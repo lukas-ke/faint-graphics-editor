@@ -21,36 +21,14 @@ import os
 from locale import getpreferredencoding
 from subprocess import Popen, PIPE
 
-def working_copy_modified(wc_path):
-    return not _get_svn_revision(wc_path).isdigit()
-
-
-def _get_svn_revision(wc_path):
-    svn_ver = Popen(['svnversion', wc_path], stdout=PIPE)
-    return svn_ver.communicate()[0].decode(getpreferredencoding()).rstrip()
-
-
-def _get_svn_path_line(info_string):
-    for line in info_string.split("\n"):
-        if line.startswith("URL: "):
-            return line[4:].strip()
-
-
-def _get_svn_path(wc_path):
-    svn_info = Popen(['svn', 'info', wc_path], stdout=PIPE)
-    return _get_svn_path_line(svn_info.communicate()[0].decode(getpreferredencoding()))
-
-
 def _now_utc():
     return datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
-
 
 def _write_string_func( f, name, value ):
     f.write('\n')
     f.write('faint::utf8_string %s(){\n' % name)
     f.write('  return "%s";\n' % value)
     f.write('}\n')
-
 
 def run(faint_root, version):
     generated_dir = os.path.join(faint_root, "generated")
@@ -64,8 +42,6 @@ def run(faint_root, version):
     f.write('namespace faint{\n\n')
     _write_string_func(f, 'faint_version', version)
     _write_string_func(f, 'faint_build_date', _now_utc())
-    _write_string_func(f, 'faint_svn_path', _get_svn_path(faint_root))
-    _write_string_func(f, 'faint_svn_revision', _get_svn_revision(faint_root))
     f.write('} // namespace\n')
     f.close()
     return cpp_path

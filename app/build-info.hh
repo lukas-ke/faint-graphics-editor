@@ -20,8 +20,6 @@
 namespace faint{
 
 faint::utf8_string faint_build_date();
-faint::utf8_string faint_svn_path();
-faint::utf8_string faint_svn_revision();
 faint::utf8_string faint_version();
 
 } // namespace

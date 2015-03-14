@@ -55,8 +55,6 @@ static wxStaticText* details_text(wxWindow* parent){
   utf8_string faint_info =
     endline_sep(
       space_sep("Executable path:", get_faint_exe_path().Str()),
-      space_sep("SVN path:",
-        faint_svn_path() + ":" + faint_svn_revision()),
       space_sep("Build date:", faint_build_date()));
 
   std::stringstream ss;
