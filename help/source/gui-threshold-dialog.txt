@@ -1,0 +1,15 @@
+page:"Threshold Dialog"
+summary:"Dialog for specifying an intensity range to replace with the primary color, while the rest is replaced with the secondary"
+
+= The threshold dialog =
+The threshold dialog is used to specify an intensity threshold for
+which all pixels are set to the primary color, while all pixels
+outside are set to the secondary color.
+
+To open the threshold dialog use Image->Color->Threshold, or the
+Python function withbind:dialog_threshold();.
+
+\image(gui-threshold-dialog.png)
+
+
+See \ref(feat-threshold.txt) for more details.

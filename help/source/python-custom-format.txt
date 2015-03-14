@@ -1,0 +1,41 @@
+page:"Adding file formats"
+
+= Adding file formats =
+Custom file formats for loading and saving can be added with the
+add_format function.
+
+{{{
+<font face="courier">
+add_format(load_function, save_function, format_name, extension)
+</font>
+}}}
+
+The load-function is called when a file with the given extension is
+opened. It receives, the file path and an \ref(py-image-props.txt), for
+constructing the image.
+
+The save-function is called when a file is saved with the given
+extension. It receives the file path and the \ref(py-canvas.txt)
+representing the image being saved.
+
+The load_function or the save_function may be None, making
+either load or save unavailable.
+
+== Example ==
+---
+'Custom file format example'\br
+\py_example(python_custom_format.py)
+---
+
+The above example defines a load function and a save function for
+files with the extension ".silly". This format is indeed silly,
+as the load-function simply adds a frame with a single text object
+showing the name of the loaded file and the save-function only writes
+the type name of each object to the file.
+
+After the call to add_format, the added format will be an option for
+loading and saving via the file dialog (as well as all other ways of
+loading files, such as drag and drop or via the command line).
+
+---
+See also: \ref(py-image-props.txt), \ref(py-frame-props.txt)

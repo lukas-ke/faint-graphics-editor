@@ -1,0 +1,22 @@
+page:"Frame Control"
+summary:"The control for animation frames"
+
+= The frame control =
+
+The frame control allows adding
+animation frames (for \ref(fmt-gif.txt,gifs)),
+alternate images (for \ref(fmt-ico.txt,icons))
+or pages (for \ref(fmt-pdf.txt,pdfs)).
+
+\image(gui-frame-control.png)
+
+The frame list to the right of the add-frame button is only shown if there are
+at least two frames.
+
+The Faint main view shows, and allows editing, the currently selected
+frame. The selected frame is indicated in the frame list.
+
+Frames in the list can be rearranged by drag and drop. The currently
+shown frame can be removed by clicking its close icon (\graphic(close-frame.png)).
+
+Frames are selected by clicking on them in the frame list, or using the Python-functions withbind:next_frame();, withbind:prev_frame(); or select_frame(num);

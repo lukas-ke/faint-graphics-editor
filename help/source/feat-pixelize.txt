@@ -1,0 +1,14 @@
+page:"Pixelize"
+summary:"Pixelize an image (by averaging pixels)"
+
+\image(feat-icon-raster.png) \image(feat-icon-dialog.png) \image(feat-icon-scriptable.png)
+= Pixelize =
+Pixelizing an image replaces squares of pixels with their average
+value, in practice decreasing the resolution (but not the image size).
+
+||\image(feat-desaturate-color.jpg)||\image(feat-pixelize1.png)||\image(feat-pixelize2.png)||
+|| /The original image/ || / Pixelized with size 5 / || /Pixelized with size 10 /||
+
+== Method ==
+To pixelize use the menu option Image->Effects->Pixelize or the Python
+function pixelize(pixel_size).

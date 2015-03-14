@@ -1,0 +1,52 @@
+page:"Resize Dialog"
+summary:"The resize dialog for the image, objects or selection"
+
+= The resize dialog =
+The resize dialog is used for scaling, cropping and expanding. The
+dialog can be used for the entire image, a selected raster region or
+selected objects. The available functionality depends on the active
+selection.
+
+To open the resize dialog use Image->Resize... (Ctrl+E) or the Python function withbind:dialog_resize();
+
+||\image(gui-resize-dialog-image.png)||
+|| /The standard resize dialog/ ||
+
+||\image(icon-info.png)||The width and height fields allow math, \ref(math_entry_fields,try it out!)||
+
+|| *Element* || *Quick key* || *Description* ||
+|| Proportional || P || When enabled and the width or the height is changed, the opposite parameter is updated to keep the relation intact. ||
+|| Nearest neighbour || N || When enabled, scale operations will use nearest neighbour interpolation (no smoothing). ||
+|| Width || Alt+W || For specifying the new width (in pixels). ||
+|| Height || Alt+H || For specifying the new height (in pixels). ||
+|| Resize anchor top left || Q || Expands or shrinks the image from the right and down and closes the dialog. ||
+|| Resize anchor center || W || Expands or shrinks the image distributed over all sides and closes the dialog. ||
+|| Rescale || E || Scales the image and closes the dialog. ||
+
+== Resize/Rescale entire image ==
+When no selection is active, the resize dialog will affect the
+entire image.
+
+== Math entry fields ==
+label:math_entry_fields
+The width and height entry fields support simple math expressions and specifying percentages. Some examples:
+|| *Expression* || *Meaning* ||
+||600 + 10||The width or height will be set to 610||
+||600 + 10 * 4||The width or height will be set to 640||
+||600 / 2||The width or height will be set to 300||
+||75%||The width or height will be set to 75% of the previous value||
+
+||\image(icon-info.png)||To add a border to an image, select the desired border color as background, open the resize dialog and set the width and height to their current values plus an offset, e.g. 640 + 20, 480 + 20, then select Resize anchor center ('W'). ||
+
+== Copy width and height ==
+The size configured in one resize dialog can be copied for use in another.
+To copy both the width and height in the resize dialog, use Alt+C. To paste
+the copied width and height into a resize dialog use Alt+V.
+
+||\image(icon-info.png)||Any string with two integers separated by a comma that has been copied to the clipboard can be pasted into a resize dialog.||
+
+---
+See also:
+* \ref(feat-dwim-resize.txt) for expanding with smart color choice
+* \ref(gui-image-resize-handles.txt) for resizing using the image handles
+* \ref(feat-crop.txt) for image shrinking alternatives.

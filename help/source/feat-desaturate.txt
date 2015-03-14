@@ -1,0 +1,24 @@
+page:"Desaturate"
+summary:"Replacing color in an image with gray-scale"
+
+\image(feat-icon-scriptable.png)
+
+= Desaturate =
+Desaturating the image replaces all colors with gray-scale
+equivalents.  There are two alternate methods, one which takes
+apparent weights of colors in account and an unweighted variant which
+values the red, green and blue components the same.
+
+||\image(feat-desaturate-color.jpg)||\image(feat-desaturate-weighted.jpg)||\image(feat-desaturate-unweighted.jpg) \ref(image_feat_desaturate_color,Source) ||
+|| /Color image/ || /Weighted desaturation/ || /Unweighted desaturation/ ||
+
+== Method ==
+To desaturate use the menu option Image->Color->Desaturate (which uses the weighted desaturation) or these Python functions:
+
+*Free functions*
+|| withbind:desaturate(); || Desaturates the active image ||
+|| withbind:desaturate_weighted(); || Weighted desaturation of the active image ||
+
+*Image Methods*
+|| image.desaturate(); || Desaturates the specified image ||
+|| image.desaturate_weighted() || Weighted desaturation of the specified image ||

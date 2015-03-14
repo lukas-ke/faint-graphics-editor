@@ -1,0 +1,10 @@
+page:"Feature Reference"
+
+= Feature reference =
+This section is an attempt to describe all functionality in Faint as
+separate items, ordered alphabetically.
+
+The entries describe the various options for using a feature, be it
+dialogs, tools or scripting.
+
+child_summary

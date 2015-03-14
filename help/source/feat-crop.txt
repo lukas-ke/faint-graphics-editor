@@ -1,0 +1,38 @@
+page:"Crop"
+summary:"Image cropping"
+
+\image(feat-icon-raster-and-object.png) \image(feat-icon-scriptable.png)
+
+= Crop =
+Cropping shrinks the image or certain selected objects.
+
+== Method ==
+* Menu: Edit->Crop (Ctrl+Alt+C)
+* Python: withbind:context_crop();
+
+== Details ==
+There are three cropping methods: auto crop, crop to raster selection and crop objects.
+
+label:auto_crop
+*Auto crop:* If no selection is active, the image is cropped automatically by
+removing contiguous colors from the edges.
+
+|| \image(feat-autocrop-pre.png)||\image(feat-autocrop-post.png)||
+|| No selection, raster mode || Ctrl+Alt+C auto-crops ||
+Auto-crop supports \ref(feat-dwim-auto-crop.txt,DWIM) after
+cropping ambiguously.
+
+*Crop to raster selection:* Crop will remove everything outside the selection.
+
+||\image(feat-crop-raster-pre.png)||\image(feat-crop-raster-post.png)||
+|| A raster selection is active || Ctrl+Alt+C crops away everything outside the selection ||
+
+*Crop objects:* Crop will be performed on each object if used with an
+object selection. Object crop is supported by Text Regions and Raster
+Objects.
+
+||\image(feat-crop-objects-pre.png)||\image(feat-crop-objects-post.png)||
+|| A raster object, an ellipse and two text objects are selected. || Ctrl+Alt+C crops the raster object and resizes the text objects. ||
+
+---
+See also \ref(feat-raster-selection.txt) and \ref(feat-object-selection.txt). See \ref(feat-shrink-selection.txt) for a similar function for clamping the selection to content.

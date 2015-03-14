@@ -1,0 +1,24 @@
+page:"Do-What-I-Mean (DWIM)"
+summary:"Modifies performed commands in predictable ways"
+
+= Do-What-I-Mean (DWIM) =
+Faint allows modifying some commands after they've been performed,
+this is referred to as Do-What-I-Mean (DWIM).
+
+For example, when deleting a raster region, the DWIM-feature allows
+using the surrounding color rather than the secondary color. For
+Auto-crop (in ambiguous situations), DWIM allows toggling which
+region is cropped to. The DWIM for delete is purely for convenience,
+while the auto-crop DWIM extends the utility of auto crop.
+
+DWIM is used after a command has been executed, and is triggered
+manually, using\br
+withbind:dwim();
+
+A DWIM-command can be undone and redone like other commands.
+
+== DWIM:able commands ==
+* \ref(auto_crop,Auto Crop) (\ref(feat-dwim-auto-crop.txt))
+* \ref(feat-delete.txt) (\ref(feat-dwim-delete.txt))
+* Resize (\ref(feat-dwim-resize.txt))
+* Rotate (\ref(feat-dwim-rotate.txt))

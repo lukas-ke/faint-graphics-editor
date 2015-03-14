@@ -1,0 +1,15 @@
+page:"Ellipse"
+summary:"Draw Ellipses"
+
+= \graphic(tool-ellipse.png) Ellipse (or circle) =
+label:tool_ellipse
+The Ellipse tool Draws ellipses or adds ellipse objects.
+
+*Settings*
+||\image(linewidth.png)|| Line Width || The width of the ellipse edge ||
+||\graphic(linestyle-solid.png) \graphic(linestyle-long-dash.png)|| Line Style ||
+||\graphic(fillstyle-border.png) \graphic(fillstyle-fill.png) \graphic(fillstyle-border-and-fill.png) || Fill Style || Outline only, Fill only or Fill and Outline ||
+
+*Keyboard modifiers*
+||\image(key-shift.png)||If shift is held while drawing, the ellipse will be constrained to a circle.||
+||\image(key-ctrl.png)||If Ctrl is held, the ellipse will be centered at the start point.||

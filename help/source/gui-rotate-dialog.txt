@@ -1,0 +1,27 @@
+page:"Rotate Dialog"
+summary:"A dialog with options for rotating or flipping the image or selection"
+
+= The rotate dialog =
+The rotate dialog is used for rotating or flipping. If no selection is
+active when the dialog is opened, the action will affect the entire
+image. If a raster area or objects are selected, only that selection
+will be affected.
+
+To open the rotate dialog use Image->Rotate (Ctrl+R) or the Python
+function withbind:dialog_rotate();
+
+||\image(gui-rotate-dialog1.png)||\image(gui-rotate-dialog2.png)||
+|| / The first page of the rotate dialog / || / The second page of the rotate dialog / ||
+
+== Dialog options ==
+|| *Icon* || *Quick key* || *Description* ||
+||\graphic(rotate-dialog-flip-horizontal.png)|| /Q/ || Flip (mirror) horizontally ||
+||\graphic(rotate-dialog-flip-vertical.png)|| /W/ || Flip (mirror) vertically ||
+||\graphic(rotate-dialog-rotate-next.png)|| /E/ || Continues to the rotation options ||
+||\graphic(rotate-dialog-rotate.png)|| /E/ || (..after continuing) rotates the specified number of degrees ||
+||\graphic(tool-level.png)|| /H/ || Selects the \ref(tool_level,level tool) and closes the dialog ||
+
+---
+See also:
+* The \ref(gui-resize-dialog.txt).
+* \ref(feat-dwim-rotate.txt) for rotating with smart color choice for the padding

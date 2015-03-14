@@ -1,0 +1,21 @@
+page:"Bitmap"
+summary:"Class representing in-memory bitmaps"
+
+= Bitmap =
+\image(py-detached-copy.png)
+
+The Bitmap class represents in-memory bitmaps. Instances of this class
+contain their pixel data, unlike \ref(py-canvas.txt,Canvas)-objects which
+always reference an image in a tab. Bitmaps therefore do not support
+undo or redo, but instead allow more effective scripted access.
+
+== Example use ==
+\py_example(python_bitmap.py)
+
+== Bitmap methods ==
+\include(generated/py-bitmap-methods.txt)
+\include(generated/py-common-methods.txt)
+
+---
+See also \ref(py-canvas.txt) for editing of images opened in tabs and
+\ref(py-pattern.txt) for using bitmaps as fill colors.

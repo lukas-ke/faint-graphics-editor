@@ -1,0 +1,17 @@
+page:"PDF"
+summary:"A document format"
+
+\image(fmt-vector.png) \image(fmt-multi-image.png)
+
+= Portable Document Format (.pdf) =
+PDF is a document format with vector graphics.
+
+Faint has limited PDF support, which can be used to save graphics for
+inclusion in PDF-documents generated with for example pdflatex. In
+other situations, \ref(fmt-svg.txt,SVG) is preferable when saving
+vector images from Faint.
+
+Faint can open the PDF:s it has saved, but not PDF:s from other
+applications.
+
+||\image(icon-work-in-progress.png)||*Note*: Faint is quite bad at PDF.||

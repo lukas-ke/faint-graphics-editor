@@ -1,0 +1,18 @@
+struct settings_$name{
+  // From $$file
+
+  static int Get(Settings& self){
+    if (!self.Has($setting)){
+      throw ValueError("$prettyname not set.");
+    }
+    else{
+      return self.Get($setting);
+    }
+  }
+
+  static void Set(Settings& self,
+    const StaticBoundedInt<$min_value, $max_value>& value)
+  {
+    self.Set($setting, value.GetValue());
+  }
+};

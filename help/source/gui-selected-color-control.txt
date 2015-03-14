@@ -1,0 +1,42 @@
+page:"Selected color control"
+summary:"The selected color control"
+
+= Selected color control =
+\image(color-options.png)
+
+The selected color control shows the currently selected primary and
+secondary color.
+
+Left clicking either color in this control opens the
+\ref(gui-color-selection-dialog.txt) for adjusting that color.
+
+Right clicking opens a context menu with some options for the clicked
+color.
+
+== Appearances ==
+When a raster or object selection is active, at least one color in the
+control will target the selection. This is indicated by a dashed border
+around the color:
+
+||\image(gui-selected-color-selection-none.png)||Neither color targets a selection||
+||\image(gui-selected-color-selection-both.png)||The colors target the foreground and background colors of selected objects||
+||\image(gui-selected-color-selection-fg.png)||The primary color targets the foreground of selected objects. No object featuring a background is selected, so the secondary color is a regular color choice||
+||\image(gui-selected-color-selection-bg.png)||The secondary color targets the mask color of the active raster selection.||
+
+When objects are selected, the control shows colors from the selected
+objects. A color change will in this case change the color of the
+objects, and not the normal color selection. Once the objects are
+deselected, the control will again show the regular primary and
+secondary color selection used for drawing tools.
+
+When a raster selection is active, the secondary color controls the
+mask. Changes to the secondary color will in this case change the mask
+of the current selection instead of the normal color selection. After
+deselection or changing to a regular tool, the control will again show
+the regular secondary color.
+
+---
+See also:
+* \ref(color.txt) for an introduction to colors, gradients and patterns in Faint
+* \ref(gui-color-selection-dialog.txt) for the color-selection dialog
+* \ref(gui-color-panel.txt) for the quick-selection control

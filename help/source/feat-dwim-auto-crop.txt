@@ -1,0 +1,25 @@
+page:"DWIM-Auto-Crop"
+summary:"Toggle which region is auto-cropped to, after the fact"
+
+= Do-What-I-Mean Auto-Crop =
+Sometimes when using \ref(auto_crop,auto crop), two regions are equally
+likely targets. The DWIM-Auto-Crop feature is used after cropping
+removes the wrong region, to crop to the opposite side instead.
+
+== Method ==
+After performing an auto-crop, use
+* Python: withbind:dwim();
+
+== Example ==
+An image with two equally croppable sides:
+||\image(feat-dwim-auto-crop-1.png)||
+
+The result after an initial auto-crop:
+||\image(feat-dwim-auto-crop-2.png)||
+
+By applying DWIM-Auto-Crop after cropping, the image is cropped from the
+left side instead:
+||\image(feat-dwim-auto-crop-3.png)||
+
+---
+See also \ref(feat-crop.txt) for an introduction to cropping.

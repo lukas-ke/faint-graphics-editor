@@ -1,0 +1,16 @@
+page:"Polygon"
+summary:"Draw Polygons"
+
+= \graphic(tool-polygon.png) Polygon =
+label:tool_polygon
+The Polygon tool draws polygon shapes.
+
+*Settings*
+||\image(linewidth.png)|| Line Width || The width of the polygon edge ||
+||\graphic(linestyle-solid.png) \graphic(linestyle-long-dash.png) || Line Style || Solid or dashed ||
+||\graphic(fillstyle-border.png) \graphic(fillstyle-fill.png) \graphic(fillstyle-border-and-fill.png)|| Fill Style || Outline only, Fill only or Fill and Outline ||
+
+*Keyboard modifiers*
+||\image(key-shift.png)||The first line connected to the moved point will be constrained to 45 degree angles.||
+||\image(key-ctrl.png)\image(key-shift.png)||The second line connected to the moved point will be constrained to 45 degree angles.||
+||\image(key-ctrl.png)||The moved point will snap to \ref(feat-snap-points.txt,points in objects), the \ref(feat-grid.txt,grid) or \ref(feat-snap90.txt,90 degree corner points).||

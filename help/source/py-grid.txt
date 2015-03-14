@@ -1,0 +1,10 @@
+page:"Grid"
+summary:"Interface for the Grid for an image"
+
+= Grid =
+\image(py-modifies-state.png)
+
+Grid objects are used to modify \ref(feat-grid.txt,grid) settings for an image.
+
+== Grid properties ==
+\include(generated/py-grid-properties.txt)

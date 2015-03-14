@@ -1,0 +1,27 @@
+page:"BMP"
+summary:"An uncompressed lossless raster format."
+
+\image(fmt-flatten.png) \image(fmt-lossless.png) \image(fmt-no-alpha.png)
+
+= Bitmap (.bmp) =
+The BMP file format is an uncompressed raster format. Faint can save
+either 24 bit-per-pixel bitmaps, or 8-bit-per-pixel color or grayscale
+bitmaps (available as different options in the file dialog).
+
+Bitmaps often have unduly large file sizes, so for drawings,
+\ref(fmt-png.txt,PNG) is usually a better alternative. For
+photographs, depending on quality requirements, \ref(fmt-jpg.txt,JPG)
+may be a better alternative.
+
+Bitmaps do not support transparency.
+
+== 256 color bitmap (8bpp) ==
+When saving as an 8-bit per pixel bitmap, the saved image will be
+\ref(feat-quantize.txt,quantized) if it uses more than 256 distinct
+colors.
+
+== Grayscale bitmap (8bpp) ==
+When saving as an 8-bit per pixel grayscale bitmap,the saved image is
+desaturated using unweighted desaturation. If weighted desaturation is
+required, the image should be desaturated manually first (see
+\ref(feat-desaturate.txt)).

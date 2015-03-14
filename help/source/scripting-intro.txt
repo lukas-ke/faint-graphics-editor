@@ -1,0 +1,41 @@
+page:"Scripting"
+= Scripting =
+Faint has an interactive interpreter for the Python programming
+language. This help section introduces the scripting, for a function and
+class reference, see instead \ref(ref-scripting.txt).
+
+|| \image(python-interpreter.png) \image(python-script-output.png) ||
+
+To show the interpreter window, select '''Python Interpreter''' in the Edit menu (or press F8).
+From this interpreter, most of what can be be done manually in Faint can be done
+programatically.
+
+|| \image(icon-info.png) || This documentation only covers Python as it relates to Faint. For an introduction to Python, see \extref(http://www.python.org). ||
+
+Two simple examples on drawing from the interpreter and customizing
+settings follow.
+
+---
+'Draw a 640x480 grid of 10x10 squares to the active image'\br
+
+\py_example(scripting_intro_squares.py)
+---
+Typing the above code in the interpreter produces a grid of 10x10 pixel squares covering (0,0)-(640,480) in the
+active drawing area.
+
+The interpreter also allows customizing and extending Faint to make it
+more effective for your work. The example below shows how a keyboard
+key can be connected to several actions:
+---
+'Make space-bar select the line tool, set line width to 10 and foreground color to blue'\br
+
+\py_example(scripting_intro_bind.py)
+---
+See \ref(python-bind-keys.txt) for more information on key binding.
+
+= Persistent changes - the configuration file =
+Functions and binds entered in the interpreter are lost when Faint is
+closed. For persistence, use the \ref(feat-config-file.txt,configuration file).
+
+---
+See also \ref(gui-python-console.txt) and \ref(ref-scripting.txt).

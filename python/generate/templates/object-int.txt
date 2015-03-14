@@ -1,0 +1,22 @@
+struct Smth_property_$name{
+  // From $$file
+
+  static int Get(const BoundObject<Object>& self){
+    const Settings& settings = self.obj->GetSettings();
+    if (!settings.Has($setting)){
+      throw ValueError("That object does not support $prettyname.");
+    }
+    return settings.Get($setting);
+  }
+
+  static void Set(const BoundObject<Object>& self,
+    const StaticBoundedInt<$min_value, $max_value>& value)
+  {
+    if (!self.obj->GetSettings().Has($setting)){
+      throw ValueError("That object does not support $prettyname.");
+    }
+
+    python_run_command(self,
+      change_setting_command(self.obj, $setting, value.GetValue()));
+  }
+};

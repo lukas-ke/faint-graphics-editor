@@ -1,0 +1,39 @@
+page:"DWIM-Resize"
+summary:"Expand the image using the surrounding color"
+
+= Do-What-I-Mean Resize =
+The DWIM-resize feature uses the old image edge color as background for the new
+region after resizing.
+
+== Method ==
+After resizing the drawing area (using for example the
+\ref(gui-image-resize-handles.txt) or the \ref(gui-resize-dialog.txt)), use
+* Python: withbind:dwim();
+
+== Details ==
+Normally when expanding the drawing area, the new region is filled
+with the secondary color. When the image edges have a distinct color,
+it is often more useful to use that color for the new region.
+
+The Resize DWIM feature allows toggling to the old edge color after
+resizing. This is more convenient than changing the secondary color
+and then resizing, and removes the need to undo after a mistaken
+resize.
+
+The color used as the alternative will be the most frequently
+appearing color along the old edges.
+
+== Example ==
+An image with white background color is resized:
+||\image(dwim-resize1.png)||\image(dwim-resize2.png)||
+
+Wrong secondary color, as usual...
+||\image(dwim-resize3.png)||
+
+Pressing Alt+Y triggers DWIM-resize, and changes the background color using
+the old edge:
+||\image(dwim-resize4.png) ||
+
+---
+See also \ref(feat-dwim-delete.txt), for similar color replacement
+after deleting and \ref(feat-dwim-rotate.txt) after rotating.

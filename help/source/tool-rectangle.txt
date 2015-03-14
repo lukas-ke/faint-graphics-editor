@@ -1,0 +1,13 @@
+page:"Rectangle"
+summary:"Draw rectangles"
+
+= \graphic(tool-rectangle.png) Rectangle =
+label:tool_rectangle
+*Settings*
+||\image(linewidth.png)|| Line Width ||
+||\graphic(linestyle-solid.png) \graphic(linestyle-long-dash.png)|| Line Style ||
+||\graphic(fillstyle-border.png) \graphic(fillstyle-fill.png) \graphic(fillstyle-border-and-fill.png) || Fill Style || Outline only, Fill only or Fill and Outline ||
+
+*Keyboard modifiers*
+||\image(key-shift.png)||The rectangle will be constrained to a square.||
+||\image(key-ctrl.png)||The rectangle corner will snap to \ref(feat-snap-points.txt,points in objects) or the \ref(feat-grid.txt,grid).||

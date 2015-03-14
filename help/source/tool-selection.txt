@@ -1,0 +1,44 @@
+page:"Selection"
+summary:"Tool for selecting objects or regions in the image"
+
+= \graphic(tool-selection.png) Selection =
+The selection tool is used for selecting raster areas when in the
+raster-layer or objects when in the object-layer.
+
+== Raster selection ==
+label:tool_raster_selection
+When the raster layer is active, the Selection tool selects and moves
+areas in the image. Many commands behave differently when a selection
+is active. For example, the "Crop" command will crop the image to the
+selection if there is one, otherwise the command will perform an
+\ref(auto_crop,auto crop).
+
+*Settings*
+||\graphic(choice-transparent.png)|| Transparent background: The selected background color will not be transferred when the selection is moved. ||
+||\graphic(choice-opaque.png)|| Opaque background: The selected area will be transferred with all colors. The "hole" left behind a moved selection will receive the current background color.||
+||\graphic(alpha-blending.png)|| Alpha blending: When enabled, colors in the selection will blend with the background. When disabled, the colors from the selection will be copied as is to the background, including the alpha value. ||
+
+*Keyboard modifiers*
+||\image(key-ctrl.png)|| If Ctrl is held when a selection is dragged, the selection will be copied. ||
+||\image(key-shift.png)|| If shift is held when a selection is dragged, the drag will be constrained to horizontal or vertical lines. ||
+
+||\image(icon-info.png)|| Use Ctrl+Right-Click inside the selection to quickly pick a color to treat as transparent. Ctrl+Right-Click outside to select Opaque background. ||
+|| || See \ref(feat-dwim-delete.txt) for a quick way to clear an area with the surrounding color ||
+
+== Object selection ==
+label:tool_object_selection
+When the object layer is active, the Selection tool is used to select,
+move, resize, rotate and otherwise adjust objects.
+
+To select an object, click inside it. To deselect all objects, click
+outside. Hold Ctrl to select multiple objects, or click
+outside objects, hold the mouse and drag to select all objects within
+a rectangle.
+
+*Settings*\br
+||\image(objselectsettings.png)|| The Object Selection tool makes the settings of all selected objects editable.\brWhen a setting is changed, the selected objects will be adjusted. Note that the current drawing settings will remain unchanged.||
+||\graphic(edit-points.png)|| When an object with editable points is selected, this setting toggles between point editing and resizing. ||
+
+*Keyboard modifiers*
+||\image(key-ctrl.png)|| If Ctrl is held when the selected objects are dragged, the objects will be copied instead of moved.\brIf Ctrl is held when starting a resize, the object will be rotated instead.||
+||\image(key-shift.png)||When dragging objects, Shift constrains the drag to horizontal and vertical lines.\brWhen resizing, Shift keeps the object proportions.\brWhen rotating, Shift constrains to certain angles.||

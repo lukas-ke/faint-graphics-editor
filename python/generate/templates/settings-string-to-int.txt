@@ -1,0 +1,18 @@
+struct settings_$name{
+  // From $$file
+
+  static utf8_string Get(Settings& self){
+    if (!self.Has($setting)){
+      throw ValueError("$prettyname not set.");
+    }
+    int i_value = to_int(self.Get($setting));
+    const char* s_value = nullptr;
+    $int_to_string
+    return utf8_string(s_value);
+  }
+
+  static void Set(Settings& self, const utf8_string& s_value){
+    $string_to_int
+    self.Set($setting, value);
+  }
+};

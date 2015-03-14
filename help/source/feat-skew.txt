@@ -1,0 +1,10 @@
+page:"Skew (Shear mapping)"
+summary:"Skewing objects"
+
+\image(feat-icon-scriptable.png)
+
+= Skew (shear mapping) =
+Objects can be skewed, either as a result of image aligned \ref(feat-resize-objects.txt,resizing) of a rotated object or with the \ref(py-something.txt,skew) method which sets the skewness in pixels.
+
+||\image(feat-skew.png)||
+|| / Rectangle skewed 20 pixels / ||

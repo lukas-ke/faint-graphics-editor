@@ -1,0 +1,21 @@
+page:"Settings"
+summary:"Class representing Faint tool or object settings"
+
+= Settings =
+\image(py-detached-copy.png)
+
+The Settings class represents tool or object \ref(settings.txt,settings.)
+
+Note that Settings-objects are self contained (copies), they do not
+keep a reference to their source, so to effect a change in Faint, the
+modified settings must be passed to a function or method.
+
+To change the settings of a Faint-object, use the update_settings
+method of the \ref(py-something.txt). To use it for the current
+settings in Faint (i.e. for tools), use the global update_settings function.
+
+== Settings properties ==
+\include(generated/py-settings-properties.txt)
+
+== Settings methods ==
+\include(generated/py-settings-methods.txt)

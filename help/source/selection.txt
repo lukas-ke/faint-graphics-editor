@@ -1,0 +1,23 @@
+page:"Selection"
+summary:"Selecting areas or objects for adjustment"
+
+= Selection =
+Faint has two types of selection: 'raster-' and 'object'-selection.
+
+The raster selection selects a region in the raster graphics, while
+object selection deals with complete objects. Some operations are only
+available when a selection is active. For example, 'Delete' will
+replace the selected raster area in the image with the background
+color or, for object selection, remove all selected objects.
+
+To modify the raster selection, use the
+\ref(tool-selection.txt,selection tool) in the Raster layer. To modify the
+object selection, use it in the Object layer.
+
+The raster selection is used to move, delete and copy parts of the
+raster image.  The object selection is likewise used to move, delete
+and copy objects. The object selection also allows changing properties
+of the selected objects, such as line width or color.
+
+||\graphic(tool-selection.png)+\graphic(layer-raster.png)||\graphic(tool-selection.png)+\graphic(layer-object.png)||
+||\image(raster-selection-example.png) \br'/Raster selection/'||\image(vector-selection-example.png) \br '/Object selection/'||

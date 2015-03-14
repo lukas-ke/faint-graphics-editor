@@ -1,0 +1,24 @@
+page:"Calibrate"
+summary:"Convert pixels to measurements"
+
+= \graphic(tool-calibrate.png) Calibrate =
+label:tool_calibrate
+The calibration tool is used to specify a distance in the image for
+calibrating the coordinate system.
+
+The calibration can be used to show measures of objects using
+\ref(ref-text-expressions.txt,text expressions) or the
+\ref(tool_tape_measure,tape measure tool).
+
+\image(tool-calibrate-example.png)
+
+If the image is calibrated since previously, the current calibration
+will be shown while the calibrate tool is selected:\br
+\image(tool-calibrate-idle.png)
+
+*Keyboard modifiers*
+||\image(key-shift.png)||If shift is held while specifying the distance, the line will be perfectly horizontal or vertical.||
+||\image(key-ctrl.png)||The line end will \ref(feat-snap-points.txt,snap) to object points or the \ref(feat-grid.txt,grid).||
+
+---
+See also \ref(feat-calibration.txt,calibration reference)

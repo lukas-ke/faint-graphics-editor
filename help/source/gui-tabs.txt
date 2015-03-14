@@ -1,0 +1,21 @@
+page:"Tabs"
+summary:"The tabs for selecting images"
+
+= The image tabs =
+The tabs above the drawing area are used to select which image to edit
+when multiple images have been opened.
+
+== Unsaved changes indication ==
+An asterisk after the file name in a tab indicates that the file has
+unsaved changes.
+||\image(gui-tab-asterisk.png)||
+
+== Reordering ==
+The tabs can be reordered. To move a tab, click it and drag it to the new location.
+||\image(gui-tab-drag1.png)||\image(gui-tab-drag2.png)||
+
+== Splitting ==
+The view can be split, so multiple images can be viewed side by
+side. To split the view, click a tab and drag it to either corner of
+the drawing area.
+||\image(gui-tab-split.png)||

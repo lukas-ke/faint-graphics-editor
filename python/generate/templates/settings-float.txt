@@ -1,0 +1,19 @@
+struct settings_$name{
+  // From $$file
+
+  static coord Get(Settings& self){
+    if (!self.Has($setting)){
+      throw ValueError("$prettyname not set.");
+    }
+    else{
+      return self.Get($setting);
+    }
+  }
+
+  static void Set(Settings& self, coord value){
+    if (value < $min_value  || $max_value < value){
+      throw ValueError("Argument outside range [$min_value, $max_value].");
+    }
+    self.Set($setting, value);
+  }
+};

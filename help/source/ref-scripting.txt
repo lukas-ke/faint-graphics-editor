@@ -1,0 +1,11 @@
+page:"Scripting Reference"
+
+= Scripting reference =
+This section lists the Python classes and functions that form the
+interface for programatically drawing and customizing Faint. This interface is used in the \ref(gui-python-console.txt,interpreter) or
+\ref(feat-config-file.txt,configuration file).
+
+This is a reference section, for an introduction to scripting in
+Faint, see instead \ref(scripting-intro.txt).
+
+child_summary

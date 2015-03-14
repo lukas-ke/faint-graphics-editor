@@ -1,0 +1,32 @@
+page:"File Formats"
+
+= File formats =
+Faint can save images in a number of formats. Which format should be
+used depends on the type of image and intended use.
+
+In addition to the built-in formats, custom formats can be added via
+Python, see \ref(python-custom-format.txt).
+
+== Format recommendations ==
+This table lists which file format should be used for different types
+of images.
+
+tablestyle:fancy
+|| *Image type* || *Recommended format* ||
+|| Photo ||\ref(fmt-jpg.txt,jpg)||
+|| Pixel art, drawing ||\ref(fmt-png.txt,png)||
+|| Animation ||\ref(fmt-gif.txt,gif)||
+|| Diagram (vector graphics) ||\ref(fmt-svg.txt,svg)||
+|| Mix of raster and vector ||\ref(fmt-svg.txt,svg)||
+
+== File format list ==
+tablestyle:fancy
+||*Format*||*Compression*||*Flattens*||*Note*||
+||\ref(fmt-bmp.txt,bmp)|| None || Yes ||Beware the large file sizes||
+||\ref(fmt-cur.txt,cur)|| Lossless || Yes || Cursors ||
+||\ref(fmt-gif.txt,gif)|| Lossless (limited palette) || Yes || Animations, pixel art ||
+||\ref(fmt-ico.txt,ico)|| Lossless || Yes || Icons ||
+||\ref(fmt-jpg.txt,jpg)|| Lossy || Yes || Photographs ||
+||\ref(fmt-pdf.txt,pdf)|| Vector || No ||Vector images for documents or printing||
+||\ref(fmt-png.txt,png)|| Lossless || Yes || Screenshots, pixel-art, clip-art ||
+||\ref(fmt-svg.txt,svg)|| Vector || No ||Vector images||

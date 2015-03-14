@@ -1,0 +1,11 @@
+page:"PNG"
+summary:"A lossless raster format with alpha transparency."
+
+\image(fmt-flatten.png) \image(fmt-lossless.png) \image(fmt-alpha.png)
+
+= Portable Network Graphics (.png) =
+Portable Network Graphics is a lossless raster format with alpha transparency.
+
+== Transparency ==
+PNG images retain the alpha values used in Faint, which allows
+different degrees of transparency for individual pixels.

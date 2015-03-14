@@ -1,0 +1,28 @@
+page:"Command line"
+summary:"Command line parameters"
+
+= Command line options =
+This section describes the parameters Faint supports when started from the command line.
+
+\image(msw-cmd-line.png)
+
+tablestyle:fancy
+tablewidths:10%,10%,*
+||Short form||Long form||Description||
+||-h||--help|| Displays the command line help ||
+||-s||--silent|| Disables the user interface. Only meaningful with --run. Will exit after running the script specified with --run.||
+||-i||--newinst|| Force a new instance, allows starting another instance of Faint instead of raising the already started instance.||
+||-ii||--noserver|| The started Faint instance will not attempt to start a server and become a single instance.||
+|| ||--run|| Runs the specified \ref(scripting-intro.txt,Python script).||
+|| ||--arg|| Stores the specified string in ifaint.cmd_arg for access from Python.||
+
+== Examples ==
+tablestyle:plain
+tablewidths:35%,*
+
+||faint -h||Shows the command line help in the command window, then exits||
+||faint somefile.png||Starts Faint and loads the file named somefile.png||
+||faint --run somescript.py||Starts Faint and runs the Python-script somescript.py||
+||faint somefile.png --run somescript.py||Starts Faint, loads somefile.png then runs somescript.py ||
+||faint somefile.png --run somescript.py --silent||Starts Faint without showing a window, loads somefile.png then runs somescript.py and then exits ||
+||faint --run somescript.py --arg blue||Starts Faint, runs somescript.py which presumably reads the string 'blue' from ifaint.cmd_arg||

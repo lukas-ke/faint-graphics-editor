@@ -1,0 +1,22 @@
+page:"Replace Color"
+summary:"Replacing a color with another"
+
+\image(feat-icon-raster.png) \image(feat-icon-tool.png) \image(feat-icon-scriptable.png)
+= Replace color =
+Replace a color in the image with a different color.
+
+== Using the fill tool ==
+The \ref(tool_fill,fill tool) replaces the clicked color in the
+entire image if Ctrl is held.
+
+== Using Python ==
+A function for replacing a color is available from the Python
+interpreter.
+
+*Image methods*
+|| image.replace_color(old_color, new_color) || Replaces old_color with new_color ||
+
+||\image(icon-info.png)|| *Tip:* Use the \ref(tool_picker,color picker) to select the color to delete, and use 'get_fgcol()' or 'get_bgcol()' as an argument to 'replace_color'. ||
+
+---
+See also \ref(feat-erase-but-color.txt) and \ref(feat-replace-alpha.txt).

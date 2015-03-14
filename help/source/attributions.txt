@@ -1,0 +1,36 @@
+page:"Attributions"
+summary:"Source attributions"
+
+= Image attributions =
+This page contains attributions for images in the Faint
+documentation from external sources.
+
+== Agriocnemis pygmaea male ==
+label:image_color_selective_resaturation
+\image(color-selective-resaturation.png) \br
+This image was modified from an original by Joydeep:\br
+\extref(http://commons.wikimedia.org/wiki/File:Agriocnemis_pygmaea_male,_Burdwan,_West_Bengal,_India_14_03_2012.jpg) \br
+Under the Creative Commons Attribution-ShareAlike 3.0 Unported license:\br
+\extref(http://creativecommons.org/licenses/by-sa/3.0/deed.en)
+
+== Chinese Lantern ==
+label:image_feat_desaturate_color
+\image(feat-desaturate-color.jpg)\br
+This image was modified from an original by Derek Ramsey (Ram-Man) and
+Chanticleer garden:\br
+\extref(http://en.wikipedia.org/wiki/File:Abutilon_x_hybridum_'Moonchimes'_Flower_2800px.jpg) \br
+Under the Creative Commons Attribution-ShareAlike 3.0 Unported license:\br
+\extref(http://creativecommons.org/licenses/by-sa/3.0/deed.en)
+
+== Cat Icons ==
+label:image_feat_autocrop_pre
+\image(feat-autocrop-pre.png)\br
+This image was modified from a public-domain original by molumnen:\br
+\extref(http://openclipart.org/detail/394/cat-icons-by-molumen)
+
+== The Blue Marble ==
+label:image_raster_vs_object_annotations
+\image(img-annotations.jpg)\br
+This image was modified from the NASA photograph "The blue marble",
+which is in the public domain:\br
+\extref(http://commons.wikimedia.org/wiki/File:The_Blue_Marble_4463x4163.jpg)

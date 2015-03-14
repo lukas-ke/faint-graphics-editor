@@ -1,0 +1,71 @@
+page:"Drawing a flag"
+summary:"Layer choice, adding and editing objects, snapping to points"
+
+= Drawing a flag =
+This tutorial teaches the following:
+* using line and rectangle objects
+* snapping lines to certain points
+* modifying tools with Shift and Ctrl
+* editing objects
+
+This is the first tutorial for Faint. It will take less than five
+minutes to complete. If you make a mistake at any step, you can use
+Undo (Ctrl+Z) to revert it.
+
+== 1. Select the object layer ==
+For this tutorial, use the object layer. To select the object layer,
+click this image in the top left:
+
+\image(select-vector.png)
+== 2. Draw the flag base ==
+Select the rectangle tool.\br
+Change the Rectangle fill setting to "Fill-only".\br
+Select a blue:ish color in the palette.\br
+Click in the canvas and drag so that you create a rectangle, as shown below.\br
+
+If you are unhappy with your rectangle, select it with the Object
+selection tool, and adjust the edges.
+
+== 3. Draw a cross ==
+*...the first line*\br
+Select the line tool. Use the default settings (1 pixel line width, solid line).\br
+Draw a line somewhere near the flag, then select the Object select
+tool to select the line and adjust it.
+
+Try to adjust the line ends so that the line stretches vertically
+through the center of the flag rectangle.
+
+||\image(icon-info.png)||Line ends can snap snap to the following points on a rectangle: \br \image(rect-snap.png)\brTo snap, hold Ctrl while adjusting the line endpoints||
+
+*...clone the line*\br
+Now for the other line. To avoid having to re-select the line tool,
+with the object selection tool still active click someowhere on the
+current line. Hold Ctrl and click and drag the line, it will be cloned.
+
+Drag and snap the ends of the new line in place across the vertical
+center of the flag base, like you did before.
+
+== 4. Thicker lines ==
+The lines look a bit thin! Select both lines by clicking each line
+while holding Ctrl. When both lines are selected, adjust the line
+width setting. This will only change the width of selected objects.
+
+== 5. Move the vertical line to the left ==
+The finishing touch: the vertical line should be adjusted to the
+left. Select the vertical line. Now hold shift. Shift enables you to
+constrain the movement to either vertical or horizontal lines.  While
+holding shift, move the line to the left. Notice how it stays in the
+same vertical position.
+
+== 6. Group the flag into a single object ==
+Press Ctrl+A. This will select all objects. Then, Ctrl+G to group them.
+The flag will now behave as a single object (to ungroup it, use the opposite command, Ctrl+U).
+
+== 7. Save your work ==
+Since we've only used object graphics, we will save the image as an svg file. Press Ctrl+S.
+
+== Related help ==
+See \ref(tools.txt) for information about the line, rectangle and object
+selection tools.
+See \ref(formats.txt) for information about file formats and why svg was
+suitable in this tutorial

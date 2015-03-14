@@ -1,0 +1,33 @@
+page:"Object Selection"
+summary:"Object selection methods"
+
+= Object selection =
+Objects can be selected, and can then be adjusted. For an introduction, see
+\ref(objects.txt).
+
+||\image(feat-flatten1.png)||
+||A selected polygon object||
+
+== Deselect objects ==
+* *Menu* (in Object mode): Edit->select None (Ctrl+D)
+* *Python* select()
+
+== Select all objects ==
+* *Menu* (in Object mode): Edit->Select All (Ctrl+A)
+* *Python*: select(objects)
+
+== Select specific object ==
+* *Tool*: Use the \ref(tool_object_selection,object selection tool)
+* *Python*: select('obj')
+
+== Deselect specific object ==
+* *Tool*: Use the \ref(tool_object_selection,selection tool)
+* *Python*: deselect('obj')
+
+= Python notes =
+All objects in the active image are accessible by the automatic list
+'objects'. Likewise, all selected objects are accessible by the
+'selected' list.
+
+---
+See also \ref(feat-raster-selection.txt) for the raster equivalent.

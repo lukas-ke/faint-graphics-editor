@@ -1,0 +1,27 @@
+page:"Tool Reference"
+
+tablestyle:fancy
+
+= Tool reference =
+This section describes all tools in Faint. This is a reference section, for an introduction, see instead \ref(tools.txt).
+
+In the following table, \image(supports-raster.png) indicates a tool which can target raster graphics, while
+\image(supports-object.png) indicates a tool which can target objects (see \ref(raster-vs-object.txt)).
+
+|| *Icon*|| *Name*|| *Description*|| *Supports*||
+||\graphic(tool-selection.png)|| \ref(tool-selection.txt,Selection)|| Selects a region or objects to move or modify||\image(supports-raster.png)\image(supports-object.png)||
+||\graphic(tool-pen.png)||\ref(tool_pen,Pen)||Freehand-drawing||\image(supports-raster.png)||
+||\graphic(tool-brush.png)||\ref(tool_brush,Brush)||Like the pen, but more luxurious||\image(supports-raster.png)||
+||\graphic(tool-picker.png)||\ref(tool_picker,Color Picker)||Selects colors from the image||\image(supports-raster.png)\image(supports-object.png)||
+||\graphic(tool-line.png)||\ref(tool_line,Line)||Draws lines||\image(supports-raster.png)\image(supports-object.png)||
+||\graphic(tool-path.png)||\ref(tool_path,Path)||Draws arbitrary shapes||\image(supports-raster.png)\image(supports-object.png)||
+||\graphic(tool-spline.png)||\ref(tool_spline,Spline)||Draws curved lines||\image(supports-raster.png)\image(supports-object.png)||
+||\graphic(tool-rectangle.png)||\ref(tool_rectangle,Rectangle)||Draws rectangles||\image(supports-raster.png)\image(supports-object.png)||
+||\graphic(tool-ellipse.png)||\ref(tool_ellipse,Ellipse)||Draws ellipses||\image(supports-raster.png)\image(supports-object.png)||
+||\graphic(tool-polygon.png)||\ref(tool_polygon,Polygon)||Draws polygons||\image(supports-raster.png)\image(supports-object.png)||
+||\graphic(tool-text.png)||\ref(tool_text,Text)||Writes text||\image(supports-raster.png)\image(supports-object.png)||
+||\graphic(tool-floodfill.png)||\ref(tool_fill,Fill)||Fills contiguous areas with color<br>replaces colors in objects||\image(supports-raster.png)\image(supports-object.png)||
+||\graphic(tool-level.png)||\ref(tool_level,Level)||Rotate the image to align the horizon||\image(supports-raster.png)\image(supports-object.png)||
+||\graphic(tool-hot-spot.png)||\ref(tool_hot_spot,Hot spot)||Specify the image hot spot||\image(supports-raster.png)||
+||\graphic(tool-calibrate.png)||\ref(tool_calibrate,Calibrate)||Convert pixels to measurements||\image(supports-raster.png)\image(supports-object.png)||
+||\graphic(tool-tape-measure.png)||\ref(tool_tape_measure,Tape measure)||Read measurements from the image||\image(supports-raster.png)\image(supports-object.png)||

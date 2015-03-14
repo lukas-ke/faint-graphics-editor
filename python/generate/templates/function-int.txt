@@ -1,0 +1,18 @@
+void set_$name(int value){
+  // From $$file
+
+  if (value < $min_value  || $max_value < value){
+    throw ValueError(space_sep("Argument for set_$prettyname", str_int(value),
+      "outside range [$min_value, $max_value]."));
+  }
+
+  auto& app = get_app_context();
+  app.Set($setting, value);
+}
+
+int get_$name(){
+  // From $$file
+
+  auto& app = get_app_context();
+  return app.Get($setting);
+}

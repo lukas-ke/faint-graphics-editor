@@ -1,0 +1,15 @@
+page:"Picker"
+summary:"Select colors or patterns from the image"
+
+= \graphic(tool-picker.png) Color picker =
+label:tool_picker
+The color picker is used to select colors from the image. Use the left
+mouse button to use the targeted color as foreground color, and the
+right mouse button to use it as the background color. The color picker
+can also pick the entire image as a pattern.
+
+\image(picker-example.png)
+
+*Keyboard modifiers*
+||\image(key-ctrl.png)\image(mouse-left.png) || Ctrl+Click picks the entire image as a pattern anchored at the click position.\brThis is useful for cloning a region.||
+||\image(key-ctrl.png)\image(key-shift.png)\image(mouse-left.png)|| Ctrl+Shift+Click picks the entire image as a pattern anchored at the top left corner.\brThis is useful for saving the image state for selectively reverting regions.||

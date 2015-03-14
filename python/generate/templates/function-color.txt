@@ -1,0 +1,13 @@
+void set_$name(const Paint& paint){
+  // From $$file
+
+  auto& app = get_app_context();
+  app.Set($setting, paint);
+}
+
+Paint get_$name(){
+  // From $$file
+
+  auto& app = get_app_context();
+  return app.Get($setting);
+}

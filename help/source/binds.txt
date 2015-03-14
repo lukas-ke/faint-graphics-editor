@@ -1,0 +1,7 @@
+page:"Key Binds"
+
+= Key binds =
+This is an automatically updated list of Python functions bound to keys.
+For instructions on how to change binds, see \ref(python-bind-keys.txt).
+
+\bindlist()

@@ -1,0 +1,44 @@
+page:"Text expressions"
+summary:"Evaluated expressions in text-objects"
+
+tablestyle:fancy
+tablewidths:10%,10%,*
+
+= Text expressions =
+This page lists all expressions supported by the
+\ref(tool-text.txt,text tool) and text objects when parsing,
+\graphic(text-parsing.png), is enabled.
+
+The expressions are shown as entered while the text is being edited,
+and are replaced by their result when editing has been completed.
+
+\image(text-expression-editing.png) \image(text-expression-done.png)
+
+== Evaluated expressions ==
+The following expressions require parameters and are replaced by the result
+of some look-up.
+
+Expressions that refer to objects require an
+\ref(naming_objects,object name) as the first parameter.
+
+The expressions that require a unit support "px", or "px2" for areas.
+
+When \ref(tool-calibrate.txt,calibrated), units with conversions to the
+calibration unit may be used, e.g. m for meters or m2 for square
+meters if calibrated with a metric unit (such as m, cm or mm).
+
+||*Expression*||*Evaluates to*||
+||\area(object,area_unit)||The object's area in the requested unit.||
+||\perimeter(object,distance_unit)||The length of the object's perimeter  in the requested unit, for example px2.||
+||\width(object,distance_unit)||The width of the object in the requested unit, defined as the length of p0->p1 of its \ref(py-tri.txt,Tri).||
+||\height(object,distance_unit)||The height of the object in the requested unit, defined as  the length of p0->p2 of its \ref(py-tri.txt,Tri).||
+||\u(unicode_code_point)||The unicode character specified by the code point (integer).||
+
+
+== Character constants ==
+The following expressions are replaced by their symbol, if supported
+by the font.
+
+The example images are in the Segoe UI Symbol font at 18pt.
+
+\insert(generated/text-expressions.txt)

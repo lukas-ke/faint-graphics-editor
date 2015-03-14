@@ -1,0 +1,16 @@
+page:"Constrained drawing"
+summary:"Constraining drawing and editing to directions or proportions"
+
+\image(feat-icon-tool.png) \image(feat-icon-raster-and-object.png)
+= Constrained drawing =
+Many tools can be "constrained". For example, line drawing can be
+constrained to certain angles, and rectangle drawing can be
+constrained to squares. Selection movement can be constrained along
+the horizontal or vertical axes.
+
+To constrain, hold shift while drawing or adjusting an object or selection.\br
+\image(key-shift.png)\image(mouse-left.png)
+
+\image(constrain.png)
+
+See \ref(tools.txt) for per-tool information.

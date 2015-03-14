@@ -1,0 +1,18 @@
+page:"Flood Fill"
+summary:"Replace a contiguous area of one color with a different color"
+
+\image(feat-icon-raster.png) \image(feat-icon-tool.png) \image(feat-icon-scriptable.png)
+= Flood fill =
+Replaces a contiguous area of one color with a different color
+
+||\image(tool-fill-unchanged.png)||\image(tool-fill-flood.png)||
+||Before flood fill||After flood fill||
+
+== Using the fill tool ==
+The \ref(tool_fill,fill tool) flood fills from the click position.
+
+== Using Python ==
+||image.fill((x,y), paint)||Flood fill originating at x,y using the specified color, pattern or gradient.||
+
+---
+See also \ref(feat-boundary-fill.txt) for replacing colors bounded by a color.

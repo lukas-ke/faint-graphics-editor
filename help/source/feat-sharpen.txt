@@ -1,0 +1,10 @@
+page:"Sharpen"
+summary:"Sharpens the image"
+
+\image(feat-icon-raster.png) \image(feat-icon-dialog.png) \image(feat-icon-scriptable.png)
+
+= Sharpen =
+The image can be sharpened in Faint using either the Sharpness dialog or the
+Python function unsharp_mask.
+---
+See also \ref(feat-blur.txt) for blurring an image.

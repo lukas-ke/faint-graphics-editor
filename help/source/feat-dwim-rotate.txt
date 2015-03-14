@@ -1,0 +1,37 @@
+page:"DWIM-Rotate"
+summary:"Rotate the image using the surrounding color for extending"
+
+= Do-What-I-Mean Rotate =
+The DWIM-rotate feature uses the old image edge color as background
+for new region after rotating the image.
+
+== Method ==
+After rotating the image using the \ref(gui-rotate-dialog.txt), use
+* Python: withbind:dwim();
+
+== Details ==
+When rotating an image by non-90-degree increments, the image area
+must be grown to fit the rotated content. The new regions are normally
+filled with the current secondary color.\br
+\image(feat-dwim-rotate.png)
+
+The Rotate DWIM feature allows filling the new regions with the old
+edge color after rotating. This is more convenient than changing the
+secondary color and then rotating. The color used as the alternative
+will be the most frequently appearing color along the edges of the
+rotated region.
+
+== Example ==
+An image with black background is rotated:
+|| \image(feat-dwim-rotate-1.png) ||
+
+The new regions are initially filled with the secondary color:
+|| \image(feat-dwim-rotate-2.png) ||
+
+Pressing Alt+Y triggers DWIM-rotate and changes the color to the old
+edge color:
+|| \image(feat-dwim-rotate-3.png) ||
+
+---
+See also \ref(feat-dwim-delete.txt), for similar color replacement
+after deleting and \ref(feat-dwim-resize.txt) after resizing.

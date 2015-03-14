@@ -1,0 +1,10 @@
+page:"Blur"
+summary:"Blurs the image"
+
+\image(feat-icon-raster.png) \image(feat-icon-dialog.png) \image(feat-icon-scriptable.png)
+
+= Gaussian blur =
+The image can be blurred in Faint using either the Sharpness dialog or the
+Python function gaussian_blur.
+---
+See also \ref(feat-sharpen.txt) for sharpening an image.

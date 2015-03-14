@@ -1,0 +1,56 @@
+page:"Objects"
+summary:"Working with Objects"
+= Objects =
+Many \ref(tools.txt,tools) create objects when they're used in the object
+mode. As an example, the \ref(tool-line.txt,line tool) adds adjustable lines in the object mode.
+
+To work with objects, select the object mode:\br
+\image(select-vector.png)
+
+|| \image(icon-info.png) || When using objects, it is often best to save the image in a vector \ref(formats.txt,format). ||
+
+== Selecting objects ==
+Objects can be adjusted while they are selected. There are several
+ways to select objects.\br Edit->Select All (Ctrl+A) selects all
+objects in the image (if the Object mode is active).
+
+The \graphic(tool-selection.png) \ref(tool-selection.txt,selection tool)
+either draws a rectangle to select all objects within, or selects
+individual clicked objects when the object layer is selected.
+
+\image(object-selection-cutout.png)
+
+\image(select-objects.png)
+
+If Ctrl is held, the clicked objects, or objects within the drawn
+rectangle, will be deselected.
+
+For more object selection details, see
+\ref(feat-object-selection.txt,Feature Reference/Object Selection).
+
+== Object settings/appearance ==
+When the selection tool is used with the Object layer, changes to
+settings will affect the selected objects, instead of the tools.\br
+
+\image(object-settings.png)
+
+== Point editing ==
+Lines, polygons and paths are constructed from multiple points which
+can be adjusted independently. Ellipses also have adjustable points
+used to limit them to arc segments. To edit the points of such an
+object, select it with the selection tool and enable 'Edit
+points'.
+
+|| \graphic(edit-points.png) || \image(editable-polygon.png) ||
+|| The edit points setting. || A polygon with editable points ||
+
+== Naming objects ==
+label:naming_objects
+Objects can be given names which can be used to refer to their
+properties from \ref(ref-text-expressions.txt,text expressions) in
+text objects.
+
+To name an object, select it with the selection tool then
+press enter and type a name, followed by enter again.
+
+\image(object-name.png)

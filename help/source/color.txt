@@ -1,0 +1,66 @@
+page:"Color"
+summary:"Color and pattern selection"
+= Color =
+Faint features a primary and a secondary color choice.\br
+\image(selected-color-control.png)
+
+The primary color is (normally) used for drawing lines, and borders of shapes,
+while the secondary color is used for filling.
+
+To select the primary color, left click a color in the palette. To select the
+secondary color, right click in the palette.\br
+\image(color-palette.png)
+
+Single-click either the primary or the secondary color in the selected
+color control to adjust the color freely in the
+\ref(gui-color-selection-dialog.txt). Double click a color in the palette
+to adjust it with the color selection dialog. Colors can also be
+selected in an image, using the \ref(tool_picker).
+
+== Alpha ==
+label:color_rgba
+Faint uses RGBA-colors. That is, colors are defined by their relative
+amounts of red, green and blue with an additional 'alpha component'
+controlling the degree of translucency. With an alpha of 0, a color is
+completely transparent, with an alpha of 255 it is completely opaque.
+
+Faint indicates alpha by blending against a checkered pattern.
+|| \image(color-0-alpha.png) || Fully transparent (alpha=0) ||
+|| \image(color-128-alpha.png) || Half transparent (alpha=128) ||
+|| \image(color-255-alpha.png) || Fully opaque (alpha=255) ||
+
+When the checkered pattern appears in the palette or selected color
+control, it indicates the alpha of that color. When the checkered
+pattern is visible in the image, it means that the image will be
+partially transparent in that area (if saved to a
+\ref(formats.txt,file format) that supports alpha).
+
+== Gradients ==
+label:color_gradient
+Gradient transitions can be used as the primary or secondary "color".
+Faint indicates a gradient color item in the palette or as a selected color
+by rendering the gradient, like this: \image(color-gradient-icon.png) \br
+
+|| \image(color-draw-with-gradient.png) ||
+|| 'Objects filled with gradients' ||
+
+Gradients can be configured in the \ref(gui-color-selection-dialog.txt) or
+using the Python-function 'set_fg'.
+
+== Patterns ==
+label:color_pattern
+Image patterns can be used instead of colors. Faint indicates patterns
+with this icon: \image(color-pattern-icon.png) \br
+
+Patterns are repeated where drawn, and can also be used for various
+image effects. Use the \ref(gui-color-selection-dialog.txt) or the
+\ref(tool_picker) to select an image to use as a pattern.
+||\image(color-draw-with-pattern.png)||
+||'Drawing with a pattern'||
+
+The pattern feature allows an editing trick. By using the edited image
+as the pattern, the image state is stored as a color and can be
+selectively reverted using any of the drawing tools.
+
+|| \image(color-selective-resaturation.png)||
+|| Desaturated image with color redrawn with the \ref(tool_brush,brush tool). ||

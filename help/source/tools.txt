@@ -1,0 +1,20 @@
+page:"Tools"
+summary:"The tools available for drawing in Faint"
+= Tools =
+The \ref(gui-tool-panel.txt,tool panel) to the left of the main frame
+contains the tools that are used to draw, or add objects to-, the
+drawing area.
+
+Most tools are available in both the raster and object \ref(raster-vs-object.txt,modes).\br
+To select a tool, click its button in the tool panel. Most tools do
+their thing when either mouse button is held with the cursor over the
+drawing area and the mouse is moved.
+
+Many of the tools use a primary and a secondary \ref(color.txt,color). If the
+left mouse button is used for drawing, the primary color will be used
+for foreground and the secondary for background.
+
+|| \image(gui-status-info1.png) ||
+|| The lower left of the \ref(gui-status-bar.txt,status bar) contains tool help ||
+
+All tools are described in detail in \ref(ref-tools.txt).

@@ -1,0 +1,16 @@
+page:"Snap to Object points"
+summary:"Snapping to points in objects while adjusting points or drawing"
+
+\image(feat-icon-object.png) \image(feat-icon-tool.png)
+
+= Snap to object points =
+While drawing or moving a point, the adjusted point can be snapped to
+certain points in objects.
+
+||\image(feat-snap-object-points.png)||A line with end-points snapped to the center of a circle\br and the middle of the left side of a rectangle||
+
+To snap, hold \image(key-ctrl.png) while moving a point or drawing shapes.
+---
+See also:\br
+* \ref(feat-grid.txt) for snapping to a grid
+* \ref(feat-snap90.txt) for forming corners while drawing lines and polygons

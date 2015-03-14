@@ -1,0 +1,9 @@
+page:"Help Window"
+summary:"The window containing usage help for Faint"
+
+= The help window =
+The help window shows the Faint-help, and is probably where you're
+reading this text.
+
+To open the Help window dialog use Help->Help index or the Python
+function withbind:dialog_help();.

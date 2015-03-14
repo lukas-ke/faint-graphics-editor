@@ -1,0 +1,22 @@
+page:"Quantize"
+summary:"Reducing the number of colors in an image"
+
+\image(feat-icon-scriptable.png)
+
+= Quantize =
+Quantizing the image reduces the amount of colors to at most 256.  The
+quantization also performs dithering for better approximation of colors.
+
+||\image(feat-desaturate-color.jpg)||\image(feat-quantized.png)||
+|| /Original, 16139 colors/ || /Quantized, 178 colors/ ||
+
+
+== Method ==
+When saving to certain formats with limited color depth, such as
+\ref(fmt-bmp.txt,8-bit bmp), the saved image is quantized
+automatically.
+
+To quantize an image within Faint, use the Python method quantize.
+
+*Image Methods*
+|| image.quantize(); || Quantizes the specified image ||

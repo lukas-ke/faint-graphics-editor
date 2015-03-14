@@ -1,0 +1,25 @@
+page:"Level"
+summary:"Tool aligning the image horizon"
+
+= \graphic(tool-level.png) Level =
+label:tool_level
+
+The level tool is used to straighten rotated images, or to align
+multiple images. The level tool is selected in the
+\ref(gui-rotate-dialog.txt).
+
+\image(tool-level-1.png) \image(tool-level-2.png)
+
+To straighten a rotated image, draw a line along an edge. The image
+is rotated so that the traced edge becomes horizontal.
+
+To align a feature across multiple images, first right-click and draw
+a line along a feature in the first image, then left-click and draw a
+line in the second image. \br
+The second image will be rotated so that the traced feature has the
+same angle in both images.
+
+*Modifiers*
+||\image(mouse-left.png)||Rotate the image so that the traced line is aligned with the horizon ||
+||\image(mouse-right.png)||Draw a line which redefines the horizon||
+||\image(key-shift.png)||The image will be both scaled and rotated so that the traced line is aligned with the defined horizon\br(This requires defining a horizon first).||

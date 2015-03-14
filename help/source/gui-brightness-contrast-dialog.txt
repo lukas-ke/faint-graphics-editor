@@ -1,0 +1,15 @@
+page:"Brightness/Contrast Dialog"
+summary:"Dialog for modifying the brightness and contrast of an image"
+
+= The brightness/contrast dialog =
+The brightness and contrast dialog is used to modify the brightness
+and contrast of an image.
+
+\image(gui-brightness-contrast-dialog.png)
+
+To open the brightness contrast dialog use Image->Brightness Contrast,
+or the Python function withbind:dialog_brightness_contrast();.
+
+The "Brightness"-slider modifies the average brightness level, while
+the "Contrast"-slider amplifies values, see
+\ref(feat-brightness-contrast.txt) for more details.

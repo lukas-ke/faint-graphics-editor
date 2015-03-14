@@ -1,0 +1,40 @@
+page:"Raster and Object Graphics"
+summary:"Description of the raster and object modes"
+
+= Raster and Object graphics =
+label:rasterandobject
+Faint has two modes: the 'Raster mode', for drawing and the 'Object mode' (or
+'Vector mode') for adding objects.
+A Faint image can mix elements from both modes. By default, raster
+graphics are at the bottom and object graphics are placed on top.
+
+The current mode determines the output created by
+\ref(tools.txt,tools) - adjustable objects or static drawn pixels. The
+mode is selected with the 'Layer selection control' at the top of the
+tool panel\br
+\image(img-layer-selection.png) \brThe 'Layer Selection Control'.
+
+\image(layer-raster.png) *Selects the raster mode.*\br
+Working in the 'Raster mode' is a bit like regular drawing - that which has been
+drawn can be erased or drawn over but not easily adjusted. The Raster mode is suitable for sketching, pixel-art and photo-editing.\br
+\image(raster-graphics-example.png) \brStatic (drawn) 'Raster Graphics'.
+
+\image(layer-vector.png) *Selects the object mode.*\br
+To continue with silly analogies, working in the object mode is like
+scrap-booking. Anything drawn in object mode mode becomes a vector
+object that can be selected, moved and scaled. These objects can,
+however, not be manipulated on the pixel-level, therefore vector
+graphics are practical for diagrams (floor plans, flow-charts), and
+some types of drawings - but not for e.g. photographs or pixel art.\br
+\image(vector-graphics-example.png)
+\brAdjustable (vector) 'Objects'.
+
+When saving an image with object graphics, a vector file format, such
+as SVG, should be used so the objects are preserved. Raster
+file formats flatten the image. (See \ref(formats.txt)).
+
+The combination of object and raster graphics makes it possible to add
+adjustable annotations such as text and arrows to raster images.\br
+\image(img-annotations.jpg) \br
+Photo with annotations using the 'Raster layer' for the photograph,
+and the 'Object layer' for the text and arrows.

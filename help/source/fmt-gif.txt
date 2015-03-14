@@ -1,0 +1,24 @@
+page:"GIF"
+summary:"A lossless raster format with animation support."
+
+\image(fmt-flatten.png) \image(fmt-animation.png) \image(fmt-lossless.png) \image(fmt-palette.png)
+
+= Graphics Interchange Format (.gif) =
+A lossless raster format with animation support.
+
+The number of colors per frame is limited to 256, so GIF is suitable
+for simple sprites, or clipart - not photographs. When animation is
+not required, \ref(fmt-png.txt,PNG) is generally a better alternative.
+
+|| \image(icon-work-in-progress.png) || *Note*: The quantization (color reduction) Faint uses when saving a GIF is rather bad, only the first frame delay is used and transparency is lost. ||
+
+== Transparency ==
+GIF frames use a mask color for transparency. Faint only supports this
+when opening. Saved gifs currently lose transparency.
+
+== Frame delay ==
+The frame delay for an image to be saved as a GIF can currently only
+be set from the Python interpreter.
+
+*Image method*
+|| frame.set_delay(delay) || Sets the delay for the frame to 'delay', specified in hundredths of a second (see \ref(py-frame.txt).) ||

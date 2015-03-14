@@ -1,0 +1,14 @@
+page:"Interpreter"
+summary:"The Interpreter class modifies the Faint Python interpreter window"
+
+= Interpreter =
+\image(py-modifies-state.png)
+
+Methods on the interpreter class are used to modify the \ref(gui-python-console.txt,Python console window).
+Use the interpreter-object to access the methods.
+
+== Interpreter methods ==
+\include(generated/py-interpreter-methods.txt)
+
+---
+See also \ref(py-window.txt).

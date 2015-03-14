@@ -1,0 +1,21 @@
+page:"Status bar"
+summary:"The status bar for tool feedback"
+
+= Status bar =
+The status-bar at the bottom of the Faint-window contains context specific help and tool feedback.
+
+The help includes information about the current tool and pointed-at
+items like \ref(ref-menu.txt,menu options) or \ref(settings.txt,tool settings).
+
+== Left side ==
+The left side of the status bar contains context specific help. This example image shows help for the \ref(tool-polygon.txt,polygon) tool.\br
+\image(gui-status-info1.png)
+
+The tool help often includes information about modifier keys, and for
+example suggests using the Shift-key to constrain line drawing. The
+left status bar area also shows help for menu items and tool setting
+controls.
+
+== Right side ==
+The right side of the status bar contains context feedback. This example image shows feedback for the \ref(tool-picker.txt,color picker) tool, indicating the pointed at color expressed in rgb and hex, followed by the pixel position.\br
+\image(gui-status-info2.png)

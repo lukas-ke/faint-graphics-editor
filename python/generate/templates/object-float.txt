@@ -1,0 +1,24 @@
+struct Smth_property_$name{
+  // From $$file
+
+  static coord Get(const BoundObject<Object>& self){
+    const Settings& settings = self.obj->GetSettings();
+    if (!settings.Has($setting)){
+      throw ValueError("That object does not support $prettyname.");
+    }
+    return settings.Get($setting);
+  }
+
+  static void Set(const BoundObject<Object>& self, coord value){
+    if (!self.obj->GetSettings().Has($setting)){
+      throw ValueError("That object does not support $prettyname.");
+    }
+
+    if (value < $min_value  || $max_value < value){
+      throw ValueError("Argument outside range [$min_value, $max_value].");
+    }
+
+    python_run_command(self,
+      change_setting_command(self.obj, $setting, value));
+  }
+};

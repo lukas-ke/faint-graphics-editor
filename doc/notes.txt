@@ -1,0 +1,64 @@
+\def(allows-global-redo)Allows global redo example;
+Tools that provide a HistoryContext typically feature a private
+undo-stack.
+
+AllowGlobalRedo() lets such tools inhibit the regular Redo, even if
+the tool currently has no redoable command.
+
+For example, When using the Polygon tool, points are added on left
+click. This can be undone with Ctrl+Z, and redone with Ctrl+Y. When
+there is nothing to redo in the tool (i.e. at the last added point),
+CanRedo() from the Polygon tool's HistoryContext will be false.
+
+However: AllowsGlobalRedo will be false even if CanRedo is false, since
+otherwise, if there was an image-level redo available, the tool would,
+surprisingly, be preempted on a call to Redo() and the image modified
+in the middle of point editing.
+
+A similar function for undo is not required, as the tool can simply be
+preempted when undone past its initial action.
+
+\def(draw-before-zoom)Draw before zoom;
+Tool::DrawBeforeZoom controls the configuration of the FaintDC passed
+to Tool::Draw.
+
+Vector output from tools should be drawn, with scaled coordinates and
+widths *after* the view is zoomed (i.e. onto the already scaled bitmap
+background), so that the output appears sharp at all zoom levels.
+
+Raster output should be drawn onto the background *before* the view is
+zoomed, so that the actual pixel data is scaled as if it was part
+of the background.
+
+\def(refresh-on-mouse-out)Refresh on mouse out;
+Tool::RefreshOnMouseOut is used to avoid leaving droppings when the
+mouse leaves the drawing area for another window or panel (when not
+capturing mouse).
+<refresh-on-mouse-out.png>
+
+The droppings would not modify the actual image data, but the area
+they're in might not be refreshed for some time, which would make it
+appear as if the image had been modified.
+
+\def(rotation-blending)Rotation blending;
+Rotation from the rotate dialog is performed by creating a larger
+destination bitmap, filled with the secondary color, which the rotated
+bitmap is drawn onto, using Cairo.
+
+This previously used the unsuitable CAIRO_OPERATOR_OVER compositing mode,
+and therefore lost alpha in the rotated pixels, as they were blended
+onto the background.
+
+I fixed this by using CAIRO_OPERATOR_SOURCE, which sets the pixels,
+and used a clip-region to avoid overwriting the "new pixels" around
+the rotated area with transparency.
+
+Unfortunately, this caused a border at the edge of the clip-region,
+most obvious when rotating towards the same background as the former edge:
+<rotation-blending.png>
+<- A white image rotated 45 degrees with white background selected
+gets a spurious border.
+
+Currently (2014-09-24 onwards) I'm avoiding this by using a smaller
+clip-region than the actual rotated destination region, but this loses
+pixels. There's probably a better way to do it.

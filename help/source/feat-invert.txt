@@ -1,0 +1,19 @@
+page:"Invert"
+summary:"Invert image colors"
+\image(feat-icon-raster.png) \image(feat-icon-scriptable.png)
+= Invert =
+Inverts the colors in the image.
+
+|| \image(feat-desaturate-color.jpg)|| \image(feat-invert.jpg)||
+
+|| \image(feat-invert-cat1.png)|| \image(feat-invert-cat2.png)||
+
+== Method ==
+To invert use the menu option Image->Color->Invert or these Python functions:
+
+*Free functions*
+|| withbind:invert(); || Inverts the active image ||
+|| invert(i1, i2, ...) || Inverts the specified images ||
+
+*Image methods*
+|| image.invert() || Inverts the specified image ||

@@ -1,0 +1,27 @@
+page:"CUR"
+summary:"A format for application cursors on Microsoft Windows"
+
+\image(fmt-flatten.png) \image(fmt-multi-image.png) \image(fmt-lossless.png) \image(fmt-limited-size.png)
+
+= Windows cursor (.cur) =
+A format for application cursors on Microsoft Windows. A cursor
+consists of one or more images of different size and color depths to
+provide variants for different situations. The width and height of
+cursors is limited to 256 pixels.
+
+== Transparency ==
+Cursors use a mask color for transparency. When saved from Faint,
+fully transparent pixels (alpha=0) will be transparent.
+Semi-transparent-pixels (alpha=1-254) lose their alpha component,
+becoming fully opaque (alpha=255).
+
+== Hot spot ==
+Cursor files have a hot spot which specifies which point should anchor
+at the pointer coordinate.
+
+In Faint, the hot spot for an image can be set with the
+\ref(tool-hot-spot.txt,hot spot tool) or the Python function
+frame.set_hotspot (see \ref(py-frame.txt)).
+
+\image(gui-hot-spot.png)\br
+Hot spot for an arrow cursor.

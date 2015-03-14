@@ -1,0 +1,59 @@
+page:"Color Selection Dialog"
+summary:"The color selection dialog"
+
+= The color selection dialog =
+The color selection dialog is used for configuring \ref(color.txt,colors) (..and patterns and gradients). The dialog can adjust colors in the
+palette as well as the selected primary and secondary color.
+
+\image(gui-color-selection-dialog-hsl.png)
+
+To edit a palette color with this dialog, double-click a color in the
+\ref(gui-color-panel.txt). To edit the current foreground or background, single-click one of those in the \ref(gui-selected-color-control.txt).
+
+The color selection dialog is divided in separate tabs for selecting
+either a single RGBA-color, a gradient or a bitmap pattern. When the
+dialog is closed (OK), the selection in the currently shown tab will
+be used (i.e. either a color, a gradient or a pattern).
+
+*Keyboard shortcuts for tab-selection*
+||Q||Show the HSL-tab||
+||W||Show the Gradient-tab||
+||E||Show the Pattern-tab||
+
+== The HSL tab (single color) ==
+The HSL tab is used to specify an RGBA color, either using the
+hue/saturation control and the lightness slider or the HSL or RGBA
+entry fields.
+
+Use Alt+C to copy the RGBA values to the clipboard. Use Alt+V to
+paste three or four comma separated values to the RGBA entry fields.
+
+== The Gradient Tab ==
+\image(gui-color-selection-dialog-gradient.png)
+
+The gradient tab has controls for specifying the color stops of a
+linear or radial gradient. The angle of linear gradients can be
+adjusted by clicking the gradient control and adjusting the
+angle-indicating line.
+
+The triangular handles below the gradient control the color stops. To
+offset the stops, click and drag the handles. To clone a color stop,
+hold Ctrl when dragging its handle. Right click a handle to remove it.
+To change the color of a stop, click the colored square below its handle.
+
+== The Pattern Tab ==
+\image(gui-color-selection-dialog-pattern.png)
+
+The pattern tab allows pasting a bitmap from the clipboard to use as
+pattern, retrieving the active image as a pattern and copying the
+current pattern to the clipboard.
+
+*Keyboard shortcuts*
+||Ctrl+C||Copy the pattern to the clipboard||
+||Ctrl+V||Use the clipboard content as pattern||
+
+---
+See also\br
+* \ref(color.txt) for an introduction to colors, gradients and patterns in Faint
+* \ref(gui-selected-color-control.txt) for the control indicating the current color choice
+* \ref(gui-color-panel.txt) for the quick-selection control

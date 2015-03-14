@@ -1,0 +1,6 @@
+page:"User interface"
+summary:"Overview of the Faint user interface"
+= User interface =
+The Faint user interface is shown below. The indicated regions link to the documentation for that feature.
+
+\imagemap(gui-overview.map)

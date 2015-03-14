@@ -1,0 +1,28 @@
+page:"Frame"
+summary:"Interface to an image frame"
+
+= Frame =
+\image(py-modifies-state.png)
+
+Frame objects are used to modify a specific frame in an image. They can be retrieved from a \ref(py-canvas.txt).
+
+||\image(icon-info.png)|| The undo/redo overhead for each action makes the Frame interface unsuitable for per-pixel modification. See instead \ref(py-bitmap.txt). ||
+
+Frame objects only provide information and drawing operations for the
+specific frame. For the operations shared between all frames in an
+image, such as undo or getting the file name, see instead
+\ref(py-canvas.txt).
+
+== Example use ==
+\py_example(py_frame_example.py)
+
+== Frame methods ==
+\include(generated/py-frame-methods.txt)
+\include(generated/py-common-methods.txt)
+\include(generated/py-less-common-methods.txt)
+
+---
+See also:\br
+\ref(py-bitmap.txt) for faster scripted editing.\br
+\ref(py-canvas.txt) for non-frame-specific functions or forwarding to the active frame.\br
+\ref(gui-frame-control.txt) for the gui control for handling frames.

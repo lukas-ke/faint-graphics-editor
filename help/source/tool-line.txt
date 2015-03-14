@@ -1,0 +1,16 @@
+page:"Line"
+summary:"Draw lines"
+
+= \graphic(tool-line.png) Line =
+label:tool_line
+The line tool is used to draw lines.
+
+*Settings*
+||\image(linewidth.png)|| Line Width ||
+|| \graphic(linestyle-solid.png) \graphic(linestyle-long-dash.png) || Line Style ||
+|| \graphic(line-arrow-front.png) \graphic(line-no-arrow.png) || Arrow head ||
+|| \graphic(line-polyline.png) || Poly-line ||
+
+*Keyboard modifiers*
+||\image(key-shift.png)||If shift is held while drawing, the lines will be perfecly horizontal, vertical or diagonal.||
+||\image(key-ctrl.png)||The adjusted line end will \ref(feat-snap-points.txt,snap) to control points of objects.||

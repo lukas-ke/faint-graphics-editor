@@ -1,0 +1,20 @@
+page:"Something"
+summary:"Class representing Faint Objects"
+
+= Something =
+\image(py-modifies-state.png)
+
+The ill-named Something-class references a Faint object in a Canvas.
+
+== Properties ==
+
+\include(generated/py-something-properties.txt)
+
+== Methods ==
+\include(generated/py-something-methods.txt)
+
+== Setting properties ==
+The settings of an object can be accessed and modified using these
+properties.
+
+\include(generated/py-settings-properties.txt)

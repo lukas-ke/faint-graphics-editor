@@ -1,0 +1,17 @@
+void set_$name(const utf8_string& s_value){
+  // From $$file
+
+  $string_to_int
+  auto& app = get_app_context();
+  app.Set($setting, to_int(value));
+}
+
+utf8_string get_$name(){
+  // From $$file
+
+  auto& app = get_app_context();
+  int i_value = app.Get($setting);
+  const char* s_value = nullptr;
+  $int_to_string
+  return utf8_string(s_value);
+}

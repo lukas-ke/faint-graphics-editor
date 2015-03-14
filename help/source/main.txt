@@ -1,0 +1,12 @@
+page:"Faint Help"
+= \image(faint-icon.png) Welcome to Faint... =
+
+...the free, easy to use, scriptable, fun and surprisingly powerful
+combined vector and raster graphics editor which does all you need and
+nothing else.
+
+== Help topics ==
+If you are new to Faint, you should read the sections in \ref(basics.txt).
+You can also try a \ref(tutorials.txt,tutorial).
+
+|| \image(icon-info.png) ||*Navigating the help*: \br Space-bar scrolls the help text one page. \br Arrow-keys target the focused window (either the help index or the help text). Use Ctrl+'Arrow' to target the other window. \br Page Up and Page Down always target the help text window. ||

@@ -1,0 +1,19 @@
+page:"Become Path"
+summary:"Convert objects to paths"
+
+= Become Path =
+Non-path objects can be converted to paths for more flexible editing.
+
+To convert the selected objects to path objects use either
+Objects->Become Path in the menu, or the Python method
+\ref(py-something.txt,become_path).
+
+== Ellipse example ==
+After converting an ellipse to a path, control points become available.
+||\image(feat-become-path-ellipse1.png)||\image(feat-become-path-ellipse2.png)||\image(feat-become-path-ellipse3.png)||
+
+== Text example ==
+Text objects converted to paths can have both a stroke (outline) and fill,
+but the text can no longer be edited.
+
+\image(feat-become-path-text.png)

@@ -1,0 +1,30 @@
+page:"Transparent Raster Object Background"
+summary:"Setting the transparent color for a raster object"
+
+= Transparent raster object background =
+A single color in a raster object can be made transparent, so that the
+background will be visible through the object. This is similar to the
+transparent background
+\ref(feat-transparent-selection-bg.txt,for a raster selection).
+
+||\image(feat-transparent-raster-object-bg-1.png)||\image(feat-transparent-raster-object-bg-2.png)||
+|| Selected raster object with opaque background || Selected raster object with transparent background ||
+
+== Normal (boring) method ==
+1. Select a raster object with the object selection tool. \br
+\image(object-selection-cutout.png)\br
+2. Enable Transparent Background. \br
+\image(transparent-bg-cutout.png)\br
+3. Select the color to make transparent as the secondary color by right clicking in the palette.\br
+\image(feat-transparent-raster-object-bg-color.png)
+
+== Quick method ==
+With Object Selection active, use Ctrl+Right-Click within a raster
+object to quickly pick the color to treat as transparent.\br
+\image(feat-transparent-raster-object-bg-quick.png)\image(key-ctrl.png)\image(mouse-right.png)
+
+This will perform all the steps of the boring method automatically.
+
+---
+See also \ref(feat-transparent-selection-bg.txt) for a similar method
+for the raster selection.

@@ -1,0 +1,19 @@
+page:"ICO"
+summary:"A format for application icons on Microsoft Windows"
+
+\image(fmt-flatten.png) \image(fmt-multi-image.png) \image(fmt-lossless.png) \image(fmt-limited-size.png)
+
+= Windows icon (.ico) =
+A format for application icons on Microsoft Windows.  An icon consists
+of one or more images of different size and color depth to provide
+variants for different situations. The width and height of icons is
+limited to 256 pixels.
+
+The icon format is very similar to the
+\ref(fmt-cur.txt,cursor format).
+
+== Transparency ==
+Icons use a mask color for transparency. When saved from Faint, fully
+transparent pixels (alpha=0) will be transparent.
+Semi-transparent-pixels (alpha=1-254) lose their alpha component,
+becoming fully opaque.

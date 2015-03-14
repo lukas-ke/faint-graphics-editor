@@ -1,0 +1,12 @@
+page:"Brightness/Contrast"
+summary:"Adjusting brightness/contrast (bias and gain)"
+
+\image(feat-icon-raster.png) \image(feat-icon-dialog.png) \image(feat-icon-scriptable.png)
+
+= Brightness/Contrast =
+Faint can adjust the brightness and contrast of images, using either
+the \ref(gui-brightness-contrast-dialog.txt) or the Python function
+brightness-contrast.
+
+||\image(feat-desaturate-color.jpg)||\image(feat-brightness-contrast1.jpg)||\image(feat-brightness-contrast2.jpg)||
+|| /Original image/ || /Lowered brightness/ || /Increased contrast/ ||

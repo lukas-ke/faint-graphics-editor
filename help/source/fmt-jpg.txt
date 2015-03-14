@@ -1,0 +1,11 @@
+page:"JPEG"
+summary:"A compressed format suitable for photographs"
+
+\image(fmt-flatten.png) \image(fmt-lossy.png)
+
+= JPEG =
+A compressed raster format suitable for photographs.
+
+== No transparency ==
+The alpha component is lost when saving JPEG from Faint, all pixels
+become fully opaque.

@@ -1,0 +1,35 @@
+page:"DWIM-Delete"
+summary:"A quick way to clear a raster area with the surrounding color"
+
+= Do-What-I-Mean Delete =
+The DWIM-delete feature replaces the hole left behind deleted raster
+graphics with the surrounding color instead of the active secondary
+color.
+
+== Method ==
+After performing a delete, use
+* Python: withbind:dwim();
+
+== Details ==
+Normally when deleting raster graphics in the raster selection, the
+"hole" is filled with the secondary color. When deleting a distinct
+area surrounded by some color, it could be expected that the
+surrounding color should be used instead. Since it is easy to forget
+to change the background color, and tedious to undo the mistake,
+change color and delete again, this feature was added.
+
+== Example ==
+||\image(dwim-delete1.png)||
+||A stick man is being chased by a scary dog.||
+
+||\image(dwim-delete2.png)||
+||Eager to help, we decide to delete the dog using the raster selection tool.||
+
+||\image(dwim-delete3.png)||
+||That's typical, we used the wrong background color!||
+
+||\image(dwim-delete4.png)||
+|| DWIM-delete to the rescue. Using withbind:dwim(); we're rid of both the dog and the green rectangle ||
+
+---
+See also \ref(feat-raster-selection.txt).

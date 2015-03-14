@@ -1,0 +1,23 @@
+page:"Brush"
+summary:"Free hand drawing with a variably sized brush"
+
+= \graphic(tool-brush.png) Brush =
+label:tool_brush
+The brush tool is used for free hand drawing with a variably shaped and sized "brush".
+
+\image(tool-brush-example.png) \br'Example brush-output'
+
+*Settings*\br
+
+||\graphic(brush-circle.png)\graphic(brush-rect.png)\graphic(brush-experimental.png)||Circular, rectangular or transparent brush||
+||\image(brush-size.png)|| The size of the brush in pixels ||
+
+*Keyboard modifiers*
+||\image(key-shift.png)|| If shift is held while drawing, the brush will draw horizontal or vertical lines.||
+
+== Using the brush for Cloning ==
+By \ref(tool-picker.txt,picking) image locations as patterns and
+drawing with a transparent brush, details can be added or removed from
+an image, such as dogs getting in the way of your gravel photography:
+
+\image(gravel1.jpg) \image(gravel2.jpg)

@@ -1,0 +1,23 @@
+page:"Tips"
+
+= Tips =
+*Use cloning instead of copying*\br
+Hold Ctrl while dragging to clone the selected raster area or selected
+objects. This is in most cases more convenient than using Copy and
+Paste
+
+*Use Shift for constrained drawing*\br
+Shift can be used to constrain a lot of actions horizontally,
+vertically or diagonally. For example lines can be constrained to 45
+degree angles and movement of the selection can be constrained along
+the horizontal or vertical axes only.\br
+\image(constrain.png)
+
+*Use Center all the time*\br
+Center (Keyboard shorcut "c") centers the image on the cursor. This is more amazing than you
+might assume.
+
+*Use Ctrl+Right-Click to set Transparent background*\br
+Hold control and right click in a dragged selection to set the clicked
+pixel as the \ref(feat-transparent-selection-bg.txt,transparent background) of the area. Ctrl+right click outside the
+selection to use no transparent background.

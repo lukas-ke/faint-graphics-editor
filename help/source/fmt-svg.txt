@@ -1,0 +1,34 @@
+page:"SVG"
+summary:"A vector format"
+
+\image(fmt-vector.png)
+
+= Scalable Vector Graphics (.svg) =
+A format for Vector images. Faint also saves the background (unless it
+consists of a single color) as an embedded PNG, so SVG is a suitable
+for storing images with both vector and raster elements.
+
+Note that svg images saved from Faint with embedded raster graphics
+tend to have large file sizes.
+
+== Faint extensions ==
+SVG:s saved with Faint may contain the following Faint-specific
+attributes and elements to allow opening the image in Faint without
+losing information.
+
+tablestyle:fancy
+
+|| *Attribute*||*Elements*||*Description*||
+||faint:background||image||When '1' marks an image-element as the Faint background.||
+||faint:bg-style||image||The Faint background style of image objects ('bgstyle'-setting).||
+||faint:bounded||text||Attribute for &lt;text&gt;, indicating whether the Text-object should be bounded.||
+||faint:hardbreak||text||Whether a line-break is an actual line break (='1') or due to the bounding rectangle (='0')||
+||faint:mask-color||image||The mask color of image objects ('bg'-setting).||
+||faint:parsing||text||Whether Text should be parsed for \ref(ref-text-expressions.txt,expressions.)||
+||faint:raw||text||Contains the unevaluated string for text objects with parsing=True||
+||faint:tri||path||The \ref(py-tri.txt,geometry) of the object.||
+||faint:type||polygon, path||Can indicate that a polygon should be reloaded as a Rect, and a path as an Ellipse or Spline||
+||faint:valign||text||Vertical alignment of text (top, center or bottom).||
+
+||*Element*||*Description*||
+||faint:calibration||Element under &lt;defs&gt; which describes the image \ref(tool-calibrate.txt,calibration).||

@@ -1,0 +1,7 @@
+page:"Tool Panel"
+summary:"The tool selection panel"
+
+= The tool panel =
+The tool panel on the left side of Faint is used to select \ref(ref-tools.txt,tools) used for drawing, adding objects, handling selection and such.
+
+\imagemap(gui-tool-panel-annotated.map)

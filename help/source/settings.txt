@@ -1,0 +1,32 @@
+page:"Settings"
+summary:"Tool and object settings"
+
+= Settings =
+Settings affect \ref(tools.txt,tools) and \ref(objects.txt,objects).
+
+When a tool is selected, the settings for the tool can be modified.
+The object selection tool allows adjusting the settings for the
+selected objects.
+
+The settings can also be changed via the
+\ref(scripting-intro.txt,Python interpreter), using the Python-name from the following table.
+
+tablestyle:fancy
+|| *Icon* ||*Setting*||*Python name*||*Applies to*||
+||\image(linewidth.png) ||Line width||linewidth||Line, Polygon, Spline, Path||
+||\graphic(linestyle-solid.png)\graphic(linestyle-long-dash.png)||Line style||linestyle||Line, Polygon, Spline, Path||
+||\image(na.png)||Line cap||cap||Line, Polygon, Spline, Path||
+||\image(na.png)||Line join||join||Polyline, Polygon, Spline, Path||
+||\graphic(line-no-arrow.png)\graphic(line-arrow-front.png)||Arrowhead||arrow||Line, Polyline||
+||\image(setting-fg.png)||Primary color||fg||Most||
+||\image(setting-bg.png)||Secondary color||bg||Most||
+||\graphic(line-polyline.png)||Polyline||polyline||Line tool||
+||\graphic(fillstyle-border.png)\graphic(fillstyle-fill.png)\br\graphic(fillstyle-border-and-fill.png)||Fill style||fillstyle||Rectangle, Ellipse, Polygon, Path||
+||\image(brush-size.png)||Brush size||brushsize||Brush tool||
+||\image(fontsize.png)||Font size||fontsize||Text||
+||\image(fontface.png)||Font face||font||Text||
+||\graphic(choice-transparent.png)\graphic(choice-opaque.png)||Background style||bgstyle||Raster selection, Raster object||
+||\graphic(layer-raster.png)\graphic(layer-object.png)||Layer type||-||Most||
+||\graphic(brush-rect.png)\graphic(brush-circle.png)||Brush shape||brushshape||Brush tool||
+||\graphic(edit-points.png)||Edit points||editpoints||Line, Polygon, Spline, Path||
+||\graphic(text-parsing.png)||Parse expressions||parsing||Text||

@@ -1,0 +1,13 @@
+page:"Path"
+summary:"Draws arbitrary shape outlines"
+
+= \graphic(tool-path.png) Path =
+label:tool_path
+The path tool is used to draw arbitrary shape outlines. It is similar to \ref(tool-polygon.txt), but allows curved segments.
+
+*Settings*
+||\image(linewidth.png)|| Line Width || The width of the polygon edge ||
+||\graphic(path-closed.png)|| Close path || Whether the path outline should be closed ||
+||\graphic(linestyle-solid.png) \graphic(linestyle-long-dash.png) || Line Style || Solid or dashed ||
+||\graphic(pointtype-curve.png) \graphic(pointtype-line.png)||Type for new nodes|| Lines or curves ||
+||\graphic(fillstyle-border.png) \graphic(fillstyle-fill.png) \graphic(fillstyle-border-and-fill.png)|| Fill Style || Outline only, Fill only or Fill and Outline ||

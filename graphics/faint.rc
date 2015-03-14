@@ -1,0 +1,7 @@
+// Resources for MSW
+
+// Icon for the faint-executable
+0 ICON "faint-icon.ico"
+
+// Include the wx rc for wxCURSOR_BLANK
+#include "wx/msw/wx.rc"

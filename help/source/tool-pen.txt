@@ -1,0 +1,17 @@
+page:"Pen"
+summary:"Tool for single-pixel free-hand drawing"
+
+= \graphic(tool-pen.png) Pen =
+label:tool_pen
+The pen tool is used for single pixel thick free hand drawing. The pen
+is active while a mouse button is held. The left mouse button draws
+using the foreground color, the right mouse button draws using the
+background color.
+
+*Settings*\br
+The pen has no settings. For variable shape and thickness, use the \ref(tool_brush,brush) instead.
+
+*Keyboard modifiers*\br
+||\image(key-shift.png) || If shift is held while drawing, the pen will draw horizontal or vertical lines.||
+
+\image(tool-pen-example.png) \br'Example pen-output'

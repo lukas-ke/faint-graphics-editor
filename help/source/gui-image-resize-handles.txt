@@ -1,0 +1,37 @@
+page:"Image Resize Handles"
+summary:"The handles outside the image for scaling or resizing"
+
+= The image resize handles =
+The image resize handles are used to scale the image or resize
+the drawing area.
+
+||\image(gui-image-resize-handles.png)||
+|| The resize handles, with the pointer\br over the top-left handle (diagonal resizing) ||
+
+To resize or rescale, click one of the handles, keep the mouse button
+depressed and drag the mouse.
+
+Use the left button to *resize* (expand or shrink) the drawing
+area. The secondary color will fill the expanded region. Hold shift to
+resize proportionally.
+
+To *scale* the image contents, use the right mouse button. Hold down
+shift for proportional resize. Hold down control to use nearest
+neighbour scaling (disables color blending).
+
+||\image(mouse-left.png)|| Resize the drawing area ||
+||\image(mouse-right.png)|| Scale the image ||
+||\image(key-ctrl.png)|| Nearest neighbour (scaling only) ||
+||\image(key-shift.png) || Keep proportions ||
+
+||\image(icon-info.png)|| If you need precision when resizing the drawing area, zoom in and use centering (key: 'C') to move around while resizing. ||
+
+== DWIM resize ==
+Use \ref(feat-dwim-resize.txt,DWIM) bind:dwim; after expanding the drawing
+area to expand with the most prominent edge color, instead of the secondary color.
+
+---
+See also:
+* \ref(feat-dwim-resize.txt) for expanding with smart color choice
+* \ref(gui-resize-dialog.txt) for using the resize dialog to resize the image
+* \ref(feat-crop.txt) for image shrinking alternatives.

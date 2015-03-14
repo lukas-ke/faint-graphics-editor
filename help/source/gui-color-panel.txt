@@ -1,0 +1,21 @@
+page:"Color Panel"
+summary:"The color panel"
+
+= The color panel =
+The color panel contains a set of configured colors, gradients and
+patterns.
+
+\image(color-palette.png)
+
+||\image(mouse-left.png)|| Left-click to select a color as primary  ||
+||\image(mouse-right.png)|| Right-click to select a color as secondary ||
+||\image(mouse-left-double.png)|| Double-click to open the \ref(gui-color-selection-dialog.txt) for editing a color||
+||\image(key-ctrl-mouse-right.png)|| Ctrl+Right-click to remove a color from the panel ||
+
+The colors can be reorganized by drag and drop.
+
+---
+See also:
+* \ref(color.txt) for an introduction to colors, gradients and patterns in Faint
+* \ref(gui-color-selection-dialog.txt) for the control indicating the current color choice
+* \ref(gui-selected-color-control.txt) for the quick-selection control

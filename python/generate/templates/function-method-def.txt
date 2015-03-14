@@ -1,0 +1,3 @@
+// From $$file
+FREE_FORWARDER(set_$name, METH_VARARGS, "set_$prettyname", "$doc_str"),
+FREE_FORWARDER(get_$name, METH_VARARGS, "get_$prettyname", "$doc_str"),

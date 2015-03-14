@@ -1,0 +1,21 @@
+page:"Rotate"
+summary:"Rotation"
+
+= Rotation =
+Faint has a number of rotation options:
+
+The \ref(gui-rotate-dialog.txt,rotate dialog) allows rotating the entire image,
+selected objects or a raster selection.\br
+
+The \ref(tool-selection.txt,selection tool) allows free-hand rotation
+of selected objects.\br
+
+The \ref(tool-level.txt,level tool) rotates the image to align a feature
+with a defined horizon.\br
+
+The Python function withbind:context_rotate_90CW(); rotates the image or
+selection 90-degrees clockwise.
+
+Objects can be rotated with the Python-methods rotate or set_angle on
+the \ref(py-something.txt,Something class). They can also be transformed
+by replacing their \ref(py-tri.txt).

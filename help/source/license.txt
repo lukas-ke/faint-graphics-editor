@@ -1,0 +1,106 @@
+page:"License information"
+summary:"License information"
+
+= Faint license information =
+Faint is licensed under the \ref(apache-license).
+
+= Libraries =
+Faint depends on other free and open source libraries. These are
+listed below.
+
+== Cairo ==
+Faint uses the Cairo 2D graphics library for vector graphics, under
+the
+\ref(lgpl21).\br
+\extref(http://cairographics.org).
+
+== Expat ==
+Faint uses the Expat XML Parser, under the
+\ref(expat-license).\br
+\extref(http://www.libexpat.org)
+
+== GLib ==
+Faint uses Pango and therefore also depends on GLib, under the
+\ref(lgpl21).\br
+\extref(http://www.gtk.org).
+
+The Windows installer of Faint includes dll-files from
+\extref(http://www.gtk.org/download/win32.php).
+
+== Leptonica ==
+The \ref(feat-quantize.txt,color quantization) Faint uses for
+reducing colors is based on code from Leptonica under a \ref(leptonica-copyright,Creative Commons Attribution 2.5 License).\br
+\extref(http://www.leptonica.com)
+
+== libpng ==
+Faint uses libpng under the
+\ref(libpng-license).\br
+\extref(http://www.libpng.org).
+
+== Pango ==
+Faint uses the Pango text layout engine library for text rendering,
+under the
+\ref(lgpl21).\br
+\extref(http://www.pango.org/).
+
+== wxWidgets ==
+Faint uses wxWidgets, the cross-platform GUI library
+under the
+\ref(wx-license).\br
+\extref(http://www.wxwidgets.org/).
+
+== zlib ==
+Faint uses the zlib compression library under the
+\ref(zlib-license).\br
+\extref(http://www.zlib.net)
+
+== Cubic bézier arc algorithm ==
+The algorithm Faint uses for computing arc paths is based on the
+document "Drawing an elliptical arc using polylines, quadratic or
+cubic Bézier curves" and the source file "EllipticalArc.java" by
+L. Maisonobe of \extref(http://spaceroots.org).
+
+His originals are available here: \br
+\extref(http://www.spaceroots.org/downloads.html)
+
+\br
+||\image(arc-example.png)||
+|| / Arcs in Faint / ||
+
+== Fast gaussian blur ==
+The algorithm Faint uses for fast approximation of gaussian blur by
+consecutive box blurs is based on the code from this page:\br
+\extref(http://blog.ivank.net/fastest-gaussian-blur.html) by Ivan Kuckir.
+
+= Licenses =
+This section reproduces licenses Faint depends on directly or indirectly.
+
+== Apache license 2.0 ==
+label:apache-license
+Faint itself is licensed under the Apache license 2.0.
+
+\verbatim_include(../../LICENSE)
+
+= Expat license =
+label:expat-license
+\verbatim_include(licenses/expat-license.txt)
+
+= GNU Lesser General Public License 2.1 =
+label:lgpl21
+\verbatim_include(licenses/lgpl21.html)
+
+= Leptonica copyright notice =
+label:leptonica-copyright
+\verbatim_include(licenses/leptonica.txt)
+
+= libpng-license =
+label:libpng-license
+\verbatim_include(licenses/libpng.txt)
+
+= wxWindows Library License 3.1 =
+label:wx-license
+\verbatim_include(licenses/wx-windows-license.txt)
+
+= zlib license =
+label:zlib-license
+\verbatim_include(licenses/zlib-license.txt)

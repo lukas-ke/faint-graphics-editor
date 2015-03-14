@@ -1,0 +1,28 @@
+page:"Erase but color"
+summary:"Python function for clearing all colors except one"
+
+= Erase but color =
+Replaces all colors, except a specified color, in an image.
+
+== Using the fill tool ==
+The \ref(tool_fill,fill tool) replaces all colors other than the clicked
+color if Ctrl+Shift is held.
+
+== Using Python ==
+A function for erasing colors other than a specific color is availble from the
+Python interpreter.
+
+*Image methods*
+|| image.erase_but_color( keep, erase_color ) || Replaces all colors except 'keep' with the (optionally specified) 'erase_color'||
+
+== Example ==
+A black border surrounds a ghastly gradient over a gray background.\br
+\image(feat-erase-but-color1.png)
+
+Using the Python function, like this:
+'erase_but_color((0,0,0),(255,255,255))' retains the black pixels
+(0,0,0) and replaces all others with white (255,255,255).\br
+\image(feat-erase-but-color2.png)
+
+---
+See also \ref(feat-replace-color.txt) and \ref(feat-replace-alpha.txt).

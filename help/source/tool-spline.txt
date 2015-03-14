@@ -1,0 +1,10 @@
+page:"Spline"
+summary:"Draw curved lines"
+
+= \graphic(tool-spline.png) Spline (curved line) =
+label:tool_spline
+The spline tool is used to draw curves, also known as splines.
+
+*Settings*
+||\image(linewidth.png)|| Line Width ||
+||\graphic(linestyle-solid.png) \graphic(linestyle-long-dash.png) || Line Style ||

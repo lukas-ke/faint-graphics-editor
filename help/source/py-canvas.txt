@@ -1,0 +1,35 @@
+page:"Canvas"
+summary:"Class representing images opened in Faint"
+
+= Canvas =
+\image(py-modifies-state.png)
+
+Canvas objects are used to modify an image opened in
+Faint. Modifications to an image through the Canvas interface are
+undoable actions, just like the manual image editing.
+
+The active canvas is retrieved with 'get_active_image()'. Specific
+canvases can be retrieved from the automatic list 'images' or using
+the function 'list_images()'.
+
+Operations on a canvas always target the active frame. To modify a
+specific frame, retrieve a \ref(py-frame.txt, frame object) instead
+with get_frame(index).
+
+||\image(icon-info.png)|| The undo/redo overhead for each action makes the Canvas interface unsuitable for per-pixel modification. See instead \ref(py-bitmap.txt). ||
+
+== Example use ==
+\py_example(py_canvas_example.py)
+
+== Canvas properties ==
+\include(generated/py-canvas-properties.txt)
+
+== Canvas methods ==
+\include(generated/py-canvas-methods.txt)
+\include(generated/py-common-methods.txt)
+\include(generated/py-less-common-methods.txt)
+
+---
+See also:\br
+\ref(py-bitmap.txt) for faster scripted editing.\br
+\ref(py-frame.txt) for targetting a specific frame.
