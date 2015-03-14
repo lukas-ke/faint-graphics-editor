@@ -355,13 +355,14 @@ CanvasPanel::CanvasPanel(wxWindow* parent,
       }
     });
 
+  // Fixme: Fails under Gtk/X due to "window not yet created"
+  #ifdef __WXMSW__
   bind_fwd(this, wxEVT_SIZE, [&](wxSizeEvent& event){
-      // Fixme: Causes crash due to unrealized-window
-      // Move binding into EVT_CREATE-handler?
-      //AdjustScrollbars(m_state.geo.Pos());
-      //RefreshToolRect();
+      AdjustScrollbars(m_state.geo.Pos());
+      RefreshToolRect();
       event.Skip();
   });
+  #endif
 
   SetBackgroundColour(to_wx(g_canvasBg));
   SetBackgroundStyle(wxBG_STYLE_PAINT);
