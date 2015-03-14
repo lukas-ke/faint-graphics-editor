@@ -2,3 +2,4 @@ out.txt
 err.txt
 build.cfg
 objs-*
+generated_makefile
