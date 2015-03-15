@@ -2,11 +2,12 @@
 All notable changes to Faint graphics editor are documented in this file.
 
 ## [Unreleased][unreleased]
-Long overdue release!  
+Long overdue release!
+
 **Highlights**:
 
 - hotspot, calibration and tape-measure tools.
-- expression support in text objects  
+- expression support in text objects
 - improved SVG handling.
 - more properties, less methods in Python API.
 
@@ -104,9 +105,6 @@ image and raster selection.
 
 - [Python] New function, `perimeter` for getting the perimeter length of objects.
 
-- [Python] New method: `Canvas.get_paint(x,y)`, returns the Paint at x,y, either
-  the background color or an object fill.
-
 - [Python] Added crop-method to Python raster and text objects.
 
 - [Python] Added new function `encode_bitmap_png`
@@ -185,9 +183,6 @@ image and raster selection.
 - [Python] Removed Bitmap method `flood_fill`, which did not check
   boundaries, in favor of `fill(...)`, which does.
 
-- [Python] Renamed `Canvas.get_pixel` to `Canvas.get_paint`, to clarify
-  that it may return a gradient or pattern.
-
 ### Changed
 - Merged raster and object selection into the same tool.
 
@@ -210,8 +205,12 @@ image and raster selection.
   defaults to black instead of failing the load.
   (Work around for svg-test "suite coords-units-01-b.svg").
 
-- [Python] `Canvas.get_paint(x,y)` (formerly `get_pixel`) has been modified to 
-  always return a color from the background (never a gradient or pattern).
+- [Python] `Canvas.get_paint(x,y)` now returns the Paint at x,y, being
+  either the fill of the top-most object, or the image background
+  color if no object at x,y.
+
+- [Python] `Canvas.get_pixel(x,y)` now returns the color of the background at x,y
+  as a tuple.
 
 - [Python] `Canvas.Text` allows passing a point (two coordinates) instead of
   a rectangle (four coordinates), and then creates an auto-sized text object.
