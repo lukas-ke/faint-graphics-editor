@@ -6,56 +6,52 @@ Long overdue release!
 
 **Highlights**:
 
-- hotspot, calibration and tape-measure tools.
-- expression support in text objects
-- improved SVG handling.
-- more properties, less methods in Python API.
+- Hotspot, Calibration and Tape-measure tools.
+- Expression support in text objects.
+- Improved SVG handling.
+- More properties, less methods in Python API.
+- Merged raster and vector selection tools.
 
 ### Added
 - Added hot-spot tool, for setting the hot spot in a frame. This was
   previously available only via `frame.set_hotspot` Python function.
 
-- Added calibration tool for defining image measurements. This
-  can be used with text-expressions to show the length or area of objects.
-
 - Added tape-measure tool for showing image measurements.
 
-- Added support for expressions in text objects. These can be used
-  to specify symbols (e.g. `\pi` or `\poop`), or to retrieve the area of an object (`area(rectangle1, mm2)`). 
+- Added calibration tool for defining image measurements in various
+  units. This can be used with text-expressions to show the length or
+  area of objects, or with the tape measure tool.
 
-- An Object's name can be specified by selecting an object and pressing enter.
-  This name can be used to refer to the object in text expressions.
+- The name of an Object can be specified by selecting the object and
+  pressing enter. This name can be used to refer to the object in text
+  expressions.
+
+- Added support for typing expressions in text objects, which are
+  automatically converted like: "The rectangle is \width(rect1,mm) mm
+  wide." becomes e.g. "The rectangle is 22 mm wide".
 
 - Added rounded rectangles.
 
-- Added `--arg` command line option which stores the specified value as a string
-  in ifaint.cmd_arg, for use with command line scripts.
+- Added `--arg` command line option which stores the specified value
+  as a string in `ifaint.cmd_arg, for use with command line scripts.
 
 - Added Ctrl+T for transposing characters during text entry.
 
-- Added support for typing expressions in text objects, which are
-automatically converted like: "The rectangle is \width(rect1,mm) mm
-wide." becomes e.g. "The rectangle is 22 mm wide".
-
-- Added support for specifying image measurements in various units
-for use in text expressions.
-
 - Added support for specifying character contants in text objects, which are
-shown as symbols when the text objects are not being edited, for example
-\pi for a pi-symbol,
-\deg for degree
-\sq for superscript 2
-Also \u(hex) allows specifying a unicode symbol by hex value.
+  shown as symbols when the text objects are not being edited, for example
+  \pi for a pi-symbol,
+  \deg for degree
+  \sq for superscript 2
+  Also \u(hex) allows specifying a unicode symbol by hex value.
 
 - Added render-style option for text objects to render either as a
-cairo path or pango layout. The pango layout rendering is "wobbly"
-if the text is rotated on windows, but often looks better than
-rendering as a cairo-path when not rotated.
-Only available via Python,
-obj.text_render_style = 'pangolayout' or 'cairopath'
+  cairo path or pango layout. The pango layout rendering is "wobbly"
+  if the text is rotated on windows, but often looks better than
+  rendering as a cairo-path when not rotated. Only available via
+  Python, obj.text_render_style = 'pangolayout' or 'cairopath'
 
 - Added checkbox for nearest neighbour scaling to resize dialog for
-image and raster selection.
+  image and raster selection.
 
 - Added dialog for adjusting alpha transparency.
 
@@ -66,14 +62,14 @@ image and raster selection.
 - When saving icons, those at 256x256 pixels size are now png-encoded for
   smaller file size.
 
-- Added DWIM-support for shrink_selection, shrinks to the other half 
-  like auto-crop. [FIXME: VERIFY]
+- Added DWIM-support for `shrink_selection`, which shrinks to the
+  other half like auto-crop.
 
-- Added DWIM-support for raster rotation, to use the most common edge color
-  for the hole left by the rotation.
+- Added DWIM-support for raster rotation, to use the most common edge
+  color for the hole left by the rotation.
 
-- Added an overlay showing where a control point in a path ended up when
-  adjusting it and using snapping.
+- Added an overlay showing where a control point in a path ended up
+  when adjusting it and using snapping.
 
 - These dialogs are no longer modal, and allow interaction with e.g.
   colors while they're open:
@@ -100,10 +96,11 @@ image and raster selection.
 
 - [Python] Added: `obj.get_text_raw`
 
-- [Python] New object method: `obj.set_name(s)`, sets the name used for
-  referring to objects from expressions in text objects.
+- [Python] New object method: `obj.set_name(s)`, sets the name used
+  for referring to objects from expressions in text objects.
 
-- [Python] New function, `perimeter` for getting the perimeter length of objects.
+- [Python] New function, `perimeter` for getting the perimeter length
+  of objects.
 
 - [Python] Added crop-method to Python raster and text objects.
 
