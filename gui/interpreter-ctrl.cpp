@@ -105,7 +105,7 @@ const wxEventTypeTag<PendingCharEvent> EVT_FAINT_PENDING_CHAR(FAINT_PENDING_CHAR
 static bool in_quote(const wxString& text){
   int quotes = 0;
   for (size_t i = 0; i != text.size(); i++){
-    if (text[i] == wxChar('\"') && (i == 0 || text[i-1] != wxChar('\\'))){
+    if (text[i] == wxChar('\"') && (i == 0 || text[i - 1] != wxChar('\\'))){
       quotes++;
     }
   }
@@ -542,26 +542,35 @@ public:
   }
 
   void StyleLine(){
-    const auto pos = GetInsertionPoint();    
-    if (pos == 0 || ReadOnly(pos -1)){
+    const auto pos = GetInsertionPoint();
+    if (pos == 0 || ReadOnly(pos - 1)){
       return;
     }
 
-    wxString prevChar = GetRange(pos - 1, pos);
-    if (is_closing_brace(prevChar[0])){
-      wxString line = GetRange(m_inputStart, pos);
-      // Fixme: Check cast
-      size_t matched = find_open_brace(line, 
-        static_cast<size_t>(pos - m_inputStart - 1));
-      if (matched != wxString::npos){
-        wxTextAttr style = line[matched] == opposite_brace(prevChar[0]) ?
+    const auto prevChar = GetRange(pos - 1, pos).at(0);
+
+    if (is_closing_brace(prevChar)){
+      const wxString line = GetRange(m_inputStart, pos);
+
+      assert(pos > m_inputStart);
+      const auto closePos = static_cast<size_t>(pos - m_inputStart - 1);
+
+      const auto openPos = find_open_brace(line, closePos);
+
+      if (openPos != wxString::npos){
+        // Indicate the matched pair of braces, using different style
+        // for a valid match, like () and an invalid match, like [).
+        wxTextAttr style = line[openPos] == opposite_brace(prevChar) ?
           matched_brace_attr() :
           mismatched_brace_attr();
-        SetStyle(BeginningOfLine() + resigned(matched), m_inputStart + resigned(matched) + 1, style);
-        SetStyle(pos-1, pos, style);
+
+        SetStyle(BeginningOfLine() + resigned(openPos),
+          m_inputStart + resigned(openPos) + 1, style);
+        SetStyle(pos - 1, pos, style);
       }
       else{
-        SetStyle(pos-1, pos, unmatched_brace_attr());
+        // Indicate the invalid, lone brace
+        SetStyle(pos - 1, pos, unmatched_brace_attr());
       }
     }
   }
