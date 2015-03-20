@@ -92,6 +92,7 @@ Long overdue release!
  - Path: Added 's' and 'S' operators.
  - Path: Added 't' and 'T' operators.
  - Added svg 'switch'-element support.
+
 - [Python] Added: `obj.get_text_evaluated`.
 
 - [Python] Added: `obj.get_text_raw`
@@ -101,8 +102,6 @@ Long overdue release!
 
 - [Python] New function, `perimeter` for getting the perimeter length
   of objects.
-
-- [Python] Added crop-method to Python raster and text objects.
 
 - [Python] Added new function `encode_bitmap_png`
 
@@ -195,7 +194,7 @@ Long overdue release!
 - Changed the appearance of the tool-bar to make the selected tool more
   apparent.
 
-- Faint no longer retries to "connect" to another Faint instance after
+- Faint no longer tries to "connect" to another Faint instance after
   one attempt has failed, and instead starts a new instance directly.
 
 - [SVG] When color parsing fails, a warning is set and the colors
@@ -216,7 +215,7 @@ Long overdue release!
   results in `IndexError` instead of `ValueError`.
 
 - [Python] Functions throw `MemoryError` in some cases when allocations
-  fail. [FIXME: DOCUMENT].
+  fail.
 
 - [Python] `Canvas.set_size` accepts patterns as well.
 
@@ -227,10 +226,10 @@ Long overdue release!
   inserting the bitmap as the new selection.
 
 - [Python] The `auto_crop` methods of Bitmap, Frame and Canvas return `True` if
-  anything was copped, `False` otherwise.
+  anything was cropped, `False` otherwise.
 
-- [Python] Changed exception type when clipboard open fails from `ValueError` 
-  to `OSError`.
+- [Python] Changed exception type when opening the clipboard fails
+  from `ValueError` to `OSError`.
 
 - [Python] Setters for integers and floats state the passed in value,
   not only the ranges when outside:  
@@ -281,13 +280,13 @@ Long overdue release!
 
 - Fixed flickering of the color indication in the color panel.
 
-- Fixed error in undo for 90-degree rotations. [Fixme: check if in 0.23]
+- Fixed error in undo for 90-degree rotations.
 
 - Wacom tablet: Failures during initialization of a Wacom tablet yield
   error message instead of crash on assertion.
 
 - Wacom Tablet: Tablet is no longer initialized if starting with
-  --silent.
+  `--silent`.
 
 - Paths created from Ellipses (using Objects->Become Path) now
   retain angle-spans (arcs).
@@ -333,18 +332,17 @@ Long overdue release!
 
 - [SVG] Fixed SVG arrowhead save/load.
 
-- [SVG] Show warning for failed items in <def>.
+- [SVG] Show warning for failed items in `<def>`.
 
 - [SVG] Default to unbounded text when loading.
 
-- [SVG] Image length expressed as percentage. [Fixme: What?]
+- [SVG] Handle Image length expressed as percentage.
 
 - [SVG] Allow unary negative coordinates without leading space in
-  coordinate lists. [r4097]
+  coordinate lists.
 
 - [SVG] Render up to the last valid point for polygons and polylines
   with an odd number of coordinates, according to SVG 1.1 Appendix F2.
-  [r4097]
 
 - [PDF] Fixed division error in pdf writing.
 
@@ -385,7 +383,6 @@ Long overdue release!
   both snap and visibility.
 
 - [Python] Added many more methods to Bitmap.
-  [Fixme: List them, e.g. subbitmap]
 
 - [Python] Added `blit`-function for blitting bitmaps. Should be used
   instead of `bitmap.blit` method:
