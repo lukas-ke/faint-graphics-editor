@@ -139,9 +139,8 @@ static bool long_to_int(long src, int* dst){
 }
 
 bool parse_int(PyObject* args, Py_ssize_t n, int* value){
-  PyObject* obj = PySequence_GetItem(args, n);
-  long temp = PyLong_AsLong(obj);
-  py_xdecref(obj);
+  scoped_ref obj(PySequence_GetItem(args, n));
+  long temp = PyLong_AsLong(obj.get());
 
   if (temp == -1 && PyErr_Occurred()){
     return false;
@@ -151,16 +150,14 @@ bool parse_int(PyObject* args, Py_ssize_t n, int* value){
 }
 
 bool parse_bool(PyObject* args, Py_ssize_t n, bool* value){
-  PyObject* obj = PySequence_GetItem(args, n);
-  *value = (1 == PyObject_IsTrue(obj));
-  py_xdecref(obj);
+  scoped_ref obj(PySequence_GetItem(args, n));
+  *value = (1 == PyObject_IsTrue(obj.get()));
   return true;
 }
 
 bool parse_Index(PyObject* args, Py_ssize_t n, Index* value){
-  PyObject* obj = PySequence_GetItem(args, n);
-  long temp = PyLong_AsLong(obj);
-  py_xdecref(obj);
+  scoped_ref obj(PySequence_GetItem(args, n));
+  long temp = PyLong_AsLong(obj.get());
   if (temp == -1 && PyErr_Occurred()){
     return false;
   }
@@ -178,9 +175,8 @@ bool parse_Index(PyObject* args, Py_ssize_t n, Index* value){
 
 bool parse_coord(PyObject* args, Py_ssize_t n, coord* value){
   if (PySequence_Check(args)){
-    PyObject* obj = PySequence_GetItem(args, n);
-    coord temp = PyFloat_AsDouble(obj);
-    py_xdecref(obj);
+    scoped_ref obj(PySequence_GetItem(args, n));
+    coord temp = PyFloat_AsDouble(obj.get());
     if (PyErr_Occurred()){
       return false;
     }
@@ -338,12 +334,15 @@ bool parse_flat(DefaultConstructible<FilePath>& p,
   throw_insufficient_args_if(len - n < 1, "File path");
 
   // Fixme: Check error handling behavior
-  // Fixme: decref
-  PyObject* utf8 = PyUnicode_AsUTF8String(args);
+  scoped_ref utf8(PyUnicode_AsUTF8String(args));
   if (utf8 == nullptr){
     throw PresetFunctionError();
   }
-  char* bytes = PyBytes_AsString(utf8);
+  const char* bytes = PyBytes_AsString(utf8.get());
+  if (bytes == nullptr){
+    throw PresetFunctionError();
+  }
+
   utf8_string str(bytes);
 
   if (!is_absolute_path(str)){

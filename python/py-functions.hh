@@ -549,22 +549,30 @@ static bool parse_png_bitmap(PyObject* args, Bitmap& out){
     return false;
   }
 
-  PyObject* pngStrPy = PySequence_GetItem(args, 0);
-  if (!PyBytes_Check(pngStrPy)){
-    py_xdecref(pngStrPy);
+  scoped_ref pngStrPy(PySequence_GetItem(args, 0));
+  if (!PyBytes_Check(pngStrPy.get())){
     PyErr_SetString(PyExc_TypeError, "Invalid png-string.");
     return false;
   }
 
-  Py_ssize_t len = PyBytes_Size(pngStrPy);
+  auto len = PyBytes_Size(pngStrPy.get());
   if (len <= 0){
     return false;
   }
 
-  Bitmap bmp(from_png(PyBytes_AsString(pngStrPy), static_cast<size_t>(len)));
-  py_xdecref(pngStrPy);
-  out = bmp;
-  return true;
+  const char* bytes = PyBytes_AsString(pngStrPy.get());
+  if (bytes == nullptr){
+    return false;
+  }
+
+  Bitmap bmp(from_png(bytes, static_cast<size_t>(len)));
+  if (bitmap_ok(bmp)){
+    out = bmp;
+    return true;
+  }
+  else{
+    return false;
+  }
 }
 
 /* function: "bitmap_from_png_string(s)->bmp\n
@@ -583,22 +591,30 @@ static bool parse_jpg_bitmap(PyObject* args, Bitmap& out){
     return false;
   }
 
-  PyObject* pngStrPy = PySequence_GetItem(args, 0);
-  if (!PyBytes_Check(pngStrPy)){
-    py_xdecref(pngStrPy);
+  scoped_ref jpgStrPy(PySequence_GetItem(args, 0));
+  if (!PyBytes_Check(jpgStrPy.get())){
     PyErr_SetString(PyExc_TypeError, "Invalid jpg-string.");
     return false;
   }
 
-  Py_ssize_t len = PyBytes_Size(pngStrPy);
+  auto len = PyBytes_Size(jpgStrPy.get());
   if (len <= 0){
     return false;
   }
 
-  Bitmap bmp(from_jpg(PyBytes_AsString(pngStrPy), static_cast<size_t>(len)));
-  py_xdecref(pngStrPy);
-  out = bmp;
-  return true;
+  const char* bytes = PyBytes_AsString(jpgStrPy.get());
+  if (bytes == 0){
+    return false;
+  }
+
+  Bitmap bmp(from_jpg(bytes, static_cast<size_t>(len)));
+  if (bitmap_ok(bmp)){
+    out = bmp;
+    return true;
+  }
+  else{
+    return false;
+  }
 }
 
 /* function: "bitmap_from_jpg_string(s)->bmp\n

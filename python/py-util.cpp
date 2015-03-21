@@ -84,17 +84,18 @@ bool invalid_pixel_pos(const IntPoint& pos, const Bitmap& bmp){
 }
 
 static utf8_string object_string(PyObject* obj){
-  PyObject* pyStr = PyObject_Str(obj);
+  scoped_ref pyStr(PyObject_Str(obj));
   if (pyStr == nullptr){
     return "";
   }
-  PyObject* utf8 = PyUnicode_AsUTF8String(pyStr);
+  scoped_ref utf8(PyUnicode_AsUTF8String(pyStr.get()));
   assert(utf8 != nullptr);
-  char* bytes = PyBytes_AsString(utf8);
-  utf8_string str(bytes); // Fixme
-  py_xdecref(pyStr);
-  py_xdecref(utf8);
-  return str;
+  const char* bytes = PyBytes_AsString(utf8.get());
+  if (bytes == nullptr){
+    return "";
+  }
+
+  return utf8_string(bytes);
 }
 
 bool parse_color(PyObject* args, Color& color, bool allowAlpha){
@@ -132,24 +133,25 @@ bool parse_color(PyObject* args, Color& color, bool allowAlpha){
 
 bool parse_color_stop(PyObject* obj, ColorStop& stop){
   if (PySequence_Length(obj) != 2){
-    PyErr_SetString(PyExc_ValueError, "Color stop must be specified using offset,(r,g,b[,a])");
+    PyErr_SetString(PyExc_ValueError,
+      "Color stop must be specified using offset,(r,g,b[,a])");
     return false;
   }
-  PyObject* pyOffset = PySequence_GetItem(obj, 0);
-  if (!PyFloat_Check(pyOffset)){
+
+  scoped_ref pyOffset(PySequence_GetItem(obj, 0));
+  if (!PyFloat_Check(pyOffset.get())){
     PyErr_SetString(PyExc_ValueError,
       "Color stop must start with a floating point offset");
-    py_xdecref(pyOffset);
     return false;
   }
-  double offset = PyFloat_AsDouble(pyOffset);
-  py_xdecref(pyOffset);
-  PyObject* pyColor = PySequence_GetItem(obj,1);
+
+  double offset = PyFloat_AsDouble(pyOffset.get());
+  scoped_ref pyColor(PySequence_GetItem(obj,1));
   Color c;
-  if (!parse_color(pyColor, c)){
-    py_xdecref(pyColor);
+  if (!parse_color(pyColor.get(), c)){
     return false;
   }
+
   stop = ColorStop(c, offset);
   return true;
 }
@@ -491,20 +493,23 @@ utf8_string py_error_string(){
 
   PyErr_Fetch(&type, &value, &traceBack);
   if (value == nullptr){
+    py_xdecref(type);
+    py_xdecref(traceBack);
     return utf8_string("");
   }
-  PyObject* exceptionStr = PyObject_Str(value);
+
+  scoped_ref exceptionStr(PyObject_Str(value));
   py_xdecref(type);
   py_xdecref(value);
   py_xdecref(traceBack);
+
   if (exceptionStr == nullptr){
     return utf8_string("");
   }
-  PyObject* bytes = PyUnicode_AsUTF8String(exceptionStr);
-  char* str(PyBytes_AsString(bytes)); // Fixme
+
+  scoped_ref utf8(PyUnicode_AsUTF8String(exceptionStr.get()));
+  const char* str(PyBytes_AsString(utf8.get()));
   utf8_string errorString(str);
-  py_xdecref(exceptionStr);
-  py_xdecref(bytes);
   return errorString;
 }
 
@@ -543,13 +548,13 @@ static utf8_string get_name(PyObject* o){
 }
 
 static utf8_string decode_or_die(PyObject* obj){
-  PyObject* pyBytes = PyUnicode_AsUTF8String(obj);
+  scoped_ref pyBytes(PyUnicode_AsUTF8String(obj));
   assert(pyBytes != nullptr);
-  char* utf8 = PyBytes_AsString(pyBytes);
+
+  const char* utf8 = PyBytes_AsString(pyBytes.get());
   assert(utf8 != nullptr);
-  utf8_string str(utf8);
-  py_xdecref(pyBytes);
-  return utf8;
+
+  return utf8_string(utf8);
 }
 
 static void decode_syntax_error_tuple(PyObject* tuple, FaintPyExc& info){
