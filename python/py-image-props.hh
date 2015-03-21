@@ -15,6 +15,7 @@
 
 #ifndef FAINT_PY_IMAGE_PROPS_HH
 #define FAINT_PY_IMAGE_PROPS_HH
+#include "python/py-include.hh"
 
 namespace faint{
 
@@ -27,7 +28,7 @@ struct imagePropsObject{
   ImageProps* props;
 };
 
-imagePropsObject* pythoned(ImageProps&);
+typed_scoped_ref<imagePropsObject> pythoned(ImageProps&);
 
 } // namespace
 

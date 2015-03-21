@@ -60,12 +60,34 @@ struct Decreffer{
   }
 };
 
+template<typename T>
+struct CastDecreffer{
+  void operator()(T* obj){
+    py_xdecref((PyObject*)obj);
+  }
+};
+
 dumb_ptr<PyObject> borrowed(PyObject*);
 
+// Pointer to PyObject* which decrements the objects reference count
+// when it goes out of scope.
 using scoped_ref = std::unique_ptr<PyObject, Decreffer>;
+
+// Pointer to specific types (which must be PyObject*:s)
+//
+template<typename T>
+using typed_scoped_ref = std::unique_ptr<T, CastDecreffer<T>>;
 
 // Increments the ref-count of the argument and returns a new reference
 scoped_ref new_ref(PyObject*);
+
+template<typename T>
+constexpr bool managed(const T&){
+  return
+    std::is_same<typename T::deleter_type, Decreffer>::value ||
+    std::is_same<typename T::deleter_type,
+                 CastDecreffer<typename T::element_type>>::value;
+}
 
 const int init_ok = 0;
 const int init_fail = -1;

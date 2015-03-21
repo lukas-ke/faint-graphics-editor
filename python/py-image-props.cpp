@@ -170,12 +170,12 @@ PyTypeObject ImagePropsType = {
   nullptr  // tp_finalize
 };
 
-imagePropsObject* pythoned(ImageProps& props){
+typed_scoped_ref<imagePropsObject> pythoned(ImageProps& props){
   imagePropsObject* py_props = (imagePropsObject*)
     ImagePropsType.tp_alloc(&ImagePropsType,0);
   py_props->props = &props;
   py_props->alive = true;
-  return py_props;
+  return typed_scoped_ref<imagePropsObject>(py_props);
 }
 
 } // namespace

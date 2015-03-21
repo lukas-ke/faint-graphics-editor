@@ -76,16 +76,15 @@ SaveResult save_error_from_exception(const Format& format){
 
 SaveResult PyFileFormat::Save(const FilePath& filePath, Canvas& canvas){
   assert(m_callSave != nullptr);
-  PyObject* py_canvas = pythoned(canvas);
-  PyObject* filePathUnicode = build_unicode(filePath.Str());
-  PyObject* argList = Py_BuildValue("OO", filePathUnicode, py_canvas);
-  PyObject* result = PyObject_Call(m_callSave.get(), argList, nullptr);
+
+  scoped_ref py_canvas(pythoned(canvas));
+  scoped_ref filePathUnicode(build_unicode(filePath.Str()));
+  scoped_ref argList(Py_BuildValue("OO", filePathUnicode.get(), py_canvas.get()));
+
+  scoped_ref result(PyObject_Call(m_callSave.get(), argList.get(), nullptr));
   if (result == nullptr){
     return save_error_from_exception(*this);
   }
-  py_xdecref(py_canvas);
-  py_xdecref(argList);
-  py_xdecref(result);
   return SaveResult::SaveSuccessful();
 }
 
@@ -110,19 +109,17 @@ void PyFileFormat::Load(const FilePath& filePath, ImageProps& props){
     return;
   }
 
-  imagePropsObject* py_props = pythoned(props);
-  PyObject* filePathUnicode = build_unicode(filePath.Str());
-  PyObject* argList = Py_BuildValue("OO", filePathUnicode, py_props);
-  PyObject* result = PyObject_Call(m_callLoad.get(), argList, nullptr);
+  auto py_props = pythoned(props);
+  static_assert(managed(py_props), "");
+
+  scoped_ref filePathUnicode(build_unicode(filePath.Str()));
+  scoped_ref argList(Py_BuildValue("OO", filePathUnicode, py_props));
+  scoped_ref result(PyObject_Call(m_callLoad.get(), argList.get(), nullptr));
   if (result == nullptr){
     props.SetError(load_error_string_from_exception(*this));
   }
-  else {
-    py_xdecref(result);
-  }
+
   py_props->alive = false;
-  py_xdecref((PyObject*)py_props);
-  py_xdecref(argList);
 }
 
 } // namespace
