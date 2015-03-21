@@ -48,6 +48,8 @@ utf8_string py_error_string();
 utf8_string stack_trace_str(PyObject* traceback);
 FaintPyExc py_error_info();
 
+Optional<int> as_int(PyObject*);
+
 } // namespace
 
 #endif

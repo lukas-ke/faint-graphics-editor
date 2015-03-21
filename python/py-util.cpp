@@ -17,6 +17,7 @@
 #include "bitmap/bitmap.hh"
 #include "bitmap/gradient.hh"
 #include "geo/int-point.hh"
+#include "geo/limits.hh"
 #include "geo/pathpt.hh"
 #include "text/formatting.hh"
 #include "python/py-include.hh"
@@ -672,6 +673,15 @@ PyObject* get_save_exception_type(){
   static PyObject* faintPySaveError = PyErr_NewException("ifaint.SaveError",
     nullptr, nullptr);
   return faintPySaveError;
+}
+
+Optional<int> as_int(PyObject* obj){
+  auto v = PyLong_AsLong(obj);
+  if (v == -1 && PyErr_Occurred()){
+    return {};
+  }
+  return can_represent<int>(v) ?
+    option(static_cast<int>(v)) : no_option();
 }
 
 } // namespace

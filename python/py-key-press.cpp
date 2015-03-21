@@ -15,9 +15,11 @@
 
 #include <set>
 #include <sstream>
+#include "geo/limits.hh"
 #include "python/py-key-press.hh"
 #include "python/py-include.hh"
 #include "python/py-interface.hh"
+#include "python/py-util.hh"
 
 namespace faint{
 
@@ -34,41 +36,37 @@ void python_key_press(const KeyPress& key){
 }
 
 std::vector<BindInfo> list_binds(){
-  PyObject* module = PyImport_ImportModule("ifaint");
+  scoped_ref module(PyImport_ImportModule("ifaint"));
   assert(module != nullptr);
-  PyObject* dict = PyModule_GetDict(module); // Borrowed ref
+  PyObject* dict = PyModule_GetDict(module.get()); // Borrowed ref
   PyObject* binds = PyDict_GetItemString(dict, "_binds"); // Borrowed ref
-  PyObject* keys = PyDict_Keys(binds); // New ref
-  int n = static_cast<int>(PySequence_Length(keys)); // Fixme: Check cast or change type
+  scoped_ref keys(PyDict_Keys(binds));
+  auto n = PySequence_Length(keys.get());
   std::set<BindInfo, BindInfo_less> bindList;
 
-  for (int i = 0; i != n; i++){
-    PyObject* tuple = PySequence_GetItem(keys, i); // New ref
-    PyObject* objKey = PySequence_GetItem(tuple, 0); // New ref
-    PyObject* objMod = PySequence_GetItem(tuple, 1); // New ref
-    long keyCode = PyLong_AsLong(objKey);
-    long mod = PyLong_AsLong(objMod);
-    faint::py_xdecref(objKey);
-    faint::py_xdecref(objMod);
-    PyObject* obj_function = PyDict_GetItem(binds, tuple); // Borrowed ref
-    PyObject* obj_functionName = PyObject_GetAttrString(obj_function, "__name__"); // New reference
+  for (Py_ssize_t i = 0; i != n; i++){
+    scoped_ref tuple(PySequence_GetItem(keys.get(), i));
+    scoped_ref objKey(PySequence_GetItem(tuple.get(), 0));
+    scoped_ref objMod(PySequence_GetItem(tuple.get(), 1));
+    auto keyCode = as_int(objKey.get());
+    assert(keyCode.IsSet());
+    auto mod = as_int(objMod.get());
+    assert(mod.IsSet());
+
+    PyObject* obj_function = PyDict_GetItem(binds, tuple.get()); // Borrowed ref
+    scoped_ref obj_functionName(PyObject_GetAttrString(obj_function, "__name__"));
+
     utf8_string functionName;
-    if (PyUnicode_Check(obj_functionName)){
-      PyObject* utf8 = PyUnicode_AsUTF8String(obj_functionName);
+    if (PyUnicode_Check(obj_functionName.get())){
+      scoped_ref utf8(PyUnicode_AsUTF8String(obj_functionName.get()));
       if (utf8 != nullptr){
-        functionName = PyBytes_AsString(utf8);
-        faint::py_xdecref(utf8);
+        functionName = PyBytes_AsString(utf8.get());
       }
     }
-    if (obj_functionName != nullptr){
-      py_xdecref(obj_functionName);
-    }
-    py_xdecref(tuple);
-    KeyPress keyObj(Mod::Create(static_cast<int>(mod)), Key(static_cast<int>(keyCode))); // Fixme: Check cast or change type
+
+    KeyPress keyObj(Mod::Create(mod.Get()), Key(keyCode.Get()));
     bindList.insert(BindInfo(keyObj, functionName, ""));
   }
-  py_xdecref(keys);
-  py_xdecref(module);
   return std::vector<BindInfo>(begin(bindList), end(bindList));
 }
 

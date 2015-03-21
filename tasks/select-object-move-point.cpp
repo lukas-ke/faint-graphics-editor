@@ -56,7 +56,7 @@ static std::vector<Point> get_corners(const Object* object, int pointIndex){
 }
 
 static Angle get_constrain_angle(const Point& p0, const Point& oldPos){
-  // Fixme: Consider angle360. Also unary - suspicious for Angle
+  // Fixme: Consider angle360
   Angle angle = -line_angle({p0, oldPos});
   if (angle < Angle::Zero()){
     return 2 * pi + angle;
@@ -127,7 +127,7 @@ public:
   TaskResult MouseMove(const PosInfo& info) override{
     Point p(info.pos);
 
-    int numPoints = static_cast<int>(m_object->GetMovablePoints().size()); // Fixme: Check cast
+    int numPoints = resigned(m_object->GetMovablePoints().size());
 
     bool snapHeld = info.modifiers.Primary() && numPoints > 1;
     bool constrainHeld = info.modifiers.Secondary() &&  numPoints > 1;

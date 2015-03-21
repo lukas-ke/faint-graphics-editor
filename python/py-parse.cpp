@@ -13,7 +13,6 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include <limits>
 #include "app/canvas.hh"
 #include "app/frame.hh"
 #include "bitmap/bitmap.hh"
@@ -23,6 +22,7 @@
 #include "geo/arc.hh"
 #include "geo/calibration.hh"
 #include "geo/int-rect.hh"
+#include "geo/limits.hh"
 #include "geo/line.hh"
 #include "geo/pathpt.hh"
 #include "geo/rect.hh"
@@ -129,9 +129,7 @@ bool parse_item(PyObject*& item, PyObject* args, Py_ssize_t&, Py_ssize_t, bool){
 }
 
 static bool long_to_int(long src, int* dst){
-  if (std::numeric_limits<int>::min() <= src &&
-    src <= std::numeric_limits<int>::max())
-  {
+  if (can_represent<int>(src)){
     *dst = static_cast<int>(src);
     return true;
   }
