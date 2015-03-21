@@ -509,26 +509,26 @@ utf8_string py_error_string(){
 }
 
 std::vector<utf8_string> parse_traceback(PyObject* tb){
-
-  PyObject* tracebackModule = PyImport_ImportModule("traceback");
+  scoped_ref tracebackModule(PyImport_ImportModule("traceback"));
   assert(tracebackModule != nullptr);
 
-  PyObject* dict = PyModule_GetDict(tracebackModule);
-  PyObject* format_tb = PyDict_GetItemString(dict, "format_tb");
+  PyObject* dict = PyModule_GetDict(tracebackModule.get()); // Borrowed
+  PyObject* format_tb = PyDict_GetItemString(dict, "format_tb"); // Borrowed
 
   const int maxTracebackItems = 20;
   PyObject* args = Py_BuildValue("Oi", tb, maxTracebackItems);
   PyObject* tbList = PyEval_CallObject(format_tb, args);
   assert(PySequence_Check(tbList));
-  int n = static_cast<int>(PySequence_Length(tbList)); // Fixme: Check cast/Change type
+  auto n = PySequence_Length(tbList);
+  assert(n >= 0);
+
   std::vector<utf8_string> v;
-  v.reserve(to_size_t(n));
-  for (int i = 0; i != n; i++){
-    PyObject* item = PySequence_GetItem(tbList, i);
-    v.push_back(object_string(item));
-    py_xdecref(item);
+  v.reserve(static_cast<size_t>(n));
+  for (Py_ssize_t i = 0; i != n; i++){
+    scoped_ref item(PySequence_GetItem(tbList, i));
+    v.push_back(object_string(item.get()));
   }
-  py_xdecref(tracebackModule);
+
   return v;
 }
 
@@ -553,7 +553,7 @@ static utf8_string decode_or_die(PyObject* obj){
 }
 
 static void decode_syntax_error_tuple(PyObject* tuple, FaintPyExc& info){
-  int numItems = static_cast<int>(PySequence_Length(tuple)); // Fixme: Check cast/change type
+  auto numItems = PySequence_Length(tuple);
   if (numItems == 0){
     return;
   }
@@ -571,7 +571,7 @@ static void decode_syntax_error_tuple(PyObject* tuple, FaintPyExc& info){
     return;
   }
 
-  int numExtra = static_cast<int>(PySequence_Length(syntaxErrTuple.get())); // Fixme: Check cast/change type
+  auto numExtra = PySequence_Length(syntaxErrTuple.get());
   if (numExtra == 0){
     return;
   }
@@ -584,12 +584,12 @@ static void decode_syntax_error_tuple(PyObject* tuple, FaintPyExc& info){
   if (numExtra > 1){
     scoped_ref line(PySequence_GetItem(syntaxErrTuple.get(), 1));
     if (line != nullptr && PyLong_Check(line.get())){
-      syntaxError.line = static_cast<int>(PyLong_AsLong(line.get())); // Fixme: Check cast/Change type
+      syntaxError.line = as_int(line.get()).Get();
     }
     if (numExtra > 2){
       scoped_ref column(PySequence_GetItem(syntaxErrTuple.get(), 2));
       if (column != nullptr && PyLong_Check(column.get())){
-        syntaxError.col = static_cast<int>(PyLong_AsLong(column.get())); // Fixme: Check cast/Change type
+        syntaxError.col = as_int(column.get()).Get();
       }
 
       if (numExtra > 3){
@@ -615,10 +615,10 @@ void decode_syntax_error_object(PyObject* error, FaintPyExc& info){
     info.message = decode_or_die(msg.get());
   }
   if (lineNo != nullptr && PyLong_Check(lineNo.get())){
-    errInfo.line = static_cast<int>(PyLong_AsLong(lineNo.get())); // Fixme: Check cast/Change type
+    errInfo.line = as_int(lineNo.get()).Get();
   }
   if (offset != nullptr && PyLong_Check(offset.get())){
-    errInfo.col = static_cast<int>(PyLong_AsLong(offset.get())); // Fixme: Check cast/Change type
+    errInfo.col = as_int(offset.get()).Get();
   }
   if (text != nullptr && PyUnicode_Check(text.get())){
     errInfo.code = decode_or_die(text.get());

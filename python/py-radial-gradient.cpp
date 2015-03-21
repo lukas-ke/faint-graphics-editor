@@ -86,7 +86,7 @@ static int RadialGradient_init(radialGradientObject* self,
   PyObject* args,
   PyObject*)
 {
-  int numArgs = static_cast<int>(PySequence_Length(args)); // Fixme: Check cast or change type
+  auto numArgs = PySequence_Length(args);
   if (numArgs == 0){
     PyErr_SetString(PyExc_ValueError, "Atleast one color stop required");
     return init_fail;
@@ -115,7 +115,7 @@ static int RadialGradient_init(radialGradientObject* self,
       py_xdecref(pyStop);
       return init_fail;
     }
-    numArgs = static_cast<int>(PySequence_Length(pyStop)); // Fixme: Check cast or change type
+    numArgs = PySequence_Length(pyStop);
     if (numArgs == 0){
       PyErr_SetString(PyExc_ValueError, "Atleast one color stop required");
       return init_fail;

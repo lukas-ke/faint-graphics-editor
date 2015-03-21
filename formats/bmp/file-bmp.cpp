@@ -43,20 +43,23 @@ static BitmapFileHeader create_bitmap_file_header(BitmapQuality quality,
   int rowStride,
   int height)
 {
+  assert(rowStride > 0);
+  assert(height > 0);
+
   const auto headerLengths = struct_lengths<BitmapInfoHeader, BitmapFileHeader>();
 
   BitmapFileHeader h;
   h.fileType = 0x4d42; // "BM" (reversed, endianness and all)
 
-  h.fileLength = static_cast<uint32_t>(headerLengths + 
-    palette_length_bytes(quality) + 
-    rowStride * height); // Fixme: Check cast
+  h.fileLength = static_cast<uint32_t>(headerLengths +
+    palette_length_bytes(quality) +
+    static_cast<uint32_t>(rowStride) * static_cast<uint32_t>(height));
 
   h.reserved1 = 0;
   h.reserved2 = 0;
 
-  h.dataOffset = static_cast<uint32_t>(headerLengths + 
-    palette_length_bytes(quality)); // Fixme: Check cast
+  h.dataOffset = static_cast<uint32_t>(headerLengths +
+    palette_length_bytes(quality));
   return h;
 }
 

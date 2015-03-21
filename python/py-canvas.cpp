@@ -491,7 +491,7 @@ static PyObject* canvas_Group(Canvas& canvas, PyObject* args){
     PySequence_GetItem(args, 0) :
     args;
 
-  const int n = static_cast<int>(PySequence_Length(sequence)); // Fixme: Check cast or change type
+  const auto n = PySequence_Length(sequence);
   // Prevent empty seguence arguments groups, i.e. Group([])
   if (n == 0){
     PyErr_SetString(PyExc_TypeError, "A group must contain at least one object.");

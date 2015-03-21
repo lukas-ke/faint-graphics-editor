@@ -557,7 +557,11 @@ static bool parse_png_bitmap(PyObject* args, Bitmap& out){
   }
 
   Py_ssize_t len = PyBytes_Size(pngStrPy);
-  Bitmap bmp(from_png(PyBytes_AsString(pngStrPy), to_size_t(static_cast<int>(len)))); // Fixme: Check cast/Change type
+  if (len <= 0){
+    return false;
+  }
+
+  Bitmap bmp(from_png(PyBytes_AsString(pngStrPy), static_cast<size_t>(len)));
   py_xdecref(pngStrPy);
   out = bmp;
   return true;
@@ -587,7 +591,11 @@ static bool parse_jpg_bitmap(PyObject* args, Bitmap& out){
   }
 
   Py_ssize_t len = PyBytes_Size(pngStrPy);
-  Bitmap bmp(from_jpg(PyBytes_AsString(pngStrPy), to_size_t(static_cast<int>(len)))); // Fixme: Check cast/Change type
+  if (len <= 0){
+    return false;
+  }
+
+  Bitmap bmp(from_jpg(PyBytes_AsString(pngStrPy), static_cast<size_t>(len)));
   py_xdecref(pngStrPy);
   out = bmp;
   return true;

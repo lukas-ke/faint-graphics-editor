@@ -23,4 +23,10 @@ bool can_represent(T2 v){
     std::numeric_limits<T1>::min() <= v && v <= std::numeric_limits<T1>::max();
 }
 
+template<typename DST, typename SRC>
+DST asserting_static_cast(SRC v){
+  assert(can_represent<DST>(v));
+  return static_cast<DST>(v);
+}
+
 } // namespace

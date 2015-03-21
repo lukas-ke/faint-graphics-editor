@@ -152,8 +152,8 @@ LineSegment ObjText::ComputeCaret(const TextInfo& info, const Tri& tri,
   auto textSize = info.TextSize(line.text.substr(0, pos.col));
 
   textSize.h = info.ComputeRowHeight();
-  Tri caretTri(tri.P0(), tri.P1(), textSize.h); // Fixme
-  caretTri = aligned(offset_aligned(caretTri, textSize.w, static_cast<coord>(pos.row) * textSize.h), // Fixme: Check cast
+  Tri caretTri(tri.P0(), tri.P1(), textSize.h);
+  caretTri = aligned(offset_aligned(caretTri, textSize.w, pos.row * textSize.h),
     m_settings.Get(ts_HorizontalAlign), line.width, tri.Width());
 
   return LineSegment(caretTri.P0(), caretTri.P2());
@@ -332,12 +332,12 @@ IntRect ObjText::GetRefreshRect() const{
     // Fixme: Slow.
     TextInfoDC info(m_settings);
     text_lines_t lines = split_string(info, m_textBuf.get(), max_width_t());
-    
-    int w = 0;        
+
+    int w = 0;
     for (auto l : lines){
       w = std::max(info.GetWidth(l.text), w);
     }
-    
+
     const int h = info.ComputeRowHeight() * resigned(lines.size());
     return floiled(bounding_rect(Tri(m_tri.P0(), m_tri.GetAngle(), Size(w,h))));
   }

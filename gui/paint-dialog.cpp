@@ -20,6 +20,7 @@
 #include "wx/sizer.h"
 #include "bitmap/paint.hh"
 #include "bitmap/pattern.hh"
+#include "geo/limits.hh"
 #include "gui/paint-dialog.hh"
 #include "gui/paint-dialog/gradient-panel.hh"
 #include "gui/paint-dialog/hsl-panel.hh"
@@ -40,16 +41,22 @@ static Optional<Color> deserialize_color(const utf8_string& str){
 
   size_t num = strs.size();
   if (num < 3 || 4 < num){
-    return no_option();
+    return {};
   }
 
   std::vector<int> components;
-  for (size_t i = 0; i != strs.size(); i++){
+  for (size_t i = 0; i != num; i++){
     long value;
     if (!strs[i].ToLong(&value)){
-      return no_option();
+      return {};
     }
-    components.push_back(static_cast<int>(value)); // Fixme: Check cast
+
+    if (can_represent<int>(value)){
+      components.push_back(static_cast<int>(value));
+    }
+    else{
+      return {};
+    }
   }
 
   int r = components[0];
@@ -81,7 +88,7 @@ public:
 
     m_panelHSL = std::make_unique<PaintPanel_HSL>(m_tabs);
     m_tabs->AddPage(m_panelHSL->AsWindow(), "HSL");
-    
+
     #ifdef __wxMSW__
     // Required to get the same background color in custom controls
     // (e.g. the gradient display) when the panel is in a notebook
