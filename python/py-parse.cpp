@@ -528,7 +528,7 @@ bool parse_flat(Radii& radii, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
 }
 
 bool parse_flat(Color& color, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
-  const int items = len - n;
+  const auto items = len - n;
   throw_insufficient_args_if(items < 3, "color");
 
   int readItems = 0;
@@ -848,7 +848,7 @@ bool parse_flat(Settings& s, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
 static Bitmap* as_Bitmap(PyObject* obj, Py_ssize_t n){
   if (!PyObject_IsInstance(obj, (PyObject*)&BitmapType)){
 
-    PyErr_SetString(PyExc_ValueError, space_sep("Argument", str_int(n + 1), "must be a Bitmap").c_str());
+    PyErr_SetString(PyExc_ValueError, space_sep("Argument", str_ssize_t(n + 1), "must be a Bitmap").c_str()); // Fixme: Prevent overflow
     return nullptr;
   }
   bitmapObject* py_bitmap = (bitmapObject*)obj;

@@ -13,6 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include <sstream>
 #include "bitmap/bitmap.hh"
 #include "python/py-function-error.hh"
 #include "python/py-interface.hh"
@@ -21,6 +22,12 @@
 #include "util/color-span.hh"
 
 namespace faint{
+
+utf8_string str_ssize_t(Py_ssize_t v){
+  std::stringstream ss;
+  ss << v;
+  return utf8_string(ss.str());
+}
 
 PythonError::PythonError(PyObject* errorType, const utf8_string& error)
   : m_errorType(errorType),
@@ -60,25 +67,25 @@ ValueError::ValueError(const utf8_string& error)
   : PythonError(PyExc_ValueError, error)
 {}
 
-ValueError::ValueError(const utf8_string& error, int n)
-  : PythonError(PyExc_ValueError, space_sep("Argument:", str_int(n + 1), error))
+ValueError::ValueError(const utf8_string& error, Py_ssize_t n)
+  : PythonError(PyExc_ValueError, space_sep("Argument:", str_ssize_t(n + 1), error)) // Fixme: Prevent overflow
 {}
 
 TypeError::TypeError(const utf8_string& error)
   : PythonError(PyExc_TypeError, error)
 {}
 
-TypeError::TypeError(const TypeName& expectedType, int n)
+TypeError::TypeError(const TypeName& expectedType, Py_ssize_t n)
   : PythonError(PyExc_TypeError,
-    "Argument " + str_int(n + 1) + " must be a " +
+    "Argument " + str_ssize_t(n + 1) + " must be a " + // Fixme: Prevent overflow
     expectedType.Get())
 {}
 
 TypeError::TypeError(const TypeName& expectedType,
   const utf8_string& extraInfo,
-  int n)
+  Py_ssize_t n)
   : PythonError(PyExc_TypeError,
-    space_sep("Argument", str_int(n + 1), "must be a",
+      space_sep("Argument", str_ssize_t(n + 1), "must be a", // Fixme: Prevent overflow
       expectedType.Get(), no_sep(bracketed(extraInfo), ".")))
 {}
 

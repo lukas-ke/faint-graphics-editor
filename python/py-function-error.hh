@@ -52,7 +52,7 @@ void throw_if_outside(const IntPoint&, const ColorSpan&);
 class ValueError : public PythonError{
 public:
   ValueError(const utf8_string&);
-  ValueError(const utf8_string&, int n);
+  ValueError(const utf8_string&, Py_ssize_t n);
 };
 
 class category_type_error;
@@ -61,9 +61,9 @@ using TypeName = Distinct<utf8_string, category_type_error, 0>;
 class TypeError : public PythonError{
 public:
   TypeError(const utf8_string&);
-  TypeError(const TypeName& expectedType, int argNum);
+  TypeError(const TypeName& expectedType, Py_ssize_t argNum);
   TypeError(const TypeName& expectedType, const utf8_string& extraInfo,
-    int argNum);
+    Py_ssize_t argNum);
 };
 
 class OSError : public PythonError{
@@ -88,6 +88,8 @@ private:
 };
 
 void throw_insufficient_args_if(bool, const utf8_string& type);
+
+utf8_string str_ssize_t(Py_ssize_t); // Fixme: Move to some util file
 
 } // namespace
 
