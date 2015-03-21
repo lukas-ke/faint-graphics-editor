@@ -49,7 +49,7 @@ static BitmapFileHeader create_bitmap_file_header(BitmapQuality quality,
   BitmapFileHeader h;
   h.fileType = 0x4d42; // "BM" (reversed, endianness and all)
 
-  h.fileLength = asserting_static_cast<uint32_t>(headerLengths +
+  h.fileLength = convert(headerLengths +
     palette_length_bytes(quality) +
     asserting_static_cast<uint32_t>(rowStride) *
     asserting_static_cast<uint32_t>(height));

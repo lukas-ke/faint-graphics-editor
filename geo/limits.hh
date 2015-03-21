@@ -13,6 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include <cassert>
 #include <limits>
 
 namespace faint{
@@ -55,6 +56,38 @@ template<typename DST, typename SRC>
 DST asserting_static_cast(SRC v){
   assert(can_represent<DST>(v));
   return static_cast<DST>(v);
+}
+
+// Wrapper which converts the held value to other types using
+// asserting_static_cast
+template<typename T>
+class Convertible{
+public:
+  explicit Convertible(T v) :
+    m_v(v){}
+
+  template<typename DST>
+  operator DST() const{
+    return asserting_static_cast<DST>(m_v);
+  }
+
+private:
+  T m_v;
+};
+
+template<typename T, typename T2>
+T& operator+=(T& lhs, const Convertible<T2>& rhs){
+  lhs += static_cast<T>(rhs);
+  return lhs;
+}
+
+// Wrap the value for conversion to a different type, e.g.
+// int v = convert(someValue);
+//
+// Note: Asserts that the target-type can_represent the value.
+template<typename T>
+auto convert(T v){
+  return Convertible<T>(v);
 }
 
 } // namespace

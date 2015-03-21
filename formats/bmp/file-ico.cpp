@@ -68,7 +68,7 @@ static auto create_bitmap_info_header_png(const Bitmap& bmp, size_t rawDataSize)
   h.colorPlanes = 1;
   h.bpp = 0;
   h.compression = Compression::BI_PNG;
-  h.rawDataSize = asserting_static_cast<uint32_t>(rawDataSize);
+  h.rawDataSize = convert(rawDataSize);
   h.horizontalResolution = 1; // Fixme: OK?
   h.verticalResolution = 1; // Fixme: OK?
   h.paletteColors = 0;
@@ -389,7 +389,7 @@ static IconDir create_icon_dir_icon(const ico_vec& bitmaps){
   IconDir iconDir;
   iconDir.reserved = 0;
   iconDir.imageType = IconType::ICO;
-  iconDir.imageCount = asserting_static_cast<uint16_t>(bitmaps.size());
+  iconDir.imageCount = convert(bitmaps.size());
   return iconDir;
 }
 
@@ -397,7 +397,7 @@ static IconDir create_icon_dir_cursor(const cur_vec& cursors){
   IconDir iconDir;
   iconDir.reserved = 0;
   iconDir.imageType = IconType::CUR;
-  iconDir.imageCount = asserting_static_cast<uint16_t>(cursors.size());
+  iconDir.imageCount = convert(cursors.size());
   return iconDir;
 }
 
@@ -426,21 +426,20 @@ static std::vector<IconDirEntry> create_icon_dir_entries(const ico_vec& bitmaps,
       assert(pngStrIter != pngData.end());
 
       auto bytes = pngStrIter->second.size();
-      entry.bytes = asserting_static_cast<uint32_t>(bytes);
+      entry.bytes = convert(bytes);
 
       const size_t lengthOfHeaders = struct_lengths<
         BitmapInfoHeader, BitmapFileHeader>();
 
       // Offset to png-data, i.e. past both headers.
-      entry.offset = asserting_static_cast<uint32_t>(offset + lengthOfHeaders);
-      offset += asserting_static_cast<int>(entry.bytes + lengthOfHeaders);
+      entry.offset = convert(offset + lengthOfHeaders);
+      offset += convert(entry.bytes + lengthOfHeaders);
     }
     else if (compression == IcoCompression::BMP){
-      entry.bytes =
-        asserting_static_cast<uint32_t>(area(bmp.GetSize()) * 4 +
+      entry.bytes = convert(area(bmp.GetSize()) * 4 +
         and_map_bytes(bmp.GetSize()) +
         struct_lengths<BitmapInfoHeader>());
-      entry.offset = static_cast<decltype(entry.offset)>(offset);
+      entry.offset = convert(offset);
       offset += entry.bytes;
     }
     else{
@@ -467,10 +466,9 @@ static std::vector<IconDirEntry> create_cursor_dir_entries(const cur_vec& cursor
     entry.colorCount = 0; // 0 when >= 8bpp
     set_hot_spot(entry, cursors[i].second);
 
-    entry.bytes =
-      asserting_static_cast<uint32_t>(area(bmp.GetSize()) * 4 +
+    entry.bytes = convert(area(bmp.GetSize()) * 4 +
       and_map_bytes(bmp.GetSize()) +
-       struct_lengths<BitmapInfoHeader>());
+      struct_lengths<BitmapInfoHeader>());
     entry.offset = offset;
     v.push_back(entry);
     offset += entry.bytes;
@@ -483,7 +481,7 @@ BitmapFileHeader create_bitmap_file_header_png(size_t encodedSize){
 
   BitmapFileHeader h;
   h.fileType = 0x4d42; // "BM" (reversed, endianness and all)
-  h.fileLength = asserting_static_cast<uint32_t>(headerLengths + encodedSize);
+  h.fileLength = convert(headerLengths + encodedSize);
   h.reserved1 = 0;
   h.reserved2 = 0;
   h.dataOffset = headerLengths;
