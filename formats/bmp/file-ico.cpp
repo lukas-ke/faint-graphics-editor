@@ -440,7 +440,7 @@ static std::vector<IconDirEntry> create_icon_dir_entries(const ico_vec& bitmaps,
         asserting_static_cast<uint32_t>(area(bmp.GetSize()) * 4 +
         and_map_bytes(bmp.GetSize()) +
         struct_lengths<BitmapInfoHeader>());
-      entry.offset = offset;
+      entry.offset = static_cast<decltype(entry.offset)>(offset);
       offset += entry.bytes;
     }
     else{

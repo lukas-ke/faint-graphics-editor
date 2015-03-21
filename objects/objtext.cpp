@@ -153,7 +153,8 @@ LineSegment ObjText::ComputeCaret(const TextInfo& info, const Tri& tri,
 
   textSize.h = info.ComputeRowHeight();
   Tri caretTri(tri.P0(), tri.P1(), textSize.h);
-  caretTri = aligned(offset_aligned(caretTri, textSize.w, pos.row * textSize.h),
+  caretTri = aligned(offset_aligned(caretTri, textSize.w, 
+    static_cast<coord>(pos.row * textSize.h)),
     m_settings.Get(ts_HorizontalAlign), line.width, tri.Width());
 
   return LineSegment(caretTri.P0(), caretTri.P2());
