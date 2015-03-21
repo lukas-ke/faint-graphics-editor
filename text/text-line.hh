@@ -20,14 +20,15 @@
 #include "text/utf8-string.hh"
 
 namespace faint{
-class Size;
+
+class IntSize;
 
 class TextInfo{
 public:
   virtual ~TextInfo() = default;
-  virtual coord GetWidth(const utf8_string&) const = 0;
-  virtual coord ComputeRowHeight() const = 0;
-  virtual Size TextSize(const utf8_string&) const = 0;
+  virtual int GetWidth(const utf8_string&) const = 0;
+  virtual int ComputeRowHeight() const = 0;
+  virtual IntSize TextSize(const utf8_string&) const = 0;
 };
 
 class TextLine{

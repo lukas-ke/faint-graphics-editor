@@ -16,16 +16,16 @@ using namespace faint;
 
 class Test_TextInfo : public TextInfo{
 public:
-  coord GetWidth(const utf8_string& str) const override{
-    return static_cast<coord>(str.size()) * 10.0;
+  int GetWidth(const utf8_string& str) const override{
+    return str.size() * 10;
   }
 
-  coord ComputeRowHeight() const override{
-    return 12.0;
+  int ComputeRowHeight() const override{
+    return 12;
   }
 
-  Size TextSize(const faint::utf8_string& str) const override{
-    return Size(GetWidth(str), ComputeRowHeight());
+  IntSize TextSize(const faint::utf8_string& str) const override{
+    return IntSize(GetWidth(str), ComputeRowHeight());
   }
 
   text_lines_t RowYourBoat(){
@@ -37,8 +37,7 @@ public:
   }
 
   void Test_text_extents(){
-    EQUAL(rounded(text_extents(*this, RowYourBoat())),
-      IntSize(35 * 10, 4 * 12));
+    EQUAL(text_extents(*this, RowYourBoat()), IntSize(35 * 10, 4 * 12));
   }
 
   void Test_text_line_regions(){

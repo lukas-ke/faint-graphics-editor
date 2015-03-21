@@ -16,6 +16,7 @@
 #ifndef FAINT_TEXT_GEO_HH
 #define FAINT_TEXT_GEO_HH
 #include <vector>
+#include "geo/int-size.hh"
 #include "geo/primitive.hh"
 #include "text/text-line.hh"
 #include "util/setting-id.hh"
@@ -83,7 +84,7 @@ std::vector<Tri> text_line_regions(const TextInfo&,
   const text_lines_t&,
   const Align&);
 
-Size text_extents(const TextInfo&, const text_lines_t&);
+IntSize text_extents(const TextInfo&, const text_lines_t&);
 
 } // namespace
 

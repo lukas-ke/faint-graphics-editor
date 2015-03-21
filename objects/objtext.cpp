@@ -43,19 +43,19 @@ public:
       m_settings(settings)
   {}
 
-  coord GetWidth(const utf8_string& str) const override{
+  int GetWidth(const utf8_string& str) const override{
     return m_dc.TextSize(str, m_settings).w;
   }
 
-  Size TextSize(const utf8_string& str) const override{
+  IntSize TextSize(const utf8_string& str) const override{
     return m_dc.TextSize(str, m_settings);
   }
 
-  coord ComputeRowHeight() const override{
+  int ComputeRowHeight() const override{
     // A full row is the ascent + descent
     if (m_rowHeight.NotSet()){
       auto metrics = m_dc.GetFontMetrics(m_settings);
-      m_rowHeight.Set(floated(metrics.ascent + metrics.descent));
+      m_rowHeight.Set(metrics.ascent + metrics.descent);
     }
     return m_rowHeight.Get();
   }
@@ -86,7 +86,7 @@ private:
   Bitmap m_bitmap;
   FaintDC m_dc;
   const Settings& m_settings;
-  mutable Optional<coord> m_rowHeight;
+  mutable Optional<int> m_rowHeight;
 };
 
 static utf8_string get_expression_string(const parse_result_t& result,
@@ -149,7 +149,7 @@ LineSegment ObjText::ComputeCaret(const TextInfo& info, const Tri& tri,
   TextPos pos = index_to_row_column(lines, m_textBuf.caret());
 
   const auto& line = lines[pos.row];
-  Size textSize = info.TextSize(line.text.substr(0, pos.col));
+  auto textSize = info.TextSize(line.text.substr(0, pos.col));
 
   textSize.h = info.ComputeRowHeight();
   Tri caretTri(tri.P0(), tri.P1(), textSize.h); // Fixme
@@ -280,9 +280,10 @@ void ObjText::DrawMask(FaintDC& dc){
 
 Rect ObjText::GetAutoSizedRect() const {
   TextInfoDC info(m_settings);
-  return Rect(m_tri.P0(),
-    text_extents(info,
-      split_string(info, m_textBuf.get(), no_option())));
+  const auto textSize = text_extents(info,
+    split_string(info, m_textBuf.get(), no_option()));
+
+  return Rect(m_tri.P0(), floated(textSize));
 }
 
 LineSegment ObjText::GetCaret() const{
@@ -331,8 +332,8 @@ IntRect ObjText::GetRefreshRect() const{
     // Fixme: Slow.
     TextInfoDC info(m_settings);
     text_lines_t lines = split_string(info, m_textBuf.get(), max_width_t());
-    coord w = 0;
-    coord h = info.ComputeRowHeight() * static_cast<coord>(lines.size());
+    int w = 0;
+    int h = info.ComputeRowHeight() * lines.size();
     for (auto l : lines){
       w = std::max(info.GetWidth(l.text), w);
     }
@@ -350,9 +351,10 @@ Tri ObjText::GetTri() const{
   }
   else{
     TextInfoDC info(m_settings);
-    return Tri(m_tri.P0(), m_tri.GetAngle(),
-      text_extents(info,
-        split_string(info, m_textBuf.get(), no_option())));
+    const auto textSize = text_extents(info,
+      split_string(info, m_textBuf.get(), no_option()));
+
+    return Tri(m_tri.P0(), m_tri.GetAngle(), floated(textSize));
   }
 }
 

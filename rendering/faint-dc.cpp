@@ -944,7 +944,7 @@ void FaintDC::Text(const Tri& t, const utf8_string& text, const Settings& s,
     });
 }
 
-Size FaintDC::TextSize(const utf8_string& text, const Settings& s) const{
+IntSize FaintDC::TextSize(const utf8_string& text, const Settings& s) const{
   return m_cr->pango_text_size(text, s);
 }
 

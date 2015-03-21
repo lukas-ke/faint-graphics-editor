@@ -578,7 +578,7 @@ void CairoContext::new_sub_path(){
   cairo_new_sub_path(m_impl->cr);
 }
 
-Size CairoContext::pango_text_size(const utf8_string& text,
+IntSize CairoContext::pango_text_size(const utf8_string& text,
   const Settings& s) const
 {
   auto fd(get_font_description(s));
@@ -595,7 +595,7 @@ Size CairoContext::pango_text_size(const utf8_string& text,
 
   int w, h;
   pango_layout_get_pixel_size(layout.get(), &w, &h);
-  return Size(w, h);
+  return IntSize(w, h);
 }
 
 FontMetrics CairoContext::pango_font_metrics(const Settings& s) const{

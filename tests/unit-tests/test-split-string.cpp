@@ -1,25 +1,26 @@
 // -*- coding: us-ascii-unix -*-
 #include "test-sys/test.hh"
-#include "geo/size.hh"
+#include "geo/int-size.hh"
 #include "text/char-constants.hh"
 #include "text/split-string.hh"
 #include "util/optional.hh"
 
 namespace{
+
 using namespace faint;
 
 class TextInfo_split_string : public TextInfo{
 public:
-  coord GetWidth(const utf8_string& str) const override{
+  int GetWidth(const utf8_string& str) const override{
     // Use ten pixels for each character
-    return static_cast<coord>(str.size()) * 10.0;
+    return str.size() * 10;
   }
 
-  coord ComputeRowHeight() const override{
+  int ComputeRowHeight() const override{
     FAIL();
   }
 
-  Size TextSize(const faint::utf8_string&) const override{
+  IntSize TextSize(const faint::utf8_string&) const override{
     FAIL();
   }
 };

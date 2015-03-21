@@ -125,15 +125,15 @@ std::vector<Tri> text_selection_region(const TextInfo& info,
   TextPos s0 = index_to_row_column(lines, selection.from);
   TextPos s1 = index_to_row_column(lines, selection.to);
 
-  Size size0 = info.TextSize(lines[s0.row].text.substr(0, s0.col));
-  Size size1 = info.TextSize(lines[s1.row].text.substr(0, s1.col));
+  auto size0 = info.TextSize(lines[s0.row].text.substr(0, s0.col));
+  auto size1 = info.TextSize(lines[s1.row].text.substr(0, s1.col));
 
   std::vector<Tri> rectangles;
   const coord rowHeight = info.ComputeRowHeight();
   for (size_t row = s0.row; row <= s1.row; row++){
     coord dx = static_cast<coord>(row) * rowHeight * sin(-tri.GetAngle());
     coord dy = static_cast<coord>(row) * rowHeight * cos(tri.GetAngle());
-    Size rowSize = info.TextSize(lines[row].text);
+    auto rowSize = info.TextSize(lines[row].text);
 
     // Start of the row
     Tri t2 = translated(tri, dx, dy);
@@ -181,13 +181,13 @@ std::vector<Tri> text_line_regions(const TextInfo& info,
 
 }
 
-Size text_extents(const TextInfo& info, const text_lines_t& lines){
-  coord width = 0;
+IntSize text_extents(const TextInfo& info, const text_lines_t& lines){
+  int width = 0;
   for (size_t i = 0; i!= lines.size(); i++){
     width = std::max(width, info.GetWidth(lines[i].text));
   }
 
-  return Size(width, info.ComputeRowHeight() * static_cast<coord>(lines.size())); // Fixme: Check cast
+  return IntSize(width, info.ComputeRowHeight() * resigned(lines.size()));
 }
 
 } // namespace
