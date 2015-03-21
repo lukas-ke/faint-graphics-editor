@@ -29,29 +29,16 @@ PyFileFormat::PyFileFormat(const load_callback_t& loader,
   const save_callback_t& saver,
   const label_t& label,
   const FileExtension& ext)
-  : Format(ext, label, can_save(saver.Get() != nullptr),
-    can_load(loader.Get() != nullptr)),
-    m_callLoad(nullptr),
-    m_callSave(nullptr)
+  : Format(ext,
+     label,
+     can_save(saver.Get() != nullptr),
+     can_load(loader.Get() != nullptr))
 {
-  PyObject* loadCallback = loader.Get();
-  PyObject* saveCallback = saver.Get();
-  if (loadCallback != nullptr){
-    Py_INCREF(loadCallback);
-    m_callLoad = loadCallback;
+  if (loader.Get() != nullptr){
+    m_callLoad = new_ref(loader.Get());
   }
-  if (saveCallback != nullptr){
-    Py_INCREF(saveCallback);
-    m_callSave = saveCallback;
-  }
-}
-
-PyFileFormat::~PyFileFormat(){
-  if (m_callLoad != nullptr){
-    py_xdecref(m_callLoad);
-  }
-  if (m_callSave != nullptr){
-    py_xdecref(m_callSave);
+  if (saver.Get() != nullptr){
+    m_callSave = new_ref(saver.Get());
   }
 }
 
@@ -92,7 +79,7 @@ SaveResult PyFileFormat::Save(const FilePath& filePath, Canvas& canvas){
   PyObject* py_canvas = pythoned(canvas);
   PyObject* filePathUnicode = build_unicode(filePath.Str());
   PyObject* argList = Py_BuildValue("OO", filePathUnicode, py_canvas);
-  PyObject* result = PyObject_Call(m_callSave, argList, nullptr);
+  PyObject* result = PyObject_Call(m_callSave.get(), argList, nullptr);
   if (result == nullptr){
     return save_error_from_exception(*this);
   }
@@ -126,7 +113,7 @@ void PyFileFormat::Load(const FilePath& filePath, ImageProps& props){
   imagePropsObject* py_props = pythoned(props);
   PyObject* filePathUnicode = build_unicode(filePath.Str());
   PyObject* argList = Py_BuildValue("OO", filePathUnicode, py_props);
-  PyObject* result = PyObject_Call(m_callLoad, argList, nullptr);
+  PyObject* result = PyObject_Call(m_callLoad.get(), argList, nullptr);
   if (result == nullptr){
     props.SetError(load_error_string_from_exception(*this));
   }

@@ -32,4 +32,9 @@ dumb_ptr<PyObject> borrowed(PyObject* o){
   return dumb_ptr<PyObject>(o);
 }
 
+scoped_ref new_ref(PyObject* o){
+  Py_INCREF(o);
+  return scoped_ref(o);
+}
+
 } // namespace

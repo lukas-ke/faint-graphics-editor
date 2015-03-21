@@ -16,6 +16,7 @@
 #ifndef FAINT_PY_FORMAT_HH
 #define FAINT_PY_FORMAT_HH
 #include "formats/format.hh"
+#include "python/py-include.hh"
 
 namespace faint{
 
@@ -29,12 +30,12 @@ public:
     const save_callback_t&,
     const label_t&,
     const FileExtension&);
-  ~PyFileFormat();
+
   void Load(const FilePath&, ImageProps&) override;
   SaveResult Save(const FilePath&, Canvas&) override;
 private:
-  PyObject* m_callLoad;
-  PyObject* m_callSave;
+  scoped_ref m_callLoad;
+  scoped_ref m_callSave;
 };
 
 } // namespace

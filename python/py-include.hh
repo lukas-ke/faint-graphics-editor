@@ -64,6 +64,9 @@ dumb_ptr<PyObject> borrowed(PyObject*);
 
 using scoped_ref = std::unique_ptr<PyObject, Decreffer>;
 
+// Increments the ref-count of the argument and returns a new reference
+scoped_ref new_ref(PyObject*);
+
 const int init_ok = 0;
 const int init_fail = -1;
 
