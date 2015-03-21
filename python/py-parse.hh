@@ -18,7 +18,7 @@
 #include "geo/range.hh"
 #include "python/bound-object.hh"
 #include "python/py-fwd.hh"
-#include "python/py-bitmap.hh" // Fixme: Used because Bitmap& isn't the actual reference
+#include "python/py-bitmap.hh"
 #include "python/py-function-error.hh"
 #include "text/formatting.hh" // for str_int
 #include "util/common-fwd.hh"
@@ -30,7 +30,7 @@
 namespace faint{
 
 template<typename T>
-bool parse_item(T& item, PyObject* args, int& n, int len, bool allowFlat);
+bool parse_item(T& item, PyObject* args, Py_ssize_t& n, Py_ssize_t len, bool allowFlat);
 
 // Remap some types to support parsing (e.g. for types that are not
 // default-constructible.
@@ -83,13 +83,15 @@ template<> struct arg_traits<Settings>{static const TypeName name;};
 template<> struct arg_traits<Tri>{static const TypeName name;};
 template<> struct arg_traits<utf8_string>{static const TypeName name;};
 
-bool parse_int(PyObject*, int n, int* value);
-bool parse_coord(PyObject*, int n, coord* value);
-bool parse_bytes(PyObject*, int, std::string* value);
+bool parse_int(PyObject*, Py_ssize_t n, int* value);
+bool parse_coord(PyObject*, Py_ssize_t n, coord* value);
+bool parse_bytes(PyObject*, Py_ssize_t n, std::string* value);
 
 // Parse flat for Faint Objects
 template<typename T>
-bool parse_flat(BoundObject<T>& obj, PyObject* args, int& n, int len){
+bool parse_flat(BoundObject<T>& obj, PyObject* args, Py_ssize_t& n,
+  Py_ssize_t len)
+{
   BoundObject<Object> rawObj;
   bool ok = parse_flat(rawObj, args, n, len);
   if (!ok){
@@ -106,7 +108,7 @@ bool parse_flat(BoundObject<T>& obj, PyObject* args, int& n, int len){
 
 // parse_flat for Either
 template<typename T1,typename T2>
-bool parse_item(DefaultConstructible<Either<T1, T2> >& obj, PyObject* args, int& n, int len, bool allowFlat){
+bool parse_item(DefaultConstructible<Either<T1, T2> >& obj, PyObject* args, Py_ssize_t& n, Py_ssize_t len, bool allowFlat){
   try{
     typename type2type<T1>::type first;
     if (parse_item(first, args, n, len, allowFlat)){ // Fixme: allow flat?
@@ -131,49 +133,49 @@ bool parse_item(DefaultConstructible<Either<T1, T2> >& obj, PyObject* args, int&
   return false;
 }
 
-bool parse_flat(DefaultConstructible<Angle>&, PyObject*, int& n, int len);
-bool parse_flat(DefaultConstructible<Delay>&, PyObject*, int& n, int len);
-bool parse_flat(bitmapObject*&, PyObject*, int& n, int len);
-bool parse_flat(BoundObject<Object>&, PyObject*, int& n, int len);
-bool parse_flat(Calibration&, PyObject*, int& n, int len);
-bool parse_flat(Canvas*&, PyObject*, int& n, int len);
-bool parse_flat(ColorSpan&, PyObject*, int& n, int len);
-bool parse_flat(Grid&, PyObject*, int& n, int len);
-bool parse_flat(DefaultConstructible<FilePath>&, PyObject*, int& n, int len);
-bool parse_flat(const Image*&, PyObject*, int& n, int len);
-bool parse_flat(bool&, PyObject*, int& n, int len);
-bool parse_flat(int&, PyObject*, int& n, int len);
-bool parse_flat(Index&, PyObject*, int& n, int len);
-bool parse_flat(Tri&, PyObject*, int& n, int len);
-bool parse_flat(coord&, PyObject*, int& n, int len);
-bool parse_flat(IntRect&, PyObject*, int& n, int len);
-bool parse_flat(utf8_string&, PyObject*, int& n, int len);
-bool parse_flat(std::string&, PyObject*, int& n, int len);
-bool parse_flat(Settings&, PyObject*, int& n, int len);
-bool parse_flat(Bitmap&, PyObject*, int& n, int len);
-bool parse_flat(AngleSpan&, PyObject*, int& n, int len);
-bool parse_flat(KeyPress& value, PyObject*, int& n, int len);
-bool parse_flat(IntSize&, PyObject*, int& n, int len);
-bool parse_flat(Color&, PyObject*, int& n, int len);
-bool parse_flat(ColorStop&, PyObject*, int& n, int len);
-bool parse_flat(Paint&, PyObject*, int& n, int len);
-bool parse_flat(IntLineSegment&, PyObject*, int& n, int len);
-bool parse_flat(IntPoint&, PyObject*, int& n, int len);
-bool parse_flat(LineSegment&, PyObject*, int& n, int len);
-bool parse_flat(Point&, PyObject*, int& n, int len);
-bool parse_flat(ColRGB&, PyObject*, int& n, int len);
-bool parse_flat(Rect&, PyObject*, int& n, int len);
-bool parse_flat(Radii&, PyObject*, int& n, int len);
+bool parse_flat(DefaultConstructible<Angle>&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(DefaultConstructible<Delay>&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(bitmapObject*&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(BoundObject<Object>&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(Calibration&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(Canvas*&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(ColorSpan&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(Grid&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(DefaultConstructible<FilePath>&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(const Image*&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(bool&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(int&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(Index&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(Tri&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(coord&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(IntRect&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(utf8_string&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(std::string&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(Settings&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(Bitmap&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(AngleSpan&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(KeyPress& value, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(IntSize&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(Color&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(ColorStop&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(Paint&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(IntLineSegment&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(IntPoint&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(LineSegment&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(Point&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(ColRGB&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(Rect&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
+bool parse_flat(Radii&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
 
 template<typename T, typename category, int ID>
-bool parse_flat(Subtype<T, category, ID>& obj, PyObject* args, int& n, int len){
+bool parse_flat(Subtype<T, category, ID>& obj, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   using base_type = typename Subtype<T, category, ID>::base_type;
   return parse_flat(static_cast<base_type&>(obj), args, n, len);
 }
 
 // Parse flat for vectors (sequences)
 template<typename T>
-bool parse_flat(std::vector<T>& vec, PyObject* args, int& n, int len){
+bool parse_flat(std::vector<T>& vec, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   if (len - n < 0){
     throw TypeError("Too few arguments for parsing sequence of " +
       arg_traits<T>::name.Get());
@@ -188,9 +190,9 @@ bool parse_flat(std::vector<T>& vec, PyObject* args, int& n, int len){
   }
 
   std::vector<T> temp;
-  for (int i = n; i < len; i++){
+  for (auto i = n; i < len; i++){
     T item;
-    int n2 = i;
+    auto n2 = i;
     if (!parse_item(item, args, n2, len, true)){
       return false;
     }
@@ -203,8 +205,8 @@ bool parse_flat(std::vector<T>& vec, PyObject* args, int& n, int len){
 
 template<int MIN_BOUND, int MAX_BOUND>
 bool parse_flat(StaticBoundedInt<MIN_BOUND, MAX_BOUND>& value, PyObject* args,
-  int& n,
-  int len)
+  Py_ssize_t& n,
+  Py_ssize_t len)
 {
   int raw;
   if (!parse_flat(raw, args, n, len)){
@@ -226,8 +228,8 @@ bool parse_flat(StaticBoundedInt<MIN_BOUND, MAX_BOUND>& value, PyObject* args,
 template<int MIN_BOUND, int MAX_BOUND>
 bool parse_flat(StaticBoundedInterval<MIN_BOUND, MAX_BOUND>& range,
   PyObject* args,
-  int& n,
-  int len)
+  Py_ssize_t& n,
+  Py_ssize_t len)
 {
   if (len - n < 2){
     throw ValueError("Too few arguments for parsing range");
@@ -293,21 +295,33 @@ inline bool unary_item(bool){
 // Assigns the args parameter to the item parameter and returns true.
 // This allows forwarding with Python args list.
 // (Strongly typed target functions should be preferred).
-bool parse_item(PyObject*& item, PyObject* args, int&, int, bool);
+bool parse_item(PyObject*& item,
+  PyObject* args,
+  Py_ssize_t& n,
+  Py_ssize_t len,
+  bool);
 
 // Parse item number n from the args sequence with length len
 // Store the result in item.
 template<typename T>
-bool parse_item(T& item, PyObject* args, int& n, int len, bool allowFlat){
+bool parse_item(T& item, PyObject* args,
+  Py_ssize_t& n,
+  Py_ssize_t len,
+  bool allowFlat)
+{
   if (len - n < 1){
     throw ValueError("Incorrect number of arguments");
   }
 
   scoped_ref elems(PySequence_GetItem(args, n));
   if (PySequence_Check(elems.get())){
-    int nOther = 0;
-    bool ok = parse_flat(item, elems.get(), nOther,
-      static_cast<int>(PySequence_Length(elems.get()))); // Fixme: Check cast or change type
+    Py_ssize_t nOther = 0;
+
+    bool ok = parse_flat(item,
+      elems.get(),
+      nOther,
+      PySequence_Length(elems.get()));
+
     if (!ok){
       return false;
     }
@@ -320,7 +334,7 @@ bool parse_item(T& item, PyObject* args, int& n, int len, bool allowFlat){
   throw TypeError("Must be a sequence");
 }
 
-inline bool is_none(PyObject* args, int n, int len){
+inline bool is_none(PyObject* args, Py_ssize_t n, Py_ssize_t len){
   if (len <= n){
     return false;
   }
@@ -332,8 +346,8 @@ inline bool is_none(PyObject* args, int n, int len){
 template<typename T>
 bool parse_item(Optional<T>& item,
   PyObject* args,
-  int& n,
-  int len,
+  Py_ssize_t& n,
+  Py_ssize_t len,
   bool allowFlat)
 {
   if (n == len){
@@ -422,14 +436,14 @@ struct TypeDependentFalse{
 
 // Default-parse_flat which merely static_asserts
 template<typename T>
-bool parse_flat(T, PyObject*,int&, int){
+bool parse_flat(T, PyObject*, Py_ssize_t&, Py_ssize_t){
   static_assert(TypeDependentFalse<T>::value,
     "parse_flat not overloaded for type.");
   return false;
 }
 
 template<typename T>
-bool parse_flat(Optional<T>& opt, PyObject* args, int& n, int len){
+bool parse_flat(Optional<T>& opt, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   // Fixme: n, length?
   if (args == Py_None){
     return true;

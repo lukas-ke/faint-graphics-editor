@@ -158,7 +158,8 @@ wxChoice* create_choice(window_t parent,
   return new wxChoice(parent.w,
     wxID_ANY,
     wxDefaultPosition, wxDefaultSize,
-    static_cast<int>(strsWx.size()), strsWx.data()); // Fixme: Check cast
+    resigned(strsWx.size()),
+    strsWx.data());
 }
 
 void delete_dialog(wxDialog*& dlg){
@@ -556,7 +557,7 @@ void set_dotted_pen(wxDC& dc, const Color& c, int w){
 }
 
 void draw_polygon(wxDC& dc, const std::vector<IntPoint>& points){
-  dc.DrawPolygon(static_cast<int>(points.size()), to_wx(points).data()); // Fixme: Check cast
+  dc.DrawPolygon(resigned(points.size()), to_wx(points).data());
 }
 
 void draw_line(wxDC& dc, const IntPoint& p0, const IntPoint& p1){

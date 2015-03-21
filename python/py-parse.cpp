@@ -13,6 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include <limits>
 #include "app/canvas.hh"
 #include "app/frame.hh"
 #include "bitmap/bitmap.hh"
@@ -122,30 +123,43 @@ static PyObject* build_paint(const Paint& paint){
   return visit(paint, build_color_tuple, build_pattern, build_gradient);
 }
 
-bool parse_item(PyObject*& item, PyObject* args, int&, int, bool){
+bool parse_item(PyObject*& item, PyObject* args, Py_ssize_t&, Py_ssize_t, bool){
   item = args;
   return true;
 }
 
-bool parse_int(PyObject* args, int n, int* value){
+static bool long_to_int(long src, int* dst){
+  if (std::numeric_limits<int>::min() <= src &&
+    src <= std::numeric_limits<int>::max())
+  {
+    *dst = static_cast<int>(src);
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
+bool parse_int(PyObject* args, Py_ssize_t n, int* value){
   PyObject* obj = PySequence_GetItem(args, n);
   long temp = PyLong_AsLong(obj);
   py_xdecref(obj);
+
   if (temp == -1 && PyErr_Occurred()){
     return false;
   }
-  *value = static_cast<int>(temp); // Fixme: Check cast or change type
-  return true;
+
+  return long_to_int(temp, value);
 }
 
-bool parse_bool(PyObject* args, int n, bool* value){
+bool parse_bool(PyObject* args, Py_ssize_t n, bool* value){
   PyObject* obj = PySequence_GetItem(args, n);
   *value = (1 == PyObject_IsTrue(obj));
   py_xdecref(obj);
   return true;
 }
 
-bool parse_Index(PyObject* args, int n, Index* value){
+bool parse_Index(PyObject* args, Py_ssize_t n, Index* value){
   PyObject* obj = PySequence_GetItem(args, n);
   long temp = PyLong_AsLong(obj);
   py_xdecref(obj);
@@ -155,11 +169,16 @@ bool parse_Index(PyObject* args, int n, Index* value){
   if (temp < 0){
     throw ValueError("Negative index specified.", n);
   }
-  *value = Index(static_cast<int>(temp)); // Fixme: Use conversion function
-  return true;
+
+  int v;
+  if (long_to_int(temp, &v)){
+    *value = Index(v);
+    return true;
+  }
+  return false;
 }
 
-bool parse_coord(PyObject* args, int n, coord* value){
+bool parse_coord(PyObject* args, Py_ssize_t n, coord* value){
   if (PySequence_Check(args)){
     PyObject* obj = PySequence_GetItem(args, n);
     coord temp = PyFloat_AsDouble(obj);
@@ -186,7 +205,7 @@ bool parse_coord(PyObject* args, int n, coord* value){
   }
 }
 
-bool parse_bytes(PyObject* args, int, std::string* value){
+bool parse_bytes(PyObject* args, Py_ssize_t, std::string* value){
   char* str = PyBytes_AsString(args);
   if (str == nullptr){
     // PyBytes_AsString will have raised TypeError
@@ -196,7 +215,7 @@ bool parse_bytes(PyObject* args, int, std::string* value){
   return true;
 }
 
-bool parse_flat(bitmapObject*& bmp, PyObject* args, int& n, int len){
+bool parse_flat(bitmapObject*& bmp, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 1, "bitmap");
 
   scoped_ref ref(PySequence_GetItem(args, n));
@@ -208,7 +227,7 @@ bool parse_flat(bitmapObject*& bmp, PyObject* args, int& n, int len){
   return true;
 }
 
-bool parse_flat(BoundObject<Object>& obj, PyObject* args, int& n, int len){
+bool parse_flat(BoundObject<Object>& obj, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 1, "Object");
 
   if (!PySequence_Check(args)){
@@ -230,7 +249,7 @@ bool parse_flat(BoundObject<Object>& obj, PyObject* args, int& n, int len){
   return true;
 }
 
-bool parse_flat(Calibration& calibration, PyObject* args, int& n, int len){
+bool parse_flat(Calibration& calibration, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 3, "Calibration");
   coord x0, y0, x1, y1, lineLength;
   PyObject* unitStr;
@@ -253,7 +272,7 @@ bool parse_flat(Calibration& calibration, PyObject* args, int& n, int len){
 
 }
 
-bool parse_flat(Canvas*& canvas, PyObject* args, int& n, int len){
+bool parse_flat(Canvas*& canvas, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 1, "Canvas");
 
   scoped_ref ref(PySequence_GetItem(args, n));
@@ -270,7 +289,7 @@ bool parse_flat(Canvas*& canvas, PyObject* args, int& n, int len){
   return true;
 }
 
-bool parse_flat(Grid& grid, PyObject* args, int& n, int len){
+bool parse_flat(Grid& grid, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 1, "grid");
 
   if (!PyObject_IsInstance(args, (PyObject*)&GridType)){
@@ -287,7 +306,7 @@ bool parse_flat(Grid& grid, PyObject* args, int& n, int len){
 
 bool parse_flat(DefaultConstructible<Angle>& angle,
   PyObject* args,
-  int& n, int len)
+  Py_ssize_t& n, Py_ssize_t len)
 {
   throw_insufficient_args_if(len - n < 1, "Angle");
   coord radians;
@@ -301,7 +320,7 @@ bool parse_flat(DefaultConstructible<Angle>& angle,
 
 bool parse_flat(DefaultConstructible<Delay>& delay,
   PyObject* args,
-  int& n, int len)
+  Py_ssize_t& n, Py_ssize_t len)
 {
   throw_insufficient_args_if(len - n < 1, "Delay");
   Delay::value_type v;
@@ -315,8 +334,8 @@ bool parse_flat(DefaultConstructible<Delay>& delay,
 
 bool parse_flat(DefaultConstructible<FilePath>& p,
   PyObject* args,
-  int& n,
-  int len)
+  Py_ssize_t& n,
+  Py_ssize_t len)
 {
   throw_insufficient_args_if(len - n < 1, "File path");
 
@@ -340,7 +359,7 @@ bool parse_flat(DefaultConstructible<FilePath>& p,
   return true;
 }
 
-bool parse_flat(const Image*& image, PyObject* args, int& n, int len){
+bool parse_flat(const Image*& image, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 1, "Canvas");
 
   scoped_ref ref(PySequence_GetItem(args, n));
@@ -356,7 +375,7 @@ bool parse_flat(const Image*& image, PyObject* args, int& n, int len){
   return true;
 }
 
-bool parse_flat(bool& value, PyObject* args, int& n, int len){
+bool parse_flat(bool& value, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 1, "boolean");
 
   if (PySequence_Check(args)){
@@ -373,7 +392,7 @@ bool parse_flat(bool& value, PyObject* args, int& n, int len){
   }
 }
 
-bool parse_flat(int& value, PyObject* args, int& n, int len){
+bool parse_flat(int& value, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 1, "integer");
 
   if (PySequence_Check(args)){
@@ -388,12 +407,15 @@ bool parse_flat(int& value, PyObject* args, int& n, int len){
   if (temp == -1 && PyErr_Occurred()){
     return false;
   }
-  value = static_cast<int>(temp); // Fixme: Check cast or change type
-  n += 1;
-  return true;
+
+  if (long_to_int(temp, &value)){
+    n += 1;
+    return true;
+  }
+  return false;
 }
 
-bool parse_flat(Index& value, PyObject* args, int& n, int len){
+bool parse_flat(Index& value, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 1, "index");
 
   if (PySequence_Check(args)){
@@ -411,12 +433,17 @@ bool parse_flat(Index& value, PyObject* args, int& n, int len){
   if (temp < 0){
     throw ValueError("Negative index specified.", n);
   }
-  value = Index(static_cast<int>(temp)); // Fixme: Use conversion function
-  n += 1;
-  return true;
+
+  int v;
+  if (long_to_int(temp, &v)){
+    value = Index(v);
+    n += 1;
+    return true;
+  }
+  return false;
 }
 
-bool parse_flat(coord& value, PyObject* args, int& n, int len){
+bool parse_flat(coord& value, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 1, "float");
 
   if (parse_coord(args, n, &value)){
@@ -426,7 +453,7 @@ bool parse_flat(coord& value, PyObject* args, int& n, int len){
   return false;
 }
 
-bool parse_flat(IntSize& size, PyObject* args, int& n, int len){
+bool parse_flat(IntSize& size, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 2, "size");
 
   int w, h;
@@ -441,7 +468,7 @@ bool parse_flat(IntSize& size, PyObject* args, int& n, int len){
   return true;
 }
 
-bool parse_flat(IntRect& r, PyObject* args, int& n, int len){
+bool parse_flat(IntRect& r, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 4, "IntRect");
 
   int x, y, w, h;
@@ -468,7 +495,7 @@ bool parse_flat(IntRect& r, PyObject* args, int& n, int len){
   return true;
 }
 
-bool parse_flat(Tri& tri, PyObject* args, int& n, int len){
+bool parse_flat(Tri& tri, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 1, "Tri");
   if (PyObject_IsInstance(args, (PyObject*)&TriType)){
     tri = ((triObject*)args)->tri;
@@ -487,7 +514,7 @@ bool parse_flat(Tri& tri, PyObject* args, int& n, int len){
   return true;
 }
 
-bool parse_flat(Radii& radii, PyObject* args, int& n, int len){
+bool parse_flat(Radii& radii, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 2, "Radii");
 
   coord rx, ry;
@@ -500,7 +527,7 @@ bool parse_flat(Radii& radii, PyObject* args, int& n, int len){
   return true;
 }
 
-bool parse_flat(Color& color, PyObject* args, int& n, int len){
+bool parse_flat(Color& color, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   const int items = len - n;
   throw_insufficient_args_if(items < 3, "color");
 
@@ -530,26 +557,24 @@ bool parse_flat(Color& color, PyObject* args, int& n, int len){
   return true;
 }
 
-bool parse_flat(ColorSpan& colorSpan, PyObject* args, int& n, int len){
-  const int numItems = len - n;
+bool parse_flat(ColorSpan& colorSpan, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
+  const auto numItems = len - n;
   throw_insufficient_args_if(numItems < 2, "ColorSpan");
 
   scoped_ref maybeColor(PySequence_GetItem(args, n));
   scoped_ref maybeSize(PySequence_GetItem(args, n + 1));
 
   Color color;
-  int n2 = 0;
+  Py_ssize_t n2 = 0;
   if (!parse_flat(color, maybeColor.get(), n2,
-    static_cast<int>(PySequence_Length(maybeColor.get())))) // Fixme: Check cast/Change type
+      PySequence_Length(maybeColor.get())))
   {
     throw TypeError("First item of ColorSpan must be a color.");
   }
 
   IntSize size;
-  int n3 = 0;
-  if (!parse_flat(size, maybeSize.get(), n3,
-    static_cast<int>(PySequence_Length(maybeSize.get())))) // Fixme: Check cast/Change type
-  {
+  Py_ssize_t n3 = 0;
+  if (!parse_flat(size, maybeSize.get(), n3, PySequence_Length(maybeSize.get()))){
     throw TypeError("Second item of ColorSpan must be a size.");
   }
 
@@ -558,7 +583,7 @@ bool parse_flat(ColorSpan& colorSpan, PyObject* args, int& n, int len){
   return true;
 }
 
-bool parse_flat(Rect& r, PyObject* args, int& n, int len){
+bool parse_flat(Rect& r, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 4, "Rect");
 
   coord x, y, w, h;
@@ -626,7 +651,7 @@ static bool parse_non_sequence(Paint& paint, PyObject* arg){
   return false;
 }
 
-bool parse_flat(Paint& paint, PyObject* args, int& n, int len){
+bool parse_flat(Paint& paint, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   if (!PySequence_Check(args)){
     if (parse_non_sequence(paint, args)){
       return true;
@@ -663,7 +688,7 @@ bool parse_flat(Paint& paint, PyObject* args, int& n, int len){
   }
 }
 
-bool parse_flat(IntLineSegment& line, PyObject* args, int& n, int len){
+bool parse_flat(IntLineSegment& line, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 4, "line segment");
 
   int x0;
@@ -686,7 +711,7 @@ bool parse_flat(IntLineSegment& line, PyObject* args, int& n, int len){
   return true;
 }
 
-bool parse_flat(IntPoint& pt, PyObject* args, int& n, int len){
+bool parse_flat(IntPoint& pt, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 2, "IntPoint");
 
   int x, y;
@@ -699,7 +724,7 @@ bool parse_flat(IntPoint& pt, PyObject* args, int& n, int len){
   return true;
 }
 
-bool parse_flat(ColorStop& stop, PyObject* args, int& n, int len){
+bool parse_flat(ColorStop& stop, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 2, "color stop");
 
   double offset;
@@ -724,7 +749,7 @@ bool parse_flat(ColorStop& stop, PyObject* args, int& n, int len){
   return true;
 }
 
-bool parse_flat(LineSegment& line, PyObject* args, int& n, int len){
+bool parse_flat(LineSegment& line, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 4, "line segment");
 
   coord x0;
@@ -747,7 +772,7 @@ bool parse_flat(LineSegment& line, PyObject* args, int& n, int len){
   return true;
 }
 
-bool parse_flat(Point& pt, PyObject* args, int& n, int len){
+bool parse_flat(Point& pt, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 2, "IntPoint");
 
   coord x, y;
@@ -760,7 +785,7 @@ bool parse_flat(Point& pt, PyObject* args, int& n, int len){
   return true;
 }
 
-bool parse_flat(ColRGB& color, PyObject* args, int& n, int len){
+bool parse_flat(ColRGB& color, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 3, "RGB-color");
 
   int r, g, b;
@@ -779,7 +804,7 @@ bool parse_flat(ColRGB& color, PyObject* args, int& n, int len){
   return true;
 }
 
-bool parse_flat(std::string& value, PyObject* args, int& n, int len){
+bool parse_flat(std::string& value, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 1, "byte string");
 
   if (parse_bytes(args, n, &value)){
@@ -789,7 +814,8 @@ bool parse_flat(std::string& value, PyObject* args, int& n, int len){
   return false;
 }
 
-bool parse_flat(utf8_string& value, PyObject* args, int& n, int /*len*/){
+bool parse_flat(utf8_string& value, PyObject* args, Py_ssize_t& n,
+  Py_ssize_t /*len*/){
   if (n != 0){
     throw ValueError("Flat string parse not starting at 0?");
   }
@@ -806,7 +832,7 @@ bool parse_flat(utf8_string& value, PyObject* args, int& n, int /*len*/){
     });
 }
 
-bool parse_flat(Settings& s, PyObject* args, int& n, int len){
+bool parse_flat(Settings& s, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 1, "Settings");
 
   scoped_ref ref(PySequence_GetItem(args, n));
@@ -819,7 +845,7 @@ bool parse_flat(Settings& s, PyObject* args, int& n, int len){
   return true;
 }
 
-static Bitmap* as_Bitmap(PyObject* obj, int n){
+static Bitmap* as_Bitmap(PyObject* obj, Py_ssize_t n){
   if (!PyObject_IsInstance(obj, (PyObject*)&BitmapType)){
 
     PyErr_SetString(PyExc_ValueError, space_sep("Argument", str_int(n + 1), "must be a Bitmap").c_str());
@@ -829,7 +855,7 @@ static Bitmap* as_Bitmap(PyObject* obj, int n){
   return py_bitmap->bmp;
 }
 
-bool parse_flat(Bitmap& bmp, PyObject* args, int& n, int len){
+bool parse_flat(Bitmap& bmp, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 1, "Bitmap");
 
   scoped_ref ref(PySequence_GetItem(args, n));
@@ -843,7 +869,7 @@ bool parse_flat(Bitmap& bmp, PyObject* args, int& n, int len){
   return true;
 }
 
-bool parse_flat(AngleSpan& span, PyObject* args, int& n, int len){
+bool parse_flat(AngleSpan& span, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 2, "angle span");
 
   coord a1;
@@ -858,7 +884,7 @@ bool parse_flat(AngleSpan& span, PyObject* args, int& n, int len){
   return true;
 }
 
-bool parse_flat(KeyPress& value, PyObject* args, int& n, int len){
+bool parse_flat(KeyPress& value, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 2, "KeyPress");
 
   int keyCode, modifier;

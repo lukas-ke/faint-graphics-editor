@@ -98,13 +98,19 @@ struct ArgParse{
   // results in a tuple (to prepare the actual C++ function call) and
   // keep recursin'.
   template<class...PARSED>
-  static PyObject* ParseNext(const std::tuple<PARSED...>& parsed, PyObject* pyArgs, int n, int len, const FUNC& f){
+  static PyObject* ParseNext(const std::tuple<PARSED...>& parsed,
+    PyObject* pyArgs,
+    Py_ssize_t n,
+    Py_ssize_t len,
+    const FUNC& f)
+  {
     typename plain_type2type<HEAD>::type current;
     if (!parse_item(current, pyArgs, n, len, true)){
       return nullptr;
     }
     else{
-      return ArgParse<RET, FUNC, Args...>::ParseNext(std::tuple_cat(parsed, std::tie(current)), pyArgs, n, len, f);
+      return ArgParse<RET, FUNC, Args...>::ParseNext(std::tuple_cat(parsed,
+        std::tie(current)), pyArgs, n, len, f);
     }
   }
 };
@@ -113,7 +119,12 @@ template<class RET, class FUNC, class HEAD>
 struct ArgParse<RET, FUNC, HEAD>{
   // Parse the last argument
   template<class...PARSED>
-  static PyObject* ParseNext(const std::tuple<PARSED...>& t, PyObject* pyArgs, int n, int len, const FUNC& f){
+  static PyObject* ParseNext(const std::tuple<PARSED...>& t,
+    PyObject* pyArgs,
+    Py_ssize_t n,
+    Py_ssize_t len,
+    const FUNC& f)
+  {
     typename plain_type2type<HEAD>::type current;
     if (!parse_item(current, pyArgs, n, len, true)){
       return nullptr;
@@ -138,8 +149,8 @@ struct ArgParse<RET, FUNC, HEAD>{
 template<typename Tuple, typename RET, typename FUNC, class HEAD, class... Args>
 PyObject* call_cpp_function(PyObject* pyArgs, const FUNC& f, const Tuple& t){
   try{
-    int len = static_cast<int>(PySequence_Length(pyArgs)); // Fixme: Check cast
-    int n = 0;
+    Py_ssize_t len = PySequence_Length(pyArgs);
+    Py_ssize_t n = 0;
     return ArgParse<RET, FUNC, HEAD, Args...>::ParseNext(t, pyArgs, n, len, f);
   }
   catch (const PythonError& error){
@@ -361,8 +372,10 @@ struct setter_t{
 
     try{
       typename plain_type2type<T1>::type a1;
-      int n = 0;
-      const int len = static_cast<int>(PySequence_Check(arg) ? PySequence_Length(arg) : 1); // Fixme: Check cast (or change type of len)
+      Py_ssize_t n = 0;
+      const Py_ssize_t len = static_cast<int>(PySequence_Check(arg) ?
+        PySequence_Length(arg) : 1);
+
       if (!parse_flat(a1, arg, n, len)){
         return setter_fail;
       }
