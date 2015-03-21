@@ -17,7 +17,7 @@ using namespace faint;
 class Test_TextInfo : public TextInfo{
 public:
   int GetWidth(const utf8_string& str) const override{
-    return str.size() * 10;
+    return resigned(str.size()) * 10;
   }
 
   int ComputeRowHeight() const override{

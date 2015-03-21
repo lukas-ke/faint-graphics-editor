@@ -332,11 +332,13 @@ IntRect ObjText::GetRefreshRect() const{
     // Fixme: Slow.
     TextInfoDC info(m_settings);
     text_lines_t lines = split_string(info, m_textBuf.get(), max_width_t());
-    int w = 0;
-    int h = info.ComputeRowHeight() * lines.size();
+    
+    int w = 0;        
     for (auto l : lines){
       w = std::max(info.GetWidth(l.text), w);
     }
+    
+    const int h = info.ComputeRowHeight() * resigned(lines.size());
     return floiled(bounding_rect(Tri(m_tri.P0(), m_tri.GetAngle(), Size(w,h))));
   }
 }

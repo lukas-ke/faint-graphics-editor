@@ -32,7 +32,7 @@ void gui_test_image_toggle_ctrl(wxWindow* p, faint::StatusInterface& status,
 
   const IntSize bitmapSize(28, 23);
   {
-    auto c = create_image_toggle(p,
+    create_image_toggle(p,
       ts_BrushShape,
       bitmapSize,
       status,
@@ -40,8 +40,6 @@ void gui_test_image_toggle_ctrl(wxWindow* p, faint::StatusInterface& status,
       {ToggleImage(art.Get(Icon::BRUSH_CIRCLE), 1, "Circle"),
        ToggleImage(art.Get(Icon::BRUSH_RECT), 0, "Rect"),
        ToggleImage(art.Get(Icon::BRUSH_EXPERIMENTAL), 2, "Experimental")},
-      Axis::VERTICAL);
-
-    // set_pos(c, {10, 10});
+      Axis::VERTICAL);    
   }
 }

@@ -13,7 +13,7 @@ class TextInfo_split_string : public TextInfo{
 public:
   int GetWidth(const utf8_string& str) const override{
     // Use ten pixels for each character
-    return str.size() * 10;
+    return resigned(str.size()) * 10;
   }
 
   int ComputeRowHeight() const override{
