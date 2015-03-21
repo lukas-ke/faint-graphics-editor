@@ -93,6 +93,19 @@ void run_python_str(const utf8_string& cmd){
   get_python_context().EvalDone();
 }
 
+static std::vector<utf8_string> names_in_sequence(PyObject* seq){
+  std::vector<utf8_string> names;
+  const Py_ssize_t n = PySequence_Length(seq);
+  for (Py_ssize_t i = 0; i != n; i++){
+    scoped_ref name(PySequence_GetItem(seq, i));
+    scoped_ref utf8(PyUnicode_AsUTF8String(name.get()));
+    assert(utf8 != nullptr);
+    char* str = PyBytes_AsString(utf8.get()); // Should not be deallocated
+    names.emplace_back(str);
+  }
+  return names;
+}
+
 std::vector<utf8_string> list_ifaint_names(){
   scoped_ref module(PyImport_ImportModule("ifaint"));
   assert(module != nullptr);
@@ -103,16 +116,7 @@ std::vector<utf8_string> list_ifaint_names(){
   scoped_ref keys(PyDict_Keys(dict.get()));
   assert(keys != nullptr);
 
-  std::vector<utf8_string> names;
-  const int n = static_cast<int>(PySequence_Length(keys.get())); // Fixme: Check cast or change type
-  for (int i = 0; i != n; i++){
-    scoped_ref name(PySequence_GetItem(keys.get(), i));
-    scoped_ref utf8(PyUnicode_AsUTF8String(name.get()));
-    assert(utf8 != nullptr);
-    char* str = PyBytes_AsString(utf8.get()); // Should not be deallocated
-    names.emplace_back(str);
-  }
-  return names;
+  return names_in_sequence(keys.get());
 }
 
 } // namespace

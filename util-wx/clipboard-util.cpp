@@ -33,26 +33,26 @@ static Optional<Size> deserialize_size(const utf8_string& str){
   wxString wxStr(to_wx(str));
   wxArrayString strs = wxSplit(to_wx(str), ',', '\0');
   if (strs.GetCount() != 2){
-    return no_option();
+    return {};
   }
 
   long width;
   if (!strs[0].ToLong(&width)){
-    return no_option();
+    return {};
   }
   if (width <= 0){
-    return no_option();
+    return {};
   }
 
   long height;
   if (!strs[1].ToLong(&height)){
-    return no_option();
+    return {};
   }
   if (height <= 0){
-    return no_option();
+    return {};
   }
 
-  return option(Size(static_cast<coord>(width), static_cast<coord>(height))); // Fixme: Check casts
+  return {Size(static_cast<coord>(width), static_cast<coord>(height))};
 }
 
 Optional<Size> clipboard_get_size(){
