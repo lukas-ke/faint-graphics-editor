@@ -433,7 +433,7 @@ static std::vector<IconDirEntry> create_icon_dir_entries(const ico_vec& bitmaps,
 
       // Offset to png-data, i.e. past both headers.
       entry.offset = asserting_static_cast<uint32_t>(offset + lengthOfHeaders);
-      offset += static_cast<int>(entry.bytes + lengthOfHeaders);
+      offset += asserting_static_cast<int>(entry.bytes + lengthOfHeaders);
     }
     else if (compression == IcoCompression::BMP){
       entry.bytes =
