@@ -42,7 +42,6 @@ def find_files():
     installDepDir = os.path.join(sourceDir, "installer/installdep")
     installDepPython = os.path.join(installDepDir, "python")
     SysWOW64Dir = os.path.join(installDepDir, "SysWOW64")
-    paletteDir = os.path.join(sourceDir, "palettes")
     graphicsDir = os.path.join(sourceDir, "graphics")
 
     helpRootDir = os.path.join(sourceDir, "help")
@@ -62,8 +61,6 @@ def find_files():
 
     graphicsFiles = list_join(graphicsDir, graphicsDir, ('.png', '.cur'))
 
-    paletteFiles = list_join(paletteDir, paletteDir, '.txt')
-
     helpRootFiles = list_join(helpRootDir, helpRootDir, ('.html', '.dat'))
     helpImageFiles = list_join(helpImageDir, helpImageDir, ('.png', '.jpg'))
     pythonPyFiles = list_join(pythonPyDir, pythonPyDir, '.py')
@@ -74,7 +71,6 @@ def find_files():
 
     return (("$INSTDIR",instDirFiles),
             ("$INSTDIR\\graphics", graphicsFiles),
-            ("$INSTDIR\\palettes", paletteFiles),
             ("$INSTDIR\\help", helpRootFiles),
             ("$INSTDIR\\help\\images", helpImageFiles),
             ("$INSTDIR\\py", []),

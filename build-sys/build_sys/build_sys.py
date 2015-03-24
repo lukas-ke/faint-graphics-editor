@@ -100,8 +100,9 @@ def check_valid_release(cmd_opts, opts, clean_build):
                  "(build/objs)")
 
     if versioned_unfilthy(cmd_opts):
-        if gen_build_info.working_copy_modified(opts.project_root):
-            fail("Build with --version requires unmodified working copy.")
+        # if gen_build_info.working_copy_modified(opts.project_root):
+        # fail("Build with --version requires unmodified working copy.")
+        return
 
     if versioned(cmd_opts) and opts.makensis_exe is None:
         fail("Build with --version requires path to nsis in build.cfg")
@@ -278,7 +279,7 @@ def build(opts, cmdline):
         print("* Generating %s installer." % cmd_opts.version)
         oldDir = os.getcwd()
         os.chdir("../installer")
-        nsiFile = gennsis.run(cmd_opts.version)
+        nsiFile = gen_nsis.run(cmd_opts.version)
         create_installer(opts.makensis_exe, nsiFile)
         os.chdir(oldDir)
     return 0
