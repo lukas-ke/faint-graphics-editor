@@ -100,7 +100,23 @@ using rgb_prefix = Distinct<bool, category_formatting, 0>;
 utf8_string str_smart_rgba(const Color&, const rgb_prefix&);
 
 utf8_string str_int(int);
-utf8_string str_int_lpad(int, int w); // Fixme: Use a type for the padding, with _pad or smth
+
+class left_pad{
+public:
+  explicit constexpr left_pad(int pad) : m_pad(pad)
+  {}
+
+  left_pad(float) = delete;
+
+  operator int() const{
+    return m_pad;
+  }
+
+private:
+  int m_pad;
+};
+
+utf8_string str_int(int, left_pad);
 
 utf8_string str_uint(size_t);
 utf8_string str_uint(int) = delete;

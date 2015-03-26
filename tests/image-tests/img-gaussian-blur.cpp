@@ -19,9 +19,11 @@ void img_gaussian_blur(){
   for (auto sigma : {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}){
     t.AddRow(str_int(sigma),
       save_test_image(gaussian_blur_exact(bmp, sigma),
-        FileName(no_sep("gaussian_blur_exact_", str_int_lpad(sigma, 3), ".png"))),
+        FileName(no_sep("gaussian_blur_exact_",
+            str_int(sigma, left_pad(3)), ".png"))),
       save_test_image(gaussian_blur_fast(bmp, sigma),
-        FileName(no_sep("gaussian_blur_fast_", str_int_lpad(sigma, 3), ".png"))));
+        FileName(no_sep("gaussian_blur_fast_",
+            str_int(sigma, left_pad(3)), ".png"))));
   }
   save_image_table(t);
 }

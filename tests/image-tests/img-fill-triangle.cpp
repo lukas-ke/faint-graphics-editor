@@ -33,6 +33,6 @@ void img_fill_triangle(){
       color_black);
 
     save_test_image(bmp,
-      FileName("triangle_" + str_int_lpad(i, 3) + ".png"));
+      FileName("triangle_" + str_int(i, left_pad(3)) + ".png"));
   }
 }

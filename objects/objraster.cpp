@@ -18,6 +18,7 @@
 #include "bitmap/auto-crop.hh"
 #include "bitmap/draw.hh"
 #include "commands/set-bitmap-cmd.hh"
+#include "geo/axis.hh"
 #include "geo/geo-func.hh"
 #include "geo/int-rect.hh"
 #include "geo/pathpt.hh"
@@ -28,7 +29,6 @@
 #include "rendering/faint-dc.hh"
 #include "text/utf8-string.hh"
 #include "util/at-most.hh"
-#include "util/common-fwd.hh" // Fixme: For Axis
 #include "util/default-settings.hh"
 #include "util/object-util.hh"
 

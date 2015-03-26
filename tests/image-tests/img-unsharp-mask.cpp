@@ -17,7 +17,8 @@ void img_unsharp_mask(){
   for (auto sigma : {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}){
     t.AddRow(str_int(sigma),
       save_test_image(unsharp_mask_fast(bmp, (double)sigma),
-        FileName(no_sep("unsharp_mask_fast_", str_int_lpad(sigma, 3), ".png"))),
+        FileName(no_sep("unsharp_mask_fast_", str_int(sigma, left_pad(3)),
+          ".png"))),
       sourceFile);
   }
 

@@ -52,14 +52,14 @@ void img_text(){
     auto extents = dc.TextExtents(text, s);
     t.AddRow(label,
       save_test_image(bmp,
-        FileName("text_" + str_int_lpad(imageNum, 3) + ".png")),
+        FileName("text_" + str_int(imageNum, left_pad(3)) + ".png")),
 
       save_test_image(with_rect(bmp,
           tri_from_rect(translated(extents.ink, bounds.P0()))),
-        FileName("text_" + str_int_lpad(imageNum + 1, 3) + ".png")),
+        FileName("text_" + str_int(imageNum + 1, left_pad(3)) + ".png")),
 
       save_test_image(with_rect(bmp, bounds),
-        FileName("text_" + str_int_lpad(imageNum + 2, 3) + ".png")));
+        FileName("text_" + str_int(imageNum + 2, left_pad(3)) + ".png")));
     imageNum += 3;
   }
 

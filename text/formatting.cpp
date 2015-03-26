@@ -130,7 +130,7 @@ utf8_string str_int(int v){
   return utf8_string(ss.str());
 }
 
-utf8_string str_int_lpad(int v, int w){
+utf8_string str_int(int v, left_pad w){
   std::stringstream ss;
   ss << std::setfill('0') << std::setw(w) << std::right;
   ss << v;
