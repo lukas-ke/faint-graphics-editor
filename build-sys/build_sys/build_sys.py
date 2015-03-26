@@ -97,12 +97,11 @@ def check_valid_release(cmd_opts, opts, clean_build):
     if not clean_build:
         if versioned_unfilthy(cmd_opts):
             fail("Build with --version requires empty output folder "
-                 "(build/objs)")
+                 "(build/objs-release)")
 
     if versioned_unfilthy(cmd_opts):
-        # Fixme: Re-add the version check with git
-        # if gen_build_info.working_copy_modified(opts.project_root):
-        # fail("Build with --version requires unmodified working copy.")
+        if gen_build_info.working_copy_modified(opts.project_root):
+            fail("Build with --version requires unmodified working copy.")
         return
 
     if versioned(cmd_opts) and opts.makensis_exe is None:

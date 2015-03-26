@@ -19,7 +19,7 @@
 import datetime
 import os
 from locale import getpreferredencoding
-from subprocess import Popen, PIPE
+import subprocess
 
 def _now_utc():
     return datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
@@ -29,6 +29,8 @@ def _write_string_func( f, name, value ):
     f.write('faint::utf8_string %s(){\n' % name)
     f.write('  return "%s";\n' % value)
     f.write('}\n')
+
+# Fixme: Add git version-info (e.g. hash)
 
 def run(faint_root, version):
     generated_dir = os.path.join(faint_root, "generated")
@@ -45,3 +47,6 @@ def run(faint_root, version):
     f.write('} // namespace\n')
     f.close()
     return cpp_path
+
+def working_copy_modified(path):
+    return subprocess.call('git diff --quiet %s' % path) == 1
