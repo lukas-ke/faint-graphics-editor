@@ -100,6 +100,7 @@ def check_valid_release(cmd_opts, opts, clean_build):
                  "(build/objs)")
 
     if versioned_unfilthy(cmd_opts):
+        # Fixme: Re-add the version check with git
         # if gen_build_info.working_copy_modified(opts.project_root):
         # fail("Build with --version requires unmodified working copy.")
         return
