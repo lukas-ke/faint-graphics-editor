@@ -188,8 +188,8 @@ OrError<Bitmap> read_png(const FilePath& path){
   try {
     Bitmap bmp(IntSize(static_cast<int>(width), static_cast<int>(height)));
     auto* p = bmp.GetRaw();
-    auto stride = bmp.GetStride();
-    const auto srcBpp = static_cast<png_uint_32>(faint::BPP);
+    const png_uint_32 stride = convert(bmp.GetStride());
+    const png_uint_32 srcBpp = convert(faint::BPP);
 
     for (png_uint_32 y = 0; y < height; y++){
       for (png_uint_32 x = 0; x < width; x++){
@@ -306,14 +306,14 @@ PngWriteResult write_with_libpng(const char* path, const Bitmap& bmp){
   assert((width - 1) * 4 + 3 < bytesPerRow);
 
   const auto* src = bmp.GetRaw();
-  const auto stride = bmp.GetStride();
-  const auto srcBpp = static_cast<png_uint_32>(faint::BPP);
+  const png_uint_32 stride = convert(bmp.GetStride());
+  const png_uint_32 srcBpp = convert(faint::BPP);
   for (png_uint_32 y = 0; y != height; y++){
     auto row = (png_byte*) malloc(bytesPerRow);
     rowPointers[y] = row;
     for (png_uint_32 x = 0; x != width; x++){
       // Fill in this row with bitmap-data
-      int i = y * stride + x * srcBpp;
+      auto i = y * stride + x * srcBpp;
       row[x * 4] = src[i + faint::iR];
       row[x * 4 + 1] = src[i + faint::iG];
       row[x * 4 + 2] = src[i + faint::iB];
