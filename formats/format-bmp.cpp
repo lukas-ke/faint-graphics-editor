@@ -19,7 +19,7 @@
 #include "formats/format.hh"
 #include "formats/bmp/file-bmp.hh"
 #include "util/image-props.hh"
-#include "util/image-util.hh"
+#include "util/image-util.hh" // flatten
 
 namespace faint{
 
@@ -45,14 +45,14 @@ public:
     : Format(FileExtension("bmp"),
       get_bmp_label(quality),
       can_save(true),
-      can_load(false)),
+      can_load(false)), // Can only load when quality not specified
       m_quality(quality)
   {}
 
   FormatBMP()
     : Format(FileExtension("bmp"),
       label_t("Windows Bitmap (*.bmp)"),
-      can_save(false),
+      can_save(false), // Can only save when quality specified
       can_load(true))
   {}
 

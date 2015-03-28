@@ -25,8 +25,8 @@ Format* format_load_bmp();
 Format* format_cur();
 Format* format_gif();
 Format* format_ico();
+Format* format_png();
 Format* format_wx_jpg();
-Format* format_wx_png();
 
 } // namespace
 

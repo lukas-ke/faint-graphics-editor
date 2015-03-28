@@ -27,6 +27,7 @@ const int iR = 2;
 const int iG = 1;
 const int iB = 0;
 const int iA = 3;
+const int CHANNEL_MAX = 255;
 
 class Bitmap {
   // BGRA32 Bitmap
@@ -75,6 +76,9 @@ void clear(Bitmap&, const Color&);
 void clear(Bitmap&, const ColRGB&);
 void clear(Bitmap&, const Paint&);
 bool fully_inside(const IntRect&, const Bitmap&);
+
+// True if all alpha-values are 255
+bool fully_opaque(const Bitmap&);
 Color get_color(const Bitmap&, const IntPoint&);
 Color get_color_raw(const Bitmap&, int x, int y);
 bool is_blank(const Bitmap&);

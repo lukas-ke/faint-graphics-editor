@@ -250,6 +250,21 @@ bool fully_inside(const IntRect& r, const Bitmap& bmp){
   return true;
 }
 
+bool fully_opaque(const Bitmap& bmp){
+  const int stride = bmp.m_row_stride;
+  const auto* p = bmp.GetRaw();
+
+  for (int y = 0; y != bmp.m_h; y++){
+    for (int x = 0; x != bmp.m_w; x++){
+      const int i = y * stride + x * BPP;
+      if (p[i + iA] != CHANNEL_MAX){
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 bool is_blank(const Bitmap& bmp){
   Color color = get_color(bmp, IntPoint(0,0));
   for (int y = 0; y != bmp.m_h; y++){
