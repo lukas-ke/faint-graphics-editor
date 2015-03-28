@@ -50,6 +50,7 @@ def recreate_config(platform):
     f.write("glib_include=\n")
     f.write("glib_lib=\n")
     f.write("glib_config_include=\n")
+    f.write("pnglib_include=\n")
     if platform == 'msw':
         f.write("[nsis]\n")
         f.write("makensis=\n")
@@ -83,6 +84,8 @@ def read_config(platform):
     glib_config_include = config.get('folders', 'glib_config_include')
     bo.parallell_compiles = int(config.get('other', 'parallell_compiles'))
 
+    pnglib_include = config.get('folders', 'pnglib_include')
+
     bo.extra_resource_root = wx_root
     if bo.platform == 'msw':
         bo.makensis_exe = config.get('nsis', 'makensis')
@@ -106,8 +109,8 @@ def read_config(platform):
         python_lib == "" or
         python_include == "" or
         cairo_include == "" or
-        pango_include == ""):
-
+        pango_include == "" or
+        pnglib_include == ""):
         print("Error: Incorrect paths in build.cfg")
         exit(1)
 
@@ -131,12 +134,12 @@ def read_config(platform):
     bo.system_include_folders = [
         join_path(wx_vc_lib, "mswu"),
         join_path(wx_root, "include"),
-        join_path(wx_root, "src/png"),
         python_include,
         cairo_include,
         pango_include,
         glib_include,
         glib_config_include,
+        pnglib_include
     ]
 
     bo.include_folders = [bo.project_root]

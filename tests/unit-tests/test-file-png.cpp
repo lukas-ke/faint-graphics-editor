@@ -1,5 +1,5 @@
 // -*- coding: us-ascii-unix -*-
-#include "/usr/include/libpng12/png.h"
+#include "png.h"
 #include "test-sys/test.hh"
 #include "util-wx/stream.hh"
 #include "tests/test-util/file-handling.hh"
@@ -13,7 +13,6 @@
 #pragma warning(disable:4611) // _setjmp and C++-object destruction
 #endif
 
-// Fixme: Not int for w, h
 bool read_png(const char* path, png_bytep** rowPointers,
   png_uint_32* width,
   png_uint_32* height)
