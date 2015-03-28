@@ -36,32 +36,41 @@ enum class PngReadResult{
   ERROR_READ_DATA
 };
 
-static utf8_string to_string(PngReadResult result){
-  // Fixme: Compare error text style with bmp-load errors etc
+static utf8_string to_string(PngReadResult result, const FilePath& p){
   using R = PngReadResult;
+
+  auto failed_read = [](const utf8_string& s){
+    return endline_sep("Failed reading png.\n", s);
+  };
+
+  auto failed_read_libpng = [&](const utf8_string& func){
+    return failed_read(space_sep("libpng", quoted(func), "exited with error."));
+  };
+
   if (result == R::OK){
     return "No error";
   }
   else if (result == R::ERROR_OPEN_FILE){
-    return "Failed opening file for reading.";
+    return failed_read(endline_sep("File could not be opened for reading.",
+      space_sep("File:", p.Str())));
   }
   else if (result == R::ERROR_PNG_SIGNATURE){
-    return "Incorrect PNG signature.";
+    return failed_read("Incorrect PNG signature.");
   }
   else if (result == R::ERROR_CREATE_READ_STRUCT){
-    return "Failed creating read structure"; // Fixme: Memory? Png init?
+    return failed_read_libpng("create_read_struct");
   }
   else if (result == R::ERROR_CREATE_INFO_STRUCT){
-    return "Failed creating info structure"; // Fixme: Memory? Png init?
+    return failed_read_libpng("png_create_info_struct");
   }
   else if (result == R::ERROR_INIT_IO){
-    return "Failed initializing IO"; // Fixme: Memory? Png init?
+    return failed_read_libpng("png_init_io");
   }
   else if (result == R::ERROR_READ_DATA){
-    return "Failed reading image data.";
+    return failed_read_libpng("png_read_image");
   }
   else{
-    return "Unknown error.";
+    return failed_read("For reasons unknown.");
   }
 }
 
@@ -189,17 +198,18 @@ OrError<Bitmap> read_png(const FilePath& path){
     &pngBitsPerPixel);
 
   if (result != PngReadResult::OK){
-    return to_string(result);
+    return to_string(result, path);
   }
 
   if (bitDepth != 8){
-    // Fixme: Handle different bit-depths
+    // Fixme: Handle all bit-depths
     free_rows(rowPointers, height);
 
     return {"Unsupported bit depth: " + str_int(bitDepth)};
   }
+
   if (colorType != PNG_COLOR_TYPE_RGB_ALPHA && colorType != PNG_COLOR_TYPE_RGB){
-    // Fixme: Handle different byte-orders
+    // Fixme: Handle all color types
     free_rows(rowPointers, height);
     return {"Unsuppored png color-type: " + color_type_to_string(colorType)};
   }
@@ -211,6 +221,7 @@ OrError<Bitmap> read_png(const FilePath& path){
   if (!can_represent<IntSize::value_type>(width)){
     return {"Unsupported png-width"};
   }
+
   if (!can_represent<IntSize::value_type>(height)){
     return {"Unsupported png-height"};
   }
@@ -238,6 +249,7 @@ OrError<Bitmap> read_png(const FilePath& path){
         }
       }
     }
+
     free_rows(rowPointers, height);
     return bmp;
   }
@@ -258,32 +270,43 @@ enum class PngWriteResult{
   ERROR_WRITE_END
 };
 
-const utf8_string to_string(PngWriteResult result){
+const utf8_string to_string(PngWriteResult result, const FilePath& p){
   // Fixme: Compare error text style with bmp-save errors etc
   using R = PngWriteResult;
+
+  auto failed_write = [](const utf8_string& s){
+    return endline_sep("Failed saving png.\n", s);
+  };
+
+  auto failed_write_libpng = [&](const utf8_string& func){
+    return failed_write(space_sep("libpng", quoted(func), "exited with error."));
+  };
+
+
   if (result == R::OK){
-    return "No error.";
+    return "No error";
   }
   else if (result == R::ERROR_OPEN_FILE){
-    return "Failed opening file for writing.";
+    return failed_write(endline_sep("File could not be opened for writing.",
+      space_sep("File:", p.Str())));
   }
   else if (result == R::ERROR_CREATE_WRITE_STRUCT){
-    return "Failed creating write structure"; // Fixme: Memory? Png init?
+    return failed_write_libpng("png_create_write_struct");
   }
   else if (result == R::ERROR_INIT_IO){
-    return "Failed failed initializing IO"; // Fixme: Memory? Png init?
+    return failed_write_libpng("png_init_io");
   }
   else if (result == R::ERROR_WRITE_HEADER){
-    return "Failed writing header"; // Fixme: Memory? Png init?
+    return failed_write_libpng("png_write_info");
   }
   else if (result == R::ERROR_WRITE_DATA){
-    return "Failed writing image data";
+    return failed_write_libpng("png_write_image");
   }
   else if (result == R::ERROR_WRITE_END){
-    return "Failed writing trailer"; // Fixme: Maybe not trailer
+    return failed_write_libpng("png_write_end");
   }
   else{
-    return "Unknown error.";
+    return "For reasons unknown.";
   }
 }
 
@@ -389,7 +412,7 @@ SaveResult write_png(const FilePath& path, const Bitmap& bmp){
   PngWriteResult result = write_with_libpng(path.Str().c_str(), bmp);
   return result == PngWriteResult::OK ?
     SaveResult::SaveSuccessful() :
-    SaveResult::SaveFailed(to_string(result));
+    SaveResult::SaveFailed(to_string(result, path));
 }
 
 } // namespace
