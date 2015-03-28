@@ -67,24 +67,28 @@ def read_config(platform):
     bo.platform = platform
     config = configparser.RawConfigParser()
     config.read( 'build.cfg')
-    wx_root = config.get('folders', 'wx_root')
-    wx_vc_lib = join_path(wx_root, "lib", "vc_lib")
+    try:
+        wx_root = config.get('folders', 'wx_root')
+        wx_vc_lib = join_path(wx_root, "lib", "vc_lib")
 
-    cairo_include = config.get('folders', 'cairo_include')
-    cairo_lib = config.get('folders', 'cairo_lib')
+        cairo_include = config.get('folders', 'cairo_include')
+        cairo_lib = config.get('folders', 'cairo_lib')
+        
+        pango_include = config.get('folders', 'pango_include')
+        pango_lib = config.get('folders', 'pango_lib')
 
-    pango_include = config.get('folders', 'pango_include')
-    pango_lib = config.get('folders', 'pango_lib')
+        python_include = config.get('folders', 'python_include')
+        python_lib = config.get('folders', 'python_lib')
 
-    python_include = config.get('folders', 'python_include')
-    python_lib = config.get('folders', 'python_lib')
+        glib_include = config.get('folders', 'glib_include')
+        glib_lib = config.get('folders', 'glib_lib')
+        glib_config_include = config.get('folders', 'glib_config_include')
+        bo.parallell_compiles = int(config.get('other', 'parallell_compiles'))
 
-    glib_include = config.get('folders', 'glib_include')
-    glib_lib = config.get('folders', 'glib_lib')
-    glib_config_include = config.get('folders', 'glib_config_include')
-    bo.parallell_compiles = int(config.get('other', 'parallell_compiles'))
-
-    pnglib_include = config.get('folders', 'pnglib_include')
+        pnglib_include = config.get('folders', 'pnglib_include')
+    except configparser.NoOptionError as e:
+        print("Error in build.cfg:", e)
+        exit(1)
 
     bo.extra_resource_root = wx_root
     if bo.platform == 'msw':
