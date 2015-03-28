@@ -13,8 +13,6 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include <csetjmp>
-#include <cstdint>
 #include "png.h" // libpng
 
 #include "bitmap/bitmap-exception.hh"
@@ -172,19 +170,19 @@ OrError<Bitmap> read_png(const FilePath& path){
   if (bitDepth != 8){
     // Fixme: Handle different bit-depths
     free_rows(rowPointers, height);
-    return "Unsupported bit depth";
+    return {"Unsupported bit depth"};
   }
   if (colorType != PNG_COLOR_TYPE_RGB_ALPHA){
     // Fixme: Handle different byte-orders
     free_rows(rowPointers, height);
-    return "Unsuppored png color-type";
+    return {"Unsuppored png color-type"};
   }
 
   if (!can_represent<IntSize::value_type>(width)){
-    return "Unsupported png-width";
+    return {"Unsupported png-width"};
   }
   if (!can_represent<IntSize::value_type>(height)){
-    return "Unsupported png-height";
+    return {"Unsupported png-height"};
   }
 
   try {
@@ -206,7 +204,7 @@ OrError<Bitmap> read_png(const FilePath& path){
   }
   catch (const BitmapException& e){
     free_rows(rowPointers, height);
-    return e.what();
+    return {e.what()};
   }
 }
 
