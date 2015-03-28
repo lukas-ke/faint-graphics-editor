@@ -109,6 +109,10 @@ public:
     }
   }
 
+  bool operator!=(const Either& other){
+    return !operator==(other);
+  }
+
 private:
   void DoGet(Optional<T1>*& opt){
     opt = &m_v1;

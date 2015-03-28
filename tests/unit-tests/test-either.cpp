@@ -72,4 +72,24 @@ void test_either(){
 
   ASSERT(either3.Get<Color>().IsSet());
   EQUAL(either3.Get<Color>().Get(), Color(0,255,0));
+
+  {
+    using T = Either<Color, IntSize>;
+
+    // Not equal, IntSize
+    VERIFY(T(IntSize(10, 10)) != T(IntSize(10, 11)));
+    VERIFY(!(T(IntSize(10, 10)) == T(IntSize(10, 11))));
+
+    // Equal, IntSize
+    VERIFY(T(IntSize(10, 10)) == T(IntSize(10, 10)));
+    VERIFY(!(T(IntSize(10, 10)) != T(IntSize(10, 10))));
+
+    // Not-equal, Color
+    VERIFY(T(Color(255, 0, 255)) != T(Color(255, 0, 254)));
+    VERIFY(!(T(Color(255, 0, 255)) == T(Color(255, 0, 254))));
+
+    // Equal Color
+    VERIFY(T(Color(255, 0, 255)) == T(Color(255, 0, 255)));
+    VERIFY(!(T(Color(255, 0, 255)) != T(Color(255, 0, 255))));
+  }
 }
