@@ -23,7 +23,6 @@ utf8_string::utf8_string(size_t n, const utf8_char& ch){
     m_data += ch.str();
   }
 }
-
 utf8_string::utf8_string(const utf8_char& ch)
   : utf8_string(1, ch)
 {}

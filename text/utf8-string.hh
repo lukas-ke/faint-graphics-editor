@@ -24,6 +24,8 @@ class utf8_string{
 public:
   static const size_t npos;
   utf8_string() = default;
+  utf8_string(const utf8_string&) = default;
+  utf8_string(utf8_string&&) = default;
   utf8_string(size_t n, const utf8_char&);
   explicit utf8_string(const std::string&);
   explicit utf8_string(const utf8_char&);
