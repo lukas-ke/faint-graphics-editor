@@ -71,7 +71,7 @@ PngReadResult read_with_libpng(const char* path,
   png_uint_32* height,
   png_byte* colorType,
   png_byte* bitDepth,
-  png_byte* bitsPerPixel)
+  int* bitsPerPixel)
 {
   FILE* f = fopen(path, "rb");
   if (f == nullptr){
@@ -179,7 +179,7 @@ OrError<Bitmap> read_png(const FilePath& path){
   png_uint_32 height;
   png_byte colorType;
   png_byte bitDepth;
-  png_byte pngBitsPerPixel;
+  int pngBitsPerPixel;
   PngReadResult result = read_with_libpng(path.Str().c_str(),
     &rowPointers,
     &width,
