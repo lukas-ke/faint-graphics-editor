@@ -17,8 +17,8 @@
 #include "app/canvas.hh"
 #include "bitmap/bitmap.hh"
 #include "formats/format.hh"
+#include "formats/format-util.hh" // add_frame_or_set_error
 #include "formats/bmp/file-bmp.hh"
-#include "util/image-props.hh"
 #include "util/image-util.hh" // flatten
 
 namespace faint{
@@ -57,13 +57,7 @@ public:
   {}
 
   void Load(const FilePath& filePath, ImageProps& imageProps) override{
-    read_bmp(filePath).Visit(
-      [&](Bitmap& bmp){
-        imageProps.AddFrame(std::move(bmp), FrameInfo());
-      },
-      [&](const utf8_string& s){
-        imageProps.SetError(s);
-      });
+    add_frame_or_set_error(read_bmp(filePath), imageProps);
   }
 
   SaveResult Save(const FilePath& filePath, Canvas& canvas) override{
