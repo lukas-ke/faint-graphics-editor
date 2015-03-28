@@ -80,7 +80,8 @@ PngReadResult read_with_libpng(const char* path,
   png_uint_32* height,
   png_byte* colorType,
   png_byte* bitDepth,
-  int* bitsPerPixel)
+  int* bitsPerPixel,
+  std::map<utf8_string, utf8_string>& textChunks)
 {
   FILE* f = fopen(path, "rb");
   if (f == nullptr){
@@ -90,27 +91,34 @@ PngReadResult read_with_libpng(const char* path,
   png_byte sig[8];
   size_t readBytes = fread(sig, 1, 8, f);
   if (readBytes != 8){
+    fclose(f);
     return PngReadResult::ERROR_PNG_SIGNATURE;
   }
 
   if (!png_check_sig(sig, 8)){
+    fclose(f);
     return PngReadResult::ERROR_PNG_SIGNATURE;
   }
 
   png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,
     nullptr, nullptr, nullptr);
+
   if (png_ptr == nullptr){
+    fclose(f);
     return PngReadResult::ERROR_CREATE_READ_STRUCT;
   }
 
   png_infop info_ptr = png_create_info_struct(png_ptr);
   if (info_ptr == nullptr){
+    png_destroy_read_struct(&png_ptr, nullptr, nullptr);
+    fclose(f);
     return PngReadResult::ERROR_CREATE_INFO_STRUCT;
   }
 
   if (setjmp(png_jmpbuf(png_ptr))){
     // Fixme: Pass end_info
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
+    fclose(f);
     return PngReadResult::ERROR_INIT_IO;
   }
 
@@ -122,7 +130,18 @@ PngReadResult read_with_libpng(const char* path,
   int numText;
   if (png_get_text(png_ptr, info_ptr, &textPtr, &numText) > 0){
     for (int i = 0; i != numText; i++){
-      // Fixme: Store somehow
+      const auto& text(textPtr[i]);
+      auto len = strlen(text.key);
+      if (len == 0 || len > PNG_KEYWORD_MAX_LENGTH){
+        continue; // Fixme: Signal error
+      }
+      if (strlen(text.text) != text.text_length){
+        continue; // Fixme: Signal error
+      }
+      utf8_string key(text.key);
+      utf8_string value(text.text);
+
+      textChunks[key] = value;
     }
   }
 
@@ -138,6 +157,7 @@ PngReadResult read_with_libpng(const char* path,
 
   if (setjmp(png_jmpbuf(png_ptr))){
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
+    fclose(f);
     return PngReadResult::ERROR_READ_DATA;
   }
 
@@ -149,8 +169,8 @@ PngReadResult read_with_libpng(const char* path,
   png_read_image(png_ptr, *rowPointers);
   // Fixme: Read post-image-data
 
+  png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
   fclose(f);
-  png_destroy_read_struct(&png_ptr, nullptr, nullptr); // Maybe
   return PngReadResult::OK;
 }
 
@@ -189,13 +209,15 @@ OrError<Bitmap> read_png(const FilePath& path){
   png_byte colorType;
   png_byte bitDepth;
   int pngBitsPerPixel;
+  png_tEXt_map textChunks;
   PngReadResult result = read_with_libpng(path.Str().c_str(),
     &rowPointers,
     &width,
     &height,
     &colorType,
     &bitDepth,
-    &pngBitsPerPixel);
+    &pngBitsPerPixel,
+    textChunks);
 
   if (result != PngReadResult::OK){
     return to_string(result, path);
@@ -267,7 +289,12 @@ enum class PngWriteResult{
   ERROR_INIT_IO,
   ERROR_WRITE_HEADER,
   ERROR_WRITE_DATA,
-  ERROR_WRITE_END
+  ERROR_WRITE_END,
+  ERROR_WRITE_TEXT_KEY_ENCODING,
+  ERROR_WRITE_TEXT_VALUE_ENCODING,
+  ERROR_WRITE_TEXT_KEY_EMPTY,
+  ERROR_WRITE_TEXT_KEY_TOO_LONG,
+  ERROR_WRITE_TEXT_VALUE_TOO_LONG
 };
 
 const utf8_string to_string(PngWriteResult result, const FilePath& p){
@@ -305,12 +332,30 @@ const utf8_string to_string(PngWriteResult result, const FilePath& p){
   else if (result == R::ERROR_WRITE_END){
     return failed_write_libpng("png_write_end");
   }
+  else if (result == R::ERROR_WRITE_TEXT_KEY_ENCODING){
+    return failed_write(endline_sep("A specified tEXt-chunk key was not ascii.",
+      "Faint only supports ascii tEXt-chunks."));
+  }
+  else if (result == R::ERROR_WRITE_TEXT_KEY_EMPTY){
+    return failed_write("An empty key was specified for a tEXt-chunk.");
+  }
+  else if (result == R::ERROR_WRITE_TEXT_KEY_TOO_LONG){
+    return failed_write("Keys for tEXt-chunks may be at most " +
+      str_int(PNG_KEYWORD_MAX_LENGTH) + "-characters");
+  }
+  else if (result == R::ERROR_WRITE_TEXT_VALUE_TOO_LONG){
+    return failed_write("A value for a tEXt-chunks exceeded capacity of "
+      "png_size_t.");
+  }
   else{
-    return "For reasons unknown.";
+    return failed_write("For reasons unknown.");
   }
 }
 
-PngWriteResult write_with_libpng(const char* path, const Bitmap& bmp){
+PngWriteResult write_with_libpng(const char* path,
+  const Bitmap& bmp,
+  const png_tEXt_map& textChunks)
+{
   assert(bitmap_ok(bmp));
   png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
     nullptr, nullptr, nullptr);
@@ -363,6 +408,49 @@ PngWriteResult write_with_libpng(const char* path, const Bitmap& bmp){
     PNG_COMPRESSION_TYPE_BASE,
     PNG_FILTER_TYPE_BASE);
 
+  if (textChunks.size() != 0){
+    png_text* textItems = new png_text[textChunks.size()];
+    size_t i = 0;
+    for (const auto& kv : textChunks){
+      const auto& key = kv.first;
+      if (!is_ascii(key)){
+        delete[] textItems;
+        return PngWriteResult::ERROR_WRITE_TEXT_KEY_ENCODING;
+      }
+
+      if (key.size() > PNG_KEYWORD_MAX_LENGTH){
+        delete[] textItems;
+        return PngWriteResult::ERROR_WRITE_TEXT_KEY_TOO_LONG;
+      }
+      else if (key.size() == 0){
+        delete[] textItems;
+        return PngWriteResult::ERROR_WRITE_TEXT_KEY_EMPTY;
+      }
+
+      const auto& value = kv.second;
+      if (!is_ascii(value)){
+        delete[] textItems;
+        return PngWriteResult::ERROR_WRITE_TEXT_VALUE_ENCODING;
+      }
+
+      if (!can_represent<png_size_t>(value.size())){
+        return PngWriteResult::ERROR_WRITE_TEXT_VALUE_TOO_LONG;
+      }
+
+      auto& text(textItems[i]);
+      text.compression = -1; // tEXt
+      text.key = (png_charp)key.c_str(); // Fixme
+      text.text = (png_charp)value.c_str(); // Fixme
+      text.text_length = value.size();
+      text.itxt_length = 0;
+      text.lang = nullptr;
+      text.lang_key = nullptr;
+      i++;
+    }
+    png_set_text(png_ptr, info_ptr, textItems, textChunks.size());
+    delete[] textItems; // Fixme: Safe or wait?
+  }
+
   png_write_info(png_ptr, info_ptr);
 
   // Create raw-data arrays for libpng from the Bitmap.
@@ -408,11 +496,20 @@ PngWriteResult write_with_libpng(const char* path, const Bitmap& bmp){
   return PngWriteResult::OK;
 }
 
-SaveResult write_png(const FilePath& path, const Bitmap& bmp){
-  PngWriteResult result = write_with_libpng(path.Str().c_str(), bmp);
+SaveResult write_png(const FilePath& path,
+  const Bitmap& bmp,
+  const png_tEXt_map& textChunks)
+{
+  PngWriteResult result = write_with_libpng(path.Str().c_str(), bmp, textChunks);
   return result == PngWriteResult::OK ?
     SaveResult::SaveSuccessful() :
     SaveResult::SaveFailed(to_string(result, path));
 }
+
+SaveResult write_png(const FilePath& path, const Bitmap& bmp){
+  png_tEXt_map noChunks;
+  return write_png(path, bmp, noChunks);
+}
+
 
 } // namespace

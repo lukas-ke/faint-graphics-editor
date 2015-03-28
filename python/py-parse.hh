@@ -15,6 +15,7 @@
 
 #ifndef FAINT_PY_PARSE_HH
 #define FAINT_PY_PARSE_HH
+#include <map>
 #include "geo/range.hh"
 #include "python/bound-object.hh"
 #include "python/py-fwd.hh"
@@ -200,6 +201,91 @@ bool parse_flat(std::vector<T>& vec, PyObject* args, Py_ssize_t& n, Py_ssize_t l
   }
   n += resigned(temp.size());
   vec = temp;
+  return true;
+}
+
+#ifdef _MSC_VER
+#pragma warning(disable:4503) // Decorated name length exceeded
+#endif
+
+// Parse flat for maps (dictionaries)
+template<typename T1, typename T2>
+bool parse_item(std::map<T1, T2>& theMap, PyObject* args,
+  Py_ssize_t& n, Py_ssize_t len)
+{
+  if (len - n < 0){
+    throw TypeError(space_sep("Too few arguments for parsing dict of",
+      comma_sep(arg_traits<T1>::name.Get(), arg_traits<T2>::name.Get())));
+  }
+
+  if (!PyDict_Check(args)){
+    throw TypeError("Not a dictionary");
+  }
+
+  std::map<T1, T2> temp;
+  scoped_ref items(PyDict_Items(args));
+  auto nPairs = PySequence_Length(items.get());
+
+  for (decltype(nPairs) i = 0; i != nPairs; i++){
+    PyObject* pair = PySequence_GetItem(items.get(), i);
+
+    Py_ssize_t n2 = 0;
+    T1 key;
+    T2 value;
+    if (!parse_item(key, pair, n2, 2, true)){
+      return false;
+    }
+    if (n2 != 1){
+      return false;
+    }
+    if (!parse_item(value, pair, n2, 2, true)){
+      return false;
+    }
+    temp[key] = value;
+  }
+  n += 1;
+  theMap = temp;
+  return true;
+}
+
+// Parse flat for maps (dictionaries)
+template<typename T1, typename T2>
+bool parse_flat(std::map<T1, T2>& theMap, PyObject* args,
+  Py_ssize_t& n, Py_ssize_t len)
+{
+  if (len - n < 0){
+    throw TypeError(space_sep("Too few arguments for parsing dict of",
+      comma_sep(arg_traits<T1>::name.Get(), arg_traits<T2>::name.Get())));
+  }
+
+  scoped_ref dict(PySequence_GetItem(args, n));
+  if (!PyDict_Check(dict.get())){
+    throw TypeError("Not a dictionary");
+  }
+
+  std::map<T1, T2> temp;
+  scoped_ref items(PyDict_Items(dict.get()));
+  auto nPairs = PySequence_Length(items.get());
+
+  for (decltype(nPairs) i = 0; i != nPairs; i++){
+    PyObject* pair = PySequence_GetItem(items.get(), i);
+
+    Py_ssize_t n2 = 0;
+    T1 key;
+    T2 value;
+    if (!parse_item(key, pair, n2, 2, true)){
+      return false;
+    }
+    if (n2 != 1){
+      return false;
+    }
+    if (!parse_item(value, pair, n2, 2, true)){
+      return false;
+    }
+    temp[key] = value;
+  }
+  n += 1;
+  theMap = temp;
   return true;
 }
 

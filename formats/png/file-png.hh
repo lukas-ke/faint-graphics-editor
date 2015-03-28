@@ -15,6 +15,7 @@
 
 #ifndef FAINT_FILE_PNG_HH
 #define FAINT_FILE_PNG_HH
+#include <map>
 #include "bitmap/bitmap.hh"
 #include "formats/save-result.hh"
 #include "text/utf8-string.hh"
@@ -23,9 +24,12 @@
 
 namespace faint{
 
+using png_tEXt_map = std::map<utf8_string, utf8_string>;
+
 OrError<Bitmap> read_png(const FilePath&);
 
 SaveResult write_png(const FilePath&, const Bitmap&);
+SaveResult write_png(const FilePath&, const Bitmap&, const png_tEXt_map&);
 
 } // namespace
 

@@ -660,8 +660,18 @@ static std::string get_pattern_status(){
 Writes the bitmap as a png at the given path.\n
 Throws OSError on failure."
 name: "write_png" */
-static void write_png_py(const Bitmap& bmp, const FilePath& p){
-  auto r = write_png(p, bmp);
+static void write_png_py(const Bitmap& bmp,
+  const FilePath& p,
+  const Optional<png_tEXt_map>& maybeTextChunks)
+{
+  auto r = maybeTextChunks.Visit(
+    [&](const png_tEXt_map& textChunks){
+      return write_png(p, bmp, textChunks);
+    },
+    [&](){
+      return write_png(p, bmp);
+    });
+
   if (!r.Successful()){
     throw OSError(r.ErrorDescription());
   }
