@@ -294,7 +294,8 @@ enum class PngWriteResult{
   ERROR_WRITE_TEXT_VALUE_ENCODING,
   ERROR_WRITE_TEXT_KEY_EMPTY,
   ERROR_WRITE_TEXT_KEY_TOO_LONG,
-  ERROR_WRITE_TEXT_VALUE_TOO_LONG
+  ERROR_WRITE_TEXT_VALUE_TOO_LONG,
+  ERROR_WRITE_TOO_MANY_TEXT_CHUNKS
 };
 
 const utf8_string to_string(PngWriteResult result, const FilePath& p){
@@ -409,31 +410,45 @@ PngWriteResult write_with_libpng(const char* path,
     PNG_FILTER_TYPE_BASE);
 
   if (textChunks.size() != 0){
-    png_text* textItems = new png_text[textChunks.size()];
+    
+    if (!can_represent<int>(textChunks.size())){
+      fclose(f);
+      return PngWriteResult::ERROR_WRITE_TOO_MANY_TEXT_CHUNKS;      
+    }
+
+    const int numChunks = static_cast<int>(textChunks.size());
+    png_text* textItems = new png_text[numChunks];
     size_t i = 0;
+
     for (const auto& kv : textChunks){
       const auto& key = kv.first;
       if (!is_ascii(key)){
         delete[] textItems;
+	fclose(f);
         return PngWriteResult::ERROR_WRITE_TEXT_KEY_ENCODING;
       }
 
       if (key.size() > PNG_KEYWORD_MAX_LENGTH){
         delete[] textItems;
+	fclose(f);
         return PngWriteResult::ERROR_WRITE_TEXT_KEY_TOO_LONG;
       }
       else if (key.size() == 0){
         delete[] textItems;
+	fclose(f);
         return PngWriteResult::ERROR_WRITE_TEXT_KEY_EMPTY;
       }
 
       const auto& value = kv.second;
       if (!is_ascii(value)){
         delete[] textItems;
+	fclose(f);
         return PngWriteResult::ERROR_WRITE_TEXT_VALUE_ENCODING;
       }
 
       if (!can_represent<png_size_t>(value.size())){
+        delete[] textItems;	
+	fclose(f);
         return PngWriteResult::ERROR_WRITE_TEXT_VALUE_TOO_LONG;
       }
 
@@ -441,13 +456,11 @@ PngWriteResult write_with_libpng(const char* path,
       text.compression = -1; // tEXt
       text.key = (png_charp)key.c_str(); // Fixme
       text.text = (png_charp)value.c_str(); // Fixme
-      text.text_length = value.size();
-      text.itxt_length = 0;
-      text.lang = nullptr;
-      text.lang_key = nullptr;
+      text.text_length = value.size();      
       i++;
     }
-    png_set_text(png_ptr, info_ptr, textItems, textChunks.size());
+
+    png_set_text(png_ptr, info_ptr, textItems, numChunks);
     delete[] textItems; // Fixme: Safe or wait?
   }
 
