@@ -26,7 +26,7 @@
 
 namespace faint{
 
-enum class PngResult{
+enum class PngReadResult{
   OK,
   ERROR_OPEN_FILE,
   ERROR_PNG_SIGNATURE,
@@ -36,9 +36,9 @@ enum class PngResult{
   ERROR_READ_DATA
 };
 
-static utf8_string to_string(PngResult result){
+static utf8_string to_string(PngReadResult result){
   // Fixme: Compare error text style with bmp-load errors etc
-  using R = PngResult;
+  using R = PngReadResult;
   if (result == R::OK){
     return "No error";
   }
@@ -55,7 +55,7 @@ static utf8_string to_string(PngResult result){
     return "Failed creating info structure"; // Fixme: Memory? Png init?
   }
   else if (result == R::ERROR_INIT_IO){
-    return "Failed creating initializing IO"; // Fixme: Memory? Png init?
+    return "Failed initializing IO"; // Fixme: Memory? Png init?
   }
   else if (result == R::ERROR_READ_DATA){
     return "Failed reading image data.";
@@ -65,7 +65,7 @@ static utf8_string to_string(PngResult result){
   }
 }
 
-PngResult read_with_libpng(const char* path,
+PngReadResult read_with_libpng(const char* path,
   png_bytep** rowPointers,
   png_uint_32* width,
   png_uint_32* height,
@@ -74,34 +74,34 @@ PngResult read_with_libpng(const char* path,
 {
   FILE* f = fopen(path, "rb");
   if (f == nullptr){
-    return PngResult::ERROR_OPEN_FILE;
+    return PngReadResult::ERROR_OPEN_FILE;
   }
 
   png_byte sig[8];
   size_t readBytes = fread(sig, 1, 8, f);
   if (readBytes != 8){
-    return PngResult::ERROR_PNG_SIGNATURE;
+    return PngReadResult::ERROR_PNG_SIGNATURE;
   }
 
   if (!png_check_sig(sig, 8)){
-    return PngResult::ERROR_PNG_SIGNATURE;
+    return PngReadResult::ERROR_PNG_SIGNATURE;
   }
 
   png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,
     nullptr, nullptr, nullptr);
   if (png_ptr == nullptr){
-    return PngResult::ERROR_CREATE_READ_STRUCT;
+    return PngReadResult::ERROR_CREATE_READ_STRUCT;
   }
 
   png_infop info_ptr = png_create_info_struct(png_ptr);
   if (info_ptr == nullptr){
-    return PngResult::ERROR_CREATE_INFO_STRUCT;
+    return PngReadResult::ERROR_CREATE_INFO_STRUCT;
   }
 
   if (setjmp(png_jmpbuf(png_ptr))){
     // Fixme: Pass end_info
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-    return PngResult::ERROR_INIT_IO;
+    return PngReadResult::ERROR_INIT_IO;
   }
 
   png_init_io(png_ptr, f);
@@ -127,7 +127,7 @@ PngResult read_with_libpng(const char* path,
 
   if (setjmp(png_jmpbuf(png_ptr))){
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-    return PngResult::ERROR_READ_DATA;
+    return PngReadResult::ERROR_READ_DATA;
   }
 
   (*rowPointers) = (png_bytep*) malloc(sizeof(png_bytep) * (*height));
@@ -140,7 +140,7 @@ PngResult read_with_libpng(const char* path,
 
   fclose(f);
   png_destroy_read_struct(&png_ptr, nullptr, nullptr); // Maybe
-  return PngResult::OK;
+  return PngReadResult::OK;
 }
 
 static void free_rows(png_bytep* rowPointers, png_uint_32 height){
@@ -156,14 +156,14 @@ OrError<Bitmap> read_png(const FilePath& path){
   png_uint_32 height;
   png_byte colorType;
   png_byte bitDepth;
-  PngResult result = read_with_libpng(path.Str().c_str(),
+  PngReadResult result = read_with_libpng(path.Str().c_str(),
     &rowPointers,
     &width,
     &height,
     &colorType,
     &bitDepth);
 
-  if (result != PngResult::OK){
+  if (result != PngReadResult::OK){
     return to_string(result);
   }
 
@@ -189,14 +189,16 @@ OrError<Bitmap> read_png(const FilePath& path){
     Bitmap bmp(IntSize(static_cast<int>(width), static_cast<int>(height)));
     auto* p = bmp.GetRaw();
     auto stride = bmp.GetStride();
+    const auto srcBpp = static_cast<png_uint_32>(faint::BPP);
 
     for (png_uint_32 y = 0; y < height; y++){
       for (png_uint_32 x = 0; x < width; x++){
-        auto i =  y * stride + x * static_cast<png_uint_32>(faint::BPP);
-        p[i + faint::iR] = rowPointers[y][x * 4];
-        p[i + faint::iG] = rowPointers[y][x * 4 + 1];
-        p[i + faint::iB] = rowPointers[y][x * 4 + 2];
-        p[i + faint::iA] = rowPointers[y][x * 4 + 3];
+        auto i =  y * stride + x * srcBpp;
+        const auto* row = rowPointers[y];
+        p[i + faint::iR] = row[x * 4];
+        p[i + faint::iG] = row[x * 4 + 1];
+        p[i + faint::iB] = row[x * 4 + 2];
+        p[i + faint::iA] = row[x * 4 + 3];
       }
     }
     free_rows(rowPointers, height);
@@ -206,6 +208,148 @@ OrError<Bitmap> read_png(const FilePath& path){
     free_rows(rowPointers, height);
     return {e.what()};
   }
+}
+
+enum class PngWriteResult{
+  OK,
+  ERROR_OPEN_FILE,
+  ERROR_CREATE_WRITE_STRUCT,
+  ERROR_CREATE_INFO_STRUCT,
+  ERROR_INIT_IO,
+  ERROR_WRITE_HEADER,
+  ERROR_WRITE_DATA,
+  ERROR_WRITE_END
+};
+
+const utf8_string to_string(PngWriteResult result){
+  // Fixme: Compare error text style with bmp-save errors etc
+  using R = PngWriteResult;
+  if (result == R::OK){
+    return "No error.";
+  }
+  else if (result == R::ERROR_OPEN_FILE){
+    return "Failed opening file for writing.";
+  }
+  else if (result == R::ERROR_CREATE_WRITE_STRUCT){
+    return "Failed creating write structure"; // Fixme: Memory? Png init?
+  }
+  else if (result == R::ERROR_INIT_IO){
+    return "Failed failed initializing IO"; // Fixme: Memory? Png init?
+  }
+  else if (result == R::ERROR_WRITE_HEADER){
+    return "Failed writing header"; // Fixme: Memory? Png init?
+  }
+  else if (result == R::ERROR_WRITE_DATA){
+    return "Failed writing image data";
+  }
+  else if (result == R::ERROR_WRITE_END){
+    return "Failed writing trailer"; // Fixme: Maybe not trailer
+  }
+  else{
+    return "Unknown error.";
+  }
+}
+
+PngWriteResult write_with_libpng(const char* path, const Bitmap& bmp){
+  assert(bitmap_ok(bmp));
+  png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
+    nullptr, nullptr, nullptr);
+
+  if (png_ptr == nullptr){
+    return PngWriteResult::ERROR_CREATE_WRITE_STRUCT;
+  }
+
+  FILE* f = fopen(path, "wb");
+  if (!f){
+    return PngWriteResult::ERROR_OPEN_FILE;
+  }
+
+  png_infop info_ptr = png_create_info_struct(png_ptr);
+  if (info_ptr == nullptr){
+    fclose(f);
+    return PngWriteResult::ERROR_CREATE_INFO_STRUCT;
+  }
+
+  if (setjmp(png_jmpbuf(png_ptr))){
+    fclose(f);
+    return PngWriteResult::ERROR_INIT_IO;
+  }
+
+  png_init_io(png_ptr, f);
+
+  // Write the PNG-header
+  if (setjmp(png_jmpbuf(png_ptr))){
+    fclose(f);
+    return PngWriteResult::ERROR_WRITE_HEADER;
+  }
+
+  auto size(bmp.GetSize());
+  assert(size.w != 0 && size.h != 0);
+  const png_uint_32 width = convert(size.w);
+  const png_uint_32 height = convert(size.h);
+  const png_byte bitDepth = 8;
+  png_set_IHDR(png_ptr,
+    info_ptr,
+    width,
+    height,
+    bitDepth,
+    PNG_COLOR_TYPE_RGBA,
+    PNG_INTERLACE_NONE,
+    PNG_COMPRESSION_TYPE_BASE,
+    PNG_FILTER_TYPE_BASE);
+
+  png_write_info(png_ptr, info_ptr);
+
+  // Create raw-data arrays for libpng from the Bitmap.
+  png_byte** rowPointers = (png_bytep*) malloc(sizeof(png_bytep) * height);
+  const auto bytesPerRow = png_get_rowbytes(png_ptr, info_ptr);
+  assert((width - 1) * 4 + 3 < bytesPerRow);
+
+  const auto* src = bmp.GetRaw();
+  const auto stride = bmp.GetStride();
+  const auto srcBpp = static_cast<png_uint_32>(faint::BPP);
+  for (png_uint_32 y = 0; y != height; y++){
+    auto row = (png_byte*) malloc(bytesPerRow);
+    rowPointers[y] = row;
+    for (png_uint_32 x = 0; x != width; x++){
+      // Fill in this row with bitmap-data
+      int i = y * stride + x * srcBpp;
+      row[x * 4] = src[i + faint::iR];
+      row[x * 4 + 1] = src[i + faint::iG];
+      row[x * 4 + 2] = src[i + faint::iB];
+      row[x * 4 + 3] = src[i + faint::iA];
+    }
+  }
+
+
+  //
+  // Write the image data
+  //
+  if (setjmp(png_jmpbuf(png_ptr))){
+    fclose(f);
+    return PngWriteResult::ERROR_WRITE_DATA;
+  }
+
+  png_write_image(png_ptr, rowPointers);
+
+  // Write end
+  if (setjmp(png_jmpbuf(png_ptr))){
+    free_rows(rowPointers, height);
+    return PngWriteResult::ERROR_WRITE_END;
+  }
+  png_write_end(png_ptr, NULL);
+
+  free_rows(rowPointers, height);
+  fclose(f);
+  return PngWriteResult::OK;
+}
+
+SaveResult write_png(const FilePath& path, const Bitmap& bmp){
+  PngWriteResult result = write_with_libpng(path.Str().c_str(), bmp);
+  if (result != PngWriteResult::OK){
+    return SaveResult::SaveFailed(to_string(result));
+  }
+  return SaveResult::SaveSuccessful();
 }
 
 } // namespace

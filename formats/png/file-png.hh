@@ -16,12 +16,15 @@
 #ifndef FAINT_FILE_PNG_HH
 #define FAINT_FILE_PNG_HH
 #include "bitmap/bitmap.hh"
+#include "formats/save-result.hh"
 #include "util-wx/file-path.hh"
 #include "util/or-error.hh"
 
 namespace faint{
 
 OrError<Bitmap> read_png(const FilePath&);
+
+SaveResult write_png(const FilePath&, const Bitmap&);
 
 } // namespace
 
