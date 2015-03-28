@@ -43,7 +43,7 @@ def _link(files, opts, out, err, debug, cc):
     lib_paths = " ".join(["-L%s" % p for p in opts.lib_paths])
 
     cmd = (cc + " -std=c++11 -g -o %s " % out_name +
-           " ".join(files) + " " + wxlibs + " " + lib_paths +
+           " ".join(files) + " -lpng " + wxlibs + " " + lib_paths +
            " -l python3.4 -O2")
 
     linker = subprocess.Popen(cmd, stdout=out, stderr=err, shell=True)

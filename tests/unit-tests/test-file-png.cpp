@@ -1,5 +1,5 @@
 // -*- coding: us-ascii-unix -*-
-#include "png.h"
+#include "/usr/include/libpng12/png.h"
 #include "test-sys/test.hh"
 #include "util-wx/stream.hh"
 #include "tests/test-util/file-handling.hh"
@@ -13,10 +13,8 @@
 #pragma warning(disable:4611) // _setjmp and C++-object destruction
 #endif
 
-// Fixme: Use only C-code in there
-
 // Fixme: Not int for w, h
-extern "C" bool read_png(const char* path, png_bytep** rowPointers,
+bool read_png(const char* path, png_bytep** rowPointers,
   png_uint_32* width,
   png_uint_32* height)
 {
@@ -26,7 +24,10 @@ extern "C" bool read_png(const char* path, png_bytep** rowPointers,
   }
 
   png_byte sig[8];
-  fread(sig, 1, 8, f);
+  size_t readBytes = fread(sig, 1, 8, f);
+  if (readBytes != 8){
+    return false;
+  }
   if (!png_check_sig(sig, 8)){
     return false;
   }
@@ -63,10 +64,10 @@ extern "C" bool read_png(const char* path, png_bytep** rowPointers,
   *width = png_get_image_width(png_ptr, info_ptr);
   *height = png_get_image_height(png_ptr, info_ptr);
 
-  png_byte colorType = png_get_color_type(png_ptr, info_ptr);
-  png_byte bitDepth = png_get_bit_depth(png_ptr, info_ptr);
+  // png_byte colorType = png_get_color_type(png_ptr, info_ptr);
+  // png_byte bitDepth = png_get_bit_depth(png_ptr, info_ptr);
 
-  int numPasses = png_set_interlace_handling(png_ptr);
+  /*int numPasses = */ png_set_interlace_handling(png_ptr);
   png_read_update_info(png_ptr, info_ptr);
 
   if (setjmp(png_jmpbuf(png_ptr))){
@@ -102,7 +103,7 @@ void test_file_png(){
   // Fixme: Handle different byte order, bit-depth etc.
   for (png_uint_32 y = 0; y < height; y++){
     for (png_uint_32 x = 0; x < width; x++){
-      int i =  y * stride + x * faint::BPP;
+      auto i =  y * stride + x * static_cast<png_uint_32>(faint::BPP);
       p[i + faint::iR] = rowPointers[y][x * 4];
       p[i + faint::iG] = rowPointers[y][x * 4 + 1];
       p[i + faint::iB] = rowPointers[y][x * 4 + 2];
