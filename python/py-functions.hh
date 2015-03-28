@@ -29,6 +29,7 @@
 #include "app/get-python-context.hh"
 #include "bitmap/draw.hh"
 #include "bitmap/pattern.hh"
+#include "formats/png/file-png.hh"
 #include "geo/pathpt.hh"
 #include "geo/offsat.hh"
 #include "gui/dialogs.hh"
@@ -653,6 +654,17 @@ static std::string get_pattern_status(){
     ss << idToCount.first << "=" << idToCount.second << ",";
   }
   return ss.str();
+}
+
+/* function: "write_png(bmp, path)\n
+Writes the bitmap as a png at the given path.\n
+Throws OSError on failure."
+name: "write_png" */
+static void write_png_py(const Bitmap& bmp, const FilePath& p){
+  auto r = write_png(p, bmp);
+  if (!r.Successful()){
+    throw OSError(r.ErrorDescription());
+  }
 }
 
 /* extra_include: "generated/python/settings/setting-function-defs.hh" */
