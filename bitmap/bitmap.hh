@@ -29,7 +29,7 @@ const int iB = 0;
 const int iA = 3;
 
 class Bitmap {
-  // ARGB32 Bitmap
+  // BGRA32 Bitmap
 public:
   // Initializes an invalid Bitmap. Must be assigned to before use
   Bitmap();

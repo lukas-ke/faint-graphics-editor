@@ -13,24 +13,15 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_FILE_BMP_HH
-#define FAINT_FILE_BMP_HH
+#ifndef FAINT_FILE_PNG_HH
+#define FAINT_FILE_PNG_HH
 #include "bitmap/bitmap.hh"
-#include "formats/save-result.hh"
 #include "util-wx/file-path.hh"
 #include "util/or-error.hh"
 
 namespace faint{
 
-enum class BitmapQuality{
-  COLOR_8BIT,
-  COLOR_24BIT,
-  GRAY_8BIT
-};
-
-SaveResult write_bmp(const FilePath&, const Bitmap&, BitmapQuality);
-
-OrError<Bitmap> read_bmp(const FilePath&);
+OrError<Bitmap> read_png(const FilePath&);
 
 } // namespace
 

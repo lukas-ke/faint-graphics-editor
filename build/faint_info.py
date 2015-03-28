@@ -74,6 +74,7 @@ def get_src_folders(platform='msw', test=False):
         "formats/",
         "formats/bmp",
         "formats/gif",
+        "formats/png",
         "formats/wx",
         "generated/",
         "generated/python/settings",
