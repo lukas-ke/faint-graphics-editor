@@ -129,8 +129,9 @@ def read_config(platform):
 
     bo.project_root = faint_info.FAINT_ROOT
     bo.system_include_folders = [
-        join_path( wx_vc_lib, "mswu" ),
-        join_path( wx_root, "include" ),
+        join_path(wx_vc_lib, "mswu"),
+        join_path(wx_root, "include"),
+        join_path(wx_root, "src/png"),
         python_include,
         cairo_include,
         pango_include,
