@@ -593,11 +593,11 @@ static PngWriteResult write_with_libpng(const char* path,
 
       for (png_uint_32 x = 0; x != width; x++){
         // Fill the row with the bitmap-data
-        auto i = y * stride + x * srcBpp;
-        const auto c =
-          row[x * PNG_BPP] = gray_sum(src[i + faint::iR],
-            src[i + faint::iG],
-            src[i + faint::iB]);
+        const auto i = y * stride + x * srcBpp;
+
+	row[x * PNG_BPP] = gray_sum(src[i + faint::iR],
+	  src[i + faint::iG],
+	  src[i + faint::iB]);
         if (PNG_BPP == 2){
           row[x * PNG_BPP + 1] = src[i + faint::iA];
         }
