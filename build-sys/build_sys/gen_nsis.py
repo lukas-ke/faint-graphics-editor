@@ -34,7 +34,9 @@ def match_ext( extensions, filename ):
 
 def list_join( path, prefix, extensions=None ):
     prefix = prefix.replace("/","\\")
-    return [os.path.join(prefix, filename) for filename in os.listdir(path) if match_ext(extensions, filename)]
+    return [os.path.join(prefix, filename)
+            for filename in os.listdir(path) if
+            match_ext(extensions, filename)]
 
 def find_files():
     targetDir = "..\\"
@@ -52,9 +54,11 @@ def find_files():
     pythonPyDir = os.path.join(pythonRootDir, "faint")
     pythonPyExtraDir = os.path.join(pythonRootDir, "faint", "extra")
     pythonPySvgDir = os.path.join(pythonPyDir, "svg")
+    pythonPySvgParseDir = os.path.join(pythonPyDir, "svg", "parse")
+    pythonPySvgWriteDir = os.path.join(pythonPyDir, "svg", "write")
     pythonPyPdfDir = os.path.join(pythonPyDir, "pdf")
 
-    instDirFiles = list_join( sourceDir, targetDir, ("Faint.exe", ".dll", ".ico"))
+    instDirFiles = list_join(sourceDir, targetDir, ("faint.exe", ".dll", ".ico"))
     instDirFiles.extend( [os.path.join(sourceDir, "LICENSE"), os.path.join(sourceDir, "NOTICE")] )
     instDirFiles.extend(list_join( installDepPython, installDepPython, (".zip", ".pyd") ))
     instDirFiles.extend(list_join( SysWOW64Dir, SysWOW64Dir, ".dll" ) )
@@ -66,6 +70,8 @@ def find_files():
     pythonPyFiles = list_join(pythonPyDir, pythonPyDir, '.py')
     pythonPyExtraFiles = list_join(pythonPyExtraDir, pythonPyExtraDir, '.py')
     pythonPySvgFiles = list_join(pythonPySvgDir, pythonPySvgDir, '.py')
+    pythonPySvgParseFiles = list_join(pythonPySvgParseDir, pythonPySvgParseDir, '.py')
+    pythonPySvgWriteFiles = list_join(pythonPySvgWriteDir, pythonPySvgWriteDir, '.py')
     pythonPyPdfFiles = list_join(pythonPyPdfDir, pythonPyPdfDir, '.py')
     pythonCoreFiles = list_join(pythonCoreDir, pythonCoreDir, '.py')
 
@@ -78,6 +84,8 @@ def find_files():
             ("$INSTDIR\\py\\faint", pythonPyFiles),
             ("$INSTDIR\\py\\faint\\extra", pythonPyExtraFiles),
             ("$INSTDIR\\py\\faint\\svg", pythonPySvgFiles),
+            ("$INSTDIR\\py\\faint\\svg\\parse", pythonPySvgParseFiles),
+            ("$INSTDIR\\py\\faint\\svg\\write", pythonPySvgWriteFiles),
             ("$INSTDIR\\py\\faint\\pdf", pythonPyPdfFiles))
 
 def files_to_install_string(fileInfo):

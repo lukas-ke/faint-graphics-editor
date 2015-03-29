@@ -96,7 +96,7 @@ def zipit():
         os.mkdir("installdep")
         os.mkdir("installdep/python")
         os.mkdir("installdep/SysWOW64")
-    zf = zipfile.ZipFile('installdep/python/python33.zip', mode='w')
+    zf = zipfile.ZipFile('installdep/python/python34.zip', mode='w')
     for file in [file for file in os.listdir("pythonbundle") if file.endswith(".py")]:
         zf.write(os.path.join("pythonbundle", file), file)
 
