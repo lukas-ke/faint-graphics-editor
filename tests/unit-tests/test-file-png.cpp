@@ -1,5 +1,6 @@
 // -*- coding: us-ascii-unix -*-
 #include "test-sys/test.hh"
+#include "bitmap/draw.hh" // set_alpha
 #include "bitmap/filter.hh" // desaturated_simple
 #include "formats/png/file-png.hh"
 #include "tests/test-util/file-handling.hh"
@@ -8,20 +9,75 @@
 void test_file_png(){
   using namespace faint;
 
+  { // Load, save, reload, RGB
+
+    read_png(get_test_load_path(FileName("square.png"))).Visit(
+      [](const Bitmap& bmp){
+        VERIFY(bmp.GetSize() == IntSize(185, 185));
+
+        // Save with alpha values to verify that alpha is lost on
+        // RGB-save.
+        Bitmap withAlpha(bmp);
+        set_alpha(withAlpha, 128);
+
+        auto out = get_test_save_path(FileName("out-rgb.png"));
+        auto result = write_png(out, withAlpha, PngColorType::RGB);
+        ABORT_IF(result.Failed());
+
+        read_png(out).Visit(
+          [&](const Bitmap& bmp2){
+            VERIFY(bmp == bmp2);
+            VERIFY(withAlpha != bmp2);
+          },
+          [](const utf8_string& error){
+            FAIL(error.c_str());
+          });
+      },
+      [](const utf8_string& error){
+        FAIL(error.c_str());
+      });
+  }
+
   { // Load, save, reload, RGBA
+
+    read_png(get_test_load_path(FileName("square.png"))).Visit(
+      [](Bitmap& bmp){
+        ABORT_IF(bmp.GetSize() != IntSize(185, 185));
+
+        // Set alpha to ensure it is retained when saving as RGBA
+        set_alpha(bmp, 128);
+
+        auto out = get_test_save_path(FileName("out-rgba.png"));
+        auto result = write_png(out, bmp, PngColorType::RGB_ALPHA);
+        ABORT_IF(result.Failed());
+
+        read_png(out).Visit(
+          [&bmp](const Bitmap& bmp2){
+            VERIFY(bmp == bmp2);
+          },
+          [](const utf8_string& error){
+            FAIL(error.c_str());
+          });
+      },
+      [](const utf8_string& error){
+        FAIL(error.c_str());
+      });
+  }
+
+  { // Save, PNG_COLOR_TYPE_GRAY
 
     auto maybeBmp = read_png(get_test_load_path(FileName("square.png")));
     maybeBmp.Visit(
       [](const Bitmap& bmp){
-        VERIFY(bmp.GetSize() == IntSize(185, 185));
-        auto out = get_test_save_path(FileName("out.png"));
-        auto result = write_png(out, bmp, PngColorType::RGBA);
+        ABORT_IF(bmp.GetSize() != IntSize(185, 185));
+        auto out = get_test_save_path(FileName("out-gray.png"));
+        auto result = write_png(out, bmp, PngColorType::GRAY);
         VERIFY(result.Successful());
 
         auto reread = read_png(out);
         reread.Visit(
         [&bmp](const Bitmap& bmp2){
-          VERIFY(bmp == bmp2);
+          VERIFY(desaturated_simple(bmp) == bmp2);
         },
         [](const utf8_string& error){
           FAIL(error.c_str());
@@ -32,14 +88,15 @@ void test_file_png(){
     });
   }
 
-  { // Save, PNG_COLOR_TYPE_GRAY
+  { // Save, PNG_COLOR_TYPE_GRAY_ALPHA
 
     auto maybeBmp = read_png(get_test_load_path(FileName("square.png")));
     maybeBmp.Visit(
-      [](const Bitmap& bmp){
-        VERIFY(bmp.GetSize() == IntSize(185, 185));
-        auto out = get_test_save_path(FileName("out-gray.png"));
-        auto result = write_png(out, bmp, PngColorType::GRAY);
+      [](Bitmap& bmp){
+        ABORT_IF(bmp.GetSize() != IntSize(185, 185));
+        set_alpha(bmp, 128);
+        auto out = get_test_save_path(FileName("out-gray-alpha.png"));
+        auto result = write_png(out, bmp, PngColorType::GRAY_ALPHA);
         VERIFY(result.Successful());
 
         auto reread = read_png(out);
@@ -65,12 +122,9 @@ void test_file_png(){
 
     // Save the png with tEXt
     auto out = get_test_save_path(FileName("out-meta.png"));
-    const auto result = write_png(out, bmp, PngColorType::RGBA, textChunks);
-    write_png(out, bmp, PngColorType::RGBA, textChunks);
-
-    if (!result.Successful()){
-      FAIL(result.ErrorDescription().c_str());
-    }
+    const auto result = write_png(out, bmp, PngColorType::RGB_ALPHA, textChunks);
+    write_png(out, bmp, PngColorType::RGB_ALPHA, textChunks);
+    ABORT_IF(!result.Successful());
 
     // Re-read the png and tEXt
     read_png_meta(out).Visit(
