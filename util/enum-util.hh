@@ -16,6 +16,7 @@
 #ifndef FAINT_ENUM_UTIL_HH
 #define FAINT_ENUM_UTIL_HH
 #include "util/distinct.hh"
+#include "util/optional.hh"
 
 namespace faint{
 
@@ -46,6 +47,18 @@ ENUM_TYPE to_enum(typename std::underlying_type<ENUM_TYPE>::type v,
 {
   return within_enum<ENUM_TYPE>(v) ?
     static_cast<ENUM_TYPE>(v) : defaultValue.Get();
+}
+
+
+// Returns the value converted to the enum, or an empty Optional.
+template<typename ENUM_TYPE>
+Optional<ENUM_TYPE> to_enum(typename std::underlying_type<ENUM_TYPE>::type v){
+  if (within_enum<ENUM_TYPE>(v)){
+    return {static_cast<ENUM_TYPE>(v)};
+  }
+  else {
+    return {};
+  }
 }
 
 } // namespace

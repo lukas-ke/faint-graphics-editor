@@ -24,11 +24,15 @@
 
 namespace faint{
 
-enum class PngColorType{
-  RGB,
-  RGB_ALPHA,
-  GRAY,
-  GRAY_ALPHA,
+enum class PngColorType : int {
+  MIN_VALUE = 0,
+
+  RGB = MIN_VALUE,
+  RGB_ALPHA = 1,
+  GRAY = 2,
+  GRAY_ALPHA = 3,
+
+  MAX_VALUE = GRAY_ALPHA
 };
 
 using png_tEXt_map = std::map<utf8_string, utf8_string>;

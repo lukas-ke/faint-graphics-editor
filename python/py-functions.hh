@@ -656,20 +656,37 @@ static std::string get_pattern_status(){
   return ss.str();
 }
 
-/* function: "write_png(bmp, path)\n
+/* function: "write_png(bmp, path[, color_type, text_dict])\n
 Writes the bitmap as a png at the given path.\n
-Throws OSError on failure."
+Throws OSError on failure.\n
+\n
+Optional parameters:\n
+ - color_type: A constant from the png-module (e.g. png.RGB_ALPHA)\n
+ - text_dict: A dictionary of key-strings to value-strings\n
+   for png tEXt meta-data."
 name: "write_png" */
 static void write_png_py(const Bitmap& bmp,
   const FilePath& p,
+  const Optional<int>& rawColorType,
   const Optional<png_tEXt_map>& maybeTextChunks)
 {
+  const auto defaultType = static_cast<int>(PngColorType::RGB_ALPHA);
+
+  const auto colorType =
+    to_enum<PngColorType>(rawColorType.Or(defaultType)).Visit(
+      [](const PngColorType t){
+        return t;
+      },
+      []() -> PngColorType{
+        throw ValueError("color_type out of range.");
+      });
+
   auto r = maybeTextChunks.Visit(
     [&](const png_tEXt_map& textChunks){
-      return write_png(p, bmp, PngColorType::RGB_ALPHA, textChunks);
+      return write_png(p, bmp, colorType, textChunks);
     },
     [&](){
-      return write_png(p, bmp, PngColorType::RGB_ALPHA);
+      return write_png(p, bmp, colorType);
     });
 
   if (!r.Successful()){
