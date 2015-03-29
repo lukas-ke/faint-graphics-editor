@@ -28,6 +28,18 @@ using png_tEXt_map = std::map<utf8_string, utf8_string>;
 
 OrError<Bitmap> read_png(const FilePath&);
 
+struct Bitmap_and_tEXt{
+  Bitmap_and_tEXt(Bitmap&& bmp, png_tEXt_map&& text)
+    : bmp(std::move(bmp)),
+      text(std::move(text))
+  {}
+
+  Bitmap bmp;
+  png_tEXt_map text;
+};
+
+OrError<Bitmap_and_tEXt> read_png_meta(const FilePath&);
+
 SaveResult write_png(const FilePath&, const Bitmap&);
 SaveResult write_png(const FilePath&, const Bitmap&, const png_tEXt_map&);
 

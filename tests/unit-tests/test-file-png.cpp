@@ -7,25 +7,55 @@
 void test_file_png(){
   using namespace faint;
 
-  auto maybeBmp = read_png(get_test_load_path(FileName("square.png")));
+  { // Test load, save, reload
 
-  maybeBmp.Visit(
-    [](const Bitmap& bmp){
-      VERIFY(bmp.GetSize() == IntSize(185, 185));
-      auto out = get_test_save_path(FileName("out.png"));
-      auto result = write_png(out, bmp);
-      VERIFY(result.Successful());
+    auto maybeBmp = read_png(get_test_load_path(FileName("square.png")));
+    maybeBmp.Visit(
+      [](const Bitmap& bmp){
+        VERIFY(bmp.GetSize() == IntSize(185, 185));
+        auto out = get_test_save_path(FileName("out.png"));
+        auto result = write_png(out, bmp);
+        VERIFY(result.Successful());
 
-      auto reread = read_png(out);
-      reread.Visit(
+        auto reread = read_png(out);
+        reread.Visit(
         [&bmp](const Bitmap& bmp2){
           VERIFY(bmp == bmp2);
         },
         [](const utf8_string& error){
           FAIL(error.c_str());
         });
-    },
+      },
     [](const utf8_string& error){
       FAIL(error.c_str());
     });
+  }
+
+  { // Test meta-data (tEXt chunks)
+
+    Bitmap bmp(IntSize(10, 10));
+    const auto textChunks = std::map<utf8_string, utf8_string>{
+      {"First key", "First value"},
+      {"Second key", "Second value"}};
+
+    // Save the png with tEXt
+    auto out = get_test_save_path(FileName("out-meta.png"));
+    const auto result = write_png(out, bmp, textChunks);
+    write_png(out, bmp, textChunks);
+
+    if (!result.Successful()){
+      FAIL(result.ErrorDescription().c_str());
+    }
+
+    // Re-read the png and tEXt
+    read_png_meta(out).Visit(
+      [&](const Bitmap_and_tEXt& bitmapAndText){
+        // Very unchanged
+        VERIFY(bitmapAndText.bmp == bmp);
+        VERIFY(bitmapAndText.text == textChunks);
+      },
+      [](const utf8_string& error){
+        FAIL(error.c_str());
+      });
+  }
 }

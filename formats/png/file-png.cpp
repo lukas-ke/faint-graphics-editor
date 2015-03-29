@@ -202,7 +202,7 @@ static utf8_string color_type_to_string(png_byte colorType){
   }
 }
 
-OrError<Bitmap> read_png(const FilePath& path){
+OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
   png_byte** rowPointers = nullptr;
   png_uint_32 width;
   png_uint_32 height;
@@ -273,12 +273,22 @@ OrError<Bitmap> read_png(const FilePath& path){
     }
 
     free_rows(rowPointers, height);
-    return bmp;
+    return {Bitmap_and_tEXt(std::move(bmp), std::move(textChunks))};
   }
   catch (const BitmapException& e){
     free_rows(rowPointers, height);
     return {e.what()};
   }
+}
+
+OrError<Bitmap> read_png(const FilePath& p){
+  return read_png_meta(p).Visit(
+    [](const Bitmap_and_tEXt& result){
+      return OrError<Bitmap>(result.bmp);
+    },
+    [](const utf8_string& error){
+      return OrError<Bitmap>(error);
+    });
 }
 
 enum class PngWriteResult{
@@ -410,10 +420,10 @@ PngWriteResult write_with_libpng(const char* path,
     PNG_FILTER_TYPE_BASE);
 
   if (textChunks.size() != 0){
-    
+
     if (!can_represent<int>(textChunks.size())){
       fclose(f);
-      return PngWriteResult::ERROR_WRITE_TOO_MANY_TEXT_CHUNKS;      
+      return PngWriteResult::ERROR_WRITE_TOO_MANY_TEXT_CHUNKS;
     }
 
     const int numChunks = static_cast<int>(textChunks.size());
@@ -424,31 +434,31 @@ PngWriteResult write_with_libpng(const char* path,
       const auto& key = kv.first;
       if (!is_ascii(key)){
         delete[] textItems;
-	fclose(f);
+        fclose(f);
         return PngWriteResult::ERROR_WRITE_TEXT_KEY_ENCODING;
       }
 
       if (key.size() > PNG_KEYWORD_MAX_LENGTH){
         delete[] textItems;
-	fclose(f);
+        fclose(f);
         return PngWriteResult::ERROR_WRITE_TEXT_KEY_TOO_LONG;
       }
       else if (key.size() == 0){
         delete[] textItems;
-	fclose(f);
+        fclose(f);
         return PngWriteResult::ERROR_WRITE_TEXT_KEY_EMPTY;
       }
 
       const auto& value = kv.second;
       if (!is_ascii(value)){
         delete[] textItems;
-	fclose(f);
+        fclose(f);
         return PngWriteResult::ERROR_WRITE_TEXT_VALUE_ENCODING;
       }
 
       if (!can_represent<png_size_t>(value.size())){
-        delete[] textItems;	
-	fclose(f);
+        delete[] textItems;
+        fclose(f);
         return PngWriteResult::ERROR_WRITE_TEXT_VALUE_TOO_LONG;
       }
 
@@ -456,7 +466,7 @@ PngWriteResult write_with_libpng(const char* path,
       text.compression = -1; // tEXt
       text.key = (png_charp)key.c_str(); // Fixme
       text.text = (png_charp)value.c_str(); // Fixme
-      text.text_length = value.size();      
+      text.text_length = value.size();
       i++;
     }
 
