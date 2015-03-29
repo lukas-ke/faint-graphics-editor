@@ -24,9 +24,12 @@
 
 namespace faint{
 
-using png_tEXt_map = std::map<utf8_string, utf8_string>;
+enum class PngColorType{
+  RGB,
+  RGBA
+};
 
-OrError<Bitmap> read_png(const FilePath&);
+using png_tEXt_map = std::map<utf8_string, utf8_string>;
 
 struct Bitmap_and_tEXt{
   Bitmap_and_tEXt(Bitmap&& bmp, png_tEXt_map&& text)
@@ -38,10 +41,24 @@ struct Bitmap_and_tEXt{
   png_tEXt_map text;
 };
 
+// Reads a PNG-file to a Bitmap.
+OrError<Bitmap> read_png(const FilePath&);
+
+// Reads a PNG-file to a bitmap along with a map of the png-tEXT key,
+// value pairs.
 OrError<Bitmap_and_tEXt> read_png_meta(const FilePath&);
 
-SaveResult write_png(const FilePath&, const Bitmap&);
-SaveResult write_png(const FilePath&, const Bitmap&, const png_tEXt_map&);
+// Writes a Bitmap to a png-file.
+SaveResult write_png(const FilePath&, const
+  Bitmap&,
+  PngColorType);
+
+// Writes a Bitmap o a png-file, along with the tEXt chunks.
+// The tEXt chunks are written before the image data.
+SaveResult write_png(const FilePath&,
+  const Bitmap&,
+  PngColorType,
+  const png_tEXt_map&);
 
 } // namespace
 

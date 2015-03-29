@@ -37,7 +37,8 @@ public:
 
   SaveResult Save(const FilePath& filePath, Canvas& canvas) override{
     Bitmap bmp(flatten(canvas.GetImage()));
-    return write_png(filePath, bmp);
+    return write_png(filePath, bmp,
+      fully_opaque(bmp)? PngColorType::RGBA : PngColorType::RGB);
   }
 };
 

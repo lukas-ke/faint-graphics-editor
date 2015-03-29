@@ -7,14 +7,14 @@
 void test_file_png(){
   using namespace faint;
 
-  { // Test load, save, reload
+  { // Load, save, reload, RGBA
 
     auto maybeBmp = read_png(get_test_load_path(FileName("square.png")));
     maybeBmp.Visit(
       [](const Bitmap& bmp){
         VERIFY(bmp.GetSize() == IntSize(185, 185));
         auto out = get_test_save_path(FileName("out.png"));
-        auto result = write_png(out, bmp);
+        auto result = write_png(out, bmp, PngColorType::RGBA);
         VERIFY(result.Successful());
 
         auto reread = read_png(out);
@@ -31,7 +31,7 @@ void test_file_png(){
     });
   }
 
-  { // Test meta-data (tEXt chunks)
+  { // Meta-data (tEXt chunks)
 
     Bitmap bmp(IntSize(10, 10));
     const auto textChunks = std::map<utf8_string, utf8_string>{
@@ -40,8 +40,8 @@ void test_file_png(){
 
     // Save the png with tEXt
     auto out = get_test_save_path(FileName("out-meta.png"));
-    const auto result = write_png(out, bmp, textChunks);
-    write_png(out, bmp, textChunks);
+    const auto result = write_png(out, bmp, PngColorType::RGBA, textChunks);
+    write_png(out, bmp, PngColorType::RGBA, textChunks);
 
     if (!result.Successful()){
       FAIL(result.ErrorDescription().c_str());

@@ -26,6 +26,17 @@
 
 namespace faint{
 
+int to_png_color_type(PngColorType c){
+  switch (c){
+  case PngColorType::RGB:
+    return PNG_COLOR_TYPE_RGB;
+  case PngColorType::RGBA:
+    return PNG_COLOR_TYPE_RGBA;
+  }
+  assert(false);
+  return -1;
+}
+
 enum class PngReadResult{
   OK,
   ERROR_OPEN_FILE,
@@ -74,7 +85,7 @@ static utf8_string to_string(PngReadResult result, const FilePath& p){
   }
 }
 
-PngReadResult read_with_libpng(const char* path,
+static PngReadResult read_with_libpng(const char* path,
   png_bytep** rowPointers,
   png_uint_32* width,
   png_uint_32* height,
@@ -308,7 +319,7 @@ enum class PngWriteResult{
   ERROR_WRITE_TOO_MANY_TEXT_CHUNKS
 };
 
-const utf8_string to_string(PngWriteResult result, const FilePath& p){
+static utf8_string to_string(PngWriteResult result, const FilePath& p){
   // Fixme: Compare error text style with bmp-save errors etc
   using R = PngWriteResult;
 
@@ -363,11 +374,15 @@ const utf8_string to_string(PngWriteResult result, const FilePath& p){
   }
 }
 
-PngWriteResult write_with_libpng(const char* path,
+static PngWriteResult write_with_libpng(const char* path,
   const Bitmap& bmp,
+  int colorType,
   const png_tEXt_map& textChunks)
 {
   assert(bitmap_ok(bmp));
+  assert(colorType == PNG_COLOR_TYPE_RGB ||
+    colorType == PNG_COLOR_TYPE_RGB_ALPHA);
+
   png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
     nullptr, nullptr, nullptr);
 
@@ -405,9 +420,8 @@ PngWriteResult write_with_libpng(const char* path,
   const png_uint_32 height = convert(size.h);
   const png_byte bitDepth = 8;
 
-  bool alpha = !fully_opaque(bmp);
-  int colorType = alpha ? PNG_COLOR_TYPE_RGBA : PNG_COLOR_TYPE_RGB;
-  const int PNG_BPP = alpha ? 4 : 3;
+  // Fixme: Support other color-types
+  const int PNG_BPP = colorType == PNG_COLOR_TYPE_RGBA ? 4 : 3;
 
   png_set_IHDR(png_ptr,
     info_ptr,
@@ -521,17 +535,24 @@ PngWriteResult write_with_libpng(const char* path,
 
 SaveResult write_png(const FilePath& path,
   const Bitmap& bmp,
+  PngColorType colorType,
   const png_tEXt_map& textChunks)
 {
-  PngWriteResult result = write_with_libpng(path.Str().c_str(), bmp, textChunks);
+  PngWriteResult result = write_with_libpng(path.Str().c_str(), bmp,
+    to_png_color_type(colorType),
+    textChunks);
+
   return result == PngWriteResult::OK ?
     SaveResult::SaveSuccessful() :
     SaveResult::SaveFailed(to_string(result, path));
 }
 
-SaveResult write_png(const FilePath& path, const Bitmap& bmp){
+SaveResult write_png(const FilePath& path,
+  const Bitmap& bmp,
+  PngColorType colorType)
+{
   png_tEXt_map noChunks;
-  return write_png(path, bmp, noChunks);
+  return write_png(path, bmp, colorType, noChunks);
 }
 
 
