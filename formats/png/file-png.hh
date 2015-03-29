@@ -26,7 +26,8 @@ namespace faint{
 
 enum class PngColorType{
   RGB,
-  RGBA
+  RGBA,
+  GRAY
 };
 
 using png_tEXt_map = std::map<utf8_string, utf8_string>;

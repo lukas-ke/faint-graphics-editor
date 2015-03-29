@@ -44,6 +44,7 @@ Bitmap brightness_and_contrast(const Bitmap&, const brightness_contrast_t&);
 
 void desaturate_simple(Bitmap&);
 void desaturate_weighted(Bitmap&);
+Bitmap desaturated_simple(Bitmap copy);
 
 using pixelize_range_t = LowerBoundedInt<1>;
 void pixelize(Bitmap&, const pixelize_range_t&);

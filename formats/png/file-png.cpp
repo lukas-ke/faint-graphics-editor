@@ -32,6 +32,8 @@ int to_png_color_type(PngColorType c){
     return PNG_COLOR_TYPE_RGB;
   case PngColorType::RGBA:
     return PNG_COLOR_TYPE_RGBA;
+  case PngColorType::GRAY:
+    return PNG_COLOR_TYPE_GRAY;
   }
   assert(false);
   return -1;
@@ -214,6 +216,9 @@ static utf8_string color_type_to_string(png_byte colorType){
 }
 
 OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
+
+  // --
+  // Output parameters
   png_byte** rowPointers = nullptr;
   png_uint_32 width;
   png_uint_32 height;
@@ -221,6 +226,7 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
   png_byte bitDepth;
   int pngBitsPerPixel;
   png_tEXt_map textChunks;
+
   PngReadResult result = read_with_libpng(path.Str().c_str(),
     &rowPointers,
     &width,
@@ -229,6 +235,7 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
     &bitDepth,
     &pngBitsPerPixel,
     textChunks);
+  // --
 
   if (result != PngReadResult::OK){
     return to_string(result, path);
@@ -241,13 +248,22 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
     return {"Unsupported bit depth: " + str_int(bitDepth)};
   }
 
-  if (colorType != PNG_COLOR_TYPE_RGB_ALPHA && colorType != PNG_COLOR_TYPE_RGB){
+  if (colorType != PNG_COLOR_TYPE_RGB_ALPHA &&
+    colorType != PNG_COLOR_TYPE_RGB &&
+    colorType != PNG_COLOR_TYPE_GRAY)
+  {
     // Fixme: Handle all color types
     free_rows(rowPointers, height);
     return {"Unsuppored png color-type: " + color_type_to_string(colorType)};
   }
 
-  if (pngBitsPerPixel != 32 && pngBitsPerPixel != 24){
+  if (colorType == PNG_COLOR_TYPE_GRAY){
+    if (pngBitsPerPixel != 8){
+      return {"Unsupported bits-per-pixel for PNG_COLOR_TYPE GRAY: " +
+          str_int(pngBitsPerPixel)};
+    }
+  }
+  else if (pngBitsPerPixel != 32 && pngBitsPerPixel != 24){
     return {"Unsupported bits-per-pixel: " + str_int(pngBitsPerPixel)};
   }
 
@@ -267,18 +283,37 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
     const png_uint_32 BMP_BPP = convert(faint::BPP);
     const png_uint_32 PNG_BPP = convert(pngBitsPerPixel / 8);
 
-    for (png_uint_32 y = 0; y < height; y++){
-      for (png_uint_32 x = 0; x < width; x++){
-        auto i =  y * stride + x * BMP_BPP;
-        const auto* row = rowPointers[y];
-        p[i + faint::iR] = row[x * PNG_BPP];
-        p[i + faint::iG] = row[x * PNG_BPP + 1];
-        p[i + faint::iB] = row[x * PNG_BPP + 2];
-        if (PNG_BPP == 3){
+    if (colorType == PNG_COLOR_TYPE_GRAY){
+      // Read GRAY
+
+      for (png_uint_32 y = 0; y < height; y++){
+        for (png_uint_32 x = 0; x < width; x++){
+          auto i =  y * stride + x * BMP_BPP;
+          const auto* row = rowPointers[y];
+          const png_byte v = row[x * PNG_BPP];
+          p[i + faint::iR] = v;
+          p[i + faint::iG] = v;
+          p[i + faint::iB] = v;
           p[i + faint::iA] = 255;
         }
-        else{
-          p[i + faint::iA] = row[x * PNG_BPP + 3];
+      }
+    }
+    else {
+      // Read RGB or RGBA
+
+      for (png_uint_32 y = 0; y < height; y++){
+        for (png_uint_32 x = 0; x < width; x++){
+          auto i =  y * stride + x * BMP_BPP;
+          const auto* row = rowPointers[y];
+          p[i + faint::iR] = row[x * PNG_BPP];
+          p[i + faint::iG] = row[x * PNG_BPP + 1];
+          p[i + faint::iB] = row[x * PNG_BPP + 2];
+          if (PNG_BPP == 3){
+            p[i + faint::iA] = 255;
+          }
+          else{
+            p[i + faint::iA] = row[x * PNG_BPP + 3];
+          }
         }
       }
     }
@@ -374,14 +409,19 @@ static utf8_string to_string(PngWriteResult result, const FilePath& p){
   }
 }
 
+inline png_byte gray_sum(int r, int g, int b){
+  return static_cast<png_byte>((r + g + b) / 3);
+}
+
 static PngWriteResult write_with_libpng(const char* path,
   const Bitmap& bmp,
-  int colorType,
+  const int colorType,
   const png_tEXt_map& textChunks)
 {
   assert(bitmap_ok(bmp));
   assert(colorType == PNG_COLOR_TYPE_RGB ||
-    colorType == PNG_COLOR_TYPE_RGB_ALPHA);
+    colorType == PNG_COLOR_TYPE_RGB_ALPHA ||
+    colorType == PNG_COLOR_TYPE_GRAY);
 
   png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
     nullptr, nullptr, nullptr);
@@ -419,9 +459,6 @@ static PngWriteResult write_with_libpng(const char* path,
   const png_uint_32 width = convert(size.w);
   const png_uint_32 height = convert(size.h);
   const png_byte bitDepth = 8;
-
-  // Fixme: Support other color-types
-  const int PNG_BPP = colorType == PNG_COLOR_TYPE_RGBA ? 4 : 3;
 
   png_set_IHDR(png_ptr,
     info_ptr,
@@ -493,23 +530,52 @@ static PngWriteResult write_with_libpng(const char* path,
   // Create raw-data arrays for libpng from the Bitmap.
   png_byte** rowPointers = (png_bytep*) malloc(sizeof(png_bytep) * height);
   const auto bytesPerRow = png_get_rowbytes(png_ptr, info_ptr);
-  assert((width - 1) * PNG_BPP + (PNG_BPP - 1) < bytesPerRow);
 
-  const auto* src = bmp.GetRaw();
-  const png_uint_32 stride = convert(bmp.GetStride());
-  const png_uint_32 srcBpp = convert(faint::BPP);
-  for (png_uint_32 y = 0; y != height; y++){
-    auto row = (png_byte*) malloc(bytesPerRow);
-    rowPointers[y] = row;
-    for (png_uint_32 x = 0; x != width; x++){
-      // Fill the row with the bitmap-data
-      auto i = y * stride + x * srcBpp;
-      row[x * PNG_BPP] = src[i + faint::iR];
-      row[x * PNG_BPP + 1] = src[i + faint::iG];
-      row[x * PNG_BPP + 2] = src[i + faint::iB];
+  if (colorType == PNG_COLOR_TYPE_RGB || colorType == PNG_COLOR_TYPE_RGB_ALPHA){
+    // Write RGB or RGBA
 
-      if (PNG_BPP == 4){
-        row[x * PNG_BPP + 3] = src[i + faint::iA];
+    const int PNG_BPP = colorType == PNG_COLOR_TYPE_RGBA ? 4 : 3;
+    assert((width - 1) * PNG_BPP + (PNG_BPP - 1) < bytesPerRow);
+
+    const auto* src = bmp.GetRaw();
+    const png_uint_32 stride = convert(bmp.GetStride());
+    const png_uint_32 srcBpp = convert(faint::BPP);
+    for (png_uint_32 y = 0; y != height; y++){
+      auto row = (png_byte*) malloc(bytesPerRow);
+      rowPointers[y] = row;
+      for (png_uint_32 x = 0; x != width; x++){
+        // Fill the row with the bitmap-data
+        auto i = y * stride + x * srcBpp;
+        row[x * PNG_BPP] = src[i + faint::iR];
+        row[x * PNG_BPP + 1] = src[i + faint::iG];
+        row[x * PNG_BPP + 2] = src[i + faint::iB];
+
+        if (PNG_BPP == 4){
+          row[x * PNG_BPP + 3] = src[i + faint::iA];
+        }
+      }
+    }
+  }
+  else if (colorType == PNG_COLOR_TYPE_GRAY){
+    // Write gray-scale
+
+    const int PNG_BPP = 1;
+    assert((width - 1) * PNG_BPP + (PNG_BPP - 1) < bytesPerRow);
+
+    const auto* src = bmp.GetRaw();
+    const png_uint_32 stride = convert(bmp.GetStride());
+    const png_uint_32 srcBpp = convert(faint::BPP);
+
+    for (png_uint_32 y = 0; y != height; y++){
+      auto row = (png_byte*) malloc(bytesPerRow);
+      rowPointers[y] = row;
+      for (png_uint_32 x = 0; x != width; x++){
+        // Fill the row with the bitmap-data
+        auto i = y * stride + x * srcBpp;
+        const auto c =
+          row[x * PNG_BPP] = gray_sum(src[i + faint::iR],
+            src[i + faint::iG],
+            src[i + faint::iB]);
       }
     }
   }

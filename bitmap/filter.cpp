@@ -190,6 +190,11 @@ void desaturate_weighted(Bitmap& bmp){
   }
 }
 
+Bitmap desaturated_simple(Bitmap copy){
+  desaturate_simple(copy);
+  return copy;
+}
+
 void pixelize(Bitmap& bmp, const pixelize_range_t& width){
   static_assert(pixelize_range_t::min_allowed > 0,
     "pixelize expects min bound > 0");
