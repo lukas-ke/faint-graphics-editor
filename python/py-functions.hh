@@ -666,10 +666,10 @@ static void write_png_py(const Bitmap& bmp,
 {
   auto r = maybeTextChunks.Visit(
     [&](const png_tEXt_map& textChunks){
-      return write_png(p, bmp, PngColorType::RGBA, textChunks);
+      return write_png(p, bmp, PngColorType::RGB_ALPHA, textChunks);
     },
     [&](){
-      return write_png(p, bmp, PngColorType::RGBA);
+      return write_png(p, bmp, PngColorType::RGB_ALPHA);
     });
 
   if (!r.Successful()){

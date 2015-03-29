@@ -22,6 +22,10 @@
 
 namespace faint{
 
+inline PngColorType alpha_if_necessary(const Bitmap& bmp){
+  return fully_opaque(bmp) ? PngColorType::RGB_ALPHA : PngColorType::RGB;
+}
+
 class FormatPNG : public Format{
 public:
   FormatPNG()
@@ -37,8 +41,7 @@ public:
 
   SaveResult Save(const FilePath& filePath, Canvas& canvas) override{
     Bitmap bmp(flatten(canvas.GetImage()));
-    return write_png(filePath, bmp,
-      fully_opaque(bmp)? PngColorType::RGBA : PngColorType::RGB);
+    return write_png(filePath, bmp, alpha_if_necessary(bmp));
   }
 };
 

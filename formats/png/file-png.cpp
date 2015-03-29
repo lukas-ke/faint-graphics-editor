@@ -30,8 +30,8 @@ int to_png_color_type(PngColorType c){
   switch (c){
   case PngColorType::RGB:
     return PNG_COLOR_TYPE_RGB;
-  case PngColorType::RGBA:
-    return PNG_COLOR_TYPE_RGBA;
+  case PngColorType::RGB_ALPHA:
+    return PNG_COLOR_TYPE_RGB_ALPHA;
   case PngColorType::GRAY:
     return PNG_COLOR_TYPE_GRAY;
   }
