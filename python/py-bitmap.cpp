@@ -113,13 +113,22 @@ static IntSize Bitmap_get_size(Bitmap& self){
   return self.GetSize();
 }
 
-/* method: "set_pixel(x,y,(r,g,b[,a]))\n
+/* method: "set_pixel((x,y),(r,g,b[,a]))\n
 Set the pixel at (x,y) to the specified color." */
 static void Bitmap_set_pixel(Bitmap& self, const IntPoint& pos, const Color& c){
   if (invalid_pixel_pos(pos, self)){
     throw PresetFunctionError();
   }
   put_pixel(self, pos, c);
+}
+
+/* method: "get_pixel(x,y) -> (r,g,b,a)\n
+Get the color at (x,y) as an RGBA-tuple." */
+static Color Bitmap_get_pixel(Bitmap& self, const IntPoint& pos){
+  if (invalid_pixel_pos(pos, self)){
+    throw PresetFunctionError();
+  }
+  return get_color(self, pos);
 }
 
 /* method: "line(x0,y0,x1,y1)\n
