@@ -78,7 +78,7 @@ Optional<int> get_file_format_index(const Formats& formats,
 {
   for (size_t i = 0; i != formats.size(); i++){
     if (formats[i]->Match(extension)){
-      return {resigned(i) - 1};
+      return {resigned(i)};
     }
   }
   return {};

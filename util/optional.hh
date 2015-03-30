@@ -290,6 +290,11 @@ Optional<T>& operator|=(Optional<T>& lhs, const Optional<T>& rhs){
   return lhs;
 }
 
+template<typename T>
+auto otherwise(T v){
+  return [=](){return v;};
+}
+
 } // namespace
 
 #endif

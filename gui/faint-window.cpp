@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include <algorithm>
+#include <tuple>
 #include "wx/frame.h"
 #include "wx/filename.h"
 #include "wx/filedlg.h"
@@ -216,6 +217,76 @@ static void initialize_panels(wxFrame& frame, FaintWindowContext& app,
   // frame. Consider App.
   state.formats = built_in_file_formats();
   frame.SetMinSize(wxSize(640, 480));
+}
+
+static int get_save_format_index(const Formats& formats,
+  const Optional<FilePath>& maybeOldFilePath,
+  bool rasterOnly)
+{
+  // Gets the index for the suggested format for a file dialog for the
+  // given file path.
+  // If there's no old path, the index defaults to png or
+  // svg depending on rasterOnly.
+
+  auto png_svg_or_zero = [&](){
+    return get_file_format_index(formats,
+      FileExtension(rasterOnly ? "png" : "svg")).Or(0);
+  };
+
+  auto by_extension_or_default = [&](const FilePath& p){
+    return get_file_format_index(formats, p.Extension()).Visit(
+      [](int v){
+        return v;
+      },
+      png_svg_or_zero);
+  };
+
+  return maybeOldFilePath.Visit(by_extension_or_default, png_svg_or_zero);
+}
+
+using SaveDialogInfo = std::tuple<FilePath, Format*>;
+
+static Optional<SaveDialogInfo> show_save_as_dialog(wxWindow* parent,
+  DialogContext& dialogContext,
+  Canvas& canvas,
+  Formats& formats)
+{
+  Optional<FilePath> oldFilePath(canvas.GetFilePath());
+
+  const wxFileName initialPath(oldFilePath.IsSet() ?
+    wxFileName(to_wx(oldFilePath.Get().Str())) :
+    wxFileName());
+
+  auto saveFormats = saving_file_formats(formats);
+
+  wxFileDialog dlg(parent,
+    "Save as",
+    initialPath.GetPath(),
+    initialPath.GetName(),
+    to_wx(file_dialog_filter(saveFormats)),
+    wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+
+  dlg.SetFilterIndex(get_save_format_index(saveFormats,
+    oldFilePath,
+    canvas.GetObjects().empty()));
+
+  const int result = dialogContext.ShowModal(dlg);
+  if (result != wxID_OK){
+    return {};
+  }
+
+  FilePath path(FilePath::FromAbsoluteWx(dlg.GetPath()));
+  Format* format = get_save_format(formats,
+    path.Extension(),
+    dlg.GetFilterIndex());
+  if (format == nullptr){
+    // Fixme: Need an error message, though: Can this happen?
+    // The dialog will either give the specified extension or
+    // the selected extension if none matches.
+    return {};
+  }
+
+  return {SaveDialogInfo(path, format)};
 }
 
 class FaintFrame : public wxFrame {
@@ -837,91 +908,86 @@ void FaintWindow::Refresh(){
 }
 
 bool FaintWindow::Save(Canvas& canvas){
+
   auto& state(*m_impl->state);
   Optional<FilePath> maybeFilePath(canvas.GetFilePath());
 
+  auto update_recent =
+    [&](const Format& f, const FilePath& p){
+    if (f.CanLoad() || get_load_format(state.formats, p.Extension()) != nullptr){
+      m_impl->panels->menubar->AddRecentFile(p);
+    }
+  };
+
+  // Fixme: Tidy up. ;_;
   return maybeFilePath.Visit(
     [&](const FilePath& p){
       Format* format = get_save_format(state.formats, p.Extension());
       if (format == nullptr){
         return ShowSaveAsDialog(canvas);
       }
-      bool savedOk = save(m_impl->frame.get(), format, canvas, p);
-      if (!savedOk){
-        return false;
+      const bool savedOk = save(m_impl->frame.get(), format, canvas, p);
+      if (savedOk){
+        update_recent(*format, p);
       }
-      if (format->CanLoad() || get_load_format(state.formats,
-          p.Extension()) != nullptr){
-        m_impl->panels->menubar->AddRecentFile(p);
-      }
-      return true;
+
+      return savedOk;
     },
     [&](){
-      return ShowSaveAsDialog(canvas);
+      return show_save_as_dialog(m_impl->frame.get(),
+        m_impl->GetDialogContext(),
+        canvas,
+        state.formats).Visit(
+          [&](const SaveDialogInfo& info){
+            auto format = std::get<Format*>(info);
+            auto p = std::get<FilePath>(info);
+
+            const bool savedOk = save(m_impl->frame.get(),
+              format,
+              canvas,
+              p,
+              false);
+
+            if (savedOk){
+              update_recent(*format, p);
+            }
+            return savedOk;
+          },
+          otherwise(false));
     });
 }
 
-static int get_save_format_index(const Formats& formats,
-  const Optional<FilePath>& maybeOldFilePath,
-  bool rasterOnly)
-{
-  // Gets the index for the suggested format for a file dialog for the
-  // given file path.
-  // If there's no old path, the index defaults to png or
-  // svg depending on rasterOnly.
-
-  auto png_svg_or_zero = [&](){
-    return get_file_format_index(formats,
-      FileExtension(rasterOnly ? "png" : "svg")).Or(0);
-  };
-
-  auto by_extension_or_default = [&](const FilePath& p){
-    return get_file_format_index(formats, p.Extension()).Visit(
-      [](int v){
-        return v;
-      },
-      png_svg_or_zero);
-  };
-
-  return maybeOldFilePath.Visit(by_extension_or_default, png_svg_or_zero);
-}
-
 bool FaintWindow::ShowSaveAsDialog(Canvas& canvas, bool backup){
-  auto& state(*m_impl->state);
-  Optional<FilePath> oldFilePath(canvas.GetFilePath());
 
-  const wxFileName initialPath(oldFilePath.IsSet() ?
-    wxFileName(to_wx(oldFilePath.Get().Str())) :
-    wxFileName());
+  const auto saveResult = show_save_as_dialog(m_impl->frame.get(),
+    m_impl->appContext.GetDialogContext(),
+    canvas,
+    m_impl->state->formats);
 
-  wxFileDialog dlg(m_impl->frame.get(),
-    "Save as",
-    initialPath.GetPath(),
-    initialPath.GetName(),
-    to_wx(file_dialog_filter(saving_file_formats(state.formats))),
-    wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+  // Fixme: Duplicates FaintWindow::Save()
+  return saveResult.Visit(
+    [&](const SaveDialogInfo& info){
+      auto f = std::get<Format*>(info);
+      auto p = std::get<FilePath>(info);
+      const bool savedOk = save(m_impl->frame.get(),
+        f,
+        canvas,
+        p,
+        backup);
 
-  dlg.SetFilterIndex(get_save_format_index(state.formats,
-    oldFilePath,
-    canvas.GetObjects().empty()));
+      if (!savedOk){
+        return false;
+      }
 
-  const int result = m_impl->appContext.GetDialogContext().ShowModal(dlg);
-  if (result != wxID_OK){
-    return false;
-  }
+      const bool canLoad = f->CanLoad() ||
+        get_load_format(m_impl->state->formats, p.Extension()) != nullptr;
+      if (canLoad){
+        m_impl->panels->menubar->AddRecentFile(p);
+      }
 
-  FilePath path(FilePath::FromAbsoluteWx(dlg.GetPath()));
-  Format* format = get_save_format(state.formats,
-    path.Extension(),
-    dlg.GetFilterIndex());
-  if (format == nullptr){
-    // TODO: Need an error message, though: Can this happen?
-    // The dialog will either give the specified extension or
-    // the selected extension if none matches.
-    return false;
-  }
-
-  return save(m_impl->frame.get(), format, canvas, path, backup);
+      return true;
+    },
+    otherwise(false));
 }
 
 void FaintWindow::SelectLayer(Layer layer){
