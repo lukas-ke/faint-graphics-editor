@@ -18,6 +18,7 @@
 #include <string>
 #include <vector>
 #include "formats/format.hh"
+#include "util/optional.hh"
 
 namespace faint{
 
@@ -34,7 +35,7 @@ utf8_string file_dialog_filter(const std::vector<Format*>&);
 utf8_string combined_file_dialog_filter(const utf8_string& description,
   const Formats&);
 
-int get_file_format_index(const Formats&, const FileExtension&);
+Optional<int> get_file_format_index(const Formats&, const FileExtension&);
 
 // Fixme: Return Optional<Format&>
 Format* get_load_format(const Formats&, const FileExtension&);

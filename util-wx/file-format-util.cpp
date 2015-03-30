@@ -73,15 +73,15 @@ utf8_string file_dialog_filter(const Formats& formats){
   return join_fn(utf8_string("|"), formats, {single_format_filter});
 }
 
-int get_file_format_index(const Formats& formats,
+Optional<int> get_file_format_index(const Formats& formats,
   const FileExtension& extension)
 {
   for (size_t i = 0; i != formats.size(); i++){
     if (formats[i]->Match(extension)){
-      return resigned(i);
+      return {resigned(i) - 1};
     }
   }
-  return -1;
+  return {};
 }
 
 utf8_string combined_file_dialog_filter(const utf8_string& description,

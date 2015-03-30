@@ -861,14 +861,38 @@ bool FaintWindow::Save(Canvas& canvas){
     });
 }
 
+static int get_save_format_index(const Formats& formats,
+  const Optional<FilePath>& maybeOldFilePath,
+  bool rasterOnly)
+{
+  // Gets the index for the suggested format for a file dialog for the
+  // given file path.
+  // If there's no old path, the index defaults to png or
+  // svg depending on rasterOnly.
+
+  auto png_svg_or_zero = [&](){
+    return get_file_format_index(formats,
+      FileExtension(rasterOnly ? "png" : "svg")).Or(0);
+  };
+
+  auto by_extension_or_default = [&](const FilePath& p){
+    return get_file_format_index(formats, p.Extension()).Visit(
+      [](int v){
+        return v;
+      },
+      png_svg_or_zero);
+  };
+
+  return maybeOldFilePath.Visit(by_extension_or_default, png_svg_or_zero);
+}
+
 bool FaintWindow::ShowSaveAsDialog(Canvas& canvas, bool backup){
   auto& state(*m_impl->state);
   Optional<FilePath> oldFilePath(canvas.GetFilePath());
-  wxFileName initialPath(oldFilePath.IsSet() ?
+
+  const wxFileName initialPath(oldFilePath.IsSet() ?
     wxFileName(to_wx(oldFilePath.Get().Str())) :
     wxFileName());
-  int defaultFormatIndex = oldFilePath.NotSet() ? 0 :
-    get_file_format_index(state.formats, FileExtension(initialPath.GetExt()));
 
   wxFileDialog dlg(m_impl->frame.get(),
     "Save as",
@@ -877,11 +901,11 @@ bool FaintWindow::ShowSaveAsDialog(Canvas& canvas, bool backup){
     to_wx(file_dialog_filter(saving_file_formats(state.formats))),
     wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
-  if (defaultFormatIndex != -1){
-    dlg.SetFilterIndex(defaultFormatIndex);
-  }
+  dlg.SetFilterIndex(get_save_format_index(state.formats,
+    oldFilePath,
+    canvas.GetObjects().empty()));
 
-  int result = m_impl->appContext.GetDialogContext().ShowModal(dlg);
+  const int result = m_impl->appContext.GetDialogContext().ShowModal(dlg);
   if (result != wxID_OK){
     return false;
   }
