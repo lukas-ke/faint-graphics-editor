@@ -29,7 +29,8 @@ namespace faint{
 
 /* function: "perimeter()\n
 Returns the perimeter length of the object.\n
-Warning: Treats curves as lines currently." */
+Warning: Treats curves as lines currently."
+name: "perimeter" */
 extern coord perimeter_py(const BoundObject<Object>& obj){
   const auto& frame = obj.canvas->GetFrame(obj.frameId);
   const coord conversion(get_pixel_to_mm_conversion(frame).Or(1.0));
