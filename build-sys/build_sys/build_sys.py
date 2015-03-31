@@ -275,14 +275,18 @@ def build(opts, cmdline):
 
         timed(link, obj_files, opts, out, err, debug=cmd_opts.debug)
 
-    if opts.platform == 'msw' and cmd_opts.version != unknown_version_str:
-        print("* Generating %s installer." % cmd_opts.version)
-        oldDir = os.getcwd()
-        os.chdir("../installer")
-        nsiFile = gen_nsis.run(cmd_opts.version)
-        create_installer(opts.makensis_exe, nsiFile)
-        os.chdir(oldDir)
     return 0
+
+def build_installer(version, makensis_exe):
+    import build_sys.compile_msw as compile_impl
+
+    print("* Generating %s installer." % version)
+    oldDir = os.getcwd()
+    os.chdir("../installer")
+    nsiFile = gen_nsis.run(version)
+    compile_impl.create_installer(makensis_exe, nsiFile)
+    os.chdir(oldDir)
+
 
 if __name__ == '__main__':
     build()

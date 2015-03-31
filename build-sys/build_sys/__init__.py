@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 from . build_sys import build
+from . build_sys import unknown_version_str
+from . build_sys import build_installer
 from . build_sys import parse_command_line
 from build_sys.opts import BuildOptions
 import build_sys.gen_method_def as gen_method_def
