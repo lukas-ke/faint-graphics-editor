@@ -244,12 +244,18 @@ static int get_save_format_index(const Formats& formats,
   return maybeOldFilePath.Visit(by_extension_or_default, png_svg_or_zero);
 }
 
-using SaveDialogInfo = std::tuple<FilePath, Format*>;
+struct SaveDialogInfo{
+  SaveDialogInfo(const FilePath& path, Format& format)
+    : path(path), format(format)
+  {}
+  FilePath path;
+  Format& format;
+};
 
 static Optional<SaveDialogInfo> show_save_as_dialog(wxWindow* parent,
   DialogContext& dialogContext,
   Canvas& canvas,
-  Formats& formats)
+  const Formats& formats)
 {
   Optional<FilePath> oldFilePath(canvas.GetFilePath());
 
@@ -286,7 +292,7 @@ static Optional<SaveDialogInfo> show_save_as_dialog(wxWindow* parent,
     return {};
   }
 
-  return {SaveDialogInfo(path, format)};
+  return {SaveDialogInfo(path, *format)};
 }
 
 class FaintFrame : public wxFrame {
@@ -313,13 +319,15 @@ public:
 };
 
 // Fixme: return the error instead of taking parent, showing error message
+// Fixme: Also move notifysaved out.
+// ... leaves nothing though. :)
 static bool save(wxWindow* parent,
-  Format* format,
-  Canvas& canvas,
+  Format& format,
   const FilePath& filePath,
+  Canvas& canvas,
   bool backup=false)
 {
-  SaveResult result = format->Save(filePath, canvas);
+  SaveResult result = format.Save(filePath, canvas);
   if (result.Failed()){
     show_error(parent, Title("Failed Saving"),
       to_wx(result.ErrorDescription()));
@@ -914,7 +922,7 @@ bool FaintWindow::Save(Canvas& canvas){
 
   auto update_recent =
     [&](const Format& f, const FilePath& p){
-    if (f.CanLoad() || get_load_format(state.formats, p.Extension()) != nullptr){
+    if (f.CanLoad() || has_load_format(state.formats, p.Extension())){
       m_impl->panels->menubar->AddRecentFile(p);
     }
   };
@@ -926,7 +934,7 @@ bool FaintWindow::Save(Canvas& canvas){
       if (format == nullptr){
         return ShowSaveAsDialog(canvas);
       }
-      const bool savedOk = save(m_impl->frame.get(), format, canvas, p);
+      const bool savedOk = save(m_impl->frame.get(), *format, p, canvas);
       if (savedOk){
         update_recent(*format, p);
       }
@@ -939,17 +947,14 @@ bool FaintWindow::Save(Canvas& canvas){
         canvas,
         state.formats).Visit(
           [&](const SaveDialogInfo& info){
-            auto format = std::get<Format*>(info);
-            auto p = std::get<FilePath>(info);
-
             const bool savedOk = save(m_impl->frame.get(),
-              format,
+              info.format,
+              info.path,
               canvas,
-              p,
               false);
 
             if (savedOk){
-              update_recent(*format, p);
+              update_recent(info.format, info.path);
             }
             return savedOk;
           },
@@ -958,33 +963,29 @@ bool FaintWindow::Save(Canvas& canvas){
 }
 
 bool FaintWindow::ShowSaveAsDialog(Canvas& canvas, bool backup){
-
+  const auto& formats = m_impl->state->formats;
   const auto saveResult = show_save_as_dialog(m_impl->frame.get(),
     m_impl->appContext.GetDialogContext(),
     canvas,
-    m_impl->state->formats);
+    formats);
 
   // Fixme: Duplicates FaintWindow::Save()
   return saveResult.Visit(
     [&](const SaveDialogInfo& info){
-      auto f = std::get<Format*>(info);
-      auto p = std::get<FilePath>(info);
-      const bool savedOk = save(m_impl->frame.get(),
-        f,
-        canvas,
-        p,
-        backup);
-
+      const bool savedOk =
+        save(m_impl->frame.get(),
+          info.format,
+          info.path,
+          canvas,
+          backup);
       if (!savedOk){
         return false;
       }
-
-      const bool canLoad = f->CanLoad() ||
-        get_load_format(m_impl->state->formats, p.Extension()) != nullptr;
+      const bool canLoad = info.format.CanLoad() ||
+        has_load_format(formats, info.path.Extension());
       if (canLoad){
-        m_impl->panels->menubar->AddRecentFile(p);
+        m_impl->panels->menubar->AddRecentFile(info.path);
       }
-
       return true;
     },
     otherwise(false));

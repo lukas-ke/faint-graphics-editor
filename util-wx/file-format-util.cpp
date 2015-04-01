@@ -102,15 +102,17 @@ utf8_string combined_file_dialog_filter(const utf8_string& description,
     utf8_string("*.*"));
 }
 
-Format* get_load_format(const Formats& formats,
-  const FileExtension& ext)
-{
+Format* get_load_format(const Formats& formats, const FileExtension& ext){
   for (Format* f : formats){
     if (f->Match(ext) && f->CanSave()){
       return f;
     }
   }
   return nullptr;
+}
+
+bool has_load_format(const Formats& formats, const FileExtension& ext){
+  return get_load_format(formats, ext) != nullptr;
 }
 
 Format* get_save_format(const Formats& formats,

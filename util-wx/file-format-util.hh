@@ -40,6 +40,8 @@ Optional<int> get_file_format_index(const Formats&, const FileExtension&);
 // Fixme: Return Optional<Format&>
 Format* get_load_format(const Formats&, const FileExtension&);
 
+bool has_load_format(const Formats&, const FileExtension&);
+
 Format* get_save_format(const Formats&, const FileExtension&);
 
 Format* get_save_format(const Formats&, const FileExtension&,
