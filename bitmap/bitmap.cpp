@@ -57,7 +57,7 @@ inline uchar* allocate_bitmap_data(size_t len){
     return new uchar[len];
   }
   catch (const std::bad_alloc&){
-    throw BitmapException("bad_alloc");
+    throw BitmapOutOfMemory("std::bad_alloc");
   }
 }
 

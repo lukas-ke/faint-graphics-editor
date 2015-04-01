@@ -16,6 +16,7 @@
 #include "bitmap/aa-line.hh"
 #include "bitmap/auto-crop.hh"
 #include "bitmap/bitmap.hh"
+#include "bitmap/bitmap-exception.hh"
 #include "bitmap/color.hh"
 #include "bitmap/filter.hh"
 #include "bitmap/gaussian-blur.hh"
@@ -64,7 +65,7 @@ static void Bitmap_init(bitmapObject& self,
   try{
     self.bmp = new Bitmap(size, bg.Or(Paint(color_white)));
   }
-  catch (const std::bad_alloc&){
+  catch (const BitmapOutOfMemory&){
     throw MemoryError("Failed allocating memory for Bitmap");
   }
 }

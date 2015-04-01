@@ -23,4 +23,9 @@ public:
   BitmapException() = delete;
 };
 
+class BitmapOutOfMemory : public BitmapException{
+  using BitmapException::BitmapException;
+  BitmapOutOfMemory() = delete;
+};
+
 } // namespace

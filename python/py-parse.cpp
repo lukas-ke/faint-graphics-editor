@@ -16,6 +16,7 @@
 #include "app/canvas.hh"
 #include "app/frame.hh"
 #include "bitmap/bitmap.hh"
+#include "bitmap/bitmap-exception.hh"
 #include "bitmap/gradient.hh"
 #include "bitmap/paint.hh"
 #include "bitmap/pattern.hh"
@@ -913,15 +914,23 @@ PyObject* build_result(bool value){
 }
 
 PyObject* build_result(const Bitmap& bmp){
+  static const auto set_out_of_memory_error =
+    [](){
+      PyErr_SetString(PyExc_MemoryError,
+        "Insufficient memory for allocating Bitmap");
+      return nullptr;
+  };
+
   assert(bitmap_ok(bmp));
   Bitmap* newBitmap = nullptr;
   try{
     newBitmap = new Bitmap(bmp);
   }
+  catch(const BitmapOutOfMemory&){
+    return set_out_of_memory_error();
+  }
   catch(const std::bad_alloc&){
-    PyErr_SetString(PyExc_MemoryError,
-      "Insufficient memory for allocating Bitmap");
-    return nullptr;
+    return set_out_of_memory_error();
   }
   bitmapObject* py_bitmap = (bitmapObject*)BitmapType.tp_alloc(&BitmapType, 0);
   if (py_bitmap == nullptr){

@@ -20,6 +20,7 @@
 #include "wx/filedlg.h"
 #include "wx/statusbr.h"
 #include "wx/sizer.h"
+#include "bitmap/bitmap-exception.hh"
 #include "app/active-canvas.hh"
 #include "gui/canvas-panel.hh"
 #include "gui/color-panel.hh"
@@ -841,7 +842,7 @@ void FaintWindow::Open(const FileList& paths){
       }
     }
   }
-  catch (const std::bad_alloc&){
+  catch (const BitmapOutOfMemory&){
     show_error(m_impl->frame.get(), Title("Insufficient memory to load "
       "all images."), "Out of memory");
   }

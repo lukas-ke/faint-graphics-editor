@@ -16,6 +16,7 @@
 #include "app/cut-and-paste.hh"
 #include "app/get-app-context.hh"
 #include "bitmap/bitmap.hh"
+#include "bitmap/bitmap-exception.hh"
 #include "bitmap/draw.hh"
 #include "bitmap/filter.hh"
 #include "geo/int-rect.hh"
@@ -40,7 +41,7 @@ void copy_rect_to_clipboard(const Bitmap& bmp, const IntRect& rect){
     bitmap_to_clipboard(get_app_context(), clipboard,
       subbitmap(bmp, rect));
   }
-  catch(const std::bad_alloc&){
+  catch(const BitmapOutOfMemory&){
     throw MemoryError("Insufficient memory for Bitmap copy.");
   }
 }
@@ -58,7 +59,7 @@ static void copy_rect_to_clipboard(const ColorSpan& span, const IntRect& rect){
     bitmap_to_clipboard(get_app_context(), clipboard,
       Bitmap(rect.GetSize(), span.color));
   }
-  catch(const std::bad_alloc&){
+  catch(const BitmapOutOfMemory&){
     throw MemoryError("Insufficient memory for Bitmap copy.");
   }
 }
