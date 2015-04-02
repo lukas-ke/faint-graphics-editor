@@ -14,7 +14,9 @@
 // permissions and limitations under the License.
 
 #include "bitmap/bitmap-templates.hh" // onto_new
+#include "bitmap/paint.hh"
 #include "bitmap/color.hh"
+#include "bitmap/mask.hh"
 #include "gui/command-window.hh"
 #include "gui/dialog-context.hh"
 #include "gui/layout.hh"
@@ -36,6 +38,31 @@ static int get_initial_alpha(const Bitmap& bmp){
     255;
 }
 
+static Optional<Color> get_mask_color(const Settings& s){
+  if (s.Get(ts_BackgroundStyle) == BackgroundStyle::MASKED){
+    const auto& bg = s.Get(ts_Bg);
+    if (bg.IsColor()){
+      return option(bg.GetColor());
+    }
+  }
+  return {};
+}
+
+static void set_feedback(const Bitmap& src,
+  uchar alpha,
+  WindowFeedback& feedback,
+  const Settings& s)
+{
+  get_mask_color(s).Visit(
+    [&](const Color& c){
+      const auto mask = mask_not_color(src, c);
+      feedback.SetBitmap(onto_new(set_alpha_masked, src, alpha, mask));
+    },
+    [&](){
+      feedback.SetBitmap(onto_new(set_alpha, src, alpha));
+    });
+}
+
 class AlphaDialog : public CommandWindow{
 public:
   AlphaDialog()
@@ -49,11 +76,12 @@ public:
   void Show(wxWindow& parent, WindowFeedback& feedback) override{
     auto cancel = [&](){Close(feedback);};
     auto ok = [&](){Close(feedback, true);};
+
     events::void_func update_preview = [this, &feedback](){
-      feedback.SetBitmap(onto_new(set_alpha, m_bitmap, GetAlpha()));};
+      set_feedback(m_bitmap, GetAlpha(), feedback, m_settings);
+    };
 
     m_bitmap = feedback.GetBitmap();
-
     m_dialog = create_dialog(parent, "Alpha");
 
     events::on_close_window(m_dialog, cancel);
@@ -102,7 +130,7 @@ public:
 
   void Reinitialize(WindowFeedback& feedback) override{
     m_bitmap = feedback.GetBitmap();
-    feedback.SetBitmap(onto_new(set_alpha, m_bitmap, GetAlpha()));
+    set_feedback(m_bitmap, GetAlpha(), feedback, m_settings);
   }
 
   const Settings& GetSettings() const override{

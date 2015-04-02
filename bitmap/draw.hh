@@ -33,6 +33,7 @@ class IntLineSegment;
 class IntRect;
 class IntSize;
 class Interval;
+class Mask;
 class Scale;
 template<typename T> class Offsat;
 
@@ -163,6 +164,7 @@ Bitmap scale_nearest(const Bitmap&, int scale);
 Bitmap scale_nearest(const Bitmap&, const Scale&);
 Bitmap scaled_subbitmap(const Bitmap&, const Scale&, const IntRect&);
 void set_alpha(Bitmap&, uchar);
+void set_alpha_masked(Bitmap&, uchar, const Mask&);
 Bitmap subbitmap(const Bitmap&, const IntRect&);
 void vertical_scanline(Bitmap&, int x, const Color&);
 void horizontal_scanline(Bitmap&, int y, const Color&);

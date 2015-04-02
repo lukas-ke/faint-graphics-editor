@@ -22,6 +22,7 @@
 #include "bitmap/bitmap-templates.hh"
 #include "bitmap/color.hh"
 #include "bitmap/draw.hh"
+#include "bitmap/mask.hh"
 #include "bitmap/pattern.hh"
 #include "geo/axis.hh"
 #include "geo/geo-func.hh"
@@ -2253,6 +2254,21 @@ void set_alpha(Bitmap& bmp, uchar a){
     for (int x = 0; x != sz.w; x++){
       int i = y * stride + x * BPP;
       data[i + iA] = a;
+    }
+  }
+}
+
+void set_alpha_masked(Bitmap& bmp, uchar a, const Mask& m){
+  uchar* data = bmp.GetRaw();
+  const int stride = bmp.GetStride();
+  IntSize sz(bmp.GetSize());
+
+  for (int y = 0; y != sz.h; y++){
+    for (int x = 0; x != sz.w; x++){
+      if (m.Get(x, y)){
+        int i = y * stride + x * BPP;
+        data[i + iA] = a;
+      }
     }
   }
 }
