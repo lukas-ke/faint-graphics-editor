@@ -42,6 +42,7 @@ static Optional<Color> get_mask_color(const Settings& s){
   if (s.Get(ts_BackgroundStyle) == BackgroundStyle::MASKED){
     const auto& bg = s.Get(ts_Bg);
     if (bg.IsColor()){
+      // Fixme: Not if no selection or non-floating selection
       return option(bg.GetColor());
     }
   }
