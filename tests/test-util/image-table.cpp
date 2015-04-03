@@ -75,7 +75,6 @@ ImageTable::~ImageTable(){
 void ImageTable::AddRow(const std::string& label, const FileName& f1, const FileName& f2){
   m_impl->AddRow();
 
-
   m_impl->AddCell("<center>" + label + "</center>"); // Fixme
   std::stringstream ss;
   ss << "<img src='" << f1.Str() << "' onmouseover=\"this.src='" << f2.Str() <<

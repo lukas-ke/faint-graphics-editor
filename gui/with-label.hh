@@ -16,11 +16,11 @@
 #ifndef FAINT_WITH_LABEL_HH
 #define FAINT_WITH_LABEL_HH
 #include <functional>
-#include "wx/window.h" // fixme
-#include "wx/panel.h" // fixme
-#include "wx/sizer.h" // fixme
-#include "wx/stattext.h" // fixme
-#include "gui/layout.hh"
+#include "wx/window.h" // Fixme: Hide
+#include "wx/panel.h" // Fixme: Hide
+#include "wx/sizer.h" // Fixme: Hide
+#include "wx/stattext.h" // Fixme: Hide
+#include "gui/ui-constants.hh"
 
 namespace faint{
 

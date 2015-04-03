@@ -17,7 +17,7 @@
 #include "wx/dialog.h"
 #include "wx/sizer.h"
 #include "wx/stattext.h"
-#include "gui/layout.hh"
+#include "gui/ui-constants.hh"
 #include "util-wx/layout-wx.hh"
 #include "util/iter.hh"
 

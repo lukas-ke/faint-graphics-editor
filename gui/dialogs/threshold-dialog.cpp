@@ -18,8 +18,8 @@
 #include "gui/command-window.hh"
 #include "gui/dialog-context.hh"
 #include "gui/dual-slider.hh"
-#include "gui/layout.hh"
 #include "gui/slider-histogram-background.hh"
+#include "gui/ui-constants.hh"
 #include "util/command-util.hh" // get_threshold_command
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/fwd-wx.hh"

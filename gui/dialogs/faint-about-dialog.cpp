@@ -17,7 +17,7 @@
 #include "app/build-info.hh"
 #include "gui/accelerator-entry.hh"
 #include "gui/dialog-context.hh"
-#include "gui/layout.hh"
+#include "gui/ui-constants.hh"
 #include "python/py-interface.hh" // For get_python_version
 #include "rendering/cairo-context.hh" // For get_cairo_version
 #include "text/formatting.hh"

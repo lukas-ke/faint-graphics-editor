@@ -13,12 +13,11 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_LAYOUT_HH
-#define FAINT_LAYOUT_HH
+#ifndef FAINT_UI_CONSTANTS_HH
+#define FAINT_UI_CONSTANTS_HH
 #include "bitmap/color.hh"
 #include "geo/int-size.hh"
 
-// Fixme: Rename to e.g. ui-constants or smth
 namespace faint{
 
 const int panel_padding = 10;

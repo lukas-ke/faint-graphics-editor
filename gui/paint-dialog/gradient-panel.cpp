@@ -29,10 +29,10 @@
 #include "geo/range.hh" // for constrained
 #include "gui/art-container.hh"
 #include "gui/bitmap-list-ctrl.hh"
-#include "gui/layout.hh"
 #include "gui/mouse-capture.hh"
 #include "gui/paint-dialog.hh"
 #include "gui/paint-dialog/gradient-panel.hh"
+#include "gui/ui-constants.hh"
 #include "text/formatting.hh"
 #include "util/color-bitmap-util.hh"
 #include "util/index.hh"
