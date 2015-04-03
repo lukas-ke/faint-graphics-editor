@@ -75,7 +75,7 @@ static void box_blur_H(channel_t& scl, channel_t& tcl, const IntSize& size, int 
 }
 
 static void box_blur_T(channel_t& scl, channel_t& tcl, const IntSize& size, int r){
-  auto iarr = 1.0 / (r+r+1); // Fixme: ?
+  auto iarr = 1.0 / (r+r+1);
   for(int i=0; i != size.w; i++){
     auto ti = i;
     auto li = ti;
@@ -97,8 +97,8 @@ static void box_blur_T(channel_t& scl, channel_t& tcl, const IntSize& size, int 
     for(int j = r + 1; j != size.h - r; j++){
       val += scl[to_size_t(ri)] - scl[to_size_t(li)];
       tcl[to_size_t(ti)] = static_cast<unsigned char>(rounded(val*iarr));
-      li += size.w; 
-      ri += size.w; 
+      li += size.w;
+      ri += size.w;
       ti+=size.w;
     }
 
