@@ -138,7 +138,8 @@ coord perimeter(const std::vector<PathPt>& path){
   for (const PathPt& pt : but_first(path)){
     currPos = pt.Visit(
       [&](const ArcTo& arc){
-        len += distance(currPos, arc.p); // Fixme
+        // Fixme: Straight-line for arc?! Use correct formula.
+        len += distance(currPos, arc.p);
         return arc.p;
       },
       [&](const Close&){
