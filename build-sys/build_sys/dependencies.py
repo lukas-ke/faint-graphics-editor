@@ -19,15 +19,18 @@ import os
 import time
 
 def find_includes(filename):
+    """Returns a list of the files included by the specified file."""
     import re
     with open(filename) as f:
         return re.findall(r'#include "(.*)"', f.read())
+
 
 def find_header_dependencies(root, files):
     deps = {}
     for filename in files:
         includes = find_includes(filename)
-        for include in [inc for inc in [root + incl for incl in includes] if
+        for include in [inc for inc in
+                        [os.path.join(root, incl) for incl in includes] if
                         inc in files]:
             if include not in deps:
                 deps[include] = set()
@@ -36,7 +39,7 @@ def find_header_dependencies(root, files):
 
 
 def follow(include, deps, items, flat, done):
-    for includer in deps.get(include,[]):
+    for includer in deps.get(include, []):
         if includer.endswith(".cpp"):
             items.add(includer)
         elif includer.endswith(".hh"):
@@ -47,6 +50,11 @@ def follow(include, deps, items, flat, done):
 
 
 def flatten(deps):
+    """Returns a flattened copy of the dependency dictionary so that all
+    files that depend on a header, even if indirectly, are in its list
+    of dependees.
+
+    """
     flat={}
     done = set()
     for include in deps:
@@ -62,11 +70,18 @@ def flatten(deps):
 
 
 def find_header_dependencies_all(root, src_folders):
+    """Returns a dictionary mapping each header to all files that directly
+    include it (be they .cpp or .hh).
+
+    """
     return find_header_dependencies(root,
-                                    enumerate_all_sources(root, src_folders))
+        enumerate_all_sources(root, src_folders))
 
 
 def enumerate_all_sources(root, src_folders):
+    """Finds all .hh and .cpp-files in src_folders under root.
+
+    """
     src = []
     for folder in src_folders:
         for file in [file for file in os.listdir(os.path.join(root,folder)) if
@@ -77,16 +92,9 @@ def enumerate_all_sources(root, src_folders):
 
 
 def get_flat_header_dependencies(root, src_folders):
+    """Returns a dictionary mapping headers to all files that depend on
+    them by directly including them or indirectly through some other
+    include.
+
+    """
     return flatten(find_header_dependencies_all(root, src_folders))
-
-
-def _mapped_includes(root):
-    """Return a dictionary mapping each file to all headers it includes."""
-    files = enumerate_all_sources(root)
-    includes = {}
-    for filename in files:
-        adj_filename = filename.replace(root, "")
-        if adj_filename.startswith("/"):
-            adj_filename = adj_filename[1:]
-        includes[adj_filename] = find_includes(filename)
-    return includes
