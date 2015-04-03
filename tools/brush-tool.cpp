@@ -73,7 +73,7 @@ public:
   }
 
   void Do(CommandContext& context){
-    context.GetDC().Blend(m_alphaMap, m_topLeft, m_first, m_settings);
+    context.GetDC().Blend(offsat(m_alphaMap, m_topLeft), m_first, m_settings);
   }
 
 private:
@@ -135,12 +135,12 @@ public:
     const Point& p(info.pos);
 
     if (m_active){
-      dc.Blend(m_alphaMap, IntPoint(0,0), m_first.Get(),
+      dc.Blend(at_top_left(m_alphaMap), m_first.Get(),
         maybe_offsat_paint(GetSettings(), m_brush));
     }
     else if (m_drawCursor){
-      dc.Blend(m_brushOverlay, brush_top_left(p, m_brush).Get(), floored(p),
-        GetSettings());
+      dc.Blend(offsat(m_brushOverlay, brush_top_left(p, m_brush).Get()),
+        floored(p), GetSettings());
     }
 
     if (m_drawCursor && m_translucent){

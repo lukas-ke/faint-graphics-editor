@@ -18,6 +18,7 @@
 #include <memory> // for unique_ptr
 #include <vector>
 #include "geo/geo-fwd.hh"
+#include "geo/offsat.hh"
 #include "geo/point.hh"
 #include "geo/primitive.hh"
 #include "text/text-measures.hh"
@@ -52,9 +53,7 @@ public:
   std::string ErrorString() const;
   void Arc(const Tri&, const AngleSpan&, const Settings&);
   void Blit(const Bitmap&, const Point& topLeft, const Settings&);
-  // Fixme: Use Offsat<AlphaMap> somehow.
-  void Blend(const AlphaMap&, const IntPoint& topLeft, const IntPoint& anchor,
-    const Settings&);
+  void Blend(const Offsat<AlphaMap>&, const IntPoint& anchor, const Settings&);
   void Clear(const Color&);
   void Ellipse(const Tri&, const Settings&);
   Color GetPixel(const Point&) const;

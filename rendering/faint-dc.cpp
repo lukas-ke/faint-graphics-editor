@@ -380,10 +380,11 @@ void FaintDC::BitmapSetAlphaMasked(const Bitmap& drawnBitmap,
   }
 }
 
-void FaintDC::Blend(const AlphaMap& alpha, const IntPoint& topLeft,
-  const IntPoint& anchor, const Settings& s)
+void FaintDC::Blend(const Offsat<AlphaMap>& alpha,
+  const IntPoint& anchor,
+  const Settings& s)
 {
-  IntPoint imagePt(floored(floated(topLeft) * m_sc + m_origin));
+  IntPoint imagePt(floored(floated(alpha.Offset()) * m_sc + m_origin));
   if (overextends(imagePt, m_bitmap)){
     return;
   }
@@ -392,9 +393,9 @@ void FaintDC::Blend(const AlphaMap& alpha, const IntPoint& topLeft,
   if (f != nullptr){
     // Fixme: Need to offset the alpha-map and such.
     Padding p(f->GetPadding());
-    Bitmap bmp(alpha.GetSize() + p.GetSize(), color_transparent_white);
+    Bitmap bmp(alpha->GetSize() + p.GetSize(), color_transparent_white);
     IntPoint offset(p.left, p.top);
-    blend(offsat(alpha.FullReference(), imagePt), onto(bmp),
+    blend(offsat(alpha->FullReference(), imagePt), onto(bmp),
       get_fg(s, m_origin, anchor));
     f->Apply(bmp);
     blend(offsat(bmp, imagePt - offset), onto(m_bitmap));
@@ -402,13 +403,13 @@ void FaintDC::Blend(const AlphaMap& alpha, const IntPoint& topLeft,
   }
   else{
     IntRect r(floored(-m_origin), m_bitmap.GetSize());
-    IntSize alphaSz(alpha.GetSize());
+    IntSize alphaSz(alpha->GetSize());
     if (r.x + r.w > alphaSz.w || r.y + r.h >= alphaSz.h){
-      blend(offsat(alpha.FullReference(), imagePt),
+      blend(offsat(alpha->FullReference(), imagePt),
         onto(m_bitmap), get_fg(s, m_origin, anchor));
     }
     else{
-      blend(offsat(alpha.SubReference(r), imagePt + r.TopLeft()),
+      blend(offsat(alpha->SubReference(r), imagePt + r.TopLeft()),
         onto(m_bitmap), get_fg(s, m_origin, anchor));
     }
   }
