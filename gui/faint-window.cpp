@@ -178,7 +178,6 @@ static void update_zoom(FaintPanels& panels){
 
 static void initialize_panels(wxFrame& frame, FaintWindowContext& app,
   FaintPanels& panels,
-  FaintState& state,
   ArtContainer& art,
   const PaintMap& palette)
 {
@@ -200,7 +199,6 @@ static void initialize_panels(wxFrame& frame, FaintWindowContext& app,
 
   // Bottom half, the selected color, palette and zoom controls.
   panels.color = std::make_unique<ColorPanel>(&frame,
-    state.toolSettings,
     palette,
     app,
     app.GetStatusInfo(),
@@ -214,9 +212,6 @@ static void initialize_panels(wxFrame& frame, FaintWindowContext& app,
 
   app.SetTabCtrl(panels.tabControl.get()); // Fixme: Remove
 
-  // Fixme: Wrong place for such stuff, has nothing todo with main
-  // frame. Consider App.
-  state.formats = built_in_file_formats();
   frame.SetMinSize(wxSize(640, 480));
 }
 
@@ -408,7 +403,11 @@ FaintWindow::FaintWindow(ArtContainer& art,
   FaintWindowPythonContext* pythonContext = new
     FaintWindowPythonContext(*this, *interpreterFrame);
 
-  initialize_panels(*frame, *appContext, *panels, *state, art, palette);
+  initialize_panels(*frame, *appContext, *panels, art, palette);
+
+  // Fixme: Wrong place for such stuff, has nothing todo with main
+  // frame. Consider App.
+  state->formats = built_in_file_formats();
 
   m_impl = std::make_unique<FaintWindowImpl>(frame,
     std::move(panels), std::move(state),

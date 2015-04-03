@@ -47,7 +47,6 @@ static Optional<CellPos> no_highlight(){
 class PaletteCtrl::PaletteCtrlImpl : public wxPanel, public ColorDropTarget {
 public:
   PaletteCtrlImpl(wxWindow* parent,
-    const Settings& s,
     const PaintMap& palette,
     StatusInterface& status,
     DialogContext& dialogContext)
@@ -55,7 +54,6 @@ public:
       ColorDropTarget(this),
       m_dialogContext(dialogContext),
       m_mouse(this),
-      m_settings(s),
       m_statusInterface(status)
   {
     #ifdef __WXMSW__
@@ -209,7 +207,6 @@ private:
   }
 
   void SetFg(const Paint& fg){
-    m_prevFg = m_settings.Get(ts_Fg);
     SendChangeEvent(ts_Fg, fg);
   }
 
@@ -231,10 +228,6 @@ private:
     CreateBitmap(no_highlight());
   }
 
-  void UndoSetFg(){
-    SendChangeEvent(ts_Fg, m_prevFg);
-  }
-
   void UpdateCapture(const IntPoint& pos){
     assert(m_mouse.HasCapture());
 
@@ -247,10 +240,6 @@ private:
 
     // Start dragging the color
     m_mouse.Release();
-
-    // The selected foreground color should not be changed when the
-    // click initiates dragging of a color.
-    UndoSetFg();
 
     CellPos cellPos(MousePosToPalettePos(m_dragStart));
     Paint paint(m_paintMap.Get(cellPos));
@@ -273,8 +262,6 @@ private:
 
   DialogContext& m_dialogContext;
   MouseCapture m_mouse;
-  const Settings& m_settings;
-  Paint m_prevFg;
   wxBitmap m_bitmap;
   IntPoint m_dragStart;
   Optional<CellPos> m_highLight;
@@ -283,11 +270,10 @@ private:
 };
 
 PaletteCtrl::PaletteCtrl(wxWindow* parent,
-  const Settings& settings,
   const PaintMap& palette,
   StatusInterface& status,
   DialogContext& context)
-  : m_impl(make_dumb<PaletteCtrlImpl>(parent, settings, palette, status, context))
+  : m_impl(make_dumb<PaletteCtrlImpl>(parent, palette, status, context))
 {}
 
 wxWindow* PaletteCtrl::AsWindow(){

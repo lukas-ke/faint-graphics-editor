@@ -30,7 +30,6 @@ class StatusInterface;
 class PaletteCtrl {
 public:
   PaletteCtrl(wxWindow* parent,
-    const Settings&, // Fixme: Use?
     const PaintMap& palette,
     StatusInterface&,
     DialogContext&);

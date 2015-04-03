@@ -36,7 +36,6 @@ class ColorPanel {
   // control, a zoom control and an animation frames control.
 public:
   ColorPanel(wxWindow* parent,
-    const Settings&,
     const PaintMap& palette,
     AppContext&,
     StatusInterface&,

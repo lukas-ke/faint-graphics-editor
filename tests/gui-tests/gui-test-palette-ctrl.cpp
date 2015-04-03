@@ -21,10 +21,6 @@
 #include "util/setting-id.hh"
 #include "util-wx/fwd-wx.hh"
 
-namespace {
-faint::Settings paletteCtrlSettings;
-}
-
 void gui_test_palette_ctrl(wxWindow* p,
   faint::StatusInterface& status,
   faint::DialogContext& dialogContext)
@@ -37,12 +33,11 @@ void gui_test_palette_ctrl(wxWindow* p,
   paintMap.Append(Paint(Color(255,255,255)));
   paintMap.Append(Paint(Color(0,0,0)));
   paintMap.Append(Paint(Color(0,0,0, 100)));
-  paletteCtrlSettings.Set(ts_Fg, Paint(Color(255,0,255)));
 
-  PaletteCtrl c1(p, paletteCtrlSettings, paintMap, status, dialogContext);
+  PaletteCtrl c1(p, paintMap, status, dialogContext);
   set_pos(c1.AsWindow(), {10,10});
 
   // Another palette control for testing drag and drop between controls.
-  PaletteCtrl c2(p, paletteCtrlSettings, paintMap, status, dialogContext);
+  PaletteCtrl c2(p, paintMap, status, dialogContext);
   set_pos(c2.AsWindow(), {10, 100});
 }

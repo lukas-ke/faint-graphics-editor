@@ -32,7 +32,6 @@ namespace faint{
 class ColorPanelImpl : public wxPanel {
 public:
   ColorPanelImpl(wxWindow* parent,
-    const Settings& settings,
     const PaintMap& palette,
     AppContext& app,
     StatusInterface& status,
@@ -48,7 +47,6 @@ public:
     sizer->Add(m_selectedColor->AsWindow(), 0, wxALL, spacing);
 
     m_palette = std::make_unique<PaletteCtrl>(this,
-      settings,
       palette,
       status,
       app.GetDialogContext());
@@ -67,7 +65,7 @@ public:
 
     // Handle resizing child controls (e.g. color added to palette
     // or grid-control expanded).
-    bind(this, EVT_FAINT_CONTROL_RESIZED, 
+    bind(this, EVT_FAINT_CONTROL_RESIZED,
       [&](){
         Layout();
         Refresh();
@@ -82,12 +80,11 @@ public:
 };
 
 ColorPanel::ColorPanel(wxWindow* parent,
-  const Settings& settings,
   const PaintMap& palette,
   AppContext& app,
   StatusInterface& status,
   const ArtContainer& art)
-  : m_impl(make_dumb<ColorPanelImpl>(parent, settings, palette, app, status,
+  : m_impl(make_dumb<ColorPanelImpl>(parent, palette, app, status,
       art))
 {}
 
