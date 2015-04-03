@@ -43,7 +43,6 @@ Optional<Color> get_edge_color(const Bitmap&, const IntRect&);
 
 // Returns the most common color along the Bitmap edges in the directions
 // the newRect would grow its canvas.
-// Fixme: Move somewhere more suitable
 Optional<Color> resize_dwim_color(const Bitmap&, const IntRect& newRect);
 
 // Returns the most common color along the Bitmap edge
