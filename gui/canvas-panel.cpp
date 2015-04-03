@@ -99,7 +99,7 @@ CanvasPanel::CanvasPanel(wxWindow* parent,
     m_art(art),
     m_contexts(app),
     m_images(std::move(images)),
-    m_mouse(this, [=](){Preempt(PreemptOption::ALLOW_COMMAND);}),
+    m_mouse(this, OnLoss([=](){Preempt(PreemptOption::ALLOW_COMMAND);})),
     m_state(app.GetDefaultGrid()),
     m_statusInfo(statusInfo)
 {

@@ -20,10 +20,10 @@
 namespace faint{
 
 MouseCapture::MouseCapture(wxWindow* window,
-  const std::function<void()>& onLoss,
-  const std::function<void()>& onRelease)
-  : m_onCaptureLost(onLoss),
-    m_onRelease(onRelease),
+  const OnLoss& onLoss,
+  const OnRelease& onRelease)
+  : m_onCaptureLost(onLoss.Get()),
+    m_onRelease(onRelease.Get()),
     m_window(window)
 {
   bind(window, wxEVT_MOUSE_CAPTURE_LOST,
@@ -37,12 +37,12 @@ MouseCapture::MouseCapture(wxWindow* window,
     });
 }
 
-MouseCapture::MouseCapture(wxWindow* w, const std::function<void()>& onLoss)
-  : MouseCapture(w, onLoss, nullptr)
+MouseCapture::MouseCapture(wxWindow* w, const OnLoss& onLoss)
+  : MouseCapture(w, onLoss, OnRelease(nullptr))
 {}
 
 MouseCapture::MouseCapture(wxWindow* w)
-  : MouseCapture(w, nullptr)
+  : MouseCapture(w, OnLoss(nullptr))
 {}
 
 MouseCapture::~MouseCapture(){

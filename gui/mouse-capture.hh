@@ -16,13 +16,19 @@
 #ifndef FAINT_MOUSE_CAPTURE_HH
 #define FAINT_MOUSE_CAPTURE_HH
 #include <functional>
+#include "util/distinct.hh"
 
 class wxWindow;
 
 namespace faint{
 
-// Fixme: Add dummy parameters to capture lost, on-release,
-// to avoid incorrect ordering.
+class category_mouse_capture;
+
+using OnLoss =
+  Distinct<std::function<void()>, category_mouse_capture, 0>;
+
+using OnRelease =
+  Distinct<std::function<void()>, category_mouse_capture, 1>;
 
 class MouseCapture{
   // Manages wxWidgets mouse capturing for a window. Releases capture
@@ -33,10 +39,8 @@ class MouseCapture{
   // lost-capture will have no effects.
 public:
   MouseCapture(wxWindow*);
-  MouseCapture(wxWindow*, const std::function<void()>& onCaptureLost);
-  MouseCapture(wxWindow*,
-    const std::function<void()>& onCaptureLost,
-    const std::function<void()>& onRelease);
+  MouseCapture(wxWindow*, const OnLoss&);
+  MouseCapture(wxWindow*, const OnLoss&, const OnRelease&);
   ~MouseCapture();
   void Capture();
   bool HasCapture() const;

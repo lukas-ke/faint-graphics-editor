@@ -67,16 +67,15 @@ DragValueCtrl::DragValueCtrl(wxWindow* parent,
   StatusInterface& statusInfo)
   : wxPanel(parent, wxID_ANY),
     m_currentValue(10),
-    m_mouse(this, [&](){
-        // On capture lost
+    m_mouse(this,
+      OnLoss([&](){
         SetForegroundColour(g_originalColor);
         m_originValue = m_currentValue = GetDragValue();
         SendChangeEvent(m_originValue);
-      },
-      [&](){
-        // On release
-        SetCursor(get_art_container().Get(Cursor::MOVE_POINT));
       }),
+      OnRelease([&](){
+        SetCursor(get_art_container().Get(Cursor::MOVE_POINT));
+      })),
     m_originValue(10),
     m_range(range),
     m_statusInfo(statusInfo),

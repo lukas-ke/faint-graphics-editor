@@ -131,17 +131,16 @@ public:
       m_frameBoxSize(35, 38),
       m_highlightCloseFrame(false),
       m_mouse(this,
-        [this](){
-          // Capture lost:
+        OnLoss([this](){
           // Discard any drag and then refresh this control to get rid of drag
           // overlay graphics
           if (then_reset(m_dragInfo).active){
             Refresh();
           }
-        },
-        [this](){
-          SetCursor(wxCURSOR_ARROW);
         }),
+        OnRelease([this](){
+          SetCursor(wxCURSOR_ARROW);
+        })),
       m_numFrames(0),
       m_status(status)
   {
