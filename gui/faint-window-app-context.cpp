@@ -14,7 +14,8 @@
 // permissions and limitations under the License.
 
 #include <memory>
-#include "wx/wx.h" // Fixme: Narrow down (added for statusbar
+#include "wx/frame.h"
+#include "wx/statusbr.h"
 #include "app/app-context.hh"
 #include "app/context-commands.hh"
 #include "bitmap/draw.hh"
