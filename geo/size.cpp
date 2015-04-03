@@ -51,7 +51,7 @@ bool area_less(const Size& size, coord rhs){
   if (!std::isfinite(a)){
     return false;
   }
-  return a < rhs; // Fixme
+  return a < rhs;
 }
 
 } // namespace

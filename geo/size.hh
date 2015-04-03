@@ -32,7 +32,7 @@ public:
 };
 
 coord area(const Size&);
-bool area_less(const Size& lhs, coord rhs);
+bool area_less(const Size&, coord);
 Size operator+(const Size&, const Size&);
 Size operator-(const Size&, const Size&);
 Size operator/(const Size&, coord);
