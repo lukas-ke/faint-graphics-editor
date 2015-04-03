@@ -34,8 +34,8 @@
 #include "objects/objline.hh"
 #include "python/py-function-error.hh"
 #include "text/formatting.hh"
-#include "util/default-settings.hh"
 #include "util-wx/clipboard.hh"
+#include "util/default-settings.hh"
 
 namespace faint{
 

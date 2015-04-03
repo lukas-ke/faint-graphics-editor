@@ -1,6 +1,7 @@
 // -*- coding: us-ascii-unix -*-
 #include "test-sys/bench.hh"
 #include "tests/test-util/file-handling.hh"
+
 #include "bitmap/bitmap.hh"
 #include "bitmap/gaussian-blur.hh"
 #include "text/formatting.hh"

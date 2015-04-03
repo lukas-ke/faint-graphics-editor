@@ -28,10 +28,10 @@
 #include "geo/scale.hh"
 #include "text/char-constants.hh"
 #include "text/formatting.hh"
+#include "util/generator-adapter.hh"
 #include "util/index.hh"
 #include "util/iter.hh"
 #include "util/pos-info-constants.hh" // For MouseButton
-#include "util/generator-adapter.hh"
 
 namespace faint{
 

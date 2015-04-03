@@ -21,11 +21,11 @@
 #include "formats/format.hh"
 #include "formats/gif/file-gif.hh"
 #include "text/formatting.hh"
+#include "util-wx/convert-wx.hh"
+#include "util-wx/scoped-error-log.hh"
 #include "util/image.hh"
 #include "util/image-util.hh"
 #include "util/index-iter.hh"
-#include "util-wx/convert-wx.hh"
-#include "util-wx/scoped-error-log.hh"
 #include "util/make-vector.hh"
 
 namespace faint{

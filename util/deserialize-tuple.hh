@@ -15,9 +15,9 @@
 
 #ifndef FAINT_DESERIALIZE_TUPLE_HH
 #define FAINT_DESERIALIZE_TUPLE_HH
-#include "util/serialize-tuple.hh"
 #include <array>
 #include <tuple>
+#include "util/serialize-tuple.hh"
 
 namespace faint{
 

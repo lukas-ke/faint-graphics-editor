@@ -18,8 +18,8 @@
 #include <functional>
 #include <vector>
 #include "gui/gui-string-types.hh"
-#include "util/distinct.hh"
 #include "util-wx/window-types-wx.hh"
+#include "util/distinct.hh"
 
 class wxCommandEvent;
 

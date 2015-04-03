@@ -1,6 +1,6 @@
 // -*- coding: us-ascii-unix -*-
-#include "test-sys/test.hh"
 #include <vector>
+#include "test-sys/test.hh"
 #include "text/utf8-string.hh"
 #include "util/iter.hh"
 

@@ -19,7 +19,11 @@ import os
 from core import enumerate_files, get_root_dir
 
 def _filtered(includes):
-    return [incl for incl in includes if "pythoninclude.hh" not in incl]
+    def ignored(include):
+        IGNORED = ["py-include.hh", "test-sys", "test-util/", "defines.hh"]
+        return any([item in include for item in IGNORED])
+
+    return [include for include in includes if not ignored(include)]
 
 def strip_comments(line):
     comment_pos = line.rfind("//")
@@ -88,6 +92,11 @@ def _check_includes(filename, root_dir):
 
 if __name__ == '__main__':
     root_dir = get_root_dir()
-    for filename in enumerate_files(root_dir, (".hh", ".cpp")):
+    excluded_dirs=["test-sources",
+                   "python", # Fixme: Consider including
+                   "benchmarks",
+                   "image-tests",
+    ]
+    for filename in enumerate_files(root_dir, (".hh", ".cpp"), excluded_dirs):
         if filename.find("mainframe") == -1:
             _check_includes(filename, root_dir)

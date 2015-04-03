@@ -15,8 +15,8 @@
 
 #ifndef FAINT_COMMAND_WINDOW_HH
 #define FAINT_COMMAND_WINDOW_HH
-#include "util/pos-info.hh"
 #include "rendering/overlay.hh"
+#include "util/pos-info.hh"
 
 class wxWindow;
 

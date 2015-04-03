@@ -13,8 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "png.h" // libpng
-
+#include <png.h> // libpng
 #include "bitmap/bitmap-exception.hh"
 #include "formats/png/file-png.hh"
 #include "geo/limits.hh"
@@ -595,9 +594,9 @@ static PngWriteResult write_with_libpng(const char* path,
         // Fill the row with the bitmap-data
         const auto i = y * stride + x * srcBpp;
 
-	row[x * PNG_BPP] = gray_sum(src[i + faint::iR],
-	  src[i + faint::iG],
-	  src[i + faint::iB]);
+        row[x * PNG_BPP] = gray_sum(src[i + faint::iR],
+          src[i + faint::iG],
+          src[i + faint::iB]);
         if (PNG_BPP == 2){
           row[x * PNG_BPP + 1] = src[i + faint::iA];
         }

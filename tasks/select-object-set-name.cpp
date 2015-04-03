@@ -27,8 +27,8 @@
 #include "tasks/task.hh"
 #include "text/text-buffer.hh"
 #include "tools/tool.hh" // Fixme: For TextContext et al., move to new file
-#include "util/pos-info.hh"
 #include "util-wx/key-codes.hh"
+#include "util/pos-info.hh"
 
 namespace faint{
 

@@ -14,8 +14,8 @@
 // permissions and limitations under the License.
 
 #include <fstream>
-#include "util-wx/stream.hh"
 #include "util-wx/file-path.hh"
+#include "util-wx/stream.hh"
 
 namespace faint{
 

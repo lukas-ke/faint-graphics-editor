@@ -16,8 +16,8 @@
 #ifndef FAINT_FORMAT_HH
 #define FAINT_FORMAT_HH
 #include "formats/save-result.hh"
-#include "util/distinct.hh"
 #include "util-wx/file-path.hh"
+#include "util/distinct.hh"
 
 namespace faint{
 class Canvas;

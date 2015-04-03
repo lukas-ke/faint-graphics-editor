@@ -20,9 +20,9 @@
 #include "bitmap/color.hh"
 #include "geo/int-point.hh"
 #include "geo/int-size.hh"
+#include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-wx.hh"
-#include "util-wx/bind-event.hh"
 
 namespace faint{
 

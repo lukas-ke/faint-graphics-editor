@@ -13,10 +13,10 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include <memory>
 #include "wx/bitmap.h"
 #include "wx/dcclient.h"
 #include "wx/panel.h"
-#include <memory>
 #include "app/get-art-container.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
@@ -29,14 +29,14 @@
 #include "gui/art-container.hh"
 #include "gui/dialog-context.hh"
 #include "gui/mouse-capture.hh"
-#include "gui/paint-dialog/linear-gradient-display.hh"
 #include "gui/paint-dialog/gradient-slider.hh"
-#include "util/color-bitmap-util.hh"
+#include "gui/paint-dialog/linear-gradient-display.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/make-event.hh"
+#include "util/color-bitmap-util.hh"
 
 namespace faint{
 

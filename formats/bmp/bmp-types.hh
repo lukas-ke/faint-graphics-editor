@@ -20,9 +20,9 @@
 #include <array>
 #include "geo/int-point.hh"
 #include "geo/int-size.hh"
+#include "util/deserialize-tuple.hh"
 #include "util/hot-spot.hh"
 #include "util/serialize-tuple.hh"
-#include "util/deserialize-tuple.hh"
 
 namespace faint {
 

@@ -16,8 +16,8 @@
 #include <algorithm>
 #include "bitmap/auto-crop.hh"
 #include "bitmap/bitmap.hh"
-#include "bitmap/color-counting.hh"
 #include "bitmap/color.hh"
+#include "bitmap/color-counting.hh"
 #include "bitmap/draw.hh"
 #include "geo/geo-func.hh"
 #include "geo/int-rect.hh"

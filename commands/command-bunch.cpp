@@ -15,8 +15,8 @@
 
 #include <cassert>
 #include <memory>
-#include "commands/command-bunch.hh"
 #include "commands/command.hh"
+#include "commands/command-bunch.hh"
 #include "text/utf8-string.hh"
 #include "util/iter.hh"
 

@@ -26,8 +26,8 @@
 #include "objects/object.hh"
 #include "rendering/overlay.hh"
 #include "tasks/select-object-idle.hh"
-#include "tasks/select-object-move-point.hh"
 #include "tasks/select-object-move.hh"
+#include "tasks/select-object-move-point.hh"
 #include "tasks/select-object-rectangle.hh"
 #include "tasks/select-object-resize.hh"
 #include "tasks/select-object-rotate.hh"
@@ -35,12 +35,12 @@
 #include "tasks/standard-task.hh"
 #include "tasks/text-edit.hh"
 #include "text/formatting.hh"
+#include "util-wx/key-codes.hh"
 #include "util/command-util.hh"
 #include "util/convenience.hh"
 #include "util/object-util.hh"
-#include "util/tool-util.hh"
 #include "util/pos-info.hh"
-#include "util-wx/key-codes.hh"
+#include "util/tool-util.hh"
 
 namespace faint{
 

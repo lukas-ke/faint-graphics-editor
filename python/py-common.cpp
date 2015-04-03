@@ -22,9 +22,10 @@
 #include "geo/int-rect.hh"
 #include "python/py-function-error.hh"
 #include "text/formatting.hh"
+#include "util-wx/clipboard.hh"
 #include "util/color-span.hh"
 #include "util/either.hh"
-#include "util-wx/clipboard.hh"
+
 
 namespace faint{
 

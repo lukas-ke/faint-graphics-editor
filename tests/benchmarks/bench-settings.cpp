@@ -2,8 +2,8 @@
 #include "test-sys/bench.hh"
 #include "geo/primitive.hh"
 #include "util/default-settings.hh"
-#include "util/settings.hh"
 #include "util/setting-id.hh"
+#include "util/settings.hh"
 
 faint::coord lineWidth = 0;
 bool alphaBlending = false;

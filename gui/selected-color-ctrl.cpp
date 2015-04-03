@@ -29,13 +29,13 @@
 #include "gui/selected-color-ctrl.hh"
 #include "gui/setting-events.hh"
 #include "text/formatting.hh"
+#include "util-wx/convert-wx.hh"
+#include "util-wx/fwd-bind.hh"
 #include "util/color-bitmap-util.hh"
 #include "util/color-choice.hh"
 #include "util/optional.hh"
 #include "util/setting-id.hh"
 #include "util/status-interface.hh"
-#include "util-wx/convert-wx.hh"
-#include "util-wx/fwd-bind.hh"
 
 namespace faint{
 

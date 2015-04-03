@@ -19,12 +19,12 @@
 #include "gui/canvas-panel.hh"
 #include "gui/freezer.hh"
 #include "gui/tab-ctrl.hh"
-#include "util/image-props.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/gui-util.hh"
-#include "util/index-iter.hh"
 #include "util/generator-adapter.hh"
+#include "util/image-props.hh"
+#include "util/index-iter.hh"
 
 namespace faint{
 

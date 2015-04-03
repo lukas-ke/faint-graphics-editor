@@ -1,9 +1,10 @@
 // -*- coding: us-ascii-unix -*-
 #include "test-sys/test.hh"
 #include "tests/test-util/print-objects.hh"
+
+#include "editors/text-entry-util.hh"
 #include "text/char-constants.hh"
 #include "text/text-buffer.hh"
-#include "editors/text-entry-util.hh"
 #include "util-wx/key-codes.hh"
 
 void test_text_entry_util(){

@@ -18,17 +18,17 @@
 #include "commands/command.hh"
 #include "geo/adjust.hh"
 #include "geo/geo-func.hh"
+#include "geo/int-point.hh"
 #include "geo/int-rect.hh"
 #include "geo/int-size.hh"
 #include "geo/measure.hh"
-#include "geo/int-point.hh"
 #include "geo/point.hh"
 #include "rendering/faint-dc.hh"
 #include "text/formatting.hh"
 #include "tools/standard-tool.hh"
 #include "util/container-util.hh"
-#include "util/setting-util.hh"
 #include "util/pos-info.hh"
+#include "util/setting-util.hh"
 
 namespace faint{
 

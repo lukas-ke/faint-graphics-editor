@@ -2,8 +2,9 @@
 #include <algorithm>
 #include "test-sys/test.hh"
 #include "tests/test-util/print-objects.hh"
-#include "text/string-util.hh"
+
 #include "text/char-constants.hh"
+#include "text/string-util.hh"
 
 void test_utf8_string(){
   using namespace faint;

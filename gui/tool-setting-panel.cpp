@@ -21,10 +21,10 @@
 #include "gui/spin-ctrl.hh"
 #include "gui/tool-setting-ctrl.hh"
 #include "gui/tool-setting-panel.hh"
-#include "util/setting-id.hh"
-#include "util/settings.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/layout-wx.hh"
+#include "util/setting-id.hh"
+#include "util/settings.hh"
 
 namespace faint{
 

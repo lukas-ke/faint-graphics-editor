@@ -20,9 +20,9 @@
 #include "gui/bitmap-data-object.hh"
 #include "gui/object-data-object.hh"
 #include "text/utf8-string.hh"
-#include "util/optional.hh"
 #include "util-wx/clipboard.hh"
 #include "util-wx/convert-wx.hh"
+#include "util/optional.hh"
 
 namespace faint {
 

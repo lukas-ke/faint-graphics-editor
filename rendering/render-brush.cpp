@@ -18,7 +18,7 @@
 #include "geo/geo-func.hh"
 #include "geo/line.hh"
 #include "geo/size.hh"
-#include "render-brush.hh"
+#include "rendering/render-brush.hh"
 
 namespace faint{
 

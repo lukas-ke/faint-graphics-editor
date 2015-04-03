@@ -14,9 +14,9 @@
 // permissions and limitations under the License.
 
 #include "app/canvas.hh"
+#include "util/image.hh"
 #include "util/pos-info.hh"
 #include "util/tool-util.hh"
-#include "util/image.hh"
 
 namespace faint{
 

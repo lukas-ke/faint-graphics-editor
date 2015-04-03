@@ -22,11 +22,11 @@
 #include "rendering/faint-dc.hh"
 #include "text/formatting.hh"
 #include "tools/tool.hh"
+#include "util-wx/key-codes.hh"
 #include "util/command-util.hh"
 #include "util/default-settings.hh"
 #include "util/optional.hh"
 #include "util/pos-info.hh"
-#include "util-wx/key-codes.hh"
 
 namespace faint{
 

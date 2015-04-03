@@ -17,9 +17,9 @@
 #define FAINT_FILE_CUR_HH
 #include "bitmap/bitmap-fwd.hh"
 #include "formats/save-result.hh"
+#include "util-wx/file-path.hh"
 #include "util/hot-spot.hh"
 #include "util/or-error.hh"
-#include "util-wx/file-path.hh"
 
 namespace faint{
 

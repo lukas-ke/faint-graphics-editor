@@ -18,8 +18,8 @@
 #include "geo/geo-func.hh"
 #include "geo/int-rect.hh"
 #include "geo/line.hh"
-#include "util-wx/system-colors.hh"
 #include "util-wx/convert-wx.hh"
+#include "util-wx/system-colors.hh"
 
 namespace faint{
 

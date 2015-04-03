@@ -15,10 +15,10 @@
 
 #include "app/canvas.hh"
 #include "bitmap/bitmap.hh"
+#include "formats/bmp/file-ico.hh"
+#include "formats/format.hh"
 #include "util/image.hh"
 #include "util/image-props.hh"
-#include "formats/format.hh"
-#include "formats/bmp/file-ico.hh"
 #include "util/image-util.hh"
 #include "util/index-iter.hh"
 

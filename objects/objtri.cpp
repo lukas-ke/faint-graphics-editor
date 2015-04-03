@@ -21,9 +21,9 @@
 #include "objects/object.hh"
 #include "objects/objtri.hh"
 #include "rendering/faint-dc.hh"
+#include "util-wx/font.hh"
 #include "util/object-util.hh"
 #include "util/setting-id.hh"
-#include "util-wx/font.hh"
 
 namespace faint{
 

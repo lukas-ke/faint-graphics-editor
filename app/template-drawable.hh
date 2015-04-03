@@ -15,14 +15,14 @@
 
 #ifndef FAINT_TEMPLATE_DRAWABLE_HH
 #define FAINT_TEMPLATE_DRAWABLE_HH
-#include "rendering/paint-canvas.hh"
-#include "objects/object.hh" // Fixme: Needed only for Drawable, add impl
-#include "tools/tool.hh"
-#include "util/setting-id.hh"
-#include "util/pos-info.hh"
-#include "text/text-expression-context.hh"
 #include "app/canvas.hh" // Fixme: Pass Image instead
+#include "objects/object.hh" // Fixme: Needed only for Drawable, add impl
+#include "rendering/paint-canvas.hh"
+#include "text/text-expression-context.hh"
+#include "tools/tool.hh"
 #include "util/image.hh"
+#include "util/pos-info.hh"
+#include "util/setting-id.hh"
 
 namespace faint{
 

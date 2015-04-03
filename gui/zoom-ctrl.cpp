@@ -20,8 +20,8 @@
 #include "gui/events.hh"
 #include "gui/status-button.hh"
 #include "gui/zoom-ctrl.hh"
-#include "util/zoom-level.hh"
 #include "util-wx/fwd-bind.hh"
+#include "util/zoom-level.hh"
 
 namespace faint{
 

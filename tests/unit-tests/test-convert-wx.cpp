@@ -1,7 +1,8 @@
 // -*- coding: us-ascii-unix -*-
-#include "test-sys/test.hh"
 #include "wx/colour.h"
 #include "wx/geometry.h"
+#include "test-sys/test.hh"
+
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "geo/int-point.hh"

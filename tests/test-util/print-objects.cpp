@@ -4,14 +4,14 @@
 #include "bitmap/color.hh"
 #include "bitmap/paint.hh"
 #include "geo/angle.hh"
-#include "geo/line.hh"
 #include "geo/int-point.hh"
 #include "geo/int-rect.hh"
 #include "geo/int-size.hh"
+#include "geo/line.hh"
 #include "geo/point.hh"
 #include "tests/test-util/print-objects.hh"
-#include "text/utf8-char.hh"
 #include "text/formatting.hh"
+#include "text/utf8-char.hh"
 
 namespace faint {
 

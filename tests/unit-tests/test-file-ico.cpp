@@ -4,8 +4,8 @@
 #include "tests/test-util/file-handling.hh"
 #include "tests/test-util/print-objects.hh"
 #include "bitmap/color.hh"
-#include "formats/bmp/file-ico.hh"
 #include "formats/bmp/bmp-types.hh"
+#include "formats/bmp/file-ico.hh"
 #include "geo/int-point.hh"
 #include "geo/int-rect.hh"
 

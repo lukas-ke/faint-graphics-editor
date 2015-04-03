@@ -13,8 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "text/utf8-string.hh"
 #include "text/utf8.hh"
+#include "text/utf8-string.hh"
 
 namespace faint{
 

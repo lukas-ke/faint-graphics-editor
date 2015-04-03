@@ -17,11 +17,11 @@
 #include "gui/bitmap-list-ctrl.hh"
 #include "gui/image-toggle-ctrl.hh"
 #include "text/formatting.hh"
-#include "util/setting-id.hh"
-#include "util/status-interface.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/gui-util.hh"
+#include "util/setting-id.hh"
+#include "util/status-interface.hh"
 
 namespace faint{
 

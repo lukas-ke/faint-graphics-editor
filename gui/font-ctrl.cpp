@@ -19,10 +19,10 @@
 #include "gui/font-ctrl.hh"
 #include "gui/setting-events.hh"
 #include "gui/tool-setting-ctrl.hh"
-#include "util/setting-id.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/gui-util.hh"
+#include "util/setting-id.hh"
 
 namespace faint{
 

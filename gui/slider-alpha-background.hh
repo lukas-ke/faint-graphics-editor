@@ -16,8 +16,8 @@
 #ifndef FAINT_SLIDER_ALPHA_BACKGROUND_HH
 #define FAINT_SLIDER_ALPHA_BACKGROUND_HH
 #include "bitmap/bitmap.hh"
-#include "bitmap/paint.hh"
 #include "bitmap/color.hh"
+#include "bitmap/paint.hh"
 #include "gui/slider-common.hh"
 
 namespace faint{

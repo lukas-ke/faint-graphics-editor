@@ -17,10 +17,10 @@
 #include "wx/sizer.h"
 #include "bitmap/bitmap-templates.hh"
 #include "gui/slider.hh"
+#include "util-wx/fwd-wx.hh"
 #include "util-wx/gui-util.hh"
 #include "util-wx/key-codes.hh"
 #include "util-wx/layout-wx.hh"
-#include "util-wx/fwd-wx.hh"
 #include "util/command-util.hh"
 #include "util/optional.hh"
 

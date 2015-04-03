@@ -31,8 +31,8 @@
 #include "text/utf8-string.hh"
 #include "util/index-iter.hh"
 #include "util/iter.hh"
-#include "util/settings.hh"
 #include "util/setting-id.hh"
+#include "util/settings.hh"
 
 namespace faint{
 

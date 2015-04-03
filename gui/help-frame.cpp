@@ -22,13 +22,13 @@
 #include "wx/treectrl.h"
 #include "gui/art-container.hh"
 #include "gui/help-frame.hh"
-#include "util/distinct.hh"
-#include "util/optional.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/gui-util.hh"
 #include "util-wx/make-event.hh"
+#include "util/distinct.hh"
+#include "util/optional.hh"
 
 namespace faint{
 

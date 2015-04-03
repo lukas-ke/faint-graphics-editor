@@ -5,8 +5,8 @@
 #include "bitmap/bitmap.hh"
 #include "bitmap/draw.hh"
 #include "geo/int-point.hh"
-#include "geo/int-size.hh"
 #include "geo/int-rect.hh"
+#include "geo/int-size.hh"
 #include "geo/offsat.hh"
 
 using namespace faint;

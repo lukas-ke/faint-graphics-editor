@@ -13,13 +13,14 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "wx/defs.h"
 #include <set>
 #include <sstream>
+#include "wx/defs.h"
+
 #include "text/char-constants.hh"
+#include "util-wx/key-codes.hh"
 #include "util/convenience.hh"
 #include "util/key-press.hh"
-#include "util-wx/key-codes.hh"
 
 namespace faint{
 

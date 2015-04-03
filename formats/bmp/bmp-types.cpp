@@ -15,8 +15,8 @@
 
 #include <cassert>
 #include "bitmap/bitmap.hh" // Fixme
-#include "formats/bmp/file-bmp.hh" // Fixme
 #include "formats/bmp/bmp-types.hh"
+#include "formats/bmp/file-bmp.hh" // Fixme
 
 namespace faint{
 

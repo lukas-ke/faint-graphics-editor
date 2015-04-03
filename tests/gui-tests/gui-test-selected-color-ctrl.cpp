@@ -13,14 +13,14 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include "bitmap/color.hh"
+#include "bitmap/paint.hh"
 #include "geo/int-point.hh"
 #include "geo/int-size.hh"
 #include "gui/selected-color-ctrl.hh"
+#include "util-wx/fwd-wx.hh"
 #include "util/color-choice.hh"
 #include "util/status-interface.hh"
-#include "bitmap/paint.hh"
-#include "bitmap/color.hh"
-#include "util-wx/fwd-wx.hh"
 
 void gui_test_selected_color_ctrl(wxWindow* p,
   faint::StatusInterface& status, faint::DialogContext& ctx)

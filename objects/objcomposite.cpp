@@ -21,8 +21,8 @@
 #include "geo/rect.hh"
 #include "geo/scale.hh"
 #include "geo/tri.hh"
-#include "objects/object.hh"
 #include "objects/objcomposite.hh"
+#include "objects/object.hh"
 #include "text/utf8-string.hh"
 #include "util/setting-id.hh"
 

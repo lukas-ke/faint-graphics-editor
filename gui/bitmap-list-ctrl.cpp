@@ -20,13 +20,13 @@
 #include "geo/int-rect.hh"
 #include "geo/int-size.hh"
 #include "gui/bitmap-list-ctrl.hh"
+#include "util-wx/bind-event.hh"
+#include "util-wx/convert-wx.hh"
+#include "util-wx/fwd-bind.hh"
+#include "util-wx/fwd-wx.hh"
+#include "util-wx/gui-util.hh"
 #include "util/index-iter.hh"
 #include "util/status-interface.hh"
-#include "util-wx/bind-event.hh"
-#include "util-wx/fwd-bind.hh"
-#include "util-wx/gui-util.hh"
-#include "util-wx/convert-wx.hh"
-#include "util-wx/fwd-wx.hh"
 
 namespace faint{
 

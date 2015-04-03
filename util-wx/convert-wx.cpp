@@ -17,6 +17,9 @@
 #include "wx/defs.h"
 #include "wx/event.h"
 #include "wx/clipbrd.h"
+#ifdef __WXMSW__
+#include "wx/dcmemory.h"
+#endif
 #include "wx/filename.h"
 #include "wx/rawbmp.h"
 #include "wx/tokenzr.h"
@@ -26,12 +29,9 @@
 #include "geo/int-rect.hh"
 #include "gui/art-container.hh"
 #include "text/utf8-string.hh"
-#include "util/pos-info.hh"
 #include "util-wx/file-path.hh"
+#include "util/pos-info.hh"
 
-#ifdef __WXMSW__
-#include "wx/dcmemory.h"
-#endif
 
 namespace faint{
 

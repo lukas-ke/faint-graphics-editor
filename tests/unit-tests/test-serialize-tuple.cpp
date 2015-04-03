@@ -1,7 +1,8 @@
 // -*- coding: us-ascii-unix -*-
-#include "test-sys/test.hh"
 #include <cstdint>
 #include <iomanip>
+#include "test-sys/test.hh"
+
 #include "tests/test-util/print-objects.hh"
 #include "util/deserialize-tuple.hh"
 #include "util/serialize-tuple.hh"

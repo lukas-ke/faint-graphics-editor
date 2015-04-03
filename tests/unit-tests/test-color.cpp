@@ -1,6 +1,7 @@
 // -*- coding: us-ascii-unix -*-
-#include "test-sys/test.hh"
 #include <algorithm> // std::min, std::max
+#include "test-sys/test.hh"
+
 #include "bitmap/color.hh"
 #include "tests/test-util/print-objects.hh"
 

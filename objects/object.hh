@@ -17,8 +17,8 @@
 #define FAINT_OBJECT_HH
 #include <vector>
 #include "util/id-types.hh"
-#include "util/settings.hh"
 #include "util/optional.hh"
+#include "util/settings.hh"
 
 namespace faint{
 

@@ -17,8 +17,8 @@
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "bitmap/draw.hh"
-#include "geo/line.hh"
 #include "geo/int-point.hh"
+#include "geo/line.hh"
 #include "geo/primitive.hh"
 
 namespace faint{

@@ -20,7 +20,6 @@
 #include "bitmap/draw.hh"
 #include "geo/int-point.hh"
 #include "geo/int-rect.hh"
-#include "util/color-bitmap-util.hh"
 #include "gui/dialog-context.hh"
 #include "gui/paint-dialog/gradient-slider.hh"
 #include "gui/paint-dialog/radial-gradient-display.hh"
@@ -28,6 +27,7 @@
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/fwd-wx.hh"
+#include "util/color-bitmap-util.hh"
 
 namespace faint{
 

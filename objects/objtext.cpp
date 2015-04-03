@@ -26,12 +26,12 @@
 #include "text/split-string.hh"
 #include "text/text-expression.hh"
 #include "text/utf8-string.hh"
+#include "util-wx/font.hh"
 #include "util/default-settings.hh"
 #include "util/iter.hh"
 #include "util/optional.hh"
 #include "util/settings.hh"
 #include "util/text-geo.hh"
-#include "util-wx/font.hh"
 
 namespace faint{
 
@@ -153,7 +153,7 @@ LineSegment ObjText::ComputeCaret(const TextInfo& info, const Tri& tri,
 
   textSize.h = info.ComputeRowHeight();
   Tri caretTri(tri.P0(), tri.P1(), textSize.h);
-  caretTri = aligned(offset_aligned(caretTri, textSize.w, 
+  caretTri = aligned(offset_aligned(caretTri, textSize.w,
     static_cast<coord>(pos.row * textSize.h)),
     m_settings.Get(ts_HorizontalAlign), line.width, tri.Width());
 

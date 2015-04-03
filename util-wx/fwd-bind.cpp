@@ -14,10 +14,10 @@
 // permissions and limitations under the License.
 
 #include "wx/wx.h"
-#include "fwd-bind.hh"
 #include "geo/int-point.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
+#include "util-wx/fwd-bind.hh"
 
 namespace faint{ namespace events{
 

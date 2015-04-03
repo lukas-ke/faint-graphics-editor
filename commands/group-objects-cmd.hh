@@ -16,8 +16,8 @@
 #ifndef FAINT_GROUP_OBJECTS_CMD_HH
 #define FAINT_GROUP_OBJECTS_CMD_HH
 #include <utility>
-#include "util/objects.hh"
 #include "commands/command-constants.hh"
+#include "util/objects.hh"
 
 namespace faint{
 

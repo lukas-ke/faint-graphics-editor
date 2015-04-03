@@ -30,19 +30,19 @@
 #include "gui/faint-window.hh"
 #include "gui/help-frame.hh"
 #include "gui/interpreter-frame.hh"
+#include "python/py-exception.hh"
 #include "python/py-initialize-ifaint.hh"
 #include "python/py-interface.hh"
-#include "python/py-exception.hh"
 #include "python/py-key-press.hh"
 #include "python/python-context.hh"
 #include "text/formatting.hh"
-#include "util/optional.hh"
-#include "util/paint-map.hh"
-#include "util/settings.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-path-util.hh"
 #include "util-wx/gui-util.hh"
 #include "util-wx/key-codes.hh"
+#include "util/optional.hh"
+#include "util/paint-map.hh"
+#include "util/settings.hh"
 
 namespace faint{
 

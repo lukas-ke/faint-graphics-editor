@@ -16,8 +16,8 @@
 #ifndef FAINT_MULTI_TOOL_HH
 #define FAINT_MULTI_TOOL_HH
 #include "commands/command.hh"
-#include "tools/tool.hh"
 #include "tasks/task.hh"
+#include "tools/tool.hh"
 #include "util/settings.hh"
 
 namespace faint{

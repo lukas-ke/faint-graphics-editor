@@ -24,10 +24,10 @@
 #include "gui/events.hh"
 #include "gui/grid-ctrl.hh"
 #include "gui/spin-button.hh"
-#include "util/grid.hh"
-#include "util-wx/gui-util.hh"
-#include "util-wx/fwd-bind.hh"
 #include "util-wx/bind-event.hh"
+#include "util-wx/fwd-bind.hh"
+#include "util-wx/gui-util.hh"
+#include "util/grid.hh"
 
 namespace faint{
 

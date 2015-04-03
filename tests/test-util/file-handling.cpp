@@ -1,12 +1,12 @@
 // -*- coding: us-ascii-unix -*-
 #include <stdexcept>
 #include <fstream>
+#include "wx/dir.h"
 #include "formats/wx/file-image-wx.hh"
 #include "test-sys/test-name.hh"
 #include "text/formatting.hh"
 #include "tests/test-util/file-handling.hh"
 #include "tests/test-util/image-table.hh"
-#include "wx/dir.h"
 
 namespace faint{
 

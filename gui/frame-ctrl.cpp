@@ -15,7 +15,6 @@
 
 #include <algorithm>
 #include <sstream>
-#include "app/get-art-container.hh" // Fixme: pass it instead
 #include "wx/button.h"
 #include "wx/dcclient.h"
 #include "wx/dcmemory.h"
@@ -24,6 +23,7 @@
 #include "wx/sizer.h"
 #include "app/app-context.hh"
 #include "app/canvas.hh"
+#include "app/get-art-container.hh" // Fixme: pass it instead
 #include "commands/frame-cmd.hh"
 #include "geo/int-point.hh"
 #include "geo/int-rect.hh"

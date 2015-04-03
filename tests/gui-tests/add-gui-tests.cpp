@@ -1,6 +1,6 @@
 #include "gui/dialog-context.hh"
-#include "util/status-interface.hh"
 #include "util-wx/fwd-wx.hh"
+#include "util/status-interface.hh"
 
 #define GUI_TEST_FUNCTION(NAME)void NAME(wxWindow*, faint::StatusInterface&, faint::DialogContext&)
 

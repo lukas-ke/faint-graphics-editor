@@ -33,20 +33,20 @@
 #include "geo/size.hh"
 #include "geo/tri.hh"
 #include "objects/object.hh"
+#include "rendering/extra-overlay.hh"
 #include "rendering/faint-dc.hh"
 #include "rendering/overlay.hh"
 #include "rendering/overlay-dc-wx.hh"
 #include "rendering/paint-canvas.hh"
 #include "tools/tool.hh"
 #include "tools/tool-wrapper.hh"
+#include "util-wx/convert-wx.hh"
 #include "util/grid.hh"
 #include "util/image.hh"
 #include "util/iter.hh"
 #include "util/mouse.hh"
 #include "util/object-util.hh"
 #include "util/pos-info.hh"
-#include "util-wx/convert-wx.hh"
-#include "rendering/extra-overlay.hh"
 
 namespace faint{
 

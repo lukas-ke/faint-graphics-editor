@@ -14,12 +14,12 @@
 // permissions and limitations under the License.
 
 #include "bitmap/bitmap.hh"
+#include "bitmap/bitmap-templates.hh"
 #include "bitmap/color.hh"
 #include "bitmap/draw.hh"
 #include "geo/int-rect.hh"
 #include "geo/line.hh"
 #include "rendering/cairo-context.hh" // For cairo_gradient_bitmap
-#include "bitmap/bitmap-templates.hh"
 #include "util/color-bitmap-util.hh"
 
 namespace faint{

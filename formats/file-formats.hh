@@ -15,8 +15,8 @@
 
 #ifndef FAINT_FILE_FORMATS_HH
 #define FAINT_FILE_FORMATS_HH
-#include "formats/format.hh"
 #include "formats/bmp/file-bmp.hh" // For BitmapQuality
+#include "formats/format.hh"
 
 namespace faint{
 

@@ -17,9 +17,9 @@
 #include "bitmap/color.hh"
 #include "geo/int-point.hh"
 #include "gui/palette-ctrl.hh"
+#include "util-wx/fwd-wx.hh"
 #include "util/paint-map.hh"
 #include "util/setting-id.hh"
-#include "util-wx/fwd-wx.hh"
 
 void gui_test_palette_ctrl(wxWindow* p,
   faint::StatusInterface& status,

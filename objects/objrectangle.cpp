@@ -15,9 +15,9 @@
 
 #include <algorithm>
 #include "geo/geo-func.hh"
-#include "geo/measure.hh"
 #include "geo/int-rect.hh"
 #include "geo/line.hh"
+#include "geo/measure.hh"
 #include "geo/pathpt.hh"
 #include "geo/tri.hh"
 #include "objects/object.hh"

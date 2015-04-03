@@ -14,10 +14,10 @@
 // permissions and limitations under the License.
 
 #include <cassert>
-#include "util/text-geo.hh"
-#include "text/text-buffer.hh"
 #include "geo/size.hh"
 #include "geo/tri.hh"
+#include "text/text-buffer.hh"
+#include "util/text-geo.hh"
 
 namespace faint{
 

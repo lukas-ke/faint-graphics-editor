@@ -15,8 +15,8 @@
 
 #ifndef FAINT_WRITE_EXCEPTION_LOG_HH
 #define FAINT_WRITE_EXCEPTION_LOG_HH
-#include "util/optional.hh"
 #include "util-wx/file-path.hh"
+#include "util/optional.hh"
 
 namespace faint{
 

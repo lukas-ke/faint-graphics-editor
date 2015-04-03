@@ -19,11 +19,11 @@
 #include "bitmap/draw.hh"
 #include "commands/set-bitmap-cmd.hh"
 #include "geo/axis.hh"
+#include "geo/axis.hh"
 #include "geo/geo-func.hh"
 #include "geo/int-rect.hh"
 #include "geo/pathpt.hh"
 #include "geo/scale.hh"
-#include "geo/axis.hh"
 #include "objects/objraster.hh"
 #include "rendering/cairo-context.hh" // For cairo_skew
 #include "rendering/faint-dc.hh"

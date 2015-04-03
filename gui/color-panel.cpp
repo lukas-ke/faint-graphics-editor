@@ -24,8 +24,8 @@
 #include "gui/palette-ctrl.hh"
 #include "gui/selected-color-ctrl.hh"
 #include "gui/zoom-ctrl.hh"
-#include "util/dumb-ptr.hh"
 #include "util-wx/bind-event.hh"
+#include "util/dumb-ptr.hh"
 
 namespace faint{
 

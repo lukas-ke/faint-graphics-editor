@@ -18,11 +18,11 @@
 #include "wx/spinctrl.h"
 #include "gui/events.hh"
 #include "gui/spin-ctrl.hh"
-#include "util/convenience.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/layout-wx.hh"
+#include "util/convenience.hh"
 
 namespace faint{
 

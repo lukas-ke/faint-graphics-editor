@@ -16,9 +16,9 @@
 #ifndef FAINT_DROP_DOWN_CTRL_HH
 #define FAINT_DROP_DOWN_CTRL_HH
 #include <vector>
-#include "text/utf8-string.hh"
-#include "gui/tool-setting-ctrl.hh"
 #include "gui/gui-string-types.hh"
+#include "gui/tool-setting-ctrl.hh"
+#include "text/utf8-string.hh"
 
 class wxWindow;
 

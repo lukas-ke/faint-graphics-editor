@@ -19,8 +19,8 @@
 #include <iterator> // back_inserter
 #include <numeric> // accumulate
 #include <vector>
-#include "util/math-constants.hh"
 #include "bitmap/gaussian-blur.hh"
+#include "util/math-constants.hh"
 
 namespace faint{
 

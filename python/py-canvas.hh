@@ -16,6 +16,7 @@
 #ifndef FAINT_PY_CANVAS_HH
 #define FAINT_PY_CANVAS_HH
 #include "python/mapped-type.hh"
+#include "python/py-include.hh"
 #include "util/id-types.hh"
 
 namespace faint{

@@ -19,10 +19,10 @@
 #include "bitmap/draw.hh"
 #include "formats/gif/file-gif.hh"
 #include "geo/int-rect.hh"
-#include "util/enum-util.hh"
-#include "util/image-props.hh"
 #include "util-wx/file-path.hh"
 #include "util-wx/stream.hh"
+#include "util/enum-util.hh"
+#include "util/image-props.hh"
 
 namespace faint{
 

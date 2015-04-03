@@ -23,8 +23,8 @@
 #include "tasks/select-object-move.hh"
 #include "tasks/standard-task.hh"
 #include "util/command-util.hh"
-#include "util/image.hh"
 #include "util/grid.hh"
+#include "util/image.hh"
 #include "util/object-util.hh"
 #include "util/pos-info.hh"
 

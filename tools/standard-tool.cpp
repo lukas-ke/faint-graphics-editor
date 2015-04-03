@@ -14,8 +14,8 @@
 // permissions and limitations under the License.
 
 #include "tools/standard-tool.hh"
-#include "util/setting-util.hh"
 #include "util/pos-info.hh"
+#include "util/setting-util.hh"
 
 namespace faint{
 

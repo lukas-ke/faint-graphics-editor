@@ -25,9 +25,9 @@
 #include "util-wx/clipboard.hh"
 #include "util/command-util.hh"
 #include "util/default-settings.hh"
+#include "util/image.hh"
 #include "util/image-props.hh"
 #include "util/image-util.hh"
-#include "util/image.hh"
 #include "util/object-util.hh"
 
 namespace faint{

@@ -27,9 +27,9 @@
 #include "text/char-constants.hh"
 #include "text/formatting.hh"
 #include "tools/tool-contexts.hh"
+#include "util-wx/key-codes.hh"
 #include "util/command-util.hh"
 #include "util/pos-info.hh"
-#include "util-wx/key-codes.hh"
 
 namespace faint{
 

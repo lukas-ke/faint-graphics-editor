@@ -1,8 +1,8 @@
-#include "bitmap-test-util.hh"
 #include "bitmap/bitmap.hh"
-#include "bitmap/draw.hh"
 #include "bitmap/color.hh"
+#include "bitmap/draw.hh"
 #include "bitmap/iter-bmp.hh"
+#include "tests/test-util/bitmap-test-util.hh"
 
 namespace faint{
 
@@ -32,7 +32,7 @@ bool equal(const Bitmap& b1, const Bitmap& b2){
   return true;
 }
 
-bool equal_ignore_transparent(const Bitmap& b1, 
+bool equal_ignore_transparent(const Bitmap& b1,
   const Bitmap& b2)
 {
   if (b1.GetSize() != b2.GetSize()){
@@ -41,7 +41,7 @@ bool equal_ignore_transparent(const Bitmap& b1,
 
   for (ITER_XY(x, y, b1)){
     auto c1 = get_color_raw(b1, x, y);
-    auto c2 = get_color_raw(b2, x, y);    
+    auto c2 = get_color_raw(b2, x, y);
     if (c1 != c2 && (c1.a != 0 || c2.a != 0)){
       return false;
     }

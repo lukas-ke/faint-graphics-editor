@@ -16,9 +16,9 @@
 #include <algorithm>
 #include <cmath>
 #include <vector>
-#include "geo/primitive.hh"
 #include "bitmap/channel.hh"
 #include "bitmap/gaussian-blur.hh"
+#include "geo/primitive.hh"
 
 namespace faint{
 

@@ -3,8 +3,8 @@
 #include "tests/test-util/print-objects.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
-#include "util/optional.hh"
 #include "geo/int-rect.hh"
+#include "util/optional.hh"
 
 namespace {
 

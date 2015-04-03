@@ -17,9 +17,9 @@
 #include "wx/textctrl.h"
 #include "geo/primitive.hh"
 #include "gui/math-text-ctrl.hh"
-#include "util/parse-math-string.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/gui-util.hh"
+#include "util/parse-math-string.hh"
 
 namespace faint{
 

@@ -3,8 +3,8 @@
 #include <cassert>
 #include <sstream>
 #include "tests/test-util/image-table.hh"
-#include "util-wx/file-path.hh"
 #include "text/utf8-string.hh"
+#include "util-wx/file-path.hh"
 
 namespace faint {
 

@@ -22,9 +22,9 @@
 #include "geo/int-rect.hh"
 #include "rendering/faint-dc.hh"
 #include "text/utf8-string.hh"
+#include "util/default-settings.hh"
 #include "util/optional.hh"
 #include "util/raster-selection.hh"
-#include "util/default-settings.hh"
 
 namespace faint{
 

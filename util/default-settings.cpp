@@ -14,9 +14,9 @@
 // permissions and limitations under the License.
 
 #include "bitmap/color.hh"
+#include "util-wx/font.hh"
 #include "util/default-settings.hh"
 #include "util/setting-id.hh"
-#include "util-wx/font.hh"
 
 namespace faint{
 

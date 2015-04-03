@@ -14,9 +14,9 @@
 // permissions and limitations under the License.
 
 #include "gui/status-button.hh"
-#include "util/status-interface.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
+#include "util/status-interface.hh"
 
 namespace faint{
 

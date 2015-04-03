@@ -13,10 +13,10 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "bitmap/bitmap.hh"
-#include "gui/with-label.hh"
 #include "wx/button.h"
 #include "wx/textctrl.h"
+#include "bitmap/bitmap.hh"
+#include "gui/with-label.hh"
 
 namespace faint{ class StatusInterface; }
 namespace faint{ class DialogContext; }

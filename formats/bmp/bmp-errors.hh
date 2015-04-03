@@ -15,9 +15,9 @@
 
 #ifndef FAINT_BMP_ERRORS_HH
 #define FAINT_BMP_ERRORS_HH
-#include "util/index.hh"
-#include "text/utf8-string.hh"
 #include "formats/bmp/bmp-types.hh"
+#include "text/utf8-string.hh"
+#include "util/index.hh"
 
 namespace faint{ class FilePath; }
 

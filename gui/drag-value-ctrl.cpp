@@ -23,10 +23,10 @@
 #include "gui/art-container.hh"
 #include "gui/drag-value-ctrl.hh"
 #include "text/formatting.hh"
-#include "util/status-interface.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/fwd-wx.hh"
+#include "util/status-interface.hh"
 
 namespace faint{
 

@@ -20,22 +20,22 @@
 #include "app/context-commands.hh"
 #include "bitmap/draw.hh"
 #include "gui/command-window.hh"
+#include "gui/dialogs/resize-dialog-options.hh"
 #include "gui/faint-window.hh"
 #include "gui/faint-window-app-context.hh"
-#include "gui/interpreter-frame.hh"
-#include "gui/dialogs/resize-dialog-options.hh"
 #include "gui/help-frame.hh"
+#include "gui/interpreter-frame.hh"
 #include "gui/tab-ctrl.hh" // Fixme: Remove
 #include "gui/transparency-style.hh"
+#include "rendering/extra-overlay.hh"
+#include "util-wx/convert-wx.hh"
+#include "util-wx/file-format-util.hh"
+#include "util-wx/gui-util.hh"
 #include "util/bound-setting.hh"
 #include "util/image.hh"
 #include "util/image-props.hh"
 #include "util/pos-info-constants.hh"
 #include "util/visit-selection.hh"
-#include "util-wx/convert-wx.hh"
-#include "util-wx/file-format-util.hh"
-#include "util-wx/gui-util.hh"
-#include "rendering/extra-overlay.hh"
 
 namespace faint{
 

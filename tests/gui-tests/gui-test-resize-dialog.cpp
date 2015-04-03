@@ -20,9 +20,9 @@
 #include "geo/int-rect.hh"
 #include "gui/resize-dialog.hh"
 #include "text/formatting.hh"
-#include "util/optional.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/layout-wx.hh"
+#include "util/optional.hh"
 
 faint::ResizeDialogOptions g_resizeDialogOptions;
 

@@ -1,9 +1,10 @@
 // -*- coding: us-ascii-unix -*-
 #include "test-sys/test.hh"
 #include "tests/test-util/print-objects.hh"
+
 #include "text/char-constants.hh"
-#include "text/text-buffer.hh"
 #include "text/formatting.hh"
+#include "text/text-buffer.hh"
 
 void test_text_buffer(){
   using namespace faint;

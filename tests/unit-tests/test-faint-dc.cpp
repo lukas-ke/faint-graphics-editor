@@ -3,10 +3,10 @@
 #include "tests/test-util/text-bitmap.hh"
 #include "bitmap/color.hh"
 #include "bitmap/draw.hh"
+#include "geo/int-rect.hh"
 #include "rendering/faint-dc.hh"
 #include "util/default-settings.hh"
 #include "util/settings.hh"
-#include "geo/int-rect.hh"
 
 void test_faint_dc(){
   using namespace faint;

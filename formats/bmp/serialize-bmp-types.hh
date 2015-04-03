@@ -15,11 +15,11 @@
 
 #ifndef FAINT_SERIALIZE_BMP_TYPES_HH
 #define FAINT_SERIALIZE_BMP_TYPES_HH
-#include "formats/bmp/bmp-types.hh"
 #include "formats/bmp/bmp-errors.hh"
+#include "formats/bmp/bmp-types.hh"
+#include "util-wx/stream.hh"
 #include "util/optional.hh"
 #include "util/serialize-tuple.hh"
-#include "util-wx/stream.hh"
 
 namespace faint{
 

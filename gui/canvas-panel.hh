@@ -25,12 +25,12 @@
 #include "gui/mouse-capture.hh"
 #include "tools/tool.hh"
 #include "tools/tool-wrapper.hh"
+#include "util-wx/file-path.hh"
 #include "util/command-history.hh"
 #include "util/distinct.hh"
 #include "util/grid.hh"
 #include "util/id-types.hh"
 #include "util/image-list.hh"
-#include "util-wx/file-path.hh"
 
 class wxFileDropTarget;
 

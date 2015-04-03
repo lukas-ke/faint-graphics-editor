@@ -13,7 +13,6 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "gui/tool-drop-down-button.hh"
 #include "wx/popupwin.h"
 #include "wx/bmpbuttn.h"
 #include "wx/sizer.h"
@@ -24,6 +23,7 @@
 #include "geo/geo-func.hh"
 #include "geo/line.hh"
 #include "gui/events.hh"
+#include "gui/tool-drop-down-button.hh"
 #include "python/py-interface.hh"
 #include "text/formatting.hh"
 #include "util-wx/bind-event.hh"

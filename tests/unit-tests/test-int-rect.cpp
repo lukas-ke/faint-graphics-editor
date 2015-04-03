@@ -2,8 +2,8 @@
 #include "test-sys/test.hh"
 #include "tests/test-util/print-objects.hh"
 #include "geo/int-point.hh"
-#include "geo/int-size.hh"
 #include "geo/int-rect.hh"
+#include "geo/int-size.hh"
 
 void test_int_rect(){
   using namespace faint;

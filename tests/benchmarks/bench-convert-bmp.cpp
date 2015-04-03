@@ -1,6 +1,6 @@
 // -*- coding: us-ascii-unix -*-
-#include "test-sys/bench.hh"
 #include "wx/bitmap.h"
+#include "test-sys/bench.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "tests/test-util/file-handling.hh"

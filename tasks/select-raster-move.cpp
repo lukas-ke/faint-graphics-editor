@@ -25,8 +25,8 @@
 #include "tasks/select-raster-move.hh"
 #include "util/color-span.hh"
 #include "util/image-util.hh"
-#include "util/raster-selection.hh"
 #include "util/pos-info.hh"
+#include "util/raster-selection.hh"
 
 namespace faint{
 

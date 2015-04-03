@@ -1,6 +1,7 @@
 // -*- coding: us-ascii-unix -*-
-#include "test-sys/test.hh"
 #include <vector>
+#include "test-sys/test.hh"
+
 #include "geo/point-range.hh"
 
 void test_point_range(){

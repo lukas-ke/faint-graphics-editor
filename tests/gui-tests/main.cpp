@@ -23,11 +23,11 @@
 #include "gui/art-container.hh"
 #include "gui/command-window.hh"
 #include "gui/dialog-context.hh"
-#include "generated/resource/load-resources.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-path.hh"
 #include "util/status-interface.hh"
+#include "generated/resource/load-resources.hh"
 
 void add_gui_tests(wxBookCtrlBase*,
   faint::StatusInterface&,

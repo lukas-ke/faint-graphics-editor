@@ -26,12 +26,12 @@
 #include "gui/paint-dialog/hsl-panel.hh"
 #include "gui/paint-dialog/pattern-panel.hh"
 #include "text/formatting.hh"
-#include "util/optional.hh"
-#include "util-wx/convert-wx.hh"
 #include "util-wx/clipboard.hh"
+#include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/gui-util.hh"
 #include "util-wx/key-codes.hh"
+#include "util/optional.hh"
 
 namespace faint{
 

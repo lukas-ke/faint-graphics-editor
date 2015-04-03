@@ -15,9 +15,9 @@
 
 #ifndef FAINT_TAB_CTRL_HH
 #define FAINT_TAB_CTRL_HH
+#include "wx/event.h" // Fixme: Hide in impl? (events::on...)
 #include "app/app-context.hh"
 #include "gui/canvas-panel.hh" // Fixme: For initially_dirty
-#include "wx/event.h" // Fixme: Hide in impl? (events::on...)
 
 namespace faint{
 

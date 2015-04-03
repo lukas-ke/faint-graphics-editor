@@ -14,13 +14,13 @@
 // permissions and limitations under the License.
 
 #include "bitmap/bitmap-templates.hh" // onto_new
-#include "bitmap/paint.hh"
 #include "bitmap/color.hh"
 #include "bitmap/mask.hh"
+#include "bitmap/paint.hh"
 #include "gui/command-window.hh"
 #include "gui/dialog-context.hh"
-#include "gui/slider-alpha-background.hh"
 #include "gui/slider.hh"
+#include "gui/slider-alpha-background.hh"
 #include "gui/ui-constants.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/fwd-wx.hh"

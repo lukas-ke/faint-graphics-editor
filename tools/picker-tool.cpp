@@ -21,8 +21,8 @@
 #include "geo/int-rect.hh"
 #include "text/formatting.hh"
 #include "tools/standard-tool.hh"
-#include "util/tool-util.hh"
 #include "util/pos-info.hh"
+#include "util/tool-util.hh"
 
 namespace faint{
 

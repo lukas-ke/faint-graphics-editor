@@ -22,9 +22,9 @@
 #include "app/resource-id.hh"
 #include "formats/format.hh"
 #include "geo/primitive.hh"
+#include "gui/accelerator-entry.hh"
 #include "gui/command-dialog.hh"
 #include "gui/gui-string-types.hh"
-#include "gui/accelerator-entry.hh"
 #include "util/key-press.hh"
 
 class wxBitmap;

@@ -13,15 +13,15 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include "app/canvas.hh"
+#include "text/formatting.hh"
+#include "util/image-props.hh"
 #include "python/py-include.hh"
 #include "python/py-canvas.hh"
 #include "python/py-format.hh"
 #include "python/py-image-props.hh"
 #include "python/py-util.hh"
 #include "python/py-interface.hh"
-#include "app/canvas.hh"
-#include "text/formatting.hh"
-#include "util/image-props.hh"
 
 namespace faint{
 
@@ -113,7 +113,7 @@ void PyFileFormat::Load(const FilePath& filePath, ImageProps& props){
   static_assert(managed(py_props), "");
 
   scoped_ref filePathUnicode(build_unicode(filePath.Str()));
-  scoped_ref argList(Py_BuildValue("OO", filePathUnicode.get(), 
+  scoped_ref argList(Py_BuildValue("OO", filePathUnicode.get(),
     py_props.get()));
   scoped_ref result(PyObject_Call(m_callLoad.get(), argList.get(), nullptr));
   if (result == nullptr){

@@ -34,8 +34,8 @@
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/gui-util.hh"
-#include "util-wx/placement.hh"
 #include "util-wx/make-event.hh"
+#include "util-wx/placement.hh"
 #include "util/color-bitmap-util.hh"
 
 namespace faint{

@@ -14,8 +14,8 @@
 // permissions and limitations under the License.
 
 #include "bitmap/bitmap.hh"
-#include "bitmap/color.hh"
 #include "bitmap/bitmap-exception.hh"
+#include "bitmap/color.hh"
 #include "bitmap/mask.hh"
 
 namespace faint{

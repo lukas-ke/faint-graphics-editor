@@ -14,11 +14,11 @@
 // permissions and limitations under the License.
 
 #include "app/get-art-container.hh"
+#include "geo/int-point.hh"
 #include "gui/art-container.hh"
 #include "gui/bitmap-list-ctrl.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-wx.hh"
-#include "geo/int-point.hh"
 
 namespace faint{ class StatusInterface; }
 namespace faint{ class DialogContext; }

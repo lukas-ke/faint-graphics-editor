@@ -1,12 +1,13 @@
 // -*- coding: us-ascii-unix -*-
 #include <map>
-#include "geo/rect.hh"
 #include "test-sys/test.hh"
-#include "text/char-constants.hh"
-#include "text/text-expression.hh"
+
+#include "geo/rect.hh"
 #include "objects/object.hh"
 #include "objects/objrectangle.hh"
 #include "objects/objtext.hh"
+#include "text/char-constants.hh"
+#include "text/text-expression.hh"
 #include "util/default-settings.hh"
 #include "util/object-util.hh"
 

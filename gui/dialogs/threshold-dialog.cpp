@@ -20,12 +20,12 @@
 #include "gui/dual-slider.hh"
 #include "gui/slider-histogram-background.hh"
 #include "gui/ui-constants.hh"
-#include "util/command-util.hh" // get_threshold_command
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/gui-util.hh"
 #include "util-wx/key-codes.hh"
 #include "util-wx/layout-wx.hh"
+#include "util/command-util.hh" // get_threshold_command
 
 namespace faint{
 

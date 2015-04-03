@@ -15,8 +15,8 @@
 
 #ifndef FAINT_AUTO_CROP_HH
 #define FAINT_AUTO_CROP_HH
-#include "util/template-fwd.hh"
 #include "geo/geo-fwd.hh"
+#include "util/template-fwd.hh"
 
 namespace faint{
 class Bitmap;

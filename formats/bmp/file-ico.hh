@@ -17,8 +17,8 @@
 #define FAINT_FILE_ICO_HH
 #include "bitmap/bitmap-fwd.hh"
 #include "formats/save-result.hh"
-#include "util/or-error.hh"
 #include "util-wx/file-path.hh"
+#include "util/or-error.hh"
 
 namespace faint{
 

@@ -18,8 +18,8 @@
 #include <iterator>
 #include "formats/file-formats.hh"
 #include "text/formatting.hh"
-#include "util/iter.hh"
 #include "util-wx/file-format-util.hh"
+#include "util/iter.hh"
 
 namespace faint{
 

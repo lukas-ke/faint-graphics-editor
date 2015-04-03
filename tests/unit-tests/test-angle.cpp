@@ -1,7 +1,7 @@
 // -*- coding: us-ascii-unix -*-
+#include <type_traits>
 #include "test-sys/test.hh"
 #include "tests/test-util/print-objects.hh"
-#include <type_traits>
 #include "geo/angle.hh"
 
 namespace test{

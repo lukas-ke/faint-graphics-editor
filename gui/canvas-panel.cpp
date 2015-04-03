@@ -27,6 +27,10 @@
 #include "gui/canvas-panel-contexts.hh"
 #include "rendering/paint-canvas.hh"
 #include "tools/resize-canvas-tool.hh" // Fixme: Try to move to contexts
+#include "util-wx/bind-event.hh"
+#include "util-wx/convert-wx.hh"
+#include "util-wx/fwd-bind.hh"
+#include "util-wx/key-codes.hh"
 #include "util/convenience.hh"
 #include "util/generator-adapter.hh"
 #include "util/hit-test.hh"
@@ -34,10 +38,6 @@
 #include "util/image-util.hh"
 #include "util/mouse.hh"
 #include "util/object-util.hh"
-#include "util-wx/bind-event.hh"
-#include "util-wx/convert-wx.hh"
-#include "util-wx/fwd-bind.hh"
-#include "util-wx/key-codes.hh"
 
 namespace faint{
 

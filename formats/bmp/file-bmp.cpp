@@ -17,12 +17,12 @@
 #include "bitmap/color-list.hh"
 #include "bitmap/quantize.hh"
 #include "formats/bmp/bmp-errors.hh"
-#include "formats/bmp/serialize-bmp-types.hh"
 #include "formats/bmp/file-bmp.hh"
 #include "formats/bmp/serialize-bmp-pixel-data.hh"
+#include "formats/bmp/serialize-bmp-types.hh"
 #include "geo/limits.hh"
-#include "util/serialize-tuple.hh"
 #include "util-wx/stream.hh"
+#include "util/serialize-tuple.hh"
 
 namespace faint{
 

@@ -16,9 +16,9 @@
 #include <cassert>
 #include "app/canvas.hh"
 #include "bitmap/bitmap.hh"
+#include "formats/bmp/file-bmp.hh"
 #include "formats/format.hh"
 #include "formats/format-util.hh" // add_frame_or_set_error
-#include "formats/bmp/file-bmp.hh"
 #include "util/image-util.hh" // flatten
 
 namespace faint{

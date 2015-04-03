@@ -14,8 +14,8 @@
 // permissions and limitations under the License.
 
 #include "app/canvas.hh"
-#include "commands/command-bunch.hh"
 #include "commands/command.hh"
+#include "commands/command-bunch.hh"
 #include "commands/frame-cmd.hh"
 #include "geo/geo-func.hh"
 #include "rendering/overlay.hh"

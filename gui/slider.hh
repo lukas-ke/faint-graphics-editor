@@ -17,8 +17,8 @@
 #define FAINT_SLIDER_HH
 #include "wx/panel.h"  // Fixme
 #include <functional>
-#include "gui/slider-common.hh"
 #include "geo/range.hh"
+#include "gui/slider-common.hh"
 #include "util-wx/fwd-bind.hh"
 
 namespace faint{

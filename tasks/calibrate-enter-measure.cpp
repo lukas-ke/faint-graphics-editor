@@ -28,9 +28,9 @@
 #include "text/text-buffer.hh"
 #include "tools/tool-contexts.hh"
 #include "util-wx/key-codes.hh"
+#include "util/generator-adapter.hh"
 #include "util/image.hh"
 #include "util/pos-info.hh"
-#include "util/generator-adapter.hh"
 
 namespace faint{
 

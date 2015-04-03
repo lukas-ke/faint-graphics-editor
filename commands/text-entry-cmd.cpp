@@ -14,8 +14,8 @@
 // permissions and limitations under the License.
 
 #include "commands/command.hh"
-#include "objects/objtext.hh"
 #include "commands/text-entry-cmd.hh"
+#include "objects/objtext.hh"
 #include "text/utf8-string.hh"
 
 namespace faint{
