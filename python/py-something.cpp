@@ -357,7 +357,7 @@ static PyObject* Smth_repr(smthObject* self){
   }
   else {
     utf8_string str(self->obj->GetType());
-    return Py_BuildValue("s", str.c_str()); // Fixme: utf8 c_str bad idea
+    return build_unicode(self->obj->GetType());
   }
 }
 
