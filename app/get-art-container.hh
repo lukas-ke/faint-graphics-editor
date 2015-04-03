@@ -13,14 +13,14 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_APP_HH
-#define FAINT_APP_HH
+#ifndef FAINT_GET_ART_CONTAINER_HH
+#define FAINT_GET_ART_CONTAINER_HH
 
 namespace faint{
 
 class ArtContainer;
 const ArtContainer& get_art_container();
 
-}
+} // namespace
 
 #endif

@@ -13,8 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_REFRESH_INFO
-#define FAINT_REFRESH_INFO
+#ifndef FAINT_REFRESH_INFO_HH
+#define FAINT_REFRESH_INFO_HH
 #include "geo/int-rect.hh"
 #include "geo/point.hh"
 

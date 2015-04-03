@@ -13,6 +13,9 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#ifndef FAINT_BITMAP_EXCEPTION_HH
+#define FAINT_BITMAP_EXCEPTION_HH
+
 #include <stdexcept>
 
 namespace faint{
@@ -29,3 +32,5 @@ class BitmapOutOfMemory : public BitmapException{
 };
 
 } // namespace
+
+#endif

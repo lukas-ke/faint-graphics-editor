@@ -13,8 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FWD_DC_WX_HH
-#define FWD_DC_WX_HH
+#ifndef FAINT_FWD_DC_WX_HH
+#define FAINT_FWD_DC_WX_HH
 #include <vector>
 
 class IntPoint;

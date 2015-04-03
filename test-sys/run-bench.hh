@@ -13,6 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#ifndef FAINT_RUN_BENCH_HH
+#define FAINT_RUN_BENCH_HH
 #include <algorithm>
 #include "test-sys/bench.hh"
 #include "test-sys/test-name.hh"
@@ -98,3 +100,5 @@ void run_bench(void (*func)(), const std::string& fileName){
   std::cout << "  Total: " << std::setprecision(4) << totalTime << "s" << std::endl;
   BENCH_MEASURES.clear();
 }
+
+#endif

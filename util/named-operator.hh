@@ -18,8 +18,8 @@
 // https://github.com/klmr/named-operator
 // by klmr.
 
-#ifndef FAINT_NAMED_OPERATOR
-#define FAINT_NAMED_OPERATOR
+#ifndef FAINT_NAMED_OPERATOR_HH
+#define FAINT_NAMED_OPERATOR_HH
 #include <utility>
 
 namespace faint{

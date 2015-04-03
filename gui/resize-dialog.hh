@@ -13,8 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_RESIZE_WINDOW_HH
-#define FAINT_RESIZE_WINDOW_HH
+#ifndef FAINT_RESIZE_DIALOG_HH
+#define FAINT_RESIZE_DIALOG_HH
 #include "geo/int-size.hh"
 #include "geo/size.hh"
 #include "gui/dialog-context.hh"

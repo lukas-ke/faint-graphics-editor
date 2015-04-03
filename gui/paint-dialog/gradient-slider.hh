@@ -13,8 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_GRADIENT_COLOR_STOP_SLIDER_HH
-#define FAINT_GRADIENT_COLOR_STOP_SLIDER_HH
+#ifndef FAINT_GRADIENT_SLIDER_HH
+#define FAINT_GRADIENT_SLIDER_HH
 #include <functional>
 #include "bitmap/gradient.hh"
 #include "geo/int-size.hh"

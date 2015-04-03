@@ -1,6 +1,6 @@
 // -*- coding: us-ascii-unix -*-
-#ifndef FAINT_TEST_UTIL_PRINT_OBJECTS_HH
-#define FAINT_TEST_UTIL_PRINT_OBJECTS_HH
+#ifndef FAINT_TEST_PRINT_OBJECTS_HH
+#define FAINT_TEST_PRINT_OBJECTS_HH
 #include <iosfwd>
 
 #define PRINTER(CLASS)class CLASS; std::ostream& operator<<(std::ostream&, const CLASS&)

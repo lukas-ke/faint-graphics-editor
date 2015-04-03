@@ -13,8 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_POINT_GENERATOR_HH
-#define FAINT_POINT_GENERATOR_HH
+#ifndef FAINT_POINT_RANGE_HH
+#define FAINT_POINT_RANGE_HH
 #include <iterator>
 #include "geo/int-point.hh"
 

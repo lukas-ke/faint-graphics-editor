@@ -13,8 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_APP_RESIZE_DIALOG_CONTEXT_HH
-#define FAINT_APP_RESIZE_DIALOG_CONTEXT_HH
+#ifndef FAINT_RESIZE_DIALOG_CONTEXT_HH
+#define FAINT_RESIZE_DIALOG_CONTEXT_HH
 
 namespace faint{
 

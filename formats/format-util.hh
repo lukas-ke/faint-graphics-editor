@@ -13,6 +13,9 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#ifndef FAINT_FORMAT_UTIL_HH
+#define FAINT_FORMAT_UTIL_HH
+
 #include "bitmap/bitmap.hh"
 #include "util/image-props.hh"
 #include "util/or-error.hh"
@@ -24,3 +27,5 @@ namespace faint{
 void add_frame_or_set_error(OrError<Bitmap>&&, ImageProps&) ;
 
 } // namespace
+
+#endif

@@ -13,8 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_MAKE_VECTOR
-#define FAINT_MAKE_VECTOR
+#ifndef FAINT_MAKE_VECTOR_HH
+#define FAINT_MAKE_VECTOR_HH
 #include <vector>
 #include <functional>
 

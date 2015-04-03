@@ -13,6 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#ifndef FAINT_RUN_IMAGE_HH
+#define FAINT_RUN_IMAGE_HH
 #include <algorithm>
 #include "test-sys/test.hh"
 #include "test-sys/test-name.hh"
@@ -26,3 +28,5 @@ void run_image(void (*func)(), const std::string& fileName){
   // Run the image test
   func();
 }
+
+#endif

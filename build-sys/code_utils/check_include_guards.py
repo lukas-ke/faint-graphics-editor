@@ -39,12 +39,27 @@ def _check_include_guards(file_path):
         print("Expected: %s" % expected_guard)
     return expected_guard
 
+def _ignored(file_path):
+    parts = ["test-sources",
+             "msw_warn.hh",
+             "generated", # Fixme: Consider including
+             "py-functions.hh", # Fixme: Consider including
+             # Fixme: Consider including´test-util,
+             # adding e.g. a pattern to allow FAINT_TEST_...
+             "test-util/",
+             "gen/defines.hh",
+    ]
+    for part in parts:
+        if file_path.find(part) != -1:
+            return True
+    return False
+
 if __name__ == '__main__':
     root_dir = get_root_dir()
     include_guards = []
 
     for file_path in enumerate_files(root_dir, (".hh",)):
-        if file_path.find("msw_warn.hh") != -1:
+        if _ignored(file_path.replace("\\", "/")):
             continue
         include_guard = _check_include_guards(file_path)
         if include_guard in include_guards:

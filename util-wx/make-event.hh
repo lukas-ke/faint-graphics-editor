@@ -13,5 +13,10 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#ifndef FAINT_MAKE_EVENT_HH
+#define FAINT_MAKE_EVENT_HH
+
 #define MAKE_FAINT_COMMAND_EVENT(NAME)const wxEventType NAME = wxNewEventType(); \
 const wxEventTypeTag<wxCommandEvent> EVT_##NAME(NAME)
+
+#endif

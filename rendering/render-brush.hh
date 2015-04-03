@@ -13,6 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#ifndef FAINT_RENDER_BRUSH_HH
+#define FAINT_RENDER_BRUSH_HH
 #include <vector>
 #include "bitmap/alpha-map.hh"
 #include "bitmap/bitmap-fwd.hh"
@@ -37,3 +39,5 @@ void init_brush_overlay(AlphaMap&, const Brush&);
 UpperLeft brush_top_left(const Point& mousePos, const Brush&);
 
 } // namespace
+
+#endif

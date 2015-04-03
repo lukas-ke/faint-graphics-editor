@@ -1,5 +1,5 @@
-#ifndef PY_SOMETHING_PROPERTIES_HH
-#define PY_SOMETHING_PROPERTIES_HH
+#ifndef FAINT_PY_SOMETHING_PROPERTIES_HH
+#define FAINT_PY_SOMETHING_PROPERTIES_HH
 
 // Hand-written (i.e. not generated) properties for SmthType
 
