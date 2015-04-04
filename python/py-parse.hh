@@ -514,6 +514,22 @@ PyObject* build_result(const std::vector<T>& v){
   return py_list;
 }
 
+template<typename K, typename V>
+PyObject* build_result(const std::map<K, V>& m){
+  PyObject* py_dict = PyDict_New();
+
+  for (const auto& kv : m){
+    // Fixme: Check return values
+    PyObject* key = build_result(kv.first);
+    PyObject* value = build_result(kv.second);
+    int ok = PyDict_SetItem(py_dict, key, value);
+    if (ok == -1){
+      return nullptr;
+    }
+  }
+  return py_dict;
+}
+
 // Helper for default parse_flat, to make the static_assert dependent on T.
 template<typename T>
 struct TypeDependentFalse{

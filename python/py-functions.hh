@@ -694,6 +694,23 @@ static void write_png_py(const Bitmap& bmp,
   }
 }
 
+using png_pair = std::pair<Bitmap, png_tEXt_map>;
+
+/* function: "read_png(path)->(bmp, text_dict)\n
+Reads the png-file at path, returning a Bitmap and a
+dictionary of tEXt-entries.\n
+Throws OSError on failure."
+name: "read_png" */
+static png_pair read_png_py(const FilePath& path){
+  return read_png_meta(path).Visit(
+    [](const Bitmap_and_tEXt& obj) -> png_pair{
+      return std::make_pair(obj.bmp, obj.text);
+    },
+    [](const utf8_string& error) -> png_pair{
+      throw OSError(error);
+    });
+}
+
 /* extra_include: "generated/python/settings/setting-function-defs.hh" */
 
 } // namespace
