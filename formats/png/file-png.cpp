@@ -644,5 +644,8 @@ SaveResult write_png(const FilePath& path,
   return write_png(path, bmp, colorType, noChunks);
 }
 
+const utf8_string get_libpng_version(){
+  return utf8_string(PNG_LIBPNG_VER_STRING);
+}
 
 } // namespace

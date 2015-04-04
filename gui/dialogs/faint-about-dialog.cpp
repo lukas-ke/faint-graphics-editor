@@ -15,6 +15,7 @@
 
 #include <sstream>
 #include "app/build-info.hh"
+#include "formats/png/file-png.hh" // For get_libpng_version
 #include "gui/accelerator-entry.hh"
 #include "gui/dialog-context.hh"
 #include "gui/ui-constants.hh"
@@ -69,6 +70,7 @@ static wxStaticText* details_text(wxWindow* parent){
   ss << "Python version: " << get_python_version() << std::endl;
   ss << "Cairo version: " << get_cairo_version() << std::endl;
   ss << "Pango version: " << get_pango_version() << std::endl;
+  ss << "libpng version: " << get_libpng_version() << std::endl;
   ss << std::endl;
 
   return create_label(parent, faint_info + "\n\n" + ss.str().c_str());

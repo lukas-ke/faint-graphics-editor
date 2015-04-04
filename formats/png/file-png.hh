@@ -67,6 +67,8 @@ SaveResult write_png(const FilePath&,
   PngColorType,
   const png_tEXt_map&);
 
+const utf8_string get_libpng_version();
+
 } // namespace
 
 #endif
