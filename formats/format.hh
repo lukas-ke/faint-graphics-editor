@@ -52,6 +52,10 @@ private:
   utf8_string m_label;
 };
 
+// Forwards to Format::CanLoad, CanSave for use as algorithm predicates
+bool can_load_f(const Format*);
+bool can_save_f(const Format*);
+
 } // namespace
 
 #endif

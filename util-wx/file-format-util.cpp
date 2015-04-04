@@ -19,6 +19,7 @@
 #include "formats/file-formats.hh"
 #include "text/formatting.hh"
 #include "util-wx/file-format-util.hh"
+#include "util/generator-adapter.hh"
 #include "util/iter.hh"
 
 namespace faint{
@@ -46,13 +47,11 @@ T select(const T& src,
 }
 
 Formats loading_file_formats(const Formats& allFormats){
-  return select(allFormats,
-    {[](const Format* f){return f->CanLoad();}});
+  return select(allFormats, can_load_f);
 }
 
 Formats saving_file_formats(const Formats& allFormats){
-  return select(allFormats,
-    {[](const Format* f){return f->CanSave();}});
+  return select(allFormats, can_save_f);
 }
 
 static utf8_string wildcarded(const FileExtension& ext){
@@ -102,46 +101,48 @@ utf8_string combined_file_dialog_filter(const utf8_string& description,
     utf8_string("*.*"));
 }
 
-Format* get_load_format(const Formats& formats, const FileExtension& ext){
-  for (Format* f : formats){
-    if (f->Match(ext) && f->CanSave()){
-      return f;
-    }
-  }
-  return nullptr;
+static auto match_load(const FileExtension& ext){
+  return [ext](Format* f){
+    return f->Match(ext) && f->CanLoad();
+  };
 }
 
-bool has_load_format(const Formats& formats, const FileExtension& ext){
-  return get_load_format(formats, ext) != nullptr;
+static auto match_save(const FileExtension& ext){
+  return [ext](Format* f){
+    return f->Match(ext) && f->CanSave();
+  };
 }
 
-Format* get_save_format(const Formats& formats,
+Optional<Format&> get_load_format(const Formats& formats,
   const FileExtension& ext)
 {
-  for (Format* format : formats){
-    if (format->Match(ext) && format->CanSave()){
-      return format;
-    }
-  }
-  return nullptr;
+  return find_if_deref(formats, match_load(ext));
 }
 
-Format* get_save_format(const Formats& formats,
+Optional<Format&> get_save_format(const Formats& formats,
+  const FileExtension& ext)
+{
+  return find_if_deref(formats, match_save(ext));
+}
+
+Optional<Format&> get_save_format(const Formats& formats,
   const FileExtension& ext, int filterIndex)
 {
   if (0 < filterIndex && filterIndex < resigned(formats.size())){
     Format* f = formats[to_size_t(filterIndex)];
     if (f->Match(ext)){
-      return f;
+      return Optional<Format&>(*f);;
     }
   }
   return get_save_format(formats, ext);
 }
 
-bool has_save_format(const Formats& formats, const FileExtension& ext)
-{
-  return end(formats) != std::find_if(begin(formats), end(formats),
-    [&](Format* f){ return f->CanSave() && f->Match(ext); });
+bool has_load_format(const Formats& formats, const FileExtension& ext){
+  return any_of(formats, match_load(ext));
+}
+
+bool has_save_format(const Formats& formats, const FileExtension& ext){
+  return any_of(formats, match_save(ext));
 }
 
 } // namespace

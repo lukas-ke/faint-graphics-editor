@@ -40,6 +40,15 @@ auto find_if(Generator gen, UnaryPredicate p){
   return Optional<decltype(*it)>();
 }
 
+template<class Generator, class UnaryPredicate>
+auto find_if_deref(Generator gen, UnaryPredicate p){
+  auto it = std::find_if(begin(gen), end(gen), p);
+  if (it != end(gen)){
+    return Optional<decltype(**it)>(**it);
+  }
+  return Optional<decltype(**it)>();
+}
+
 template<class Container, class T, class BinaryOperation>
 auto accumulate(T initial, const Container& c, BinaryOperation op){
   return std::accumulate(begin(c), end(c), initial, op);

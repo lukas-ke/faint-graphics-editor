@@ -278,17 +278,20 @@ static Optional<SaveDialogInfo> show_save_as_dialog(wxWindow* parent,
   }
 
   FilePath path(FilePath::FromAbsoluteWx(dlg.GetPath()));
-  Format* format = get_save_format(formats,
+  auto format = get_save_format(formats,
     path.Extension(),
     dlg.GetFilterIndex());
-  if (format == nullptr){
-    // Fixme: Need an error message, though: Can this happen?
-    // The dialog will either give the specified extension or
-    // the selected extension if none matches.
-    return {};
-  }
 
-  return {SaveDialogInfo(path, *format)};
+  return format.Visit(
+    [&](Format& f) -> Optional<SaveDialogInfo>{
+      return {SaveDialogInfo(path, f)};
+    },
+    []() -> Optional<SaveDialogInfo>{
+      // Fixme: Need an error message, though: Can this happen?
+      // The dialog will either give the specified extension or
+      // the selected extension if none matches.
+      return {};
+    });
 }
 
 class FaintFrame : public wxFrame {
@@ -930,16 +933,17 @@ bool FaintWindow::Save(Canvas& canvas){
   // Fixme: Tidy up. ;_;
   return maybeFilePath.Visit(
     [&](const FilePath& p){
-      Format* format = get_save_format(state.formats, p.Extension());
-      if (format == nullptr){
-        return ShowSaveAsDialog(canvas);
-      }
-      const bool savedOk = save(m_impl->frame.get(), *format, p, canvas);
-      if (savedOk){
-        update_recent(*format, p);
-      }
-
-      return savedOk;
+      return get_save_format(state.formats, p.Extension()).Visit(
+        [&](Format& f){
+          bool savedOk = save(m_impl->frame.get(), f, p, canvas);
+          if (savedOk){
+            update_recent(f, p);
+          }
+          return savedOk;
+        },
+        [&](){
+          return ShowSaveAsDialog(canvas);
+        });
     },
     [&](){
       return show_save_as_dialog(m_impl->frame.get(),
@@ -952,7 +956,6 @@ bool FaintWindow::Save(Canvas& canvas){
               info.path,
               canvas,
               false);
-
             if (savedOk){
               update_recent(info.format, info.path);
             }

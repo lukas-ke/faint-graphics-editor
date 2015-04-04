@@ -63,4 +63,12 @@ bool Format::Match(const FileExtension& e) const {
     != m_extensions.end();
 }
 
+bool can_load_f(const Format* f){
+  return f->CanLoad();
+}
+
+bool can_save_f(const Format* f){
+  return f->CanSave();
+}
+
 } // namespace

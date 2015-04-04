@@ -23,12 +23,16 @@
 namespace faint{
 
 SaveResult save(Canvas& canvas, const FilePath& path){
-  Format* format = get_save_format(get_app_context().GetFormats(),
+  auto format = get_save_format(get_app_context().GetFormats(),
     path.Extension());
-  if (format == nullptr){
-    return SaveResult::SaveFailed(str_no_matching_format(path.Extension()));
-  }
-  return format->Save(path, canvas);
+
+  return format.Visit(
+    [&](Format& f){
+      return f.Save(path, canvas);
+    },
+    [&](){
+      return SaveResult::SaveFailed(str_no_matching_format(path.Extension()));
+    });
 }
 
 utf8_string str_no_matching_format(const FileExtension& ext){
