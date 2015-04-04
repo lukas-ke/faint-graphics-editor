@@ -35,6 +35,7 @@ enum class PngColorType : int {
   MAX_VALUE = GRAY_ALPHA
 };
 
+// Map of png tEXt keys to values
 using png_tEXt_map = std::map<utf8_string, utf8_string>;
 
 struct Bitmap_and_tEXt{
@@ -47,7 +48,7 @@ struct Bitmap_and_tEXt{
   png_tEXt_map text;
 };
 
-// Reads a PNG-file to a Bitmap.
+// Reads a PNG-file from a Bitmap.
 OrError<Bitmap> read_png(const FilePath&);
 
 // Reads a PNG-file to a bitmap along with a map of the png-tEXT key,
@@ -59,8 +60,8 @@ SaveResult write_png(const FilePath&, const
   Bitmap&,
   PngColorType);
 
-// Writes a Bitmap o a png-file, along with the tEXt chunks.
-// The tEXt chunks are written before the image data.
+// Writes a Bitmap to a png-file, along with the tEXt chunks. The tEXt
+// chunks are written before the image data.
 SaveResult write_png(const FilePath&,
   const Bitmap&,
   PngColorType,

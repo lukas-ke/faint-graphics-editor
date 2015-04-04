@@ -256,7 +256,6 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
   }
 
   if (bitDepth != 8){
-    // Fixme: Handle all bit-depths
     free_rows(rowPointers, height);
 
     return {"Unsupported bit depth: " + str_int(bitDepth)};
