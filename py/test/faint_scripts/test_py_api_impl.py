@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from ifaint import *
+import os
 
 def test(fail_if):
     # FaintApp
@@ -26,7 +27,7 @@ def test(fail_if):
     fail_if(bmp2.color_count() != 1)
     bmp2.set_pixel((1,1),(255,0,0))
     fail_if(bmp2.color_count() != 2)
-    # Fixme:  copy_rect? (modifies clipboard)
+    # Fixme: copy_rect? (modifies clipboard)
     bmp2.desaturate()
     bmp.desaturate_weighted()
     bmp.clear((255,255,255))
@@ -51,7 +52,6 @@ def test(fail_if):
     bmp.replace_alpha((100,100,100))
     bmp.set_alpha(10)
     bmp.color_balance((0,100),(0,100),(0,100))
-
 
     # Canvas
     canvas = get_active_image()
@@ -131,3 +131,14 @@ def test(fail_if):
         # Should yield type error
         pass
         # Fixme: How check exact exception?
+
+    # Save and reload png
+    png_path = os.path.abspath("out/test_py_api_impl.png")
+    write_png(get_active_image().get_bitmap(), png_path,
+        png.RGB_ALPHA,
+        {"first key": "first value",
+        "second key": "second value"})
+    b, text = read_png(os.path.abspath("out/meh.png"))
+    fail_if(b.get_size() != (640,480))
+    fail_if(text["first key"] != "first value")
+    fail_if(text["second key"] != "second value")
