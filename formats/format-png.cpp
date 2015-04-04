@@ -23,7 +23,7 @@
 namespace faint{
 
 inline PngColorType alpha_if_necessary(const Bitmap& bmp){
-  return fully_opaque(bmp) ? PngColorType::RGB_ALPHA : PngColorType::RGB;
+  return fully_opaque(bmp) ? PngColorType::RGB : PngColorType::RGB_ALPHA;
 }
 
 class FormatPNG : public Format{
