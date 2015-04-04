@@ -14,13 +14,11 @@
 // permissions and limitations under the License.
 
 #include "wx/dcclient.h"
-#include "app/get-art-container.hh" // Fixme: Only for cursors
 #include "app/resource-id.hh"
 #include "geo/angle.hh"
 #include "geo/geo-func.hh"
 #include "geo/line.hh"
 #include "geo/measure.hh"
-#include "gui/art-container.hh"
 #include "gui/drag-value-ctrl.hh"
 #include "text/formatting.hh"
 #include "util-wx/convert-wx.hh"
@@ -64,9 +62,13 @@ static int drag_value(const IntPoint& p0,
 DragValueCtrl::DragValueCtrl(wxWindow* parent,
   const IntRange& range,
   const Description& statusText,
+  const DragCursor& dragCursor,
+  const HoverCursor& hoverCursor,
   StatusInterface& statusInfo)
   : wxPanel(parent, wxID_ANY),
     m_currentValue(10),
+    m_dragCursor(dragCursor.Get()),
+    m_hoverCursor(hoverCursor.Get()),
     m_mouse(this,
       OnLoss([&](){
         SetForegroundColour(g_originalColor);
@@ -74,7 +76,7 @@ DragValueCtrl::DragValueCtrl(wxWindow* parent,
         SendChangeEvent(m_originValue);
       }),
       OnRelease([&](){
-        SetCursor(get_art_container().Get(Cursor::MOVE_POINT));
+        SetCursor(m_hoverCursor);
       })),
     m_originValue(10),
     m_range(range),
@@ -82,12 +84,12 @@ DragValueCtrl::DragValueCtrl(wxWindow* parent,
     m_statusText(statusText.Get())
 {
   SetForegroundColour(g_originalColor);
-  SetCursor(get_art_container().Get(Cursor::MOVE_POINT));
+  SetCursor(m_hoverCursor);
   SetInitialSize(wxSize(50,40));
 
   events::on_mouse_left_down(this,
     [&](const IntPoint& pos){
-      SetCursor(get_art_container().Get(Cursor::DRAG_SCALE));
+      SetCursor(m_dragCursor);
       m_origin = m_current = pos;
       m_originValue = m_currentValue;
       SetForegroundColour(g_highlightColor);

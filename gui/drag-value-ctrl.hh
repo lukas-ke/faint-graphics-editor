@@ -21,6 +21,7 @@
 #include "geo/int-range.hh"
 #include "gui/gui-string-types.hh"
 #include "gui/mouse-capture.hh"
+#include "util/distinct.hh"
 
 namespace faint{
 
@@ -34,14 +35,19 @@ public:
 
 extern const wxEventTypeTag<DragValueChangeEvent> EVT_FAINT_DRAG_VALUE_CHANGE;
 
+class category_drag_value_ctrl;
+using DragCursor = Distinct<wxCursor, category_drag_value_ctrl, 0>;
+using HoverCursor = Distinct<wxCursor, category_drag_value_ctrl, 1>;
+
 class DragValueCtrl : public wxPanel {
 public:
   // Note: Does not use tooltips as they tended to obscure the value
   DragValueCtrl(wxWindow* parent,
     const IntRange&,
     const Description&,
+    const DragCursor&,
+    const HoverCursor&,
     StatusInterface&);
-
   void SetValue(int);
 
 private:
@@ -49,6 +55,8 @@ private:
   void SendChangeEvent(int);
   IntPoint m_current;
   int m_currentValue;
+  wxCursor m_dragCursor;
+  wxCursor m_hoverCursor;
   MouseCapture m_mouse;
   IntPoint m_origin;
   int m_originValue;

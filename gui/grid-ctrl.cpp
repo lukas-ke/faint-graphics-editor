@@ -73,11 +73,16 @@ static std::unique_ptr<SpinButton> grid_spinbutton(wxWindow* parent,
 DragValueCtrl* grid_text(wxWindow* parent,
   wxSizer* sizer,
   winvec_t& showhide,
+  const ArtContainer& art,
   StatusInterface& statusInfo)
 {
+  // Create the drag-adjustable grid spacing text
+
   DragValueCtrl* text = new DragValueCtrl(parent,
     IntRange(min_t(1)),
     Description("Drag to adjust grid spacing. Right-Click to disable grid."),
+    DragCursor(art.Get(Cursor::DRAG_SCALE)),
+    HoverCursor(art.Get(Cursor::MOVE_POINT)),
     statusInfo);
   showhide.push_back(text);
   text->Hide();
@@ -113,7 +118,7 @@ GridCtrl::GridCtrl(wxWindow* parent,
     m_enabled(false)
 {
   m_sizer = new wxBoxSizer(wxHORIZONTAL);
-  m_txtCurrentSize = grid_text(this, m_sizer, m_showhide, statusInfo);
+  m_txtCurrentSize = grid_text(this, m_sizer, m_showhide, m_art, statusInfo);
   m_spinButton = grid_spinbutton(this, m_sizer, m_showhide);
   m_btnToggle = grid_toggle_button(this, m_sizer, art);
 
