@@ -689,4 +689,10 @@ Optional<int> as_int(PyObject* obj){
     option(static_cast<int>(v)) : no_option();
 }
 
+utf8_string str_ssize_t(Py_ssize_t v){
+  std::stringstream ss;
+  ss << v;
+  return utf8_string(ss.str());
+}
+
 } // namespace

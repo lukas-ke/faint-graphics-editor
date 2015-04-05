@@ -89,8 +89,6 @@ private:
 
 void throw_insufficient_args_if(bool, const utf8_string& type);
 
-utf8_string str_ssize_t(Py_ssize_t); // Fixme: Move to some util file
-
 } // namespace
 
 #endif

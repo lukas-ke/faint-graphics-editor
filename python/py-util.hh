@@ -50,6 +50,8 @@ FaintPyExc py_error_info();
 
 Optional<int> as_int(PyObject*);
 
+utf8_string str_ssize_t(Py_ssize_t);
+
 } // namespace
 
 #endif

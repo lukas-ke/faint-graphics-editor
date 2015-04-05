@@ -23,12 +23,6 @@
 
 namespace faint{
 
-utf8_string str_ssize_t(Py_ssize_t v){
-  std::stringstream ss;
-  ss << v;
-  return utf8_string(ss.str());
-}
-
 PythonError::PythonError(PyObject* errorType, const utf8_string& error)
   : m_errorType(errorType),
     m_error(error)
