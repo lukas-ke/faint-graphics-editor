@@ -47,7 +47,7 @@ static BitmapFileHeader create_bitmap_file_header(BitmapQuality quality,
   const auto headerLengths = struct_lengths<BitmapInfoHeader, BitmapFileHeader>();
 
   BitmapFileHeader h;
-  h.fileType = 0x4d42; // "BM" (reversed, endianness and all)
+  h.fileType = BITMAP_SIGNATURE;
 
   h.fileLength = convert(headerLengths +
     palette_length_bytes(quality) +
@@ -81,8 +81,7 @@ static Bitmap read_bmp_or_throw(const FilePath& filePath){
 
   auto bitmapFileHeader = read_struct_or_throw<BitmapFileHeader>(in);
 
-  // Fixme: Again reversed. Split into bytes
-  if (bitmapFileHeader.fileType != 0x4d42){
+  if (bitmapFileHeader.fileType != BITMAP_SIGNATURE){
     throw ReadBmpError(error_bitmap_signature(bitmapFileHeader.fileType));
   }
 
@@ -163,7 +162,9 @@ SaveResult write_bmp(const FilePath& filePath,
   const int rowStride = bmp_row_stride(bpp, size.w);
 
   write_struct(out, create_bitmap_file_header(quality, rowStride, size.h));
-  write_struct(out, create_bitmap_info_header(bmp.GetSize(), bpp, false));
+  write_struct(out, create_bitmap_info_header(bmp.GetSize(), bpp,
+      default_DPI(),
+      false));
 
   switch(quality){
     // Note: No default, to ensure warning if unhandled enum value

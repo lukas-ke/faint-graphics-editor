@@ -27,6 +27,8 @@
 
 namespace faint {
 
+const uint16_t BITMAP_SIGNATURE = 0x4d42; // "BM", little endian
+
 class BitmapFileHeader{
   // Information about the type, size, and layout of a file that
   // contains a "DIB".
@@ -67,7 +69,6 @@ public:
   uint16_t bpp;
   Compression compression;
   uint32_t rawDataSize;
-
   int32_t horizontalResolution;
   int32_t verticalResolution;
   uint32_t paletteColors;
@@ -114,8 +115,16 @@ void set_size(IconDirEntry&, const IntSize& size);
 HotSpot get_hot_spot(const IconDirEntry&);
 void set_hot_spot(IconDirEntry&, const HotSpot&);
 
+class category_bmp_types;
+// Dots-per-inch data type
+using DPI = Distinct<int, category_bmp_types, 0>;
+
+// Returns a  rather arbitrarily chosen dots-per-inch value.
+DPI default_DPI();
+
 BitmapInfoHeader create_bitmap_info_header(const IntSize&,
   uint16_t bpp,
+  const DPI&,
   bool andMap);
 
 } // namespace

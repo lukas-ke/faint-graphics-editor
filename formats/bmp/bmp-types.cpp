@@ -66,13 +66,24 @@ void set_hot_spot(IconDirEntry& e, const HotSpot& p){
   e.bpp = static_cast<uint16_t>(p.y); // Fixme: Error check
 }
 
+static int32_t to_pixels_per_meter(const DPI& dpi){
+  const coord inchesPerMeter = 39.3701;
+  return static_cast<int32_t>(dpi.Get() * inchesPerMeter + 0.5);
+}
+
+DPI default_DPI(){
+  return DPI(96); // Rather arbitrarily chosen.
+}
 
 BitmapInfoHeader create_bitmap_info_header(const IntSize& size, uint16_t bpp,
+  const DPI& dpi,
   bool andMap)
 {
   BitmapInfoHeader h;
   h.headerLen = BITMAPINFOHEADER_LENGTH;
   h.width = size.w;
+
+  const int32_t pixelsPerMeter = to_pixels_per_meter(dpi);
 
   // Double height in bitmap header with andMap for some reason
   h.height = andMap ? 2*size.h : size.h;
@@ -80,8 +91,7 @@ BitmapInfoHeader create_bitmap_info_header(const IntSize& size, uint16_t bpp,
   h.bpp = bpp;
   h.compression = Compression::BI_RGB;
   h.rawDataSize = 0; // Dummy value 0 allowed for BI_RGB
-  h.horizontalResolution = 1; // Fixme: OK?
-  h.verticalResolution = 1; // Fixme: OK?
+  h.horizontalResolution = h.verticalResolution = to_pixels_per_meter(dpi);
   h.paletteColors = bpp == 8 ? 256 : 0;
   h.importantColors = 0;
   return h;
