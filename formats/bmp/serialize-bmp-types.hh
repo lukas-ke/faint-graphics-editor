@@ -48,7 +48,7 @@ struct StructInfo<BitmapFileHeader>{
 
 template<>
 struct StructInfo<BitmapInfoHeader>{
-  static const size_t bytes = 40;
+  static const size_t bytes = BITMAPINFOHEADER_LENGTH;
   static const char* StructName(){return "BITMAPINFOHEADER";}
 };
 

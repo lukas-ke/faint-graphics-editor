@@ -15,6 +15,7 @@
 
 #include <cassert>
 #include "formats/bmp/bmp-types.hh"
+#include "formats/bmp/serialize-bmp-types.hh"
 #include "geo/limits.hh"
 
 namespace faint{
@@ -92,12 +93,8 @@ BitmapInfoHeader create_bitmap_info_header(const IntSize& size, uint16_t bpp,
   bool andMap)
 {
   BitmapInfoHeader h;
-  h.headerLen = BITMAPINFOHEADER_LENGTH;
+  h.headerLen = struct_lengths<BitmapInfoHeader>();
   h.width = size.w;
-
-  const int32_t pixelsPerMeter = to_pixels_per_meter(dpi);
-
-  // Double height in bitmap header with andMap for some reason
   h.height = andMap ? 2*size.h : size.h;
   h.colorPlanes = 1;
   h.bpp = bpp;
@@ -105,6 +102,24 @@ BitmapInfoHeader create_bitmap_info_header(const IntSize& size, uint16_t bpp,
   h.rawDataSize = 0; // Dummy value 0 allowed for BI_RGB
   h.horizontalResolution = h.verticalResolution = to_pixels_per_meter(dpi);
   h.paletteColors = bpp == 8 ? 256 : 0;
+  h.importantColors = 0;
+  return h;
+}
+
+BitmapInfoHeader create_bitmap_info_header_png(const IntSize& bmpSize,
+  size_t rawDataSize,
+  const DPI& dpi)
+{
+  BitmapInfoHeader h;
+  h.headerLen = struct_lengths<BitmapInfoHeader>();
+  h.width = bmpSize.w;
+  h.height = bmpSize.h;
+  h.colorPlanes = 1;
+  h.bpp = 0;
+  h.compression = Compression::BI_PNG;
+  h.rawDataSize = convert(rawDataSize);
+  h.horizontalResolution = h.verticalResolution = to_pixels_per_meter(dpi);
+  h.paletteColors = 0;
   h.importantColors = 0;
   return h;
 }

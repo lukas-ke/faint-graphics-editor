@@ -59,23 +59,6 @@ static bool peek_png_signature(BinaryReader& in, const size_t i){
   return is_png(signature);
 }
 
-static auto create_bitmap_info_header_png(const Bitmap& bmp, size_t rawDataSize){
-  BitmapInfoHeader h;
-  h.headerLen = struct_lengths<BitmapInfoHeader>();
-  IntSize bmpSize = bmp.GetSize();
-  h.width = bmpSize.w;
-  h.height = bmpSize.h;
-  h.colorPlanes = 1;
-  h.bpp = 0;
-  h.compression = Compression::BI_PNG;
-  h.rawDataSize = convert(rawDataSize);
-  h.horizontalResolution = 1; // Fixme: OK?
-  h.verticalResolution = 1; // Fixme: OK?
-  h.paletteColors = 0;
-  h.importantColors = 0;
-  return h;
-}
-
 static void test_bitmap_header(size_t iconNum, const BitmapInfoHeader& h){
   if (invalid_header_length(h.headerLen)){
     throw ReadBmpError(error_truncated_bmp_header(iconNum, h.headerLen));
@@ -367,8 +350,9 @@ static std::vector<BitmapInfoHeader> create_bitmap_headers(const ico_vec& bitmap
     if (p.second == IcoCompression::PNG){
       auto pngStrIter = pngData.find(i);
       assert(pngStrIter != pngData.end());
-      v.push_back(create_bitmap_info_header_png(p.first,
-          pngStrIter->second.size()));
+      v.push_back(create_bitmap_info_header_png(p.first.GetSize(),
+          pngStrIter->second.size(),
+          default_DPI()));
     }
     else {
       v.push_back(create_bitmap_info_header(p.first.GetSize(), 32,
@@ -484,7 +468,7 @@ BitmapFileHeader create_bitmap_file_header_png(size_t encodedSize){
   const auto headerLengths = struct_lengths<BitmapInfoHeader, BitmapFileHeader>();
 
   BitmapFileHeader h;
-  h.fileType = 0x4d42; // "BM" (reversed, endianness and all)
+  h.fileType = BITMAP_SIGNATURE;
   h.fileLength = convert(headerLengths + encodedSize);
   h.reserved1 = 0;
   h.reserved2 = 0;

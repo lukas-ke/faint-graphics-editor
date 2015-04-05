@@ -135,6 +135,10 @@ BitmapInfoHeader create_bitmap_info_header(const IntSize&,
   const DPI&,
   bool andMap);
 
+BitmapInfoHeader create_bitmap_info_header_png(const IntSize&,
+  size_t rawDataSize,
+  const DPI&);
+
 } // namespace
 
 #endif
