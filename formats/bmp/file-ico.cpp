@@ -171,7 +171,7 @@ static Optional<Bitmap> ico_read_32bpp_BI_RGB(BinaryReader& in,
 {
   int bypp = 4;
   // The size from the bmp-header. May have larger height than the size
-  // in the IconDirEntry. (Fixme: Why?)
+  // in the IconDirEntry.
   int bufLen = area(bitmapSize) * bypp;
   std::vector<char> pixelData(bufLen);
   in.read(pixelData.data(), bufLen);
