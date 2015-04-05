@@ -95,20 +95,18 @@ static bunch_name get_bunch_name(const objects_t& objects,
   return bunch_name(space_sep(get_collective_type(objects), command));
 }
 
-// Helper for maybe_stamp_old_selection,
-// SELECTION_TYPE is either sel::Copying or sel::Moving.
-// C++14: Replace with generic lambda.
-template<typename SELECTION_TYPE>
-Command* do_stamp(const SELECTION_TYPE& selection, Command* newCommand){
-  return command_bunch(CommandType::HYBRID,
-    bunch_name(newCommand->Name()),
-    stamp_floating_selection_command(selection),
-    newCommand);
-}
-
 static Command* maybe_stamp_old_selection(Command* newCommand,
   const RasterSelection& currentSelection)
 {
+  auto do_stamp = [newCommand](const auto& selection) -> Command*{
+    // Helper for Selection of type sel::Rectangle or sel::Moving.
+    using namespace faint;
+    return command_bunch(CommandType::HYBRID,
+      bunch_name(newCommand->Name()),
+      stamp_floating_selection_command(selection),
+      newCommand);
+  };
+
   return sel::visit(currentSelection,
     [&](const sel::Empty&){
       return newCommand;
@@ -117,10 +115,10 @@ static Command* maybe_stamp_old_selection(Command* newCommand,
       return newCommand;
     },
     [&](const sel::Moving& s){
-      return do_stamp(s, newCommand);
+      return do_stamp(s);
     },
     [&](const sel::Copying& s){
-      return do_stamp(s, newCommand);
+      return do_stamp(s);
     });
 }
 
