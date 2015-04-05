@@ -97,30 +97,6 @@ static bool gonna_copy(const PosInfo& info){
   return info.modifiers.Primary();
 }
 
-// Helper for move_selected_content, SELECTION_TYPE is either a
-// sel::Moving or sel::Copying.
-// C++14: Replace with generic lambda and pass to visit or add
-// dispatch for sel::Floating
-template<typename SELECTION_TYPE>
-TaskResult move_floating_content(const PosInfo& info,
-  PendingCommand& command,
-  PendingTask& newTask,
-  Settings& settings,
-  const SELECTION_TYPE& s,
-  Canvas& canvas)
-{
-  const bool gonnaCopy(gonna_copy(info));
-  if (gonnaCopy){
-    Command* stamp = stamp_floating_selection_command(s);
-    bunch_name("Clone Selection");
-    command.Set(command_bunch(CommandType::HYBRID,
-        bunch_name("Clone Selection"),
-        stamp, new AppendSelection()));
-  }
-  set_move_task(newTask, gonnaCopy, info, s.TopLeft(), settings, canvas);
-  return gonnaCopy ? TaskResult::COMMIT_AND_CHANGE : TaskResult::CHANGE;
-}
-
 static TaskResult move_selected_content(const PosInfo& info,
   PendingCommand& command,
   PendingTask& newTask,
@@ -128,6 +104,23 @@ static TaskResult move_selected_content(const PosInfo& info,
   Canvas& canvas)
 {
   const RasterSelection& selection = info.canvas.GetRasterSelection();
+
+  auto move_floating_content =
+    [&](const auto& s){
+      // Helper for copying a sel::Moving or sel::Copying.
+      using namespace faint;
+
+      const bool gonnaCopy(gonna_copy(info));
+      if (gonnaCopy){
+        Command* stamp = stamp_floating_selection_command(s);
+        bunch_name("Clone Selection");
+        command.Set(command_bunch(CommandType::HYBRID,
+            bunch_name("Clone Selection"),
+            stamp, new AppendSelection()));
+      }
+      set_move_task(newTask, gonnaCopy, info, s.TopLeft(), settings, canvas);
+      return gonnaCopy ? TaskResult::COMMIT_AND_CHANGE : TaskResult::CHANGE;
+    };
 
   return sel::visit(selection,
     [](const sel::Empty&){
@@ -139,10 +132,10 @@ static TaskResult move_selected_content(const PosInfo& info,
       return TaskResult::CHANGE;
     },
     [&](const sel::Moving& s){
-      return move_floating_content(info, command, newTask, settings, s, canvas);
+      return move_floating_content(s);
     },
     [&](const sel::Copying& s){
-      return move_floating_content(info, command, newTask, settings, s, canvas);
+      return move_floating_content(s);
     });
 }
 
