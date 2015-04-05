@@ -41,28 +41,23 @@ static auto rescale(const utf8_string& unit, const Conversions& conv){
   return std::make_pair(unit, conv / conv[unit].Get());
 }
 
-static const Conversions& get_mm_per(){
+const conversions_map_t& length_conversions(){
   static const Conversions mmPer{{
     {"mm", 1.0},
     {"cm", 10.0},
     {"dm", 100.0},
     {"m", 1000.0},
     {"km", 1000000.0},
-    {"in", 25.4}
-  }};
-  return mmPer;
-}
+    {"in", 25.4}}};
 
-const conversions_map_t& length_conversions(){
-  static const auto& mm = get_mm_per();
   static const conversions_map_t conversions{{
-    {"mm", mm},
-    rescale("cm", mm),
-    rescale("dm", mm),
-    rescale("m", mm),
-    rescale("km", mm),
-    rescale("in", mm)
-    }};
+    {"mm", mmPer},
+    rescale("cm", mmPer),
+    rescale("dm", mmPer),
+    rescale("m", mmPer),
+    rescale("km", mmPer),
+    rescale("in", mmPer)
+  }};
   return conversions;
 }
 
