@@ -409,8 +409,8 @@ void FaintWindowContext::DialogOpenFile(){
   FileList paths = show_open_file_dialog(m_faintWindow.GetRawFrame(),
     Title("Open Image(s)"),
     get_canvas_dir(GetActiveCanvas()),
-    to_wx(combined_file_dialog_filter(utf8_string("Image files"),
-      loading_file_formats(m_faintWindow.GetFileFormats()))));
+    combined_file_dialog_filter(utf8_string("Image files"),
+      loading_file_formats(m_faintWindow.GetFileFormats())));
 
   if (!paths.empty()){
     Load(paths);

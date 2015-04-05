@@ -15,8 +15,8 @@
 
 #ifndef FAINT_GUI_UTIL_HH
 #define FAINT_GUI_UTIL_HH
-#include <initializer_list>
 #include <string>
+#include <vector>
 #include "wx/accel.h"
 #include "wx/defs.h"
 #include "app/resource-id.hh"
@@ -45,9 +45,7 @@ class wxWindow;
 namespace faint{
 class ArtContainer;
 
-wxString bracketed(const wxString&);
-
-void console_message(const wxString&);
+void console_message(const utf8_string&);
 
 // Label or Bitmap button which inhibits the noise on keypress if
 // button has focus
@@ -57,7 +55,7 @@ wxButton* noiseless_button(wxWindow* parent,
   const wxSize&);
 
 wxButton* noiseless_button(wxWindow* parent,
-  const wxString&,
+  const utf8_string&,
   const Tooltip&,
   const wxSize&);
 
@@ -91,8 +89,8 @@ bool ask_exit_unsaved_changes(wxWindow* parent);
 
 void show_copy_color_error(wxWindow* parent);
 
-void show_error(wxWindow* parent, const Title&, const wxString& message);
-void show_error(wxWindow& parent, const Title&, const wxString& message);
+void show_error(wxWindow* parent, const Title&, const utf8_string& message);
+void show_error(wxWindow& parent, const Title&, const utf8_string& message);
 
 // For showing an error message before Faint is fully initialized.
 // Avoids trying to do modal-dialog handling and such.
@@ -102,7 +100,7 @@ bool show_init_error(const Title&, const utf8_string&);
 FileList show_open_file_dialog(wxWindow& parent,
   const Title&,
   const Optional<DirPath>&,
-  const wxString& filter);
+  const utf8_string& filter);
 
 void show_file_not_found_error(wxWindow* parent, const FilePath&);
 

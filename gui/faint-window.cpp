@@ -328,8 +328,7 @@ static bool save(wxWindow* parent,
 {
   SaveResult result = format.Save(filePath, canvas);
   if (result.Failed()){
-    show_error(parent, Title("Failed Saving"),
-      to_wx(result.ErrorDescription()));
+    show_error(parent, Title("Failed Saving"), result.ErrorDescription());
     return false;
   }
   if (!backup){
@@ -861,7 +860,7 @@ void FaintWindow::Open(const FileList& paths){
     for (const FilePath& path : notFound){
       error += path.Str() + "\n";
     }
-    show_error(m_impl->frame.get(), Title("Files not found"), to_wx(error));
+    show_error(m_impl->frame.get(), Title("Files not found"), error);
   }
 }
 

@@ -33,14 +33,10 @@
 
 namespace faint{
 
-wxString bracketed(const wxString& s){
-  return "(" + s + ")";
-}
-
-void console_message(const wxString& text){
+void console_message(const utf8_string& text){
   wxMessageOutput* msgOut = wxMessageOutput::Get();
   assert(msgOut != nullptr);
-  msgOut->Output(text);
+  msgOut->Output(to_wx(text));
 }
 
 wxButton* noiseless_button(wxWindow* parent, const wxBitmap& bmp,
@@ -51,13 +47,13 @@ wxButton* noiseless_button(wxWindow* parent, const wxBitmap& bmp,
   return button;
 }
 
-wxButton* noiseless_button(wxWindow* parent, const wxString& label,
+wxButton* noiseless_button(wxWindow* parent, const utf8_string& label,
   const Tooltip& tooltip,
   const wxSize& size)
 {
   // wxWANTS_CHARS prevents noise on keypress when button has focus
   wxButton* button = new wxButton(parent, wxID_ANY,
-    label, wxDefaultPosition, size,
+    to_wx(label), wxDefaultPosition, size,
     wxWANTS_CHARS);
   button->SetInitialSize(size);
   button->SetToolTip(to_wx(tooltip.Get()));
@@ -160,15 +156,15 @@ void show_copy_color_error(wxWindow* parent){
   show_modal(dlg);
 }
 
-void show_error(wxWindow* parent, const Title& title, const wxString& message){
+void show_error(wxWindow* parent, const Title& title, const utf8_string& message){
   wxMessageDialog dlg(parent,
-    message,
+    to_wx(message),
     to_wx(title.Get()),
     wxOK|wxICON_ERROR);
   show_modal(dlg);
 }
 
-void show_error(wxWindow& parent, const Title& title, const wxString& message){
+void show_error(wxWindow& parent, const Title& title, const utf8_string& message){
   show_error(&parent, title, message);
 }
 
@@ -182,10 +178,10 @@ bool show_init_error(const Title& title, const utf8_string& message){
 }
 
 static void show_warning(wxWindow* parent, const Title& title,
-  const wxString& message)
+  const utf8_string& message)
 {
   wxMessageDialog dlg(parent,
-    message,
+    to_wx(message),
     to_wx(title.Get()),
     wxOK|wxICON_WARNING);
   show_modal(dlg);
@@ -217,22 +213,21 @@ void show_load_failed_error(wxWindow* parent, const FilePath& file,
 }
 
 void show_load_warnings(wxWindow* parent, const ImageProps& props){
-  wxString warnings;
+  utf8_string warnings;
   for (int i = 0; i != props.GetNumWarnings() && i < 10; i++){
-    warnings += to_wx(props.GetWarning(i)) + "\n";
+    warnings += (props.GetWarning(i) + "\n");
   }
-  show_warning(parent, Title("Warning"),
-    warnings);
+  show_warning(parent, Title("Warning"), warnings);
 }
 
 FileList show_open_file_dialog(wxWindow& parent, const Title& title,
-  const Optional<DirPath>& initialPath, const wxString& filter)
+  const Optional<DirPath>& initialPath, const utf8_string& filter)
 {
   wxFileDialog fd(&parent,
     to_wx(title.Get()),
     initialPath.IsSet() ? to_wx(initialPath.Get().Str()) : wxString(""),
     wxString(""), // Default file
-    filter,
+    to_wx(filter),
     wxFD_OPEN | wxFD_MULTIPLE | wxFD_CHANGE_DIR | wxFD_FILE_MUST_EXIST);
   if (show_modal(fd) == wxID_OK){
     wxArrayString paths;

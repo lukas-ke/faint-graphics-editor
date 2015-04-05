@@ -257,8 +257,8 @@ public:
     m_cmd.scriptPath = make_absolute_file_path(scriptPath);
 
     if (!valid_port(m_cmd.port.str())){
-      console_message("Error: Invalid port specified " +
-        bracketed(m_cmd.port.str()));
+      console_message(space_sep("Error: Invalid port specified",
+        bracketed(m_cmd.port.str().c_str())));
       return false;
     }
 
@@ -272,8 +272,9 @@ public:
       const wxString param(parser.GetParam(i));
       wxFileName absPath(absoluted(wxFileName(param)));
       if (absPath.IsDir()){
-        console_message(wxString("Error: Folder path specified on command "
-            "line - image path expected (") + param + ").");
+        console_message(space_sep(
+          "Error: Folder path specified on command line - image path expected",
+          bracketed(to_faint(param))));
         return false;
       }
       m_cmd.files.push_back(FilePath::FromAbsoluteWx(absPath));
@@ -390,16 +391,15 @@ public:
   void RunScript(const FilePath& scriptPath){
     if (!exists(scriptPath)){
       if (m_cmd.silentMode){
-        console_message(to_wx(space_sep(utf8_string(
+        console_message(space_sep(utf8_string(
           "Python file specified with --run not found:"),
-          scriptPath.Str())));
+          scriptPath.Str()));
       }
       else {
         show_error(m_faintWindow->GetRawFrame(),
           Title("Script not found"),
-          to_wx(endline_sep(
-            utf8_string("Python file specified with --run not found:"),
-            scriptPath.Str())));
+          endline_sep("Python file specified with --run not found:",
+            scriptPath.Str()));
       }
     }
     else {
@@ -407,7 +407,7 @@ public:
         [&](const FaintPyExc& err){
           const utf8_string errStr(format_run_script_error(scriptPath, err));
           if (m_cmd.silentMode){
-            console_message(to_wx(errStr));
+            console_message(errStr);
           }
           else{
             m_pythonContext->IntFaintPrint(errStr);
