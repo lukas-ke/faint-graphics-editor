@@ -79,7 +79,6 @@ static Bitmap read_bmp_or_throw(const FilePath& filePath){
     throw ReadBmpError(error_open_file_read(filePath));
   }
 
-  // Fixme: Handle eof
   auto bitmapFileHeader = read_struct_or_throw<BitmapFileHeader>(in);
 
   // Fixme: Again reversed. Split into bytes
@@ -90,7 +89,6 @@ static Bitmap read_bmp_or_throw(const FilePath& filePath){
   auto bitmapInfoHeader = read_struct_or_throw<BitmapInfoHeader>(in);
 
   if (invalid_header_length(bitmapInfoHeader.headerLen)){
-    // Fixme: Won't happen, might be greater than 40 though.
     throw ReadBmpError(error_truncated_bmp_header(0, bitmapInfoHeader.headerLen));
   }
 
@@ -165,7 +163,7 @@ SaveResult write_bmp(const FilePath& filePath,
   const int rowStride = bmp_row_stride(bpp, size.w);
 
   write_struct(out, create_bitmap_file_header(quality, rowStride, size.h));
-  write_struct(out, create_bitmap_info_header(bmp, bpp, false));
+  write_struct(out, create_bitmap_info_header(bmp.GetSize(), bpp, false));
 
   switch(quality){
     // Note: No default, to ensure warning if unhandled enum value
@@ -178,7 +176,7 @@ SaveResult write_bmp(const FilePath& filePath,
     return SaveResult::SaveSuccessful();
 
   case BitmapQuality::COLOR_24BIT:
-    write_24bpp_BI_RGB(out, bmp); // Fixme
+    write_24bpp_BI_RGB(out, bmp);
     return SaveResult::SaveSuccessful();
   }
 

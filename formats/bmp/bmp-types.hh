@@ -23,6 +23,7 @@
 #include "util/deserialize-tuple.hh"
 #include "util/hot-spot.hh"
 #include "util/serialize-tuple.hh"
+#include "util/distinct.hh"
 
 namespace faint {
 
@@ -53,6 +54,8 @@ enum class Compression : uint32_t {
 // Returns the compression name (e.g. "BI_RGB") - or "Unknown" if
 // invalid.
 const char* enum_str(Compression);
+
+const int BITMAPINFOHEADER_LENGTH = 40;
 
 class BitmapInfoHeader{
   // A Windows BITMAPINFOHEADER (a.k.a. DIB-header).
@@ -111,10 +114,7 @@ void set_size(IconDirEntry&, const IntSize& size);
 HotSpot get_hot_spot(const IconDirEntry&);
 void set_hot_spot(IconDirEntry&, const HotSpot&);
 
-// Fixme: Move these somewhere else
-class Bitmap; // Fixme
-
-BitmapInfoHeader create_bitmap_info_header(const Bitmap& bmp,
+BitmapInfoHeader create_bitmap_info_header(const IntSize&,
   uint16_t bpp,
   bool andMap);
 

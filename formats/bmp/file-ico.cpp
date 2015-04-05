@@ -371,7 +371,7 @@ static std::vector<BitmapInfoHeader> create_bitmap_headers(const ico_vec& bitmap
           pngStrIter->second.size()));
     }
     else {
-      v.push_back(create_bitmap_info_header(p.first, 32, true));
+      v.push_back(create_bitmap_info_header(p.first.GetSize(), 32, true));
     }
   }
   return v;
@@ -380,7 +380,7 @@ static std::vector<BitmapInfoHeader> create_bitmap_headers(const ico_vec& bitmap
 static std::vector<BitmapInfoHeader> create_bitmap_headers(const cur_vec& cursors){
   std::vector<BitmapInfoHeader> v;
   for (const auto& c : cursors){
-    v.push_back(create_bitmap_info_header(c.first, 32, true));
+    v.push_back(create_bitmap_info_header(c.first.GetSize(), 32, true));
   }
   return v;
 }

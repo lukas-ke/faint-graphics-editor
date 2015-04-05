@@ -14,9 +14,7 @@
 // permissions and limitations under the License.
 
 #include <cassert>
-#include "bitmap/bitmap.hh" // Fixme
 #include "formats/bmp/bmp-types.hh"
-#include "formats/bmp/file-bmp.hh" // Fixme
 
 namespace faint{
 
@@ -68,18 +66,16 @@ void set_hot_spot(IconDirEntry& e, const HotSpot& p){
   e.bpp = static_cast<uint16_t>(p.y); // Fixme: Error check
 }
 
-BitmapInfoHeader create_bitmap_info_header(const Bitmap& bmp, uint16_t bpp,
+
+BitmapInfoHeader create_bitmap_info_header(const IntSize& size, uint16_t bpp,
   bool andMap)
 {
   BitmapInfoHeader h;
-  h.headerLen = 40; // Fixme
-  IntSize bmpSize = bmp.GetSize();
-  h.width = bmpSize.w;
-  h.height = bmpSize.h;
-  if (andMap){
-    // Double height in bitmap header for some reason
-    h.height *= 2;
-  }
+  h.headerLen = BITMAPINFOHEADER_LENGTH;
+  h.width = size.w;
+
+  // Double height in bitmap header with andMap for some reason
+  h.height = andMap ? 2*size.h : size.h;
   h.colorPlanes = 1;
   h.bpp = bpp;
   h.compression = Compression::BI_RGB;
