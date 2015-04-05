@@ -109,13 +109,21 @@ public:
 };
 
 IntSize get_size(const IconDirEntry&);
-void set_size(IconDirEntry&, const IntSize& size);
 
-// Cursors only.
+// Sets the size for the entry.
+// Note: Asserts if the width or height is > 256
+void set_size(IconDirEntry&, const IntSize&);
+
+// Cursors only: Gets the hot-spot for this entry.
 HotSpot get_hot_spot(const IconDirEntry&);
-void set_hot_spot(IconDirEntry&, const HotSpot&);
+
+// Cursors only: Sets the hot-spot for this entry
+// Returns true if successful, false if the HotSpot was out of range.
+// - When the hot-spot is out of range, it is set to 0, 0
+bool set_hot_spot(IconDirEntry&, const HotSpot&);
 
 class category_bmp_types;
+
 // Dots-per-inch data type
 using DPI = Distinct<int, category_bmp_types, 0>;
 

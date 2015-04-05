@@ -15,6 +15,7 @@
 
 #include <cassert>
 #include "formats/bmp/bmp-types.hh"
+#include "geo/limits.hh"
 
 namespace faint{
 
@@ -48,7 +49,7 @@ IntSize get_size(const IconDirEntry& e){
 }
 
 static uint8_t to_icon_measure(int value){
-  assert(value <= 256); // Fixme: Proper error handling
+  assert(value <= 256);
   return value == 256 ? 0 : static_cast<uint8_t>(value);
 }
 
@@ -61,9 +62,20 @@ HotSpot get_hot_spot(const IconDirEntry& e){
   return HotSpot(e.colorPlanes, e.bpp);
 }
 
-void set_hot_spot(IconDirEntry& e, const HotSpot& p){
-  e.colorPlanes = static_cast<uint16_t>(p.x); // Fixme: Error check
-  e.bpp = static_cast<uint16_t>(p.y); // Fixme: Error check
+bool set_hot_spot(IconDirEntry& e, const HotSpot& p){
+  const bool validHotspot =
+    can_represent<decltype(IconDirEntry::colorPlanes)>(p.x) &&
+    can_represent<decltype(IconDirEntry::bpp)>(p.y);
+  if (validHotspot){
+    e.colorPlanes = convert(p.x);
+    e.bpp = convert(p.y);
+    return true;
+  }
+  else{
+    e.colorPlanes = 0;
+    e.bpp = 0;
+    return false;
+  }
 }
 
 static int32_t to_pixels_per_meter(const DPI& dpi){
