@@ -41,37 +41,28 @@ static auto rescale(const utf8_string& unit, const Conversions& conv){
   return std::make_pair(unit, conv / conv[unit].Get());
 }
 
-static Conversions get_mm_per(){
-  // \def(err2) C++11: Initializer list crashes with VC2013;
-  // https://connect.microsoft.com/VisualStudio/feedback/details/800364/initializer-list-calls-object-destructor-twice
-  // See Faint r4469 for desired (but currently crashing) implementation.
-  //
-  // Edit: I can use some initializer lists for maps with VC2015, but
-  // the conversion unit tests fail if I try to return a reference to a static
-  // object initialized with an initializer list.
-  return Conversions{{
+static const Conversions& get_mm_per(){
+  static const Conversions mmPer{{
     {"mm", 1.0},
     {"cm", 10.0},
     {"dm", 100.0},
     {"m", 1000.0},
     {"km", 1000000.0},
-    {"in", 25.4}}};
-}
-
-static conversions_map_t init_conversions(){
-  const auto mm = get_mm_per();
-  return {
-    {"mm", mm},
-    {rescale("cm", mm)},
-    {rescale("dm", mm)},
-    {rescale("m", mm)},
-    {rescale("km", mm)},
-    {rescale("in", mm)}};
+    {"in", 25.4}
+  }};
+  return mmPer;
 }
 
 const conversions_map_t& length_conversions(){
-  // \ref(err2)
-  static conversions_map_t conversions(init_conversions());
+  static const auto& mm = get_mm_per();
+  static const conversions_map_t conversions{{
+    {"mm", mm},
+    rescale("cm", mm),
+    rescale("dm", mm),
+    rescale("m", mm),
+    rescale("km", mm),
+    rescale("in", mm)
+    }};
   return conversions;
 }
 
