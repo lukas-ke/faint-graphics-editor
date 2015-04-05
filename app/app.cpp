@@ -40,6 +40,7 @@
 #include "util-wx/file-path-util.hh"
 #include "util-wx/gui-util.hh"
 #include "util-wx/key-codes.hh"
+#include "util/exception.hh"
 #include "util/optional.hh"
 #include "util/paint-map.hh"
 #include "util/settings.hh"
@@ -319,7 +320,13 @@ public:
 
     wxInitAllImageHandlers();
     m_art.SetRoot(get_data_dir().SubDir("graphics"));
-    load_faint_resources(m_art);
+    try{
+      load_faint_resources(m_art);
+    }
+    catch (const Exception& e){
+      return show_init_error(Title("Faint Crashed"),
+        endline_sep("Faint crashed!\n", "...while loading resources.", e.What()));
+    }
 
     // Create frames and restore their states from the last run
     m_interpreterFrame = std::make_unique<InterpreterFrame>();
@@ -344,11 +351,10 @@ public:
 
     bool ok = init_python(m_cmd.arg);
     if (!ok){
-      show_error(null_parent(), Title("Faint Internal Error"),
+      return show_init_error(Title("Faint Internal Error"),
         "Faint crashed!\n\n...while running envsetup.py");
       // Fixme: Previously deleted m_faintWindow here, when it was a wxFrame.
       // Must the frame be deleted on error if before SetTopWindow?
-      return false;
     }
 
     if (!m_cmd.silentMode){
@@ -389,8 +395,11 @@ public:
           scriptPath.Str())));
       }
       else {
-        show_error(null_parent(), Title("Script not found"),
-          to_wx(endline_sep(utf8_string("Python file specified with --run not found:"), scriptPath.Str())));
+        show_error(m_faintWindow->GetRawFrame(),
+          Title("Script not found"),
+          to_wx(endline_sep(
+            utf8_string("Python file specified with --run not found:"),
+            scriptPath.Str())));
       }
     }
     else {

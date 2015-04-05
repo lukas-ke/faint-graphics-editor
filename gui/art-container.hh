@@ -29,7 +29,7 @@ class ArtContainer{
   // icons, buttons). Supports setting a root path for interpreting
   // relative paths.
 public:
-  ArtContainer();
+  ArtContainer() = default;
   wxBitmap Get(Icon id) const;
   const wxCursor& Get(Cursor id) const;
   void Load(const wxString& filename, Cursor id);

@@ -92,6 +92,12 @@ bool ask_exit_unsaved_changes(wxWindow* parent);
 void show_copy_color_error(wxWindow* parent);
 
 void show_error(wxWindow* parent, const Title&, const wxString& message);
+void show_error(wxWindow& parent, const Title&, const wxString& message);
+
+// For showing an error message before Faint is fully initialized.
+// Avoids trying to do modal-dialog handling and such.
+// Always returns 'false' for convenience.
+bool show_init_error(const Title&, const utf8_string&);
 
 FileList show_open_file_dialog(wxWindow& parent,
   const Title&,

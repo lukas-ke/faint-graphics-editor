@@ -20,8 +20,10 @@
 #include "bitmap/bitmap.hh"
 #include "formats/bmp/file-cur.hh"
 #include "gui/art-container.hh"
+#include "text/formatting.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-path.hh"
+#include "util/exception.hh"
 
 namespace faint{
 
@@ -31,9 +33,6 @@ static wxCursor cur_from_bmp(const wxBitmap& bmp, const HotSpot& hotSpot){
   img.SetOption(wxIMAGE_OPTION_CUR_HOTSPOT_Y, hotSpot.y);
   img.SetMaskColour(255, 0, 255);
   return wxCursor(img);
-}
-
-ArtContainer::ArtContainer(){
 }
 
 wxBitmap ArtContainer::Get(Icon iconId) const{
@@ -57,14 +56,29 @@ void ArtContainer::Load(const wxString& filename, Icon iconId){
   if (fn_filename.IsRelative()){
     fn_filename.MakeAbsolute(m_rootPath);
   }
-  assert(fn_filename.FileExists());
+
+  if (!fn_filename.FileExists()){
+    throw Exception(lbl("Missing icon", to_faint(filename)));
+  }
 
   wxImage image(fn_filename.GetLongPath(), wxBITMAP_TYPE_ANY);
-  assert(image.IsOk());
+  if (!image.IsOk()){
+    throw Exception(lbl("Failed loading icon", to_faint(filename)));
+  }
+
   if (image.HasMask() && !image.HasAlpha()){
     image.InitAlpha();
   }
   m_icons[iconId] = wxBitmap(image);
+}
+
+static void throw_unless_single_frame(const cur_vec& cursors,
+  const wxString& filename)
+{
+  if (cursors.size() != 1){
+    throw Exception(space_sep("Cursor", to_faint(filename),
+      "has", str_uint(cursors.size()), "frames - expected 1."));
+  }
 }
 
 void ArtContainer::Load(const wxString& filename, Cursor cursorId){
@@ -72,18 +86,23 @@ void ArtContainer::Load(const wxString& filename, Cursor cursorId){
   if (fn_filename.IsRelative()){
     fn_filename.MakeAbsolute(m_rootPath);
   }
-  assert(fn_filename.FileExists());
-  assert(fn_filename.GetExt() == "cur");
+  if (!fn_filename.FileExists()){
+    throw Exception(lbl("Missing cursor", to_faint(filename)));
+  }
+  if (fn_filename.GetExt() != "cur"){
+    throw Exception(space_sep("Cursor file-name", bracketed(to_faint(filename)),
+      "does not end with .cur"));
+  }
 
   auto result = read_cur(FilePath::FromAbsoluteWx(fn_filename));
   result.Visit(
     [&](const cur_vec& cursors){
-      assert(cursors.size() == 1); // Fixme: Add proper error handling
+      throw_unless_single_frame(cursors, filename);
       const auto& c = cursors.back();
       m_cursors[cursorId] = cur_from_bmp(to_wx_bmp(c.first), c.second);
     },
-    [](const utf8_string&){
-      assert(false); // Fixme: Add proper error handling
+    [](const utf8_string& err){
+      throw Exception(err);
     });
 }
 

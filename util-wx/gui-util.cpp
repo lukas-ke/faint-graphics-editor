@@ -168,6 +168,19 @@ void show_error(wxWindow* parent, const Title& title, const wxString& message){
   show_modal(dlg);
 }
 
+void show_error(wxWindow& parent, const Title& title, const wxString& message){
+  show_error(&parent, title, message);
+}
+
+bool show_init_error(const Title& title, const utf8_string& message){
+  wxMessageDialog dlg(nullptr,
+    to_wx(message),
+    to_wx(title.Get()),
+    wxOK|wxICON_ERROR);
+  dlg.ShowModal();
+  return false;
+}
+
 static void show_warning(wxWindow* parent, const Title& title,
   const wxString& message)
 {

@@ -13,23 +13,28 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_BITMAP_EXCEPTION_HH
-#define FAINT_BITMAP_EXCEPTION_HH
 #include "util/exception.hh"
 
 namespace faint{
 
-class BitmapException : public Exception{
-public:
-  using Exception::Exception;
-  BitmapException() = delete;
-};
+Exception::Exception(utf8_string&& str) noexcept
+  : m_str(std::move(str))
+{}
 
-class BitmapOutOfMemory : public BitmapException{
-  using BitmapException::BitmapException;
-  BitmapOutOfMemory() = delete;
-};
+Exception::Exception(const utf8_string& str)
+  : m_str(str)
+{}
+
+Exception::Exception(const char* str)
+  : m_str(str)
+{}
+
+const utf8_string& Exception::What() const noexcept{
+  return m_str;
+}
+
+const char* Exception::what() const noexcept{
+  return m_str.c_str();
+}
 
 } // namespace
-
-#endif
