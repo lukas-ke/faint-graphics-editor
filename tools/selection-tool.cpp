@@ -101,7 +101,8 @@ public:
   }
 
   ToolResult Preempt(const PosInfo& info) override{
-    // Fixme: Must both be preempted? :-/
+    // Preempting only the active selection tool (i.e. either raster
+    // or object) seems to be enough.
     return m_activeTool->Preempt(info);
   }
 
