@@ -22,6 +22,7 @@ namespace faint{
 
 const int panel_padding = 10;
 const int item_spacing = 10;
+const int small_item_spacing = 5;
 constexpr IntSize big_button_size(85, 100);
 const int labelSpacing = 10;
 
