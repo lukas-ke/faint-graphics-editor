@@ -62,15 +62,15 @@ Tri::Tri(const Point& p0, const Point& p1, const Point& p2)
     m_p2(p2)
 {}
 
-Angle Tri::GetAngle() const {
+Angle Tri::GetAngle() const{
   return line_angle({m_p0, m_p1});
 }
 
-coord Tri::Width() const {
+coord Tri::Width() const{
   return distance(m_p0, m_p1);
 }
 
-coord Tri::Height() const {
+coord Tri::Height() const{
   Angle angle1 = line_angle({m_p0, m_p1});
   Angle angle2 = line_angle({m_p0, m_p2});
   Angle angle3 = angle1 + pi / 2.0;
@@ -92,22 +92,25 @@ coord Tri::Skew() const{
 }
 
 bool Tri::operator==(const Tri& other) const{
-  return m_p0 == other.m_p0 && m_p1 == other.m_p1 && m_p2 == other.m_p2;
+  return
+    m_p0 == other.m_p0 &&
+    m_p1 == other.m_p1 &&
+    m_p2 == other.m_p2;
 }
 
-Point Tri::P0() const {
+Point Tri::P0() const{
   return m_p0;
 }
 
-Point Tri::P1() const {
+Point Tri::P1() const{
   return m_p1;
 }
 
-Point Tri::P2() const {
+Point Tri::P2() const{
   return m_p2;
 }
 
-Point Tri::P3() const {
+Point Tri::P3() const{
   const coord dx = Width();
   const Angle angle(GetAngle());
   return m_p2 + Point(dx * cos(angle), dx * sin(angle));
