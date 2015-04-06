@@ -87,7 +87,6 @@ coord Tri::Height() const {
 }
 
 coord Tri::Skew() const{
-  // Fixme: Is -GetAngle correct (considering normalization etc)
   Point p0 = rotate_point(m_p0, -GetAngle(), m_p2);
   return p0.x - m_p2.x;
 }
