@@ -110,7 +110,7 @@ public:
 
     const utf8_string intrinsicUnit(IntrinsicUnit(wantedUnit));
 
-    const faint::coord value = intrinsicUnit == "px" ?
+    const faint::coord value = intrinsicUnit == unit_px ?
       pixels :
       ctx.GetCalibration().Visit(
         [&](const Calibration& c) -> coord{
@@ -173,7 +173,7 @@ private:
     const conversions_map_t& c) const override
   {
     if (!ends(unit, with("2"))){
-      if (unit != "px" && c.find(unit) == end(c)){
+      if (unit != unit_px && c.find(unit) == end(c)){
         throw ExpressionEvalError(space_sep("Unknown unit:", unit + "."));
       }
       else{
@@ -184,6 +184,8 @@ private:
   }
 
   utf8_string IntrinsicUnit(const utf8_string& unit) const override{
+    assert(!unit.empty());
+
     // Strip "2" (for square)., e.g. mm2->mm
     return unit.substr(0, unit.size() - 1);
   }
@@ -203,7 +205,7 @@ private:
   {
     if (ends(unit, with("2"))){
       auto desquared(unit.substr(0, unit.size() - 1));
-      if (desquared != "px" && c.find(desquared) == end(c)){
+      if (desquared != unit_px && c.find(desquared) == end(c)){
         throw ExpressionEvalError(space_sep("Unknown unit:", unit + "."));
       }
       else{

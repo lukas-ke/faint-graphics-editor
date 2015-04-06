@@ -21,6 +21,7 @@
 #include "gui/spin-ctrl.hh"
 #include "gui/tool-setting-ctrl.hh"
 #include "gui/tool-setting-panel.hh"
+#include "text/text-expression-conversions.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/layout-wx.hh"
 #include "util/setting-id.hh"
@@ -31,7 +32,7 @@ namespace faint{
 class TestStringSource : public StringSource{
 public:
   std::vector<utf8_string> Get() const override{
-    return {"px", "mm", "cm", "m"}; // Fixme: Not here, and base on calibration
+    return {unit_px, "mm", "cm", "m"}; // Fixme: Not here, and base on calibration
   }
 };
 

@@ -22,6 +22,8 @@
 
 namespace faint{
 
+constexpr auto unit_px = "px";
+
 using unit_map_t = std::map<utf8_string, coord>;
 
 class Conversions{

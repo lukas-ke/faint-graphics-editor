@@ -17,6 +17,7 @@
 #include "util-wx/font.hh"
 #include "util/default-settings.hh"
 #include "util/setting-id.hh"
+#include "text/text-expression-conversions.hh" // for unit_px
 
 namespace faint{
 
@@ -159,7 +160,7 @@ Settings init_default_tool_settings(){
   s.Set(ts_PolyLine, false);
   s.Set(ts_SwapColors, false);
   s.Set(ts_TapeStyle, TapeMeasureStyle::LINE);
-  s.Set(ts_Unit, "px");
+  s.Set(ts_Unit, unit_px);
   return s;
 }
 

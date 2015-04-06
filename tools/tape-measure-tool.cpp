@@ -42,6 +42,28 @@ static Tri get_tape_text_tri(const LineSegment& l){
   return {mid_point(l), Angle::Zero(), Size(100,100)};
 }
 
+coord get_distance_scaling(const utf8_string& unit, const Calibration& c){
+  if (unit == unit_px){
+    return 1.0;
+  }
+  else {
+    const auto& conversions = length_conversions();
+    auto it = conversions.find(unit);
+    if (it == end(conversions)){
+      return 1.0;
+    }
+    else{
+      return it->second[unit].Visit(
+        [&](coord calibratedToWanted){
+          return calibratedToWanted / c.Scale();
+        },
+        [](){
+          return 1.0;
+        });
+    }
+  }
+}
+
 class TapeMeasureTool : public StandardTool {
 public:
   TapeMeasureTool(const Settings& allSettings)
@@ -54,37 +76,15 @@ public:
       return;
     }
 
-    // Fixme: Simplify
-
-    auto line = m_editor.GetLine();
-    overlays.Line(line);
-
+    const auto line = m_editor.GetLine();
     const auto& settings = GetSettings();
 
-    auto& conversions = length_conversions();
-    utf8_string unit = settings.Get(ts_Unit);
     Calibration c = get_calibration(info).Or(Calibration());
-    if (c.unit.empty()){
-      unit = "px";
-    }
+    utf8_string unit = c.unit.empty() ? utf8_string(unit_px) :
+      settings.Get(ts_Unit);
+    const coord sc = get_distance_scaling(unit, c);
 
-    coord sc = 1.0;
-    if (unit == "px"){
-      sc = 1.0;
-    }
-    else {
-      auto it = conversions.find(unit);
-      if (it == end(conversions)){
-        sc = 1.0;
-      }
-      else{
-        it->second[c.unit].Visit(
-          [&](coord calibratedToWanted){
-            sc = calibratedToWanted / c.Scale();
-          });
-      }
-    }
-
+    overlays.Line(line);
     overlays.Text(mid_point(line),
       space_sep(str(length(line) * sc, 2_dec), unit));
 
@@ -92,6 +92,8 @@ public:
       return;
     }
 
+    // Draw the side-lines
+    // Fixme: Simplify
     Rect r(bounding_rect(line));
     if (line.p0.x < line.p1.x){
       if (line.p0.y < line.p1.y){
