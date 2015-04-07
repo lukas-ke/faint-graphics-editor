@@ -247,9 +247,6 @@ bmp_vec read_ico_or_throw(const FilePath& filePath){
         auto bmp = or_throw(read_4bpp_ico(in, imageSize), onErrorImage);
         bitmaps.emplace_back(bmp);
       }
-      else if (bmpHeader.bpp == 8){
-        bitmaps.emplace_back(IntSize(10,10), color_white); // Fixme
-      }
       else if (bmpHeader.bpp == 32){
         auto bmp = or_throw(ico_read_32bpp_BI_RGB(in, imageSize), onErrorImage);
         bitmaps.emplace_back(std::move(bmp));
