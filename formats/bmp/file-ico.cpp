@@ -77,29 +77,6 @@ static void test_icon_dir_common(const IconDir& dir){
   }
 }
 
-static void test_icon_dir_ico(const IconDir& dir){
-  test_icon_dir_common(dir);
-  if (dir.imageType == IconType::CUR){
-    throw ReadBmpError(error_icon_is_cursor());
-  }
-  if (dir.imageType != IconType::ICO){
-    throw ReadBmpError(error_unknown_image_type(dir.imageType));
-  }
-}
-
-static void test_icon_dir_cur(const IconDir& dir){
-  test_icon_dir_common(dir);
-  if (dir.imageType == IconType::ICO){
-    throw ReadBmpError(error_cursor_is_icon());
-  }
-  if (dir.imageType != IconType::CUR){
-    throw ReadBmpError(error_unknown_image_type(dir.imageType));
-  }
-  if (dir.imageCount == 0){
-    throw ReadBmpError(error_no_images());
-  }
-}
-
 static auto read_icon_dir_entries(BinaryReader& in, int numIcons){
   assert(numIcons >= 0);
   std::vector<IconDirEntry> v;
@@ -206,7 +183,58 @@ static Optional<Bitmap> ico_read_png(BinaryReader& in, int len){
   return from_png(v.data(), to_size_t(len));
 }
 
-bmp_vec read_ico_or_throw(const FilePath& filePath){
+class Ico{
+public:
+  using ResultType = bmp_vec;
+  static auto error_bmp_data(size_t i){
+    return error_bmp_data_ico(i);
+  }
+
+  static void add(ResultType& v, Bitmap&& bmp, const IconDirEntry&){
+    v.emplace_back(std::move(bmp));
+  }
+
+  static void test_icon_dir(const IconDir& dir){
+    test_icon_dir_common(dir);
+    if (dir.imageType == IconType::CUR){
+      throw ReadBmpError(error_icon_is_cursor());
+    }
+    if (dir.imageType != IconType::ICO){
+      throw ReadBmpError(error_unknown_image_type(dir.imageType));
+    }
+  }
+};
+
+class Cur{
+public:
+  using ResultType = cur_vec;
+  static auto error_bmp_data(size_t i){
+    return error_bmp_data_cur(i);
+  }
+
+  static void add(ResultType& v, Bitmap&& bmp, const IconDirEntry& iconDirEntry){
+    v.emplace_back(std::make_pair(std::move(bmp), get_hot_spot(iconDirEntry)));
+  }
+
+  static void test_icon_dir(const IconDir& dir){
+    test_icon_dir_common(dir);
+    if (dir.imageType == IconType::ICO){
+      throw ReadBmpError(error_cursor_is_icon());
+    }
+    if (dir.imageType != IconType::CUR){
+      throw ReadBmpError(error_unknown_image_type(dir.imageType));
+    }
+    if (dir.imageCount == 0){
+      throw ReadBmpError(error_no_images());
+    }
+  }
+};
+
+// Reads the specified BmpType (either Cur or Ico).
+// Throws ReadBmpError on failure, otherwise returns a vector of cursors
+// or icons (as determined by BmpType::ResultType).
+template<typename BmpType>
+typename BmpType::ResultType read_or_throw(const FilePath& filePath){
   BinaryReader in(filePath);
   if (!in.good()){
     throw ReadBmpError(error_open_file_read(filePath));
@@ -216,13 +244,14 @@ bmp_vec read_ico_or_throw(const FilePath& filePath){
   if (!in.good()){
     throw ReadBmpError(error_premature_eof("ICONDIR"));
   }
-  test_icon_dir_ico(iconDir);
+
+  BmpType::test_icon_dir(iconDir);
   auto iconEntries(read_icon_dir_entries(in, iconDir.imageCount));
   if (!in.good()){
     throw ReadBmpError("ICONDIRENTRY");
   }
 
-  bmp_vec bitmaps;
+  BmpType::ResultType bitmaps;
   for (size_t i = 0; i != iconEntries.size(); i++){
     IconDirEntry& iconDirEntry = iconEntries[i];
     in.seekg(iconDirEntry.offset);
@@ -233,26 +262,28 @@ bmp_vec read_ico_or_throw(const FilePath& filePath){
     if (peek_png_signature(in, i)){
       auto bmp = or_throw(ico_read_png(in, iconDirEntry.bytes),
         [i](){return error_truncated_png_data(Index(i));});
-      bitmaps.emplace_back(std::move(bmp));
+      BmpType::add(bitmaps, std::move(bmp), iconDirEntry);
     }
     else {
-      const auto on_error_image = [i](){return error_bmp_data_ico(i);};
-      const IntSize imageSize(get_size(iconDirEntry));
+      const auto on_error_image = [i](){
+        return BmpType::error_bmp_data(i);
+      };
 
       auto bmpHeader = read_struct_or_throw<BitmapInfoHeader>(in);
       test_bitmap_header(i, bmpHeader);
+      const IntSize imageSize(get_size(iconDirEntry));
 
       if (bmpHeader.bpp == 1){
         auto bmp = or_throw(read_1bpp_ico(in, imageSize), on_error_image);
-        bitmaps.emplace_back(bmp);
+        BmpType::add(bitmaps, std::move(bmp), iconDirEntry);
       }
       else if (bmpHeader.bpp == 4){
         auto bmp = or_throw(read_4bpp_ico(in, imageSize), on_error_image);
-        bitmaps.emplace_back(bmp);
+        BmpType::add(bitmaps, std::move(bmp), iconDirEntry);
       }
       else if (bmpHeader.bpp == 32){
         auto bmp = or_throw(ico_read_32bpp_BI_RGB(in, imageSize), on_error_image);
-        bitmaps.emplace_back(std::move(bmp));
+        BmpType::add(bitmaps, std::move(bmp), iconDirEntry);
       }
       else {
         throw ReadBmpError(error_bpp(i, bmpHeader.bpp));
@@ -264,77 +295,16 @@ bmp_vec read_ico_or_throw(const FilePath& filePath){
 
 OrError<bmp_vec> read_ico(const FilePath& filePath){
   try {
-    return read_ico_or_throw(filePath);
+    return read_or_throw<Ico>(filePath);
   }
   catch (const ReadBmpError& e){
     return e.message;
   }
 }
 
-static cur_vec read_cur_or_throw(const FilePath& filePath){
-  // Fixme: Mostly duplicates read_ico_or_throw
-
-  BinaryReader in(filePath);
-  if (!in.good()){
-    throw ReadBmpError(error_open_file_read(filePath));
-  }
-
-  auto cursorDir = read_struct_or_throw<IconDir>(in);
-  if (!in.good()){
-    throw ReadBmpError(error_premature_eof("ICONDIR"));
-  }
-
-  test_icon_dir_cur(cursorDir);
-  auto iconDirEntries = read_icon_dir_entries(in, cursorDir.imageCount);
-  if (!in.good()){
-    throw ReadBmpError(error_premature_eof("ICONDIRENTRY"));
-  }
-
-  cur_vec cursors;
-  for (size_t i = 0; i != iconDirEntries.size(); i++){
-    IconDirEntry& iconDirEntry = iconDirEntries[i];
-    in.seekg(iconDirEntry.offset);
-    if (!in.good() || in.eof()){
-      throw ReadBmpError(error_read_to_offset(i, iconDirEntry.offset));
-    }
-
-    auto hotSpot(get_hot_spot(iconDirEntry));
-
-    if (peek_png_signature(in, i)){
-      auto bmp = or_throw(ico_read_png(in, iconDirEntry.bytes),
-        [i](){return error_truncated_png_data(Index(i));});
-      cursors.emplace_back(std::make_pair(std::move(bmp), hotSpot));
-    }
-    else {
-      const auto on_error_image = [i](){return error_bmp_data_cur(i);};
-      const IntSize imageSize(get_size(iconDirEntry));
-
-      auto bmpHeader = read_struct_or_throw<BitmapInfoHeader>(in);
-      test_bitmap_header(i, bmpHeader);
-
-      if (bmpHeader.bpp == 1){
-        auto bmp = or_throw(read_1bpp_ico(in, imageSize), on_error_image);
-        cursors.emplace_back(bmp, hotSpot);
-      }
-      else if (bmpHeader.bpp == 4){
-        auto bmp = or_throw(read_4bpp_ico(in, imageSize), on_error_image);
-        cursors.emplace_back(bmp, hotSpot);
-      }
-      else if (bmpHeader.bpp == 32){
-        auto bmp = or_throw(ico_read_32bpp_BI_RGB(in, imageSize), on_error_image);
-        cursors.emplace_back(std::make_pair(std::move(bmp), hotSpot));
-      }
-      else {
-        throw ReadBmpError(error_bpp(i, bmpHeader.bpp));
-      }
-    }
-  }
-  return cursors;
-}
-
 OrError<cur_vec> read_cur(const FilePath& filePath){
   try {
-    return read_cur_or_throw(filePath);
+    return read_or_throw<Cur>(filePath);
   }
   catch (const ReadBmpError& error){
     return error.message;
