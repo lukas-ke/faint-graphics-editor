@@ -111,8 +111,14 @@ utf8_string error_truncated_bmp_header(size_t num, int len){
       bracketed(space_sep("expected", str_int(BITMAPINFOHEADER_LENGTH)))));
 }
 
-utf8_string error_bmp_data(size_t num){
+utf8_string error_bmp_data_ico(size_t num){
   return endline_sep("This icon file appears broken.\n",
+    "Reading the data for a bitmap failed.",
+    lbl_u("Image entry", num + 1));
+}
+
+utf8_string error_bmp_data_cur(size_t num){
+  return endline_sep("This cursor file appears broken.\n",
     "Reading the data for a bitmap failed.",
     lbl_u("Image entry", num + 1));
 }

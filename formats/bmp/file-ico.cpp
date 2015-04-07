@@ -208,7 +208,6 @@ static Optional<Bitmap> ico_read_png(BinaryReader& in, int len){
 
 bmp_vec read_ico_or_throw(const FilePath& filePath){
   BinaryReader in(filePath);
-  std::vector<Bitmap> bitmaps;
   if (!in.good()){
     throw ReadBmpError(error_open_file_read(filePath));
   }
@@ -219,7 +218,11 @@ bmp_vec read_ico_or_throw(const FilePath& filePath){
   }
   test_icon_dir_ico(iconDir);
   auto iconEntries(read_icon_dir_entries(in, iconDir.imageCount));
+  if (!in.good()){
+    throw ReadBmpError("ICONDIRENTRY");
+  }
 
+  std::vector<Bitmap> bitmaps;
   for (size_t i = 0; i != iconEntries.size(); i++){
     IconDirEntry& iconDirEntry = iconEntries[i];
     in.seekg(iconDirEntry.offset);
@@ -233,22 +236,22 @@ bmp_vec read_ico_or_throw(const FilePath& filePath){
       bitmaps.emplace_back(std::move(bmp));
     }
     else {
-      const auto onErrorImage([i](){return error_image(i);});
+      const auto on_error_image = [i](){return error_bmp_data_ico(i);};
       const IntSize imageSize(get_size(iconDirEntry));
 
       auto bmpHeader = read_struct_or_throw<BitmapInfoHeader>(in);
       test_bitmap_header(i, bmpHeader);
 
       if (bmpHeader.bpp == 1){
-        auto bmp = or_throw(read_1bpp_ico(in, imageSize), onErrorImage);
+        auto bmp = or_throw(read_1bpp_ico(in, imageSize), on_error_image);
         bitmaps.emplace_back(bmp);
       }
       else if (bmpHeader.bpp == 4){
-        auto bmp = or_throw(read_4bpp_ico(in, imageSize), onErrorImage);
+        auto bmp = or_throw(read_4bpp_ico(in, imageSize), on_error_image);
         bitmaps.emplace_back(bmp);
       }
       else if (bmpHeader.bpp == 32){
-        auto bmp = or_throw(ico_read_32bpp_BI_RGB(in, imageSize), onErrorImage);
+        auto bmp = or_throw(ico_read_32bpp_BI_RGB(in, imageSize), on_error_image);
         bitmaps.emplace_back(std::move(bmp));
       }
       else {
@@ -295,30 +298,30 @@ static cur_vec read_cur_or_throw(const FilePath& filePath){
       throw ReadBmpError(error_read_to_offset(i, iconDirEntry.offset));
     }
 
-    bool pngCompressed = peek_png_signature(in, i);
-
     auto hotSpot(get_hot_spot(iconDirEntry));
-    if (pngCompressed){
+
+    if (peek_png_signature(in, i)){
       auto bmp = or_throw(ico_read_png(in, iconDirEntry.bytes),
         [i](){return error_truncated_png_data(Index(i));});
       cursors.emplace_back(std::make_pair(std::move(bmp), hotSpot));
     }
     else {
+      const auto on_error_image = [i](){return error_bmp_data_cur(i);};
+      const IntSize imageSize(get_size(iconDirEntry));
+
       auto bmpHeader = read_struct_or_throw<BitmapInfoHeader>(in);
       test_bitmap_header(i, bmpHeader);
+
       if (bmpHeader.bpp == 1){
-        auto bmp = or_throw(read_1bpp_ico(in, get_size(iconDirEntry)),
-          [i](){return error_bmp_data(i);});
+        auto bmp = or_throw(read_1bpp_ico(in, imageSize), on_error_image);
         cursors.emplace_back(bmp, hotSpot);
       }
       else if (bmpHeader.bpp == 4){
-        auto bmp = or_throw(read_4bpp_ico(in, get_size(iconDirEntry)),
-          [i](){return error_bmp_data(i);});
+        auto bmp = or_throw(read_4bpp_ico(in, imageSize), on_error_image);
         cursors.emplace_back(bmp, hotSpot);
       }
       else if (bmpHeader.bpp == 32){
-        auto bmp = or_throw(ico_read_32bpp_BI_RGB(in, get_size(iconDirEntry)),
-          [i](){return error_bmp_data(i);});
+        auto bmp = or_throw(ico_read_32bpp_BI_RGB(in, imageSize), on_error_image);
         cursors.emplace_back(std::make_pair(std::move(bmp), hotSpot));
       }
       else {
