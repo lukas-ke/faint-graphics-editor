@@ -143,7 +143,7 @@ static Optional<Bitmap> read_4bpp_ico(BinaryReader& in, const IntSize& size){
   return masked(bmp, andMask.Get());
 }
 
-static Optional<Bitmap> ico_read_32bpp_BI_RGB(BinaryReader& in,
+static Optional<Bitmap> read_32bpp_BI_RGB_ico(BinaryReader& in,
   const IntSize& bitmapSize)
 {
   int bypp = 4;
@@ -230,6 +230,21 @@ public:
   }
 };
 
+static Optional<Bitmap> (*get_read_pixeldata_func(size_t i, int bpp))(BinaryReader& in, const IntSize& size){
+  if (bpp == 1){
+    return read_1bpp_ico;
+  }
+  else if (bpp == 4){
+    return read_4bpp_ico;
+  }
+  else if (bpp == 32){
+    return read_32bpp_BI_RGB_ico;
+  }
+  else{
+    throw ReadBmpError(error_bpp(i, bpp));
+  }
+}
+
 // Reads the specified BmpType (either Cur or Ico).
 // Throws ReadBmpError on failure, otherwise returns a vector of cursors
 // or icons (as determined by BmpType::ResultType).
@@ -273,21 +288,9 @@ typename BmpType::ResultType read_or_throw(const FilePath& filePath){
       test_bitmap_header(i, bmpHeader);
       const IntSize imageSize(get_size(iconDirEntry));
 
-      if (bmpHeader.bpp == 1){
-        auto bmp = or_throw(read_1bpp_ico(in, imageSize), on_error_image);
-        BmpType::add(bitmaps, std::move(bmp), iconDirEntry);
-      }
-      else if (bmpHeader.bpp == 4){
-        auto bmp = or_throw(read_4bpp_ico(in, imageSize), on_error_image);
-        BmpType::add(bitmaps, std::move(bmp), iconDirEntry);
-      }
-      else if (bmpHeader.bpp == 32){
-        auto bmp = or_throw(ico_read_32bpp_BI_RGB(in, imageSize), on_error_image);
-        BmpType::add(bitmaps, std::move(bmp), iconDirEntry);
-      }
-      else {
-        throw ReadBmpError(error_bpp(i, bmpHeader.bpp));
-      }
+      auto read_pixeldata(get_read_func(i, bmpHeader.bpp));
+      auto bmp = or_throw(read_pixeldata(in, imageSize), on_error_image);
+      BmpType::add(bitmaps, std::move(bmp), iconDirEntry);
     }
   }
   return bitmaps;
