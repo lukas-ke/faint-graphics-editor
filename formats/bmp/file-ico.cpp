@@ -222,7 +222,7 @@ bmp_vec read_ico_or_throw(const FilePath& filePath){
     throw ReadBmpError("ICONDIRENTRY");
   }
 
-  std::vector<Bitmap> bitmaps;
+  bmp_vec bitmaps;
   for (size_t i = 0; i != iconEntries.size(); i++){
     IconDirEntry& iconDirEntry = iconEntries[i];
     in.seekg(iconDirEntry.offset);
