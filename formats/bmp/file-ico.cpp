@@ -266,7 +266,7 @@ typename BmpType::ResultType read_or_throw(const FilePath& filePath){
     throw ReadBmpError("ICONDIRENTRY");
   }
 
-  BmpType::ResultType bitmaps;
+  typename BmpType::ResultType bitmaps;
   for (size_t i = 0; i != iconEntries.size(); i++){
     IconDirEntry& iconDirEntry = iconEntries[i];
     in.seekg(iconDirEntry.offset);
@@ -288,7 +288,7 @@ typename BmpType::ResultType read_or_throw(const FilePath& filePath){
       test_bitmap_header(i, bmpHeader);
       const IntSize imageSize(get_size(iconDirEntry));
 
-      auto read_pixeldata(get_read_func(i, bmpHeader.bpp));
+      auto read_pixeldata(get_read_pixeldata_func(i, bmpHeader.bpp));
       auto bmp = or_throw(read_pixeldata(in, imageSize), on_error_image);
       BmpType::add(bitmaps, std::move(bmp), iconDirEntry);
     }
