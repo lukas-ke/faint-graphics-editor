@@ -84,11 +84,6 @@ public:
       IntPoint(0, size.y - LinearGradientSlider::HEIGHT));
     SetCursor(get_art_container().Get(Cursor::CROSSHAIR));
 
-    events::on_paint(this, [this](){
-      wxPaintDC dc(this);
-      dc.DrawBitmap(m_bmp, 0, 0);
-    });
-
     bind_fwd(this, wxEVT_LEFT_DOWN,
       [this](wxMouseEvent& event){
         int max_x = m_bmp.GetWidth();
@@ -113,6 +108,11 @@ public:
     events::on_gradient_slider_change(*m_slider, [this](){
       UpdateBitmap();
       Refresh();
+    });
+
+    events::on_paint(this, [this](){
+      wxPaintDC dc(this);
+      dc.DrawBitmap(m_bmp, 0, 0);
     });
   }
 

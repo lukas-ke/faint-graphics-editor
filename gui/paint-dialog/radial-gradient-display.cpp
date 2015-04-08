@@ -62,6 +62,13 @@ public:
     return m_gradient;
   }
 
+  bool SetBackgroundColor(const Color& bgColor){
+    SetBackgroundColour(to_wx(bgColor));
+    m_slider->SetBackgroundColor(bgColor);
+    UpdateBitmap();
+    return true;
+  }
+
   void SetGradient(const RadialGradient& g){
     m_gradient = g;
     UpdateBitmap();
@@ -74,13 +81,6 @@ public:
     UpdateBitmap();
     m_slider->UpdateGradient();
     Refresh();
-  }
-
-  bool SetBackgroundColor(const Color& bgColor){
-    SetBackgroundColour(to_wx(bgColor));
-    m_slider->SetBackgroundColor(bgColor);
-    UpdateBitmap();
-    return true;
   }
 
 private:
