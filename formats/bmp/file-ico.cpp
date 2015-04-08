@@ -103,73 +103,89 @@ static Bitmap masked(const Bitmap& bmp, const AlphaMap& mask){
   return out;
 }
 
-static Optional<Bitmap> read_1bpp_ico(BinaryReader& in, const IntSize& size){
-  auto colorTable = read_color_table(in, 2);
-  if (colorTable.NotSet()){
-    return {};
-  }
 
-  auto xorMask = read_1bpp_BI_RGB(in, size);
-  if (xorMask.NotSet()){
-    return {};
-  }
-
-  auto andMask = read_1bpp_BI_RGB(in, size);
-  if (andMask.NotSet()){
-    return {};
-  }
-
-  auto bmp = bitmap_from_indexed_colors(xorMask.Get(), colorTable.Get());
-  return masked(bmp, andMask.Get());
-}
-
-static Optional<Bitmap> read_4bpp_ico(BinaryReader& in, const IntSize& size){
-  auto colorTable = read_color_table(in, 16);
-  if (colorTable.NotSet()){
-    return {};
-  }
-
-  auto xorMask = read_4bpp_BI_RGB(in, size);
-  if (xorMask.NotSet()){
-    return {};
-  }
-
-  auto andMask = read_1bpp_BI_RGB(in, size);
-  if (andMask.NotSet()){
-    return {};
-  }
-
-  auto bmp = bitmap_from_indexed_colors(xorMask.Get(), colorTable.Get());
-  return masked(bmp, andMask.Get());
-}
-
-static Optional<Bitmap> read_32bpp_BI_RGB_ico(BinaryReader& in,
-  const IntSize& bitmapSize)
+auto get_read_pixeldata_func(size_t num, int bpp)
+  -> std::function<Optional<Bitmap>(BinaryReader&, const IntSize&)>
 {
-  int bypp = 4;
-  // The size from the bmp-header. May have larger height than the size
-  // in the IconDirEntry.
-  int bufLen = area(bitmapSize) * bypp;
-  std::vector<char> pixelData(bufLen);
-  in.read(pixelData.data(), bufLen);
-  if (!in.good()){
-    return {};
-  }
+  // Returns a function for reading pixeldata of the specified bits-per-pixel,
+  // or throws ReadBmpError if the bpp is unsupported.
 
-  // The size from the IconDirEntry is the exact amount of pixels
-  // this image should have.
-  const IntSize& sz(bitmapSize);
-  Bitmap bmp(sz);
-  for (int y = 0; y != sz.h; y++){
-    for (int x = 0; x != sz.w; x++){
-      uint b = to_uint(pixelData[y * sz.w * bypp + x * bypp]);
-      uint g = to_uint(pixelData[y * sz.w * bypp + x * bypp + 1]);
-      uint r = to_uint(pixelData[y * sz.w * bypp + x * bypp + 2]);
-      uint a = to_uint(pixelData[y * sz.w * bypp + x * bypp + 3]);
-      put_pixel_raw(bmp, x, bmp.m_h - y - 1, color_from_uints(r,g,b,a));
-    }
+  if (bpp == 1){
+
+    return [](BinaryReader& in, const IntSize& size) -> Optional<Bitmap>{
+      auto colorTable = read_color_table(in, 2);
+      if (colorTable.NotSet()){
+        return {};
+      }
+
+      auto xorMask = read_1bpp_BI_RGB(in, size);
+      if (xorMask.NotSet()){
+        return {};
+      }
+
+      auto andMask = read_1bpp_BI_RGB(in, size);
+      if (andMask.NotSet()){
+        return {};
+      }
+
+      auto bmp = bitmap_from_indexed_colors(xorMask.Get(), colorTable.Get());
+      return masked(bmp, andMask.Get());
+    };
   }
-  return std::move(bmp);
+  else if (bpp == 4){
+
+    return [](BinaryReader& in, const IntSize& size) -> Optional<Bitmap>{
+      auto colorTable = read_color_table(in, 16);
+      if (colorTable.NotSet()){
+        return {};
+      }
+
+      auto xorMask = read_4bpp_BI_RGB(in, size);
+      if (xorMask.NotSet()){
+        return {};
+      }
+
+      auto andMask = read_1bpp_BI_RGB(in, size);
+      if (andMask.NotSet()){
+        return {};
+      }
+
+      auto bmp = bitmap_from_indexed_colors(xorMask.Get(), colorTable.Get());
+      return masked(bmp, andMask.Get());
+    };
+  }
+  else if (bpp == 32){
+
+    return [](BinaryReader& in, const IntSize& bitmapSize) -> Optional<Bitmap>{
+      int bypp = 4;
+      // The size from the bmp-header. May have larger height than the size
+      // in the IconDirEntry.
+      int bufLen = area(bitmapSize) * bypp;
+      std::vector<char> pixelData(bufLen);
+      in.read(pixelData.data(), bufLen);
+      if (!in.good()){
+        return {};
+      }
+
+      // The size from the IconDirEntry is the exact amount of pixels
+      // this image should have.
+      const IntSize& sz(bitmapSize);
+      Bitmap bmp(sz);
+      for (int y = 0; y != sz.h; y++){
+        for (int x = 0; x != sz.w; x++){
+          uint b = to_uint(pixelData[y * sz.w * bypp + x * bypp]);
+          uint g = to_uint(pixelData[y * sz.w * bypp + x * bypp + 1]);
+          uint r = to_uint(pixelData[y * sz.w * bypp + x * bypp + 2]);
+          uint a = to_uint(pixelData[y * sz.w * bypp + x * bypp + 3]);
+          put_pixel_raw(bmp, x, bmp.m_h - y - 1, color_from_uints(r,g,b,a));
+        }
+      }
+      return std::move(bmp);
+    };
+  }
+  else{
+    throw ReadBmpError(error_bpp(num, bpp));
+  }
 }
 
 static Optional<Bitmap> ico_read_png(BinaryReader& in, int len){
@@ -230,21 +246,6 @@ public:
   }
 };
 
-static Optional<Bitmap> (*get_read_pixeldata_func(size_t i, int bpp))(BinaryReader& in, const IntSize& size){
-  if (bpp == 1){
-    return read_1bpp_ico;
-  }
-  else if (bpp == 4){
-    return read_4bpp_ico;
-  }
-  else if (bpp == 32){
-    return read_32bpp_BI_RGB_ico;
-  }
-  else{
-    throw ReadBmpError(error_bpp(i, bpp));
-  }
-}
-
 // Reads the specified BmpType (either Cur or Ico).
 // Throws ReadBmpError on failure, otherwise returns a vector of cursors
 // or icons (as determined by BmpType::ResultType).
@@ -288,7 +289,7 @@ typename BmpType::ResultType read_or_throw(const FilePath& filePath){
       test_bitmap_header(i, bmpHeader);
       const IntSize imageSize(get_size(iconDirEntry));
 
-      auto read_pixeldata(get_read_pixeldata_func(i, bmpHeader.bpp));
+      auto read_pixeldata = get_read_pixeldata_func(i, bmpHeader.bpp);
       auto bmp = or_throw(read_pixeldata(in, imageSize), on_error_image);
       BmpType::add(bitmaps, std::move(bmp), iconDirEntry);
     }
