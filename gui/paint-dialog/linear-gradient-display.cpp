@@ -119,9 +119,9 @@ public:
     return m_gradient;
   }
 
-  bool SetBackgroundColour(const wxColour& bgColor) override{
-    wxPanel::SetBackgroundColour(bgColor);
-    m_slider->SetBackgroundColor(to_faint(bgColor)); // Fixme: Warty
+  bool SetBackgroundColor(const Color& bgColor){
+    SetBackgroundColour(to_wx(bgColor));
+    m_slider->SetBackgroundColor(bgColor);
     UpdateBitmap();
     return true;
   }
@@ -205,7 +205,7 @@ void LinearGradientDisplay::Hide(){
 }
 
 void LinearGradientDisplay::SetBackgroundColor(const Color& c){
-  m_impl->SetBackgroundColour(to_wx(c));
+  m_impl->SetBackgroundColor(c);
 }
 
 void LinearGradientDisplay::SetStops(const color_stops_t& stops){
