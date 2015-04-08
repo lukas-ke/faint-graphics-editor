@@ -13,7 +13,6 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include <memory>
 #include "wx/bitmap.h"
 #include "wx/dcclient.h"
 #include "wx/window.h" // For allowing Bind
