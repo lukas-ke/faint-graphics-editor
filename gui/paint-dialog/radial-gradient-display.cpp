@@ -85,16 +85,19 @@ public:
 
 private:
   void UpdateBitmap(){
-    IntSize sz(to_faint(GetSize()));
-    Bitmap bg(sz - IntSize(0, RadialGradientSlider::HEIGHT),
+    IntSize panelSize(to_faint(GetSize()));
+    Bitmap bg(panelSize - IntSize(0, RadialGradientSlider::HEIGHT),
       to_faint(GetBackgroundColour()));
 
-    auto gSz(sz - IntSize(2 * RadialGradientSlider::HORIZONTAL_MARGIN,
-      RadialGradientSlider::HEIGHT));
+    auto xOffset = RadialGradientSlider::HORIZONTAL_MARGIN;
+    auto gradientSize(panelSize -
+      IntSize(2 * xOffset, RadialGradientSlider::HEIGHT));
+
+    // Use the right-half of the gradient ellipse
     m_gradientBmp = subbitmap(gradient_bitmap(Gradient(m_gradient),
-        IntSize(gSz.w * 2, gSz.h)),
-      IntRect(IntPoint(gSz.w,0), gSz));
-    blit(offsat(with_border(m_gradientBmp), {5,0}), onto(bg));
+        IntSize(gradientSize.w * 2, gradientSize.h)),
+      IntRect(IntPoint(gradientSize.w, 0), gradientSize));
+    blit(offsat(with_border(m_gradientBmp), {xOffset, 0}), onto(bg));
     m_bmp = to_wx_bmp(bg);
   }
 
