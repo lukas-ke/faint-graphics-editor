@@ -15,6 +15,7 @@
 
 #ifndef FAINT_LINEAR_GRADIENT_DISPLAY_HH
 #define FAINT_LINEAR_GRADIENT_DISPLAY_HH
+#include <memory>
 #include "bitmap/gradient.hh"
 
 class wxWindow;
@@ -38,7 +39,7 @@ public:
 
 private:
   class LinearGradientDisplayImpl;
-  LinearGradientDisplayImpl* m_impl;
+  std::unique_ptr<LinearGradientDisplayImpl> m_impl;
 };
 
 } // namespace

@@ -15,6 +15,7 @@
 
 #ifndef FAINT_RADIAL_GRADIENT_DISPLAY_HH
 #define FAINT_RADIAL_GRADIENT_DISPLAY_HH
+#include <memory>
 #include "bitmap/gradient.hh"
 
 class wxWindow;

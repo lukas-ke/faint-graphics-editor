@@ -16,7 +16,7 @@
 #include <memory>
 #include "wx/bitmap.h"
 #include "wx/dcclient.h"
-#include "wx/panel.h"
+#include "wx/window.h" // For allowing Bind
 #include "app/get-art-container.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
@@ -65,26 +65,26 @@ static IntPoint constrain_gradient_angle(const IntSize& sz, const IntPoint& p){
   return floored(adjust_to_45(floated(c), floated(p)));
 }
 
-class LinearGradientDisplay::LinearGradientDisplayImpl : public wxPanel {
+class LinearGradientDisplay::LinearGradientDisplayImpl{
 public:
   LinearGradientDisplayImpl(wxWindow* parent,
-    const wxSize& size,
+    const IntSize& size,
     DialogContext& dialogContext)
-    : wxPanel(parent, wxID_ANY),
-      m_mouse(this),
+    : m_panel(create_panel(parent)),
+      m_mouse(m_panel),
       m_offset(LinearGradientSlider::HORIZONTAL_MARGIN, 0)
   {
-    SetBackgroundStyle(wxBG_STYLE_PAINT); // Prevent flicker on full refresh
-    SetInitialSize(size);
-    m_slider = std::make_unique<LinearGradientSlider>(this,
-      IntSize(size.GetWidth(), LinearGradientSlider::HEIGHT),
+    set_bgstyle_paint(m_panel);
+    set_initial_size(m_panel, size);
+
+    m_slider = std::make_unique<LinearGradientSlider>(m_panel,
+      IntSize(size.w, LinearGradientSlider::HEIGHT),
       m_gradient,
       dialogContext);
-    set_pos(m_slider->AsWindow(),
-      IntPoint(0, size.y - LinearGradientSlider::HEIGHT));
-    SetCursor(get_art_container().Get(Cursor::CROSSHAIR));
+    set_pos(m_slider->AsWindow(), {0, size.h - LinearGradientSlider::HEIGHT});
+    set_cursor(m_panel, get_art_container().Get(Cursor::CROSSHAIR));
 
-    bind_fwd(this, wxEVT_LEFT_DOWN,
+    bind_fwd(m_panel, wxEVT_LEFT_DOWN,
       [this](wxMouseEvent& event){
         int max_x = m_bmp.GetWidth();
         int max_y = m_bmp.GetHeight();
@@ -96,9 +96,9 @@ public:
         SetAngleFromPos(GetBitmapPos(event));
       });
 
-    events::on_mouse_left_up(this, releaser(m_mouse));
+    events::on_mouse_left_up(m_panel, releaser(m_mouse));
 
-    bind_fwd(this, wxEVT_MOTION,
+    bind_fwd(m_panel, wxEVT_MOTION,
       [this](wxMouseEvent& event){
         if (m_mouse.HasCapture()){
           SetAngleFromPos(GetBitmapPos(event));
@@ -107,13 +107,17 @@ public:
 
     events::on_gradient_slider_change(*m_slider, [this](){
       UpdateBitmap();
-      Refresh();
+      refresh(m_panel);
     });
 
-    events::on_paint(this, [this](){
-      wxPaintDC dc(this);
+    events::on_paint(m_panel, [this](){
+      wxPaintDC dc(m_panel);
       dc.DrawBitmap(m_bmp, 0, 0);
     });
+  }
+
+  wxWindow* AsWindow(){
+    return m_panel;
   }
 
   const LinearGradient& GetGradient() const{
@@ -121,7 +125,7 @@ public:
   }
 
   bool SetBackgroundColor(const Color& bgColor){
-    SetBackgroundColour(to_wx(bgColor));
+    set_background_color(m_panel, bgColor);
     m_slider->SetBackgroundColor(bgColor);
     UpdateBitmap();
     return true;
@@ -131,14 +135,14 @@ public:
     m_gradient = g;
     UpdateBitmap();
     m_slider->UpdateGradient();
-    Refresh();
+    refresh(m_panel);
   }
 
   void SetStops(const color_stops_t& stops){
     m_gradient.SetStops(stops);
     m_slider->UpdateGradient();
     UpdateBitmap();
-    Refresh();
+    refresh(m_panel);
   }
 
 private:
@@ -158,15 +162,15 @@ private:
 
     m_gradient.SetAngle(angle);
     UpdateBitmap();
-    Refresh();
-    wxCommandEvent event(EVT_GRADIENT_ANGLE_PICKED, GetId());
-    event.SetEventObject(this);
-    GetEventHandler()->ProcessEvent(event);
+    refresh(m_panel);
+    wxCommandEvent event(EVT_GRADIENT_ANGLE_PICKED);
+    // event.SetEventObject(m_panel);
+    process_event(m_panel, event);
   }
 
   void UpdateBitmap(){
-    IntSize panelSize(to_faint(GetSize()));
-    Bitmap bg(panelSize, to_faint(GetBackgroundColour()));
+    auto panelSize = get_size(m_panel);
+    Bitmap bg(panelSize, get_background_color(m_panel));
 
     const auto gradientSize = panelSize -
       IntSize(m_offset.x * 2, LinearGradientSlider::HEIGHT);
@@ -179,6 +183,7 @@ private:
   wxBitmap m_bmp;
   LinearGradient m_gradient;
   Bitmap m_gradientBmp;
+  wxWindow* m_panel;
   MouseCapture m_mouse;
   std::unique_ptr<LinearGradientSlider> m_slider;
   const IntPoint m_offset;
@@ -188,7 +193,7 @@ LinearGradientDisplay::LinearGradientDisplay(wxWindow* parent,
   const IntSize& size,
   DialogContext& ctx)
 {
-  m_impl = new LinearGradientDisplayImpl(parent, to_wx(size), ctx);
+  m_impl = std::make_unique<LinearGradientDisplayImpl>(parent, size, ctx);
 }
 
 LinearGradientDisplay::~LinearGradientDisplay(){
@@ -196,7 +201,7 @@ LinearGradientDisplay::~LinearGradientDisplay(){
 }
 
 wxWindow* LinearGradientDisplay::AsWindow(){
-  return m_impl;
+  return m_impl->AsWindow();
 }
 
 const LinearGradient& LinearGradientDisplay::GetGradient() const{
@@ -204,7 +209,7 @@ const LinearGradient& LinearGradientDisplay::GetGradient() const{
 }
 
 void LinearGradientDisplay::Hide(){
-  m_impl->Hide();
+  hide(m_impl->AsWindow());
 }
 
 void LinearGradientDisplay::SetBackgroundColor(const Color& c){
@@ -220,7 +225,7 @@ void LinearGradientDisplay::SetGradient(const LinearGradient& g){
 }
 
 void LinearGradientDisplay::Show(){
-  m_impl->Show();
+  show(m_impl->AsWindow());
 }
 
 } // namespace

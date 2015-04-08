@@ -291,17 +291,17 @@ public:
           HandleHitInfo hit = m_region.HitTest(to_faint(event.GetPosition()));
           m_handle = hit.index;
           if (hit.type == HandleHitInfo::MISS){
-            set_cursor(m_panel, wxCURSOR_ARROW);
+            set_stock_cursor(m_panel, wxCURSOR_ARROW);
           }
           else{
             if (hit.type == HandleHitInfo::MOVE_HANDLE ||
               hit.type == HandleHitInfo::ADD_HANDLE ||
               event.ControlDown())
             {
-              set_cursor(m_panel, wxCURSOR_SIZEWE);
+              set_stock_cursor(m_panel, wxCURSOR_SIZEWE);
             }
             else{
-              set_cursor(m_panel, wxCURSOR_HAND);
+              set_stock_cursor(m_panel, wxCURSOR_HAND);
             }
           }
         }

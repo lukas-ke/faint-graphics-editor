@@ -22,6 +22,7 @@
 #include "util/distinct.hh"
 
 class wxCommandEvent;
+class wxCursor;
 
 namespace faint{
 
@@ -30,7 +31,6 @@ class Color;
 class IntPoint;
 class IntSize;
 class utf8_string;
-
 class category_fwd_wx;
 
 using Width = Distinct<int, category_fwd_wx, 0>;
@@ -235,7 +235,9 @@ void set_bgstyle_paint(window_t);
 void set_initial_size(window_t, const IntSize&);
 void set_background_color(window_t, const Color&);
 Color get_background_color(window_t);
-void set_cursor(window_t, int);
+void set_stock_cursor(window_t, int);
+
+void set_cursor(window_t, const wxCursor&);
 
 void process_event(window_t, wxCommandEvent&);
 

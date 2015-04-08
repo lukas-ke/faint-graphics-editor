@@ -595,8 +595,12 @@ Color get_background_color(window_t w){
   return to_faint(w.w->GetBackgroundColour());
 }
 
-void set_cursor(window_t w, int cursor){
-  w.w->SetCursor(wxCursor(wxStockCursor(cursor)));
+void set_stock_cursor(window_t w, int cursor){
+  set_cursor(w, wxCursor(static_cast<wxStockCursor>(cursor)));
+}
+
+void set_cursor(window_t w, const wxCursor& cursor){
+  w.w->SetCursor(cursor);
 }
 
 void refresh(window_t w){
