@@ -52,6 +52,14 @@ void set_bitmap(wxButton& button, const Bitmap& bmp){
   button.SetBitmap(to_wx_bmp(bmp));
 }
 
+void show(window_t w){
+  w.w->Show();
+}
+
+void hide(window_t w){
+  w.w->Hide();
+}
+
 void show(wxDialog* dlg){
   dlg->Show();
 }

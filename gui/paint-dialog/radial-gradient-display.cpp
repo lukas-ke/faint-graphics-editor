@@ -15,7 +15,6 @@
 
 #include "wx/bitmap.h"
 #include "wx/dcclient.h" // For wxPaintDC
-#include "wx/panel.h"
 #include "bitmap/bitmap.hh"
 #include "bitmap/draw.hh"
 #include "geo/int-point.hh"
@@ -31,31 +30,35 @@
 
 namespace faint{
 
-class RadialGradientDisplay::RadialGradientDisplayImpl : public wxPanel {
+class RadialGradientDisplay::RadialGradientDisplayImpl{
 public:
   RadialGradientDisplayImpl(wxWindow* parent,
-    const wxSize& size,
+    const IntSize& size,
     DialogContext& dialogContext)
-    : wxPanel(parent, wxID_ANY)
   {
-    SetBackgroundStyle(wxBG_STYLE_PAINT); // Prevent flicker on full refresh
-    SetInitialSize(size);
+    m_panel = create_panel(parent);
+    set_bgstyle_paint(m_panel);
+    set_initial_size(m_panel, size);
 
-    m_slider = std::make_unique<RadialGradientSlider>(this,
-      IntSize(size.GetWidth(), RadialGradientSlider::HEIGHT),
+    m_slider = std::make_unique<RadialGradientSlider>(m_panel,
+      IntSize(size.w, RadialGradientSlider::HEIGHT),
       m_gradient,
       dialogContext);
-    set_pos(m_slider->AsWindow(), {0, size.y - RadialGradientSlider::HEIGHT});
+    set_pos(m_slider->AsWindow(), {0, size.h - RadialGradientSlider::HEIGHT});
 
     events::on_gradient_slider_change(*m_slider, [this](){
       UpdateBitmap();
-      Refresh();
+      refresh(m_panel);
     });
 
-    events::on_paint(this, [this](){
-      wxPaintDC dc(this);
+    events::on_paint(m_panel, [this](){
+      wxPaintDC dc(m_panel);
       dc.DrawBitmap(m_bmp, 0, 0);
     });
+  }
+
+  wxWindow* AsWindow(){
+    return m_panel;
   }
 
   const RadialGradient& GetGradient() const{
@@ -63,7 +66,7 @@ public:
   }
 
   bool SetBackgroundColor(const Color& bgColor){
-    SetBackgroundColour(to_wx(bgColor));
+    set_background_color(m_panel, bgColor);
     m_slider->SetBackgroundColor(bgColor);
     UpdateBitmap();
     return true;
@@ -73,21 +76,21 @@ public:
     m_gradient = g;
     UpdateBitmap();
     m_slider->UpdateGradient();
-    Refresh();
+    refresh(m_panel);
   }
 
   void SetStops(const color_stops_t& stops){
     m_gradient.SetStops(stops);
     UpdateBitmap();
     m_slider->UpdateGradient();
-    Refresh();
+    refresh(m_panel);
   }
 
 private:
   void UpdateBitmap(){
-    IntSize panelSize(to_faint(GetSize()));
+    auto panelSize = get_size(m_panel);
     Bitmap bg(panelSize - IntSize(0, RadialGradientSlider::HEIGHT),
-      to_faint(GetBackgroundColour()));
+      get_background_color(m_panel));
 
     auto xOffset = RadialGradientSlider::HORIZONTAL_MARGIN;
     auto gradientSize(panelSize -
@@ -104,6 +107,7 @@ private:
   wxBitmap m_bmp;
   RadialGradient m_gradient;
   Bitmap m_gradientBmp;
+  wxWindow* m_panel;
   std::unique_ptr<RadialGradientSlider> m_slider;
 };
 
@@ -111,15 +115,14 @@ RadialGradientDisplay::RadialGradientDisplay(wxWindow* parent,
   const IntSize& size,
   DialogContext& ctx)
 {
-  m_impl = new RadialGradientDisplayImpl(parent, to_wx(size), ctx);
+  m_impl = std::make_unique<RadialGradientDisplayImpl>(parent, size, ctx);
 }
 
 RadialGradientDisplay::~RadialGradientDisplay(){
-  m_impl = nullptr; // Deleted by wxWidgets
 }
 
 wxWindow* RadialGradientDisplay::AsWindow(){
-  return m_impl;
+  return m_impl->AsWindow();
 }
 
 const RadialGradient& RadialGradientDisplay::GetGradient() const{
@@ -127,7 +130,7 @@ const RadialGradient& RadialGradientDisplay::GetGradient() const{
 }
 
 void RadialGradientDisplay::Hide(){
-  m_impl->Hide();
+  hide(m_impl->AsWindow());
 }
 
 void RadialGradientDisplay::SetBackgroundColor(const Color& c){
@@ -143,7 +146,7 @@ void RadialGradientDisplay::SetGradient(const RadialGradient& g){
 }
 
 void RadialGradientDisplay::Show(){
-  m_impl->Show();
+  show(m_impl->AsWindow());
 }
 
 } // namespace

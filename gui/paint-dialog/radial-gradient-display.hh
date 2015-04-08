@@ -38,7 +38,7 @@ public:
 
 private:
   class RadialGradientDisplayImpl;
-  RadialGradientDisplayImpl* m_impl;
+  std::unique_ptr<RadialGradientDisplayImpl> m_impl;
 };
 
 } // namespace
