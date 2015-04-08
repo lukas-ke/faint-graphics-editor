@@ -26,8 +26,6 @@ namespace faint{
 class Color;
 class DialogContext;
 
-const int g_sliderHeight = 40;
-
 class ColorStopSliderImpl;
 
 class LinearGradientSlider{
@@ -41,6 +39,10 @@ public:
   wxWindow* AsWindow();
   void SetBackgroundColor(const Color&);
   void UpdateGradient();
+
+  static const int HANDLE_WIDTH = 10;
+  static const int HORIZONTAL_MARGIN = HANDLE_WIDTH / 2;
+  static const int HEIGHT = 40;
 
 private:
   ColorStopSliderImpl* m_impl;
@@ -58,6 +60,9 @@ public:
   void SetBackgroundColor(const Color&);
   void UpdateGradient();
 
+  static const int HANDLE_WIDTH = 10;
+  static const int HORIZONTAL_MARGIN = HANDLE_WIDTH / 2;
+  static const int HEIGHT = 40;
 private:
   ColorStopSliderImpl* m_impl;
 };

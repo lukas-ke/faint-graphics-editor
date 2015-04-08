@@ -42,10 +42,10 @@ public:
     SetInitialSize(size);
 
     m_slider = std::make_unique<RadialGradientSlider>(this,
-      IntSize(size.GetWidth(), g_sliderHeight),
+      IntSize(size.GetWidth(), RadialGradientSlider::HEIGHT),
       m_gradient,
       dialogContext);
-    set_pos(m_slider->AsWindow(), {0, size.GetHeight() - g_sliderHeight});
+    set_pos(m_slider->AsWindow(), {0, size.y - RadialGradientSlider::HEIGHT});
 
     events::on_gradient_slider_change(*m_slider, [this](){
       UpdateBitmap();
@@ -76,18 +76,21 @@ public:
     Refresh();
   }
 
-  bool SetBackgroundColour(const wxColour& bgColor) override{
-    wxPanel::SetBackgroundColour(bgColor);
-    m_slider->SetBackgroundColor(to_faint(bgColor)); // Fixme: Warty
+  bool SetBackgroundColor(const Color& bgColor){
+    SetBackgroundColour(to_wx(bgColor));
+    m_slider->SetBackgroundColor(bgColor);
     UpdateBitmap();
     return true;
   }
+
 private:
   void UpdateBitmap(){
     IntSize sz(to_faint(GetSize()));
-    Bitmap bg(sz - IntSize(0, g_sliderHeight), to_faint(GetBackgroundColour()));
+    Bitmap bg(sz - IntSize(0, RadialGradientSlider::HEIGHT),
+      to_faint(GetBackgroundColour()));
 
-    IntSize gSz(sz - IntSize(10, g_sliderHeight));
+    auto gSz(sz - IntSize(2 * RadialGradientSlider::HORIZONTAL_MARGIN,
+      RadialGradientSlider::HEIGHT));
     m_gradientBmp = subbitmap(gradient_bitmap(Gradient(m_gradient),
         IntSize(gSz.w * 2, gSz.h)),
       IntRect(IntPoint(gSz.w,0), gSz));
@@ -125,7 +128,7 @@ void RadialGradientDisplay::Hide(){
 }
 
 void RadialGradientDisplay::SetBackgroundColor(const Color& c){
-  m_impl->SetBackgroundColour(to_wx(c));
+  m_impl->SetBackgroundColor(c);
 }
 
 void RadialGradientDisplay::SetStops(const color_stops_t& stops){

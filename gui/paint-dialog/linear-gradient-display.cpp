@@ -72,15 +72,16 @@ public:
     DialogContext& dialogContext)
     : wxPanel(parent, wxID_ANY),
       m_mouse(this),
-      m_offset(5,0)
+      m_offset(LinearGradientSlider::HORIZONTAL_MARGIN, 0)
   {
     SetBackgroundStyle(wxBG_STYLE_PAINT); // Prevent flicker on full refresh
     SetInitialSize(size);
     m_slider = std::make_unique<LinearGradientSlider>(this,
-      IntSize(size.GetWidth(), g_sliderHeight),
+      IntSize(size.GetWidth(), LinearGradientSlider::HEIGHT),
       m_gradient,
       dialogContext);
-    set_pos(m_slider->AsWindow(), IntPoint(0, size.y - g_sliderHeight));
+    set_pos(m_slider->AsWindow(),
+      IntPoint(0, size.y - LinearGradientSlider::HEIGHT));
     SetCursor(get_art_container().Get(Cursor::CROSSHAIR));
 
     events::on_paint(this, [this](){
@@ -164,10 +165,12 @@ private:
   }
 
   void UpdateBitmap(){
-    IntSize sz(to_faint(GetSize()));
-    Bitmap bg(sz, to_faint(GetBackgroundColour()));
-    m_gradientBmp = gradient_bitmap(Gradient(unrotated(m_gradient)),
-      sz - IntSize(10,g_sliderHeight)); // Fixme: Literals
+    IntSize panelSize(to_faint(GetSize()));
+    Bitmap bg(panelSize, to_faint(GetBackgroundColour()));
+
+    const auto gradientSize = panelSize -
+      IntSize(m_offset.x * 2, LinearGradientSlider::HEIGHT);
+    m_gradientBmp = gradient_bitmap(Gradient(unrotated(m_gradient)), gradientSize);
     blit(offsat(with_border(with_angle_indicator(m_gradientBmp,
       m_gradient.GetAngle())), m_offset), onto(bg));
     m_bmp = to_wx_bmp(bg);

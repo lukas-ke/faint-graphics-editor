@@ -113,11 +113,12 @@ static void draw_plus(Bitmap& bmp, const IntRect& r){
   draw_vline(bmp, xc, yc <plus_minus> h, s);
 }
 
-static const int HANDLE_WIDTH = 5;
+static const int HANDLE_WIDTH = LinearGradientSlider::HANDLE_WIDTH;
 
 static IntRect get_add_rectangle(int cx, const IntSize& sz){
-  const int y1 = std::min(2  * HANDLE_WIDTH, sz.h / 2);
-  return {IntPoint(cx - HANDLE_WIDTH, 2), IntPoint(cx + HANDLE_WIDTH, y1 + 2)};
+  const int y1 = std::min(HANDLE_WIDTH, sz.h / 2);
+  return {IntPoint(cx - HANDLE_WIDTH / 2, 2),
+    IntPoint(cx + HANDLE_WIDTH / 2, y1 + 2)};
 }
 
 static void draw_add_rectangle(Bitmap& bmp, const IntRect& r){
@@ -127,7 +128,7 @@ static void draw_add_rectangle(Bitmap& bmp, const IntRect& r){
 }
 
 static int pos_from_offset(double offset, const IntSize& sz){
-  return HANDLE_WIDTH + floored((sz.w - 11) * offset); // Fixme: 11?
+  return HANDLE_WIDTH / 2 + floored((sz.w - 11) * offset); // Fixme: 11?
 }
 
 class ColorStopsRegion{
@@ -139,7 +140,7 @@ public:
     const Color& bgColor)
   {
     Bitmap bmp(sz, bgColor);
-    const int w = 5;
+    const int w = 5; // ?
 
     // Add the regions for creating new handles
     const auto sortedStops = sorted(stops);
