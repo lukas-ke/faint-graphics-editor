@@ -24,6 +24,7 @@
 #include "bitmap/bitmap-exception.hh"
 #include "gui/canvas-panel.hh"
 #include "gui/color-panel.hh"
+#include "gui/drop-down-ctrl.hh" // Fixme: For StringSource
 #include "gui/events.hh"
 #include "gui/faint-window.hh"
 #include "gui/faint-window-app-context.hh"
@@ -36,6 +37,7 @@
 #include "gui/tool-panel.hh"
 #include "tablet/tablet-event.hh"
 #include "text/formatting.hh"
+#include "text/text-expression-conversions.hh" // Fixme: For unit_px
 #include "util/cleaner.hh"
 #include "util/color-choice.hh"
 #include "util/convenience.hh"
@@ -176,19 +178,29 @@ static void update_zoom(FaintPanels& panels){
   panels.menubar->UpdateZoom(zoom);
 }
 
+// Fixme: Not here, and base units on calibration
+class UnitSource : public StringSource{
+public:
+  std::vector<utf8_string> Get() const override{
+    return {unit_px, "mm", "cm", "m"};
+  }
+};
+
 static void initialize_panels(wxFrame& frame, FaintWindowContext& app,
   FaintPanels& panels,
   ArtContainer& art,
   const PaintMap& palette)
 {
   panels.menubar = std::make_unique<Menubar>(frame, app, art);
-
   // Top half, the tool panel and the drawing areas.
   auto* row1 = new wxBoxSizer(wxHORIZONTAL);
+
+  static UnitSource unitStrings;
   panels.tool = std::make_unique<ToolPanel>(&frame,
     app.GetStatusInfo(),
     art,
-    app.GetDialogContext());
+    app.GetDialogContext(),
+    unitStrings);
   row1->Add(panels.tool->AsWindow(), 0, wxEXPAND);
 
   panels.tabControl = std::make_unique<TabCtrl>(&frame,
@@ -496,7 +508,6 @@ FaintWindow::FaintWindow(ArtContainer& art,
       state.activeTool->SelectionChange();
       update_shown_settings(state, panels);
       m_impl->GetDialogContext().Reinitialize();
-
     });
 
   bind_fwd(frame, EVT_FAINT_CANVAS_CHANGE,

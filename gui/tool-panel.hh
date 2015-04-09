@@ -22,6 +22,7 @@ class wxWindow;
 namespace faint{
 
 class DialogContext;
+class StringSource;
 class ToolPanelImpl;
 
 class ToolPanel {
@@ -29,7 +30,11 @@ class ToolPanel {
 // buttons and controls for the settings of the active tool or
 // selected objects.
 public:
-  ToolPanel(wxWindow* parent, StatusInterface&, ArtContainer&, DialogContext&);
+  ToolPanel(wxWindow* parent,
+    StatusInterface&,
+    ArtContainer&,
+    DialogContext&,
+    const StringSource& unitStrings);
   ~ToolPanel();
   wxWindow* AsWindow();
   bool Visible() const;

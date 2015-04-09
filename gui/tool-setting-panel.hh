@@ -16,7 +16,7 @@
 #ifndef FAINT_TOOL_SETTING_PANEL_HH
 #define FAINT_TOOL_SETTING_PANEL_HH
 #include <list>
-#include "wx/panel.h"
+#include "wx/panel.h" // Fixme: Hide in impl
 
 namespace faint{
 
@@ -24,6 +24,7 @@ class ArtContainer;
 class DialogContext;
 class Settings;
 class StatusInterface;
+class StringSource;
 class ToolSettingCtrl;
 
 class ToolSettingPanel : public wxPanel{
@@ -31,13 +32,12 @@ public:
   ToolSettingPanel(wxWindow* parent,
     StatusInterface&,
     ArtContainer&,
-    DialogContext&);
+    DialogContext&,
+    const StringSource& units);
   void ShowSettings(const Settings&);
 
+  ToolSettingPanel(const ToolSettingPanel&) = delete;
 private:
-  ToolSettingPanel(const ToolSettingPanel&);
-  void AppendColour(const wxColour&);
-
   using ToolCtrlList = std::list<ToolSettingCtrl*>;
   ToolCtrlList m_toolControls;
 };

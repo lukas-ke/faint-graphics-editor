@@ -29,19 +29,11 @@
 
 namespace faint{
 
-class TestStringSource : public StringSource{
-public:
-  std::vector<utf8_string> Get() const override{
-    return {unit_px, "mm", "cm", "m"}; // Fixme: Not here, and base on calibration
-  }
-};
-
-TestStringSource g_testSrc;
-
 ToolSettingPanel::ToolSettingPanel(wxWindow* parent,
   StatusInterface& status,
   ArtContainer& art,
-  DialogContext& dialogContext) :
+  DialogContext& dialogContext,
+  const StringSource& unitStrings) :
   wxPanel(parent)
 {
   using namespace layout;
@@ -172,7 +164,7 @@ ToolSettingPanel::ToolSettingPanel(wxWindow* parent,
 
     control(create_drop_down(this,
       ts_Unit,
-      g_testSrc,
+      unitStrings,
       Tooltip("Unit"))),
 
     image_toggle(ts_TapeStyle, Tooltip("Tape measure"), iconSize,

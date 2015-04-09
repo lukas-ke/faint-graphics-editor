@@ -27,7 +27,8 @@ public:
   ToolPanelImpl(wxWindow* parent,
     StatusInterface& status,
     ArtContainer& art,
-    DialogContext& dialogContext)
+    DialogContext& dialogContext,
+    const StringSource& unitStrings)
     : wxPanel(parent)
   {
     const int borderSize = 5;
@@ -37,9 +38,12 @@ public:
     outerSizer->Add(m_toolbar->AsWindow(), 0,
       wxEXPAND|wxUP|wxLEFT|wxRIGHT, borderSize);
 
-    m_toolSettingPanel = new ToolSettingPanel(this, status, art, dialogContext);
-    outerSizer->Add(m_toolSettingPanel, 1, wxEXPAND | wxLEFT|wxRIGHT,
-      borderSize);
+    m_toolSettingPanel = new ToolSettingPanel(this,
+      status,
+      art,
+      dialogContext,
+      unitStrings);
+    outerSizer->Add(m_toolSettingPanel, 1, wxEXPAND | wxLEFT|wxRIGHT, borderSize);
     SetSizerAndFit(outerSizer);
   }
 
@@ -50,9 +54,10 @@ public:
 ToolPanel::ToolPanel(wxWindow* parent,
   StatusInterface& status,
   ArtContainer& art,
-  DialogContext& dialogContext)
+  DialogContext& dialogContext,
+  const StringSource& unitStrings)
 {
-  m_impl = new ToolPanelImpl(parent, status, art, dialogContext);
+  m_impl = new ToolPanelImpl(parent, status, art, dialogContext, unitStrings);
 }
 
 ToolPanel::~ToolPanel(){
