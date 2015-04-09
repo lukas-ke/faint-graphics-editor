@@ -14,43 +14,13 @@
 // permissions and limitations under the License.
 
 #include <memory>
-#include "wx/panel.h"
-#include "wx/sizer.h"
+#include "util-wx/fwd-wx.hh"
+#include "wx/sizer.h" // Fixme: Remove
 #include "gui/tool-bar.hh"
 #include "gui/tool-panel.hh"
 #include "gui/tool-setting-panel.hh"
 
 namespace faint{
-
-class ToolPanelImpl : public wxPanel{
-public:
-  ToolPanelImpl(wxWindow* parent,
-    StatusInterface& status,
-    ArtContainer& art,
-    DialogContext& dialogContext,
-    const StringSource& unitStrings)
-    : wxPanel(parent)
-  {
-    const int borderSize = 5;
-    wxBoxSizer* outerSizer = new wxBoxSizer(wxVERTICAL);
-
-    m_toolbar = std::make_unique<Toolbar>(this, status, art);
-    outerSizer->Add(m_toolbar->AsWindow(), 0,
-      wxEXPAND|wxUP|wxLEFT|wxRIGHT, borderSize);
-
-    m_toolSettingPanel = std::make_unique<ToolSettingPanel>(this,
-      status,
-      art,
-      dialogContext,
-      unitStrings);
-    outerSizer->Add(m_toolSettingPanel->AsWindow(),
-      1, wxEXPAND | wxLEFT|wxRIGHT, borderSize);
-    SetSizerAndFit(outerSizer);
-  }
-
-  std::unique_ptr<Toolbar> m_toolbar;
-  std::unique_ptr<ToolSettingPanel> m_toolSettingPanel;
-};
 
 ToolPanel::ToolPanel(wxWindow* parent,
   StatusInterface& status,
@@ -58,28 +28,44 @@ ToolPanel::ToolPanel(wxWindow* parent,
   DialogContext& dialogContext,
   const StringSource& unitStrings)
 {
-  m_impl = new ToolPanelImpl(parent, status, art, dialogContext, unitStrings);
+  m_panel = create_panel(parent);
+
+  const int borderSize = 5;
+  wxBoxSizer* outerSizer = new wxBoxSizer(wxVERTICAL);
+
+  m_toolbar = std::make_unique<Toolbar>(m_panel, status, art);
+  outerSizer->Add(m_toolbar->AsWindow(), 0,
+    wxEXPAND|wxUP|wxLEFT|wxRIGHT, borderSize);
+
+  m_toolSettingPanel = std::make_unique<ToolSettingPanel>(m_panel,
+    status,
+    art,
+    dialogContext,
+    unitStrings);
+  outerSizer->Add(m_toolSettingPanel->AsWindow(),
+    1, wxEXPAND | wxLEFT|wxRIGHT, borderSize);
+
+  set_sizer(m_panel, outerSizer);
 }
 
 ToolPanel::~ToolPanel(){
-  // Note: deletion is handled by wxWidgets.
-  m_impl = nullptr;
+  m_panel = nullptr; // Note: Deleted by wxWidgets
 }
 
 wxWindow* ToolPanel::AsWindow(){
-  return m_impl;
+  return m_panel;
 }
 
 bool ToolPanel::Visible() const{
-  return m_impl->IsShown();
+  return m_panel->IsShown();
 }
 
 void ToolPanel::Show(bool show){
-  m_impl->Show(show);
+  m_panel->Show(show);
 }
 
 void ToolPanel::Enable(bool e){
-  m_impl->Enable(e);
+  m_panel->Enable(e);
 }
 
 void ToolPanel::Hide(){
@@ -87,19 +73,19 @@ void ToolPanel::Hide(){
 }
 
 void ToolPanel::ShowSettings(const Settings& s){
-  m_impl->m_toolSettingPanel->ShowSettings(s);
+  m_toolSettingPanel->ShowSettings(s);
 }
 
 void ToolPanel::SelectTool(ToolId id){
   // Send an event like if the tool
-  // Fixme: Weird, IIRC, used to put all handling in a MainFrame
-  // On...-handler, and not duplicate button state...
-  m_impl->m_toolbar->SendToolChoiceEvent(id);
+  // Fixme: Weird, IIRC, used to put all handling in a FaintWindow
+  // event-handler, and not duplicate button state...
+  m_toolbar->SendToolChoiceEvent(id);
 }
 
 void ToolPanel::SelectLayer(Layer layer){
   // Fixme: See SelectTool note
-  m_impl->m_toolbar->SendLayerChoiceEvent(layer);
+  m_toolbar->SendLayerChoiceEvent(layer);
 }
 
 } // namespace

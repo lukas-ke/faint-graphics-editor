@@ -15,6 +15,7 @@
 
 #ifndef FAINT_TOOL_PANEL_HH
 #define FAINT_TOOL_PANEL_HH
+#include <memory>
 #include "util/status-interface.hh"
 
 class wxWindow;
@@ -23,7 +24,8 @@ namespace faint{
 
 class DialogContext;
 class StringSource;
-class ToolPanelImpl;
+class Toolbar;
+class ToolSettingPanel;
 
 class ToolPanel {
 // Vertical panel containing a layer choice control, tool selection
@@ -45,9 +47,11 @@ public:
   void SelectLayer(Layer);
   void ShowSettings(const Settings&);
 
+  ToolPanel(const ToolPanel&) = delete;
 private:
-  ToolPanel(const ToolPanel&);
-  ToolPanelImpl* m_impl;
+  wxWindow* m_panel;
+  std::unique_ptr<Toolbar> m_toolbar;
+  std::unique_ptr<ToolSettingPanel> m_toolSettingPanel;
 };
 
 } // namespace
