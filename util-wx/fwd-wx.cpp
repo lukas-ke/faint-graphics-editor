@@ -52,12 +52,16 @@ void set_bitmap(wxButton& button, const Bitmap& bmp){
   button.SetBitmap(to_wx_bmp(bmp));
 }
 
-void show(window_t w){
-  w.w->Show();
+void show(window_t w, bool doShow){
+  w.w->Show(doShow);
 }
 
 void hide(window_t w){
   w.w->Hide();
+}
+
+bool is_shown(window_t w){
+  return w.w->IsShown();
 }
 
 void show(wxDialog* dlg){
@@ -496,6 +500,10 @@ void center_over_parent(unique_dialog_ptr& dlg){
 
 void destroy(wxDialog* dlg){
   dlg->Destroy();
+}
+
+void enable(window_t w, bool doEnable){
+  w.w->Enable(doEnable);
 }
 
 unique_dialog_ptr null_dialog(){

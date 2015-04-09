@@ -39,13 +39,13 @@ public:
     const StringSource& unitStrings);
   ~ToolPanel();
   wxWindow* AsWindow();
-  bool Visible() const;
   void Enable(bool);
-  void Show(bool);
   void Hide();
-  void SelectTool(ToolId);
   void SelectLayer(Layer);
+  void SelectTool(ToolId);
+  void Show(bool);
   void ShowSettings(const Settings&);
+  bool Visible() const;
 
   ToolPanel(const ToolPanel&) = delete;
 private:

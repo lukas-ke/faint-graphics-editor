@@ -13,12 +13,12 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include <memory>
-#include "util-wx/fwd-wx.hh"
-#include "wx/sizer.h" // Fixme: Remove
+#include "wx/defs.h" // wxEXPAND etc
 #include "gui/tool-bar.hh"
 #include "gui/tool-panel.hh"
 #include "gui/tool-setting-panel.hh"
+#include "util-wx/fwd-wx.hh"
+#include "util-wx/layout-wx.hh"
 
 namespace faint{
 
@@ -29,23 +29,24 @@ ToolPanel::ToolPanel(wxWindow* parent,
   const StringSource& unitStrings)
 {
   m_panel = create_panel(parent);
-
-  const int borderSize = 5;
-  wxBoxSizer* outerSizer = new wxBoxSizer(wxVERTICAL);
-
   m_toolbar = std::make_unique<Toolbar>(m_panel, status, art);
-  outerSizer->Add(m_toolbar->AsWindow(), 0,
-    wxEXPAND|wxUP|wxLEFT|wxRIGHT, borderSize);
-
   m_toolSettingPanel = std::make_unique<ToolSettingPanel>(m_panel,
     status,
     art,
     dialogContext,
     unitStrings);
-  outerSizer->Add(m_toolSettingPanel->AsWindow(),
-    1, wxEXPAND | wxLEFT|wxRIGHT, borderSize);
 
-  set_sizer(m_panel, outerSizer);
+  const int borderSize = 5;
+  using namespace layout;
+  set_sizer(m_panel,
+    create_column(OuterSpacing(0), ItemSpacing(0), {
+      {m_toolbar->AsWindow(),
+       Proportion(0),
+       wxEXPAND|wxUP|wxLEFT|wxRIGHT, borderSize},
+
+      {m_toolSettingPanel->AsWindow(),
+       Proportion(1),
+       wxEXPAND|wxLEFT|wxRIGHT, borderSize}}));
 }
 
 ToolPanel::~ToolPanel(){
@@ -57,19 +58,19 @@ wxWindow* ToolPanel::AsWindow(){
 }
 
 bool ToolPanel::Visible() const{
-  return m_panel->IsShown();
+  return is_shown(m_panel);
 }
 
-void ToolPanel::Show(bool show){
-  m_panel->Show(show);
+void ToolPanel::Show(bool s){
+  show(m_panel, s);
 }
 
 void ToolPanel::Enable(bool e){
-  m_panel->Enable(e);
+  enable(m_panel, e);
 }
 
 void ToolPanel::Hide(){
-  Show(false);
+  hide(m_panel);
 }
 
 void ToolPanel::ShowSettings(const Settings& s){
@@ -77,7 +78,6 @@ void ToolPanel::ShowSettings(const Settings& s){
 }
 
 void ToolPanel::SelectTool(ToolId id){
-  // Send an event like if the tool
   // Fixme: Weird, IIRC, used to put all handling in a FaintWindow
   // event-handler, and not duplicate button state...
   m_toolbar->SendToolChoiceEvent(id);
