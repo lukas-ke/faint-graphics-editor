@@ -38,17 +38,18 @@ public:
     outerSizer->Add(m_toolbar->AsWindow(), 0,
       wxEXPAND|wxUP|wxLEFT|wxRIGHT, borderSize);
 
-    m_toolSettingPanel = new ToolSettingPanel(this,
+    m_toolSettingPanel = std::make_unique<ToolSettingPanel>(this,
       status,
       art,
       dialogContext,
       unitStrings);
-    outerSizer->Add(m_toolSettingPanel, 1, wxEXPAND | wxLEFT|wxRIGHT, borderSize);
+    outerSizer->Add(m_toolSettingPanel->AsWindow(),
+      1, wxEXPAND | wxLEFT|wxRIGHT, borderSize);
     SetSizerAndFit(outerSizer);
   }
 
   std::unique_ptr<Toolbar> m_toolbar;
-  ToolSettingPanel* m_toolSettingPanel;
+  std::unique_ptr<ToolSettingPanel> m_toolSettingPanel;
 };
 
 ToolPanel::ToolPanel(wxWindow* parent,

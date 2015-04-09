@@ -21,7 +21,6 @@
 #include "gui/spin-ctrl.hh"
 #include "gui/tool-setting-ctrl.hh"
 #include "gui/tool-setting-panel.hh"
-#include "text/text-expression-conversions.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/layout-wx.hh"
 #include "util/setting-id.hh"
@@ -33,15 +32,14 @@ ToolSettingPanel::ToolSettingPanel(wxWindow* parent,
   StatusInterface& status,
   ArtContainer& art,
   DialogContext& dialogContext,
-  const StringSource& unitStrings) :
-  wxPanel(parent)
+  const StringSource& unitStrings)
+  : m_panel(create_panel(parent))
 {
   using namespace layout;
-
   const IntSize iconSize(28, 23);
 
   auto hline = [this](){
-    return SizerItem(create_hline(this), Proportion(0), wxEXPAND|wxUP|wxDOWN, 5);
+    return SizerItem(create_hline(m_panel), Proportion(0), wxEXPAND|wxUP|wxDOWN, 5);
   };
 
   auto control = [this](ToolSettingCtrl* ctrl){
@@ -53,7 +51,7 @@ ToolSettingPanel::ToolSettingPanel(wxWindow* parent,
 
   auto bool_image_toggle =
     [&](const BoolSetting& s, Icon icon, const Tooltip& tooltip){
-      return control(create_bool_image_toggle(this,
+      return control(create_bool_image_toggle(m_panel,
         s,
         art.Get(icon),
         status,
@@ -63,15 +61,15 @@ ToolSettingPanel::ToolSettingPanel(wxWindow* parent,
   auto int_spinner =
     [&](const IntSetting& s, const char* label){
     static const int initialValue = 1;
-    return control(create_int_spinner(this, wxSize(50, -1), s, initialValue,
+    return control(create_int_spinner(m_panel, wxSize(50, -1), s, initialValue,
       label));
   };
 
   auto semi_float_spinner =
     [&](const FloatSetting& s, const char* label){
     static float initialValue = 1;
-    return control(create_semi_float_spinner(this, wxSize(50, -1), s, initialValue,
-        label));
+    return control(create_semi_float_spinner(m_panel,
+      wxSize(50, -1), s, initialValue, label));
   };
 
   auto image_toggle =
@@ -81,7 +79,7 @@ ToolSettingPanel::ToolSettingPanel(wxWindow* parent,
       const std::vector<ToggleImage>& images)
     {
       return control(
-        create_image_toggle(this,
+        create_image_toggle(m_panel,
           setting,
           size,
           status,
@@ -95,7 +93,7 @@ ToolSettingPanel::ToolSettingPanel(wxWindow* parent,
     };
 
   // Create all controls, and add them to m_toolControls.
-  set_sizer(this, create_column(OuterSpacing(0), ItemSpacing(0), {
+  set_sizer(m_panel, create_column(OuterSpacing(0), ItemSpacing(0), {
     hline(),
 
     bool_image_toggle(ts_EditPoints, Icon::EDIT_POINTS, Tooltip("Edit Points")),
@@ -104,7 +102,7 @@ ToolSettingPanel::ToolSettingPanel(wxWindow* parent,
 
     int_spinner(ts_BrushSize, "Brush Size"),
 
-    control(create_font_ctrl(this, dialogContext)),
+    control(create_font_ctrl(m_panel, dialogContext)),
 
     // Since the font size spinner is right below the font button, "Size" is
     // sufficient as the label.
@@ -162,7 +160,7 @@ ToolSettingPanel::ToolSettingPanel(wxWindow* parent,
     bool_image_toggle(ts_AlphaBlending, Icon::ALPHA_BLENDING,
       Tooltip("Alpha blending")),
 
-    control(create_drop_down(this,
+    control(create_drop_down(m_panel,
       ts_Unit,
       unitStrings,
       Tooltip("Unit"))),
@@ -176,13 +174,17 @@ ToolSettingPanel::ToolSettingPanel(wxWindow* parent,
     hline()}));
 }
 
+wxWindow* ToolSettingPanel::AsWindow(){
+  return m_panel;
+}
+
 void ToolSettingPanel::ShowSettings(const Settings& settings){
-  auto freezer = freeze(this);
+  auto freezer = freeze(m_panel);
   for (auto ctrl : m_toolControls){
     bool show = ctrl->UpdateControl(settings);
     ctrl->Show(show);
   }
-  Layout();
+  m_panel->Layout();
 }
 
 } // namespace

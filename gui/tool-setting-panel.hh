@@ -16,7 +16,8 @@
 #ifndef FAINT_TOOL_SETTING_PANEL_HH
 #define FAINT_TOOL_SETTING_PANEL_HH
 #include <list>
-#include "wx/panel.h" // Fixme: Hide in impl
+
+class wxWindow;
 
 namespace faint{
 
@@ -27,19 +28,21 @@ class StatusInterface;
 class StringSource;
 class ToolSettingCtrl;
 
-class ToolSettingPanel : public wxPanel{
+class ToolSettingPanel{
 public:
   ToolSettingPanel(wxWindow* parent,
     StatusInterface&,
     ArtContainer&,
     DialogContext&,
     const StringSource& units);
-  void ShowSettings(const Settings&);
 
+  wxWindow* AsWindow();
+  void ShowSettings(const Settings&);
   ToolSettingPanel(const ToolSettingPanel&) = delete;
 private:
   using ToolCtrlList = std::list<ToolSettingCtrl*>;
   ToolCtrlList m_toolControls;
+  wxWindow* m_panel;
 };
 
 } // namespace
