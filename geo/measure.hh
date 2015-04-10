@@ -36,9 +36,11 @@ Point mid_point(const Point&, const Point&);
 std::vector<Point> mid_points(const std::vector<Point>&);
 
 // Returns the angle of the line in the interval [-pi, pi]
+// <../doc/line_angle.png>
 Angle line_angle(const LineSegment&);
 
 // Returns the angle of the line in the interval [0, 2pi]
+// Fixme: Seems to have opposite sweep compared to line_angle
 Angle angle360(const LineSegment&);
 
 coord distance(const IntPoint&, const IntPoint&);
