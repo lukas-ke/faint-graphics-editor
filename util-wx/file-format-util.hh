@@ -37,7 +37,6 @@ utf8_string combined_file_dialog_filter(const utf8_string& description,
 
 Optional<int> get_file_format_index(const Formats&, const FileExtension&);
 
-Optional<Format&> get_load_format(const Formats&, const FileExtension&);
 Optional<Format&> get_save_format(const Formats&, const FileExtension&);
 Optional<Format&> get_save_format(const Formats&, const FileExtension&,
   int filterIndex);

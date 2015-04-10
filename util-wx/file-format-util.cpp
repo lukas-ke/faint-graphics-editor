@@ -109,12 +109,6 @@ static auto match_save(const FileExtension& ext){
   };
 }
 
-Optional<Format&> get_load_format(const Formats& formats,
-  const FileExtension& ext)
-{
-  return find_if_deref(formats, match_load(ext));
-}
-
 Optional<Format&> get_save_format(const Formats& formats,
   const FileExtension& ext)
 {
