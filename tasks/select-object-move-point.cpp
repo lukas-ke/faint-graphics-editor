@@ -55,15 +55,6 @@ static std::vector<Point> get_corners(const Object* object, int pointIndex){
   return {Point(p0.x, p1.y), Point(p1.x, p0.y)};
 }
 
-static Angle get_constrain_angle(const Point& p0, const Point& oldPos){
-  // Fixme: Consider angle360
-  Angle angle = -line_angle({p0, oldPos});
-  if (angle < Angle::Zero()){
-    return 2 * pi + angle;
-  }
-  return angle;
-}
-
 static bool render_snapped(Object* object, int pointIndex){
   // Render control-points when snapped or constrained as overlays,
   // since they're invisible otherwise.
@@ -150,8 +141,12 @@ public:
       // Constrain relative to the next or previous point
       Point opposite((snapHeld ? next_point : prev_point)
         (m_object, m_pointIndex));
-      p = adjust_to_default(opposite, p, pi/4,
-        get_constrain_angle(opposite, m_oldPos));
+
+      // Constrain the line to 45 degree intervals, or keep the
+      // current angle depending on which line is closer to the mouse
+      // pos.
+      const auto currentAngle = angle360({opposite, m_oldPos});
+      p = adjust_to_default(opposite, p, pi/4, currentAngle);
       m_constrainPos.Set(opposite);
     }
     else if (snapHeld){

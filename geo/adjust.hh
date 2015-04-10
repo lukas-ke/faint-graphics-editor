@@ -30,10 +30,10 @@ Point adjust_to(const Point& origin,
 // Returns the point adjusted to 45-degrees relative to origin
 Point adjust_to_45(const Point& origin, const Point&);
 
-// Adjusts like AdjustTo, but allows adding another snap-to angle (altAngle)
+// Adjusts like adjust_to, but allows adding another snap-to angle (altAngle)
 Point adjust_to_default(const Point& origin,
   const Point&,
-  const Angle&,
+  const Angle& step,
   const Angle& altAngle);
 
 enum class ConstrainDir{NONE, HORIZONTAL, VERTICAL};
