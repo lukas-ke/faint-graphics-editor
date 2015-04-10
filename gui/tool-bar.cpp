@@ -78,7 +78,7 @@ public:
        hline(5),
        {CreateToolButtons(art, status),
            Proportion(0), wxALIGN_CENTER_HORIZONTAL}}));
-    
+
     bind_fwd(m_panel, wxEVT_TOGGLEBUTTON,
       [&](wxCommandEvent& event){
         if (event.GetEventObject() != m_groupButton){
@@ -243,17 +243,17 @@ private:
         Description("Defines image measurements."),
         ToolId::CALIBRATE},
 
-      { art.Get(Icon::TOOL_LEVEL),
-        create_selected_bitmap(art.Get(Icon::TOOL_LEVEL)),
-        Tooltip("Level"),
-        Description("Image alignment"),
-        ToolId::LEVEL},
-
       { art.Get(Icon::TOOL_TAPE_MEASURE),
         create_selected_bitmap(art.Get(Icon::TOOL_TAPE_MEASURE)),
         Tooltip("Tape measure"),
         Description("Image measurements"),
         ToolId::TAPE_MEASURE},
+
+      { art.Get(Icon::TOOL_LEVEL),
+        create_selected_bitmap(art.Get(Icon::TOOL_LEVEL)),
+        Tooltip("Level"),
+        Description("Image alignment"),
+        ToolId::LEVEL},
 
       { art.Get(Icon::TOOL_HOT_SPOT),
         create_selected_bitmap(art.Get(Icon::TOOL_HOT_SPOT)),
