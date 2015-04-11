@@ -71,7 +71,7 @@ wxIcon get_icon(ArtContainer&, Icon);
 
 wxIconBundle bundle_icons(const wxIcon&, const wxIcon&);
 
-void fit_size_to(wxTextCtrl*, const wxString&);
+void fit_size_to(wxTextCtrl*, const utf8_string&);
 
 int parse_int_value(wxTextCtrl*, int defaultValue);
 

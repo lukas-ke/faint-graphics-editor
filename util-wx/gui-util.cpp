@@ -91,8 +91,8 @@ wxIconBundle bundle_icons(const wxIcon& icon1, const wxIcon& icon2){
   return bundle;
 }
 
-void fit_size_to(wxTextCtrl* textCtrl, const wxString& str){
-  wxSize extents = textCtrl->GetTextExtent(str);
+void fit_size_to(wxTextCtrl* textCtrl, const utf8_string& str){
+  wxSize extents = textCtrl->GetTextExtent(to_wx(str));
   textCtrl->SetInitialSize(wxSize(extents.x + 10, -1));
 }
 

@@ -185,13 +185,13 @@ public:
 
       create_row({
         m_width = focused(label_left<MathTextCtrl>(raw(m_dialog), "&Width", size.w,
-          [&](){
+          [&](coord){
             m_lastChanged = m_width;
             UpdateProportions(FocusMode::IGNORE_FOCUS);
           })),
 
         m_height = label_left<MathTextCtrl>(raw(m_dialog), "&Height", size.h,
-            [&](){
+            [&](coord){
               m_lastChanged = m_height;
               UpdateProportions(FocusMode::IGNORE_FOCUS);
             })}),

@@ -16,30 +16,31 @@
 #ifndef FAINT_MATH_TEXT_CTRL_HH
 #define FAINT_MATH_TEXT_CTRL_HH
 #include "wx/panel.h" // Fixme: Don't inherit, hide in impl.
+#include "text/utf8-string.hh"
+#include "util-wx/fwd-bind.hh"
+
+namespace faint{ class MathTextCtrl; }
+
+namespace faint{ namespace events{
+
+// Event handler for when the MathTextCtrl:s value is changed by user
+// entry.
+using coord_func = std::function<void(coord)>;
+void on_value_change(MathTextCtrl*, const coord_func&);
+
+}} // namespace
 
 namespace faint{
-
-// Event sent by MathTextCtrl when the value is changed by user entry
-extern const wxEventType MATH_TEXT_CONTROL_UPDATE;
-extern const wxEventTypeTag<wxCommandEvent> EVT_MATH_TEXT_CONTROL_UPDATE;
 
 class MathTextCtrl : public wxPanel{
 public:
   MathTextCtrl(wxWindow* parent, coord value);
-
-  template<typename FUNC>
-  MathTextCtrl(wxWindow* parent, coord value, FUNC&& f)
-    : MathTextCtrl(parent, value)
-  {
-    bind(this, EVT_MATH_TEXT_CONTROL_UPDATE, f);	 
-  }
-
-  void FitSizeTo(const wxString&);
+  MathTextCtrl(wxWindow* parent, coord value, const events::coord_func& onChange);
+  void FitSizeTo(const utf8_string&);
   void SetValue(coord);
   coord GetValue() const;
   coord GetOldValue() const;
   bool HasFocus() const override;
-
 private:
   class MathTextCtrlImpl;
   MathTextCtrlImpl* m_textCtrl;

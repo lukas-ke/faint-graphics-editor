@@ -100,7 +100,4 @@ void on_slider_change(window_t, const int_func&);
 
 }} // namespace
 
-
-
-
 #endif
