@@ -26,8 +26,8 @@ namespace faint{
 // <../doc/angle360_ccw.png>
 Angle angle360_ccw(const LineSegment&);
 
-// Same as IntRect(const IntPoint&, const IntPoint&), but
-// sometimes looks more consistent
+// Same as IntRect(const IntPoint&, const IntPoint&), but sometimes
+// looks more consistent
 IntRect bounding_rect(const IntPoint&, const IntPoint&);
 IntRect bounding_rect(const IntPoint&, const IntPoint&, const IntPoint&);
 IntRect bounding_rect(const IntLineSegment&);
