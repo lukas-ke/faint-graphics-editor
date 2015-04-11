@@ -99,15 +99,6 @@ public:
   }
 
 private:
-  wxWindow* AsWindow(wxWindow* w){
-    return w;
-  }
-
-  template<typename T>
-  wxWindow* AsWindow(T* w){
-    return w->AsWindow();
-  }
-
   wxStaticText* m_label;
   T* m_window;
 };
