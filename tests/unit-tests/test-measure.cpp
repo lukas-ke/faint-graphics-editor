@@ -55,4 +55,10 @@ void test_measure(){
   // mid_point
   EQUAL(mid_point({1.0, 1.0}, {7.0, 5.0}), Point(4, 3));
   EQUAL(mid_point({1.0, 1.0}, {-7.0, -5.0}), Point(-3, -2));
+
+  { // mid_points
+    std::vector<Point> result = {{4.0, 3.0}, {4.0, 3.0}, {-3.0, -2.0}};
+    EQUAL(mid_points({{1.0, 1.0}, {7.0, 5.0}, {1.0, 1.0}, {-7.0, -5.0}}), result);
+  }
+
 }

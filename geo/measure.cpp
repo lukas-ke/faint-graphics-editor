@@ -87,8 +87,7 @@ Point mid_point(const LineSegment& l){
 }
 
 Point mid_point(const Point& p0, const Point& p1){
-  return Point(std::min(p0.x, p1.x) + std::fabs(p0.x - p1.x) / 2,
-    std::min(p0.y, p1.y) + std::fabs(p0.y - p1.y) / 2);
+  return (p0 + p1) / 2;
 }
 
 std::vector<Point> mid_points(const std::vector<Point>& in_pts){
