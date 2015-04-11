@@ -123,7 +123,7 @@ bool Tri::Contains(const Point& pt) const{
 
 coord area(const Tri& tri){
   Tri t2 = rotated(tri, -tri.GetAngle(), tri.P0());
-  coord h = std::abs(t2.P0().y - t2.P3().y);
+  coord h = std::fabs(t2.P0().y - t2.P3().y);
   return tri.Width() * h;
 }
 

@@ -37,7 +37,7 @@ size_t caret_from_extents(const std::vector<int>& extents,
     coord d0 = pos.x - (x0 + extents[left]);
     coord d1 = pos.x - (x0 + extents[right]);
     if (d1 < 0){
-      return (std::abs(d0) < std::abs(d1)) ?
+      return (std::fabs(d0) < std::fabs(d1)) ?
         left : right;
     }
   }
