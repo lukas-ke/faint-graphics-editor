@@ -6,6 +6,7 @@
 #include "geo/line.hh"
 #include "geo/measure.hh"
 #include "tests/test-util/print-objects.hh"
+#include "util/math-constants.hh"
 
 void test_measure(){
   using namespace faint;
@@ -44,4 +45,7 @@ void test_measure(){
   NEAR(distance(Point(0,0), Point(1,-1)), std::sqrt(2), eps);
   NEAR(distance(Point(0,0), Point(-1,-1)), std::sqrt(2), eps);
 
+  NEAR(ellipse_perimeter(1.0, 1.0), math::tau, eps);
+  NEAR(ellipse_perimeter(0.5, 0.5), math::pi, eps);
+  NEAR(ellipse_perimeter(10.0, 20.0), 96.884, 0.001_eps)
 }
