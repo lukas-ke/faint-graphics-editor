@@ -15,9 +15,10 @@
 
 #ifndef FAINT_MATH_TEXT_CTRL_HH
 #define FAINT_MATH_TEXT_CTRL_HH
-#include "wx/panel.h" // Fixme: Don't inherit, hide in impl.
 #include "text/utf8-string.hh"
 #include "util-wx/fwd-bind.hh"
+
+class wxWindow;
 
 namespace faint{ class MathTextCtrl; }
 
@@ -32,19 +33,22 @@ void on_value_change(MathTextCtrl*, const coord_func&);
 
 namespace faint{
 
-class MathTextCtrl : public wxPanel{
+class MathTextCtrl{
 public:
   MathTextCtrl(wxWindow* parent, coord value);
   MathTextCtrl(wxWindow* parent, coord value, const events::coord_func& onChange);
+  wxWindow* AsWindow();
   void FitSizeTo(const utf8_string&);
   void SetValue(coord);
   coord GetValue() const;
   coord GetOldValue() const;
-  bool HasFocus() const override;
+  bool HasFocus() const;
 private:
   class MathTextCtrlImpl;
   MathTextCtrlImpl* m_textCtrl;
 };
+
+wxWindow* as_window(MathTextCtrl*);
 
 } // namespace
 

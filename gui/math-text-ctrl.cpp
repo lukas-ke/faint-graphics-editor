@@ -23,7 +23,6 @@
 #include "util/parse-math-string.hh"
 
 namespace faint{
-
 // Event sent by MathTextCtrl when the value is changed by user entry
 extern const wxEventType MATH_TEXT_CONTROL_UPDATE;
 extern const wxEventTypeTag<wxCommandEvent> EVT_MATH_TEXT_CONTROL_UPDATE;
@@ -31,6 +30,20 @@ extern const wxEventTypeTag<wxCommandEvent> EVT_MATH_TEXT_CONTROL_UPDATE;
 const wxEventType MATH_TEXT_CONTROL_UPDATE = wxNewEventType();
 const wxEventTypeTag<wxCommandEvent> EVT_MATH_TEXT_CONTROL_UPDATE(
   MATH_TEXT_CONTROL_UPDATE);
+
+}
+
+namespace faint{ namespace events{
+void on_value_change(MathTextCtrl* c, const coord_func& f){
+  bind_fwd(c->AsWindow(), EVT_MATH_TEXT_CONTROL_UPDATE,
+    [f, c](const wxCommandEvent&){
+      f(c->GetValue());
+    });
+}
+
+}}
+
+namespace faint{
 
 static std::string format_inactive(coord value, coord originalValue){
   std::stringstream ss;
@@ -105,13 +118,13 @@ private:
   }
 };
 
-MathTextCtrl::MathTextCtrl(wxWindow* parent, coord value)
-  : wxPanel(parent, wxID_ANY)
-{
-  m_textCtrl = new MathTextCtrlImpl(this, value);
+MathTextCtrl::MathTextCtrl(wxWindow* parent, coord value){
+  m_textCtrl = new MathTextCtrlImpl(parent, value);
   SetValue(value);
-  wxSize size(m_textCtrl->GetSize());
-  SetMinSize(wxSize(size.x + 2, size.y + 2));
+}
+
+wxWindow* MathTextCtrl::AsWindow(){
+  return m_textCtrl;
 }
 
 MathTextCtrl::MathTextCtrl(wxWindow* parent,
@@ -140,19 +153,10 @@ bool MathTextCtrl::HasFocus() const{
 
 void MathTextCtrl::FitSizeTo(const utf8_string& str){
   fit_size_to(m_textCtrl, str);
-  wxSize size(m_textCtrl->GetSize());
-  SetMinSize(wxSize(size.x + 2, size.y + 2));
+}
+
+wxWindow* as_window(MathTextCtrl* c){
+  return c->AsWindow();
 }
 
 } // namespace
-
-namespace faint{ namespace events{
-
-void on_value_change(MathTextCtrl* c, const coord_func& f){
-  bind_fwd(c, EVT_MATH_TEXT_CONTROL_UPDATE,
-    [f, c](const wxCommandEvent&){
-      f(c->GetValue());
-    });
-}
-
-}} // namespace

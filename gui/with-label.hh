@@ -21,6 +21,7 @@
 #include "wx/sizer.h" // Fixme: Hide
 #include "wx/stattext.h" // Fixme: Hide
 #include "gui/ui-constants.hh"
+#include "util-wx/window-types-wx.hh"
 
 namespace faint{
 
@@ -53,10 +54,10 @@ public:
 
     if (pos == LabelPos::LEFT){
       sz->Add(m_label, 0, wxRIGHT|wxALIGN_CENTER, labelSpacing);
-      sz->Add(m_window);
+      sz->Add(as_window(m_window));
     }
     else if (pos == LabelPos::BELOW){
-      sz->Add(m_window);
+      sz->Add(as_window(m_window));
       sz->Add(m_label, 0, wxALIGN_CENTER);
     }
     SetSizerAndFit(sz);
@@ -98,6 +99,15 @@ public:
   }
 
 private:
+  wxWindow* AsWindow(wxWindow* w){
+    return w;
+  }
+
+  template<typename T>
+  wxWindow* AsWindow(T* w){
+    return w->AsWindow();
+  }
+
   wxStaticText* m_label;
   T* m_window;
 };

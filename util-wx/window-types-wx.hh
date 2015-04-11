@@ -55,6 +55,10 @@ public:
   wxWindow* w;
 };
 
+inline wxWindow* as_window(window_t w){
+  return w.w;
+}
+
 } // namespace
 
 #endif
