@@ -263,7 +263,7 @@ utf8_string str_percentage(int numerator, int denominator){
 }
 
 utf8_string str_line_status_subpixel(const LineSegment& l){
-  int angle = rounded(angle360(l).Deg());
+  int angle = rounded(angle360_ccw(l).Deg());
 
   return comma_sep(str_from_to(l.p0, l.p1),
     lbl("length", str_length(length(l))),
@@ -283,7 +283,7 @@ utf8_string str_line_status(const IntLineSegment& line){
       str_int_length(lineRadius)),
 
     lbl("angle",
-      str_degrees_int_symbol(rounded(angle360(floated(line)).Deg()))));
+      str_degrees_int_symbol(rounded(angle360_ccw(floated(line)).Deg()))));
 }
 
 utf8_string lbl(const utf8_string& label, const utf8_string& value){

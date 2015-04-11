@@ -119,8 +119,8 @@ public:
 
   TaskResult MouseMove(const PosInfo& info) override{
     const Point& pos = info.pos;
-    Angle a1 = line_angle({m_pivot, m_handle});
-    Angle a2 = line_angle({m_pivot, pos});
+    Angle a1 = line_angle_cw({m_pivot, m_handle});
+    Angle a2 = line_angle_cw({m_pivot, pos});
     Angle delta = a2 - a1;
     if (info.modifiers.Secondary()){
       if (delta > -pi/4.0 && delta < pi/4.0){

@@ -21,6 +21,11 @@
 
 namespace faint{
 
+// Returns the angle of the line in the interval [0, 2pi],
+// with angles increasing counter-clockwise.
+// <../doc/angle360_ccw.png>
+Angle angle360_ccw(const LineSegment&);
+
 // Same as IntRect(const IntPoint&, const IntPoint&), but
 // sometimes looks more consistent
 IntRect bounding_rect(const IntPoint&, const IntPoint&);
@@ -31,18 +36,6 @@ Rect bounding_rect(const LineSegment&);
 Rect bounding_rect(const Point&, const Point&, const Point&);
 Rect bounding_rect(const Point&, const Point&);
 
-Point mid_point(const LineSegment&);
-Point mid_point(const Point&, const Point&);
-std::vector<Point> mid_points(const std::vector<Point>&);
-
-// Returns the angle of the line in the interval [-pi, pi]
-// <../doc/line_angle.png>
-Angle line_angle(const LineSegment&);
-
-// Returns the angle of the line in the interval [0, 2pi]
-// Fixme: Seems to have opposite sweep compared to line_angle
-Angle angle360(const LineSegment&);
-
 coord distance(const IntPoint&, const IntPoint&);
 coord distance(const Point&, const Point&);
 
@@ -50,9 +43,18 @@ coord distance(const Point&, const Point&);
 // line distance for the specified number of subdivisions. A higher
 // number of subdivisions gives a better approximation, but is more
 // time consuming.
-coord distance(const Point&, const CubicBezier&, int subdivisions);
+coord distance(const Point& start, const CubicBezier&, int subdivisions);
 
 coord ellipse_perimeter(coord a, coord b);
+
+// Returns the angle between the positive x-axis and the line in the
+// interval [-pi, pi], with positive angles on the lower semi-circle
+// <../doc/line_angle_cw.png>
+Angle line_angle_cw(const LineSegment&);
+
+Point mid_point(const LineSegment&);
+Point mid_point(const Point&, const Point&);
+std::vector<Point> mid_points(const std::vector<Point>&);
 
 coord perimeter(const std::vector<PathPt>&);
 

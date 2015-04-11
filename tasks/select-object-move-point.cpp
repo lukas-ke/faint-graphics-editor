@@ -145,7 +145,7 @@ public:
       // Constrain the line to 45 degree intervals, or keep the
       // current angle depending on which line is closer to the mouse
       // pos.
-      const auto currentAngle = angle360({opposite, m_oldPos});
+      const auto currentAngle = angle360_ccw({opposite, m_oldPos});
       p = adjust_to_default(opposite, p, pi/4, currentAngle);
       m_constrainPos.Set(opposite);
     }

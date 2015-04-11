@@ -122,10 +122,10 @@ public:
     assert(index < 2);
     Point c(center_point(m_tri));
     if (index == 0){
-      m_angleSpan.start = line_angle({c, p});
+      m_angleSpan.start = line_angle_cw({c, p});
     }
     else{
-      m_angleSpan.stop = line_angle({c, p});
+      m_angleSpan.stop = line_angle_cw({c, p});
     }
   }
 

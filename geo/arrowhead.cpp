@@ -50,7 +50,7 @@ Point Arrowhead::P2() const{
 }
 
 Arrowhead get_arrowhead(const LineSegment& l, coord lineWidth){
-  Angle angle = line_angle(reversed(l));
+  Angle angle = line_angle_cw(reversed(l));
   Angle orth = angle + pi / 2.0;
   coord ax0 = cos(orth) * 9 * (lineWidth / 3.0);
   coord ay0 = sin(orth) * 9 * (lineWidth / 3.0);

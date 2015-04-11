@@ -29,7 +29,7 @@ Point adjust_to(const Point& o,
 {
   const int n_angles = 360 / truncated(step.Deg()) + 1;
   const coord length = distance(o, p);
-  const Angle angle = angle360({o, p});
+  const Angle angle = angle360_ccw({o, p});
 
   for (int i = 0; i!= n_angles; i++){
     Angle i_angle = i * step + offset;
@@ -46,7 +46,7 @@ Point adjust_to(const Point& o,
 }
 
 Point adjust_to_45(const Point& o, const Point& p){
-  const Angle angle = angle360({o, p});
+  const Angle angle = angle360_ccw({o, p});
   coord dx = p.x - o.x;
   coord dy = p.y - o.y;
 
@@ -85,7 +85,7 @@ Point adjust_to_default(const Point& origin,
   auto twoPi = 2 * pi.Rad();
   int n_angles = static_cast<int>(twoPi / angle.Rad()) + 1;
   auto length = distance(origin, p);
-  auto initialAngle = -line_angle({origin, p}).Rad();
+  auto initialAngle = -line_angle_cw({origin, p}).Rad();
   if (initialAngle < 0){
     initialAngle = twoPi + initialAngle;
   }

@@ -137,7 +137,7 @@ public:
 
     if (centerPoint && constrainToCircle) {
       m_p1 = constrain_to_square(m_origP0, info.pos, subPixel);
-      Angle angle = line_angle({m_origP0, m_p1});
+      Angle angle = line_angle_cw({m_origP0, m_p1});
       coord radius = distance(m_origP0, m_p1);
       coord rx = cos(angle) * radius;
       m_p0 = m_origP0 - Point::Both(rx);

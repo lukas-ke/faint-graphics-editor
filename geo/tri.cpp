@@ -42,7 +42,7 @@ Tri::Tri(const Point& p0, const Point& p1, coord h)
   : m_p0(p0),
     m_p1(p1)
 {
-  Angle angle = line_angle({p0, p1});
+  Angle angle = line_angle_cw({p0, p1});
   coord dy = delta_from_length(h);
   m_p2 = m_p0 + Point(dy * cos(angle + pi / 2), dy * sin(angle + pi / 2));
 }
@@ -63,7 +63,7 @@ Tri::Tri(const Point& p0, const Point& p1, const Point& p2)
 {}
 
 Angle Tri::GetAngle() const{
-  return line_angle({m_p0, m_p1});
+  return line_angle_cw({m_p0, m_p1});
 }
 
 coord Tri::Width() const{
@@ -71,8 +71,8 @@ coord Tri::Width() const{
 }
 
 coord Tri::Height() const{
-  Angle angle1 = line_angle({m_p0, m_p1});
-  Angle angle2 = line_angle({m_p0, m_p2});
+  Angle angle1 = line_angle_cw({m_p0, m_p1});
+  Angle angle2 = line_angle_cw({m_p0, m_p2});
   Angle angle3 = angle1 + pi / 2.0;
   coord h = distance(m_p0, m_p2);
 
@@ -192,7 +192,7 @@ Point mid_P2_P3(const Tri& t){
 
 static Tri offset_P0_P1(const Tri& t, coord xOff){
   // Fixme: Merge offset_P0_* into offset_aligned
-  Angle a = line_angle(LineSegment(t.P0(), t.P1()));
+  Angle a = line_angle_cw(LineSegment(t.P0(), t.P1()));
 
   coord dx = xOff * cos(a);
   coord dy = xOff * sin(a);
@@ -202,7 +202,7 @@ static Tri offset_P0_P1(const Tri& t, coord xOff){
 
 static Tri offset_P0_P2(const Tri& t, coord yOff){
   // Fixme: Merge offset_P0_* into offset_aligned
-  Angle a = line_angle(LineSegment(t.P0(), t.P2()));
+  Angle a = line_angle_cw(LineSegment(t.P0(), t.P2()));
 
   coord dx = yOff * cos(a);
   coord dy = yOff * sin(a);

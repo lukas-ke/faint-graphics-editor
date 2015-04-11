@@ -55,7 +55,7 @@ static bool rather_short(const LineSegment& line){
 // Returns the shortest rotation angle that would align the line with
 // the horizon (0 degrees)
 static Angle get_rotation_angle(const LineSegment& line){
-  Angle angle = angle360(line);
+  Angle angle = angle360_ccw(line);
   if (angle <= Angle::Deg(90)){
     return angle;
   }

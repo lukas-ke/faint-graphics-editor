@@ -27,6 +27,21 @@
 
 namespace faint{
 
+Angle angle360_ccw(const LineSegment& l){
+  if (l.p0 == l.p1){
+    return Angle::Zero();
+  }
+
+  Angle angle = line_angle_cw(l);
+  if (angle < Angle::Zero()){
+    angle = 2 * pi + angle;
+  }
+  if (angle == Angle::Zero()){
+    return angle;
+  }
+  return 2 * pi - angle;
+}
+
 IntRect bounding_rect(const IntPoint& p0, const IntPoint& p1){
   return IntRect(p0, p1);
 }
@@ -64,7 +79,7 @@ coord distance(const IntPoint& pt1, const IntPoint& pt2){
   return distance(floated(pt1), floated(pt2));
 }
 
-Angle line_angle(const LineSegment& l){
+Angle line_angle_cw(const LineSegment& l){
   return atan2(l.p1.y - l.p0.y, l.p1.x - l.p0.x);
 }
 
@@ -95,25 +110,9 @@ std::vector<Point> mid_points(const std::vector<Point>& in_pts){
   return midPts;
 }
 
-Angle angle360(const LineSegment& l){
-  if (l.p0 == l.p1){
-    return Angle::Zero();
-  }
-
-  Angle angle = line_angle(l);
-  if (angle < Angle::Zero()){
-    angle = 2 * pi + angle;
-  }
-  if (angle == Angle::Zero()){
-    return angle;
-  }
-  return 2 * pi - angle;
-}
-
-coord sq(coord v){
-  return v * v;
-}
 coord ellipse_perimeter(coord a, coord b){
+  static const auto sq = [](coord v){return v * v;};
+
   coord pi = faint::pi.Rad();
   return
    pi * (a+b) * (

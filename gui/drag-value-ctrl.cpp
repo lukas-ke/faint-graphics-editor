@@ -52,7 +52,7 @@ static int drag_value(const IntPoint& p0,
 {
   assert(dampening > 0);
   coord d = truncated(distance(p0, p1));
-  Angle a = angle360({floated(p0), floated(p1)});
+  Angle a = angle360_ccw({floated(p0), floated(p1)});
   if (Angle::Deg(135) < a && a < Angle::Deg(315)){
     d *= -1;
   }
