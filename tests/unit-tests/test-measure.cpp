@@ -12,6 +12,17 @@ void test_measure(){
   using namespace faint;
   const auto eps = Epsilon(std::numeric_limits<double>::epsilon());
 
+  // angle360_ccw
+  // <../../doc/angle360_ccw.png>
+  NEAR(angle360_ccw({{0,0},{1,0}}).Deg(), 0.0, eps);
+  NEAR(angle360_ccw({{0,0},{1,-1}}).Deg(), 45.0, eps);
+  NEAR(angle360_ccw({{0,0},{0,-1}}).Deg(), 90.0, eps);
+  NEAR(angle360_ccw({{0,0},{-1,-1}}).Deg(), 135.0, eps);
+  NEAR(angle360_ccw({{0,0},{-1,0}}).Deg(), 180.0, eps);
+  NEAR(angle360_ccw({{0,0},{-1,1}}).Deg(), 225.0, eps);
+  NEAR(angle360_ccw({{0,0},{0,1}}).Deg(), 270.0, eps);
+  NEAR(angle360_ccw({{0,0},{1,1}}).Deg(), 315.0, eps);
+
   // line_angle_cw
   // <../../doc/line_angle_cw.png>
   NEAR(line_angle_cw({{0,0},{1,0}}).Deg(), 0.0, eps);
@@ -27,17 +38,6 @@ void test_measure(){
   NEAR(line_angle_cw({{0,0},{0,-1}}).Deg(), -90.0, eps);
   NEAR(line_angle_cw({{0,0},{-1,-1}}).Deg(), -135.0, eps);
 
-  // angle360_ccw
-  // <../../doc/angle360_ccw.png>
-  NEAR(angle360_ccw({{0,0},{1,0}}).Deg(), 0.0, eps);
-  NEAR(angle360_ccw({{0,0},{1,-1}}).Deg(), 45.0, eps);
-  NEAR(angle360_ccw({{0,0},{0,-1}}).Deg(), 90.0, eps);
-  NEAR(angle360_ccw({{0,0},{-1,-1}}).Deg(), 135.0, eps);
-  NEAR(angle360_ccw({{0,0},{-1,0}}).Deg(), 180.0, eps);
-  NEAR(angle360_ccw({{0,0},{-1,1}}).Deg(), 225.0, eps);
-  NEAR(angle360_ccw({{0,0},{0,1}}).Deg(), 270.0, eps);
-  NEAR(angle360_ccw({{0,0},{1,1}}).Deg(), 315.0, eps);
-
   // distance
   NEAR(distance(Point(0,0), Point(1,0)), 1.0, eps);
   NEAR(distance(Point(0,0), Point(1,1)), std::sqrt(2), eps);
@@ -45,7 +45,14 @@ void test_measure(){
   NEAR(distance(Point(0,0), Point(1,-1)), std::sqrt(2), eps);
   NEAR(distance(Point(0,0), Point(-1,-1)), std::sqrt(2), eps);
 
+  // Note: bezier-distance tested in bezier-distance.cpp
+
+  // ellipse_perimeter
   NEAR(ellipse_perimeter(1.0, 1.0), math::tau, eps);
   NEAR(ellipse_perimeter(0.5, 0.5), math::pi, eps);
-  NEAR(ellipse_perimeter(10.0, 20.0), 96.884, 0.001_eps)
+  NEAR(ellipse_perimeter(10.0, 20.0), 96.884, 0.001_eps);
+
+  // mid_point
+  EQUAL(mid_point({1.0, 1.0}, {7.0, 5.0}), Point(4, 3));
+  EQUAL(mid_point({1.0, 1.0}, {-7.0, -5.0}), Point(-3, -2));
 }
