@@ -1,4 +1,5 @@
 // -*- coding: us-ascii-unix -*-
+#include <cmath>
 #include <limits>
 #include "test-sys/test.hh"
 #include "geo/angle.hh"
@@ -35,4 +36,12 @@ void test_measure(){
   NEAR(angle360_ccw({{0,0},{-1,1}}).Deg(), 225.0, eps);
   NEAR(angle360_ccw({{0,0},{0,1}}).Deg(), 270.0, eps);
   NEAR(angle360_ccw({{0,0},{1,1}}).Deg(), 315.0, eps);
+
+  // distance
+  NEAR(distance(Point(0,0), Point(1,0)), 1.0, eps);
+  NEAR(distance(Point(0,0), Point(1,1)), std::sqrt(2), eps);
+  NEAR(distance(Point(0,0), Point(-1,1)), std::sqrt(2), eps);
+  NEAR(distance(Point(0,0), Point(1,-1)), std::sqrt(2), eps);
+  NEAR(distance(Point(0,0), Point(-1,-1)), std::sqrt(2), eps);
+
 }

@@ -34,12 +34,12 @@ Angle angle360_ccw(const LineSegment& l){
 
   Angle angle = line_angle_cw(l);
   if (angle < Angle::Zero()){
-    angle = 2 * pi + angle;
+    angle = angle + tau;
   }
   if (angle == Angle::Zero()){
     return angle;
   }
-  return 2 * pi - angle;
+  return tau - angle;
 }
 
 IntRect bounding_rect(const IntPoint& p0, const IntPoint& p1){
@@ -71,8 +71,7 @@ Rect bounding_rect(const Point& p0, const Point& p1, const Point& p2){
 }
 
 coord distance(const Point& p0, const Point& p1){
-  return sqrt((p0.x - p1.x) * (p0.x - p1.x) +
-    (p0.y - p1.y) * (p0.y - p1.y));
+  return sqrt(sq(p0.x - p1.x) + sq(p0.y - p1.y));
 }
 
 coord distance(const IntPoint& pt1, const IntPoint& pt2){
@@ -89,7 +88,7 @@ Point mid_point(const LineSegment& l){
 
 Point mid_point(const Point& p0, const Point& p1){
   return Point(std::min(p0.x, p1.x) + std::fabs(p0.x - p1.x) / 2,
-    std::min(p0.y, p1.y) + std::abs(p0.y - p1.y) / 2);
+    std::min(p0.y, p1.y) + std::abs(p0.y - p1.y) / 2); // Fixme: Not fabs?
 }
 
 std::vector<Point> mid_points(const std::vector<Point>& in_pts){
@@ -111,9 +110,11 @@ std::vector<Point> mid_points(const std::vector<Point>& in_pts){
 }
 
 coord ellipse_perimeter(coord a, coord b){
-  static const auto sq = [](coord v){return v * v;};
-
   coord pi = faint::pi.Rad();
+
+  // Ramanujan, Srinivasa, (1914). "Modular Equations and
+  // Approximations to pi"
+  // <../doc/ellipse_perimeter.png>
   return
    pi * (a+b) * (
      (3 * sq(a - b)) / (

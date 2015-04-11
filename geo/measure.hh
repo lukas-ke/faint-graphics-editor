@@ -36,6 +36,8 @@ Rect bounding_rect(const LineSegment&);
 Rect bounding_rect(const Point&, const Point&, const Point&);
 Rect bounding_rect(const Point&, const Point&);
 
+// Returns the positive distance between the points. Insensitive to
+// ordering.
 coord distance(const IntPoint&, const IntPoint&);
 coord distance(const Point&, const Point&);
 
@@ -49,6 +51,7 @@ coord ellipse_perimeter(coord a, coord b);
 
 // Returns the angle between the positive x-axis and the line in the
 // interval [-pi, pi], with positive angles on the lower semi-circle
+// (Pretty much the same as atan2!)
 // <../doc/line_angle_cw.png>
 Angle line_angle_cw(const LineSegment&);
 

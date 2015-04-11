@@ -412,11 +412,6 @@ void color_balance(Bitmap& bmp,
   }
 }
 
-template<typename T>
-T sq(T v){
-  return v*v;
-}
-
 static IntPoint whirled(const Point& p, const Point& c, coord r,
   const Angle& whirl)
 {

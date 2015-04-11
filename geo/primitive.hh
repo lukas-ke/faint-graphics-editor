@@ -69,6 +69,11 @@ int rounded_down(float) = delete;
 int rounded_up(float) = delete;
 int truncated(float) = delete;
 
+template<typename T>
+T sq(T v){
+  return v * v;
+}
+
 } // namespace
 
 #endif
