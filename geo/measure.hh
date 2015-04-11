@@ -50,7 +50,7 @@ coord distance(const Point& start, const CubicBezier&, int subdivisions);
 coord ellipse_perimeter(coord a, coord b);
 
 // Returns the angle between the positive x-axis and the line in the
-// interval [-pi, pi], with positive angles on the lower semi-circle
+// interval (-pi, pi], with positive angles on the lower semi-circle
 // (Pretty much the same as atan2!)
 // <../doc/line_angle_cw.png>
 Angle line_angle_cw(const LineSegment&);
