@@ -90,20 +90,14 @@ Point mid_point(const Point& p0, const Point& p1){
   return (p0 + p1) / 2;
 }
 
-std::vector<Point> mid_points(const std::vector<Point>& in_pts){
-  if (in_pts.empty()){
-    return std::vector<Point>();
+std::vector<Point> mid_points(const std::vector<Point>& pts){
+  if (pts.empty()){
+    return {};
   }
 
-  std::vector<Point> pts(in_pts);
-  Point a = pts[0];
   std::vector<Point> midPts;
   for (size_t i = 1; i != pts.size(); i++){
-    Point b = pts[i];
-    Point p0 = min_coords(a,b);
-    Point p1 = max_coords(a,b);
-    midPts.push_back(p0 + (p1 - p0) / 2);
-    a = pts[i];
+    midPts.push_back(mid_point(pts[i-1], pts[i]));
   }
   return midPts;
 }
