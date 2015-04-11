@@ -32,14 +32,14 @@
 namespace faint{
 
 static void flip_horizontally(const objects_t& objects, const Size& size){
-  const Point p0(size.w / 2.0f, size.h / 2.0f);
+  const auto p0 = point_from_size(size / 2);
   for (Object* obj : objects){
     obj->SetTri(scaled(obj->GetTri(), invert_x_scale(), p0));
   }
 }
 
 static void flip_vertically(const objects_t& objects, const Size& size){
-  const Point p0(size.w / 2.0f, size.h / 2.0f);
+  const auto p0 = point_from_size(size / 2);
   for (Object* obj : objects){
     obj->SetTri(scaled(obj->GetTri(), invert_y_scale(), p0));
   }

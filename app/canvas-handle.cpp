@@ -94,27 +94,27 @@ HandleDirection CanvasResizeHandle::GetDirection() const{
 IntPoint CanvasResizeHandle::GetPos() const{
   switch (m_handlePos){
   case HandlePos::TOP_LEFT:
-    return IntPoint(0,0);
+    return {0,0};
   case HandlePos::TOP_RIGHT:
-    return IntPoint(m_canvasSize.w - 1, 0);
+    return {m_canvasSize.w - 1, 0};
   case HandlePos::BOTTOM_LEFT:
-    return IntPoint(0, m_canvasSize.h - 1);
+    return {0, m_canvasSize.h - 1};
   case HandlePos::BOTTOM_RIGHT:
-    return IntPoint(m_canvasSize.w - 1, m_canvasSize.h - 1);
+    return {m_canvasSize.w - 1, m_canvasSize.h - 1};
   case HandlePos::TOP_SIDE:
-    return IntPoint((m_canvasSize.w - 1)/2, 0);
+    return {(m_canvasSize.w - 1)/2, 0};
   case HandlePos::BOTTOM_SIDE:
-    return IntPoint((m_canvasSize.w - 1)/2, m_canvasSize.h - 1);
+    return {(m_canvasSize.w - 1)/2, m_canvasSize.h - 1};
   case HandlePos::LEFT_SIDE:
-    return IntPoint(0, (m_canvasSize.h - 1)/2);
+    return {0, (m_canvasSize.h - 1)/2};
   case HandlePos::RIGHT_SIDE:
-    return IntPoint(m_canvasSize.w - 1, (m_canvasSize.h - 1)/2);
+    return {m_canvasSize.w - 1, (m_canvasSize.h - 1)/2};
   case HandlePos::END:
     assert(false);
-    return IntPoint(0,0);
-  }
+    return {0,0};
+}
   assert(false);
-  return IntPoint(0,0);
+  return {0,0};
 }
 
 IntRect CanvasResizeHandle::GetRect() const{
@@ -144,7 +144,8 @@ IntRect CanvasResizeHandle::GetRect() const{
   }
   else if (m_handlePos == HandlePos::TOP_SIDE){
     const int ch_w = g_canvasHandleSz.w;
-    return IntRect(IntPoint((int)m_geo.border.w + width / 2 - m_geo.pos.x - ch_w / 2, top),
+    return IntRect(
+      IntPoint((int)m_geo.border.w + width / 2 - m_geo.pos.x - ch_w / 2, top),
       g_canvasHandleSz);
   }
   else if (m_handlePos == HandlePos::BOTTOM_SIDE){

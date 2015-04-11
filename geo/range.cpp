@@ -112,7 +112,7 @@ int Interval::Delta() const{
 }
 
 int Interval::Mid() const{
-  return m_min + (m_max - m_min) / 2;
+  return mid_value(m_min, m_max);
 }
 
 int Interval::Upper() const{
