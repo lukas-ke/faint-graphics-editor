@@ -57,6 +57,10 @@ Angle line_angle_cw(const LineSegment&);
 
 Point mid_point(const LineSegment&);
 Point mid_point(const Point&, const Point&);
+
+// Returns the mid_point between all points in the vector. The
+// returned vector will contain one point less than source vector,
+// or no points if the source was empty.
 std::vector<Point> mid_points(const std::vector<Point>&);
 
 coord perimeter(const std::vector<PathPt>&);

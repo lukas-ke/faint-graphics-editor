@@ -91,7 +91,7 @@ Point mid_point(const Point& p0, const Point& p1){
 }
 
 std::vector<Point> mid_points(const std::vector<Point>& pts){
-  if (pts.empty()){
+  if (pts.size() < 2){
     return {};
   }
 

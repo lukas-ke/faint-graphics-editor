@@ -56,9 +56,11 @@ void test_measure(){
   EQUAL(mid_point({1.0, 1.0}, {7.0, 5.0}), Point(4, 3));
   EQUAL(mid_point({1.0, 1.0}, {-7.0, -5.0}), Point(-3, -2));
 
-  { // mid_points
-    std::vector<Point> result = {{4.0, 3.0}, {4.0, 3.0}, {-3.0, -2.0}};
-    EQUAL(mid_points({{1.0, 1.0}, {7.0, 5.0}, {1.0, 1.0}, {-7.0, -5.0}}), result);
-  }
-
+  // mid_points
+  using pt_vec = std::vector<Point>;
+  EQUAL(mid_points({}), pt_vec());
+  EQUAL(mid_points({{1.0, 1.0}}), pt_vec());
+  EQUAL(mid_points({{1.0, 1.0}, {7.0, 5.0}}), pt_vec({{4.0, 3.0}}));
+  EQUAL(mid_points({{1.0, 1.0}, {7.0, 5.0}, {1.0, 1.0}, {-7.0, -5.0}}),
+    pt_vec({{4.0, 3.0}, {4.0, 3.0}, {-3.0, -2.0}}));
 }
