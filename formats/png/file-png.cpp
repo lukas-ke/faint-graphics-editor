@@ -66,7 +66,8 @@ enum class PngReadResult{
   ERROR_CREATE_INFO_STRUCT,
   ERROR_INIT_IO,
   ERROR_READ_DATA,
-  ERROR_READ_PALETTE // Fixme: Add error handling for this
+  ERROR_READ_PALETTE, // Fixme: Add error handling for this
+  ERROR_MALLOC
 };
 
 static utf8_string to_string(PngReadResult result, const FilePath& p){
@@ -101,6 +102,9 @@ static utf8_string to_string(PngReadResult result, const FilePath& p){
   }
   else if (result == R::ERROR_READ_DATA){
     return failed_read_libpng("png_read_image");
+  }
+  else if (result == R::ERROR_MALLOC){
+    return failed_read_libpng("Out of memory.");
   }
   else{
     return failed_read("For reasons unknown.");
@@ -197,8 +201,20 @@ static PngReadResult read_with_libpng(const char* path,
   }
 
   const auto rowBytes = png_get_rowbytes(png_ptr, info_ptr);
+  if (rowBytes == 0){
+    return PngReadResult::ERROR_READ_DATA;
+  }
+
   *rows = (png_byte*) malloc(rowBytes * *height);
+  if (*rows == nullptr){
+    return PngReadResult::ERROR_MALLOC;
+  }
   auto rowPointers = (png_byte**) malloc(sizeof(png_byte*) * (*height));
+  if (rowPointers == nullptr){
+    free(*rows);
+    return PngReadResult::ERROR_MALLOC;
+  }
+
   for (png_uint_32 y = 0; y < (*height); y++){
     rowPointers[y] = *rows + y * rowBytes;
   }
@@ -211,12 +227,18 @@ static PngReadResult read_with_libpng(const char* path,
     if (result != PNG_INFO_PLTE){
       return PngReadResult::ERROR_READ_PALETTE;
     }
-    (*palette) = (png_color*) malloc(sizeof(png_color) * PNG_MAX_PALETTE_LENGTH);
+    *palette = (png_color*) malloc(sizeof(png_color) * PNG_MAX_PALETTE_LENGTH);
+    if (*palette == nullptr){
+      free(*rows);
+      free(*rowPointers);
+      return PngReadResult::ERROR_MALLOC;
+    }
     memcpy(*palette, tempPalette, *numPalette);
   }
 
   png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
   fclose(f);
+  free(rowPointers);
   return PngReadResult::OK;
 }
 
