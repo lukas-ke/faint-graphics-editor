@@ -68,7 +68,7 @@ public:
     : wxPanel(parent)
   {
     wxSizer* sz = new wxBoxSizer(layout_orientation(pos));
-    m_label = new wxStaticText(this, wxID_ANY, label);
+    m_label = create_label(this, label);
     m_window = f(this);
 
     if (pos == LabelPos::LEFT){
