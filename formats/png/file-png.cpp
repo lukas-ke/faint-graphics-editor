@@ -182,8 +182,8 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
     // Read the data into a faint-Bitmap
     Bitmap bmp(IntSize(static_cast<int>(width), static_cast<int>(height)));
     auto* p = bmp.GetRaw();
-    const png_uint_32 stride = convert(bmp.GetStride());
-    const png_uint_32 BMP_BPP = convert(faint::BPP);
+    const auto bmpStride = bmp.GetStride();
+    const auto bmpBpp = faint::BPP;
     const png_uint_32 PNG_BPP = convert(pngBitsPerPixel / 8);
 
     if (gray_or_gray_alpha(colorType)){
@@ -192,7 +192,7 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
       for (png_uint_32 y = 0; y < height; y++){
         const auto* row = rows + y * width * PNG_BPP;
         for (png_uint_32 x = 0; x < width; x++){
-          auto i =  y * stride + x * BMP_BPP;
+          auto i =  y * bmpStride + x * bmpBpp;
           const png_byte v = row[x * PNG_BPP];
           p[i + faint::iR] = v;
           p[i + faint::iG] = v;
@@ -208,7 +208,7 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
       for (png_uint_32 y = 0; y < height; y++){
         const auto* row = rows + y * width * PNG_BPP;
         for (png_uint_32 x = 0; x < width; x++){
-          auto i =  y * stride + x * BMP_BPP;
+          auto i =  y * bmpStride + x * bmpBpp;
           p[i + faint::iR] = row[x * PNG_BPP];
           p[i + faint::iG] = row[x * PNG_BPP + 1];
           p[i + faint::iB] = row[x * PNG_BPP + 2];
@@ -226,7 +226,7 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
         const auto* row = rows + y * width * PNG_BPP;
 
         for (png_uint_32 x = 0; x < width; x++){
-          auto i =  y * stride + x * BMP_BPP;
+          auto i =  y * bmpStride + x * bmpBpp;
           auto paletteIndex = row[x * PNG_BPP]; // PNG_BPP Should be 1 probably.
           auto color = palette[paletteIndex];
 
