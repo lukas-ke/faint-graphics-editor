@@ -53,14 +53,14 @@ static void set_from_ratio(MathTextCtrl& ctrl, coord ratio){
 
 template<typename FUNC>
 static WithLabel<wxButton>* defaultable_button(wxWindow* parent,
-  const wxString& toolTip,
+  const utf8_string& toolTip,
   FUNC&& f)
 {
   auto* withLabel = label_below<wxButton>(parent, "(Default)", wxID_ANY, "",
     wxDefaultPosition, to_wx(big_button_size));
   auto& b = withLabel->GetWindow();
   bind(&b, wxEVT_BUTTON, std::move(f));
-  b.SetToolTip(toolTip);
+  set_tooltip(b, toolTip);
   return withLabel;
 }
 

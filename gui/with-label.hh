@@ -16,12 +16,11 @@
 #ifndef FAINT_WITH_LABEL_HH
 #define FAINT_WITH_LABEL_HH
 #include <functional>
-#include "wx/window.h" // Fixme: Hide
 #include "wx/panel.h" // Fixme: Hide
 #include "wx/sizer.h" // Fixme: Hide
-#include "wx/stattext.h" // Fixme: Hide
 #include "gui/ui-constants.hh"
 #include "util-wx/window-types-wx.hh"
+#include "util-wx/fwd-wx.hh"
 
 namespace faint{
 
@@ -45,25 +44,26 @@ template<typename T>
 class WithLabel : public wxPanel {
 public:
   template<typename ...Args>
-  WithLabel(wxWindow* parent, LabelPos pos, const wxString& label, Args&& ... args)
+  WithLabel(wxWindow* parent, LabelPos pos, const utf8_string& label,
+    Args&& ... args)
     : wxPanel(parent)
   {
     wxSizer* sz = new wxBoxSizer(layout_orientation(pos));
-    m_label = new wxStaticText(this, wxID_ANY, label);
+    m_label = create_label(this, label);
     m_window = new T(this, std::forward<Args>(args)...);
 
     if (pos == LabelPos::LEFT){
-      sz->Add(m_label, 0, wxRIGHT|wxALIGN_CENTER, labelSpacing);
+      sz->Add(raw(m_label), 0, wxRIGHT|wxALIGN_CENTER, labelSpacing);
       sz->Add(as_window(m_window));
     }
     else if (pos == LabelPos::BELOW){
       sz->Add(as_window(m_window));
-      sz->Add(m_label, 0, wxALIGN_CENTER);
+      sz->Add(raw(m_label), 0, wxALIGN_CENTER);
     }
     SetSizerAndFit(sz);
   }
 
-  WithLabel(wxWindow* parent, LabelPos pos, const wxString& label,
+  WithLabel(wxWindow* parent, LabelPos pos, const utf8_string& label,
     std::function<T*(wxWindow*)> f)
     : wxPanel(parent)
   {
@@ -87,11 +87,11 @@ public:
   }
 
   void HideLabel(){
-    m_label->Hide();
+    hide(m_label);
   }
 
   void ShowLabel(){
-    m_label->Show();
+    show(m_label);
   }
 
   operator T&(){
@@ -106,7 +106,7 @@ private:
 template<typename T, typename ...Args>
 WithLabel<T>* with_label(LabelPos pos,
   wxWindow* parent,
-  const wxString& label,
+  const utf8_string& label,
   Args&& ...args)
 {
   return new WithLabel<T>(parent, pos, label, std::forward<Args>(args)...);

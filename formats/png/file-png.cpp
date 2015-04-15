@@ -18,6 +18,7 @@
 #include "formats/png/file-png.hh"
 #include "geo/limits.hh"
 #include "text/formatting.hh"
+#include "python/py-interface.hh" // Fixme
 
 #ifdef _MSC_VER
 #pragma warning(disable:4611) // _setjmp and C++-object destruction
@@ -43,14 +44,18 @@ int to_png_color_type(PngColorType c){
   return -1;
 }
 
-inline bool gray_or_gray_alpha(int colorType){
+static bool gray_or_gray_alpha(int colorType){
   return colorType == PNG_COLOR_TYPE_GRAY ||
     colorType == PNG_COLOR_TYPE_GRAY_ALPHA;
 }
 
-inline bool rgb_or_rgba(int colorType){
+static bool rgb_or_rgba(int colorType){
   return colorType == PNG_COLOR_TYPE_RGB ||
     colorType == PNG_COLOR_TYPE_RGB_ALPHA;
+}
+
+static bool palettized(int colorType){
+  return colorType == PNG_COLOR_TYPE_PALETTE;
 }
 
 enum class PngReadResult{
@@ -60,7 +65,8 @@ enum class PngReadResult{
   ERROR_CREATE_READ_STRUCT,
   ERROR_CREATE_INFO_STRUCT,
   ERROR_INIT_IO,
-  ERROR_READ_DATA
+  ERROR_READ_DATA,
+  ERROR_READ_PALETTE // Fixme: Add error handling for this
 };
 
 static utf8_string to_string(PngReadResult result, const FilePath& p){
@@ -108,6 +114,8 @@ static PngReadResult read_with_libpng(const char* path,
   png_byte* colorType,
   png_byte* bitDepth,
   int* bitsPerPixel,
+  png_color** palette,
+  int* numPalette,
   std::map<utf8_string, utf8_string>& textChunks)
 {
   FILE* f = fopen(path, "rb");
@@ -195,6 +203,15 @@ static PngReadResult read_with_libpng(const char* path,
 
   png_read_image(png_ptr, *rowPointers);
   // Fixme: Read post-image-data
+  if (*colorType == PNG_COLOR_TYPE_PALETTE){
+    png_color* tempPalette;
+    auto result = png_get_PLTE(png_ptr, info_ptr, &tempPalette, numPalette);
+    if (result != PNG_INFO_PLTE){
+      return PngReadResult::ERROR_READ_PALETTE;
+    }
+    (*palette) = (png_color*) malloc(sizeof(png_color) * PNG_MAX_PALETTE_LENGTH);
+    memcpy(*palette, tempPalette, *numPalette);
+  }
 
   png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
   fclose(f);
@@ -240,6 +257,8 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
   png_byte bitDepth;
   int pngBitsPerPixel;
   png_tEXt_map textChunks;
+  png_color* palette = nullptr;
+  int numPalette = 0;
 
   PngReadResult result = read_with_libpng(path.Str().c_str(),
     &rowPointers,
@@ -248,6 +267,8 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
     &colorType,
     &bitDepth,
     &pngBitsPerPixel,
+    &palette,
+    &numPalette,
     textChunks);
   // --
 
@@ -261,7 +282,9 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
     return {"Unsupported bit depth: " + str_int(bitDepth)};
   }
 
-  if (!rgb_or_rgba(colorType) && !gray_or_gray_alpha(colorType)){
+  if (!rgb_or_rgba(colorType) && !gray_or_gray_alpha(colorType) &&
+    !palettized(colorType))
+  {
     // Fixme: Handle all color types
     free_rows(rowPointers, height);
     return {"Unsuppored png color-type: " + color_type_to_string(colorType)};
@@ -279,8 +302,17 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
           str_int(pngBitsPerPixel)};
     }
   }
-  else if (pngBitsPerPixel != 32 && pngBitsPerPixel != 24){
-    return {"Unsupported bits-per-pixel: " + str_int(pngBitsPerPixel)};
+  else if (colorType == PNG_COLOR_TYPE_PALETTE){
+    if (pngBitsPerPixel != 8){
+      free(palette);
+      return {"Unsupported bits-per-pixel for PNG_COLOR_TYPE_PALETTE; " +
+          str_int(pngBitsPerPixel)};
+    }
+  }
+  else if (colorType == PNG_COLOR_TYPE_RGB_ALPHA){
+    if (pngBitsPerPixel != 32 && pngBitsPerPixel != 24){
+      return {"Unsupported bits-per-pixel: " + str_int(pngBitsPerPixel)};
+    }
   }
 
   if (!can_represent<IntSize::value_type>(width)){
@@ -334,8 +366,22 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
         }
       }
     }
-    else{
-      assert(false);
+    else if (palettized(colorType)){
+      python_print("Palettized.");
+      for (png_uint_32 y = 0; y < height; y++){
+        for (png_uint_32 x = 0; x < width; x++){
+          auto i =  y * stride + x * BMP_BPP;
+          const auto* row = rowPointers[y];
+          auto paletteIndex = row[x * PNG_BPP]; // PNG_BPP Should be 1 probably.
+          auto color = palette[paletteIndex];
+
+          p[i + faint::iR] = color.red;
+          p[i + faint::iG] = color.green;
+          p[i + faint::iB] = color.blue;
+          p[i + faint::iA] = 255;
+        }
+      }
+      free(palette);
     }
 
     free_rows(rowPointers, height);
