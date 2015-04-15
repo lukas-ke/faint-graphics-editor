@@ -108,7 +108,7 @@ static utf8_string to_string(PngReadResult result, const FilePath& p){
 }
 
 static PngReadResult read_with_libpng(const char* path,
-  png_bytep** rowPointers,
+  png_byte** rows,
   png_uint_32* width,
   png_uint_32* height,
   png_byte* colorType,
@@ -196,12 +196,14 @@ static PngReadResult read_with_libpng(const char* path,
     return PngReadResult::ERROR_READ_DATA;
   }
 
-  (*rowPointers) = (png_bytep*) malloc(sizeof(png_bytep) * (*height));
+  const auto rowBytes = png_get_rowbytes(png_ptr, info_ptr);
+  *rows = (png_byte*) malloc(rowBytes * *height);
+  auto rowPointers = (png_byte**) malloc(sizeof(png_byte*) * (*height));
   for (png_uint_32 y = 0; y < (*height); y++){
-    (*rowPointers)[y] = (png_byte*) malloc(png_get_rowbytes(png_ptr,info_ptr));
+    rowPointers[y] = *rows + y * rowBytes;
   }
 
-  png_read_image(png_ptr, *rowPointers);
+  png_read_image(png_ptr, rowPointers);
   // Fixme: Read post-image-data
   if (*colorType == PNG_COLOR_TYPE_PALETTE){
     png_color* tempPalette;
@@ -250,7 +252,7 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
 
   // --
   // Output parameters
-  png_byte** rowPointers = nullptr;
+  png_byte* rows = nullptr;
   png_uint_32 width;
   png_uint_32 height;
   png_byte colorType;
@@ -261,7 +263,7 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
   int numPalette = 0;
 
   PngReadResult result = read_with_libpng(path.Str().c_str(),
-    &rowPointers,
+    &rows,
     &width,
     &height,
     &colorType,
@@ -277,8 +279,7 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
   }
 
   if (bitDepth != 8){
-    free_rows(rowPointers, height);
-
+    free(rows);
     return {"Unsupported bit depth: " + str_int(bitDepth)};
   }
 
@@ -286,7 +287,7 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
     !palettized(colorType))
   {
     // Fixme: Handle all color types
-    free_rows(rowPointers, height);
+    free(rows);
     return {"Unsuppored png color-type: " + color_type_to_string(colorType)};
   }
 
@@ -335,9 +336,9 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
       // Read GRAY
 
       for (png_uint_32 y = 0; y < height; y++){
+        const auto* row = rows + y * width * PNG_BPP;
         for (png_uint_32 x = 0; x < width; x++){
           auto i =  y * stride + x * BMP_BPP;
-          const auto* row = rowPointers[y];
           const png_byte v = row[x * PNG_BPP];
           p[i + faint::iR] = v;
           p[i + faint::iG] = v;
@@ -351,9 +352,9 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
       // Read RGB or RGBA
 
       for (png_uint_32 y = 0; y < height; y++){
+        const auto* row = rows + y * width * PNG_BPP;
         for (png_uint_32 x = 0; x < width; x++){
           auto i =  y * stride + x * BMP_BPP;
-          const auto* row = rowPointers[y];
           p[i + faint::iR] = row[x * PNG_BPP];
           p[i + faint::iG] = row[x * PNG_BPP + 1];
           p[i + faint::iB] = row[x * PNG_BPP + 2];
@@ -369,9 +370,10 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
     else if (palettized(colorType)){
       python_print("Palettized.");
       for (png_uint_32 y = 0; y < height; y++){
+        const auto* row = rows + y * width * PNG_BPP;
+
         for (png_uint_32 x = 0; x < width; x++){
           auto i =  y * stride + x * BMP_BPP;
-          const auto* row = rowPointers[y];
           auto paletteIndex = row[x * PNG_BPP]; // PNG_BPP Should be 1 probably.
           auto color = palette[paletteIndex];
 
@@ -384,11 +386,11 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
       free(palette);
     }
 
-    free_rows(rowPointers, height);
+    free(rows);
     return {Bitmap_and_tEXt(std::move(bmp), std::move(textChunks))};
   }
   catch (const BitmapException& e){
-    free_rows(rowPointers, height);
+    free(rows);
     return {e.what()};
   }
 }
@@ -651,6 +653,7 @@ static PngWriteResult write_with_libpng(const char* path,
 
   // Write the image data
   if (setjmp(png_jmpbuf(png_ptr))){
+    free_rows(rowPointers, height);
     fclose(f);
     return PngWriteResult::ERROR_WRITE_DATA;
   }
@@ -659,6 +662,7 @@ static PngWriteResult write_with_libpng(const char* path,
   // Write end
   if (setjmp(png_jmpbuf(png_ptr))){
     free_rows(rowPointers, height);
+    fclose(f);
     return PngWriteResult::ERROR_WRITE_END;
   }
   png_write_end(png_ptr, nullptr);
