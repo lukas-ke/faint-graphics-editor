@@ -13,26 +13,36 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_PNG_UTIL_HH
-#define FAINT_PNG_UTIL_HH
+#ifndef FAINT_READ_LIBPNG_HH
+#define FAINT_READ_LIBPNG_HH
 #include <png.h> // libpng
+#include "formats/png/file-png.hh"
 
 namespace faint{
 
-inline bool gray_or_gray_alpha(int colorType){
-  return colorType == PNG_COLOR_TYPE_GRAY ||
-    colorType == PNG_COLOR_TYPE_GRAY_ALPHA;
-}
+enum class PngReadResult{
+  OK,
+  ERROR_OPEN_FILE,
+  ERROR_PNG_SIGNATURE,
+  ERROR_CREATE_READ_STRUCT,
+  ERROR_CREATE_INFO_STRUCT,
+  ERROR_INIT_IO,
+  ERROR_READ_DATA,
+  ERROR_READ_PALETTE, // Fixme: Add error handling for this
+  ERROR_MALLOC
+};
 
-inline bool rgb_or_rgba(int colorType){
-  return colorType == PNG_COLOR_TYPE_RGB ||
-    colorType == PNG_COLOR_TYPE_RGB_ALPHA;
-}
+PngReadResult read_with_libpng(const char* path,
+  png_byte** rows,
+  png_uint_32* width,
+  png_uint_32* height,
+  png_byte* colorType,
+  png_byte* bitDepth,
+  int* bitsPerPixel,
+  png_color** palette,
+  int* numPalette,
+  std::map<utf8_string, utf8_string>& textChunks);
 
-inline bool palettized(int colorType){
-  return colorType == PNG_COLOR_TYPE_PALETTE;
-}
-
-} // namespace
+} // namespace faint
 
 #endif
