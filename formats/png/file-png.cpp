@@ -133,7 +133,7 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
     return to_string(result, path);
   }
 
-  if (bitDepth != 8){
+  if (bitDepth != 8 && bitDepth != 16){
     free(rows);
     return {"Unsupported bit depth: " + str_int(bitDepth)};
   }
@@ -165,7 +165,10 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
     }
   }
   else if (colorType == PNG_COLOR_TYPE_RGB_ALPHA){
-    if (pngBitsPerPixel != 32 && pngBitsPerPixel != 24){
+    if (pngBitsPerPixel != 32 &&
+      pngBitsPerPixel != 24 &&
+      pngBitsPerPixel != 64)
+    {
       return {"Unsupported bits-per-pixel: " + str_int(pngBitsPerPixel)};
     }
   }
@@ -203,20 +206,36 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
       }
     }
     else if (rgb_or_rgba(colorType)){
-      // Read RGB or RGBA
 
-      for (png_uint_32 y = 0; y < height; y++){
-        const auto* row = rows + y * width * PNG_BPP;
-        for (png_uint_32 x = 0; x < width; x++){
-          auto i =  y * bmpStride + x * bmpBpp;
-          p[i + faint::iR] = row[x * PNG_BPP];
-          p[i + faint::iG] = row[x * PNG_BPP + 1];
-          p[i + faint::iB] = row[x * PNG_BPP + 2];
-          if (PNG_BPP == 3){
-            p[i + faint::iA] = 255;
+      if (PNG_BPP == 3 || PNG_BPP == 4){
+        // Read RGB or RGBA
+        for (png_uint_32 y = 0; y < height; y++){
+          const auto* row = rows + y * width * PNG_BPP;
+          for (png_uint_32 x = 0; x < width; x++){
+            auto i =  y * bmpStride + x * bmpBpp;
+            p[i + faint::iR] = row[x * PNG_BPP];
+            p[i + faint::iG] = row[x * PNG_BPP + 1];
+            p[i + faint::iB] = row[x * PNG_BPP + 2];
+            if (PNG_BPP == 3){
+              p[i + faint::iA] = 255;
+            }
+            else{
+              p[i + faint::iA] = row[x * PNG_BPP + 3];
+            }
           }
-          else{
-            p[i + faint::iA] = row[x * PNG_BPP + 3];
+        }
+      }
+      else if (PNG_BPP == 8){
+        // Note: Discards the least significant byte for each channel,
+        // since Faint-bitmaps use 4 BPP.
+        for (png_uint_32 y = 0; y < height; y++){
+          const auto* row = rows + y * width * PNG_BPP;
+          for (png_uint_32 x = 0; x < width; x++){
+            auto i =  y * bmpStride + x * bmpBpp;
+            p[i + faint::iR] = row[x * PNG_BPP + 1];
+            p[i + faint::iG] = row[x * PNG_BPP + 3];
+            p[i + faint::iB] = row[x * PNG_BPP + 5];
+            p[i + faint::iA] = row[x * PNG_BPP + 7];
           }
         }
       }
