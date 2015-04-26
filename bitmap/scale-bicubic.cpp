@@ -74,7 +74,7 @@ static auto all_column_weights(const int srcWidth, const int dstWidth){
 static auto current_row_weights(coord dy){
   // Compute the weights for the four rows surrounding a source-row
   // with the given fractional part of the y-coordinate (dy).
-  std::array<coord, 4> nWeight{0,0,0,0};
+  std::array<coord, 4> nWeight{{0,0,0,0}};
 
   for (int n = OFFSET_BEGIN; n != OFFSET_END; n++){
     nWeight[n + 1] = R(dy - n);
