@@ -20,7 +20,7 @@
 #include "bitmap/auto-crop.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/bitmap-templates.hh"
-#include "bitmap/color.hh"
+#include "bitmap/color-ptr.hh"
 #include "bitmap/draw.hh"
 #include "bitmap/mask.hh"
 #include "bitmap/pattern.hh"
@@ -36,7 +36,7 @@
 #include "geo/range.hh"
 #include "geo/scale.hh"
 #include "geo/size.hh"
-#include "util/common-fwd.hh" // Fixme: For axis
+#include "util/common-fwd.hh" // Fixme: For ScaleQuality
 #include "util/optional.hh"
 
 namespace faint{
@@ -122,54 +122,6 @@ LineAttributes with_cap(const BorderAttributes& b, LineCap cap){
 using std::swap;
 
 #define EVER ;;
-
-class color_ptr{
-public:
-  // For fetching rgba values from an uchar-pointer
-  // (Which must be at the correct four-byte offset)
-  uchar& r;
-  uchar& g;
-  uchar& b;
-  uchar& a;
-  color_ptr(uchar* p):
-    r(*(p + iR)),
-    g(*(p + iG)),
-    b(*(p + iB)),
-    a(*(p + iA))
-  {}
-  void Set(const Color& c){
-    r = c.r;
-    g = c.g;
-    b = c.b;
-    a = c.a;
-  }
-  color_ptr& operator=(const color_ptr&) = delete;
-};
-
-class const_color_ptr{
-public:
-  // For fetching rgba values from an uchar-pointer
-  // (Which must be at the correct four-byte offset)
-  const uchar r;
-  const uchar g;
-  const uchar b;
-  const uchar a;
-  const_color_ptr(const uchar* p):
-    r(*(p + iR)),
-    g(*(p + iG)),
-    b(*(p + iB)),
-    a(*(p + iA))
-  {}
-
-  const_color_ptr& operator=(const const_color_ptr&) = delete;
-};
-
-bool operator==(const color_ptr& c1, const Color& c2){
-  return c1.r == c2.r &&
-    c1.g == c2.g &&
-    c1.b == c2.b &&
-    c1.a == c2.a;
-}
 
 static int int_abs(int v){
   return v < 0 ? -v : v;
@@ -2072,124 +2024,6 @@ Bitmap scale(const Bitmap& bmp, const Scale& scale, ScaleQuality quality){
   };
   assert(false);
   return Bitmap();
-}
-
-Bitmap scale_bilinear(const Bitmap& src, const Scale& scale){
-  IntSize newSize(constrained(rounded(floated(src.GetSize()) * abs(scale)),
-      min_t(1), min_t(1)));
-  if (newSize == src.GetSize()){
-    return Bitmap(src);
-  }
-
-  Bitmap dst(newSize);
-  const coord x_ratio = floated(src.m_w - 1) / floated(newSize.w);
-  const coord y_ratio = floated(src.m_h - 1) / floated(newSize.h);
-  const uchar* data = src.m_data;
-
-  for (int yDst = 0; yDst != newSize.h; yDst++){
-    for (int xDst = 0; xDst != newSize.w; xDst++){
-      int xSrc = truncated(x_ratio * xDst);
-      int ySrc = truncated(y_ratio * yDst);
-      const coord x_diff = x_ratio * xDst - xSrc;
-      const coord y_diff = y_ratio * yDst - ySrc;
-      const int srcIndex = ySrc * src.m_row_stride + xSrc * BPP;
-      const_color_ptr a(data + srcIndex);
-      const_color_ptr b(data + srcIndex + BPP);
-      const_color_ptr c(data + srcIndex + src.m_row_stride);
-      const_color_ptr d(data + srcIndex + src.m_row_stride + BPP);
-
-      // Fixme: Check for possible overflow
-      const uchar blue = static_cast<uchar>((a.b)*(1-x_diff)*(1-y_diff) +
-        (b.b)*(x_diff)*(1-y_diff) +
-        (c.b)*(y_diff)*(1-x_diff) +
-        (d.b)*(x_diff*y_diff) + 0.5);
-
-      const uchar green = static_cast<uchar>(a.g*(1-x_diff)*(1-y_diff) +
-        b.g*(x_diff)*(1-y_diff) +
-        (c.g)*(y_diff)*(1-x_diff) +
-        (d.g)*(x_diff*y_diff) + 0.5);
-
-      const uchar red = static_cast<uchar>(a.r * (1-x_diff)*(1-y_diff) +
-        b.r*(x_diff)*(1-y_diff) +
-        c.r*(y_diff)*(1-x_diff) +
-        (d.r)*(x_diff*y_diff) + 0.5);
-
-      const uchar alpha = static_cast<uchar>(a.a * (1-x_diff)*(1-y_diff) +
-        b.a*(x_diff)*(1-y_diff) +
-        c.a*(y_diff)*(1-x_diff) +
-        (d.a)*(x_diff*y_diff) + 0.5);
-
-      uchar* rDst = dst.m_data + yDst * (dst.m_row_stride) + xDst * BPP;
-      *(rDst + iR) = red;
-      *(rDst + iG) = green;
-      *(rDst + iB) = blue;
-      *(rDst + iA) = alpha;
-    }
-  }
-
-  if (scale.x < 0){
-    dst = flip_horizontal(dst);
-  }
-  if (scale.y < 0) {
-    dst = flip_vertical(dst);
-  }
-  return dst;
-}
-
-Bitmap scale_nearest(const Bitmap& src, int scale){
-  const int w2 = src.m_w * scale;
-  const int h2 = src.m_h * scale;
-
-  Bitmap scaled(IntSize(w2, h2));
-  int x_ratio = (src.m_w << 16) / scaled.m_w + 1;
-  int y_ratio = (src.m_h << 16) / scaled.m_h + 1;
-  int x2, y2 ;
-  uchar* p_dst = scaled.m_data;
-  const uchar* p_src = src.m_data;
-
-  for (int i = 0; i< h2; i++){ // Fixme: use j (=ydst)
-    for (int j = 0; j < w2; j++){ // Fixme: use i (=xdst)
-      x2 = ((j*x_ratio)>>16);
-      y2 = ((i*y_ratio)>>16);
-
-      uchar* rDst = p_dst + i * (scaled.m_row_stride) + j * BPP;
-      const uchar* rSrc = p_src + y2 * (src.m_row_stride) + x2 * BPP;
-
-      *(rDst + 0) = *rSrc;
-      *(rDst + 1) = *(rSrc + 1);
-      *(rDst + 2) = *(rSrc + 2);
-      *(rDst + 3) = *(rSrc + 3);
-    }
-  }
-  return scaled;
-}
-
-Bitmap scale_nearest(const Bitmap& src, const Scale& scale){
-  const int w2 = static_cast<int>(src.m_w * scale.x);
-  const int h2 = static_cast<int>(src.m_h * scale.y);
-
-  Bitmap scaled(IntSize(w2, h2));
-  int x_ratio = (src.m_w << 16) / scaled.m_w + 1;
-  int y_ratio = (src.m_h << 16) / scaled.m_h + 1;
-  int x2, y2 ;
-  uchar* p_dst = scaled.m_data;
-  const uchar* p_src = src.m_data;
-
-  for (int i = 0; i< h2; i++){
-    for (int j = 0; j < w2; j++){
-      x2 = ((j*x_ratio)>>16);
-      y2 = ((i*y_ratio)>>16);
-
-      uchar* rDst = p_dst + i * (scaled.m_row_stride) + j * BPP;
-      const uchar* rSrc = p_src + y2 * (src.m_row_stride) + x2 * BPP;
-
-      *(rDst + 0) = *rSrc;
-      *(rDst + 1) = *(rSrc + 1);
-      *(rDst + 2) = *(rSrc + 2);
-      *(rDst + 3) = *(rSrc + 3);
-    }
-  }
-  return scaled;
 }
 
 Bitmap scaled_subbitmap(const Bitmap& src, const Scale& scale,
