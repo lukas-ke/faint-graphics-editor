@@ -47,6 +47,13 @@ void Common_scale_bilinear(T target, const IntSize& size){
   python_run_command(target, rescale_command(size, ScaleQuality::BILINEAR));
 }
 
+/* method: "scale_bicubic(w,h)\n
+Scale the image to the specified size with bicubic interpolation" */
+template<typename T>
+void Common_scale_bicubic(T target, const IntSize& size){
+  python_run_command(target, rescale_command(size, ScaleQuality::BICUBIC));
+}
+
 /* method: "scale_nearest(w,h)\n
 Scale the image to the specified size with nearest neighbour
 interpolation" */

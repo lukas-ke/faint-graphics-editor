@@ -76,7 +76,7 @@ class utf8_string;
 enum class Cursor;
 enum class Layer;
 enum class MouseButton;
-enum class ScaleQuality{NEAREST, BILINEAR};
+enum class ScaleQuality{NEAREST, BILINEAR, BICUBIC};
 using commands_t = std::vector<Command*>;
 using objects_t = std::vector<Object*>;
 using tris_t = std::vector<Tri>;

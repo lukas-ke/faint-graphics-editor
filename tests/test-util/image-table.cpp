@@ -72,7 +72,10 @@ ImageTable::~ImageTable(){
   delete m_impl;
 }
 
-void ImageTable::AddRow(const std::string& label, const FileName& f1, const FileName& f2){
+void ImageTable::AddToggleRow(const std::string& label,
+  const FileName& f1,
+  const FileName& f2)
+{
   m_impl->AddRow();
 
   m_impl->AddCell("<center>" + label + "</center>");
@@ -92,10 +95,12 @@ std::string img_cell(const FileName& f){
   return ss.str();
 }
 
-void ImageTable::AddRow(const faint::utf8_string& label, const FileName& f1, const FileName& f2){
-  AddRow(label.str(), f1, f2);
+void ImageTable::AddToggleRow(const faint::utf8_string& label,
+  const FileName& f1,
+  const FileName& f2)
+{
+  AddToggleRow(label.str(), f1, f2);
 }
-
 
 void ImageTable::AddRow(){
   m_impl->AddRow();

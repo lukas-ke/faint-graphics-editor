@@ -15,8 +15,8 @@ public:
   ImageTable(const std::string& title);
   ImageTable(const std::string& title, const std::vector<utf8_string>& headings);
   ~ImageTable();
-  void AddRow(const std::string&, const FileName&, const FileName&);
-  void AddRow(const faint::utf8_string&, const FileName&, const FileName&);
+  void AddToggleRow(const utf8_string&, const FileName&, const FileName&);
+  void AddToggleRow(const std::string&, const FileName&, const FileName&);
 
   template<class... Args>
   void AddRow(Args... args){

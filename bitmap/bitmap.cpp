@@ -281,6 +281,10 @@ bool point_in_bitmap(const Bitmap& bmp, const IntPoint& pos){
   return pos.x >= 0 && pos.y >= 0 && pos.x < bmp.m_w && pos.y < bmp.m_h;
 }
 
+bool within_bitmap(const Bitmap& bmp, int x, int y){
+  return x >= 0 && y >= 0 && x < bmp.m_w && y < bmp.m_h;
+}
+
 void put_pixel(Bitmap& bmp, const IntPoint& pos, const Color& color){
   put_pixel_raw(bmp, pos.x, pos.y, color);
 }

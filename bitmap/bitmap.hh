@@ -83,6 +83,7 @@ Color get_color(const Bitmap&, const IntPoint&);
 Color get_color_raw(const Bitmap&, int x, int y);
 bool is_blank(const Bitmap&);
 bool point_in_bitmap(const Bitmap&, const IntPoint&);
+bool within_bitmap(const Bitmap&, int x, int y);
 void put_pixel(Bitmap&, const IntPoint&, const Color&);
 void put_pixel_raw(Bitmap&, int x, int y, const Color&);
 
