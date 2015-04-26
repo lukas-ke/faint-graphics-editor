@@ -13,7 +13,7 @@ void test_file_bmp(){
   using namespace faint;
   {
     // 8-bits-per-pixel grayscale
-    auto path = get_test_load_path(FileName("13x7-8bpp-gray.bmp"));
+    auto path = get_test_load_path(FileName("13x7-8bipp-gray.bmp"));
     read_bmp(path).Visit(
       [](const Bitmap& bmp){
         EQUAL(bmp.GetSize(), IntSize(13,7));
@@ -36,7 +36,7 @@ void test_file_bmp(){
 
   {
     // 8-bits-per-pixel color
-    auto path = get_test_load_path(FileName("12x6-8bpp.bmp"));
+    auto path = get_test_load_path(FileName("12x6-8bipp.bmp"));
     read_bmp(path).Visit(
       [](const Bitmap& bmp){
         EQUAL(bmp.GetSize(), IntSize(12,6));
@@ -61,11 +61,11 @@ void test_file_bmp(){
 
   {
     // 24-bits-per-pixel
-    auto path = get_test_load_path(FileName("65x65-24bpp.bmp"));
+    auto path = get_test_load_path(FileName("65x65-24bipp.bmp"));
     read_bmp(path).Visit(
       [](const Bitmap& bmp){
         EQUAL(bmp.GetSize(), IntSize(65,65));
-        VERIFY(equal(bmp, load_test_image(FileName("65x65-24bpp-key.png"))));
+        VERIFY(equal(bmp, load_test_image(FileName("65x65-24bipp-key.png"))));
       },
       [&](const utf8_string& error){
         MESSAGE(path.Str().c_str());

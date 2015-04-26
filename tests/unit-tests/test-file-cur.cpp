@@ -21,7 +21,7 @@ void test_file_cur(){
 
   {
     // 24-bits-per-pixel, 6x6
-    auto cursors = test_read_cur(get_test_load_path(FileName("24bpp-6x6.cur")));
+    auto cursors = test_read_cur(get_test_load_path(FileName("24bipp-6x6.cur")));
     ABORT_IF(cursors.size() != 1);
     const auto& cursor = cursors.front();
 
@@ -42,7 +42,7 @@ void test_file_cur(){
   {
     // 24-bits-per-pixel, 256x256
     auto cursors = test_read_cur(get_test_load_path(
-      FileName("24bpp-256x256.cur")));
+      FileName("24bipp-256x256.cur")));
 
     ABORT_IF(cursors.size() != 1);
     const auto& cursor = cursors.front();

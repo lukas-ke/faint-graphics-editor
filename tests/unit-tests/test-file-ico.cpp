@@ -81,7 +81,7 @@ static FilePath test_write_ico(const FileName& fileName,
 void test_file_ico(){
 
   // Load the test icon
-  FileName fileName("32-bpp_8-bit-alpha_no-palette-BI_RGB.ico");
+  FileName fileName("32-bipp_8-bit-alpha_no-palette-BI_RGB.ico");
   auto srcPath = get_test_load_path(fileName);
   auto originalBitmaps = test_read_ico(srcPath);
 
