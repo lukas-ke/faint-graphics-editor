@@ -227,7 +227,7 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
       }
       else if (PNG_ByPP == 8){
         // Note: Discards the least significant byte for each channel,
-        // since Faint-bitmaps use 4 BPP.
+        // since Faint-bitmaps use 4 ByPP.
         for (png_uint_32 y = 0; y < height; y++){
           const auto* row = rows + y * width * PNG_ByPP;
           for (png_uint_32 x = 0; x < width; x++){

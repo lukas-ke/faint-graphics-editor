@@ -104,13 +104,14 @@ static Bitmap masked(const Bitmap& bmp, const AlphaMap& mask){
 }
 
 
-auto get_read_pixeldata_func(size_t num, int bpp)
+auto get_read_pixeldata_func(size_t num, int bitsPerPixel)
   -> std::function<Optional<Bitmap>(BinaryReader&, const IntSize&)>
 {
-  // Returns a function for reading pixeldata of the specified bits-per-pixel,
-  // or throws ReadBmpError if the bpp is unsupported.
+  // Returns a function for reading pixeldata of the specified
+  // bits-per-pixel, or throws ReadBmpError if the bitsPerPixel is
+  // unsupported.
 
-  if (bpp == 1){
+  if (bitsPerPixel == 1){
 
     return [](BinaryReader& in, const IntSize& size) -> Optional<Bitmap>{
       auto colorTable = read_color_table(in, 2);
@@ -118,12 +119,12 @@ auto get_read_pixeldata_func(size_t num, int bpp)
         return {};
       }
 
-      auto xorMask = read_1bpp_BI_RGB(in, size);
+      auto xorMask = read_1bipp_BI_RGB(in, size);
       if (xorMask.NotSet()){
         return {};
       }
 
-      auto andMask = read_1bpp_BI_RGB(in, size);
+      auto andMask = read_1bipp_BI_RGB(in, size);
       if (andMask.NotSet()){
         return {};
       }
@@ -132,7 +133,7 @@ auto get_read_pixeldata_func(size_t num, int bpp)
       return masked(bmp, andMask.Get());
     };
   }
-  else if (bpp == 4){
+  else if (bitsPerPixel == 4){
 
     return [](BinaryReader& in, const IntSize& size) -> Optional<Bitmap>{
       auto colorTable = read_color_table(in, 16);
@@ -140,12 +141,12 @@ auto get_read_pixeldata_func(size_t num, int bpp)
         return {};
       }
 
-      auto xorMask = read_4bpp_BI_RGB(in, size);
+      auto xorMask = read_4bipp_BI_RGB(in, size);
       if (xorMask.NotSet()){
         return {};
       }
 
-      auto andMask = read_1bpp_BI_RGB(in, size);
+      auto andMask = read_1bipp_BI_RGB(in, size);
       if (andMask.NotSet()){
         return {};
       }
@@ -154,10 +155,10 @@ auto get_read_pixeldata_func(size_t num, int bpp)
       return masked(bmp, andMask.Get());
     };
   }
-  else if (bpp == 32){
+  else if (bitsPerPixel == 32){
 
     return [](BinaryReader& in, const IntSize& bitmapSize) -> Optional<Bitmap>{
-      int bypp = 4;
+      const int bypp = 4;
       // The size from the bmp-header. May have larger height than the size
       // in the IconDirEntry.
       int bufLen = area(bitmapSize) * bypp;
@@ -184,7 +185,7 @@ auto get_read_pixeldata_func(size_t num, int bpp)
     };
   }
   else{
-    throw ReadBmpError(error_bpp(num, bpp));
+    throw ReadBmpError(error_bits_per_pixel(num, bitsPerPixel));
   }
 }
 
@@ -289,7 +290,7 @@ typename BmpType::ResultType read_or_throw(const FilePath& filePath){
       test_bitmap_header(i, bmpHeader);
       const IntSize imageSize(get_size(iconDirEntry));
 
-      auto read_pixeldata = get_read_pixeldata_func(i, bmpHeader.bpp);
+      auto read_pixeldata = get_read_pixeldata_func(i, bmpHeader.bitsPerPixel);
       auto bmp = or_throw(read_pixeldata(in, imageSize), on_error_image);
       BmpType::add(bitmaps, std::move(bmp), iconDirEntry);
     }
@@ -379,9 +380,9 @@ static std::vector<IconDirEntry> create_icon_dir_entries(const ico_vec& bitmaps,
     IconDirEntry entry;
     set_size(entry, p.first.GetSize());
     entry.reserved = 0;
-    entry.colorCount = 0; // 0 when >= 8bpp
+    entry.colorCount = 0; // 0 when bitsPerPixel >= 8
     entry.colorPlanes = 1;
-    entry.bpp = 32;
+    entry.bitsPerPixel = 32;
 
     if (compression == IcoCompression::PNG){
       const auto pngStrIter = pngData.find(i);
@@ -425,7 +426,7 @@ static std::vector<IconDirEntry> create_cursor_dir_entries(const cur_vec& cursor
     IconDirEntry entry;
     set_size(entry, bmp.GetSize());
     entry.reserved = 0;
-    entry.colorCount = 0; // 0 when >= 8bpp
+    entry.colorCount = 0; // 0 when bitsPerPixel >= 8
     set_hot_spot(entry, cursors[i].second);
 
     entry.bytes = convert(area(bmp.GetSize()) * 4 +
@@ -501,7 +502,7 @@ SaveResult write_ico(const FilePath& filePath,  const ico_vec& bitmaps){
     }
     else{
       write_struct(out, bmpHeaders[i]);
-      write_32bpp_BI_RGB_ICO(out, p.first);
+      write_32bipp_BI_RGB_ICO(out, p.first);
     }
   }
   return SaveResult::SaveSuccessful();
@@ -537,7 +538,7 @@ SaveResult write_cur(const FilePath& filePath, const cur_vec& cursors){
   assert(cursors.size() == bmpHeaders.size());
   for (size_t i = 0; i != cursors.size(); i++){
     write_struct(out, bmpHeaders[i]);
-    write_32bpp_BI_RGB_ICO(out, cursors[i].first);
+    write_32bipp_BI_RGB_ICO(out, cursors[i].first);
   }
   return SaveResult::SaveSuccessful();
 }

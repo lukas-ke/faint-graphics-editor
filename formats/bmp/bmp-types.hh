@@ -66,7 +66,7 @@ public:
   int32_t width;
   int32_t height;
   uint16_t colorPlanes;
-  uint16_t bpp;
+  uint16_t bitsPerPixel;
   Compression compression;
   uint32_t rawDataSize;
   int32_t horizontalResolution;
@@ -95,10 +95,10 @@ class IconDirEntry{
 public:
   uint8_t width; // Note: 0 should be interpreted as 256,
   uint8_t height; // Note: 0 should be interpreted as 256,
-  uint8_t colorCount; // Number of colors in image (0 if bpp >= 8)
+  uint8_t colorCount; // Number of colors in image (0 if bitsPerPixel >= 8)
   uint8_t reserved;
   uint16_t colorPlanes; // 0 or 1
-  uint16_t bpp;
+  uint16_t bitsPerPixel;
 
   // The size of the image's data in bytes (Fixme: Including headers?)
   uint32_t bytes;
@@ -131,7 +131,7 @@ using DPI = Distinct<int, category_bmp_types, 0>;
 DPI default_DPI();
 
 BitmapInfoHeader create_bitmap_info_header(const IntSize&,
-  uint16_t bpp,
+  uint16_t bitsPerPixel,
   const DPI&,
   bool andMap);
 

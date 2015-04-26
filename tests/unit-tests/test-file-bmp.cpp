@@ -12,7 +12,7 @@
 void test_file_bmp(){
   using namespace faint;
   {
-    // 8bpp grayscale
+    // 8-bits-per-pixel grayscale
     auto path = get_test_load_path(FileName("13x7-8bpp-gray.bmp"));
     read_bmp(path).Visit(
       [](const Bitmap& bmp){
@@ -35,7 +35,7 @@ void test_file_bmp(){
   }
 
   {
-    // 8bpp color
+    // 8-bits-per-pixel color
     auto path = get_test_load_path(FileName("12x6-8bpp.bmp"));
     read_bmp(path).Visit(
       [](const Bitmap& bmp){
@@ -60,7 +60,7 @@ void test_file_bmp(){
   }
 
   {
-    // 24bpp
+    // 24-bits-per-pixel
     auto path = get_test_load_path(FileName("65x65-24bpp.bmp"));
     read_bmp(path).Visit(
       [](const Bitmap& bmp){
@@ -73,6 +73,6 @@ void test_file_bmp(){
       });
   }
 
-  // Fixme: Add 32bpp
+  // Fixme: Add 32-bits-per-pixel
   // Fixme: Add save tests.
 }

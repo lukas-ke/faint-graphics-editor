@@ -26,7 +26,7 @@ class ColorList;
 
 // Returns the required row-stride for the pixel-data rows with the
 // specified bits per pixel and bitmap width.
-int bmp_row_stride(int bpp, int w);
+int bmp_row_stride(int bitsPerPixel, int w);
 
 // Row stride for the and map in cursors, icons.
 int and_map_row_stride(int w);
@@ -35,25 +35,25 @@ int and_map_row_stride(int w);
 // the given size.
 int and_map_bytes(const IntSize& bmpSize);
 
-template<int bpp>
+template<int bitsPerPixel>
 int bmp_row_stride(int w){
-  return bmp_row_stride(bpp, w);
+  return bmp_row_stride(bitsPerPixel, w);
 }
 
-template<int bpp>
+template<int bitsPerPixel>
 int bmp_row_padding(int w){
-  return bmp_row_stride(bpp, w) - (w * bpp) / 8;
+  return bmp_row_stride(bitsPerPixel, w) - (w * bitsPerPixel) / 8;
 }
 
-void write_8bpp_BI_RGB(BinaryWriter&, const std::pair<AlphaMap, ColorList>&);
-void write_24bpp_BI_RGB(BinaryWriter&, const Bitmap&);
-void write_32bpp_BI_RGB_ICO(BinaryWriter&, const Bitmap&);
+void write_8bipp_BI_RGB(BinaryWriter&, const std::pair<AlphaMap, ColorList>&);
+void write_24bipp_BI_RGB(BinaryWriter&, const Bitmap&);
+void write_32bipp_BI_RGB_ICO(BinaryWriter&, const Bitmap&);
 
-Optional<AlphaMap> read_1bpp_BI_RGB(BinaryReader&, const IntSize&);
-Optional<AlphaMap> read_4bpp_BI_RGB(BinaryReader&, const IntSize&);
-Optional<AlphaMap> read_8bpp_BI_RGB(BinaryReader&, const IntSize&);
-Optional<Bitmap> read_24bpp_BI_RGB(BinaryReader&, const IntSize&);
-Optional<Bitmap> read_32bpp_BI_RGB(BinaryReader&, const IntSize&);
+Optional<AlphaMap> read_1bipp_BI_RGB(BinaryReader&, const IntSize&);
+Optional<AlphaMap> read_4bipp_BI_RGB(BinaryReader&, const IntSize&);
+Optional<AlphaMap> read_8bipp_BI_RGB(BinaryReader&, const IntSize&);
+Optional<Bitmap> read_24bipp_BI_RGB(BinaryReader&, const IntSize&);
+Optional<Bitmap> read_32bipp_BI_RGB(BinaryReader&, const IntSize&);
 
 Optional<ColorList> read_color_table(BinaryReader&, int numColors);
 

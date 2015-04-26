@@ -25,7 +25,7 @@ namespace faint{
 
 utf8_string error_ico_too_many_images(size_t);
 utf8_string error_bitmap_signature(uint16_t);
-utf8_string error_bpp(size_t num, int bpp);
+utf8_string error_bits_per_pixel(size_t num, int bitsPerPixel);
 utf8_string error_color_planes(size_t num, int planes);
 utf8_string error_compression(size_t num, Compression);
 utf8_string error_dir_reserved(int value);

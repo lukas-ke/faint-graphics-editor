@@ -63,7 +63,6 @@ static Bitmap kernel_h_apply(const Bitmap& src, const std::vector<double>& k){
   Bitmap dst(src.GetSize());
   int r = static_cast<int>(k.size()) / 2;
   int w = resigned(k.size());
-  const int bpp = 4;
   for (int y = 0; y != src.m_h; y++){
     const uchar* srcRow = src.m_data + y * src.m_row_stride;
     uchar* dstRow = dst.m_data + y * dst.m_row_stride;
@@ -76,10 +75,10 @@ static Bitmap kernel_h_apply(const Bitmap& src, const std::vector<double>& k){
 
       for (int i = 0; i != w; i++){
         int d = std::min(x, std::max(i - r, -(src.m_w - x - 1)));
-        vR += srcRow[(x - d) * bpp + iR] * k[to_size_t(i)];
-        vG += srcRow[(x - d) * bpp + iG] * k[to_size_t(i)];
-        vB += srcRow[(x - d) * bpp + iB] * k[to_size_t(i)];
-        vA += srcRow[(x - d) * bpp + iA] * k[to_size_t(i)];
+        vR += srcRow[(x - d) * ByPP + iR] * k[to_size_t(i)];
+        vG += srcRow[(x - d) * ByPP + iG] * k[to_size_t(i)];
+        vB += srcRow[(x - d) * ByPP + iB] * k[to_size_t(i)];
+        vA += srcRow[(x - d) * ByPP + iA] * k[to_size_t(i)];
       }
       dstRow[x * ByPP + iR] = static_cast<uchar>(vR);
       dstRow[x * ByPP + iG] = static_cast<uchar>(vG);

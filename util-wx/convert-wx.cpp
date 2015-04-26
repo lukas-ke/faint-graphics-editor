@@ -244,12 +244,16 @@ Bitmap to_faint(wxBitmap wxBmp){
 //
 // Probably this bug: http://trac.wxwidgets.org/ticket/11640
 wxBitmap clean_bitmap(const wxBitmap& dirtyBmp){
-  // 24bpp depth loses alpha information, but wxMemoryDC does not
-  // support alpha Setting this to 32 or retrieving from the bitmap
-  // works for pastes between applications and within Faint, but
-  // fails for pastes from print screen (gives very weird effects,
-  // probably random alpha values).
-  // I've also tried GCDC Blit and DrawBitmap, neither retained alpha
+  // Note: This uses 24-bits-per-pixel, thereby losing alpha
+  // information, as wxMemoryDC does not support alpha.
+  //
+  // Using 32-bits-per-pixel here (or retrieving the necessary value
+  // from the wxBitmap) works for pastes between applications and
+  // within Faint, but fails for pastes from print screen (gives very
+  // weird effects, probably random alpha values).
+  //
+  // ... I've also tried GCDC Blit and DrawBitmap, neither retained
+  // alpha.
   wxBitmap cleanBmp(dirtyBmp.GetWidth(), dirtyBmp.GetHeight(), 24);
   wxMemoryDC cleanDC(cleanBmp);
   cleanDC.DrawBitmap(dirtyBmp, 0, 0);

@@ -60,21 +60,24 @@ void set_size(IconDirEntry& e, const IntSize& sz){
 }
 
 HotSpot get_hot_spot(const IconDirEntry& e){
-  return HotSpot(e.colorPlanes, e.bpp);
+  // Color-planes and bits per pixel are appropriated for
+  // the hot spot-location in the cursor format.
+  return HotSpot(e.colorPlanes, e.bitsPerPixel);
 }
 
 bool set_hot_spot(IconDirEntry& e, const HotSpot& p){
+  // See get_hot_spot-note.
   const bool validHotspot =
     can_represent<decltype(IconDirEntry::colorPlanes)>(p.x) &&
-    can_represent<decltype(IconDirEntry::bpp)>(p.y);
+    can_represent<decltype(IconDirEntry::bitsPerPixel)>(p.y);
   if (validHotspot){
     e.colorPlanes = convert(p.x);
-    e.bpp = convert(p.y);
+    e.bitsPerPixel = convert(p.y);
     return true;
   }
   else{
     e.colorPlanes = 0;
-    e.bpp = 0;
+    e.bitsPerPixel = 0;
     return false;
   }
 }
@@ -88,7 +91,8 @@ DPI default_DPI(){
   return DPI(96); // Rather arbitrarily chosen.
 }
 
-BitmapInfoHeader create_bitmap_info_header(const IntSize& size, uint16_t bpp,
+BitmapInfoHeader create_bitmap_info_header(const IntSize& size,
+  uint16_t bitsPerPixel,
   const DPI& dpi,
   bool andMap)
 {
@@ -97,11 +101,11 @@ BitmapInfoHeader create_bitmap_info_header(const IntSize& size, uint16_t bpp,
   h.width = size.w;
   h.height = andMap ? 2*size.h : size.h;
   h.colorPlanes = 1;
-  h.bpp = bpp;
+  h.bitsPerPixel = bitsPerPixel;
   h.compression = Compression::BI_RGB;
   h.rawDataSize = 0; // Dummy value 0 allowed for BI_RGB
   h.horizontalResolution = h.verticalResolution = to_pixels_per_meter(dpi);
-  h.paletteColors = bpp == 8 ? 256 : 0;
+  h.paletteColors = bitsPerPixel == 8 ? 256 : 0;
   h.importantColors = 0;
   return h;
 }
@@ -115,7 +119,7 @@ BitmapInfoHeader create_bitmap_info_header_png(const IntSize& bmpSize,
   h.width = bmpSize.w;
   h.height = bmpSize.h;
   h.colorPlanes = 1;
-  h.bpp = 0;
+  h.bitsPerPixel = 0;
   h.compression = Compression::BI_PNG;
   h.rawDataSize = convert(rawDataSize);
   h.horizontalResolution = h.verticalResolution = to_pixels_per_meter(dpi);

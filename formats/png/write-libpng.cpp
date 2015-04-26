@@ -154,24 +154,24 @@ PngWriteResult write_with_libpng(const char* path,
   if (rgb_or_rgba(colorType)){
     // Write RGB or RGBA
 
-    const int PNG_BPP = colorType == PNG_COLOR_TYPE_RGBA ? 4 : 3;
-    assert((width - 1) * PNG_BPP + (PNG_BPP - 1) < bytesPerRow);
+    const int PNG_ByPP = colorType == PNG_COLOR_TYPE_RGBA ? 4 : 3;
+    assert((width - 1) * PNG_ByPP + (PNG_ByPP - 1) < bytesPerRow);
 
     const auto* src = bmp.GetRaw();
     const png_uint_32 stride = convert(bmp.GetStride());
-    const png_uint_32 srcBpp = convert(ByPP);
+    const png_uint_32 srcByPP = convert(ByPP);
     for (png_uint_32 y = 0; y != height; y++){
       auto row = (png_byte*) malloc(bytesPerRow);
       rowPointers[y] = row;
       for (png_uint_32 x = 0; x != width; x++){
         // Fill the row with the bitmap-data
-        auto i = y * stride + x * srcBpp;
-        row[x * PNG_BPP] = src[i + faint::iR];
-        row[x * PNG_BPP + 1] = src[i + faint::iG];
-        row[x * PNG_BPP + 2] = src[i + faint::iB];
+        auto i = y * stride + x * srcByPP;
+        row[x * PNG_ByPP] = src[i + faint::iR];
+        row[x * PNG_ByPP + 1] = src[i + faint::iG];
+        row[x * PNG_ByPP + 2] = src[i + faint::iB];
 
-        if (PNG_BPP == 4){
-          row[x * PNG_BPP + 3] = src[i + faint::iA];
+        if (PNG_ByPP == 4){
+          row[x * PNG_ByPP + 3] = src[i + faint::iA];
         }
       }
     }
@@ -180,12 +180,12 @@ PngWriteResult write_with_libpng(const char* path,
   else if (gray_or_gray_alpha(colorType)){
     // Write gray-scale
 
-    const int PNG_BPP = colorType == PNG_COLOR_TYPE_GRAY_ALPHA ? 2 : 1;
-    assert((width - 1) * PNG_BPP + (PNG_BPP - 1) < bytesPerRow);
+    const int PNG_ByPP = colorType == PNG_COLOR_TYPE_GRAY_ALPHA ? 2 : 1;
+    assert((width - 1) * PNG_ByPP + (PNG_ByPP - 1) < bytesPerRow);
 
     const auto* src = bmp.GetRaw();
     const png_uint_32 stride = convert(bmp.GetStride());
-    const png_uint_32 srcBpp = convert(ByPP);
+    const png_uint_32 srcByPP = convert(ByPP);
 
     for (png_uint_32 y = 0; y != height; y++){
       auto row = (png_byte*) malloc(bytesPerRow);
@@ -193,13 +193,13 @@ PngWriteResult write_with_libpng(const char* path,
 
       for (png_uint_32 x = 0; x != width; x++){
         // Fill the row with the bitmap-data
-        const auto i = y * stride + x * srcBpp;
+        const auto i = y * stride + x * srcByPP;
 
-        row[x * PNG_BPP] = gray_sum(src[i + faint::iR],
+        row[x * PNG_ByPP] = gray_sum(src[i + faint::iR],
           src[i + faint::iG],
           src[i + faint::iB]);
-        if (PNG_BPP == 2){
-          row[x * PNG_BPP + 1] = src[i + faint::iA];
+        if (PNG_ByPP == 2){
+          row[x * PNG_ByPP + 1] = src[i + faint::iA];
         }
       }
     }

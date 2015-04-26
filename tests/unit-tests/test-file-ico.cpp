@@ -103,5 +103,4 @@ void test_file_ico(){
       originalBitmaps, IcoCompression::PNG);
     FWD(check_bitmaps(test_read_ico(filePath)));
   }
-
 }

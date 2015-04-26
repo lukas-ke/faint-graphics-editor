@@ -38,11 +38,11 @@ utf8_string error_bitmap_signature(uint16_t v){
       "expected", str_int(v)));
 }
 
-utf8_string error_bpp(size_t num, int bpp){
+utf8_string error_bits_per_pixel(size_t num, int bitsPerPixel){
   return endline_sep(
     "The bits per pixel setting for this icon is not supported by Faint.\n",
     lbl_u("Image entry", num + 1),
-    lbl("Bits per pixel", bpp));
+    lbl("Bits per pixel", bitsPerPixel));
 }
 
 utf8_string error_color_planes(size_t num, int planes){

@@ -21,10 +21,10 @@
 
 namespace faint{
 
-int bmp_row_stride(int bpp, int w){
+int bmp_row_stride(int bitsPerPixel, int w){
   // Round the row size to a multiple of four bytes.
-  const int ROW_PAD = 4;
-  return ((bpp * w + 31) / 32) * ROW_PAD;
+  const int ROW_PAD_BYTES = 4;
+  return ((bitsPerPixel * w + 31) / 32) * ROW_PAD_BYTES;
 }
 
 int and_map_row_stride(int w){
@@ -45,7 +45,7 @@ static void write_color_table(BinaryWriter& out, const ColorList& l){
   }
 }
 
-void write_32bpp_BI_RGB_ICO(BinaryWriter& out, const Bitmap& bmp){
+void write_32bipp_BI_RGB_ICO(BinaryWriter& out, const Bitmap& bmp){
   // The size from the bmp-header. May have larger height than the size
   // in the IconDirEntry. (Fixme: Why?)
 
@@ -68,7 +68,7 @@ void write_32bpp_BI_RGB_ICO(BinaryWriter& out, const Bitmap& bmp){
   }
 }
 
-void write_24bpp_BI_RGB(BinaryWriter& out, const Bitmap& bmp){
+void write_24bipp_BI_RGB(BinaryWriter& out, const Bitmap& bmp){
   const int padBytes = bmp_row_padding<24>(bmp.m_w);
 
   for (int y = 0; y != bmp.m_h; y++){
@@ -84,7 +84,9 @@ void write_24bpp_BI_RGB(BinaryWriter& out, const Bitmap& bmp){
   }
 }
 
-void write_8bpp_BI_RGB(BinaryWriter& out, const std::pair<AlphaMap, ColorList>& p){
+void write_8bipp_BI_RGB(BinaryWriter& out,
+  const std::pair<AlphaMap, ColorList>& p)
+{
   const auto& bmp(p.first);
   write_color_table(out, p.second);
 
@@ -100,7 +102,7 @@ void write_8bpp_BI_RGB(BinaryWriter& out, const std::pair<AlphaMap, ColorList>& 
   }
 }
 
-Optional<AlphaMap> read_1bpp_BI_RGB(BinaryReader& in, const IntSize& size){
+Optional<AlphaMap> read_1bipp_BI_RGB(BinaryReader& in, const IntSize& size){
   const int rowLength = bmp_row_stride<1>(size.w);
   const int bufferLength = rowLength * size.h;
 
@@ -123,7 +125,7 @@ Optional<AlphaMap> read_1bpp_BI_RGB(BinaryReader& in, const IntSize& size){
   return option(alphaMap);
 }
 
-Optional<AlphaMap> read_4bpp_BI_RGB(BinaryReader& in, const IntSize& size){
+Optional<AlphaMap> read_4bipp_BI_RGB(BinaryReader& in, const IntSize& size){
   const int rowLength = bmp_row_stride<4>(size.w);
   const int bufferLength = rowLength * size.h;
 
@@ -149,7 +151,7 @@ Optional<AlphaMap> read_4bpp_BI_RGB(BinaryReader& in, const IntSize& size){
   return option(alphaMap);
 }
 
-Optional<AlphaMap> read_8bpp_BI_RGB(BinaryReader& in, const IntSize& size){
+Optional<AlphaMap> read_8bipp_BI_RGB(BinaryReader& in, const IntSize& size){
   AlphaMap alphaMap(size);
   const int padBytes = bmp_row_padding<8>(size.w);
   for (int y = 0; y != size.h; y++){
@@ -168,7 +170,7 @@ Optional<AlphaMap> read_8bpp_BI_RGB(BinaryReader& in, const IntSize& size){
   return option(alphaMap);
 }
 
-Optional<Bitmap> read_24bpp_BI_RGB(BinaryReader& in, const IntSize& size){
+Optional<Bitmap> read_24bipp_BI_RGB(BinaryReader& in, const IntSize& size){
   Bitmap bmp(size);
   const int padBytes = bmp_row_padding<24>(size.w);
   for (int y = 0; y != bmp.m_h; y++){
@@ -190,7 +192,7 @@ Optional<Bitmap> read_24bpp_BI_RGB(BinaryReader& in, const IntSize& size){
   return option(bmp);
 }
 
-Optional<Bitmap> read_32bpp_BI_RGB(BinaryReader& in, const IntSize& size){
+Optional<Bitmap> read_32bipp_BI_RGB(BinaryReader& in, const IntSize& size){
   Bitmap bmp(size);
   const int padBytes = bmp_row_padding<32>(size.w);
 

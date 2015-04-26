@@ -20,7 +20,7 @@ static cur_vec test_read_cur(const FilePath& filePath){
 void test_file_cur(){
 
   {
-    // 24bpp, 6x6
+    // 24-bits-per-pixel, 6x6
     auto cursors = test_read_cur(get_test_load_path(FileName("24bpp-6x6.cur")));
     ABORT_IF(cursors.size() != 1);
     const auto& cursor = cursors.front();
@@ -40,7 +40,7 @@ void test_file_cur(){
   }
 
   {
-    // 24bpp, 256x256
+    // 24-bits-per-pixel, 256x256
     auto cursors = test_read_cur(get_test_load_path(
       FileName("24bpp-256x256.cur")));
 
@@ -50,6 +50,6 @@ void test_file_cur(){
     EQUAL(cursor.first.GetSize(), IntSize(256,256));
   }
 
-  // Fixme: Add 1bpp
-  // Fixme: Add 4bpp
+  // Fixme: Add 1-bit-per-pixel
+  // Fixme: Add 4-bits-per-pixel
 }

@@ -21,6 +21,7 @@
 #include "formats/bmp/serialize-bmp-pixel-data.hh"
 #include "formats/bmp/serialize-bmp-types.hh"
 #include "geo/limits.hh"
+#include "text/formatting.hh"
 #include "util-wx/stream.hh"
 #include "util/serialize-tuple.hh"
 
@@ -101,29 +102,30 @@ static Bitmap read_bmp_or_throw(const FilePath& filePath){
 
   const IntSize bmpSize(bitmapInfoHeader.width, bitmapInfoHeader.height);
 
-  if (bitmapInfoHeader.bpp == 8){
+  if (bitmapInfoHeader.bitsPerPixel == 8){
     auto colorList = or_throw(read_color_table(in, 256),
       "Failed reading color table.");
 
     in.seekg(bitmapFileHeader.dataOffset);
 
-    auto alphaMap = or_throw(read_8bpp_BI_RGB(in, bmpSize),
-      "Failed reading 8bpp-pixel data");
+    auto alphaMap = or_throw(read_8bipp_BI_RGB(in, bmpSize),
+      "Failed reading 8-bits-per-pixel data");
 
     return bitmap_from_indexed_colors(alphaMap, colorList);
   }
   else {
     in.seekg(bitmapFileHeader.dataOffset);
-    if (bitmapInfoHeader.bpp == 24){
-      return or_throw(read_24bpp_BI_RGB(in, bmpSize),
-        "Failed reading 24-bpp pixel data.");
+    if (bitmapInfoHeader.bitsPerPixel == 24){
+      return or_throw(read_24bipp_BI_RGB(in, bmpSize),
+        "Failed reading 24-bits-per-pixel data.");
     }
-    else if (bitmapInfoHeader.bpp == 32){
-      return or_throw(read_32bpp_BI_RGB(in, bmpSize),
-        "Failed reading 32-bpp pixel data.");
+    else if (bitmapInfoHeader.bitsPerPixel == 32){
+      return or_throw(read_32bipp_BI_RGB(in, bmpSize),
+        "Failed reading 32-bits-per-pixel data.");
     }
   }
-  throw ReadBmpError("Unsupported bpp");
+  throw ReadBmpError(Sentence("Unsupported bits-per-pixel",
+    bracketed(str_int(bitmapInfoHeader.bitsPerPixel))));
 }
 
 OrError<Bitmap> read_bmp(const FilePath& filePath){
@@ -156,28 +158,28 @@ SaveResult write_bmp(const FilePath& filePath,
     return SaveResult::SaveFailed(error_open_file_write(filePath));
   }
 
-  uint16_t bpp = quality == BitmapQuality::COLOR_24BIT ? 24 : 8;
+  uint16_t bitsPerPixel = quality == BitmapQuality::COLOR_24BIT ? 24 : 8;
 
   const IntSize size(bmp.GetSize());
-  const int rowStride = bmp_row_stride(bpp, size.w);
+  const int rowStride = bmp_row_stride(bitsPerPixel, size.w);
 
   write_struct(out, create_bitmap_file_header(quality, rowStride, size.h));
-  write_struct(out, create_bitmap_info_header(bmp.GetSize(), bpp,
-      default_DPI(),
-      false));
+  write_struct(out, create_bitmap_info_header(bmp.GetSize(), bitsPerPixel,
+    default_DPI(),
+    false));
 
   switch(quality){
     // Note: No default, to ensure warning if unhandled enum value
   case BitmapQuality::COLOR_8BIT:
-    write_8bpp_BI_RGB(out, quantized(bmp, Dithering::ON));
+    write_8bipp_BI_RGB(out, quantized(bmp, Dithering::ON));
     return SaveResult::SaveSuccessful();
 
   case BitmapQuality::GRAY_8BIT:
-    write_8bpp_BI_RGB(out, {desaturate_AlphaMap(bmp), grayscale_color_table()});
+    write_8bipp_BI_RGB(out, {desaturate_AlphaMap(bmp), grayscale_color_table()});
     return SaveResult::SaveSuccessful();
 
   case BitmapQuality::COLOR_24BIT:
-    write_24bpp_BI_RGB(out, bmp);
+    write_24bipp_BI_RGB(out, bmp);
     return SaveResult::SaveSuccessful();
   }
 

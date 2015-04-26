@@ -92,7 +92,7 @@ inline auto tied(BitmapInfoHeader& h){
     h.width,
     h.height,
     h.colorPlanes,
-    h.bpp,
+    h.bitsPerPixel,
     raw_enum_value(h.compression),
     h.rawDataSize,
     h.horizontalResolution,
@@ -113,7 +113,7 @@ inline auto tied(IconDirEntry& h){
     h.reserved,
     h.colorCount,
     h.colorPlanes,
-    h.bpp,
+    h.bitsPerPixel,
     h.bytes,
     h.offset);
 }

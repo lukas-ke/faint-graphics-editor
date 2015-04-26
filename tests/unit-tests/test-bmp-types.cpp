@@ -50,7 +50,7 @@ void test_bmp_types(){
     EQUAL(h1.width, h2.width);
     EQUAL(h1.height, h2.height);
     EQUAL(h1.colorPlanes, h2.colorPlanes);
-    EQUAL(h1.bpp, h2.bpp);
+    EQUAL(h1.bitsPerPixel, h2.bitsPerPixel);
     EQUALF(h1.compression, h2.compression, enum_str);
     EQUAL(h1.rawDataSize, h2.rawDataSize);
     EQUAL(h1.horizontalResolution, h2.horizontalResolution);
@@ -86,7 +86,7 @@ void test_bmp_types(){
     EQUAL(h1.colorCount, h2.colorCount);
     EQUAL(h1.reserved, h2.reserved);
     EQUAL(h1.colorPlanes, h2.colorPlanes);
-    EQUAL(h1.bpp, h2.bpp);
+    EQUAL(h1.bitsPerPixel, h2.bitsPerPixel);
     EQUAL(h1.bytes, h2.bytes);
     EQUAL(h1.offset, h2.offset);
   }
