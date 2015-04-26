@@ -21,6 +21,8 @@
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "bitmap/draw.hh"
+#include "bitmap/scale-bilinear.hh"
+#include "bitmap/scale-nearest.hh"
 #include "geo/arc.hh"
 #include "geo/arrowhead.hh"
 #include "geo/geo-func.hh"

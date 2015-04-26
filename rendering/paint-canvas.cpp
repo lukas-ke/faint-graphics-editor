@@ -22,6 +22,8 @@
 #include "app/canvas-handle.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/draw.hh"
+#include "bitmap/scale-bilinear.hh"
+#include "bitmap/scale-nearest.hh"
 #include "geo/canvas-geo.hh"
 #include "geo/geo-func.hh"
 #include "geo/int-point.hh"

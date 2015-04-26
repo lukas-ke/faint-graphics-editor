@@ -16,7 +16,8 @@
 #include <cassert>
 #include <cmath>
 #include "bitmap/auto-crop.hh"
-#include "bitmap/draw.hh"
+#include "bitmap/draw.hh" // Fixme: For flip
+#include "bitmap/scale-bilinear.hh"
 #include "commands/set-bitmap-cmd.hh"
 #include "geo/axis.hh"
 #include "geo/axis.hh"

@@ -3,10 +3,8 @@
 #include "tests/test-util/file-handling.hh"
 #include "tests/test-util/image-table.hh"
 
-#include "bitmap/bitmap.hh"
-#include "bitmap/draw.hh"
 #include "bitmap/scale-bicubic.hh"
-#include "geo/int-size.hh"
+#include "bitmap/scale-bilinear.hh"
 #include "text/formatting.hh"
 
 void img_scale_bicubic(){
@@ -23,6 +21,7 @@ void img_scale_bicubic(){
     const auto fileBicubic =
       save_test_image(scale_bicubic(bmp, Scale(scale, scale)),
         FileName(no_sep("bicubic-", str(scale, 1_dec), ".png"))).StripPath();
+
     const auto fileBilinear =
       save_test_image(scale_bilinear(bmp, Scale(scale, scale)),
         FileName(no_sep("bilinear-", str(scale, 1_dec), ".png"))).StripPath();

@@ -13,7 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "bitmap/bitmap.hh"
+#include "bitmap/scale-nearest.hh"
 #include "geo/scale.hh"
 
 namespace faint{

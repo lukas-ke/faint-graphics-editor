@@ -25,6 +25,8 @@
 #include "bitmap/mask.hh"
 #include "bitmap/pattern.hh"
 #include "bitmap/scale-bicubic.hh"
+#include "bitmap/scale-bilinear.hh"
+#include "bitmap/scale-nearest.hh"
 #include "geo/axis.hh"
 #include "geo/geo-func.hh"
 #include "geo/geo-list-points.hh"
@@ -1994,7 +1996,7 @@ void replace_color(Bitmap& bmp, const OldColor& oldColor, const Paint& paint){
     });
 }
 
-// Note: rotate is implemented in rotate.cpp
+// Note: rotate_nearest is implemented in rotate-util.cpp
 
 Bitmap rotate_90cw(const Bitmap& src){
   Bitmap dst(transposed(src.GetSize()));
