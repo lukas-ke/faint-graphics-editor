@@ -41,11 +41,11 @@ Bitmap scale_bilinear(const Bitmap& src, const Scale& scale){
       int ySrc = truncated(y_ratio * yDst);
       const coord x_diff = x_ratio * xDst - xSrc;
       const coord y_diff = y_ratio * yDst - ySrc;
-      const int srcIndex = ySrc * src.m_row_stride + xSrc * BPP;
+      const int srcIndex = ySrc * src.m_row_stride + xSrc * ByPP;
       const_color_ptr a(data + srcIndex);
-      const_color_ptr b(data + srcIndex + BPP);
+      const_color_ptr b(data + srcIndex + ByPP);
       const_color_ptr c(data + srcIndex + src.m_row_stride);
-      const_color_ptr d(data + srcIndex + src.m_row_stride + BPP);
+      const_color_ptr d(data + srcIndex + src.m_row_stride + ByPP);
 
       // Fixme: Check for possible overflow
       const uchar blue = static_cast<uchar>((a.b)*(1-x_diff)*(1-y_diff) +
@@ -68,7 +68,7 @@ Bitmap scale_bilinear(const Bitmap& src, const Scale& scale){
         c.a*(y_diff)*(1-x_diff) +
         (d.a)*(x_diff*y_diff) + 0.5);
 
-      uchar* rDst = dst.m_data + yDst * (dst.m_row_stride) + xDst * BPP;
+      uchar* rDst = dst.m_data + yDst * (dst.m_row_stride) + xDst * ByPP;
       *(rDst + iR) = red;
       *(rDst + iG) = green;
       *(rDst + iB) = blue;

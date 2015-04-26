@@ -34,8 +34,8 @@ Bitmap scale_nearest(const Bitmap& src, int scale){
       x2 = ((j*x_ratio)>>16);
       y2 = ((i*y_ratio)>>16);
 
-      uchar* rDst = p_dst + i * (scaled.m_row_stride) + j * BPP;
-      const uchar* rSrc = p_src + y2 * (src.m_row_stride) + x2 * BPP;
+      uchar* rDst = p_dst + i * (scaled.m_row_stride) + j * ByPP;
+      const uchar* rSrc = p_src + y2 * (src.m_row_stride) + x2 * ByPP;
 
       *(rDst + 0) = *rSrc;
       *(rDst + 1) = *(rSrc + 1);
@@ -62,8 +62,8 @@ Bitmap scale_nearest(const Bitmap& src, const Scale& scale){
       x2 = ((j*x_ratio)>>16);
       y2 = ((i*y_ratio)>>16);
 
-      uchar* rDst = p_dst + i * (scaled.m_row_stride) + j * BPP;
-      const uchar* rSrc = p_src + y2 * (src.m_row_stride) + x2 * BPP;
+      uchar* rDst = p_dst + i * (scaled.m_row_stride) + j * ByPP;
+      const uchar* rSrc = p_src + y2 * (src.m_row_stride) + x2 * ByPP;
 
       *(rDst + 0) = *rSrc;
       *(rDst + 1) = *(rSrc + 1);

@@ -81,10 +81,10 @@ static Bitmap kernel_h_apply(const Bitmap& src, const std::vector<double>& k){
         vB += srcRow[(x - d) * bpp + iB] * k[to_size_t(i)];
         vA += srcRow[(x - d) * bpp + iA] * k[to_size_t(i)];
       }
-      dstRow[x * BPP + iR] = static_cast<uchar>(vR);
-      dstRow[x * BPP + iG] = static_cast<uchar>(vG);
-      dstRow[x * BPP + iB] = static_cast<uchar>(vB);
-      dstRow[x * BPP + iA] = static_cast<uchar>(vA);
+      dstRow[x * ByPP + iR] = static_cast<uchar>(vR);
+      dstRow[x * ByPP + iG] = static_cast<uchar>(vG);
+      dstRow[x * ByPP + iB] = static_cast<uchar>(vB);
+      dstRow[x * ByPP + iA] = static_cast<uchar>(vA);
     }
   }
   return dst;
@@ -94,7 +94,7 @@ static Bitmap kernel_v_apply(const Bitmap& src, const std::vector<double>& k){
   Bitmap dst(src.GetSize());
   int r = static_cast<int>(k.size()) / 2;
   int w = resigned(k.size());
-  static_assert(BPP == 4, "4-bytes per pixel required.");
+  static_assert(ByPP == 4, "4-bytes per pixel required.");
   for (int y = 0; y != src.m_h; y++){
     const uchar* srcRow = src.m_data + y * src.m_row_stride;
     uchar* dstRow = dst.m_data + y * dst.m_row_stride;
@@ -105,16 +105,16 @@ static Bitmap kernel_v_apply(const Bitmap& src, const std::vector<double>& k){
       double vA = 0;
       for (int i = 0; i != w; i++){
         const int d = std::min(y, std::max(i - r, -(src.m_h - y - 1)));
-        vR += srcRow[x * BPP - d * src.m_row_stride + iR] * k[to_size_t(i)];
-        vG += srcRow[x * BPP - d * src.m_row_stride + iG] * k[to_size_t(i)];
-        vB += srcRow[x * BPP - d * src.m_row_stride + iB] * k[to_size_t(i)];
-        vA += srcRow[x * BPP - d * src.m_row_stride + iA] * k[to_size_t(i)];
+        vR += srcRow[x * ByPP - d * src.m_row_stride + iR] * k[to_size_t(i)];
+        vG += srcRow[x * ByPP - d * src.m_row_stride + iG] * k[to_size_t(i)];
+        vB += srcRow[x * ByPP - d * src.m_row_stride + iB] * k[to_size_t(i)];
+        vA += srcRow[x * ByPP - d * src.m_row_stride + iA] * k[to_size_t(i)];
       }
 
-      dstRow[x * BPP + iR] = static_cast<uchar>(vR);
-      dstRow[x * BPP + iG] = static_cast<uchar>(vG);
-      dstRow[x * BPP + iB] = static_cast<uchar>(vB);
-      dstRow[x * BPP + iA] = static_cast<uchar>(vA);
+      dstRow[x * ByPP + iR] = static_cast<uchar>(vR);
+      dstRow[x * ByPP + iG] = static_cast<uchar>(vG);
+      dstRow[x * ByPP + iB] = static_cast<uchar>(vB);
+      dstRow[x * ByPP + iA] = static_cast<uchar>(vA);
     }
   }
   return dst;

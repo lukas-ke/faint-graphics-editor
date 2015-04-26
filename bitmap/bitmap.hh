@@ -22,7 +22,7 @@
 
 namespace faint{
 
-const int BPP = 4;
+const int ByPP = 4;
 const int iR = 2;
 const int iG = 1;
 const int iB = 0;

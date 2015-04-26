@@ -127,17 +127,17 @@ Bitmap rotate_nearest(const Bitmap& bmp,
 
       if (orgX >= 0 && orgY >= 0 && orgX < bmp.m_w && orgY < bmp.m_h){
         // Inside source - copy the bits
-        dstRow[stepX * BPP + iR] = src[orgX * BPP + orgY * bmp.m_row_stride + iR];
-        dstRow[stepX * BPP + iG] = src[orgX * BPP + orgY * bmp.m_row_stride + iG];
-        dstRow[stepX * BPP + iB] = src[orgX * BPP + orgY * bmp.m_row_stride + iB];
-        dstRow[stepX * BPP + iA] = src[orgX * BPP + orgY * bmp.m_row_stride + iA];
+        dstRow[stepX * ByPP + iR] = src[orgX*ByPP + orgY * bmp.m_row_stride + iR];
+        dstRow[stepX * ByPP + iG] = src[orgX*ByPP + orgY * bmp.m_row_stride + iG];
+        dstRow[stepX * ByPP + iB] = src[orgX*ByPP + orgY * bmp.m_row_stride + iB];
+        dstRow[stepX * ByPP + iA] = src[orgX*ByPP + orgY * bmp.m_row_stride + iA];
       }
       else {
         // Outside source - set the color to bg color
-        dstRow[stepX * BPP + iR] = bgColor.r;
-        dstRow[stepX * BPP + iG] = bgColor.g;
-        dstRow[stepX * BPP + iB] = bgColor.b;
-        dstRow[stepX * BPP + iA] = bgColor.a;
+        dstRow[stepX * ByPP + iR] = bgColor.r;
+        dstRow[stepX * ByPP + iG] = bgColor.g;
+        dstRow[stepX * ByPP + iB] = bgColor.b;
+        dstRow[stepX * ByPP + iA] = bgColor.a;
       }
     }
     dstRow += bmpDst.m_row_stride;

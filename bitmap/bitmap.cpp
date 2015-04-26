@@ -185,8 +185,8 @@ bool Bitmap::operator==(const Bitmap& other) const{
   int rhsStride = other.m_row_stride;
   for (int y = 0; y != m_h; y++){
     for (int x = 0; x != m_w; x++){
-      int iLhs = y * lhsStride + x * BPP;
-      int iRhs = y * rhsStride + x * BPP;
+      int iLhs = y * lhsStride + x * ByPP;
+      int iRhs = y * rhsStride + x * ByPP;
       if (lhs[iLhs + iR] != rhs[iRhs + iR] ||
         lhs[iLhs + iG] != rhs[iRhs + iG] ||
         lhs[iLhs + iB] != rhs[iRhs + iB] ||
@@ -210,7 +210,7 @@ void clear(Bitmap& bmp, const Color& c){
   uchar* data = bmp.m_data;
   for (int y = 0; y != bmp.m_h; y++){
     for (int x = 0; x != bmp.m_w; x++){
-      int dst = y * bmp.m_row_stride + x * BPP;
+      int dst = y * bmp.m_row_stride + x * ByPP;
       data[dst + iR] = c.r;
       data[dst + iG] = c.g;
       data[dst + iB] = c.b;
@@ -232,7 +232,7 @@ Color get_color(const Bitmap& bmp, const IntPoint& pos){
 }
 
 Color get_color_raw(const Bitmap& bmp, int x, int y){
-  int pos = y * bmp.m_row_stride + x * BPP;
+  int pos = y * bmp.m_row_stride + x * ByPP;
   uchar* data = bmp.m_data;
   return Color(data[pos + iR],
     data[pos + iG],
@@ -256,7 +256,7 @@ bool fully_opaque(const Bitmap& bmp){
 
   for (int y = 0; y != bmp.m_h; y++){
     for (int x = 0; x != bmp.m_w; x++){
-      const int i = y * stride + x * BPP;
+      const int i = y * stride + x * ByPP;
       if (p[i + iA] != CHANNEL_MAX){
         return false;
       }
@@ -294,7 +294,7 @@ void put_pixel_raw(Bitmap& bmp, int x, int y, const Color& color){
     return;
   }
   uchar* data = bmp.GetRaw();
-  int pos = y * bmp.m_row_stride + x * BPP;
+  int pos = y * bmp.m_row_stride + x * ByPP;
   data[pos + iA] = color.a;
   data[pos + iR] = color.r;
   data[pos + iG] = color.g;

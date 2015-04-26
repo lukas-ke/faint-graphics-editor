@@ -164,7 +164,7 @@ void desaturate_simple(Bitmap& bmp){
   uchar* data = bmp.m_data;
   for (int y = 0; y != bmp.m_h; y++){
     for (int x = 0; x != bmp.m_w; x++){
-      int dst = y * bmp.m_row_stride + x * BPP;
+      int dst = y * bmp.m_row_stride + x * ByPP;
       uchar gray = static_cast<uchar>((data[dst + iR] +
           data[dst + iG] +
           data[dst + iB]) / 3);
@@ -179,7 +179,7 @@ void desaturate_weighted(Bitmap& bmp){
   uchar* data = bmp.m_data;
   for (int y = 0; y != bmp.m_h; y++){
     for (int x = 0; x != bmp.m_w; x++){
-      int dst = y * bmp.m_row_stride + x * BPP;
+      int dst = y * bmp.m_row_stride + x * ByPP;
       uchar gray = static_cast<uchar>(0.3 * data[dst + iR] +
           0.59 * data[dst + iG] +
           0.11 * data[dst + iB]);
@@ -365,7 +365,7 @@ Filter* get_pixelize_filter(){
 void invert(Bitmap& bmp){
   for (int y = 0; y != bmp.m_h; y++){
     uchar* data = bmp.m_data + y * bmp.m_row_stride;
-    for (int x = 0; x != bmp.m_w * BPP; x += BPP){
+    for (int x = 0; x != bmp.m_w * ByPP; x += ByPP){
       uchar* pos = data + x;
       *(pos + iR) = static_cast<uchar>(255 - *(pos + iR));
       *(pos + iG) = static_cast<uchar>(255 - *(pos + iG));
@@ -403,7 +403,7 @@ void color_balance(Bitmap& bmp,
 
   for (int y = 0; y != bmp.m_h; y++){
     uchar* row = bmp.m_data + y * bmp.m_row_stride;
-    for (int x = 0; x != bmp.m_w * BPP; x += BPP){
+    for (int x = 0; x != bmp.m_w * ByPP; x += ByPP){
       uchar* pos = row + x;
       *(pos + iR) = clip_rgb(*(pos + iR) * Xr + Yr);
       *(pos + iG) = clip_rgb(*(pos + iG) * Xg + Yg);

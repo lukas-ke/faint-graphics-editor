@@ -159,7 +159,7 @@ PngWriteResult write_with_libpng(const char* path,
 
     const auto* src = bmp.GetRaw();
     const png_uint_32 stride = convert(bmp.GetStride());
-    const png_uint_32 srcBpp = convert(faint::BPP);
+    const png_uint_32 srcBpp = convert(ByPP);
     for (png_uint_32 y = 0; y != height; y++){
       auto row = (png_byte*) malloc(bytesPerRow);
       rowPointers[y] = row;
@@ -185,7 +185,7 @@ PngWriteResult write_with_libpng(const char* path,
 
     const auto* src = bmp.GetRaw();
     const png_uint_32 stride = convert(bmp.GetStride());
-    const png_uint_32 srcBpp = convert(faint::BPP);
+    const png_uint_32 srcBpp = convert(ByPP);
 
     for (png_uint_32 y = 0; y != height; y++){
       auto row = (png_byte*) malloc(bytesPerRow);

@@ -114,7 +114,7 @@ Bitmap scale_bicubic(const Bitmap& src, const Scale& scale){
 
   // For each destination row (j)
   for (int j = 0; j != dstSize.h; j++){
-    faint::uchar* pDst = dst.GetRaw() + j * dstStride;
+    uchar* pDst = dst.GetRaw() + j * dstStride;
     const coord y = src_coord_subpixel(j, srcSize.h, dstSize.h);
 
     // Integer y-coordinate in source image
@@ -140,7 +140,7 @@ Bitmap scale_bicubic(const Bitmap& src, const Scale& scale){
 
       // Fixme: Move into inner loop.
       const uchar* pSrc = src.GetRaw() + (yi - 1) * src.GetStride() +
-        (xi - 1) * faint::BPP;
+        (xi - 1) * ByPP;
 
       // For each weight combination, row (=n) by column (=m)
       for (int n = OFFSET_BEGIN; n != OFFSET_END; n++){
@@ -161,9 +161,9 @@ Bitmap scale_bicubic(const Bitmap& src, const Scale& scale){
               totalWeight += w;
             }
           }
-          pSrc += faint::BPP;
+          pSrc += ByPP;
         }
-        pSrc = pSrc - faint::BPP * OFFSET_STEPS + src.GetStride();
+        pSrc = pSrc - ByPP * OFFSET_STEPS + src.GetStride();
       }
 
       static const auto sum_to_color =
@@ -175,7 +175,7 @@ Bitmap scale_bicubic(const Bitmap& src, const Scale& scale){
       pDst[iG] = sum_to_color(g, a);
       pDst[iB] = sum_to_color(b, a);
       pDst[iA] = static_cast<uchar>(a / totalWeight + 0.5);
-      pDst += faint::BPP;
+      pDst += ByPP;
     }
   }
   return dst;

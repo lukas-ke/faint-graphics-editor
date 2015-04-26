@@ -127,7 +127,7 @@ wxImage to_wx_image(const Bitmap& bmp){
 
   for (int y = 0; y != bmp.m_h; y++){
     for (int x = 0; x != bmp.m_w; x++){
-      size_t srcPos = to_size_t(y * stride + x * BPP);
+      size_t srcPos = to_size_t(y * stride + x * ByPP);
       size_t dstPos_rgb = to_size_t(y * bmp.m_w * 3 + x * 3);
       size_t dstPos_alpha = to_size_t(y * bmp.m_w + x);
       rgbData[dstPos_rgb] = bgraData[srcPos + iR];
@@ -157,7 +157,7 @@ wxBitmap to_wx_bmp(const Bitmap& bmp){
   for (int y = 0; y != bmp.m_h; y++){
     PixelData::Iterator rowStart = p;
     for (int x = 0; x != bmp.m_w; x++){
-      int pos = y *  stride + x * BPP;
+      int pos = y *  stride + x * ByPP;
       #ifdef __WXMSW__
       const uchar alpha = *(data + pos + iA);
       p.Alpha() = alpha;
@@ -192,7 +192,7 @@ Bitmap to_faint(wxBitmap wxBmp){
     for (int y = 0; y != bmp.m_h; y++){
       wxPixelData<wxBitmap, wxNativePixelFormat>::Iterator rowStart = p;
       for (int x = 0; x != bmp.m_w; x++){
-        size_t pos = to_size_t(y * stride + x * BPP);
+        size_t pos = to_size_t(y * stride + x * ByPP);
         data[pos + iA] = 255;
         data[pos + iR] = p.Red();
         data[pos + iG] = p.Green();
@@ -213,7 +213,7 @@ Bitmap to_faint(wxBitmap wxBmp){
     for (int y = 0; y != bmp.m_h; y++){
       AlphaPixelData::Iterator rowStart = p;
       for (int x = 0; x != bmp.m_w; x++){
-        size_t pos = to_size_t(y * stride + x * BPP);
+        size_t pos = to_size_t(y * stride + x * ByPP);
         #ifdef __WXMSW__
         // Convert back from premultiplied alpha
         data[pos + iA] = p.Alpha();

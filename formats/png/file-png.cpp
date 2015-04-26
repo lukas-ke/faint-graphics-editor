@@ -186,67 +186,67 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
     Bitmap bmp(IntSize(static_cast<int>(width), static_cast<int>(height)));
     auto* p = bmp.GetRaw();
     const auto bmpStride = bmp.GetStride();
-    const auto bmpBpp = faint::BPP;
-    const png_uint_32 PNG_BPP = convert(pngBitsPerPixel / 8);
+    const auto bmpByPP = ByPP;
+    const png_uint_32 PNG_ByPP = convert(pngBitsPerPixel / 8);
 
     if (gray_or_gray_alpha(colorType)){
       // Read GRAY
 
       for (png_uint_32 y = 0; y < height; y++){
-        const auto* row = rows + y * width * PNG_BPP;
+        const auto* row = rows + y * width * PNG_ByPP;
         for (png_uint_32 x = 0; x < width; x++){
-          auto i =  y * bmpStride + x * bmpBpp;
-          const png_byte v = row[x * PNG_BPP];
+          auto i =  y * bmpStride + x * bmpByPP;
+          const png_byte v = row[x * PNG_ByPP];
           p[i + faint::iR] = v;
           p[i + faint::iG] = v;
           p[i + faint::iB] = v;
           p[i + faint::iA] = (colorType == PNG_COLOR_TYPE_GRAY_ALPHA) ?
-            row[x * PNG_BPP + 1] : faint::CHANNEL_MAX;
+            row[x * PNG_ByPP + 1] : faint::CHANNEL_MAX;
         }
       }
     }
     else if (rgb_or_rgba(colorType)){
 
-      if (PNG_BPP == 3 || PNG_BPP == 4){
+      if (PNG_ByPP == 3 || PNG_ByPP == 4){
         // Read RGB or RGBA
         for (png_uint_32 y = 0; y < height; y++){
-          const auto* row = rows + y * width * PNG_BPP;
+          const auto* row = rows + y * width * PNG_ByPP;
           for (png_uint_32 x = 0; x < width; x++){
-            auto i =  y * bmpStride + x * bmpBpp;
-            p[i + faint::iR] = row[x * PNG_BPP];
-            p[i + faint::iG] = row[x * PNG_BPP + 1];
-            p[i + faint::iB] = row[x * PNG_BPP + 2];
-            if (PNG_BPP == 3){
+            auto i =  y * bmpStride + x * bmpByPP;
+            p[i + faint::iR] = row[x * PNG_ByPP];
+            p[i + faint::iG] = row[x * PNG_ByPP + 1];
+            p[i + faint::iB] = row[x * PNG_ByPP + 2];
+            if (PNG_ByPP == 3){
               p[i + faint::iA] = 255;
             }
             else{
-              p[i + faint::iA] = row[x * PNG_BPP + 3];
+              p[i + faint::iA] = row[x * PNG_ByPP + 3];
             }
           }
         }
       }
-      else if (PNG_BPP == 8){
+      else if (PNG_ByPP == 8){
         // Note: Discards the least significant byte for each channel,
         // since Faint-bitmaps use 4 BPP.
         for (png_uint_32 y = 0; y < height; y++){
-          const auto* row = rows + y * width * PNG_BPP;
+          const auto* row = rows + y * width * PNG_ByPP;
           for (png_uint_32 x = 0; x < width; x++){
-            auto i =  y * bmpStride + x * bmpBpp;
-            p[i + faint::iR] = row[x * PNG_BPP + 1];
-            p[i + faint::iG] = row[x * PNG_BPP + 3];
-            p[i + faint::iB] = row[x * PNG_BPP + 5];
-            p[i + faint::iA] = row[x * PNG_BPP + 7];
+            auto i =  y * bmpStride + x * bmpByPP;
+            p[i + faint::iR] = row[x * PNG_ByPP + 1];
+            p[i + faint::iG] = row[x * PNG_ByPP + 3];
+            p[i + faint::iB] = row[x * PNG_ByPP + 5];
+            p[i + faint::iA] = row[x * PNG_ByPP + 7];
           }
         }
       }
     }
     else if (palettized(colorType)){
       for (png_uint_32 y = 0; y < height; y++){
-        const auto* row = rows + y * width * PNG_BPP;
+        const auto* row = rows + y * width * PNG_ByPP;
 
         for (png_uint_32 x = 0; x < width; x++){
-          auto i =  y * bmpStride + x * bmpBpp;
-          auto paletteIndex = row[x * PNG_BPP]; // PNG_BPP Should be 1 probably.
+          auto i =  y * bmpStride + x * bmpByPP;
+          auto paletteIndex = row[x * PNG_ByPP]; // PNG_ByPP Should be 1 probably.
           auto color = palette[paletteIndex];
 
           p[i + faint::iR] = color.red;

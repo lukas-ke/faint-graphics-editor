@@ -821,8 +821,8 @@ static Bitmap flip_horizontal(const Bitmap& src){
   uchar* pSrc = src.m_data;
   for (int y = 0; y != src.m_h; y++){
     for (int x = 0 ; x != src.m_w; x++){
-      int iSrc = y * src.m_row_stride + x * BPP;
-      int iDst = y * dst.m_row_stride + (dst.m_w - 1) * BPP - x * BPP;
+      int iSrc = y * src.m_row_stride + x * ByPP;
+      int iDst = y * dst.m_row_stride + (dst.m_w - 1) * ByPP - x * ByPP;
       pDst[ iDst + iR ] = pSrc[iSrc + iR ];
       pDst[ iDst + iG ] = pSrc[iSrc + iG ];
       pDst[ iDst + iB ] = pSrc[iSrc + iB ];
@@ -838,8 +838,8 @@ static Bitmap flip_vertical(const Bitmap& src){
   uchar* pSrc = src.m_data;
   for (int y = 0; y != src.m_h; y++){
     for (int x = 0 ; x != src.m_w; x++){
-      int iSrc = y * src.m_row_stride + x * BPP;
-      int iDst = (dst.m_h - y - 1)* dst.m_row_stride + x * BPP;
+      int iSrc = y * src.m_row_stride + x * ByPP;
+      int iDst = (dst.m_h - y - 1)* dst.m_row_stride + x * ByPP;
       pDst[ iDst + iR ] = pSrc[iSrc + iR ];
       pDst[ iDst + iG ] = pSrc[iSrc + iG ];
       pDst[ iDst + iB ] = pSrc[iSrc + iB ];
@@ -933,8 +933,8 @@ void blend(const Offsat<Bitmap>& src, DstBmp dst){
   uchar* dstData = dst.GetRaw();
   for (int y = yMin; y != yMax; y++){
     for (int x = xMin; x != xMax; x++){
-      int srcPos = y * srcStride + x * BPP;
-      int dstPos = (y + y0) * dstStride + (x + x0) * BPP;
+      int srcPos = y * srcStride + x * ByPP;
+      int dstPos = (y + y0) * dstStride + (x + x0) * ByPP;
       float alpha = srcData[srcPos + iA];
       dstData[dstPos + iR] = static_cast<uchar>((srcData[srcPos + iR] * alpha +
         dstData[dstPos + iR] * (255 - alpha)) / 255);
@@ -971,7 +971,7 @@ void blend_masked(const Offsat<Bitmap>& src, DstBmp dst,
 
   for (int y = yMin; y != yMax; y++){
     for (int x = xMin; x != xMax; x++){
-      int srcPos = y * srcStride + x * BPP;
+      int srcPos = y * srcStride + x * ByPP;
        if (srcData[srcPos + iA] == 0 ||
          (srcData[ srcPos + iA ] == maskColor.a &&
            srcData[ srcPos + iR ] == maskColor.r &&
@@ -980,7 +980,7 @@ void blend_masked(const Offsat<Bitmap>& src, DstBmp dst,
          continue;
        }
 
-      int dstPos = (y + y0) * dstStride + (x + x0) * BPP;
+      int dstPos = (y + y0) * dstStride + (x + x0) * ByPP;
       uchar alpha = srcData[srcPos + iA];
       dstData[dstPos + iR] = static_cast<uchar>((srcData[srcPos + iR] * alpha +
          dstData[dstPos + iR] * (255 - alpha)) / 255);
@@ -1036,7 +1036,7 @@ static void blend_color(const Offsat<AlphaMapRef>& offsatAlphaMap, DstBmp dst,
 
   for (int y = yMin; y != yMax; y++){
     for (int x = xMin; x != xMax; x++){
-      int dstPos = (y + topLeft.y) * stride + (x + topLeft.x) * BPP;
+      int dstPos = (y + topLeft.y) * stride + (x + topLeft.x) * ByPP;
       uchar alpha = alphaMap.Get(x,y);
       dstData[dstPos + iR] = static_cast<uchar>((c.r * alpha +
           dstData[dstPos + iR] * (255 - alpha)) / 255);
@@ -1086,8 +1086,8 @@ void blit(const Offsat<Bitmap>& src, DstBmp dst){
 
   for (int y = yMin; y != yMax; y++){
     for (int x = xMin; x != xMax; x++){
-      int srcPos = y * srcStride + x * BPP;
-      int dstPos = (y + y0) * dstStride + (x + x0) * BPP;
+      int srcPos = y * srcStride + x * ByPP;
+      int dstPos = (y + y0) * dstStride + (x + x0) * ByPP;
       dstData[ dstPos ] = srcData[srcPos ];
       dstData[ dstPos + 1 ] = srcData[srcPos + 1 ];
       dstData[ dstPos + 2 ] = srcData[srcPos + 2 ];
@@ -1118,8 +1118,8 @@ void blit_masked(const Offsat<Bitmap>& src, DstBmp dst, const Color& maskColor){
 
   for (int y = yMin; y != yMax; y++){
     for (int x = xMin; x != xMax; x++){
-      int srcPos = y * srcStride + x * BPP;
-      int dstPos = (y + y0) * dstStride + (x + x0) * BPP;
+      int srcPos = y * srcStride + x * ByPP;
+      int dstPos = (y + y0) * dstStride + (x + x0) * ByPP;
       if (
           srcData[ srcPos + 3 ] != maskColor.a ||
           srcData[ srcPos + 2 ] != maskColor.r ||
@@ -1943,7 +1943,7 @@ void replace_color_color(Bitmap& bmp, const OldColor& in_oldColor,
   const Color& newColor(in_newColor.Get());
   for (int y = 0; y != bmp.m_h; y++){
     uchar* row = bmp.m_data + y * bmp.m_row_stride;
-    for (int x = 0; x != bmp.m_w * BPP; x += BPP){
+    for (int x = 0; x != bmp.m_w * ByPP; x += ByPP){
       color_ptr current(row + x);
       if (current == oldColor){
         current.Set(newColor);
@@ -2004,8 +2004,8 @@ Bitmap rotate_90cw(const Bitmap& src){
   uchar* pSrc = src.m_data;
   for (int y = 0; y != src.m_h; y++){
     for (int x = 0 ; x != src.m_w; x++){
-      int iSrc = y * src.m_row_stride + x * BPP;
-      int iDst = x * dst.m_row_stride + (dst.m_w - y - 1) * BPP;
+      int iSrc = y * src.m_row_stride + x * ByPP;
+      int iDst = x * dst.m_row_stride + (dst.m_w - y - 1) * ByPP;
       pDst[ iDst + iR ] = pSrc[iSrc + iR ];
       pDst[ iDst + iG ] = pSrc[iSrc + iG ];
       pDst[ iDst + iB ] = pSrc[iSrc + iB ];
@@ -2047,12 +2047,12 @@ Bitmap scaled_subbitmap(const Bitmap& src, const Scale& scale,
       int y = truncated(y_ratio * i + r.y);
       coord x_diff = (x_ratio * j + r.x) - x;
       coord y_diff = (y_ratio * i + r.y) - y;
-      int index = y * src.m_row_stride + x * BPP;
+      int index = y * src.m_row_stride + x * ByPP;
 
       const_color_ptr a(data + index);
-      const_color_ptr b(data + index + BPP);
+      const_color_ptr b(data + index + ByPP);
       const_color_ptr c(data + index + src.m_row_stride);
-      const_color_ptr d(data + index + src.m_row_stride + BPP);
+      const_color_ptr d(data + index + src.m_row_stride + ByPP);
 
       uchar blue = static_cast<uchar>((a.b)*(1-x_diff)*(1-y_diff) +
         (b.b)*(x_diff)*(1-y_diff) +
@@ -2074,7 +2074,7 @@ Bitmap scaled_subbitmap(const Bitmap& src, const Scale& scale,
         c.a*(y_diff)*(1-x_diff) +
         (d.a)*(x_diff*y_diff));
 
-      uchar* rDst = scaled.m_data + i * (scaled.m_row_stride) + j * BPP;
+      uchar* rDst = scaled.m_data + i * (scaled.m_row_stride) + j * ByPP;
 
       *(rDst + iR) = red;
       *(rDst + iG) = green;
@@ -2091,7 +2091,7 @@ void set_alpha(Bitmap& bmp, uchar a){
   IntSize sz(bmp.GetSize());
   for (int y = 0; y != sz.h; y++){
     for (int x = 0; x != sz.w; x++){
-      int i = y * stride + x * BPP;
+      int i = y * stride + x * ByPP;
       data[i + iA] = a;
     }
   }
@@ -2105,7 +2105,7 @@ void set_alpha_masked(Bitmap& bmp, uchar a, const Mask& m){
   for (int y = 0; y != sz.h; y++){
     for (int x = 0; x != sz.w; x++){
       if (m.Get(x, y)){
-        int i = y * stride + x * BPP;
+        int i = y * stride + x * ByPP;
         data[i + iA] = a;
       }
     }
@@ -2122,8 +2122,8 @@ Bitmap subbitmap(const Bitmap& orig, const IntRect& r){
 
   for (int y = 0; y != r.h; y++){
     for (int x = 0; x != r.w; x++){
-      int dstPos = y * destStride + x * BPP;
-      int srcPos = (y + r.y) * origStride + (x + r.x) * BPP;
+      int dstPos = y * destStride + x * ByPP;
+      int srcPos = (y + r.y) * origStride + (x + r.x) * ByPP;
       data[ dstPos ] = origData[ srcPos ];
       data[ dstPos + 1 ] = origData[ srcPos + 1 ];
       data[ dstPos + 2 ] = origData[ srcPos + 2 ];
