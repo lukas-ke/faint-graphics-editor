@@ -15,82 +15,11 @@
 
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
-#include "bitmap/rotate-util.hh"
-#include "geo/angle.hh"
+#include "geo/rotation-adjustment.hh"
 
 // The rotation code is adapted from this example for Windows GDI by
 // Yves Maurer: http://www.codeguru.com/cpp/g-m/gdi/article.php/c3693
 namespace faint {
-
-static double min4(double a, double b, double c, double d){
-  if (a < b){
-    if (c < a){
-      return (d < c) ? d : c;
-    }
-    else {
-      return (d < a) ? d : a;
-    }
-  }
-  else if (c < b){
-    return (d < c) ? d : c;
-  }
-  else {
-    return (d < b) ? d : b;
-  }
-}
-
-static double max4(double a, double b, double c, double d){
-  if (a > b){
-    if (c > a){
-      return (d > c) ? d : c;
-    }
-    else {
-      return (d > a) ? d : a;
-    }
-  }
-  else if (c > b){
-    return (d > c) ? d : c;
-  }
-  else {
-    return (d > b) ? d : b;
-  }
-}
-
-RotationAdjustment::RotationAdjustment(const IntPoint& offset,
-  const IntSize& size)
-  : offset(offset),
-    size(size)
-{}
-
-RotationAdjustment get_rotation_adjustment(const Angle& angle,
-  const IntSize& size)
-{
-  // Use the upper-left corner as pivot
-  const coord CtX = 0;
-  const coord CtY = 0;
-
-  // Find the corners to initialize the destination width and height
-  const coord cA = cos(angle);
-  const coord sA = sin(angle);
-
-  const coord x1 = CtX + (-CtX) * cA - (-CtY) * sA;
-  const coord x2 = CtX + (size.w - CtX) * cA - (-CtY) * sA;
-  const coord x3 = CtX + (size.w - CtX) * cA - (size.h - CtY) * sA;
-  const coord x4 = CtX + (-CtX) * cA - (size.h - CtY) * sA;
-
-  const coord y1 = CtY + (-CtY) * cA + (-CtX) * sA;
-  const coord y2 = CtY + (size.h - CtY) * cA + (-CtX) * sA;
-  const coord y3 = CtY + (size.h - CtY) * cA + (size.w - CtX) * sA;
-  const coord y4 = CtY + (-CtY) * cA + (size.w - CtX) * sA;
-
-  IntPoint offset(floored(min4(x1, x2, x3, x4)),
-    floored(min4(y1, y2, y3, y4)));
-  IntSize newSize(ceiled(max4(x1, x2, x3, x4)) - offset.x,
-    ceiled(max4(y1,y2,y3,y4)) - offset.y);
-
-  return RotationAdjustment(offset, newSize);
-}
-
 
 Bitmap rotate_nearest(const Bitmap& bmp,
   const Angle& angle,

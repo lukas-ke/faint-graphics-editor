@@ -1,5 +1,5 @@
 // -*- coding: us-ascii-unix -*-
-// Copyright 2013 Lukas Kemmer
+// Copyright 2012 Lukas Kemmer
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you
 // may not use this file except in compliance with the License. You
@@ -13,8 +13,9 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_ROTATE_UTIL_HH
-#define FAINT_ROTATE_UTIL_HH
+#ifndef FAINT_ROTATION_ADJUSTMENT_HH
+#define FAINT_ROTATION_ADJUSTMENT_HH
+#include "geo/angle.hh"
 #include "geo/int-point.hh"
 #include "geo/int-size.hh"
 
