@@ -21,58 +21,58 @@
 // Yves Maurer: http://www.codeguru.com/cpp/g-m/gdi/article.php/c3693
 namespace faint {
 
-Bitmap rotate_nearest(const Bitmap& bmp,
+Bitmap rotate_nearest(const Bitmap& src,
   const Angle& angle,
   const Color& bgColor)
 {
-  // Use the upper-left corner as pivot
-  double CtX = 0;
-  double CtY = 0;
-
-  // Find the corners to initialize the destination width and height
-
   RotationAdjustment adj = get_rotation_adjustment(angle,
-    bmp.GetSize());
+    src.GetSize());
 
-  Bitmap bmpDst(adj.size, bgColor);
-  uchar* dstRow = bmpDst.m_data;
+  Bitmap dst(adj.size, bgColor);
+  uchar* dstRow = dst.m_data;
 
-  const uchar* src = bmp.m_data;
   coord ca = cos(angle);
   coord sa = sin(angle);
   coord divisor = ca*ca + sa*sa;
 
+  // Use the upper-left corner as pivot
+  const double CtX = 0;
+  const double CtY = 0;
+
+  const uchar* pSrc = src.m_data;
+
   // Iterate over the destination bitmap
-  for (int stepY = 0; stepY != bmpDst.m_h; stepY++){
-    for (int stepX = 0; stepX != bmpDst.m_w; stepX++){
+  for (int j = 0; j != dst.m_h; j++){
+    for (int i = 0; i != dst.m_w; i++){
+
       // Calculate the source coordinate
-      int orgX = static_cast<int>((ca * (((double) stepX + adj.offset.x) +
+      int x = static_cast<int>((ca * (((double) i + adj.offset.x) +
             CtX * (ca - 1)) +
-          sa * (((double) stepY + adj.offset.y) +
+          sa * (((double) j + adj.offset.y) +
             CtY * (sa - 1))) / divisor);
 
-      int orgY = static_cast<int>(CtY + (CtX - ((double) stepX + adj.offset.x)) *
-        sa + ca *(((double) stepY + adj.offset.y) - CtY + (CtY - CtX) * sa));
+      int y = static_cast<int>(CtY + (CtX - ((double) i + adj.offset.x)) *
+        sa + ca *(((double) j + adj.offset.y) - CtY + (CtY - CtX) * sa));
 
-      if (orgX >= 0 && orgY >= 0 && orgX < bmp.m_w && orgY < bmp.m_h){
+      if (0 <= x && x < src.m_w && 0 <= y && y < src.m_h){
         // Inside source - copy the bits
-        dstRow[stepX * ByPP + iR] = src[orgX*ByPP + orgY * bmp.m_row_stride + iR];
-        dstRow[stepX * ByPP + iG] = src[orgX*ByPP + orgY * bmp.m_row_stride + iG];
-        dstRow[stepX * ByPP + iB] = src[orgX*ByPP + orgY * bmp.m_row_stride + iB];
-        dstRow[stepX * ByPP + iA] = src[orgX*ByPP + orgY * bmp.m_row_stride + iA];
+        dstRow[i * ByPP + iR] = pSrc[x*ByPP + y * src.m_row_stride + iR];
+        dstRow[i * ByPP + iG] = pSrc[x*ByPP + y * src.m_row_stride + iG];
+        dstRow[i * ByPP + iB] = pSrc[x*ByPP + y * src.m_row_stride + iB];
+        dstRow[i * ByPP + iA] = pSrc[x*ByPP + y * src.m_row_stride + iA];
       }
       else {
         // Outside source - set the color to bg color
-        dstRow[stepX * ByPP + iR] = bgColor.r;
-        dstRow[stepX * ByPP + iG] = bgColor.g;
-        dstRow[stepX * ByPP + iB] = bgColor.b;
-        dstRow[stepX * ByPP + iA] = bgColor.a;
+        dstRow[i * ByPP + iR] = bgColor.r;
+        dstRow[i * ByPP + iG] = bgColor.g;
+        dstRow[i * ByPP + iB] = bgColor.b;
+        dstRow[i * ByPP + iA] = bgColor.a;
       }
     }
-    dstRow += bmpDst.m_row_stride;
+    dstRow += dst.m_row_stride;
   }
 
-  return bmpDst;
+  return dst;
 }
 
 } // namespace
