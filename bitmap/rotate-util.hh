@@ -25,10 +25,11 @@ public:
   RotationAdjustment(const IntPoint&, const IntSize&);
 
   // Some offset possibly meaningful to rotation algorithms.
+  // Fixme: Clarify
   IntPoint offset;
 
-  // The required size for a new image to contain a rotated bounding
-  // box.
+  // The required size for an image after rotation
+  // <../doc/rotate-util-size.png>
   IntSize size;
 };
 
