@@ -30,7 +30,7 @@ public:
   IntPoint offset;
 
   // The required size for an image after rotation
-  // <../doc/rotate-util-size.png>
+  // <../doc/rotation-adjustment-size.png>
   IntSize size;
 };
 
