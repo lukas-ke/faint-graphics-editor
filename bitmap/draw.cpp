@@ -187,8 +187,8 @@ static std::map<int,int> ellipse_points(int x0, int y0, int a, int b){
 
   while (stopy <= stopx) {
     //put_pixel(bmp, x0 + x, y0 + y, c);
-    points[ y0 + y ] = x0 - x;
-    points[ y0 - y ] = x0 - x;
+    points[y0 + y] = x0 - x;
+    points[y0 - y] = x0 - x;
     //put_pixel(bmp, x0 + x, y0 - y, c);
     x++;
 
@@ -209,8 +209,8 @@ static std::map<int,int> ellipse_points(int x0, int y0, int a, int b){
   while (stopy >= stopx) {
 
     //put_pixel(bmp, x0 + x, y0 + y, c);
-    points[ y0 + y ] = x0 - x;
-    points[ y0 - y ] = x0 - x;
+    points[y0 + y] = x0 - x;
+    points[y0 - y] = x0 - x;
     // put_pixel(bmp, x0 + x, y0 - y, c);
     y++;
     error -= a2 * (y - 1);
@@ -676,7 +676,7 @@ void draw_polygon_f(Bitmap& bmp,
   }
 
   for (size_t i = 1; i != points.size(); i++){
-    draw_line_f(bmp, setPixFunc, {points[ i - 1], points[i]},
+    draw_line_f(bmp, setPixFunc, {points[i - 1], points[i]},
       with_cap(s, LineCap::ROUND));
     line_circle_f(bmp, setPixFunc, points[i], s.lineWidth);
   }
@@ -823,10 +823,10 @@ static Bitmap flip_horizontal(const Bitmap& src){
     for (int x = 0 ; x != src.m_w; x++){
       int iSrc = y * src.m_row_stride + x * ByPP;
       int iDst = y * dst.m_row_stride + (dst.m_w - 1) * ByPP - x * ByPP;
-      pDst[ iDst + iR ] = pSrc[iSrc + iR ];
-      pDst[ iDst + iG ] = pSrc[iSrc + iG ];
-      pDst[ iDst + iB ] = pSrc[iSrc + iB ];
-      pDst[ iDst + iA ] = pSrc[iSrc + iA ];
+      pDst[iDst + iR] = pSrc[iSrc + iR];
+      pDst[iDst + iG] = pSrc[iSrc + iG];
+      pDst[iDst + iB] = pSrc[iSrc + iB];
+      pDst[iDst + iA] = pSrc[iSrc + iA];
     }
   }
   return dst;
@@ -840,10 +840,10 @@ static Bitmap flip_vertical(const Bitmap& src){
     for (int x = 0 ; x != src.m_w; x++){
       int iSrc = y * src.m_row_stride + x * ByPP;
       int iDst = (dst.m_h - y - 1)* dst.m_row_stride + x * ByPP;
-      pDst[ iDst + iR ] = pSrc[iSrc + iR ];
-      pDst[ iDst + iG ] = pSrc[iSrc + iG ];
-      pDst[ iDst + iB ] = pSrc[iSrc + iB ];
-      pDst[ iDst + iA ] = pSrc[iSrc + iA ];
+      pDst[iDst + iR] = pSrc[iSrc + iR];
+      pDst[iDst + iG] = pSrc[iSrc + iG];
+      pDst[iDst + iB] = pSrc[iSrc + iB];
+      pDst[iDst + iA] = pSrc[iSrc + iA];
     }
   }
   return dst;
@@ -973,10 +973,10 @@ void blend_masked(const Offsat<Bitmap>& src, DstBmp dst,
     for (int x = xMin; x != xMax; x++){
       int srcPos = y * srcStride + x * ByPP;
        if (srcData[srcPos + iA] == 0 ||
-         (srcData[ srcPos + iA ] == maskColor.a &&
-           srcData[ srcPos + iR ] == maskColor.r &&
-           srcData[ srcPos + iG ] == maskColor.g &&
-           srcData[ srcPos + iB ] == maskColor.b)) {
+         (srcData[srcPos + iA] == maskColor.a &&
+           srcData[srcPos + iR] == maskColor.r &&
+           srcData[srcPos + iG] == maskColor.g &&
+           srcData[srcPos + iB] == maskColor.b)) {
          continue;
        }
 
@@ -1088,10 +1088,10 @@ void blit(const Offsat<Bitmap>& src, DstBmp dst){
     for (int x = xMin; x != xMax; x++){
       int srcPos = y * srcStride + x * ByPP;
       int dstPos = (y + y0) * dstStride + (x + x0) * ByPP;
-      dstData[ dstPos ] = srcData[srcPos ];
-      dstData[ dstPos + 1 ] = srcData[srcPos + 1 ];
-      dstData[ dstPos + 2 ] = srcData[srcPos + 2 ];
-      dstData[ dstPos + 3 ] = srcData[srcPos + 3 ];
+      dstData[dstPos] = srcData[srcPos];
+      dstData[dstPos + 1] = srcData[srcPos + 1];
+      dstData[dstPos + 2] = srcData[srcPos + 2];
+      dstData[dstPos + 3] = srcData[srcPos + 3];
     }
   }
 }
@@ -1121,15 +1121,15 @@ void blit_masked(const Offsat<Bitmap>& src, DstBmp dst, const Color& maskColor){
       int srcPos = y * srcStride + x * ByPP;
       int dstPos = (y + y0) * dstStride + (x + x0) * ByPP;
       if (
-          srcData[ srcPos + 3 ] != maskColor.a ||
-          srcData[ srcPos + 2 ] != maskColor.r ||
-          srcData[ srcPos + 1 ] != maskColor.g ||
-          srcData[ srcPos ] != maskColor.b)
+          srcData[srcPos + 3] != maskColor.a ||
+          srcData[srcPos + 2] != maskColor.r ||
+          srcData[srcPos + 1] != maskColor.g ||
+          srcData[srcPos] != maskColor.b)
         {
-          dstData[ dstPos ] = srcData[srcPos ];
-          dstData[ dstPos + 1 ] = srcData[srcPos + 1 ];
-          dstData[ dstPos + 2 ] = srcData[srcPos + 2 ];
-          dstData[ dstPos + 3 ] = srcData[srcPos + 3 ];
+          dstData[dstPos] = srcData[srcPos];
+          dstData[dstPos + 1] = srcData[srcPos + 1];
+          dstData[dstPos + 2] = srcData[srcPos + 2];
+          dstData[dstPos + 3] = srcData[srcPos + 3];
         }
     }
   }
@@ -2006,10 +2006,10 @@ Bitmap rotate_90cw(const Bitmap& src){
     for (int x = 0 ; x != src.m_w; x++){
       int iSrc = y * src.m_row_stride + x * ByPP;
       int iDst = x * dst.m_row_stride + (dst.m_w - y - 1) * ByPP;
-      pDst[ iDst + iR ] = pSrc[iSrc + iR ];
-      pDst[ iDst + iG ] = pSrc[iSrc + iG ];
-      pDst[ iDst + iB ] = pSrc[iSrc + iB ];
-      pDst[ iDst + iA ] = pSrc[iSrc + iA ];
+      pDst[iDst + iR] = pSrc[iSrc + iR];
+      pDst[iDst + iG] = pSrc[iSrc + iG];
+      pDst[iDst + iB] = pSrc[iSrc + iB];
+      pDst[iDst + iA] = pSrc[iSrc + iA];
     }
   }
   return dst;
@@ -2124,10 +2124,10 @@ Bitmap subbitmap(const Bitmap& orig, const IntRect& r){
     for (int x = 0; x != r.w; x++){
       int dstPos = y * destStride + x * ByPP;
       int srcPos = (y + r.y) * origStride + (x + r.x) * ByPP;
-      data[ dstPos ] = origData[ srcPos ];
-      data[ dstPos + 1 ] = origData[ srcPos + 1 ];
-      data[ dstPos + 2 ] = origData[ srcPos + 2 ];
-      data[ dstPos + 3 ] = origData[ srcPos + 3 ];
+      data[dstPos] = origData[srcPos];
+      data[dstPos + 1] = origData[srcPos + 1];
+      data[dstPos + 2] = origData[srcPos + 2];
+      data[dstPos + 3] = origData[srcPos + 3];
     }
   }
   return bmp;
