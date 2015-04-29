@@ -78,6 +78,7 @@ Tri rotated(const Tri&, const Angle& angle, Point origin);
 Tri scaled(const Tri&, const Scale&, const Point& origin);
 Tri skewed(const Tri& t, coord skewX);
 Tri translated(const Tri&, coord tX, coord tY);
+Tri translated(const Tri&, const Point&);
 Tri tri_from_rect(const Rect&);
 
 // Verifies that no point in the Tri contains invalid values.

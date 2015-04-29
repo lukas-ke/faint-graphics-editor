@@ -100,7 +100,6 @@ public:
 
   void DoRaster(CommandContext& context) override{
     const Bitmap& bmp(context.GetBitmap());
-    Point p0(static_cast<coord>(bmp.m_w) / 2.0, static_cast<coord>(bmp.m_h) / 2.0);
     context.SetBitmap(rotate_90cw(bmp));
   }
 
@@ -115,7 +114,7 @@ public:
     Point p0(size.w, size.h);
     for (Object* obj : objects){
       obj->SetTri(translated(rotated(obj->GetTri(), -(pi / 2), p0),
-          -size.w + size.h, - size.h));
+        -size.w + size.h, - size.h));
     }
   }
 private:
@@ -236,9 +235,13 @@ public:
   void Do(CommandContext& ctx) override{
     Rect rect = floated(rect_from_size(ctx.GetImageSize()));
     m_offset = get_object_offset(rect, m_angle, m_scale);
-
+    const auto center(rect.Center());
     for (Object* obj : ctx.GetObjects()){
-      obj->SetTri(translated(rotated(scaled(obj->GetTri(), m_scale, rect.Center()), m_angle, rect.Center()), -m_offset.x, -m_offset.y));
+      obj->SetTri(translated(
+        rotated(
+          scaled(obj->GetTri(), m_scale, center),
+          m_angle, center),
+        -m_offset));
     }
     DoRaster(ctx);
   }
@@ -258,9 +261,14 @@ public:
     const objects_t& objects = ctx.GetObjects();
     Point center = point_from_size(oldSize) / 2;
     for (Object* obj : objects){
-      obj->SetTri(translated(rotated(scaled(obj->GetTri(), inverse(m_scale), center), -m_angle, center), m_offset.x, m_offset.y));
+      obj->SetTri(translated(
+        rotated(
+          scaled(obj->GetTri(), inverse(m_scale), center),
+          -m_angle, center),
+        m_offset));
     }
   }
+
 private:
   Angle m_angle;
   Paint m_bg;

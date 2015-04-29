@@ -244,7 +244,10 @@ Tri skewed(const Tri& t, coord skewX){
 }
 
 Tri translated(const Tri& t, coord tX, coord tY){
-  Point off(tX, tY);
+  return translated(t, Point(tX, tY));
+}
+
+Tri translated(const Tri& t, const Point& off){
   return Tri(t.P0() + off, t.P1() + off, t.P2() + off);
 }
 
