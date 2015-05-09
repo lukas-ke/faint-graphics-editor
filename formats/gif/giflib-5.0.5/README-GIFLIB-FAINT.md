@@ -1,0 +1,14 @@
+GIFLIB and Faint
+===============================
+This folder contains a modified fraction of GIFLIB.
+
+GIFLIB is copyright Eric S. Raymond, and is used under its license
+(see the file COPYING).
+
+Note: Several files not required by Faint have been removed. Some
+files have been modified to compile more readily on Windows.
+
+Refer to the GIFLIB-project for undamaged distributions:
+
+http://sourceforge.net/projects/giflib/  
+http://giflib.sourceforge.net/

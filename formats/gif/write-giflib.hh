@@ -1,5 +1,5 @@
 // -*- coding: us-ascii-unix -*-
-// Copyright 2013 Lukas Kemmer
+// Copyright 2015 Lukas Kemmer
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you
 // may not use this file except in compliance with the License. You
@@ -13,30 +13,22 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_FILE_GIF_HH
-#define FAINT_FILE_GIF_HH
-#include <vector>
-#include "bitmap/alpha-map.hh"
-#include "bitmap/quantize.hh"
-#include "formats/save-result.hh"
-#include "util/delay.hh"
+#ifndef FAINT_WRITE_GIFLIB_HH
+#define FAINT_WRITE_GIFLIB_HH
+#include "formats/gif/file-gif.hh"
 
 namespace faint{
 
-class FilePath;
-class ImageProps;
-
-void read_gif(const FilePath&, ImageProps&);
-
-struct MappedColors_and_delay{
-  MappedColors_and_delay(const MappedColors& image, const Delay& delay)
-    : image(image), delay(delay)
-  {}
-  MappedColors image;
-  Delay delay;
+enum class GifWriteResult{
+  OK,
+  ERROR_OPEN_FILE,
+  ERROR_OUT_OF_MEMORY,
+  ERROR_OTHER,
+  ERROR_TOO_LARGE_PALETTE
 };
 
-SaveResult write_gif(const FilePath&, const std::vector<MappedColors_and_delay>&);
+GifWriteResult write_with_giflib(const char* path,
+  const std::vector<MappedColors_and_delay>&);
 
 } // namespace
 

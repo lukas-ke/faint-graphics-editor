@@ -24,6 +24,7 @@ class AlphaMap;
 class Bitmap;
 
 class ColorList{
+  // Fixme: Has no benefit over vector<Color> eh?
 public:
   ColorList();
   void AddColor(const Color&);
@@ -42,6 +43,8 @@ public:
   auto end() const{
     return m_colors.end();
   }
+
+  using value_type = Color;
 private:
   std::vector<Color> m_colors;
 };

@@ -82,4 +82,6 @@ def list_hh(folder):
 
 
 def list_cpp(folder):
-    return list_by_ext(folder, 'cpp')
+    l = list_by_ext(folder, '.cpp')
+    l.extend(list_by_ext(folder, '.c'))
+    return l

@@ -27,7 +27,7 @@ faint::Bitmap load_key(const char* filename){
 
   // Unfortunately, the png loading of the keys replaces the alpha
   // transparency with a mask, which when undone gets color 0,0,0,0
-  // instead of the saved 255,255,255,0
+  // instead of the saved 255,255,255,0 // Fixme: Still true now that I use libpng?
   replace_color_color(bmp, Old(color_transparent_black),
     New(color_transparent_white));
   return bmp;
@@ -37,11 +37,27 @@ faint::Bitmap load_key(const char* filename){
 
 void test_file_gif(){
   using namespace faint;
-  ImageProps props;
-  read_gif(get_test_load_path(FileName("86-68.gif")), props);
-  ABORT_IF(props.GetNumFrames() != 4);
-  FWD(check_frame(props.GetFrame(0_idx), load_key("86-68-key-1.png")));
-  FWD(check_frame(props.GetFrame(1_idx), load_key("86-68-key-2.png")));
-  FWD(check_frame(props.GetFrame(2_idx), load_key("86-68-key-3.png")));
-  FWD(check_frame(props.GetFrame(3_idx), load_key("86-68-key-4.png")));
+  {
+    // Read
+    ImageProps props;
+    read_gif(get_test_load_path(FileName("86-68.gif")), props);
+    ABORT_IF(props.GetNumFrames() != 4);
+    FWD(check_frame(props.GetFrame(0_idx), load_key("86-68-key-1.png")));
+    FWD(check_frame(props.GetFrame(1_idx), load_key("86-68-key-2.png")));
+    FWD(check_frame(props.GetFrame(2_idx), load_key("86-68-key-3.png")));
+    FWD(check_frame(props.GetFrame(3_idx), load_key("86-68-key-4.png")));
+  }
+
+  {
+    // Write
+    auto img = load_test_image(FileName("gauss-source.png"));
+    auto mapped = quantized(img, Dithering::ON);
+    std::vector<MappedColors_and_delay> images = {{mapped, Delay(0)}};
+    auto result = write_gif(get_test_save_path(FileName("libgif.gif")), images);
+    if (!result.Successful()){
+      MESSAGE(result.ErrorDescription().c_str());
+      FAIL();
+    }
+    // Fixme: Reload and check it.
+  }
 }

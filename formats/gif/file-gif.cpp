@@ -18,7 +18,9 @@
 #include "bitmap/bitmap.hh"
 #include "bitmap/draw.hh"
 #include "formats/gif/file-gif.hh"
+#include "formats/gif/write-giflib.hh"
 #include "geo/int-rect.hh"
+#include "text/formatting.hh"
 #include "util-wx/file-path.hh"
 #include "util-wx/stream.hh"
 #include "util/enum-util.hh"
@@ -753,6 +755,42 @@ void read_gif(const FilePath& filePath, ImageProps& props){
   catch(const LoadGifError& e){
     props.SetError(e.GetString());
   }
+}
+
+static utf8_string to_string(GifWriteResult result, const FilePath& path){
+  using R = GifWriteResult;
+
+  auto failed_write = [](const utf8_string& s){
+    return endline_sep("Failed saving gif.\n", s);
+  };
+
+  auto failed_write_giflib = [&](const utf8_string& func){
+    return failed_write(space_sep("giflib", quoted(func), "exited with error."));
+  };
+
+  if (result == R::OK){
+    return "No error";
+  }
+  else if (result == R::ERROR_OPEN_FILE){
+    return failed_write(endline_sep("File could not be opened for writing.",
+      space_sep("File:", path.Str())));
+  }
+  else if (result == R::ERROR_OUT_OF_MEMORY){
+    return failed_write("Out of memory.");
+  }
+  else {
+    return failed_write("Unknown error.");
+  }
+}
+
+SaveResult write_gif(const FilePath& path,
+  const std::vector<MappedColors_and_delay>& images)
+{
+  auto result = write_with_giflib(path.Str().c_str(), images);
+  return result == GifWriteResult::OK ?
+    SaveResult::SaveSuccessful() :
+    SaveResult::SaveFailed(to_string(result, path));
+
 }
 
 } // namespace

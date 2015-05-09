@@ -4,7 +4,6 @@ summary:"License information"
 = Faint license information =
 Faint is licensed under the \ref(apache-license).
 
-= Libraries =
 Faint depends on other free and open source libraries. These are
 listed below.
 
@@ -18,6 +17,12 @@ the
 Faint uses the Expat XML Parser, under the
 \ref(expat-license).\br
 \extref(http://www.libexpat.org)
+
+== GIFLIB ==
+Faint uses GIFLIB under its \ref(giflib-license,license) for writing
+gif-files.\br
+\extref(http://sourceforge.net/projects/giflib/)\br
+\extref(http://giflib.sourceforge.net/)
 
 == GLib ==
 Faint uses Pango and therefore also depends on GLib, under the
@@ -84,6 +89,10 @@ Faint itself is licensed under the Apache license 2.0.
 = Expat license =
 label:expat-license
 \verbatim_include(licenses/expat-license.txt)
+
+= GIFLIB license =
+label:giflib-license
+\verbatim_include(../../formats/gif/giflib-5.0.5/COPYING)
 
 = GNU Lesser General Public License 2.1 =
 label:lgpl21

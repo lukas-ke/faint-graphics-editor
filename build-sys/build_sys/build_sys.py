@@ -120,6 +120,15 @@ def prepare_out_dir(obj_root):
         return False
 
 
+def _ext_cpp_to_obj(f, obj_ext):
+    return f.replace('.cpp', obj_ext).replace('.c', obj_ext)
+
+
+def _to_obj(obj_root, cpp, obj_ext):
+    return os.path.join(obj_root,
+        os.path.basename(cpp).replace('.cpp', obj_ext).replace('.c', obj_ext))
+
+
 def _modified_directly(source_files, obj_root, obj_ext):
     """Returns the cpp-files which are modified more recently than their
     object files.
@@ -127,18 +136,11 @@ def _modified_directly(source_files, obj_root, obj_ext):
     """
     modified = []
     for cpp in source_files:
-        obj_file = os.path.join(obj_root,
-                                os.path.split(cpp)[1].replace('.cpp',
-                                                              obj_ext))
+        obj_file = _to_obj(obj_root, cpp, obj_ext)
         if util.changed(cpp, obj_file):
             modified.append(cpp)
 
     return set(modified)
-
-
-def _to_obj(obj_root, cpp, obj_ext):
-    return os.path.join(obj_root,
-        os.path.basename(cpp).replace('.cpp', obj_ext))
 
 
 def _modified_dependencies(deps, obj_root, obj_ext, ignore):

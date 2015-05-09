@@ -31,7 +31,7 @@ cl_common_switches = [
     "Gy", # Disable function level linking (why?)
     "Oi", # Intrinsic functions (faster but larger)
     "W4", # Warning level
-    "WX", # Treat warnings as errors
+    # "WX", # Treat warnings as errors
     "Y-", # Ignore precompiled header options
     "fp:precise", # Floating point model
     "nologo", # No startup banner

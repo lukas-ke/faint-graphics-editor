@@ -390,7 +390,6 @@ if __name__ == '__main__':
         exit_on_error(build_gui_tests, (platform, cmdline))
         exit_on_error(run_unit_tests, (platform, cmdline))
 
-
     if opts.version != bs.unknown_version_str and platform == 'msw':
         bo = read_build_options(platform)
         bs.build_installer(opts.version, bo.makensis_exe)

@@ -162,9 +162,9 @@ wxBitmap to_wx_bmp(const Bitmap& bmp){
       const uchar alpha = *(data + pos + iA);
       p.Alpha() = alpha;
       // Todo: What. Simplify.
-      p.Red() = (*(data + pos + iR) * (255 - (255 - alpha))) / 255;
-      p.Green() = (*(data + pos + iG) * (255 - (255 - alpha))) / 255;
-      p.Blue() = (*(data + pos + iB) * (255 - (255 - alpha))) / 255;
+      p.Red() = (*(data + pos + iR) * alpha) / 255;
+      p.Green() = (*(data + pos + iG) * alpha) / 255;
+      p.Blue() = (*(data + pos + iB) * alpha) / 255;
       #else
       p.Alpha() = *(data + pos + iA);
       p.Red()   = *(data + pos + iR);
