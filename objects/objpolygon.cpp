@@ -16,6 +16,7 @@
 #include <cassert>
 #include "geo/geo-func.hh"
 #include "geo/int-rect.hh"
+#include "geo/measure.hh" // with_mid_points_cyclic
 #include "geo/points.hh"
 #include "objects/object.hh"
 #include "objects/objpolygon.hh"
@@ -55,7 +56,7 @@ public:
   }
 
   std::vector<Point> GetAttachPoints() const override{
-    return Vertices();
+    return with_mid_points_cyclic(Vertices());
   }
 
   std::vector<Point> GetExtensionPoints() const override{

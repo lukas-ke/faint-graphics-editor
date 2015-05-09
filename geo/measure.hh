@@ -63,6 +63,18 @@ Point mid_point(const Point&, const Point&);
 // or no points if the source was empty.
 std::vector<Point> mid_points(const std::vector<Point>&);
 
+// Returns the points with the mid-points between adjacent points
+// interspersed.
+// For {p1, p2, p3}, returns {p1, m(p1, p2), p2, m(p2, p3), p3}
+std::vector<Point> with_mid_points(const std::vector<Point>&);
+
+// Returns the points with the mid-points between adjacent points
+// interspersed, including the mid-point between the last and first
+// points (as implied by cyclic).
+// For {p1, p2, p3}, returns {m(p3, p1), p1, m(p2, p1), p2, m(p2, p3), p3}
+std::vector<Point> with_mid_points_cyclic(const std::vector<Point>&);
+
+
 coord perimeter(const std::vector<PathPt>&);
 
 } // namespace

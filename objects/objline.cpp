@@ -81,10 +81,7 @@ public:
   }
 
   std::vector<Point> GetAttachPoints() const override{
-    std::vector<Point> pts(m_points.GetPointsDumb(m_tri));
-    std::vector<Point> extension(mid_points(pts));
-    pts.insert(end(pts), begin(extension), end(extension));
-    return pts;
+    return with_mid_points(m_points.GetPointsDumb(m_tri));
   }
 
   std::vector<Point> GetExtensionPoints() const override{

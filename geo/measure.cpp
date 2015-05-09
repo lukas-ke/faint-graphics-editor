@@ -102,6 +102,43 @@ std::vector<Point> mid_points(const std::vector<Point>& pts){
   return midPts;
 }
 
+std::vector<Point> with_mid_points(const std::vector<Point>& src){
+  if (src.size() < 2){
+    return src;
+  }
+
+  std::vector<Point> dst;
+  dst.reserve(src.size() * 2 - 1);
+
+  auto prev = src.front();
+  dst.push_back(prev);
+  for (const auto& pt : but_first(src)){
+    dst.push_back(mid_point(pt, prev));
+    dst.push_back(pt);
+    prev = pt;
+  }
+  return dst;
+}
+
+std::vector<Point> with_mid_points_cyclic(const std::vector<Point>& src){
+  if (src.size() < 2){
+    // At least two points are needed to find mid-points, even if
+    // cyclic
+    return src;
+  }
+
+  std::vector<Point> dst;
+  dst.reserve(src.size() * 2);
+
+  auto prev = src.back();
+  for (const auto& pt : src){
+    dst.push_back(mid_point(pt, prev));
+    dst.push_back(pt);
+    prev = pt;
+  }
+  return dst;
+}
+
 coord ellipse_perimeter(coord a, coord b){
   coord pi = faint::pi.Rad();
 

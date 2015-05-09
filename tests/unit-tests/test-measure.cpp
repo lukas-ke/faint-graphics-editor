@@ -63,4 +63,26 @@ void test_measure(){
   EQUAL(mid_points({{1.0, 1.0}, {7.0, 5.0}}), pt_vec({{4.0, 3.0}}));
   EQUAL(mid_points({{1.0, 1.0}, {7.0, 5.0}, {1.0, 1.0}, {-7.0, -5.0}}),
     pt_vec({{4.0, 3.0}, {4.0, 3.0}, {-3.0, -2.0}}));
+
+  {
+    // with_mid_points
+    EQUAL(with_mid_points({}), pt_vec());
+
+    // Unmodified for less than two points
+    EQUAL(with_mid_points({{1.0,1.0}}), pt_vec({{1.0, 1.0}}));
+
+    EQUAL(with_mid_points({{1.0, 1.0}, {2.0, 2.0}}),
+      pt_vec({{1.0, 1.0}, {1.5, 1.5}, {2.0, 2.0}}));
+  }
+
+  {
+    // with_mid_points_cyclic
+    EQUAL(with_mid_points_cyclic({}), pt_vec());
+
+    // Unmodified for less than two points
+    EQUAL(with_mid_points_cyclic({{1.0,1.0}}), pt_vec({{1.0, 1.0}}));
+
+    EQUAL(with_mid_points_cyclic({{1.0, 1.0}, {2.0, 2.0}}),
+      pt_vec({{1.5, 1.5}, {1.0, 1.0}, {1.5, 1.5}, {2.0, 2.0}}));
+  }
 }
