@@ -15,7 +15,7 @@
 
 #include <memory>
 #include "formats/gif/write-giflib.hh"
-#include "formats/gif/giflib-5.0.5/lib/gif_lib.h"
+#include "formats/gif/giflib-5.0.5/gif_lib.h"
 #include "util/iter.hh"
 
 namespace {

@@ -38,23 +38,25 @@ def gen_makefile(fileList, opts, debug, cc):
         "-I%s" % include for include in opts.include_folders])
 
     makefile.write("INCLUDES=%s\n" % " \\\n  ".join(includes))
-
+    # Fixme: Re-add Werror in both debug, release.
+    # Fixme: In fact, put it in lists instead, like for msvc
     if debug:
-        makefile.write("CCFLAGS=-Wall -Wextra -Werror -pedantic -ansi -Wconversion -Wno-strict-aliasing -Wno-sign-conversion -std=c++14 -g -c %s\n" % 
+
+        makefile.write("CCFLAGS=-Wall -Wextra -pedantic -ansi -Wconversion -Wno-strict-aliasing -Wno-sign-conversion -std=c++14 -g -c %s\n" % 
                        compiler_specific_warnings(cc))        
     else:
-        makefile.write("CCFLAGS=-Wall -Wextra -Werror -pedantic -ansi -Wconversion -O2 -Wno-sign-conversion -Wno-strict-aliasing -std=c++14 -Wunused -fdiagnostics-show-option -c %s\n" %
+        makefile.write("CCFLAGS=-Wall -Wextra -pedantic -ansi -Wconversion -O2 -Wno-sign-conversion -Wno-strict-aliasing -std=c++14 -Wunused -fdiagnostics-show-option -c %s\n" %
                        compiler_specific_warnings(cc))
 
     makefile.write("WXFLAGS:=$(shell %s/wx-config --cxxflags)\n" % opts.wx_root)
     makefile.write("\n")
-    makefile.write("all: " + " \\\n  ".join([os.path.join(objRoot, os.path.basename(f).replace(".cpp", ".o")) for f in fileList if '/msw/' not in f])) # Fixme: Ugly way to exclude msw
+    makefile.write("all: " + " \\\n  ".join([os.path.join(objRoot, os.path.basename(f).replace(".cpp", ".o").replace(".c", ".o")) for f in fileList if '/msw/' not in f])) # Fixme: Ugly way to exclude msw
     makefile.write('\n\n')
 
     for f in fileList:
         if '/msw/' in f: # Fixme: Ugly way to exclude msw
             continue
-        objName = os.path.join(objRoot, os.path.basename(f).replace(".cpp", ".o"))
+        objName = os.path.join(objRoot, os.path.basename(f).replace(".cpp", ".o").replace(".c", ".o"))
         makefile.write('%s: %s\n' % (objName, f))
         makefile.write('\t%s $(CCFLAGS) $(INCLUDES) $(WXFLAGS) $< -o $@\n' % cc)
         makefile.write('\n')

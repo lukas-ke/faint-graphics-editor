@@ -8,7 +8,9 @@ two modules will be linked.  Preserve this property!
 
 *****************************************************************************/
 
-// #include <unistd.h>
+#ifndef _MSC_VER
+ #include <unistd.h>
+#endif
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -572,7 +574,7 @@ EGifPutExtensionBlock(GifFileType *GifFile,
 
     Buf = ExtLen;
     InternalWrite(GifFile, &Buf, 1);
-    InternalWrite(GifFile, Extension, ExtLen);
+    InternalWrite(GifFile, (const unsigned char*)Extension, ExtLen);
 
     return GIF_OK;
 }
@@ -628,7 +630,7 @@ EGifPutExtension(GifFileType *GifFile,
         Buf[2] = ExtLen;    /* Extension length */
         InternalWrite(GifFile, Buf, 3);
     }
-    InternalWrite(GifFile, Extension, ExtLen);
+    InternalWrite(GifFile, (const unsigned char*)Extension, ExtLen);
     Buf[0] = 0;
     InternalWrite(GifFile, Buf, 1);
 
