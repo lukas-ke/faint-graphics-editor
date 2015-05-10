@@ -43,66 +43,123 @@ namespace faint{
 GifWriteResult write_with_giflib(const char* path,
   const std::vector<MappedColors_and_delay>& v)
 {
-  const auto& b1 = v.front().image;
-  const auto& image = std::get<AlphaMap>(b1);
-  const auto& colorList = std::get<ColorList>(b1);
-  const auto size = image.GetSize(); // TODO: Max gif-size?
-
-  // Fixme: Use delay
-  // Fixme: Support mask color
-
-  if (colorList.GetNumColors() > 256){
-    return GifWriteResult::ERROR_TOO_LARGE_PALETTE;
-  }
+  assert(!v.empty());
 
   GifFile gifFile(path);
   if (gifFile.f == nullptr){
     return GifWriteResult::ERROR_OPEN_FILE;
   }
 
-  std::unique_ptr<GifColorType[]> colorPtr(
-    new GifColorType[256]);
+  // For writing the screen descriptor once based on the first image
+  // Fixme: Rework, write the first and then use but_last or smth
+  bool first = true;
 
-  for (const auto& p : enumerate(colorList)){
-    const auto i = p.num;
-    const auto& c = p.item;
-    colorPtr[i].Red = c.r;
-    colorPtr[i].Green = c.g;
-    colorPtr[i].Blue = c.b;
-  }
+  for (const auto& entry : v){
+    const auto& image = std::get<AlphaMap>(entry.image);
+    const auto size = image.GetSize(); // TODO: Max gif-size?
 
-  ColorMapObject colorMap;
-  colorMap.ColorCount = 256; // Fixme: Must be some multiple?
-  colorMap.BitsPerPixel = 8; // Fixme: ?
-  colorMap.SortFlag = false; // Fixme: ?
-  colorMap.Colors = colorPtr.get();
+    // Fixme: Support mask color
 
-  // Fixme: Legacy, according to gif_lib.h
-  auto err = EGifPutScreenDesc(gifFile.f,
-    size.w,
-    size.h,
-    colorMap.BitsPerPixel,
-    0,
-    &colorMap);
-  if (err == GIF_ERROR){
-    return GifWriteResult::ERROR_OTHER;
-  }
+    if (first){
+      const auto& globalColorList = std::get<ColorList>(v.front().image);
+      if (globalColorList.GetNumColors() > 256){
+        return GifWriteResult::ERROR_TOO_LARGE_PALETTE;
+      }
+      std::unique_ptr<GifColorType[]> colorPtr(
+        new GifColorType[256]);
 
-  err = EGifPutImageDesc(gifFile.f,
-    0,
-    0, size.w, size.h, false, nullptr);
-  if (err == GIF_ERROR){
-    return GifWriteResult::ERROR_OTHER;
-  }
+      for (const auto& p : enumerate(globalColorList)){
+        const auto i = p.num;
+        const auto& c = p.item;
+        colorPtr[i].Red = c.r;
+        colorPtr[i].Green = c.g;
+        colorPtr[i].Blue = c.b;
+      }
 
-  for (int y = 0; y != size.h; y++){
-    auto scanline = const_cast<GifPixelType*>(image.GetRaw() + y * size.w);
-    err = EGifPutLine(gifFile.f, scanline, size.w);
+      ColorMapObject colorMap;
+      colorMap.ColorCount = 256; // Fixme: Must be some multiple?
+      colorMap.BitsPerPixel = 8; // Fixme: ?
+      colorMap.SortFlag = false; // Fixme: ?
+      colorMap.Colors = colorPtr.get();
+
+      EGifSetGifVersion(gifFile.f, true); // GIF89, for animation support
+      // Fixme: Legacy API, according to gif_lib.h
+      auto err = EGifPutScreenDesc(gifFile.f,
+        size.w,
+        size.h,
+        colorMap.BitsPerPixel,
+        0, // Background
+        &colorMap);
+      if (err == GIF_ERROR){
+        return GifWriteResult::ERROR_OTHER;
+      }
+    }
+
+
+    // Graphics control block (for disposal and delay)
+    {
+      GraphicsControlBlock gcb;
+      gcb.DisposalMode = DISPOSE_BACKGROUND;
+      gcb.UserInputFlag = false;
+      gcb.DelayTime = entry.delay.Get();
+      gcb.TransparentColor = NO_TRANSPARENT_COLOR;
+
+      GifByteType extension[4];
+      auto err = EGifGCBToExtension(&gcb, extension);
+      if (err == GIF_ERROR){
+        return GifWriteResult::ERROR_OTHER;
+      }
+
+      err = EGifPutExtension(gifFile.f, GRAPHICS_EXT_FUNC_CODE, 4, extension);
+      if (err == GIF_ERROR){
+        return GifWriteResult::ERROR_OTHER;
+      }
+    }
+
+    // Fixme: Local.. repeats global occasionally...
+    const auto& colorList = std::get<ColorList>(entry.image);
+    std::unique_ptr<GifColorType[]> colorPtr(new GifColorType[256]);
+
+    for (const auto& p : enumerate(colorList)){
+      const auto i = p.num;
+      const auto& c = p.item;
+      colorPtr[i].Red = c.r;
+      colorPtr[i].Green = c.g;
+      colorPtr[i].Blue = c.b;
+    }
+
+    ColorMapObject colorMap;
+    colorMap.ColorCount = 256; // Fixme: Must be some multiple?
+    colorMap.BitsPerPixel = 8; // Fixme: ?
+    colorMap.SortFlag = false; // Fixme: ?
+    colorMap.Colors = colorPtr.get();
+
+    // Avoid specifying a palette for the first image - it would be
+    // identical to the global color map.
+    auto colorMapPtr = first ? nullptr : &colorMap;
+
+    auto err = EGifPutImageDesc(gifFile.f,
+      0, // GifLeft
+      0, // GifTop
+      size.w, // GifWidth
+      size.h, // GifHeight
+      false, // GifInterlace
+      colorMapPtr);
+
     if (err == GIF_ERROR){
       return GifWriteResult::ERROR_OTHER;
     }
-  }
 
+    // Write the pixel-data
+    for (int y = 0; y != size.h; y++){
+      auto scanline = const_cast<GifPixelType*>(image.GetRaw() + y * size.w);
+      err = EGifPutLine(gifFile.f, scanline, size.w);
+      if (err == GIF_ERROR){
+        return GifWriteResult::ERROR_OTHER;
+      }
+    }
+    first = false;
+  }
   return GifWriteResult::OK;
 }
 

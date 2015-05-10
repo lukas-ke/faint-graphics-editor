@@ -60,4 +60,35 @@ void test_file_gif(){
     }
     // Fixme: Reload and check it.
   }
+
+  {
+    // Read/write
+    ImageProps props;
+    read_gif(get_test_load_path(FileName("86-68.gif")), props);
+    ABORT_IF(props.GetNumFrames() != 4);
+
+    auto get_bmp =
+      [](const FrameProps& p){
+        return p.GetBackground().Visit(
+          [](const Bitmap& bmp) -> MappedColors{
+            return quantized(bmp, Dithering::ON);
+          },
+          [](const ColorSpan&) -> MappedColors{
+            FAIL("Got color span instead of Bitmap.");
+          });
+      };
+
+    std::vector<MappedColors_and_delay> images = {
+      {get_bmp(props.GetFrame(0_idx)), Delay(0)},
+      {get_bmp(props.GetFrame(1_idx)), Delay(0)},
+      {get_bmp(props.GetFrame(2_idx)), Delay(0)},
+      {get_bmp(props.GetFrame(3_idx)), Delay(0)}};
+    auto result = write_gif(get_test_save_path(FileName("libgif86-68.gif")),
+      images);
+    if (!result.Successful()){
+      MESSAGE(result.ErrorDescription().c_str());
+      FAIL();
+    }
+  }
+
 }
