@@ -22,7 +22,9 @@ namespace faint{
 class category_frame_properties;
 
 // The time an animation should remain on a given frame in hundredths
-// of a second
+// of a second.
+// Fixme: Consider using e.g. std::chrono, converting to hundredths
+// when saving as gif
 using Delay = Distinct<int, category_frame_properties, 0>;
 
 } // namespace
