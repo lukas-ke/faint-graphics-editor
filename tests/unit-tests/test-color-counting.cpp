@@ -78,4 +78,43 @@ void test_color_counting(){
     EQUAL(get_unique_colors(bmp), key);
   }
 
+  {
+    // merged_fully_transparent, empty
+    auto preferred = ColRGB(10,60,20);
+    std::vector<Color> colors;
+    std::vector<Color> key;
+    EQUAL(merged_fully_transparent(colors, preferred), key);
+  }
+
+  {
+    // merged_fully_transparent
+    auto preferred = ColRGB(10,60,20);
+    std::vector<Color> colors =
+      {with_alpha(color_blue, 0),
+       with_alpha(color_gray, 10),
+       with_alpha(color_red, 0),
+       with_alpha(color_magenta, 255)};
+    std::vector<Color> key =
+      {with_alpha(color_gray, 10),
+       with_alpha(color_magenta, 255),
+       with_alpha(preferred, 0)};
+    EQUAL(merged_fully_transparent(colors, preferred), key);
+  }
+
+  {
+    // merged_fully_transparent, no fully transparent
+    auto preferred = ColRGB(10,60,20);
+
+    std::vector<Color> colors =
+      {with_alpha(color_blue, 40),
+       with_alpha(color_gray, 1),
+       with_alpha(color_red, 30),
+       with_alpha(color_magenta, 255)};
+    std::vector<Color> key =
+      {with_alpha(color_blue, 40),
+       with_alpha(color_gray, 1),
+       with_alpha(color_red, 30),
+       with_alpha(color_magenta, 255)};
+    EQUAL(merged_fully_transparent(colors, preferred), key);
+  }
 }

@@ -56,9 +56,8 @@ GifWriteResult write_with_giflib(const char* path,
   const bool isGif89 = v.size() > 1;
 
   for (const auto& entry : v){
-    const auto& image = entry.image.image;
-    const auto size = image.GetSize(); // TODO: Max gif-size?
-
+    const auto& map = entry.image.map;
+    const auto size = map.GetSize(); // TODO: Max gif-size?
     // Fixme: Support mask color
 
     if (first){
@@ -89,7 +88,7 @@ GifWriteResult write_with_giflib(const char* path,
         size.w,
         size.h,
         colorMap.BitsPerPixel,
-        0, // Background
+        entry.image.transparencyIndex.Or(0), // Background, fixme?
         &colorMap);
       if (err == GIF_ERROR){
         return GifWriteResult::ERROR_OTHER;
@@ -101,7 +100,7 @@ GifWriteResult write_with_giflib(const char* path,
       gcb.DisposalMode = DISPOSE_BACKGROUND;
       gcb.UserInputFlag = false;
       gcb.DelayTime = entry.delay.Get();
-      gcb.TransparentColor = NO_TRANSPARENT_COLOR;
+      gcb.TransparentColor = entry.image.transparencyIndex.Or(NO_TRANSPARENT_COLOR);
 
       GifByteType extension[4];
       auto err = EGifGCBToExtension(&gcb, extension);
@@ -150,7 +149,7 @@ GifWriteResult write_with_giflib(const char* path,
 
     // Write the pixel-data
     for (int y = 0; y != size.h; y++){
-      auto scanline = const_cast<GifPixelType*>(image.GetRaw() + y * size.w);
+      auto scanline = const_cast<GifPixelType*>(map.GetRaw() + y * size.w);
       err = EGifPutLine(gifFile.f, scanline, size.w);
       if (err == GIF_ERROR){
         return GifWriteResult::ERROR_OTHER;

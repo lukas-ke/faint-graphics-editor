@@ -100,21 +100,22 @@ void test_file_gif(){
       {get_bmp(srcProps.GetFrame(2_idx)), delays[2]},
       {get_bmp(srcProps.GetFrame(3_idx)), delays[3]}};
 
+    VERIFY(images[0].image.transparencyIndex.IsSet());
+
     const auto outPath = get_test_save_path(FileName("libgif86-68.gif"));
     auto result = write_gif(outPath, images);
     if (!result.Successful()){
       FAIL(result.ErrorDescription().c_str());
     }
 
-    // Re-read the saved gif
+    // Re-read and verify the saved gif
     ImageProps props;
     read_gif(outPath, props);
     ABORT_IF(props.GetNumFrames() != 4);
     for (int i = 0; i != props.GetNumFrames().Get(); i++){
       const auto& frame = props.GetFrame(Index(i));
       EQUAL(frame.GetDelay(), delays[i]);
-      // FWD(check_frame(frame, keys[0])); <- Fixme: Fails, because write gif loses transparency
-
+      FWD(check_frame(frame, keys[i]));
     }
   }
 }

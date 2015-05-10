@@ -94,8 +94,11 @@ ColRGB to_rgb(const HSL&);
 Color to_rgba(const HSL&, int a=255);
 bool opaque(const Color&);
 bool translucent(const Color&);
+bool fully_transparent(const Color&);
 bool valid_color(int r, int g, int b, int a);
 bool valid_color(int r, int g, int b);
+Color with_alpha(const ColRGB&, uchar a);
+Color with_alpha(const Color&, uchar a);
 
 constexpr ColRGB rgb_black(0, 0, 0);
 constexpr ColRGB rgb_white(255, 255, 255);

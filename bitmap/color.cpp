@@ -138,6 +138,10 @@ bool opaque(const Color& c){
   return c.a == 255;
 }
 
+bool fully_transparent(const Color& c){
+  return c.a == 0;
+}
+
 bool translucent(const Color& c){
   return c.a != 255;
 }
@@ -151,6 +155,14 @@ bool valid_color(int r, int g, int b, int a){
 
 bool valid_color(int r, int g, int b){
   return valid_color(r, g, b, 255);
+}
+
+Color with_alpha(const ColRGB& rgb, uchar a){
+  return Color(rgb, a);
+}
+
+Color with_alpha(const Color& c, uchar a){
+  return with_alpha(strip_alpha(c), a);
 }
 
 double dmod(double value, double range){

@@ -22,6 +22,8 @@
 
 namespace faint{
 
+using color_vec_t = std::vector<Color>;
+
 static void insert_color_count(color_counts_t& colors, const Color& c){
   auto it = colors.find(c);
   if (it != colors.end()){
@@ -41,9 +43,19 @@ void add_color_counts(const Bitmap& bmp, color_counts_t& colors){
   }
 }
 
-std::vector<Color> get_unique_colors(const Bitmap& bmp){
+int count_colors(const Bitmap& bmp){
+  std::unordered_set<unsigned int> s;
+  for (int y = 0; y != bmp.m_h; y++){
+    for (int x = 0; x != bmp.m_w; x++){
+      s.insert(to_hash(get_color_raw(bmp, x,y)));
+    }
+  }
+  return resigned(s.size());
+}
+
+color_vec_t get_unique_colors(const Bitmap& bmp){
   assert(bmp.m_w > 0 && bmp.m_h > 0);
-  std::vector<Color> colors;
+  color_vec_t colors;
   colors.reserve(std::max(area(bmp.GetSize()), 1));
 
   for (int y = 0; y != bmp.m_h; y++){
@@ -56,6 +68,15 @@ std::vector<Color> get_unique_colors(const Bitmap& bmp){
   return {begin(colors), std::unique(begin(colors), end(colors))};
 }
 
+color_vec_t merged_fully_transparent(const color_vec_t& src, const ColRGB& rgb){
+  color_vec_t dst(src);
+  dst.erase(std::remove_if(begin(dst), end(dst), fully_transparent), end(dst));
+  if (src.size() != dst.size()){
+    dst.push_back(with_alpha(rgb, 0));
+  }
+  return dst;
+}
+
 Color most_common(const color_counts_t& colors){
   assert(!colors.empty());
   using count_t = color_counts_t::value_type;
@@ -63,16 +84,6 @@ Color most_common(const color_counts_t& colors){
     [](const count_t& c1, const count_t& c2){return c1.second < c2.second;});
   assert(it != colors.end());
   return it->first;
-}
-
-int count_colors(const Bitmap& bmp){
-  std::unordered_set<unsigned int> s;
-  for (int y = 0; y != bmp.m_h; y++){
-    for (int x = 0; x != bmp.m_w; x++){
-      s.insert(to_hash(get_color_raw(bmp, x,y)));
-    }
-  }
-  return resigned(s.size());
 }
 
 } // namespace

@@ -31,8 +31,11 @@ enum class OctTreeDepth{
 class MappedColors{
 public:
   MappedColors(const AlphaMap&, const ColorList&);
-  MappedColors(const AlphaMap&, const ColorList&, int transparencyIndex);
-  AlphaMap image;
+  MappedColors(const AlphaMap&,
+    const ColorList&,
+    const Optional<int>& transparencyIndex);
+
+  AlphaMap map;
   ColorList palette;
   Optional<int> transparencyIndex;
 };

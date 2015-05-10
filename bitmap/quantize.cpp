@@ -49,23 +49,24 @@
 #include "bitmap/color-counting.hh"
 #include "bitmap/draw.hh"
 #include "bitmap/quantize.hh"
+#include "geo/limits.hh"
 
 namespace faint{
 
-MappedColors::MappedColors(const AlphaMap& image, const ColorList& palette)
-  : image(image),
-    palette(palette)
+MappedColors::MappedColors(const AlphaMap& map, const ColorList& palette)
+  : MappedColors(map, palette, no_option())
 {}
 
-MappedColors::MappedColors(const AlphaMap& image,
+MappedColors::MappedColors(const AlphaMap& map,
   const ColorList& palette,
-  int in_transparencyIndex)
-  : image(image),
+  const Optional<int>& transparencyIndex)
+  : map(map),
     palette(palette),
-    transparencyIndex(in_transparencyIndex)
+    transparencyIndex(transparencyIndex)
 {
-  assert(0 <= in_transparencyIndex);
-  assert(in_transparencyIndex < palette.GetNumColors());
+  assert(transparencyIndex.NotSet() || 0 <= transparencyIndex.Get());
+  assert(transparencyIndex.NotSet() || transparencyIndex.Get() <
+    palette.GetNumColors());
 }
 
 // Fixme: If I replace with 50, gradients.png works
@@ -577,26 +578,41 @@ static MappedColors apply_quantization(const Bitmap& bmp, const Octree& tree){
 }
 
 static MappedColors simply_index_it(const Bitmap& bmp){
-  color_counts_t colorCounts;
-  // Fixme: Not really counting, just enumerating
-  add_color_counts(bmp, colorCounts);
+  assert(area(bmp.GetSize()) > 0);
+  const auto ucolors = get_unique_colors(bmp);
+  // Fixme: Must find an unused color.
+  const auto colors = merged_fully_transparent(ucolors, rgb_white);
+
+  assert(0 < colors.size());
+  assert(colors.size() <= 256);
+
+  const uchar lastColorIndex = convert(colors.size() - 1);
 
   ColorList indexToColor;
   std::map<Color, uchar> colorToIndex;
-  for (auto item : colorCounts){
-    const Color& c = item.first;
+  for (const auto& c : colors){
     colorToIndex[c] = static_cast<uchar>(indexToColor.GetNumColors());
     indexToColor.AddColor(c);
   }
 
   const IntSize sz(bmp.GetSize());
   AlphaMap indexes(sz);
+
   for (int y = 0; y != sz.h; y++){
     for (int x = 0; x != sz.w; x++){
-      indexes.Set(x,y, colorToIndex[get_color_raw(bmp,x,y)]);
+      const auto c = get_color_raw(bmp, x, y);
+      if (fully_transparent(c)){
+        indexes.Set(x, y, lastColorIndex);
+      }
+      else {
+        indexes.Set(x,y, colorToIndex[get_color_raw(bmp,x,y)]);
+      }
     }
   }
-  return {indexes, indexToColor};
+
+  Optional<int> transparencyIndex(convert(lastColorIndex),
+    fully_transparent(colors.back()));
+  return {indexes, indexToColor, transparencyIndex};
 }
 
 MappedColors quantized(const Bitmap& bmp, Dithering dithering, OctTreeDepth d){
@@ -620,7 +636,7 @@ MappedColors quantized(const Bitmap& bmp, Dithering dithering, OctTreeDepth d){
 Bitmap quantized_bmp(const Bitmap& bmp, Dithering dithering, OctTreeDepth d){
   auto indexed = quantized(bmp, dithering, d);
   // Fixme: Consider transparencyIndex
-  return bitmap_from_indexed_colors(indexed.image, indexed.palette);
+  return bitmap_from_indexed_colors(indexed.map, indexed.palette);
 }
 
 void quantize(Bitmap& bmp, Dithering dithering, OctTreeDepth d){

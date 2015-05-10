@@ -29,14 +29,23 @@ using color_counts_t = std::map<Color, int>;
 // Adds the colors from the Bitmap to the passed in color_counts_t
 void add_color_counts(const Bitmap&, color_counts_t&);
 
+int count_colors(const Bitmap&);
+
 // Returns a vector containing all distinct colors in the bitmap
 // sorted by operator<.
 std::vector<Color> get_unique_colors(const Bitmap&);
 
+// Returns a copy with all fully transparent color variants
+// (i.e. any rgba = {*,*,*,0} removed in favor of a single instance
+// of the given preferredRgb with alpha=0, at the end.
+//
+// If there are no transparent pixels, the resulting vector will be
+// identical to the source.
+std::vector<Color> merged_fully_transparent(const std::vector<Color>&,
+  const ColRGB& preferredRgb);
+
 // Returns the most common color. The color_counts_t must not be empty
 Color most_common(const color_counts_t&);
-
-int count_colors(const Bitmap&);
 
 } // namespace
 
