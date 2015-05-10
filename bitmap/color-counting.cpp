@@ -19,10 +19,12 @@
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "bitmap/color-counting.hh"
+#include "bitmap/mask.hh"
 
 namespace faint{
 
 using color_vec_t = std::vector<Color>;
+using rgb_vec_t = std::vector<ColRGB>;
 
 static void insert_color_count(color_counts_t& colors, const Color& c){
   auto it = colors.find(c);
@@ -61,6 +63,25 @@ color_vec_t get_unique_colors(const Bitmap& bmp){
   for (int y = 0; y != bmp.m_h; y++){
     for (int x = 0; x != bmp.m_w; ++x){
       colors.push_back(get_color_raw(bmp, x, y));
+    }
+  }
+
+  std::sort(begin(colors), end(colors));
+  return {begin(colors), std::unique(begin(colors), end(colors))};
+}
+
+rgb_vec_t get_unique_colors_rgb(const Bitmap& bmp, const Mask& exclude){
+  assert(bmp.m_w > 0 && bmp.m_h > 0);
+  assert(bmp.GetSize() == exclude.GetSize());
+
+  rgb_vec_t colors;
+  colors.reserve(std::max(area(bmp.GetSize()), 1));
+
+  for (int y = 0; y != bmp.m_h; y++){
+    for (int x = 0; x != bmp.m_w; ++x){
+      if (!exclude.Get(x, y)){
+        colors.push_back(strip_alpha(get_color_raw(bmp, x, y)));
+      }
     }
   }
 

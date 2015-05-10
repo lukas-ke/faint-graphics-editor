@@ -48,6 +48,7 @@
 #include "bitmap/color.hh"
 #include "bitmap/color-counting.hh"
 #include "bitmap/draw.hh"
+#include "bitmap/mask.hh"
 #include "bitmap/quantize.hh"
 #include "geo/limits.hh"
 
@@ -576,17 +577,28 @@ static MappedColors apply_quantization(const Bitmap& bmp, const Octree& tree){
   return {dst, map};
 }
 
+ColRGB first_unused(const std::vector<ColRGB>& sortedColors){
+  ColRGB transparent = rgb_black;
+  for (const auto& c : sortedColors){
+    if (c != transparent){
+      return transparent;
+    }
+    transparent = next_color(transparent);
+  }
+  return transparent;
+}
+
 static MappedColors simply_index_it(const Bitmap& bmp){
   assert(area(bmp.GetSize()) > 0);
-  const auto ucolors = get_unique_colors(bmp);
-  // Fixme: Must find an unused color.
-  const auto colors = merged_fully_transparent(ucolors, rgb_white);
+  const auto mask = mask_alpha_equal(bmp, 0);
+  auto colors = get_unique_colors_rgb(bmp, mask);
+  bool hasTransparent = mask.Any() && colors.size() < 256;
 
-  assert(0 < colors.size());
-  assert(colors.size() <= 256);
-
+  if (hasTransparent){
+    auto transparent = first_unused(colors);
+    colors.push_back(transparent);
+  }
   const uchar lastColorIndex = convert(colors.size() - 1);
-
   ColorList indexToColor;
   std::map<Color, uchar> colorToIndex;
   for (const auto& c : colors){
@@ -600,17 +612,17 @@ static MappedColors simply_index_it(const Bitmap& bmp){
   for (int y = 0; y != sz.h; y++){
     for (int x = 0; x != sz.w; x++){
       const auto c = get_color_raw(bmp, x, y);
-      if (fully_transparent(c)){
+      if (hasTransparent && mask.Get(x, y)){
         indexes.Set(x, y, lastColorIndex);
       }
       else {
-        indexes.Set(x,y, colorToIndex[get_color_raw(bmp,x,y)]);
+        const auto rgb = strip_alpha(get_color_raw(bmp,x,y));
+        indexes.Set(x,y, colorToIndex[rgb]);
       }
     }
   }
 
-  Optional<int> transparencyIndex(convert(lastColorIndex),
-    fully_transparent(colors.back()));
+  Optional<int> transparencyIndex(convert(lastColorIndex), hasTransparent);
   return {indexes, indexToColor, transparencyIndex};
 }
 

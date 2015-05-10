@@ -43,6 +43,16 @@ Mask::~Mask(){
   m_data = nullptr;
 }
 
+bool Mask::Any() const{
+  int len = area(m_size);
+  for (int i = 0; i != len; i++){
+    if (m_data[i]){
+      return true;
+    }
+  }
+  return false;
+}
+
 void Mask::Set(int x, int y, bool value){
   if (0 <= x && x < m_size.w && 0 <= y && y < m_size.h){
     m_data[m_size.w * y + x] = value;
@@ -54,6 +64,10 @@ bool Mask::Get(int x, int y) const{
     return m_data[m_size.w * y + x];
   }
   return false;
+}
+
+IntSize Mask::GetSize() const{
+  return m_size;
 }
 
 Mask mask_set_color(const Bitmap& bmp, const Color& c){
@@ -73,6 +87,17 @@ Mask mask_not_color(const Bitmap& bmp, const Color& c){
   for (int y = 0; y != size.h; y++){
     for (int x = 0; x != size.w; x++){
       m.Set(x, y, get_color_raw(bmp, x, y) != c);
+    }
+  }
+  return m;
+}
+
+Mask mask_alpha_equal(const Bitmap& bmp, uchar maskAlpha){
+  const auto size = bmp.GetSize();
+  Mask m(size);
+  for (int y = 0; y != size.h; y++){
+    for (int x = 0; x != size.w; x++){
+      m.Set(x, y, get_color_raw(bmp, x, y).a == maskAlpha);
     }
   }
   return m;

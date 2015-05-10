@@ -26,7 +26,8 @@ public:
   ~Mask();
   void Set(int x, int y, bool);
   bool Get(int x, int y) const;
-  const IntSize& GetSize() const;
+  IntSize GetSize() const;
+  bool Any() const;
 private:
   IntSize m_size;
   bool* m_data;
@@ -35,8 +36,14 @@ private:
 class Bitmap;
 class Color;
 
+// A mask which is set for all pixels matching Color.
 Mask mask_set_color(const Bitmap&, const Color&);
+
+// A mask which is set in all pixels not matching Color.
 Mask mask_not_color(const Bitmap&, const Color&);
+
+// A mask which is set for all pixels with the given alpha
+Mask mask_alpha_equal(const Bitmap&, uchar alpha);
 
 } // namespace
 

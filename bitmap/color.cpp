@@ -60,6 +60,23 @@ HS HSL::GetHS() const{
   return HS(h,s);
 }
 
+static ColRGB rgb_from_hash(unsigned int h){
+  unsigned char r = static_cast<unsigned char>((h >> 16) & 0xff);
+  unsigned char g = static_cast<unsigned char>((h >> 8) & 0xff);
+  unsigned char b = static_cast<unsigned char>((h) & 0xff);
+  return {r,g,b};
+}
+
+static unsigned int to_hash(const ColRGB& c){
+  return (static_cast<unsigned int>(c.r) << 16) |
+    (static_cast<unsigned int>(c.g) << 8) |
+    (static_cast<unsigned int>(c.b));
+}
+
+bool ColRGB::operator<(const ColRGB& c2) const{
+  return to_hash(*this) < to_hash(c2);
+}
+
 ColRGB blend_alpha(const Color& color, const ColRGB& bg){
   return rgb_from_ints((color.r * color.a + bg.r * (255 - color.a)) / 255,
     (color.g * color.a + bg.g * (255 - color.a)) / 255,
@@ -302,6 +319,12 @@ Color mix(const Color& c1, const Color& c2){
     (c1.g + c2.g) / 2,
     (c1.b + c2.b) / 2,
     (c1.a + c2.a) / 2);
+}
+
+ColRGB next_color(const ColRGB& c){
+  auto h = to_hash(c);
+  return h == 0xffffff ? c :
+    rgb_from_hash(h + 1);
 }
 
 } // namespace

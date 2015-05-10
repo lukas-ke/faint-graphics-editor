@@ -67,21 +67,10 @@ void test_quantize(){
     auto mapped = quantized(bmp, Dithering::ON);
     const auto& map = mapped.map;
     const auto& palette = mapped.palette;
-    ABORT_IF(palette.size() != 4);
+    ABORT_IF(palette.size() != 2);
     ABORT_IF(map.GetSize() != bmp.GetSize());
-
-    for (int y = 0; y != map.GetSize().h; y++){
-      for (int x = 0; x != map.GetSize().w; x++){
-        const auto v = map.Get(x, y);
-        ABORT_IF(v >= palette.size());
-        auto c = palette[v];
-        if (fully_transparent(c)){
-          EQUAL(c, color_transparent_white);
-        }
-        else{
-          EQUAL(get_color_raw(bmp, x, y), palette[v]);
-        }
-      }
-    }
+    ABORT_IF(mapped.transparencyIndex.NotSet());
+    EQUAL(map.Get(0, 0), mapped.transparencyIndex.Get());
+    EQUAL(palette[map.Get(1, 0)], strip_alpha(color_red));
   }
 }

@@ -31,6 +31,9 @@ public:
   constexpr ColRGB(uchar r, uchar g, uchar b) : r(r), g(g), b(b){}
   bool operator==(const ColRGB&) const;
   bool operator!=(const ColRGB&) const;
+  // Simple field-by-field less for containers.
+  bool operator<(const ColRGB& c) const;
+
   uchar r;
   uchar g;
   uchar b;
@@ -43,7 +46,7 @@ public:
   constexpr Color(uchar r, uchar g, uchar b, uchar a = 255)
     : r(r), g(g), b(b), a(a)
   {}
-  constexpr Color(const ColRGB& c, uchar a=255)
+  constexpr Color(const ColRGB& c, uchar a=255) // Fixme: Consider explicit! This allows e.g. strip_alpha(ColRGB), fully_transparent(ColRGB) etc.
     : r(c.r), g(c.g), b(c.b), a(a)
   {}
 
@@ -120,6 +123,9 @@ int sum_rgb(const Color&);
 
 unsigned int to_hash(const Color&);
 Color color_from_hash(unsigned int);
+
+// The next greater color, using the same scheme as operator<
+ColRGB next_color(const ColRGB&);
 
 } // namespace
 

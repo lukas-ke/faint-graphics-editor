@@ -22,6 +22,7 @@ namespace faint{
 
 class Bitmap;
 class Color;
+class Mask;
 
 // Maps Colors to a pixel count
 using color_counts_t = std::map<Color, int>;
@@ -34,6 +35,11 @@ int count_colors(const Bitmap&);
 // Returns a vector containing all distinct colors in the bitmap
 // sorted by operator<.
 std::vector<Color> get_unique_colors(const Bitmap&);
+
+// Returns a vector containing all distinct colors (after stripping
+// alpha) in the bitmap sorted by operator<.
+// Masked pixels are excluded as well.
+std::vector<ColRGB> get_unique_colors_rgb(const Bitmap&, const Mask& exclude);
 
 // Returns a copy with all fully transparent color variants
 // (i.e. any rgba = {*,*,*,0} removed in favor of a single instance
