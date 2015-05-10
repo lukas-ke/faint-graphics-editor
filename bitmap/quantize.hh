@@ -15,6 +15,7 @@
 
 #ifndef FAINT_QUANTIZE_HH
 #define FAINT_QUANTIZE_HH
+#include "bitmap/alpha-map.hh"
 #include "bitmap/color-list.hh"
 
 namespace faint{
@@ -27,7 +28,14 @@ enum class OctTreeDepth{
   SIX=6
 };
 
-using MappedColors = std::pair<AlphaMap, ColorList>;
+class MappedColors{
+public:
+  MappedColors(const AlphaMap&, const ColorList&);
+  MappedColors(const AlphaMap&, const ColorList&, int transparencyIndex);
+  AlphaMap image;
+  ColorList palette;
+  Optional<int> transparencyIndex;
+};
 
 // Returns a list of quantized colors and an AlphaMap, corresponding
 // to the Bitmap, which indexes into the list.

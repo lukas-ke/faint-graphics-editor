@@ -16,6 +16,7 @@
 #ifndef FAINT_COLOR_COUNTING_HH
 #define FAINT_COLOR_COUNTING_HH
 #include <map>
+#include <vector>
 
 namespace faint{
 
@@ -28,8 +29,11 @@ using color_counts_t = std::map<Color, int>;
 // Adds the colors from the Bitmap to the passed in color_counts_t
 void add_color_counts(const Bitmap&, color_counts_t&);
 
-// Returns the most common color. The color_counts_t must not be
-// empty
+// Returns a vector containing all distinct colors in the bitmap
+// sorted by operator<.
+std::vector<Color> get_unique_colors(const Bitmap&);
+
+// Returns the most common color. The color_counts_t must not be empty
 Color most_common(const color_counts_t&);
 
 int count_colors(const Bitmap&);

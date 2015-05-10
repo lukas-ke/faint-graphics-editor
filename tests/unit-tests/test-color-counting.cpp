@@ -1,5 +1,7 @@
 // -*- coding: us-ascii-unix -*-
+#include <algorithm> // std::sort
 #include "test-sys/test.hh"
+#include "tests/test-util/print-objects.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "bitmap/color-counting.hh"
@@ -60,4 +62,20 @@ void test_color_counting(){
     EQUAL(colorCounts.at(Color(255,0,0,100)), 1);
     EQUAL(colorCounts.at(Color(255,0,0,200)), 1);
   }
+
+  {
+    // get_unique_colors
+
+    // Three colors, red duplicated
+    Bitmap bmp(IntSize(2,2), Color(255,255,255));
+    put_pixel(bmp, {0,0}, color_red);
+    put_pixel(bmp, {1,0}, color_red);
+    put_pixel(bmp, {0,1}, color_blue);
+    put_pixel(bmp, {1,1}, color_magenta);
+
+    auto key = std::vector<Color>({color_red, color_blue, color_magenta});
+    std::sort(begin(key), end(key));
+    EQUAL(get_unique_colors(bmp), key);
+  }
+
 }

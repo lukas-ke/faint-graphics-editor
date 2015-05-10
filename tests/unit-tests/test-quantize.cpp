@@ -12,8 +12,8 @@ void test_quantize(){
     // Single color
     Bitmap bmp(IntSize(2,2), Color(255,0,255));
     auto q(quantized(bmp, Dithering::ON));
-    const auto& indices(q.first);
-    const auto& colorList(q.second);
+    const auto& indices(q.image);
+    const auto& colorList(q.palette);
     EQUAL(indices.GetSize(), IntSize(2,2));
     EQUAL(colorList.GetNumColors(), 1);
     EQUAL(colorList.GetColor(0), Color(255,0,255));

@@ -41,6 +41,21 @@ void add_color_counts(const Bitmap& bmp, color_counts_t& colors){
   }
 }
 
+std::vector<Color> get_unique_colors(const Bitmap& bmp){
+  assert(bmp.m_w > 0 && bmp.m_h > 0);
+  std::vector<Color> colors;
+  colors.reserve(std::max(area(bmp.GetSize()), 1));
+
+  for (int y = 0; y != bmp.m_h; y++){
+    for (int x = 0; x != bmp.m_w; ++x){
+      colors.push_back(get_color_raw(bmp, x, y));
+    }
+  }
+
+  std::sort(begin(colors), end(colors));
+  return {begin(colors), std::unique(begin(colors), end(colors))};
+}
+
 Color most_common(const color_counts_t& colors){
   assert(!colors.empty());
   using count_t = color_counts_t::value_type;

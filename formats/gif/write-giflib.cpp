@@ -56,13 +56,13 @@ GifWriteResult write_with_giflib(const char* path,
   const bool isGif89 = v.size() > 1;
 
   for (const auto& entry : v){
-    const auto& image = std::get<AlphaMap>(entry.image);
+    const auto& image = entry.image.image;
     const auto size = image.GetSize(); // TODO: Max gif-size?
 
     // Fixme: Support mask color
 
     if (first){
-      const auto& globalColorList = std::get<ColorList>(v.front().image);
+      const auto& globalColorList = v.front().image.palette;
       if (globalColorList.GetNumColors() > 256){
         return GifWriteResult::ERROR_TOO_LARGE_PALETTE;
       }
@@ -115,7 +115,7 @@ GifWriteResult write_with_giflib(const char* path,
       }
     }
 
-    const auto& colorList = std::get<ColorList>(entry.image);
+    const auto& colorList = entry.image.palette;
     std::unique_ptr<GifColorType[]> colorPtr(new GifColorType[256]);
 
     for (const auto& p : enumerate(colorList)){

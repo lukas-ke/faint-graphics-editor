@@ -23,6 +23,7 @@ class BinaryReader;
 class BinaryWriter;
 class Bitmap;
 class ColorList;
+class MappedColors;
 
 // Returns the required row-stride for the pixel-data rows with the
 // specified bits per pixel and bitmap width.
@@ -45,7 +46,7 @@ int bmp_row_padding(int w){
   return bmp_row_stride(bitsPerPixel, w) - (w * bitsPerPixel) / 8;
 }
 
-void write_8bipp_BI_RGB(BinaryWriter&, const std::pair<AlphaMap, ColorList>&);
+void write_8bipp_BI_RGB(BinaryWriter&, const MappedColors&); // Fixme: Ignores transparent index
 void write_24bipp_BI_RGB(BinaryWriter&, const Bitmap&);
 void write_32bipp_BI_RGB_ICO(BinaryWriter&, const Bitmap&);
 

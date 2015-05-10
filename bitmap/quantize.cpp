@@ -44,7 +44,6 @@
 #include <algorithm>
 #include <cassert>
 #include <cstring> // memcpy
-#include "bitmap/alpha-map.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "bitmap/color-counting.hh"
@@ -52,6 +51,22 @@
 #include "bitmap/quantize.hh"
 
 namespace faint{
+
+MappedColors::MappedColors(const AlphaMap& image, const ColorList& palette)
+  : image(image),
+    palette(palette)
+{}
+
+MappedColors::MappedColors(const AlphaMap& image,
+  const ColorList& palette,
+  int in_transparencyIndex)
+  : image(image),
+    palette(palette),
+    transparencyIndex(in_transparencyIndex)
+{
+  assert(0 <= in_transparencyIndex);
+  assert(in_transparencyIndex < palette.GetNumColors());
+}
 
 // Fixme: If I replace with 50, gradients.png works
 // Also with levels = 4...
@@ -536,7 +551,7 @@ static MappedColors apply_dithered_quantization(const Bitmap& bmp,
   delete[] r2;
   delete[] g2;
   delete[] b2;
-  return std::make_pair(dst, tree.colorMap);
+  return {dst, tree.colorMap};
 }
 
 // Based on octreeQuantizePixels
@@ -558,11 +573,12 @@ static MappedColors apply_quantization(const Bitmap& bmp, const Octree& tree){
     }
   }
   ColorList map = tree.colorMap;
-  return std::make_pair(dst, map);
+  return {dst, map};
 }
 
 static MappedColors simply_index_it(const Bitmap& bmp){
   color_counts_t colorCounts;
+  // Fixme: Not really counting, just enumerating
   add_color_counts(bmp, colorCounts);
 
   ColorList indexToColor;
@@ -580,7 +596,7 @@ static MappedColors simply_index_it(const Bitmap& bmp){
       indexes.Set(x,y, colorToIndex[get_color_raw(bmp,x,y)]);
     }
   }
-  return std::make_pair(indexes, indexToColor);
+  return {indexes, indexToColor};
 }
 
 MappedColors quantized(const Bitmap& bmp, Dithering dithering, OctTreeDepth d){
@@ -602,8 +618,9 @@ MappedColors quantized(const Bitmap& bmp, Dithering dithering, OctTreeDepth d){
 }
 
 Bitmap quantized_bmp(const Bitmap& bmp, Dithering dithering, OctTreeDepth d){
-  std::pair<AlphaMap, ColorList> indexed = quantized(bmp, dithering, d);
-  return bitmap_from_indexed_colors(indexed.first, indexed.second);
+  auto indexed = quantized(bmp, dithering, d);
+  // Fixme: Consider transparencyIndex
+  return bitmap_from_indexed_colors(indexed.image, indexed.palette);
 }
 
 void quantize(Bitmap& bmp, Dithering dithering, OctTreeDepth d){

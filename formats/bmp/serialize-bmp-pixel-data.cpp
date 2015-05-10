@@ -16,6 +16,7 @@
 #include "bitmap/alpha-map.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/color-list.hh"
+#include "bitmap/quantize.hh"
 #include "formats/bmp/serialize-bmp-pixel-data.hh"
 #include "util-wx/stream.hh"
 
@@ -84,17 +85,16 @@ void write_24bipp_BI_RGB(BinaryWriter& out, const Bitmap& bmp){
   }
 }
 
-void write_8bipp_BI_RGB(BinaryWriter& out,
-  const std::pair<AlphaMap, ColorList>& p)
+void write_8bipp_BI_RGB(BinaryWriter& out, const MappedColors& mappedColors)
 {
-  const auto& bmp(p.first);
-  write_color_table(out, p.second);
+  const auto& map(mappedColors.image);
+  write_color_table(out, mappedColors.palette);
 
-  const IntSize sz(bmp.GetSize());
+  const IntSize sz(map.GetSize());
   int padBytes = bmp_row_padding<8>(sz.w);
   for (int y = 0; y != sz.h; y++){
     for (int x = 0; x != sz.w; x++){
-      out.put(bmp.Get(x, sz.h - y - 1));
+      out.put(map.Get(x, sz.h - y - 1));
     }
     for (int i = 0; i != padBytes; i++){
       out.put(0);
