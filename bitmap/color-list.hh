@@ -24,15 +24,25 @@ class AlphaMap;
 class Bitmap;
 
 class ColorList{
-  // Fixme: Has no benefit over vector<Color> eh?
 public:
-  ColorList();
-  void AddColor(const Color&);
-  Color GetColor(int index) const;
-  int GetNumColors() const;
+  ColorList(){
+    m_colors.reserve(256);
+  }
+
+  void push_back(const Color& c){m_colors.push_back(c);}
+
+  const Color& operator[](int i) const{
+    return m_colors[i];
+  }
+
+  int size() const{
+    return static_cast<int>(m_colors.size());
+  }
+
   auto begin(){
     return m_colors.begin();
   }
+
   auto end(){
     return m_colors.end();
   }
@@ -40,6 +50,7 @@ public:
   auto begin() const{
     return m_colors.begin();
   }
+
   auto end() const{
     return m_colors.end();
   }

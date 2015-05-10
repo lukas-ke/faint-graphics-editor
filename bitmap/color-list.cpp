@@ -20,23 +20,6 @@
 
 namespace faint{
 
-ColorList::ColorList(){
-  m_colors.reserve(256);
-}
-
-void ColorList::AddColor(const Color& color){
-  m_colors.push_back(color);
-}
-
-Color ColorList::GetColor(int index) const{
-  assert(index < resigned(m_colors.size()));
-  return m_colors[to_size_t(index)];
-}
-
-int ColorList::GetNumColors() const{
-  return resigned(m_colors.size());
-}
-
 Bitmap bitmap_from_indexed_colors(const AlphaMap& alphaMap,
   const ColorList& colorMap)
 {
@@ -45,7 +28,7 @@ Bitmap bitmap_from_indexed_colors(const AlphaMap& alphaMap,
   for (int y = 0; y != sz.h; y++){
     for (int x = 0; x != sz.w; x++){
       uchar index = alphaMap.Get(x,y);
-      Color color = colorMap.GetColor(index);
+      Color color = colorMap[index];
       put_pixel_raw(dst, x, y, color);
     }
   }

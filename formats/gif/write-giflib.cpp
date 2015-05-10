@@ -62,7 +62,7 @@ GifWriteResult write_with_giflib(const char* path,
 
     if (first){
       const auto& globalColorList = v.front().image.palette;
-      if (globalColorList.GetNumColors() > 256){
+      if (globalColorList.size() > 256){
         return GifWriteResult::ERROR_TOO_LARGE_PALETTE;
       }
       std::unique_ptr<GifColorType[]> colorPtr(

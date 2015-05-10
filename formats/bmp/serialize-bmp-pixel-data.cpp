@@ -223,7 +223,7 @@ Optional<ColorList> read_color_table(BinaryReader& in, int numColors){
     if (!in.good()){
       return {};
     }
-    l.AddColor(Color(static_cast<unsigned char>(bytes[2]),
+    l.push_back(Color(static_cast<unsigned char>(bytes[2]),
         static_cast<unsigned char>(bytes[1]),
         static_cast<unsigned char>(bytes[0]),
         255));

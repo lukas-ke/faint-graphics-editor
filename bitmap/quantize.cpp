@@ -65,8 +65,7 @@ MappedColors::MappedColors(const AlphaMap& map,
     transparencyIndex(transparencyIndex)
 {
   assert(transparencyIndex.NotSet() || 0 <= transparencyIndex.Get());
-  assert(transparencyIndex.NotSet() || transparencyIndex.Get() <
-    palette.GetNumColors());
+  assert(transparencyIndex.NotSet() || transparencyIndex.Get() < palette.size());
 }
 
 // Fixme: If I replace with 50, gradients.png works
@@ -358,12 +357,12 @@ static Octree* generate_octree(const Bitmap& bmp,
         if (cqcsub->numSamples >= thresh * static_cast<float>(pixelsPerCell)) {
           // Make it a true leaf
           cqcsub->isLeaf = true;
-          assert(colorMap.GetNumColors() < 256);
-          if (colorMap.GetNumColors() < 256) {
+          assert(colorMap.size() < 256);
+          if (colorMap.size() < 256) {
             // Assign the color index
-            cqcsub->index = colorMap.GetNumColors();
+            cqcsub->index = colorMap.size();
             ColRGB rgb = get_rgb_from_octcube(isub, level + 1);
-            colorMap.AddColor(Color(rgb,255));
+            colorMap.push_back(Color(rgb,255));
             cqcsub->center = rgb;
           }
           cqc->numLeaves++;
@@ -384,11 +383,11 @@ static Octree* generate_octree(const Bitmap& bmp,
               cqc->numSamples += cqcsub->numSamples;
             }
           }
-          if (colorMap.GetNumColors() < 256) {
+          if (colorMap.size() < 256) {
             // assign the color index
-            cqc->index = colorMap.GetNumColors();
+            cqc->index = colorMap.size();
             ColRGB rgb = get_rgb_from_octcube(i, level);
-            colorMap.AddColor(Color(rgb,255));
+            colorMap.push_back(Color(rgb,255));
             cqc->center = rgb;
           }
           else {
@@ -591,8 +590,8 @@ static MappedColors simply_index_it(const Bitmap& bmp){
   ColorList indexToColor;
   std::map<Color, uchar> colorToIndex;
   for (const auto& c : colors){
-    colorToIndex[c] = static_cast<uchar>(indexToColor.GetNumColors());
-    indexToColor.AddColor(c);
+    colorToIndex[c] = static_cast<uchar>(indexToColor.size());
+    indexToColor.push_back(c);
   }
 
   const IntSize sz(bmp.GetSize());
