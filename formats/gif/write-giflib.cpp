@@ -63,6 +63,7 @@ GifWriteResult write_with_giflib(const char* path,
   // Fixme: Rework, write the first and then use but_last or smth
   bool first = true;
   const bool isGif89 = true;
+  static const int PALETTE_LENGTH = 256;
 
   for (const auto& entry : v){
     const auto& map = entry.image.map;
@@ -74,8 +75,6 @@ GifWriteResult write_with_giflib(const char* path,
       }
 
       // Fixme: Must be some multiple when used with ColorMapObject?
-      static const int PALETTE_LENGTH = 256;
-
       std::unique_ptr<GifColorType[]> colorPtr(
         new GifColorType[PALETTE_LENGTH]);
 
@@ -96,12 +95,11 @@ GifWriteResult write_with_giflib(const char* path,
       colorMap.SortFlag = false; // Fixme: ?
       colorMap.Colors = colorPtr.get();
 
-      // Fixme: Legacy API, according to gif_lib.h
       auto err = EGifPutScreenDesc(gifFile,
         size.w,
         size.h,
         colorMap.BitsPerPixel,
-        entry.image.transparencyIndex.Or(0), // Background, fixme?
+        entry.image.transparencyIndex.Or(0), // Background
         &colorMap);
       if (err == GIF_ERROR){
         return GifWriteResult::ERROR_OTHER;
@@ -126,7 +124,7 @@ GifWriteResult write_with_giflib(const char* path,
     }
 
     const auto& colorList = entry.image.palette;
-    std::unique_ptr<GifColorType[]> colorPtr(new GifColorType[256]);
+    std::unique_ptr<GifColorType[]> colorPtr(new GifColorType[PALETTE_LENGTH]);
 
     for (const auto& p : enumerate(colorList)){
       const auto i = p.num;
@@ -136,8 +134,9 @@ GifWriteResult write_with_giflib(const char* path,
       colorPtr[i].Blue = c.b;
     }
 
+    // Fixme: Duplicates screen-descriptor (global color map)
     ColorMapObject colorMap;
-    colorMap.ColorCount = 256; // Fixme: Must be some multiple?
+    colorMap.ColorCount = PALETTE_LENGTH; // Fixme: Must be some multiple?
     colorMap.BitsPerPixel = 8; // Fixme: ?
     colorMap.SortFlag = false; // Fixme: ?
     colorMap.Colors = colorPtr.get();
@@ -145,7 +144,6 @@ GifWriteResult write_with_giflib(const char* path,
     // Avoid specifying a palette for the first image - it would be
     // identical to the global color map.
     auto colorMapPtr = first ? nullptr : &colorMap;
-
 
     err = EGifPutImageDesc(gifFile,
       0, // GifLeft
