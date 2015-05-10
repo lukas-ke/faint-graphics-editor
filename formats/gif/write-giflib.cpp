@@ -53,6 +53,7 @@ GifWriteResult write_with_giflib(const char* path,
   // For writing the screen descriptor once based on the first image
   // Fixme: Rework, write the first and then use but_last or smth
   bool first = true;
+  const bool isGif89 = v.size() > 1;
 
   for (const auto& entry : v){
     const auto& image = std::get<AlphaMap>(entry.image);
@@ -82,7 +83,7 @@ GifWriteResult write_with_giflib(const char* path,
       colorMap.SortFlag = false; // Fixme: ?
       colorMap.Colors = colorPtr.get();
 
-      EGifSetGifVersion(gifFile.f, true); // GIF89, for animation support
+      EGifSetGifVersion(gifFile.f, isGif89); // GIF89, for animation support
       // Fixme: Legacy API, according to gif_lib.h
       auto err = EGifPutScreenDesc(gifFile.f,
         size.w,
@@ -95,9 +96,7 @@ GifWriteResult write_with_giflib(const char* path,
       }
     }
 
-
-    // Graphics control block (for disposal and delay)
-    {
+    if (isGif89) {
       GraphicsControlBlock gcb;
       gcb.DisposalMode = DISPOSE_BACKGROUND;
       gcb.UserInputFlag = false;
@@ -116,7 +115,6 @@ GifWriteResult write_with_giflib(const char* path,
       }
     }
 
-    // Fixme: Local.. repeats global occasionally...
     const auto& colorList = std::get<ColorList>(entry.image);
     std::unique_ptr<GifColorType[]> colorPtr(new GifColorType[256]);
 
