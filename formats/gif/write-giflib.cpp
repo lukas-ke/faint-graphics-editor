@@ -23,16 +23,25 @@ namespace {
 class GifFile{
   // Wrapper for automatically calling EGifCloseFile on a GifFileType*
 public:
-  GifFile(const char* path){
-    // Fixme: Throw on error
-    int openErr;
-    f = EGifOpenFileName(path, false, &openErr);
+  explicit GifFile(const char* path){
+    f = EGifOpenFileName(path, false, nullptr);
   }
+
   ~GifFile(){
     if (f != nullptr){
       EGifCloseFile(f);
     }
   }
+
+  bool Bad() const{
+    return f == nullptr;
+  }
+
+  operator GifFileType*(){
+    return f;
+  }
+
+private:
   GifFileType* f;
 };
 
@@ -46,7 +55,7 @@ GifWriteResult write_with_giflib(const char* path,
   assert(!v.empty());
 
   GifFile gifFile(path);
-  if (gifFile.f == nullptr){
+  if (gifFile.Bad()){
     return GifWriteResult::ERROR_OPEN_FILE;
   }
 
@@ -57,16 +66,18 @@ GifWriteResult write_with_giflib(const char* path,
 
   for (const auto& entry : v){
     const auto& map = entry.image.map;
-    const auto size = map.GetSize(); // TODO: Max gif-size?
-    // Fixme: Support mask color
-
+    const auto size = map.GetSize(); // Fixme: Max gif-size?
     if (first){
       const auto& globalColorList = v.front().image.palette;
       if (globalColorList.size() > 256){
         return GifWriteResult::ERROR_TOO_LARGE_PALETTE;
       }
+
+      // Fixme: Must be some multiple when used with ColorMapObject?
+      static const int PALETTE_LENGTH = 256;
+
       std::unique_ptr<GifColorType[]> colorPtr(
-        new GifColorType[256]);
+        new GifColorType[PALETTE_LENGTH]);
 
       for (const auto& p : enumerate(globalColorList)){
         const auto i = p.num;
@@ -77,16 +88,16 @@ GifWriteResult write_with_giflib(const char* path,
       }
 
       // GIF89, for animation and transparency support
-      EGifSetGifVersion(gifFile.f, true);
+      EGifSetGifVersion(gifFile, true);
 
       ColorMapObject colorMap;
-      colorMap.ColorCount = 256; // Fixme: Must be some multiple?
+      colorMap.ColorCount = PALETTE_LENGTH;
       colorMap.BitsPerPixel = 8; // Fixme: ?
       colorMap.SortFlag = false; // Fixme: ?
       colorMap.Colors = colorPtr.get();
 
       // Fixme: Legacy API, according to gif_lib.h
-      auto err = EGifPutScreenDesc(gifFile.f,
+      auto err = EGifPutScreenDesc(gifFile,
         size.w,
         size.h,
         colorMap.BitsPerPixel,
@@ -109,7 +120,7 @@ GifWriteResult write_with_giflib(const char* path,
       return GifWriteResult::ERROR_OTHER;
     }
 
-    err = EGifPutExtension(gifFile.f, GRAPHICS_EXT_FUNC_CODE, 4, extension);
+    err = EGifPutExtension(gifFile, GRAPHICS_EXT_FUNC_CODE, 4, extension);
     if (err == GIF_ERROR){
       return GifWriteResult::ERROR_OTHER;
     }
@@ -136,7 +147,7 @@ GifWriteResult write_with_giflib(const char* path,
     auto colorMapPtr = first ? nullptr : &colorMap;
 
 
-    err = EGifPutImageDesc(gifFile.f,
+    err = EGifPutImageDesc(gifFile,
       0, // GifLeft
       0, // GifTop
       size.w, // GifWidth
@@ -151,7 +162,7 @@ GifWriteResult write_with_giflib(const char* path,
     // Write the pixel-data
     for (int y = 0; y != size.h; y++){
       auto scanline = const_cast<GifPixelType*>(map.GetRaw() + y * size.w);
-      err = EGifPutLine(gifFile.f, scanline, size.w);
+      err = EGifPutLine(gifFile, scanline, size.w);
       if (err == GIF_ERROR){
         return GifWriteResult::ERROR_OTHER;
       }
