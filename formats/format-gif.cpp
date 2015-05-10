@@ -14,15 +14,10 @@
 // permissions and limitations under the License.
 
 #include <sstream>
-#include "wx/anidecod.h" // wxImageArray
-#include "wx/quantize.h"
-#include "wx/wfstream.h"
 #include "app/canvas.hh"
 #include "formats/format.hh"
 #include "formats/gif/file-gif.hh"
 #include "text/formatting.hh"
-#include "util-wx/convert-wx.hh"
-#include "util-wx/scoped-error-log.hh"
 #include "util/image.hh"
 #include "util/image-util.hh"
 #include "util/index-iter.hh"
@@ -56,22 +51,11 @@ static SaveResult fail_size_mismatch(const std::vector<IntSize>& sizes){
   return SaveResult::SaveFailed(utf8_string(ss.str()));
 }
 
-static SaveResult fail_stream_error(const FilePath& filePath){
-  return SaveResult::SaveFailed(space_sep("Faint could not write to",
-    quoted(filePath.Str()) + "."));
-}
-
 static std::vector<IntSize> get_frame_sizes(Canvas& canvas){
   return make_vector(up_to(canvas.GetNumFrames()),
     [&](const auto& i){
       return canvas.GetFrame(i).GetSize();
     });
-}
-
-static SaveResult fail_save(const FilePath& filePath, const ScopedErrorLog& log){
-  return SaveResult::SaveFailed(endline_sep(space_sep(
-    "Failed saving to", quoted(filePath.Str()) + ".\n"),
-    log.GetMessages()));
 }
 
 class FormatGIF : public Format {
@@ -88,35 +72,21 @@ public:
   }
 
   SaveResult Save(const FilePath& filePath, Canvas& canvas) override{
+    // Verify that all frames have the same size
     std::vector<IntSize> sizes = get_frame_sizes(canvas);
     if (!uniform_size(sizes)){
       return fail_size_mismatch(sizes);
     }
 
-    wxImageArray images;
+    // Flatten and quantize
+    std::vector<MappedColors_and_delay> images;
     for (auto i : up_to(canvas.GetNumFrames())){
-      Bitmap bmp(flatten(canvas.GetFrame(i)));
-      wxImage img(to_wx_image(bmp));
-      wxQuantize::Quantize(img, img); // Fixme: Need same quantization for every frame
-      images.Add(new wxImage(img)); // wxImageArray uses delete
+      const auto& f = canvas.GetFrame(i);
+      // Fixme: Consider using the same palette for multiple frames
+      images.emplace_back(quantized(flatten(f), Dithering::ON), f.GetDelay());
     }
 
-    int delay_ms = canvas.GetFrame(0_idx).GetDelay().Get(); // Fixme: Should have per-frame delay
-
-    wxFileOutputStream out(to_wx(filePath.Str()));
-    if (!out.IsOk()){
-      return fail_stream_error(filePath);
-    }
-
-    // Collect wx log messages
-    ScopedErrorLog logger;
-
-    wxGIFHandler handler;
-    bool ok = handler.SaveAnimation(images, &out, false, delay_ms);
-    if (ok){
-      return SaveResult::SaveSuccessful();
-    }
-    return fail_save(filePath, logger);
+    return write_gif(filePath, images);
   }
 };
 
