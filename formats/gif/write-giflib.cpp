@@ -53,7 +53,7 @@ GifWriteResult write_with_giflib(const char* path,
   // For writing the screen descriptor once based on the first image
   // Fixme: Rework, write the first and then use but_last or smth
   bool first = true;
-  const bool isGif89 = v.size() > 1;
+  const bool isGif89 = true;
 
   for (const auto& entry : v){
     const auto& map = entry.image.map;
@@ -76,13 +76,15 @@ GifWriteResult write_with_giflib(const char* path,
         colorPtr[i].Blue = c.b;
       }
 
+      // GIF89, for animation and transparency support
+      EGifSetGifVersion(gifFile.f, true);
+
       ColorMapObject colorMap;
       colorMap.ColorCount = 256; // Fixme: Must be some multiple?
       colorMap.BitsPerPixel = 8; // Fixme: ?
       colorMap.SortFlag = false; // Fixme: ?
       colorMap.Colors = colorPtr.get();
 
-      EGifSetGifVersion(gifFile.f, isGif89); // GIF89, for animation support
       // Fixme: Legacy API, according to gif_lib.h
       auto err = EGifPutScreenDesc(gifFile.f,
         size.w,
@@ -95,23 +97,21 @@ GifWriteResult write_with_giflib(const char* path,
       }
     }
 
-    if (isGif89) {
-      GraphicsControlBlock gcb;
-      gcb.DisposalMode = DISPOSE_BACKGROUND;
-      gcb.UserInputFlag = false;
-      gcb.DelayTime = entry.delay.Get();
-      gcb.TransparentColor = entry.image.transparencyIndex.Or(NO_TRANSPARENT_COLOR);
+    GraphicsControlBlock gcb;
+    gcb.DisposalMode = DISPOSE_BACKGROUND;
+    gcb.UserInputFlag = false;
+    gcb.DelayTime = entry.delay.Get();
+    gcb.TransparentColor = entry.image.transparencyIndex.Or(NO_TRANSPARENT_COLOR);
 
-      GifByteType extension[4];
-      auto err = EGifGCBToExtension(&gcb, extension);
-      if (err == GIF_ERROR){
-        return GifWriteResult::ERROR_OTHER;
-      }
+    GifByteType extension[4];
+    auto err = EGifGCBToExtension(&gcb, extension);
+    if (err == GIF_ERROR){
+      return GifWriteResult::ERROR_OTHER;
+    }
 
-      err = EGifPutExtension(gifFile.f, GRAPHICS_EXT_FUNC_CODE, 4, extension);
-      if (err == GIF_ERROR){
-        return GifWriteResult::ERROR_OTHER;
-      }
+    err = EGifPutExtension(gifFile.f, GRAPHICS_EXT_FUNC_CODE, 4, extension);
+    if (err == GIF_ERROR){
+      return GifWriteResult::ERROR_OTHER;
     }
 
     const auto& colorList = entry.image.palette;
@@ -135,7 +135,8 @@ GifWriteResult write_with_giflib(const char* path,
     // identical to the global color map.
     auto colorMapPtr = first ? nullptr : &colorMap;
 
-    auto err = EGifPutImageDesc(gifFile.f,
+
+    err = EGifPutImageDesc(gifFile.f,
       0, // GifLeft
       0, // GifTop
       size.w, // GifWidth
