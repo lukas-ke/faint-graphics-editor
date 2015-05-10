@@ -591,7 +591,7 @@ ColRGB first_unused(const std::vector<ColRGB>& sortedColors){
 static MappedColors simply_index_it(const Bitmap& bmp){
   assert(area(bmp.GetSize()) > 0);
   const auto mask = mask_alpha_equal(bmp, 0);
-  auto colors = get_unique_colors_rgb(bmp, mask);
+  auto colors = unique_colors_rgb(bmp, mask);
   bool hasTransparent = mask.Any() && colors.size() < 256;
 
   if (hasTransparent){

@@ -55,22 +55,7 @@ int count_colors(const Bitmap& bmp){
   return resigned(s.size());
 }
 
-color_vec_t get_unique_colors(const Bitmap& bmp){
-  assert(bmp.m_w > 0 && bmp.m_h > 0);
-  color_vec_t colors;
-  colors.reserve(std::max(area(bmp.GetSize()), 1));
-
-  for (int y = 0; y != bmp.m_h; y++){
-    for (int x = 0; x != bmp.m_w; ++x){
-      colors.push_back(get_color_raw(bmp, x, y));
-    }
-  }
-
-  std::sort(begin(colors), end(colors));
-  return {begin(colors), std::unique(begin(colors), end(colors))};
-}
-
-rgb_vec_t get_unique_colors_rgb(const Bitmap& bmp, const Mask& exclude){
+rgb_vec_t unique_colors_rgb(const Bitmap& bmp, const Mask& exclude){
   assert(bmp.m_w > 0 && bmp.m_h > 0);
   assert(bmp.GetSize() == exclude.GetSize());
 
@@ -87,15 +72,6 @@ rgb_vec_t get_unique_colors_rgb(const Bitmap& bmp, const Mask& exclude){
 
   std::sort(begin(colors), end(colors));
   return {begin(colors), std::unique(begin(colors), end(colors))};
-}
-
-color_vec_t merged_fully_transparent(const color_vec_t& src, const ColRGB& rgb){
-  color_vec_t dst(src);
-  dst.erase(std::remove_if(begin(dst), end(dst), fully_transparent), end(dst));
-  if (src.size() != dst.size()){
-    dst.push_back(with_alpha(rgb, 0));
-  }
-  return dst;
 }
 
 Color most_common(const color_counts_t& colors){
