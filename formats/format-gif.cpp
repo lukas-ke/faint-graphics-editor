@@ -13,6 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include <algorithm>
 #include <sstream>
 #include "app/canvas.hh"
 #include "formats/format.hh"
@@ -26,23 +27,18 @@
 
 namespace faint{
 
-static size_t find_mismatch_index(const std::vector<IntSize>& sizes){
-  assert(!sizes.empty());
-  size_t i = 1;
-  for (; i != sizes.size(); i++){
-    if (sizes[i] != sizes[0]){
-      break;
-    }
-  }
-  return i;
+static auto find_mismatch(const std::vector<IntSize>& sizes){
+  const auto not_equal =
+    [first = sizes.front()](const auto& sz){ return sz != first;};
+  return std::find_if(sizes.begin(), sizes.end(), not_equal);
 }
 
 static bool uniform_size(const std::vector<IntSize>& sizes){
-  return find_mismatch_index(sizes) == sizes.size();
+  return find_mismatch(sizes) == sizes.end();
 }
 
 static SaveResult fail_size_mismatch(const std::vector<IntSize>& sizes){
-  size_t index = find_mismatch_index(sizes);
+  size_t index = std::distance(begin(sizes), find_mismatch(sizes));
   assert(index != sizes.size());
   std::stringstream ss;
   ss << "This image can not be saved as a gif." << std::endl << std::endl <<
@@ -72,14 +68,13 @@ public:
 
   SaveResult Save(const FilePath& filePath, Canvas& canvas) override{
     // Verify that all frames have the same size
-    std::vector<IntSize> sizes = get_frame_sizes(canvas);
+    auto sizes = get_frame_sizes(canvas);
     if (!uniform_size(sizes)){
       return fail_size_mismatch(sizes);
     }
 
     // Flatten and quantize
     std::vector<MappedColors_and_delay> images;
-
     for (const auto& f : canvas){
       // Fixme: Consider using the same palette for multiple frames
       images.emplace_back(quantized(flatten(f), Dithering::ON), f.GetDelay());
