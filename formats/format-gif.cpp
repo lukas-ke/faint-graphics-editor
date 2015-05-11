@@ -21,6 +21,7 @@
 #include "util/image.hh"
 #include "util/image-util.hh"
 #include "util/index-iter.hh"
+#include "util/frame-iter.hh"
 #include "util/make-vector.hh"
 
 namespace faint{
@@ -52,10 +53,8 @@ static SaveResult fail_size_mismatch(const std::vector<IntSize>& sizes){
 }
 
 static std::vector<IntSize> get_frame_sizes(Canvas& canvas){
-  return make_vector(up_to(canvas.GetNumFrames()),
-    [&](const auto& i){
-      return canvas.GetFrame(i).GetSize();
-    });
+  const auto get_size = [](const auto& frame){return frame.GetSize();};
+  return make_vector(canvas, get_size);
 }
 
 class FormatGIF : public Format {
@@ -80,8 +79,8 @@ public:
 
     // Flatten and quantize
     std::vector<MappedColors_and_delay> images;
-    for (auto i : up_to(canvas.GetNumFrames())){
-      const auto& f = canvas.GetFrame(i);
+
+    for (const auto& f : canvas){
       // Fixme: Consider using the same palette for multiple frames
       images.emplace_back(quantized(flatten(f), Dithering::ON), f.GetDelay());
     }

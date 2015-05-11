@@ -26,10 +26,10 @@ auto make_vector(const Generator& gen, Func&& f){
   // all values produced by begin(gen) to end(gen).
 
   using value_type =
-    typename std::result_of<Func(typename Generator::value_type)>::type;
+    typename std::result_of<Func(typename decltype(begin(gen))::value_type)>::type;
 
   std::vector<value_type> v;
-  v.reserve(gen.size());
+  v.reserve(std::distance(begin(gen), end(gen)));
 
   for (const auto& value : gen){
     v.emplace_back(f(value));
