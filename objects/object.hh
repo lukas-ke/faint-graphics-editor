@@ -80,7 +80,6 @@ public:
   bool Inactive() const;
   virtual void InsertPoint(const Point&, int index);
   virtual bool IsControlPoint(int index) const;
-  bool IsNamed(const utf8_string&);
   virtual int NumPoints() const;
   virtual void RemovePoint(int index);
   template<typename T> void Set(const T& s, typename T::ValueType);
