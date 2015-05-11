@@ -173,7 +173,7 @@ public:
       }
       else if (oldPt.IsMove()){
         if (index == at){
-          m_points.SetPoint(m_tri, PathPt::LineTo(pt), resigned(i));
+          m_points.SetPoint(m_tri, PathPt::MoveTo(pt), resigned(i));
           break;
         }
         at += 1;

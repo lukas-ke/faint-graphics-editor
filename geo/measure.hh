@@ -74,7 +74,6 @@ std::vector<Point> with_mid_points(const std::vector<Point>&);
 // For {p1, p2, p3}, returns {m(p3, p1), p1, m(p2, p1), p2, m(p2, p3), p3}
 std::vector<Point> with_mid_points_cyclic(const std::vector<Point>&);
 
-
 coord perimeter(const std::vector<PathPt>&);
 
 } // namespace
