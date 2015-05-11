@@ -194,7 +194,7 @@ PyObject* call_cpp_function(){
 // -----------------------------------------------------------------------
 // A bunch of structures which all contain a function (PythonFunc) follow.
 //
-// This function:
+// The contained function:
 // 1. makes the wrapped C++-function appear like a
 //    PyMethodDef-compatible PyObject*(PyObject*,PyObject*)-function
 //
@@ -433,13 +433,6 @@ init_zero_arg_t<PY_CLASS_T> init_resolve(void(*func)(PY_CLASS_T));
 template<typename PY_CLASS_T>
 repr_t<PY_CLASS_T> repr_resolve(utf8_string(*func)(PY_CLASS_T));
 
-// Presumably necessary wrapping since adding scope resolution after
-// decltype(...) didn't compile
-template<typename ForwardingStruct>
-struct Route{
-  using T = ForwardingStruct;
-};
-
 // -----------------------------------------------------------------------
 // Macros for use in PyMethodDef:s (FORWARDER etc.)
 // -----------------------------------------------------------------------
@@ -458,33 +451,30 @@ struct Route{
 //  2. uses the "resolve"-overloads to resolve a
 //     template-instantiation of the forwarding structure templates
 //
-//  3. nests the resolved struct in Route, since decltype(...)::PythonFunc
-//     wouldn't compile
-//
-//  4. specializes PythonFunc with the C++-function pointer so that the
+//  3. specializes PythonFunc with the C++-function pointer so that the
 //     function can be called (the resolve-step only gave the signature,
 //     not the address).
 
 // For methods (taking a self-object as the first argument)
-#define FORWARDER(CppFunc, ARGS_TYPE, NAME, DOC){NAME, Route<decltype(resolve(CppFunc))>::T::PythonFunc<CppFunc>, ARGS_TYPE, DOC}
+#define FORWARDER(CppFunc, ARGS_TYPE, NAME, DOC){NAME, decltype(resolve(CppFunc))::PythonFunc<CppFunc>, ARGS_TYPE, DOC}
 
 // For free functions (no self-object))
-#define FREE_FORWARDER(CppFunc, ARGS_TYPE, NAME, DOC){NAME, Route<decltype(free_resolve(CppFunc))>::T::PythonFunc<CppFunc>, ARGS_TYPE, DOC}
+#define FREE_FORWARDER(CppFunc, ARGS_TYPE, NAME, DOC){NAME, decltype(free_resolve(CppFunc))::PythonFunc<CppFunc>, ARGS_TYPE, DOC}
 
 // For getters
-#define GETTER_FORWARDER(CppFunc)Route<decltype(get_resolve(CppFunc))>::T::PythonFunc<CppFunc>
+#define GETTER_FORWARDER(CppFunc)decltype(get_resolve(CppFunc))::PythonFunc<CppFunc>
 
 // For setters
-#define SETTER_FORWARDER(CppFunc)Route<decltype(set_resolve(CppFunc))>::T::PythonFunc<CppFunc>
+#define SETTER_FORWARDER(CppFunc)decltype(set_resolve(CppFunc))::PythonFunc<CppFunc>
 
 // For getters and setters
 #define PROPERTY_FORWARDER(CppStruct, NAME, DOC){(char*)NAME, GETTER_FORWARDER(CppStruct::Get), SETTER_FORWARDER(CppStruct::Set), (char*)DOC, nullptr}
 
 // For Python-class initialization functions (tp_init)
-#define INIT_FORWARDER(CppFunc)(initproc)Route<decltype(init_resolve(CppFunc))>::T::PythonFunc<CppFunc>
+#define INIT_FORWARDER(CppFunc)(initproc)decltype(init_resolve(CppFunc))::PythonFunc<CppFunc>
 
 // For tp_repr
-#define REPR_FORWARDER(CppFunc)(reprfunc)Route<decltype(repr_resolve(CppFunc))>::T::PythonFunc<CppFunc>
+#define REPR_FORWARDER(CppFunc)(reprfunc)decltype(repr_resolve(CppFunc))::PythonFunc<CppFunc>
 
 } // namespace
 
