@@ -311,8 +311,7 @@ std::vector<PathPt> ObjText::GetPath(const ExpressionContext& ctx) const{
   // Build the path
   std::vector<PathPt> path;
   auto tris(text_line_regions(textInfo, m_tri, lines, align));
-  for (const auto item : zip(tris, lines))
-  {
+  for (const auto item : zip(tris, lines)){
     auto subPath(textInfo.GetTextPath(item.first, item.second.text));
     for (const auto& p : subPath){
       path.push_back(p);

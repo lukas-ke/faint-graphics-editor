@@ -29,31 +29,31 @@ public:
   using reference = Index&;
 
   IndexIter(const Index& index)
-    : index(index)
+    : m_index(index)
   {}
 
   const Index* operator->() const{
-    return &index;
+    return &m_index;
   }
 
   Index operator*() const{
-    return index;
+    return m_index;
   }
 
   bool operator!=(const IndexIter& other) const{
-    return index != other.index;
+    return m_index != other.m_index;
   }
 
   bool operator==(const IndexIter& other) const{
-    return index == other.index;
+    return m_index == other.m_index;
   }
 
   IndexIter& operator++(){
-    index = Index(index.Get() + 1);
+    m_index = Index(m_index.Get() + 1);
     return *this;
   }
 
-  Index index;
+  Index m_index;
 };
 
 class up_to{

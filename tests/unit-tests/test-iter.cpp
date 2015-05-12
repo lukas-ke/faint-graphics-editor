@@ -4,18 +4,6 @@
 #include "text/utf8-string.hh"
 #include "util/iter.hh"
 
-namespace{
-
-enum class IterableTestEnum{
-  BEGIN = 0,
-  FIRST_VALUE = 0,
-  SECOND_VALUE = 1,
-  THIRD_VALUE = 2,
-  END
-};
-
-}
-
 void test_iter(){
   using namespace faint;
 
@@ -94,6 +82,14 @@ void test_iter(){
 
   {
     // Test "iterable"
+    enum class IterableTestEnum{
+      BEGIN = 0,
+      FIRST_VALUE = 0,
+      SECOND_VALUE = 1,
+      THIRD_VALUE = 2,
+      END
+    };
+
     int i = 0;
     for (IterableTestEnum value : iterable<IterableTestEnum>()){
       ASSERT(value < IterableTestEnum::END);
