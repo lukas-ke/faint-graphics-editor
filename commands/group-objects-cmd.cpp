@@ -19,6 +19,7 @@
 #include "objects/objcomposite.hh"
 #include "objects/object.hh"
 #include "text/formatting.hh"
+#include "util/generator-adapter.hh"
 #include "util/iter.hh"
 #include "util/object-util.hh"
 
@@ -40,7 +41,7 @@ public:
   void Do(CommandContext& context) override{
     // Initialize on the first run
     if (m_objectDepths.empty()){
-      for (const Object* obj : m_objects){
+      for (const auto* obj : m_objects){
         m_objectDepths.push_back(context.GetObjectZ(obj));
       }
     }
@@ -91,13 +92,13 @@ public:
   void Do(CommandContext& context) override{
     // Initialize object depths for Undo on the first run
     if (m_objectDepths.empty()) {
-      for (const Object* obj : m_objects){
+      for (const auto* obj : m_objects){
         m_objectDepths.push_back(context.GetObjectZ(obj));
       }
     }
 
     // Traverse and ungroup all groups in the command
-    for (Object* group : m_objects){
+    for (auto* group : m_objects){
       int numContained = group->GetObjectCount();
       const int depth = context.GetObjectZ(group);
       // Add the contained objects
@@ -117,7 +118,7 @@ public:
 
   void Undo(CommandContext& context) override{
     for (auto group : enumerate(m_objects)){
-      int numContained = (*group)->GetObjectCount();
+      const auto numContained = (*group)->GetObjectCount();
       if (numContained == 0){
         continue;
       }
@@ -134,28 +135,19 @@ private:
   bool m_select;
 };
 
-static bool all_are_groups(const objects_t& objects){
-  for (const Object* obj : objects){
-    if (obj->GetObjectCount() == 0){
-      return false;
-    }
-  }
-  return true;
-}
-
 std::pair<Command*, Object*> group_objects_command(const objects_t& objects,
   const select_added& select)
 {
   assert(!objects.empty());
-  GroupObjectsCommand* cmd = new GroupObjectsCommand(objects, select);
-  return std::make_pair(cmd, cmd->GetComposite());
+  auto* cmd = new GroupObjectsCommand(objects, select);
+  return {cmd, cmd->GetComposite()};
 }
 
 Command* ungroup_objects_command(const objects_t& objects,
   const select_added& select)
 {
   assert(!objects.empty());
-  assert(all_are_groups(objects));
+  assert(all_of(objects, has_subobjects));
   return new UngroupObjectsCommand(objects, select);
 }
 

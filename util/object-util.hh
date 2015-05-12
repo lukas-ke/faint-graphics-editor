@@ -77,6 +77,8 @@ utf8_string get_collective_type(const objects_t&);
 Settings get_object_settings(const objects_t&);
 tris_t get_tris(const objects_t&);
 
+bool has_subobjects(const Object*);
+
 // True if the the object or one of its sub-objects match the id
 bool is_or_has(const Object*, const ObjectId&);
 bool is_raster_object(Object*);

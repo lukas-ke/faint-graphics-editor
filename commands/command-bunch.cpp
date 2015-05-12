@@ -37,19 +37,19 @@ public:
   }
 
   ~CommandBunch(){
-    for (Command* cmd : m_commands){
+    for (auto* cmd : m_commands){
       delete cmd;
     }
   }
 
   void Do(CommandContext& context) override{
-    for (Command* cmd : m_commands){
+    for (auto* cmd : m_commands){
       cmd->Do(context);
     }
   }
 
   void DoRaster(CommandContext& context) override{
-    for (Command* cmd : m_commands){
+    for (auto* cmd : m_commands){
       cmd->DoRaster(context);
     }
   }
@@ -100,7 +100,7 @@ public:
   }
 
   void Undo(CommandContext& context) override{
-    for (Command* cmd : reversed(m_commands)){
+    for (auto* cmd : reversed(m_commands)){
       cmd->Undo(context);
     }
   }

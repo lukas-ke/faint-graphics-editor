@@ -33,14 +33,14 @@ namespace faint{
 
 static void flip_horizontally(const objects_t& objects, const Size& size){
   const auto p0 = point_from_size(size / 2);
-  for (Object* obj : objects){
+  for (auto* obj : objects){
     obj->SetTri(scaled(obj->GetTri(), invert_x_scale(), p0));
   }
 }
 
 static void flip_vertically(const objects_t& objects, const Size& size){
   const auto p0 = point_from_size(size / 2);
-  for (Object* obj : objects){
+  for (auto* obj : objects){
     obj->SetTri(scaled(obj->GetTri(), invert_y_scale(), p0));
   }
 }
@@ -72,6 +72,7 @@ public:
     // Flipping again undoes object changes
     DoObjects(context);
   }
+
 private:
   void DoObjects(CommandContext& context){
     if (m_axis == Axis::HORIZONTAL){
@@ -122,7 +123,7 @@ private:
     const Size size(floated(context.GetImageSize()));
     const objects_t& objects = context.GetObjects();
     Point p0(size.w, size.h);
-    for (Object* obj : objects){
+    for (auto* obj : objects){
       obj->SetTri(translated(rotated(obj->GetTri(), pi / 2, p0),
           -size.w, size.w - size.h));
     }
@@ -157,7 +158,7 @@ public:
     Rect rect = floated(rect_from_size(ctx.GetImageSize()));
     m_offset = get_object_offset(rect, m_angle);
 
-    for (Object* obj : ctx.GetObjects()){
+    for (auto* obj : ctx.GetObjects()){
       obj->SetTri(translated(rotated(obj->GetTri(), m_angle, rect.Center()),
         -m_offset.x, -m_offset.y));
     }
@@ -181,9 +182,9 @@ public:
     Size oldSize = floated(ctx.GetImageSize());
     const objects_t& objects = ctx.GetObjects();
     Point center = point_from_size(oldSize) / 2;
-    for (Object* obj : objects){
+    for (auto* obj : objects){
       obj->SetTri(translated(rotated(obj->GetTri(), -m_angle, center),
-          m_offset.x, m_offset.y));
+        m_offset.x, m_offset.y));
     }
   }
 private:
@@ -236,7 +237,7 @@ public:
     Rect rect = floated(rect_from_size(ctx.GetImageSize()));
     m_offset = get_object_offset(rect, m_angle, m_scale);
     const auto center(rect.Center());
-    for (Object* obj : ctx.GetObjects()){
+    for (auto* obj : ctx.GetObjects()){
       obj->SetTri(translated(
         rotated(
           scaled(obj->GetTri(), m_scale, center),
@@ -260,7 +261,7 @@ public:
     Size oldSize = floated(ctx.GetImageSize());
     const objects_t& objects = ctx.GetObjects();
     Point center = point_from_size(oldSize) / 2;
-    for (Object* obj : objects){
+    for (auto* obj : objects){
       obj->SetTri(translated(
         rotated(
           scaled(obj->GetTri(), inverse(m_scale), center),

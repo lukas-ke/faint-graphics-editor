@@ -224,6 +224,10 @@ tris_t get_tris(const objects_t& objects){
   return tris;
 }
 
+bool has_subobjects(const Object* obj){
+  return obj->GetObjectCount() != 0;
+}
+
 bool is_or_has(const Object* object, const ObjectId& id){
   if (object->GetId() == id){
     return true;
