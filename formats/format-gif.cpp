@@ -13,7 +13,6 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include <algorithm>
 #include <sstream>
 #include "app/canvas.hh"
 #include "formats/format.hh"
@@ -39,12 +38,11 @@ static bool uniform_size(const std::vector<IntSize>& sizes){
 static SaveResult fail_size_mismatch(const std::vector<IntSize>& sizes){
   size_t index = std::distance(begin(sizes), find_mismatch(sizes));
   assert(index != sizes.size());
-  std::stringstream ss;
-  ss << "This image can not be saved as a gif." << std::endl << std::endl <<
-    "It contains frames of different sizes." << std::endl <<
-    "Frame 1: " << str(sizes[0]) << std::endl <<
-    "Frame " << index + 1 << ": " << str(sizes[index]);
-  return SaveResult::SaveFailed(utf8_string(ss.str()));
+  return SaveResult::SaveFailed(
+    endline_sep("This image can not be saved as a gif.\n\n"
+      "It contains frames of different sizes.",
+      lbl("Frame 1", str(sizes[0])),
+      lbl(space_sep("Frame" , str_int(index + 1)), str(sizes[index]))));
 }
 
 static std::vector<IntSize> get_frame_sizes(Canvas& canvas){
