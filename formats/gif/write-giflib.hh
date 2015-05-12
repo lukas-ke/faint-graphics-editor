@@ -28,7 +28,7 @@ enum class GifWriteResult{
 };
 
 GifWriteResult write_with_giflib(const char* path,
-  const std::vector<MappedColors_and_delay>&);
+  const std::vector<GifFrame>&);
 
 } // namespace
 

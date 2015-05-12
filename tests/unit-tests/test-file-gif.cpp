@@ -66,7 +66,7 @@ void test_file_gif(){
     // Write a single frame
     auto img = load_test_image(FileName("gauss-source.png"));
     auto mapped = quantized(img, Dithering::ON);
-    std::vector<MappedColors_and_delay> images = {{mapped, Delay(0)}};
+    std::vector<GifFrame> images = {{mapped, Delay(0)}};
     auto result = write_gif(get_test_save_path(FileName("libgif.gif")), images);
     if (!result.Successful()){
       FAIL(result.ErrorDescription().c_str());
@@ -94,7 +94,7 @@ void test_file_gif(){
 
     auto delays = std::vector<Delay>({{10}, {20}, {30}, {40}});
 
-    std::vector<MappedColors_and_delay> images = {
+    std::vector<GifFrame> images = {
       {get_bmp(srcProps.GetFrame(0_idx)), delays[0]},
       {get_bmp(srcProps.GetFrame(1_idx)), delays[1]},
       {get_bmp(srcProps.GetFrame(2_idx)), delays[2]},

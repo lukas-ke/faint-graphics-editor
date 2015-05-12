@@ -28,15 +28,15 @@ class ImageProps;
 
 void read_gif(const FilePath&, ImageProps&);
 
-struct MappedColors_and_delay{
-  MappedColors_and_delay(const MappedColors& image, const Delay& delay)
+struct GifFrame{
+  GifFrame(const MappedColors& image, const Delay& delay)
     : image(image), delay(delay)
   {}
   MappedColors image;
   Delay delay;
 };
 
-SaveResult write_gif(const FilePath&, const std::vector<MappedColors_and_delay>&);
+SaveResult write_gif(const FilePath&, const std::vector<GifFrame>&);
 
 } // namespace
 

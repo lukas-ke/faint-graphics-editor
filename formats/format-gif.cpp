@@ -26,7 +26,7 @@
 
 namespace faint{
 
-static MappedColors_and_delay to_gif_frame(const Image& f){
+static GifFrame to_gif_frame(const Image& f){
   return {quantized(flatten(f), Dithering::ON), f.GetDelay()};
 };
 
@@ -68,7 +68,6 @@ public:
 
   SaveResult Save(const FilePath& filePath, Canvas& canvas) override{
     auto sizes = get_frame_sizes(canvas);
-
     return uniform_size(sizes) ?
       write_gif(filePath, make_vector(canvas, to_gif_frame)) :
       fail_size_mismatch(sizes);

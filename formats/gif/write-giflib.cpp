@@ -50,7 +50,7 @@ private:
 namespace faint{
 
 GifWriteResult write_with_giflib(const char* path,
-  const std::vector<MappedColors_and_delay>& v)
+  const std::vector<GifFrame>& v)
 {
   assert(!v.empty());
 
