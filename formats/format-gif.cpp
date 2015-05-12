@@ -19,6 +19,7 @@
 #include "formats/format.hh"
 #include "formats/gif/file-gif.hh"
 #include "text/formatting.hh"
+#include "util/generator-adapter.hh"
 #include "util/image.hh"
 #include "util/image-util.hh"
 #include "util/index-iter.hh"
@@ -28,9 +29,7 @@
 namespace faint{
 
 static auto find_mismatch(const std::vector<IntSize>& sizes){
-  const auto not_equal =
-    [first = sizes.front()](const auto& sz){ return sz != first;};
-  return std::find_if(sizes.begin(), sizes.end(), not_equal);
+  return find_if_iter(sizes, not_equal_to(sizes.front()));
 }
 
 static bool uniform_size(const std::vector<IntSize>& sizes){

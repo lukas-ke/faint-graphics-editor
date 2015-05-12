@@ -50,6 +50,11 @@ auto find_if_deref(Generator gen, UnaryPredicate p){
 }
 
 template<class Generator, class UnaryPredicate>
+auto find_if_iter(Generator&& gen, UnaryPredicate p){
+  return std::find_if(begin(gen), end(gen), p);
+}
+
+template<class Generator, class UnaryPredicate>
 Optional<int> find_index_if(Generator gen, UnaryPredicate p){
   auto it = std::find_if(begin(gen), end(gen), p);
   if (it != end(gen)){
@@ -68,6 +73,11 @@ Container sorted(const Container& c){
   Container c2(c);
   sort(begin(c2), end(c2));
   return c2;
+}
+
+template<typename T>
+auto not_equal_to(const T& key){
+  return [key=key](const T& value){return value != key;};
 }
 
 } // namespace
