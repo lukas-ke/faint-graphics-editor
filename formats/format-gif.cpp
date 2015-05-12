@@ -72,14 +72,12 @@ public:
       return fail_size_mismatch(sizes);
     }
 
-    // Flatten and quantize
-    std::vector<MappedColors_and_delay> images;
-    for (const auto& f : canvas){
-      // Fixme: Consider using the same palette for multiple frames
-      images.emplace_back(quantized(flatten(f), Dithering::ON), f.GetDelay());
-    }
+    const auto adapt_frame =
+      [](const auto& f) -> MappedColors_and_delay{
+        return {quantized(flatten(f), Dithering::ON), f.GetDelay()};
+      };
 
-    return write_gif(filePath, images);
+    return write_gif(filePath, make_vector(canvas, adapt_frame));
   }
 };
 
