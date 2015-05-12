@@ -22,17 +22,17 @@
 namespace faint{
 
 template<class Generator, class UnaryPredicate>
-bool any_of(Generator gen, UnaryPredicate p){
+bool any_of(Generator&& gen, UnaryPredicate&& p){
   return std::any_of(begin(gen), end(gen), p);
 }
 
 template<class Generator, class UnaryPredicate>
-bool all_of(Generator gen, UnaryPredicate p){
+bool all_of(Generator&& gen, UnaryPredicate&& p){
   return std::all_of(begin(gen), end(gen), p);
 }
 
 template<class Generator, class UnaryPredicate>
-auto find_if(Generator gen, UnaryPredicate p){
+auto find_if(Generator&& gen, UnaryPredicate&& p){
   auto it = std::find_if(begin(gen), end(gen), p);
   if (it != end(gen)){
     return Optional<decltype(*it)>(*it);
@@ -50,12 +50,12 @@ auto find_if_deref(Generator gen, UnaryPredicate p){
 }
 
 template<class Generator, class UnaryPredicate>
-auto find_if_iter(Generator&& gen, UnaryPredicate p){
+auto find_if_iter(Generator&& gen, UnaryPredicate&& p){
   return std::find_if(begin(gen), end(gen), p);
 }
 
 template<class Generator, class UnaryPredicate>
-Optional<int> find_index_if(Generator gen, UnaryPredicate p){
+Optional<int> find_index_if(Generator&& gen, UnaryPredicate&& p){
   auto it = std::find_if(begin(gen), end(gen), p);
   if (it != end(gen)){
     return Optional<int>(resigned(it - begin(gen)));
@@ -64,20 +64,19 @@ Optional<int> find_index_if(Generator gen, UnaryPredicate p){
 }
 
 template<class Container, class T, class BinaryOperation>
-auto accumulate(T initial, const Container& c, BinaryOperation op){
+auto accumulate(T&& initial, const Container& c, BinaryOperation&& op){
   return std::accumulate(begin(c), end(c), initial, op);
 }
 
 template<class Container>
-Container sorted(const Container& c){
-  Container c2(c);
-  sort(begin(c2), end(c2));
-  return c2;
+Container sorted(Container c){
+  sort(begin(c), end(c));
+  return c;
 }
 
 template<typename T>
 auto not_equal_to(const T& key){
-  return [key=key](const T& value){return value != key;};
+  return [=](const T& value){return value != key;};
 }
 
 } // namespace

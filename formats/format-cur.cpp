@@ -16,12 +16,17 @@
 #include "app/canvas.hh"
 #include "formats/bmp/file-cur.hh"
 #include "formats/format.hh"
-#include "util/image.hh"
+#include "util/frame-iter.hh"
 #include "util/image-props.hh"
 #include "util/image-util.hh"
-#include "util/index-iter.hh"
+#include "util/image.hh"
+#include "util/make-vector.hh"
 
 namespace faint{
+
+static auto to_cursor(const Image& frame){
+  return std::make_pair(flatten(frame), frame.GetHotSpot());
+};
 
 class FormatCUR : public Format {
 public:
@@ -45,12 +50,7 @@ public:
   }
 
   SaveResult Save(const FilePath& filePath, Canvas& canvas){
-    cur_vec cursors;
-    for (auto i : up_to(canvas.GetNumFrames())){
-      const Image& frame(canvas.GetFrame(i));
-      cursors.emplace_back(std::make_pair(flatten(frame), frame.GetHotSpot()));
-    }
-    return write_cur(filePath, cursors);
+    return write_cur(filePath, make_vector(canvas, to_cursor));
   }
 };
 

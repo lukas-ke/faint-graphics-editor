@@ -14,14 +14,14 @@
 // permissions and limitations under the License.
 
 #include "app/canvas.hh"
+#include "bitmap/quantize.hh"
 #include "formats/format.hh"
 #include "formats/gif/file-gif.hh"
 #include "text/formatting.hh"
+#include "util/frame-iter.hh"
 #include "util/generator-adapter.hh"
 #include "util/image.hh"
 #include "util/image-util.hh"
-#include "util/index-iter.hh"
-#include "util/frame-iter.hh"
 #include "util/make-vector.hh"
 
 namespace faint{
