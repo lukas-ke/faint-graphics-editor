@@ -22,6 +22,7 @@
 #include "bitmap/bitmap-templates.hh"
 #include "bitmap/color-ptr.hh"
 #include "bitmap/draw.hh"
+#include "bitmap/iter-bmp.hh"
 #include "bitmap/mask.hh"
 #include "bitmap/pattern.hh"
 #include "bitmap/scale-bicubic.hh"
@@ -39,6 +40,7 @@
 #include "geo/scale.hh"
 #include "geo/size.hh"
 #include "util/common-fwd.hh" // Fixme: For ScaleQuality
+#include "util/make-vector.hh"
 #include "util/optional.hh"
 
 namespace faint{
@@ -470,7 +472,7 @@ void draw_wide_ellipse_f(Bitmap& bmp, const Functor& setPixFunc,
 
   std::map<int,int> points = ellipse_points(x0, y0,
     a - s.lineWidth, b - s.lineWidth);
-  for (auto ptPair : points){
+  for (const auto& ptPair : points){
     setPixFunc(bmp, ptPair.second, ptPair.first);
   }
 
@@ -1888,18 +1890,11 @@ std::vector<Color> get_palette(const Bitmap& bmp){
   // was a lot slower than just storing unsigned int, at least in
   // VS2013.
   std::unordered_set<unsigned int> hashed;
-  for (int y = 0; y != bmp.m_h; y++){
-    for (int x = 0; x != bmp.m_w; x++){
-      hashed.insert(to_hash(get_color_raw(bmp, x, y)));
-    }
+  for (ITER_XY(x, y, bmp)){
+    hashed.insert(to_hash(get_color_raw(bmp, x, y)));
   }
 
-  std::vector<Color> colors;
-  colors.reserve(hashed.size());
-  for (auto value : hashed){
-    colors.push_back(color_from_hash(value));
-  }
-  return colors;
+  return make_vector(hashed, color_from_hash);
 }
 
 bool overextends_down(const IntRect& r, const Bitmap& bmp){

@@ -128,7 +128,7 @@ static bool send_paths_to_server(const FileList& paths, const std::string& port)
   }
 
   // Pass all the files to the old instance
-  for (const FilePath& filePath : paths){
+  for (const auto& filePath : paths){
     connection->Execute(FILE_PREFIX + to_wx(filePath.Str()));
   }
 

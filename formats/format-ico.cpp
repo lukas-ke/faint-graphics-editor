@@ -17,10 +17,11 @@
 #include "bitmap/bitmap.hh"
 #include "formats/bmp/file-ico.hh"
 #include "formats/format.hh"
-#include "util/image.hh"
+#include "util/frame-iter.hh"
 #include "util/image-props.hh"
 #include "util/image-util.hh"
-#include "util/index-iter.hh"
+#include "util/image.hh"
+#include "util/make-vector.hh"
 
 namespace faint{
 
@@ -28,6 +29,10 @@ static IcoCompression select_compression(const Image& image){
   return area(image.GetSize()) >= area(IntSize(64, 64)) ?
     IcoCompression::PNG :
     IcoCompression::BMP;
+}
+
+static auto to_icon(const Image& frame){
+  return std::make_pair(flatten(frame), select_compression(frame));
 }
 
 class FormatICO : public Format {
@@ -52,14 +57,7 @@ public:
   }
 
   SaveResult Save(const FilePath& filePath, Canvas& canvas) override{
-    ico_vec bitmaps;
-    for (auto i : up_to(canvas.GetNumFrames())){
-      const auto& frame(canvas.GetFrame(i));
-
-      bitmaps.emplace_back(std::make_pair(flatten(frame),
-        select_compression(frame)));
-    }
-    return write_ico(filePath, bitmaps);
+    return write_ico(filePath, make_vector(canvas, to_icon));
   }
 };
 

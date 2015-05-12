@@ -6,6 +6,7 @@
 #include "bitmap/draw.hh"
 #include "formats/gif/file-gif.hh"
 #include "util/image-props.hh"
+#include "util/iter.hh"
 
 namespace{
 
