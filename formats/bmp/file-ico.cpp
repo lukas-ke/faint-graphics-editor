@@ -80,6 +80,7 @@ static void test_icon_dir_common(const IconDir& dir){
 static auto read_icon_dir_entries(BinaryReader& in, int numIcons){
   assert(numIcons >= 0);
   std::vector<IconDirEntry> v;
+  v.reserve(numIcons);
   for (int i = 0; i != numIcons; i++){
     auto entry = read_struct_or_throw<IconDirEntry>(in);
     if (!in.good()){
@@ -320,13 +321,12 @@ static std::vector<BitmapInfoHeader> create_bitmap_headers(const ico_vec& bitmap
   const std::map<size_t, std::string>& pngData)
 {
   std::vector<BitmapInfoHeader> v;
+  v.reserve(bitmaps.size());
   for (size_t i = 0; i != bitmaps.size(); i++){
     const auto& p = bitmaps[i];
     if (p.second == IcoCompression::PNG){
-      auto pngStrIter = pngData.find(i);
-      assert(pngStrIter != pngData.end());
       v.push_back(create_bitmap_info_header_png(p.first.GetSize(),
-          pngStrIter->second.size(),
+          pngData.at(i).size(),
           default_DPI()));
     }
     else {
@@ -340,6 +340,7 @@ static std::vector<BitmapInfoHeader> create_bitmap_headers(const ico_vec& bitmap
 
 static std::vector<BitmapInfoHeader> create_bitmap_headers(const cur_vec& cursors){
   std::vector<BitmapInfoHeader> v;
+  v.reserve(cursors.size());
   for (const auto& c : cursors){
     v.push_back(create_bitmap_info_header(c.first.GetSize(), 32,
       default_DPI(),
@@ -385,10 +386,8 @@ static std::vector<IconDirEntry> create_icon_dir_entries(const ico_vec& bitmaps,
     entry.bitsPerPixel = 32;
 
     if (compression == IcoCompression::PNG){
-      const auto pngStrIter = pngData.find(i);
-      assert(pngStrIter != pngData.end());
-
-      auto bytes = pngStrIter->second.size();
+      const auto& pngStr = pngData.at(i);
+      const auto bytes = pngStr.size();
       entry.bytes = convert(bytes);
 
       const size_t lengthOfHeaders = struct_lengths<
@@ -492,10 +491,7 @@ SaveResult write_ico(const FilePath& filePath,  const ico_vec& bitmaps){
   for (size_t i = 0; i != bitmaps.size(); i++){
     const auto& p = bitmaps[i];
     if (p.second == IcoCompression::PNG){
-      const auto& pngStrIter = pngData.find(i);
-      assert(pngStrIter != pngData.end());
-      const auto& pngStr(pngStrIter->second);
-
+      const auto& pngStr = pngData.at(i);
       write_struct(out, create_bitmap_file_header_png(pngStr.size()));
       write_struct(out, bmpHeaders[i]);
       out.write(pngStr.c_str(), pngStr.size());
@@ -514,11 +510,11 @@ SaveResult write_cur(const FilePath& filePath, const cur_vec& cursors){
     return SaveResult::SaveFailed(error_ico_too_many_images(cursors.size()));
   }
 
-  for (size_t i = 0; i != cursors.size(); i++){
-    const Bitmap& bmp(cursors[i].first);
+  for (const auto& cur : cursors){
+    const auto& bmp(cur.first);
     if (bmp.m_w > 256 || bmp.m_h > 256){
       return SaveResult::SaveFailed(utf8_string(
-        "Maximum size for cursors is 256x256"));
+        "The maximum size for cursors is 256x256 pixels."));
     }
   }
   IconDir iconDir = create_icon_dir_cursor(cursors);

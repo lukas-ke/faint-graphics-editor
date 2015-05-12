@@ -162,7 +162,7 @@ public:
   {}
 
   ~MoveRasterSelectionCommand(){
-    for (Command* cmd : m_merged){
+    for (auto* cmd : m_merged){
       delete cmd;
     }
   }
@@ -171,8 +171,10 @@ public:
     if (!sameFrame){
       return false;
     }
-    MoveRasterSelectionCommand* candidate =
-      dynamic_cast<MoveRasterSelectionCommand*>(cmd);
+
+    // Merge with other, consecutive, move-raster-selection commands
+    // by using their position
+    auto* candidate = dynamic_cast<MoveRasterSelectionCommand*>(cmd);
     if (candidate == nullptr){
       return false;
     }
@@ -199,7 +201,7 @@ public:
   }
 
 private:
-  std::vector<Command*> m_merged;
+  std::vector<Command*> m_merged; // Fixme: Can't I just delete the merged command?
   IntPoint m_newPos;
   IntPoint m_oldPos;
 };
