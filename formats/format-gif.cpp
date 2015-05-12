@@ -13,7 +13,6 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include <sstream>
 #include "app/canvas.hh"
 #include "formats/format.hh"
 #include "formats/gif/file-gif.hh"
@@ -26,6 +25,10 @@
 #include "util/make-vector.hh"
 
 namespace faint{
+
+static MappedColors_and_delay to_gif_frame(const Image& f){
+  return {quantized(flatten(f), Dithering::ON), f.GetDelay()};
+};
 
 static auto find_mismatch(const std::vector<IntSize>& sizes){
   return find_if_iter(sizes, not_equal_to(sizes.front()));
@@ -64,18 +67,11 @@ public:
   }
 
   SaveResult Save(const FilePath& filePath, Canvas& canvas) override{
-    // Verify that all frames have the same size
     auto sizes = get_frame_sizes(canvas);
-    if (!uniform_size(sizes)){
-      return fail_size_mismatch(sizes);
-    }
 
-    const auto adapt_frame =
-      [](const auto& f) -> MappedColors_and_delay{
-        return {quantized(flatten(f), Dithering::ON), f.GetDelay()};
-      };
-
-    return write_gif(filePath, make_vector(canvas, adapt_frame));
+    return uniform_size(sizes) ?
+      write_gif(filePath, make_vector(canvas, to_gif_frame)) :
+      fail_size_mismatch(sizes);
   }
 };
 
