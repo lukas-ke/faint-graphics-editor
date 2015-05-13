@@ -670,7 +670,7 @@ void CairoContext::set_clip_polygon(const std::array<Point,4>& pts){
   // Fixme: This doesn't work quite right, maybe
   // https://bugzilla.gnome.org/show_bug.cgi?id=697357
   move_to(pts.front());
-  for(const Point& pt : but_first(pts)){
+  for (const auto& pt : but_first(pts)){
     line_to(pt);
   }
   close_path();

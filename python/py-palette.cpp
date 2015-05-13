@@ -68,7 +68,7 @@ static void faintpalette_set(AppContext& app, const std::vector<Paint>& paints){
     throw ValueError("At least one color required.");
   }
   PaintMap paintMap;
-  for(const Paint& paint : paints){
+  for (const auto& paint : paints){
     paintMap.Append(paint);
   }
   app.SetPalette(paintMap);

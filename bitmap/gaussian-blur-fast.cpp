@@ -48,7 +48,7 @@ static std::vector<int> boxes_for_gauss(double sigma, int n){
 
 static void box_blur_H(channel_t& scl, channel_t& tcl, const IntSize& size, int r){
   auto iarr = 1.0 / (r+r+1);
-  for(int i = 0; i != size.h; i++){
+  for (int i = 0; i != size.h; i++){
     auto ti = i*size.w;
     auto li = ti;
     auto ri = ti+r;
@@ -56,18 +56,18 @@ static void box_blur_H(channel_t& scl, channel_t& tcl, const IntSize& size, int 
     auto lv = scl[to_size_t(ti+size.w-1)];
     auto val = (r+1)*fv;
 
-    for(int j=0; j<r; j++){
+    for (int j = 0; j < r; j++){
       val += scl[to_size_t(ti+j)];
     }
-    for(int j=0; j<=r; j++){
+    for (int j = 0; j <= r; j++){
       val += scl[to_size_t(ri++)] - fv;
       tcl[to_size_t(ti++)] = static_cast<unsigned char>(rounded(val*iarr));
     }
-    for(int j=r+1; j<size.w-r; j++){
+    for (int j = r + 1; j < size.w - r; j++){
       val += scl[to_size_t(ri++)] - scl[to_size_t(li++)];
       tcl[to_size_t(ti++)] = static_cast<unsigned char>(rounded(val*iarr));
     }
-    for(int j = size.w - r; j != size.w; j++){
+    for (int j = size.w - r; j != size.w; j++){
       val += lv- scl[to_size_t(li++)];
       tcl[to_size_t(ti++)] = static_cast<unsigned char>(rounded(val*iarr));
     }
@@ -76,25 +76,25 @@ static void box_blur_H(channel_t& scl, channel_t& tcl, const IntSize& size, int 
 
 static void box_blur_T(channel_t& scl, channel_t& tcl, const IntSize& size, int r){
   auto iarr = 1.0 / (r+r+1);
-  for(int i=0; i != size.w; i++){
+  for (int i = 0; i != size.w; i++){
     auto ti = i;
     auto li = ti;
     auto ri = ti + r * size.w;
     auto fv = scl[to_size_t(ti)];
     auto lv = scl[to_size_t(ti+size.w * (size.h - 1))];
     auto val = (r + 1) * fv;
-    for(int j = 0; j != r; j++){
+    for (int j = 0; j != r; j++){
       val += scl[to_size_t(ti + j * size.w)];
     }
 
-    for(int j = 0; j <=r; j++){
+    for (int j = 0; j <= r; j++){
       val += scl[to_size_t(ri)] - fv;
       tcl[to_size_t(ti)] = static_cast<unsigned char>(rounded(val*iarr));
       ri += size.w;
       ti += size.w;
     }
 
-    for(int j = r + 1; j != size.h - r; j++){
+    for (int j = r + 1; j != size.h - r; j++){
       val += scl[to_size_t(ri)] - scl[to_size_t(li)];
       tcl[to_size_t(ti)] = static_cast<unsigned char>(rounded(val*iarr));
       li += size.w;
@@ -102,7 +102,7 @@ static void box_blur_T(channel_t& scl, channel_t& tcl, const IntSize& size, int 
       ti+=size.w;
     }
 
-    for(int j = size.h - r; j != size.h; j++){
+    for (int j = size.h - r; j != size.h; j++){
       val += lv - scl[to_size_t(li)];
       tcl[to_size_t(ti)] = static_cast<unsigned char>(rounded(val*iarr));
       li += size.w;
