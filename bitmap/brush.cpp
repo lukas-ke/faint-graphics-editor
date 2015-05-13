@@ -43,7 +43,7 @@ Brush::~Brush(){
 }
 
 void Brush::Set(int x, int y, uchar value){
-  m_data[ y * m_w + x ] = value;
+  m_data[y * m_w + x] = value;
 }
 
 void Brush::Set(const IntPoint& pos, uchar value){
@@ -52,7 +52,7 @@ void Brush::Set(const IntPoint& pos, uchar value){
 
 uchar Brush::Get(int x, int y) const{
   assert(x >= 0 && y >= 0 && x < m_w && y < m_h);
-  return m_data[ y * m_w + x ];
+  return m_data[y * m_w + x];
 }
 
 IntSize Brush::GetSize() const{

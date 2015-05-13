@@ -33,7 +33,7 @@ template<>\
 void Settings::Set(const SettingType& s,\
 const SettingType::ValueType& v)\
 {\
-    m_##SettingType##Map[ s ] =  v;\
+    m_##SettingType##Map[s] =  v;\
 }
 // ---
 

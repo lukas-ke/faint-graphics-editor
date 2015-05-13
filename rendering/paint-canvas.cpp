@@ -375,7 +375,7 @@ void paint_canvas(wxDC& paintDC,
   }
 
   // Paint objects onto the scaled bitmap
-  paint_after_zoom( FaintDC(scaled,
+  paint_after_zoom(FaintDC(scaled,
       origin_t(-info.imageRegion.TopLeft() * zoom), zoom),
     objects,
     tool,

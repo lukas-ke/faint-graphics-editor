@@ -101,8 +101,8 @@ public:
       return IntRect(m_points[0], IntSize(1,1));
     }
     else{
-      IntPoint p0 = m_points[ m_points.size() -1 ];
-      IntPoint p1 = m_points[ m_points.size() -2 ];
+      IntPoint p0 = m_points[m_points.size() - 1];
+      IntPoint p1 = m_points[m_points.size() - 2];
       return IntRect(p0, p1);
     }
   }

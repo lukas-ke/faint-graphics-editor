@@ -98,7 +98,7 @@ int ZoomLevel::GetPercentage() const{
     return static_cast<int>(m_scale.Get() * 100);
   }
   if (m_zoomLevel >= 0){
-    return positiveZoom[ m_zoomLevel ] * 100;
+    return positiveZoom[m_zoomLevel] * 100;
   }
   return negativeZoomPct[-m_zoomLevel - 1];
 }
@@ -108,9 +108,9 @@ coord ZoomLevel::GetScaleFactor() const{
     return m_scale.Get();
   }
   if (m_zoomLevel >= 0){
-    return static_cast<coord>(positiveZoom[ m_zoomLevel ]);
+    return static_cast<coord>(positiveZoom[m_zoomLevel]);
   }
-  return negativeZoom[ -m_zoomLevel - 1 ];
+  return negativeZoom[-m_zoomLevel - 1];
 }
 
 bool ZoomLevel::Next(){
