@@ -1,4 +1,7 @@
 faint
 *.exe
+*.exe.manifest
+*.exp
+*.lib
 *__pycache__*
 generated

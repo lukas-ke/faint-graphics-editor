@@ -48,25 +48,20 @@ public:
   }
 
   void Increment(const PatternId& id){
-    ref_map_t::iterator it = m_refCounts.find(id);
-    assert(it != m_refCounts.end());
-    it->second++;
+    m_refCounts.at(id) += 1;
   }
 
   void Decrement(const PatternId& id){
-    ref_map_t::iterator it = m_refCounts.find(id);
-    assert(it != m_refCounts.end());
-    assert(it->second >= 1);
-    it->second--;
-    if (it->second == 0){
+    auto& count = m_refCounts.at(id);
+    assert(count >= 1);
+    count -= 1;
+    if (count == 0){
       Erase(id);
     }
   }
 
   const Bitmap& Get(const PatternId& id) const{
-    pat_map_t::const_iterator it(m_patterns.find(id));
-    assert(it != m_patterns.end());
-    return it->second;
+    return m_patterns.at(id);
   }
 
   std::map<int, int> GetStatus() const{
