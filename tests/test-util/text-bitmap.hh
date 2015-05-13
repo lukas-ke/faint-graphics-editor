@@ -14,6 +14,19 @@ class Brush;
 
 using bitmap_value_map = std::map<char, Color>;
 
+// Functions for instantiating Bitmaps, Brushes and AlphaMaps from a
+// string description (laid out in 2d) and a map of characters to
+// colors (or values in the case of brush and alpha-map).
+//
+// Example:
+//   auto blackCircleBmp = create_bitmap({4, 4},
+//    " .. "
+//    "...."
+//    "...."
+//    " .. ",
+//    {{'.', color_black()},
+//     {' ', color_white()}});
+
 Bitmap create_bitmap(const IntSize&,
   const std::string&,
   const bitmap_value_map& charToColor);

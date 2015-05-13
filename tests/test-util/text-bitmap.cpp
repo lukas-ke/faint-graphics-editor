@@ -13,6 +13,8 @@ template<> struct MapType<Bitmap>{using value_type = Color;};
 template<> struct MapType<AlphaMap>{using value_type = uchar;};
 template<> struct MapType<Brush>{using value_type = uchar;};
 
+// Type mapping a character (e.g. 'x' to the value type for a certain
+// "bitmap" type (e.g. uchar for brushes, Color for Bitmap).
 template<typename T>
 using ValueMap = std::map<char, typename MapType<T>::value_type>;
 
@@ -44,9 +46,8 @@ T create_map(const IntSize& sz,
     for (int x = 0; x != sz.w; x++){
       size_t index = to_size_t(y * sz.w + x);
       assert(index < s.size());
-      auto it = valueMap.find(s[index]);
-      assert(it != end(valueMap));
-      set_value(object, {x, y}, it->second);
+      const auto& v = valueMap.at(s[index]);
+      set_value(object, {x, y}, v);
     }
   }
   return object;
@@ -84,6 +85,8 @@ void check_impl(const T& item, const std::string& s,
     }
   }
   catch (const AbortTestException&){
+    // The test will have been flagged as failed.
+    // No need to abort.
   }
 }
 

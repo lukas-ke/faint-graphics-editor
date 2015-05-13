@@ -36,15 +36,11 @@ static wxCursor cur_from_bmp(const wxBitmap& bmp, const HotSpot& hotSpot){
 }
 
 wxBitmap ArtContainer::Get(Icon iconId) const{
-  std::map<Icon, wxBitmap>::const_iterator it = m_icons.find(iconId);
-  assert(it != m_icons.end());
-  return it->second;
+  return m_icons.at(iconId);
 }
 
 const wxCursor& ArtContainer::Get(Cursor cursorId) const{
-  std::map<Cursor, wxCursor>::const_iterator it = m_cursors.find(cursorId);
-  assert(it != m_cursors.end());
-  return it->second;
+  return m_cursors.at(cursorId);
 }
 
 void ArtContainer::Add(const wxCursor& cursor, Cursor cursorId){

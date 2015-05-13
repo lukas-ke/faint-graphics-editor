@@ -61,9 +61,7 @@ public:
 
   int GetValue() const override{
     auto index = m_bitmapList->GetSelection();
-    auto it = m_indexToValue.find(index);
-    assert(it != m_indexToValue.end());
-    return it->second;
+    return m_indexToValue.at(index);
   }
 
   void SetValue(int value) override{

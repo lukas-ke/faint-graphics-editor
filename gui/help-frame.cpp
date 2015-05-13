@@ -222,9 +222,7 @@ public:
   }
 
   page_filename GetPage(const wxTreeItemId& id){
-    page_map_t::const_iterator it = m_idToPage.find(id);
-    assert(it != m_idToPage.end());
-    return it->second;
+    return m_idToPage.at(id);
   }
 
   void Next(){
@@ -267,6 +265,7 @@ private:
       if (s.empty()){
         break;
       }
+
       size_t sep = s.find(";");
       assert(sep != wxString::npos);
       page_filename filename(s.substr(sep + 1));
