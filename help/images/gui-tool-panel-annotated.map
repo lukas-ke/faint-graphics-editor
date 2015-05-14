@@ -4,8 +4,9 @@
 0,88,100,111 tool-rectangle.txt
 0,113,100,136 tool-polygon.txt
 0,183,101,206 tool-calibrate.txt
-0,208,101,231 tool-level.txt
-0,233,101,256 tool-hot-spot.txt
+0,208,101,231 tool-tape-measure.txt
+0,233,101,256 tool-level.txt
+0,258,101,281 tool-hot-spot.txt
 102,13,219,36 tool-pen.txt
 102,38,219,61 tool-picker.txt
 102,63,219,86 tool-path.txt
