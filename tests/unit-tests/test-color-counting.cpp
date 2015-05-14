@@ -6,8 +6,11 @@
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "bitmap/color-counting.hh"
+#include "bitmap/mask.hh"
 #include "geo/int-point.hh"
 #include "geo/int-size.hh"
+#include "util/generator-adapter.hh" // sorted
+#include "util/make-vector.hh"
 
 void test_color_counting(){
   using namespace faint;
@@ -16,7 +19,10 @@ void test_color_counting(){
     {'r', color_red},
     {'g', color_green},
     {'b', color_blue},
-    {'m', color_magenta}};
+    {'m', color_magenta},
+    {'R', with_alpha(color_red, 0)},
+    {'M', with_alpha(color_magenta, 50)},
+    {'G', with_alpha(color_gray, 50)}};
 
   {
     // add_color_counts, four distinct colors
@@ -53,5 +59,21 @@ void test_color_counting(){
     EQUAL(colorCounts.at(to_hash(color_magenta)), 2);
   }
 
-  // Fixme: Test unique_colors_rgb
+  { // unique_colors_rgb
+    auto key = sorted(make_vector({
+      color_red,
+      color_magenta,
+      color_gray}, strip_alpha));
+
+    auto v = unique_colors_rgb(create_bitmap(IntSize(3, 3),
+          "rmR"
+          "bmM"
+          "GGG",
+          colors),
+        create_mask(IntSize(3, 3),
+          " # "
+          "#  "
+          "   "));
+    EQUAL(v, key);
+  }
 }

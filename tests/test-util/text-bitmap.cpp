@@ -2,6 +2,7 @@
 #include "bitmap/alpha-map.hh"
 #include "bitmap/brush.hh"
 #include "bitmap/draw.hh"
+#include "bitmap/mask.hh"
 #include "tests/test-util/text-bitmap.hh"
 #include "test-sys/test.hh"
 
@@ -12,6 +13,7 @@ struct MapType{};
 template<> struct MapType<Bitmap>{using value_type = Color;};
 template<> struct MapType<AlphaMap>{using value_type = uchar;};
 template<> struct MapType<Brush>{using value_type = uchar;};
+template<> struct MapType<Mask>{using value_type = bool;};
 
 // Type mapping a character (e.g. 'x' to the value type for a certain
 // "bitmap" type (e.g. uchar for brushes, Color for Bitmap).
@@ -24,6 +26,10 @@ static void set_value(Bitmap& bmp, const IntPoint& pos, const Color& c){
 
 static void set_value(Brush& brush, const IntPoint& pos, uchar alphaValue){
   brush.Set(pos, alphaValue);
+}
+
+static void set_value(Mask& mask, const IntPoint& pos, bool value){
+  mask.Set(pos.x, pos.y, value);
 }
 
 uchar get_value(const AlphaMap& alphaMap, const IntPoint& pos){
@@ -66,6 +72,13 @@ Brush create_brush(const IntSize& sz,
 {
   return create_map<Brush>(sz, s, charToAlpha);
 }
+
+Mask create_mask(const IntSize& sz,
+  const std::string& s)
+{
+  return create_map<Mask>(sz, s, {{'#', true}, {' ', false}});
+}
+
 
 template<typename T>
 void check_impl(const T& item, const std::string& s,

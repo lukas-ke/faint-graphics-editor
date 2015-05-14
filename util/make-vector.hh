@@ -38,6 +38,24 @@ auto make_vector(const Generator& gen, Func&& f){
   return v;
 }
 
+template<typename T, typename Func>
+auto make_vector(std::initializer_list<T>&& gen, Func&& f){
+  // Return a vector containing the results of calling f with
+  // all values produced by begin(gen) to end(gen).
+
+  using value_type =
+    typename std::result_of<Func(typename decltype(*begin(gen)))>::type;
+
+  std::vector<value_type> v;
+  v.reserve(std::distance(begin(gen), end(gen)));
+
+  for (const auto& value : gen){
+    v.emplace_back(f(value));
+  }
+
+  return v;
+}
+
 } // namespace
 
 #endif

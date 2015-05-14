@@ -11,6 +11,7 @@
 namespace faint{
 class AlphaMap;
 class Brush;
+class Mask;
 
 using bitmap_value_map = std::map<char, Color>;
 
@@ -46,6 +47,11 @@ using alphamap_value_map = std::map<char, uchar>;
 void check(const AlphaMap&,
   const std::string&,
   const alphamap_value_map&);
+
+// Creates a mask from the string, which should contain
+//  ' ' for false
+//  '#' for true
+Mask create_mask(const IntSize&, const std::string&);
 
 } // namespace
 
