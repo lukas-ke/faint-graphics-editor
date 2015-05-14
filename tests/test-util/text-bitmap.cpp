@@ -66,6 +66,14 @@ Bitmap create_bitmap(const IntSize& sz,
   return create_map<Bitmap>(sz, s, colorMap);
 }
 
+BitmapAndMask create_bitmap_and_mask(const IntSize& sz,
+  const std::string& bmp,
+  const std::map<char, faint::Color>& colorMap,
+  const std::string& mask)
+{
+  return {create_map<Bitmap>(sz, bmp, colorMap), create_mask(sz, mask)};
+}
+
 Brush create_brush(const IntSize& sz,
   const std::string& s,
   const std::map<char, uchar>& charToAlpha)
@@ -73,9 +81,7 @@ Brush create_brush(const IntSize& sz,
   return create_map<Brush>(sz, s, charToAlpha);
 }
 
-Mask create_mask(const IntSize& sz,
-  const std::string& s)
-{
+Mask create_mask(const IntSize& sz, const std::string& s){
   return create_map<Mask>(sz, s, {{'#', true}, {' ', false}});
 }
 

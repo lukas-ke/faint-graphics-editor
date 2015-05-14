@@ -22,12 +22,15 @@ namespace faint{
 
 class Mask{
 public:
-  Mask(const IntSize&);
+  explicit Mask(const IntSize&);
+  Mask(Mask&&);
+  Mask(const Mask&);
   ~Mask();
   void Set(int x, int y, bool);
   bool Get(int x, int y) const;
   IntSize GetSize() const;
   bool Any() const;
+  Mask& operator=(const Mask&) = delete;
 private:
   IntSize m_size;
   bool* m_data;

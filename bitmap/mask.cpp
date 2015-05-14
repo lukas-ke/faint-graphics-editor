@@ -20,9 +20,7 @@
 
 namespace faint{
 
-Mask::Mask(const IntSize& size)
-  : m_size(size)
-{
+auto* allocate_mask_data(const IntSize& size){
   if (size.w <= 0){
     throw BitmapException("Invalid width (mask)");
   }
@@ -31,16 +29,34 @@ Mask::Mask(const IntSize& size)
   }
 
   try{
-    m_data = new bool[size.w * size.h];
+    return new bool[area(size)];
   }
   catch (const std::bad_alloc&){
     throw BitmapOutOfMemory("mask");
   }
 }
 
+Mask::Mask(const IntSize& size)
+  : m_size(size),
+    m_data(allocate_mask_data(size))
+{}
+
+Mask::Mask(Mask&& moved)
+  : m_size(moved.m_size),
+    m_data(moved.m_data)
+{
+  moved.m_data = nullptr;
+}
+
+Mask::Mask(const Mask& other)
+  : m_size(other.m_size),
+    m_data(allocate_mask_data(other.m_size))
+{
+  memcpy(m_data, other.m_data, area(m_size));
+}
+
 Mask::~Mask(){
   delete[] m_data;
-  m_data = nullptr;
 }
 
 bool Mask::Any() const{
