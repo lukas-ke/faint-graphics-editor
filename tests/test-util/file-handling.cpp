@@ -29,13 +29,14 @@ static OrError<Bitmap> load_png(const FilePath& path){
 }
 
 Bitmap load_test_image(const FileName& fileName){
-  return load_png(get_test_load_path(fileName)).Visit(
+  const auto path = get_test_load_path(fileName);
+  return load_png(path).Visit(
     [](const Bitmap& bmp){
       return bmp;
     },
-    [](const utf8_string&) -> Bitmap{
-      // Todo: Throw fail-test-exception
-      throw std::logic_error("Failed loading");
+    [&](const utf8_string&) -> Bitmap{
+      throw std::runtime_error(std::string("load_test_image failed loading \"") +
+        path.Str().c_str() + "\"");
     });
 }
 

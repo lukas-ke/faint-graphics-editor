@@ -39,8 +39,16 @@ void run_test(void (*func)(), const std::string& fileName, int max_w, int& numFa
   try{
     func();
   }
-  catch(const AbortTestException&){
+  catch (const AbortTestException&){
     // Test will already have been flagged as failed.
+  }
+  catch (const std::runtime_error& e){
+    TEST_FAILED = true;
+    TEST_OUT << "  std::runtime_error: " << "\"" << e.what() << "\"" << std::endl;
+  }
+  catch (const std::exception& e){
+    TEST_FAILED = true;
+    TEST_OUT << "  Exception: " << "\"" << e.what() << "\"" << std::endl;
   }
 
   verify_post_checks();
