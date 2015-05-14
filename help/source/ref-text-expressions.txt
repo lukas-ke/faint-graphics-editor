@@ -32,8 +32,7 @@ meters if calibrated with a metric unit (such as m, cm or mm).
 ||\perimeter(object,distance_unit)||The length of the object's perimeter  in the requested unit, for example px2.||
 ||\width(object,distance_unit)||The width of the object in the requested unit, defined as the length of p0->p1 of its \ref(py-tri.txt,Tri).||
 ||\height(object,distance_unit)||The height of the object in the requested unit, defined as  the length of p0->p2 of its \ref(py-tri.txt,Tri).||
-||\u(unicode_code_point)||The unicode character specified by the code point (integer).||
-
+||\u(unicode_code_point_hex)||The unicode character specified by the code point, expressed in hex, e.g. \u(26F1) for UMBRELLA ON GROUND.||
 
 == Character constants ==
 The following expressions are replaced by their symbol, if supported
