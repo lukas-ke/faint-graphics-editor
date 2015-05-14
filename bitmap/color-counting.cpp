@@ -61,7 +61,7 @@ rgb_vec_t unique_colors_rgb(const Bitmap& bmp, const Mask& exclude){
   assert(bmp.GetSize() == exclude.GetSize());
 
   rgb_vec_t colors;
-  colors.reserve(std::max(area(bmp.GetSize()), 1));
+  colors.reserve(area(bmp.GetSize()));
 
   for (int y = 0; y != bmp.m_h; y++){
     for (int x = 0; x != bmp.m_w; ++x){
