@@ -22,6 +22,7 @@ namespace faint{
 
 class Bitmap;
 class Color;
+class ColRGB;
 class Mask;
 
 // Maps Colors to a pixel count
