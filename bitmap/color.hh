@@ -121,6 +121,7 @@ Color add(const Color& lhs, const Color& rhs);
 Color mix(const Color&, const Color&);
 int sum_rgb(const Color&);
 
+using color_hash = unsigned int;
 unsigned int to_hash(const Color&);
 Color color_from_hash(unsigned int);
 

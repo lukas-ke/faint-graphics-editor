@@ -26,10 +26,10 @@ void test_color_counting(){
     add_color_counts(bmp, colorCounts);
     EQUAL(colorCounts.size(), 4);
 
-    EQUAL(colorCounts.at(color_red), 1);
-    EQUAL(colorCounts.at(color_green), 1);
-    EQUAL(colorCounts.at(color_blue), 1);
-    EQUAL(colorCounts.at(color_magenta), 1);
+    EQUAL(colorCounts.at(to_hash(color_red)), 1);
+    EQUAL(colorCounts.at(to_hash(color_green)), 1);
+    EQUAL(colorCounts.at(to_hash(color_blue)), 1);
+    EQUAL(colorCounts.at(to_hash(color_magenta)), 1);
   }
   // Fixme: Test unique_colors_rgb
 

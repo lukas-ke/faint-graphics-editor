@@ -16,17 +16,19 @@
 #ifndef FAINT_COLOR_COUNTING_HH
 #define FAINT_COLOR_COUNTING_HH
 #include <map>
+#include <unordered_map>
 #include <vector>
+#include "bitmap/color.hh"
 
 namespace faint{
 
 class Bitmap;
-class Color;
-class ColRGB;
 class Mask;
 
-// Maps Colors to a pixel count
-using color_counts_t = std::map<Color, int>;
+// Maps Colors to a pixel count. The colors are indexed by their hash.
+// Hashing externally, without a hasher-template argument, was for
+// some reason faster, at least with Visual C++
+using color_counts_t = std::unordered_map<color_hash, int>;
 
 // Adds the colors from the Bitmap to the passed in color_counts_t
 void add_color_counts(const Bitmap&, color_counts_t&);

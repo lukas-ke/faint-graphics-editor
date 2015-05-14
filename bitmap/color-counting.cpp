@@ -27,12 +27,13 @@ using color_vec_t = std::vector<Color>;
 using rgb_vec_t = std::vector<ColRGB>;
 
 static void insert_color_count(color_counts_t& colors, const Color& c){
-  auto it = colors.find(c);
+  auto h = to_hash(c);
+  auto it = colors.find(h);
   if (it != colors.end()){
     it->second++;
   }
   else{
-    colors.insert(std::make_pair(c, 1));
+    colors.insert(std::make_pair(h, 1));
   }
 }
 
@@ -76,11 +77,12 @@ rgb_vec_t unique_colors_rgb(const Bitmap& bmp, const Mask& exclude){
 
 Color most_common(const color_counts_t& colors){
   assert(!colors.empty());
-  using count_t = color_counts_t::value_type;
   auto it = std::max_element(begin(colors), end(colors),
-    [](const count_t& c1, const count_t& c2){return c1.second < c2.second;});
+    [](const auto& c1, const auto& c2){
+      return c1.second < c2.second;
+    });
   assert(it != colors.end());
-  return it->first;
+  return color_from_hash(it->first);
 }
 
 } // namespace
