@@ -24,8 +24,8 @@ using bitmap_value_map = std::map<char, Color>;
 //    "...."
 //    "...."
 //    " .. ",
-//    {{'.', color_black()},
-//     {' ', color_white()}});
+//    {{'.', color_black},
+//     {' ', color_white}});
 
 Bitmap create_bitmap(const IntSize&,
   const std::string&,
