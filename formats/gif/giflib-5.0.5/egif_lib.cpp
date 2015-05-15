@@ -9,8 +9,15 @@ two modules will be linked.  Preserve this property!
 *****************************************************************************/
 
 #ifndef _MSC_VER
- #include <unistd.h>
+#include <unistd.h>
 #endif
+#ifdef _MSC_VER
+#pragma warning(disable : 4100) // CodeSize unreferenced formal parameter
+#pragma warning(disable : 4244) // conversion int to GifByteType
+#pragma warning(disable : 4389) // != signed unsigned mismatch
+#pragma warning(disable : 4996) // posix open deprecated in favor of _open
+#endif
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
