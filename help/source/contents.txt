@@ -112,8 +112,6 @@ ref-scripting.txt
 >py-something.txt
 >py-tri.txt
 >py-window.txt
-tutorials.txt
->tut-flag.txt
 ref-text-expressions.txt
 binds.txt
 tips.txt

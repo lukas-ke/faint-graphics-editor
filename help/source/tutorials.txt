@@ -1,5 +1,0 @@
-page:"Tutorials"
-
-= Tutorials =
-child_summary
-
