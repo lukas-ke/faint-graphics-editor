@@ -81,7 +81,7 @@ public:
       throw LoadGifError("stackPos >= Alphabet::SIZE");
     }
 
-    while(code > clearCode){
+    while (code > clearCode){
       stack[to_size_t(stackPos++)] = tail[to_size_t(code)];
       code = prefix[to_size_t(code)];
 

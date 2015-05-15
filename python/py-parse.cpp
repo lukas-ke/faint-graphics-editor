@@ -349,7 +349,7 @@ bool parse_flat(DefaultConstructible<FilePath>& p,
   if (!is_absolute_path(str)){
     throw ValueError(space_sep(quoted(str), "is not absolute."));
   }
-  if(!is_file_path(str)){
+  if (!is_file_path(str)){
     throw ValueError(space_sep(quoted(str), "is not a valid file name."));
   }
 
@@ -357,7 +357,11 @@ bool parse_flat(DefaultConstructible<FilePath>& p,
   return true;
 }
 
-bool parse_flat(const Image*& image, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
+bool parse_flat(const Image*& image,
+  PyObject* args,
+  Py_ssize_t& n,
+  Py_ssize_t len)
+{
   throw_insufficient_args_if(len - n < 1, "Canvas");
 
   scoped_ref ref(PySequence_GetItem(args, n));

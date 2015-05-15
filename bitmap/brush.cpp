@@ -97,8 +97,8 @@ static Brush circle_brush(int w, uchar alpha){
   b.Set(cx + rd - ofs, cy, alpha);
   b.Set(cx - rd, cy, alpha);
 
-  while(x <= y) {
-    if(f >= 0) {
+  while (x <= y) {
+    if (f >= 0) {
       y--;
       ddF_y += 2;
       f += ddF_y;

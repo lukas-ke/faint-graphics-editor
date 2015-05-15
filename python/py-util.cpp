@@ -216,7 +216,7 @@ std::vector<PathPt> parse_svg_path(const std::string& s){
     else if (controlChar == 'l'){ // Line-to relative
       prevCubic = prevQuadratic = false;
       Point pt;
-      while(ss >> pt){
+      while (ss >> pt){
         current += pt;
         points.push_back(PathPt::LineTo(current));
       }
