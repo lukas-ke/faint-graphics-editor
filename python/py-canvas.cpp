@@ -91,14 +91,14 @@ struct MappedType<Canvas&>{
 
 template<typename T>
 objects_t check_ownership(const T& image, const BoundObjects& boundObjects){
-  objects_t objects;
-  for (const auto& bound : boundObjects){
+  auto get_obj = [&](const auto& bound){
     if (!image.Has(bound.obj->GetId())){
-      throw ValueError("The canvas does not contain that item.");
+      throw faint::ValueError("The canvas does not contain that item.");
     }
-    objects.push_back(bound.obj);
-  }
-  return objects;
+    return bound.obj;
+  };
+
+  return make_vector(boundObjects, get_obj);
 }
 
 bool canvas_ok(const CanvasId& c){
