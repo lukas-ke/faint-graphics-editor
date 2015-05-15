@@ -764,10 +764,6 @@ static utf8_string to_string(GifWriteResult result, const FilePath& path){
     return endline_sep("Failed saving gif.\n", s);
   };
 
-  auto failed_write_giflib = [&](const utf8_string& func){
-    return failed_write(space_sep("giflib", quoted(func), "exited with error."));
-  };
-
   if (result == R::OK){
     return "No error";
   }

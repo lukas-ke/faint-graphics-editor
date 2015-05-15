@@ -41,11 +41,10 @@ def gen_makefile(fileList, opts, debug, cc):
     # Fixme: Re-add Werror in both debug, release.
     # Fixme: In fact, put it in lists instead, like for msvc
     if debug:
-
-        makefile.write("CCFLAGS=-Wall -Wextra -pedantic -ansi -Wconversion -Wno-strict-aliasing -Wno-sign-conversion -std=c++14 -g -c %s\n" % 
+        makefile.write("CCFLAGS=-Wall -Wextra -Werror -pedantic -ansi -Wconversion -Wno-strict-aliasing -Wno-sign-conversion -std=c++14 -g -c %s\n" % 
                        compiler_specific_warnings(cc))        
     else:
-        makefile.write("CCFLAGS=-Wall -Wextra -pedantic -ansi -Wconversion -O2 -Wno-sign-conversion -Wno-strict-aliasing -std=c++14 -Wunused -fdiagnostics-show-option -c %s\n" %
+        makefile.write("CCFLAGS=-Wall -Wextra -Werror -pedantic -ansi -Wconversion -O2 -Wno-sign-conversion -Wno-strict-aliasing -std=c++14 -Wunused -fdiagnostics-show-option -c %s\n" %
                        compiler_specific_warnings(cc))
 
     makefile.write("WXFLAGS:=$(shell %s/wx-config --cxxflags)\n" % opts.wx_root)

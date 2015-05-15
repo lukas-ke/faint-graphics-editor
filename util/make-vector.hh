@@ -24,9 +24,11 @@ template<typename Generator, typename Func>
 auto make_vector(const Generator& gen, Func&& f){
   // Return a vector containing the results of calling f with
   // all values produced by begin(gen) to end(gen).
-
+  
+  using iter_t = decltype(begin(gen));
+  using param_t = typename iter_t::value_type;
   using value_type =
-    typename std::result_of<Func(typename decltype(begin(gen))::value_type)>::type;
+    typename std::result_of<Func(param_t)>::type;
 
   std::vector<value_type> v;
   v.reserve(std::distance(begin(gen), end(gen)));
@@ -43,8 +45,9 @@ auto make_vector(std::initializer_list<T>&& gen, Func&& f){
   // Return a vector containing the results of calling f with
   // all values produced by begin(gen) to end(gen).
 
+  using iter_t = decltype(*begin(gen));
   using value_type =
-    typename std::result_of<Func(typename decltype(*begin(gen)))>::type;
+    typename std::result_of<Func(iter_t)>::type;
 
   std::vector<value_type> v;
   v.reserve(std::distance(begin(gen), end(gen)));

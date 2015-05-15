@@ -45,7 +45,7 @@ static SaveResult fail_size_mismatch(const std::vector<IntSize>& sizes){
     endline_sep("This image can not be saved as a gif.\n\n"
       "It contains frames of different sizes.",
       lbl("Frame 1", str(sizes[0])),
-      lbl(space_sep("Frame" , str_int(index + 1)), str(sizes[index]))));
+      lbl(space_sep("Frame" , str_uint(index + 1)), str(sizes[index]))));
 }
 
 static std::vector<IntSize> get_frame_sizes(Canvas& canvas){

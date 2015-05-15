@@ -611,7 +611,6 @@ static MappedColors simply_index_it(const Bitmap& bmp){
 
   for (int y = 0; y != sz.h; y++){
     for (int x = 0; x != sz.w; x++){
-      const auto c = get_color_raw(bmp, x, y);
       if (hasTransparent && mask.Get(x, y)){
         indexes.Set(x, y, lastColorIndex);
       }

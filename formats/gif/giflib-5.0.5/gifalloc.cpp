@@ -20,7 +20,7 @@
 int
 GifBitSize(int n)
 {
-    register int i;
+    int i;
 
     for (i = 1; i <= 8; i++)
         if ((1 << i) >= n)
@@ -175,7 +175,7 @@ GifUnionColorMap(const ColorMapObject *ColorIn1,
     RoundUpTo = (1 << NewGifBitSize);
 
     if (RoundUpTo != ColorUnion->ColorCount) {
-        register GifColorType *Map = ColorUnion->Colors;
+        GifColorType *Map = ColorUnion->Colors;
 
         /*
          * Zero out slots up to next power of 2.
@@ -203,8 +203,8 @@ GifUnionColorMap(const ColorMapObject *ColorIn1,
 void
 GifApplyTranslation(SavedImage *Image, GifPixelType Translation[])
 {
-    register int i;
-    register int RasterSize = Image->ImageDesc.Height * Image->ImageDesc.Width;
+    int i;
+    int RasterSize = Image->ImageDesc.Height * Image->ImageDesc.Width;
 
     for (i = 0; i < RasterSize; i++)
         Image->RasterBits[i] = Translation[Image->RasterBits[i]];

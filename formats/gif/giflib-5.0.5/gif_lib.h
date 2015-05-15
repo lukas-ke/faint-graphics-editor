@@ -128,7 +128,7 @@ GifFileType *EGifOpenFileName(const char *GifFileName,
 GifFileType *EGifOpenFileHandle(const int GifFileHandle, int *Error);
 GifFileType *EGifOpen(void *userPtr, OutputFunc writeFunc, int *Error);
 int EGifSpew(GifFileType * GifFile);
-char *EGifGetGifVersion(GifFileType *GifFile); /* new in 5.x */
+const char* EGifGetGifVersion(GifFileType *GifFile); /* new in 5.x */
 int EGifCloseFile(GifFileType * GifFile);
 
 #define E_GIF_ERR_OPEN_FAILED    1    /* And EGif possible errors. */
@@ -165,8 +165,7 @@ int EGifPutExtensionTrailer(GifFileType *GifFile);
 int EGifPutExtension(GifFileType *GifFile, const int GifExtCode, 
 		     const int GifExtLen,
                      const void *GifExtension);
-int EGifPutCode(GifFileType *GifFile, int GifCodeSize,
-                const GifByteType *GifCodeBlock);
+int EGifPutCode(GifFileType *GifFile, const GifByteType *GifCodeBlock);
 int EGifPutCodeNext(GifFileType *GifFile,
                     const GifByteType *GifCodeBlock);
 
@@ -223,7 +222,7 @@ int GifQuantizeBuffer(unsigned int Width, unsigned int Height,
 /******************************************************************************
  Error handling and reporting.
 ******************************************************************************/
-extern char *GifErrorString(int ErrorCode);     /* new in 2012 - ESR */
+extern const char* GifErrorString(int ErrorCode);     /* new in 2012 - ESR */
 
 /*****************************************************************************
  Everything below this point is new after version 1.2, supporting `slurp

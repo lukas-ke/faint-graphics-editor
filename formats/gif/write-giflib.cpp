@@ -62,7 +62,6 @@ GifWriteResult write_with_giflib(const char* path,
   // For writing the screen descriptor once based on the first image
   // Fixme: Rework, write the first and then use but_last or smth
   bool first = true;
-  const bool isGif89 = true;
   static const int PALETTE_LENGTH = 256;
 
   for (const auto& entry : v){
