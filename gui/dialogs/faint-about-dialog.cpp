@@ -55,7 +55,8 @@ static wxStaticText* license_text(wxWindow* parent){
 static wxStaticText* details_text(wxWindow* parent){
   utf8_string faint_info =
     endline_sep(
-      space_sep("Executable path:", get_faint_exe_path().Str()),
+      space_sep("Executable:", get_faint_exe_path().Str(),
+        sizeof(size_t) == 4 ? "(32-bit)" : "(64-bit)"),
       space_sep("Build date:", faint_build_date()));
 
   std::stringstream ss;
