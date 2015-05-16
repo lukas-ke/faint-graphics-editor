@@ -5,7 +5,7 @@ summary:"Turning objects into raster graphics"
 Flatten stamps objects into the background as raster graphics.
 tablewidths:33%,33%,33%
 ||\image(feat-flatten1.png)||\image(feat-flatten2.png)||\image(feat-flatten3.png)||
-|| A polygon object is selected. || *Ctrl+Space:* Flattened! It can no longer be modified like an object. || ...but now it can be drawn to! ||
+|| A polygon object is selected. || *Ctrl+Space:* Flattened. The polygon can no longer be modified like an object.. || .. but edited as pixel graphics! ||
 
 == Method ==
 tablewidths:*

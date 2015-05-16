@@ -9,7 +9,7 @@ equivalents.  There are two alternate methods, one which takes
 apparent weights of colors in account and an unweighted variant which
 values the red, green and blue components the same.
 
-||\image(feat-desaturate-color.jpg)||\image(feat-desaturate-weighted.jpg)||\image(feat-desaturate-unweighted.jpg) \ref(image_feat_desaturate_color,Source) ||
+||\image(feat-desaturate-color.jpg)||\image(feat-desaturate-weighted.jpg)||\image(feat-desaturate-unweighted.jpg) ||
 || /Color image/ || /Weighted desaturation/ || /Unweighted desaturation/ ||
 
 == Method ==

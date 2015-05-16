@@ -22,4 +22,4 @@ left side instead:
 ||\image(feat-dwim-auto-crop-3.png)||
 
 ---
-See also \ref(feat-crop.txt) for an introduction to cropping.
+See \ref(feat-crop.txt) for an introduction to cropping.

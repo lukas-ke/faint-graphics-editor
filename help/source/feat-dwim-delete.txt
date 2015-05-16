@@ -29,7 +29,7 @@ change color and delete again, this feature was added.
 ||That's typical, we used the wrong background color!||
 
 ||\image(dwim-delete4.png)||
-|| DWIM-delete to the rescue. Using withbind:dwim(); we're rid of both the dog and the green rectangle ||
+||DWIM-delete to the rescue. Using withbind:dwim(); we're rid of both the dog and the green rectangle ||
 
 ---
 See also \ref(feat-raster-selection.txt).

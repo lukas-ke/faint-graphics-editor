@@ -19,4 +19,4 @@ frame. The selected frame is indicated in the frame list.
 Frames in the list can be rearranged by drag and drop. The currently
 shown frame can be removed by clicking its close icon (\graphic(close-frame.png)).
 
-Frames are selected by clicking on them in the frame list, or using the Python-functions withbind:next_frame();, withbind:prev_frame(); or select_frame(num);
+Frames are selected by clicking on them in the frame list, or using the Python-functions withbind:next_frame();, withbind:prev_frame(); or select_frame(num).
