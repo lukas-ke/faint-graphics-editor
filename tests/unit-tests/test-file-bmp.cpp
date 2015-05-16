@@ -9,74 +9,76 @@
 #include "geo/int-point.hh"
 #include "geo/int-rect.hh"
 
+static void test_bitmap_read_write(const faint::FileName& fileName,
+  faint::BitmapQuality quality,
+  const faint::Bitmap& key)
+{
+  using namespace faint;
+
+  read_bmp(get_test_load_path(fileName)).Visit(
+    [&](const Bitmap& bmp){
+      if (VERIFY(bmp == key)){
+        // Save it again with specified quality
+        auto savePath = get_test_save_path(fileName);
+        auto saveResult = write_bmp(savePath, bmp, quality);
+        if (VERIFY(saveResult.Successful())){
+          VERIFY(read_bmp(savePath) == key);
+        }
+      }
+    },
+    [](const utf8_string& error){
+      FAIL(error.c_str());
+    });
+}
+
 void test_file_bmp(){
   using namespace faint;
+
   {
     // 8-bits-per-pixel grayscale
-    FileName fileName("13x7-8bipp-gray.bmp");
-    auto path = get_test_load_path(fileName);
-    read_bmp(path).Visit(
-      [&](const Bitmap& bmp){
-        EQUAL(bmp.GetSize(), IntSize(13,7));
-        FWD(check(bmp,
-            "XXXXXXXXXXXXX"
-            "...........X."
-            "..........X.."
-            ".........X..."
-            "........X...."
-            ".......X....."
-            "......X......",
-            {{'.', color_white},
-             {'X', color_black}}));
-        auto saveResult = write_bmp(get_test_save_path(fileName), bmp,
-          BitmapQuality::GRAY_8BIT);
-        VERIFY(saveResult.Successful());
-      },
-      [&](const utf8_string& error){
-        MESSAGE(path.Str().c_str());
-        FAIL(error.c_str());
-      });
+    const auto key = create_bitmap(IntSize(13,7),
+      "XXXXXXXXXXXXX"
+      "...........X."
+      "..........X.."
+      ".........X..."
+      "........X...."
+      ".......X....."
+      "......X......",
+      {{'.', color_white},
+      {'X', color_black}});
+
+    FWD(test_bitmap_read_write(FileName("13x7-8bipp-gray.bmp"),
+        BitmapQuality::GRAY_8BIT,
+        key));
   }
 
   {
-    // Read 8-bits-per-pixel color
-    auto path = get_test_load_path(FileName("12x6-8bipp.bmp"));
-    read_bmp(path).Visit(
-      [](const Bitmap& bmp){
-        EQUAL(bmp.GetSize(), IntSize(12,6));
-        const IntSize cellSize(6,3);
-        VERIFY(is_uniformly(Color(237,28,36),
-            bmp, {IntPoint(0,0), cellSize}));
+    // 8-bits-per-pixel color
+    const auto key = create_bitmap(IntSize(12,6),
+      "RRRRRRGGGGGG"
+      "RRRRRRGGGGGG"
+      "RRRRRRGGGGGG"
+      "BBBBBBXXXXXX"
+      "BBBBBBXXXXXX"
+      "BBBBBBXXXXXX",
 
-        VERIFY(is_uniformly(Color(34,177,76),
-            bmp, {IntPoint(6,0), cellSize}));
+      {{'R', Color(237,28,36)},
+       {'G', Color(34,177,76)},
+       {'B', Color(77,109,243)},
+       {'X', color_black}});
 
-        VERIFY(is_uniformly(Color(77,109,243),
-            bmp, {IntPoint(0,3), cellSize}));
-
-        VERIFY(is_uniformly(Color(0,0,0),
-            bmp, {IntPoint(6,3), cellSize}));
-      },
-      [&](const utf8_string& error){
-        MESSAGE(path.Str().c_str());
-        FAIL(error.c_str());
-      });
+    FWD(test_bitmap_read_write(FileName("12x6-8bipp.bmp"),
+      BitmapQuality::COLOR_8BIT,
+      key));
   }
 
   {
-    // Read 24-bits-per-pixel
-    auto path = get_test_load_path(FileName("65x65-24bipp.bmp"));
-    read_bmp(path).Visit(
-      [](const Bitmap& bmp){
-        EQUAL(bmp.GetSize(), IntSize(65,65));
-        VERIFY(equal(bmp, load_test_image(FileName("65x65-24bipp-key.png"))));
-      },
-      [&](const utf8_string& error){
-        MESSAGE(path.Str().c_str());
-        FAIL(error.c_str());
-      });
+    // 24-bits-per-pixel
+    const auto key = load_test_image(FileName("65x65-24bipp-key.png"));
+    FWD(test_bitmap_read_write(FileName("65x65-24bipp.bmp"),
+      BitmapQuality::COLOR_24BIT,
+      key));
   }
 
   // Fixme: Add 32-bits-per-pixel
-  // Fixme: Add save tests.
 }

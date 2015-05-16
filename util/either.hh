@@ -100,6 +100,14 @@ public:
     return *opt;
   }
 
+  bool operator==(const T1& v){
+    return m_v1 == v;
+  }
+
+  bool operator==(const T2& v){
+    return m_v2 == v;
+  }
+
   bool operator==(const Either& other){
     if (m_v1.IsSet()){
       return m_v1 == other.m_v1;

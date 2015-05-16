@@ -100,8 +100,13 @@ constexpr Epsilon operator "" _eps(long double v){
 
 #define NEAR(A,B,EPS) if (!test_near(A, B, EPS)){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " != " << #B << " (" << A << " != " << B << ")" << std::endl; TEST_FAILED=true;}
 
+inline bool test_write_error(int line, const char* text){
+  TEST_OUT << "  Error(" << line << "): " << text << std::endl;
+  TEST_FAILED = true;
+  return false;
+}
 
-#define VERIFY(C) if ((C)){}else{ TEST_OUT << "  Error(" << __LINE__ << "): " << #C << " failed." << std::endl; TEST_FAILED=true;}
+#define VERIFY(C) ((C) ? true : test_write_error(__LINE__, #C ## " failed."))
 
 #define NOT(C) if ((!C)){}else{ TEST_OUT << "  Error(" << __LINE__ << "): NOT " << #C << " failed." << std::endl; TEST_FAILED=true;}
 

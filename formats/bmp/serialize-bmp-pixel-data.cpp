@@ -38,10 +38,20 @@ int and_map_bytes(const IntSize& bmpSize){
 }
 
 static void write_color_table(BinaryWriter& out, const ColorList& l){
+  assert(l.size() <= 256);
   for (const auto& c : l){
     out.put(c.b);
     out.put(c.g);
     out.put(c.r);
+    out.put(0);
+  }
+
+  // Fixme: Specify correct palette length in bitmap header instead
+  const size_t padding = 256 - l.size();
+  for (size_t i = 0; i != padding; i++){
+    out.put(0);
+    out.put(0);
+    out.put(0);
     out.put(0);
   }
 }
