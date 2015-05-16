@@ -14,12 +14,17 @@
 // permissions and limitations under the License.
 
 #include <string> // std::stoi
+#include "bitmap/bitmap.hh"
 #include "geo/geo-func.hh" // floated
 #include "geo/int-point.hh"
 #include "geo/int-size.hh"
 #include "gui/grid-dialog.hh"
+#include "gui/paint-dialog.hh"
+#include "gui/static-bitmap.hh"
 #include "gui/ui-constants.hh"
+#include "util/color-bitmap-util.hh"
 #include "util-wx/fwd-wx.hh"
+#include "util-wx/fwd-bind.hh"
 #include "util-wx/layout-wx.hh"
 
 namespace faint{
@@ -34,9 +39,10 @@ static int to_int(const utf8_string& s, int defaultValue){
 }
 
 Optional<Grid> show_grid_dialog(wxWindow* parent,
-  const Grid& grid,
+  const Grid& oldGrid,
   DialogContext& c)
 {
+  Grid grid = oldGrid;
   auto dlg = create_fixed_size_dialog(parent, "Grid");
 
   auto make_edit = [&](int value){
@@ -72,17 +78,35 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
     {labelX, raw(editX),
      labelY, raw(editY)});
 
+  auto make_color_bitmap = [&](){
+    return color_bitmap(grid.GetColor(), IntSize(20, 20));
+  };
+
+  auto colorLabel = create_label(dlg, "Line color");
+  auto colorButton = new StaticBitmap(raw(dlg.get()), make_color_bitmap());
+
+  events::on_mouse_left_down(colorButton,
+    [&](const IntPoint&){
+      show_color_only_dialog(raw(dlg.get()), "Grid color",
+        grid.GetColor(), c).Visit(
+          [&](const Color& c){
+            grid.SetColor(c);
+            colorButton->SetBitmap(make_color_bitmap());
+          });
+    });
+
   set_sizer(dlg.get(),
     create_column({
       spacingRow,
       anchorRow,
       create_row({raw(dashed)}),
+      create_row({raw(colorButton), colorLabel}),
       center(create_row({create_ok_cancel_buttons(dlg.get())}))}));
 
   auto get_grid = [&](){
     auto g = Grid(true,
       to_int(get_text(editSpacing), grid.Spacing()),
-      default_grid_color(), // Fixme
+      grid.GetColor(),
       floated(IntPoint(to_int(get_text(editX), anchor.x),
         to_int(get_text(editY), anchor.y))));
     g.SetDashed(get(dashed));
