@@ -19,5 +19,5 @@ raster image.  The object selection is likewise used to move, delete
 and copy objects. The object selection also allows changing properties
 of the selected objects, such as line width or color.
 
-||\graphic(tool-selection.png)+\graphic(layer-raster.png)||\graphic(tool-selection.png)+\graphic(layer-object.png)||
+||\image(raster-selection-cutout.png)||\image(object-selection-cutout.png)||
 ||\image(raster-selection-example.png) \br'/Raster selection/'||\image(vector-selection-example.png) \br '/Object selection/'||
