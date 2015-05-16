@@ -284,8 +284,8 @@ static Optional<SaveDialogInfo> show_save_as_dialog(wxWindow* parent,
     oldFilePath,
     canvas.GetObjects().empty()));
 
-  const int result = dialogContext.ShowModal(dlg);
-  if (result != wxID_OK){
+  const auto result = dialogContext.ShowModal(dlg);
+  if (result != DialogChoice::OK){
     return {};
   }
 
@@ -378,7 +378,6 @@ public:
   std::unique_ptr<FaintState> state;
   FaintFloatingWindows windows;
   std::vector<std::unique_ptr<Cleaner>> cleanup;
-
 };
 
 static void select_tool(ToolId id, FaintState& state, FaintPanels& panels,

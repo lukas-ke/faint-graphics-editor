@@ -18,11 +18,13 @@
 
 namespace faint{
 
-int DialogContext::ShowModal(wxDialog& dlg){
+DialogChoice DialogContext::ShowModal(wxDialog& dlg){
   BeginModalDialog();
   int result = dlg.ShowModal();
   EndModalDialog();
-  return result;
+  return result == wxID_OK ?
+    DialogChoice::OK :
+    DialogChoice::CANCEL;
 }
 
 } // namespace

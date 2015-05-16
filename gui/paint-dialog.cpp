@@ -265,11 +265,8 @@ Optional<Color> show_color_only_dialog(wxWindow* parent,
   DialogContext& context)
 {
   ColorDialog dlg(parent, title, initial);
-  int result = context.ShowModal(dlg);
-  if (result == wxID_OK){
-    return option(dlg.GetColor());
-  }
-  return no_option();
+  return context.ShowModal(dlg) == DialogChoice::OK ?
+    option(dlg.GetColor()) : no_option();
 }
 
 Optional<Paint> show_paint_dialog(wxWindow* parent,
@@ -280,11 +277,9 @@ Optional<Paint> show_paint_dialog(wxWindow* parent,
 {
   PaintDialog dlg(parent, title, statusInfo, context);
   dlg.SetPaint(initial);
-  int result = context.ShowModal(dlg);
-  if (result == wxID_OK){
-    return option(dlg.GetPaint());
-  }
-  return no_option();
+  return context.ShowModal(dlg) == DialogChoice::OK ?
+    option(dlg.GetPaint()) :
+    no_option();
 }
 
 } // namespace

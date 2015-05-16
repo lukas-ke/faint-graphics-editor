@@ -287,7 +287,7 @@ Optional<Command*> show_rotate_dialog(wxWindow& parent,
   DialogContext& dialogContext)
 {
   RotateDialog dlg(parent, get_rotate_target_name(canvas), art);
-  if (dialogContext.ShowModal(dlg) == wxID_OK){
+  if (dialogContext.ShowModal(dlg) == DialogChoice::OK){
     return option(dlg.GetCommand(canvas));
   }
   return no_option();

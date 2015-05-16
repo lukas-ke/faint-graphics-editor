@@ -23,9 +23,14 @@ namespace faint{
 
 class CommandWindow;
 
+enum class DialogChoice{
+  OK,
+  CANCEL
+};
+
 class DialogContext{
 public:
-  int ShowModal(wxDialog&);
+  DialogChoice ShowModal(wxDialog&);
 
   // Shows a non-modal dialog
   virtual void Show(std::unique_ptr<CommandWindow>&&) = 0;

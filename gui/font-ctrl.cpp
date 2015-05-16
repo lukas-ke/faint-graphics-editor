@@ -60,7 +60,7 @@ public:
         initial.EnableEffects(false);
         wxFontDialog dlg(GetParent(), initial);
 
-        if (m_dialogContext.ShowModal(dlg) == wxID_OK){
+        if (m_dialogContext.ShowModal(dlg) == DialogChoice::OK){
           m_settings = settings_from_font(dlg.GetFontData().GetChosenFont());
           SendChangeEvent();
         }

@@ -13,15 +13,14 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include <string>
+#include <string> // std::stoi
+#include "geo/geo-func.hh" // floated
 #include "geo/int-point.hh"
 #include "geo/int-size.hh"
 #include "gui/grid-dialog.hh"
 #include "gui/ui-constants.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/layout-wx.hh"
-#include "util-wx/gui-util.hh" // Fixme: for fit_size_to, not here!
-#include "geo/geo-func.hh" // floated
 
 namespace faint{
 
@@ -38,53 +37,60 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
   const Grid& grid,
   DialogContext& c)
 {
-
   auto dlg = create_dialog(parent, "Grid");
 
-  using namespace layout;
+  auto make_edit = [&](int value){
+    auto edit = create_text_control(dlg.get(), "");
+    fit_size_to(edit, "10000");
+    set_number_text(edit, value, Signal::NO);
+    return edit;
+  };
 
+  // Spacing edit field
   auto labelSpacing = create_label(dlg.get(), "&Spacing", TextAlign::RIGHT);
-  auto labelX0 = create_label(dlg, "&X0", TextAlign::RIGHT);
+  auto editSpacing = make_edit(grid.Spacing());
 
-  auto editSpacing = create_text_control(dlg, "");
-  set_number_text(editSpacing, grid.Spacing(), Signal::NO);
-  fit_size_to(editSpacing, "10000");
+  // Anchor edit fields
+  auto anchor = rounded(grid.Anchor()); // Fixme: Rounded, eh?
+
+  auto labelX = create_label(dlg, "&X", TextAlign::RIGHT);
+  make_uniformly_sized({labelSpacing, labelX});
+  auto editX = make_edit(anchor.x);
+
+  auto labelY = create_label(dlg.get(), "&Y");
+  auto editY = make_edit(anchor.y);
+
+  // Dashes-checkbox
+  auto dashed = create_checkbox(dlg, "&Dashed lines", grid.Dashed());
+
+  using namespace layout;
+  auto itemSpacing = ItemSpacing(item_spacing);
   auto spacingRow = create_row(OuterSpacing(0), ItemSpacing(item_spacing),
     {labelSpacing, raw(editSpacing)});
 
-  auto anchor = grid.Anchor();
-  auto editX0 = create_text_control(dlg.get(), "");
-  fit_size_to(editX0, "10000");
-  set_number_text(editX0, anchor.x, Signal::NO);
-
-  auto editY0 = create_text_control(dlg.get(), "");
-  fit_size_to(editY0, "10000");
-  set_number_text(editY0, anchor.y, Signal::NO);
-
   auto anchorRow = create_row(OuterSpacing(0), ItemSpacing(item_spacing),
-    {labelX0, raw(editX0),
-     create_label(dlg.get(), "&Y0"), raw(editY0)});
-  auto dashes = create_checkbox(dlg, "&Dashes", grid.Enabled());
-  auto dashesRow = create_row({raw(dashes)});
-  auto okCancel = center(create_row({create_ok_cancel_buttons(dlg.get())}));
-  make_uniformly_sized({labelSpacing, labelX0});
+    {labelX, raw(editX),
+     labelY, raw(editY)});
 
-  set_sizer(dlg.get(), create_column({
-   spacingRow,
-   anchorRow,
-   dashesRow,
-   okCancel}));
+  set_sizer(dlg.get(),
+    create_column({
+      spacingRow,
+      anchorRow,
+      create_row({raw(dashed)}),
+      center(create_row({create_ok_cancel_buttons(dlg.get())}))}));
 
-  if (c.ShowModal(*dlg) == wxID_OK){ // Fixme: Use own enum. Change in DialogContext
+  auto get_grid = [&](){
     auto g = Grid(true,
       to_int(get_text(editSpacing), grid.Spacing()),
-      default_grid_color(),  // Fixme
-      floated(IntPoint(to_int(get_text(editX0), anchor.x),
-          to_int(get_text(editY0), anchor.y))));
-    g.SetDashed(get(dashes));
-    return option(g);
-  }
-  return {};
+      default_grid_color(), // Fixme
+      floated(IntPoint(to_int(get_text(editX), anchor.x),
+        to_int(get_text(editY), anchor.y))));
+    g.SetDashed(get(dashed));
+    return g;
+  };
+
+  return c.ShowModal(*dlg) == DialogChoice::OK ?
+    option(get_grid()) : no_option();
 }
 
 } // namespace

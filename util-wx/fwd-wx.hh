@@ -251,6 +251,8 @@ void set_cursor(window_t, const wxCursor&);
 
 void process_event(window_t, wxCommandEvent&);
 
+void fit_size_to(wxTextCtrl*, const utf8_string&);
+
 } // namespace
 
 #endif
