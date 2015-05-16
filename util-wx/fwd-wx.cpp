@@ -181,15 +181,28 @@ void delete_dialog(wxDialog*& dlg){
   }
 }
 
-std::unique_ptr<wxDialog, delete_dialog_f> create_dialog(window_t parent,
-  const utf8_string& title)
+static std::unique_ptr<wxDialog, delete_dialog_f> create_dialog(window_t parent,
+  const utf8_string& title, int dialogStyle)
 {
   return std::unique_ptr<wxDialog, delete_dialog_f>(
     center_over_parent(
       new wxDialog(parent.w, wxID_ANY, to_wx(title),
         wxDefaultPosition, wxDefaultSize,
-        wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)),
+        dialogStyle)),
     destroy);
+}
+
+std::unique_ptr<wxDialog, delete_dialog_f> create_dialog(window_t parent,
+  const utf8_string& title)
+{
+  return create_dialog(parent, title, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER);
+}
+
+std::unique_ptr<wxDialog, delete_dialog_f> create_fixed_size_dialog(
+  window_t parent,
+  const utf8_string& title)
+{
+  return create_dialog(parent, title, wxDEFAULT_DIALOG_STYLE);
 }
 
 wxSizer* create_ok_cancel_buttons(window_t parent, wxDialog* dlg){

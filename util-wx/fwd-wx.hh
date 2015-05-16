@@ -122,7 +122,9 @@ enum class TextAlign{
 
 wxStaticText* create_label(window_t parent, const utf8_string&, TextAlign);
 
-unique_dialog_ptr create_dialog(window_t parent,
+unique_dialog_ptr create_dialog(window_t parent, const utf8_string& title);
+
+unique_dialog_ptr create_fixed_size_dialog(window_t parent,
   const utf8_string& title);
 
 unique_dialog_ptr null_dialog();
