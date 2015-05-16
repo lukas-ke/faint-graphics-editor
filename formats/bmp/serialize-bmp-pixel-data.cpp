@@ -56,61 +56,6 @@ static void write_color_table(BinaryWriter& out, const ColorList& l){
   }
 }
 
-void write_32bipp_BI_RGB_ICO(BinaryWriter& out, const Bitmap& bmp){
-  // The size from the bmp-header. May have larger height than the size
-  // in the IconDirEntry. (Fixme: Why?)
-
-  // Write the pixel data (in archaic ICO-terms, the XOR-mask)
-  for (int y = 0; y != bmp.m_h; y++){
-    for (int x = 0; x != bmp.m_w; x++){
-      Color c(get_color_raw(bmp, x, bmp.m_h - y - 1));
-      out.put(c.b);
-      out.put(c.g);
-      out.put(c.r);
-      out.put(c.a);
-    }
-  }
-
-  // Write the AND-mask
-  int len = and_map_bytes(bmp.GetSize());
-  for (int i = 0; i != len; i++){
-    out.put(static_cast<char>(0xffu));
-    // <../../doc/fuuuu.png>
-  }
-}
-
-void write_24bipp_BI_RGB(BinaryWriter& out, const Bitmap& bmp){
-  const int padBytes = bmp_row_padding<24>(bmp.m_w);
-
-  for (int y = 0; y != bmp.m_h; y++){
-    for (int x = 0; x != bmp.m_w; x++){
-      Color c(get_color_raw(bmp, x, bmp.m_h - y - 1));
-      out.put(c.b);
-      out.put(c.g);
-      out.put(c.r);
-    }
-    for (int i = 0; i != padBytes; i++){
-      out.put(0);
-    }
-  }
-}
-
-void write_8bipp_BI_RGB(BinaryWriter& out, const MappedColors& mappedColors){
-  const auto& map(mappedColors.map);
-  write_color_table(out, mappedColors.palette);
-
-  const IntSize sz(map.GetSize());
-  int padBytes = bmp_row_padding<8>(sz.w);
-  for (int y = 0; y != sz.h; y++){
-    for (int x = 0; x != sz.w; x++){
-      out.put(map.Get(x, sz.h - y - 1));
-    }
-    for (int i = 0; i != padBytes; i++){
-      out.put(0);
-    }
-  }
-}
-
 Optional<AlphaMap> read_1bipp_BI_RGB(BinaryReader& in, const IntSize& size){
   const int rowLength = bmp_row_stride<1>(size.w);
   const int bufferLength = rowLength * size.h;
@@ -238,6 +183,61 @@ Optional<ColorList> read_color_table(BinaryReader& in, int numColors){
         255));
   }
   return option(l);
+}
+
+void write_8bipp_BI_RGB(BinaryWriter& out, const MappedColors& mappedColors){
+  const auto& map(mappedColors.map);
+  write_color_table(out, mappedColors.palette);
+
+  const IntSize sz(map.GetSize());
+  int padBytes = bmp_row_padding<8>(sz.w);
+  for (int y = 0; y != sz.h; y++){
+    for (int x = 0; x != sz.w; x++){
+      out.put(map.Get(x, sz.h - y - 1));
+    }
+    for (int i = 0; i != padBytes; i++){
+      out.put(0);
+    }
+  }
+}
+
+void write_24bipp_BI_RGB(BinaryWriter& out, const Bitmap& bmp){
+  const int padBytes = bmp_row_padding<24>(bmp.m_w);
+
+  for (int y = 0; y != bmp.m_h; y++){
+    for (int x = 0; x != bmp.m_w; x++){
+      Color c(get_color_raw(bmp, x, bmp.m_h - y - 1));
+      out.put(c.b);
+      out.put(c.g);
+      out.put(c.r);
+    }
+    for (int i = 0; i != padBytes; i++){
+      out.put(0);
+    }
+  }
+}
+
+void write_32bipp_BI_RGB_ICO(BinaryWriter& out, const Bitmap& bmp){
+  // The size from the bmp-header. May have larger height than the size
+  // in the IconDirEntry. (Fixme: Why?)
+
+  // Write the pixel data (in archaic ICO-terms, the XOR-mask)
+  for (int y = 0; y != bmp.m_h; y++){
+    for (int x = 0; x != bmp.m_w; x++){
+      Color c(get_color_raw(bmp, x, bmp.m_h - y - 1));
+      out.put(c.b);
+      out.put(c.g);
+      out.put(c.r);
+      out.put(c.a);
+    }
+  }
+
+  // Write the AND-mask
+  int len = and_map_bytes(bmp.GetSize());
+  for (int i = 0; i != len; i++){
+    out.put(static_cast<char>(0xffu));
+    // <../../doc/fuuuu.png>
+  }
 }
 
 } // namespace

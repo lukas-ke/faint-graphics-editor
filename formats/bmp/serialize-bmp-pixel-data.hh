@@ -46,17 +46,16 @@ int bmp_row_padding(int w){
   return bmp_row_stride(bitsPerPixel, w) - (w * bitsPerPixel) / 8;
 }
 
-void write_8bipp_BI_RGB(BinaryWriter&, const MappedColors&); // Fixme: Ignores transparent index
-void write_24bipp_BI_RGB(BinaryWriter&, const Bitmap&);
-void write_32bipp_BI_RGB_ICO(BinaryWriter&, const Bitmap&);
-
 Optional<AlphaMap> read_1bipp_BI_RGB(BinaryReader&, const IntSize&);
 Optional<AlphaMap> read_4bipp_BI_RGB(BinaryReader&, const IntSize&);
 Optional<AlphaMap> read_8bipp_BI_RGB(BinaryReader&, const IntSize&);
 Optional<Bitmap> read_24bipp_BI_RGB(BinaryReader&, const IntSize&);
 Optional<Bitmap> read_32bipp_BI_RGB(BinaryReader&, const IntSize&);
-
 Optional<ColorList> read_color_table(BinaryReader&, int numColors);
+
+void write_8bipp_BI_RGB(BinaryWriter&, const MappedColors&); // Fixme: Ignores transparent index
+void write_24bipp_BI_RGB(BinaryWriter&, const Bitmap&);
+void write_32bipp_BI_RGB_ICO(BinaryWriter&, const Bitmap&);
 
 } // namespace
 
