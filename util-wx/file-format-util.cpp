@@ -121,7 +121,7 @@ Optional<Format&> get_save_format(const Formats& formats,
   if (0 < filterIndex && filterIndex < resigned(formats.size())){
     Format* f = formats[to_size_t(filterIndex)];
     if (f->Match(ext)){
-      return Optional<Format&>(*f);;
+      return Optional<Format&>(*f);
     }
   }
   return get_save_format(formats, ext);

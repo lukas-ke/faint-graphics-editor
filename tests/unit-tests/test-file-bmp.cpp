@@ -13,9 +13,10 @@ void test_file_bmp(){
   using namespace faint;
   {
     // 8-bits-per-pixel grayscale
-    auto path = get_test_load_path(FileName("13x7-8bipp-gray.bmp"));
+    FileName fileName("13x7-8bipp-gray.bmp");
+    auto path = get_test_load_path(fileName);
     read_bmp(path).Visit(
-      [](const Bitmap& bmp){
+      [&](const Bitmap& bmp){
         EQUAL(bmp.GetSize(), IntSize(13,7));
         FWD(check(bmp,
             "XXXXXXXXXXXXX"
@@ -27,6 +28,9 @@ void test_file_bmp(){
             "......X......",
             {{'.', color_white},
              {'X', color_black}}));
+        auto saveResult = write_bmp(get_test_save_path(fileName), bmp,
+          BitmapQuality::GRAY_8BIT);
+        VERIFY(saveResult.Successful());
       },
       [&](const utf8_string& error){
         MESSAGE(path.Str().c_str());
@@ -35,7 +39,7 @@ void test_file_bmp(){
   }
 
   {
-    // 8-bits-per-pixel color
+    // Read 8-bits-per-pixel color
     auto path = get_test_load_path(FileName("12x6-8bipp.bmp"));
     read_bmp(path).Visit(
       [](const Bitmap& bmp){
@@ -60,7 +64,7 @@ void test_file_bmp(){
   }
 
   {
-    // 24-bits-per-pixel
+    // Read 24-bits-per-pixel
     auto path = get_test_load_path(FileName("65x65-24bipp.bmp"));
     read_bmp(path).Visit(
       [](const Bitmap& bmp){

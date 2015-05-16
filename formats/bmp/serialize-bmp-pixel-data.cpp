@@ -85,8 +85,7 @@ void write_24bipp_BI_RGB(BinaryWriter& out, const Bitmap& bmp){
   }
 }
 
-void write_8bipp_BI_RGB(BinaryWriter& out, const MappedColors& mappedColors)
-{
+void write_8bipp_BI_RGB(BinaryWriter& out, const MappedColors& mappedColors){
   const auto& map(mappedColors.map);
   write_color_table(out, mappedColors.palette);
 

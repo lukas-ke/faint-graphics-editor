@@ -5,8 +5,8 @@ summary:"Description of the raster and object modes"
 label:rasterandobject
 Faint has two modes: the 'Raster mode', for drawing and the 'Object mode' (or
 'Vector mode') for adding objects.
-A Faint image can mix elements from both modes. By default, raster
-graphics are at the bottom and object graphics are placed on top.
+A Faint image can mix elements from both modes. Objects are on top of
+the raster graphics, which form the background.
 
 The current mode determines the output created by
 \ref(tools.txt,tools) - adjustable objects or static drawn pixels. The
@@ -20,8 +20,7 @@ drawn can be erased or drawn over but not easily adjusted. The Raster mode is su
 \image(raster-graphics-example.png) \brStatic (drawn) 'Raster Graphics'.
 
 \image(layer-vector.png) *Selects the object mode.*\br
-To continue with silly analogies, working in the object mode is like
-scrap-booking. Anything drawn in object mode mode becomes a vector
+Anything drawn in object mode mode becomes a vector
 object that can be selected, moved and scaled. These objects can,
 however, not be manipulated on the pixel-level, therefore vector
 graphics are practical for diagrams (floor plans, flow-charts), and

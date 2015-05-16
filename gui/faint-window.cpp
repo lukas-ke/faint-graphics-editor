@@ -227,7 +227,7 @@ static void initialize_panels(wxFrame& frame, FaintWindowContext& app,
   frame.SetMinSize(wxSize(640, 480));
 }
 
-static int get_save_format_index(const Formats& formats,
+static int suggested_save_format_index(const Formats& formats,
   const Optional<FilePath>& maybeOldFilePath,
   bool rasterOnly)
 {
@@ -280,7 +280,7 @@ static Optional<SaveDialogInfo> show_save_as_dialog(wxWindow* parent,
     to_wx(file_dialog_filter(saveFormats)),
     wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
-  dlg.SetFilterIndex(get_save_format_index(saveFormats,
+  dlg.SetFilterIndex(suggested_save_format_index(saveFormats,
     oldFilePath,
     canvas.GetObjects().empty()));
 
@@ -290,7 +290,7 @@ static Optional<SaveDialogInfo> show_save_as_dialog(wxWindow* parent,
   }
 
   FilePath path(FilePath::FromAbsoluteWx(dlg.GetPath()));
-  auto format = get_save_format(formats,
+  auto format = get_save_format(saveFormats,
     path.Extension(),
     dlg.GetFilterIndex());
 
