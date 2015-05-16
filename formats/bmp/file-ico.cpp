@@ -330,7 +330,7 @@ static std::vector<BitmapInfoHeader> create_bitmap_headers(const ico_vec& bitmap
           default_DPI()));
     }
     else {
-      v.push_back(create_bitmap_info_header(p.first.GetSize(), 32,
+      v.push_back(create_bitmap_info_header_32bipp(p.first.GetSize(),
         default_DPI(),
         true));
     }
@@ -342,7 +342,7 @@ static std::vector<BitmapInfoHeader> create_bitmap_headers(const cur_vec& cursor
   std::vector<BitmapInfoHeader> v;
   v.reserve(cursors.size());
   for (const auto& c : cursors){
-    v.push_back(create_bitmap_info_header(c.first.GetSize(), 32,
+    v.push_back(create_bitmap_info_header_32bipp(c.first.GetSize(),
       default_DPI(),
       true));
   }

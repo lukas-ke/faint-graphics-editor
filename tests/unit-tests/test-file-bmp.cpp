@@ -22,7 +22,13 @@ static void test_bitmap_read_write(const faint::FileName& fileName,
         auto savePath = get_test_save_path(fileName);
         auto saveResult = write_bmp(savePath, bmp, quality);
         if (VERIFY(saveResult.Successful())){
-          VERIFY(read_bmp(savePath) == key);
+          read_bmp(savePath).Visit(
+            [&key](const Bitmap& bmp){
+              VERIFY(bmp == key);
+            },
+            [](const utf8_string& error){
+              FAIL(error.c_str());
+            });
         }
       }
     },

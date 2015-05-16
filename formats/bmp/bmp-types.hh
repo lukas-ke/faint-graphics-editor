@@ -126,14 +126,26 @@ class category_bmp_types;
 
 // Dots-per-inch data type
 using DPI = Distinct<int, category_bmp_types, 0>;
+using PaletteColors = Distinct<uint32_t, category_bmp_types, 1>;
 
 // Returns a  rather arbitrarily chosen dots-per-inch value.
 DPI default_DPI();
 
-BitmapInfoHeader create_bitmap_info_header(const IntSize&,
-  uint16_t bitsPerPixel,
+BitmapInfoHeader create_bitmap_info_header_8bipp(const IntSize&,
   const DPI&,
-  bool andMap);
+  const PaletteColors&,
+  bool andMap
+);
+
+BitmapInfoHeader create_bitmap_info_header_24bipp(const IntSize&,
+  const DPI&,
+  bool andMap
+);
+
+BitmapInfoHeader create_bitmap_info_header_32bipp(const IntSize&,
+  const DPI&,
+  bool andMap
+);
 
 BitmapInfoHeader create_bitmap_info_header_png(const IntSize&,
   size_t rawDataSize,

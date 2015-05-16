@@ -45,15 +45,6 @@ static void write_color_table(BinaryWriter& out, const ColorList& l){
     out.put(c.r);
     out.put(0);
   }
-
-  // Fixme: Specify correct palette length in bitmap header instead
-  const size_t padding = 256 - l.size();
-  for (size_t i = 0; i != padding; i++){
-    out.put(0);
-    out.put(0);
-    out.put(0);
-    out.put(0);
-  }
 }
 
 Optional<AlphaMap> read_1bipp_BI_RGB(BinaryReader& in, const IntSize& size){

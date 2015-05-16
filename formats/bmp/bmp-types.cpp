@@ -91,9 +91,10 @@ DPI default_DPI(){
   return DPI(96); // Rather arbitrarily chosen.
 }
 
-BitmapInfoHeader create_bitmap_info_header(const IntSize& size,
+static BitmapInfoHeader create_bitmap_info_header(const IntSize& size,
   uint16_t bitsPerPixel,
   const DPI& dpi,
+  const PaletteColors& paletteColors,
   bool andMap)
 {
   BitmapInfoHeader h;
@@ -105,9 +106,43 @@ BitmapInfoHeader create_bitmap_info_header(const IntSize& size,
   h.compression = Compression::BI_RGB;
   h.rawDataSize = 0; // Dummy value 0 allowed for BI_RGB
   h.horizontalResolution = h.verticalResolution = to_pixels_per_meter(dpi);
-  h.paletteColors = bitsPerPixel == 8 ? 256 : 0;
+  h.paletteColors = paletteColors.Get();
   h.importantColors = 0;
   return h;
+}
+
+BitmapInfoHeader create_bitmap_info_header_8bipp(const IntSize& size,
+  const DPI& dpi,
+  const PaletteColors& paletteColors,
+  bool andMap)
+{
+  return create_bitmap_info_header(size,
+    8,
+    dpi,
+    paletteColors,
+    andMap);
+}
+
+BitmapInfoHeader create_bitmap_info_header_24bipp(const IntSize& size,
+  const DPI& dpi,
+  bool andMap)
+{
+  return create_bitmap_info_header(size,
+    24,
+    dpi,
+    PaletteColors(0),
+    andMap);
+}
+
+BitmapInfoHeader create_bitmap_info_header_32bipp(const IntSize& size,
+  const DPI& dpi,
+  bool andMap)
+{
+  return create_bitmap_info_header(size,
+    32,
+    dpi,
+    PaletteColors(0),
+    andMap);
 }
 
 BitmapInfoHeader create_bitmap_info_header_png(const IntSize& bmpSize,

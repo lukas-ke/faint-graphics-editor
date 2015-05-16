@@ -27,21 +27,11 @@
 
 namespace faint{
 
-static int palette_length_bytes(BitmapQuality quality){
-  switch (quality){
-  case BitmapQuality::COLOR_24BIT:
-    // No palette, RGBA stored directly
-    return 0;
-  case BitmapQuality::GRAY_8BIT:
-  case BitmapQuality::COLOR_8BIT:
-    // 8-bit-per-pixel color table.
-    return 4 * 256;
-  }
-  assert(false);
-  return 0;
+static int palette_length_bytes(const PaletteColors& numColors){
+  return static_cast<int>(numColors.Get() * 4);
 }
 
-static BitmapFileHeader create_bitmap_file_header(BitmapQuality quality,
+static BitmapFileHeader create_bitmap_file_header(const PaletteColors& numColors,
   int rowStride,
   int height)
 {
@@ -51,7 +41,7 @@ static BitmapFileHeader create_bitmap_file_header(BitmapQuality quality,
   h.fileType = BITMAP_SIGNATURE;
 
   h.fileLength = convert(headerLengths +
-    palette_length_bytes(quality) +
+    palette_length_bytes(numColors) +
     asserting_static_cast<uint32_t>(rowStride) *
     asserting_static_cast<uint32_t>(height));
 
@@ -59,7 +49,7 @@ static BitmapFileHeader create_bitmap_file_header(BitmapQuality quality,
   h.reserved2 = 0;
 
   h.dataOffset = asserting_static_cast<uint32_t>(headerLengths +
-    palette_length_bytes(quality));
+    palette_length_bytes(numColors));
   return h;
 }
 
@@ -102,10 +92,12 @@ static Bitmap read_bmp_or_throw(const FilePath& filePath){
 
   const IntSize bmpSize(bitmapInfoHeader.width, bitmapInfoHeader.height);
 
-  if (bitmapInfoHeader.bitsPerPixel == 8){
-    auto colorList = or_throw(read_color_table(in, 256),
+  if (bitmapInfoHeader.paletteColors != 0){
+    if (bitmapInfoHeader.bitsPerPixel != 8){ // Fixme: Maybe support?
+      throw ReadBmpError("Palette for non 8-bpp bitmaps unsupported by Faint.");
+    }
+    auto colorList = or_throw(read_color_table(in, bitmapInfoHeader.paletteColors),
       "Failed reading color table.");
-
     in.seekg(bitmapFileHeader.dataOffset);
 
     auto alphaMap = or_throw(read_8bipp_BI_RGB(in, bmpSize),
@@ -113,7 +105,13 @@ static Bitmap read_bmp_or_throw(const FilePath& filePath){
 
     return bitmap_from_indexed_colors(alphaMap, colorList);
   }
-  else {
+  else{
+    // No palette
+    if (bitmapInfoHeader.bitsPerPixel == 8){
+      // Fixme: could read as gray-scale
+      throw ReadBmpError("Palette missing in 8-bpp bitmap.");
+    }
+
     in.seekg(bitmapFileHeader.dataOffset);
     if (bitmapInfoHeader.bitsPerPixel == 24){
       return or_throw(read_24bipp_BI_RGB(in, bmpSize),
@@ -149,6 +147,19 @@ static AlphaMap desaturate_AlphaMap(const Bitmap& bmp){
   return a;
 }
 
+static uint16_t bits_per_pixel(BitmapQuality quality){
+  switch(quality){
+  case BitmapQuality::COLOR_8BIT:
+    return 8;
+  case BitmapQuality::GRAY_8BIT:
+    return 8;
+  case BitmapQuality::COLOR_24BIT:
+    return 24;
+  }
+  assert(false);
+  return 0;
+}
+
 SaveResult write_bmp(const FilePath& filePath,
   const Bitmap& bmp,
   BitmapQuality quality)
@@ -158,29 +169,54 @@ SaveResult write_bmp(const FilePath& filePath,
     return SaveResult::SaveFailed(error_open_file_write(filePath));
   }
 
-  uint16_t bitsPerPixel = quality == BitmapQuality::COLOR_24BIT ? 24 : 8;
-
+  const auto bitsPerPixel = bits_per_pixel(quality);
   const IntSize size(bmp.GetSize());
   const int rowStride = bmp_row_stride(bitsPerPixel, size.w);
-
-  write_struct(out, create_bitmap_file_header(quality, rowStride, size.h));
-  write_struct(out, create_bitmap_info_header(bmp.GetSize(), bitsPerPixel,
-    default_DPI(),
-    false));
 
   switch(quality){
     // Note: No default, to ensure warning if unhandled enum value
   case BitmapQuality::COLOR_8BIT:
-    write_8bipp_BI_RGB(out, quantized(bmp, Dithering::ON));
-    return SaveResult::SaveSuccessful();
+    {
+      const auto pixelData = quantized(bmp, Dithering::ON);
+      PaletteColors paletteColors(pixelData.palette.size());
+
+      write_struct(out,
+        create_bitmap_file_header(paletteColors, rowStride, size.h));
+      write_struct(out,
+        create_bitmap_info_header_8bipp(bmp.GetSize(),
+          default_DPI(),
+          PaletteColors(pixelData.palette.size()),
+          false));
+      write_8bipp_BI_RGB(out, pixelData);
+      return SaveResult::SaveSuccessful();
+    }
 
   case BitmapQuality::GRAY_8BIT:
-    write_8bipp_BI_RGB(out, {desaturate_AlphaMap(bmp), grayscale_color_table()});
-    return SaveResult::SaveSuccessful();
+    {
+      MappedColors pixelData(desaturate_AlphaMap(bmp), grayscale_color_table());
+      PaletteColors paletteColors(pixelData.palette.size());
+      write_struct(out,
+        create_bitmap_file_header(paletteColors, rowStride, size.h));
+      write_struct(out,
+        create_bitmap_info_header_8bipp(bmp.GetSize(),
+          default_DPI(),
+          PaletteColors(pixelData.palette.size()),
+          false));
+      write_8bipp_BI_RGB(out, pixelData);
+      return SaveResult::SaveSuccessful();
+    }
 
   case BitmapQuality::COLOR_24BIT:
-    write_24bipp_BI_RGB(out, bmp);
-    return SaveResult::SaveSuccessful();
+    {
+      write_struct(out,
+        create_bitmap_file_header(PaletteColors(0), rowStride, size.h));
+      write_struct(out,
+        create_bitmap_info_header_24bipp(bmp.GetSize(),
+          default_DPI(),
+          false));
+      write_24bipp_BI_RGB(out, bmp);
+      return SaveResult::SaveSuccessful();
+    }
   }
 
   assert(false);
