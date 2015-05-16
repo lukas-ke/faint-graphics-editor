@@ -11,7 +11,7 @@ add_format(load_function, save_function, format_name, extension)
 }}}
 
 The load-function is called when a file with the given extension is
-opened. It receives, the file path and an \ref(py-image-props.txt), for
+opened. It receives the file path and an \ref(py-image-props.txt) for
 constructing the image.
 
 The save-function is called when a file is saved with the given

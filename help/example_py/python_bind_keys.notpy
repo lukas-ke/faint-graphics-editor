@@ -1,3 +1,4 @@
 #start
->> bind(invert) # Request binding the invert function to a key
+# Request binding the invert function to a key
+>> bind(invert)
 [press key]
