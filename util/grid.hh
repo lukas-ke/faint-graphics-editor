@@ -21,9 +21,13 @@
 namespace faint{
 
 Color default_grid_color();
+
 class Grid{
 public:
-  Grid(bool enabled=false, int spacing=10, const Color=default_grid_color());
+  Grid(bool enabled=false,
+    int spacing=10,
+    const Color=default_grid_color(),
+    const Point anchor=Point(0,0));
   Point Anchor() const;
   Color GetColor() const;
   bool Enabled() const;

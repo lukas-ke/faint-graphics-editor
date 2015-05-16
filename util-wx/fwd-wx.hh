@@ -114,6 +114,14 @@ wxStaticText* create_label(window_t parent, const char*, const IntPoint&);
 
 wxStaticText* create_label(window_t parent, const utf8_string&);
 
+enum class TextAlign{
+  CENTER,
+  LEFT,
+  RIGHT
+};
+
+wxStaticText* create_label(window_t parent, const utf8_string&, TextAlign);
+
 unique_dialog_ptr create_dialog(window_t parent,
   const utf8_string& title);
 

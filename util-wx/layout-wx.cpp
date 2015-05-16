@@ -91,6 +91,43 @@ wxSizer* create_row(const std::vector<SizerItem>& items){
   return row;
 }
 
+wxSizer* create_row(OuterSpacing os, ItemSpacing is,
+  const std::vector<SizerItem>& items)
+{
+  // Fixme: Unify this and create_column
+  wxBoxSizer* column = new wxBoxSizer(wxHORIZONTAL);
+  const auto outerSpacing = os.Get();
+  const auto itemSpacing = is.Get();
+  if (outerSpacing != 0){
+    column->AddSpacer(outerSpacing);
+  }
+
+  for (auto& item : but_last(items)){
+    if (item.windowItem != nullptr){
+      column->Add(item.windowItem, item.proportion.Get(), item.flags, item.border);
+    }
+    else{
+      column->Add(item.sizerItem, item.proportion.Get(), item.flags, item.border);
+    }
+    if (itemSpacing != 0){
+      column->AddSpacer(itemSpacing);
+    }
+  }
+  auto& last = items.back();
+  if (last.windowItem != nullptr){
+    column->Add(last.windowItem, last.proportion.Get(), last.flags, last.border);
+  }
+  else{
+    column->Add(last.sizerItem, last.proportion.Get(), last.flags, last.border);
+  }
+  if (outerSpacing != 0){
+    column->AddSpacer(outerSpacing);
+  }
+
+  return column;
+}
+
+
 wxSizer* create_row_outer_pad(const std::vector<SizerItem>& items){
   wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
   row->AddSpacer(panel_padding);

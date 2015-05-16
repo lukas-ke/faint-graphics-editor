@@ -360,6 +360,28 @@ wxStaticText* create_label(window_t parent, const utf8_string& text){
   return new wxStaticText(parent.w, wxID_ANY, to_wx(text));
 }
 
+auto to_wx_align(TextAlign align){
+  switch(align){
+  case TextAlign::LEFT:
+    return wxALIGN_LEFT;
+  case TextAlign::RIGHT:
+    return wxALIGN_RIGHT;
+  case TextAlign::CENTER:
+    return wxALIGN_CENTER;
+  }
+  assert(false);
+  return wxALIGN_LEFT;
+}
+
+wxStaticText* create_label(window_t parent, const utf8_string& text,
+  TextAlign align)
+{
+  return new wxStaticText(parent.w, wxID_ANY, to_wx(text),
+    wxDefaultPosition,
+    wxDefaultSize,
+    to_wx_align(align));
+}
+
 wxTextCtrl* create_text_control(window_t parent, const char* text){
   return new wxTextCtrl(parent.w, wxID_ANY, text);
 }

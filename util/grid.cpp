@@ -23,11 +23,12 @@ Color default_grid_color(){
   return Color(100,100,255,150);
 }
 
-Grid::Grid(bool enabled, int spacing, const Color color)
+Grid::Grid(bool enabled, int spacing, const Color color, const Point anchor)
   : m_color(color),
     m_dashed(true),
     m_enabled(enabled),
-    m_spacing(spacing)
+    m_spacing(spacing),
+    m_anchor(anchor)
 {}
 
 Point Grid::Anchor() const{

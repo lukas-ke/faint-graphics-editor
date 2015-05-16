@@ -24,6 +24,7 @@ class wxDialog;
 class wxSizer;
 class wxStaticText;
 class wxString;
+class wxTextCtrl;
 class wxWindow;
 
 namespace faint{ namespace layout{
@@ -60,11 +61,15 @@ public:
 bool add(wxBoxSizer*, const SizerItem&);
 
 wxSizer* create_row(const std::vector<SizerItem>&);
+wxSizer* create_row(OuterSpacing, ItemSpacing, const std::vector<SizerItem>&);
+
 wxSizer* create_row_outer_pad(const std::vector<SizerItem>&);
 wxSizer* create_row_no_pad(const std::vector<SizerItem>&);
 
 wxSizer* create_column(OuterSpacing, ItemSpacing, const std::vector<SizerItem>&);
 wxSizer* create_column(const std::vector<SizerItem>&);
+
+// Sets wxEXPAND (Fixme: Document)
 SizerItem grow(wxSizer*);
 SizerItem grow(wxWindow*);
 SizerItem center(wxSizer*);

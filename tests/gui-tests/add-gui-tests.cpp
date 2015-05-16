@@ -12,6 +12,7 @@ GUI_TEST_FUNCTION(gui_test_static_bitmap);
 GUI_TEST_FUNCTION(gui_test_with_label);
 GUI_TEST_FUNCTION(gui_test_resize_dialog);
 GUI_TEST_FUNCTION(gui_test_alpha_dialog);
+GUI_TEST_FUNCTION(gui_test_grid_dialog);
 GUI_TEST_FUNCTION(gui_test_image_toggle_ctrl);
 
 using test_init_func_t = void(*)(wxWindow*,
@@ -37,6 +38,9 @@ void add_gui_tests(wxBookCtrlBase* pageList,
     pageList, statusInterface, dialogContext);
 
   add_test("BitmapListCtrl", gui_test_bitmap_list_ctrl,
+    pageList, statusInterface, dialogContext);
+
+  add_test("GridDialog", gui_test_grid_dialog,
     pageList, statusInterface, dialogContext);
 
   add_test("ImageToggleCtrl", gui_test_image_toggle_ctrl,

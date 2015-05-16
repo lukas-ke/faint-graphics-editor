@@ -23,6 +23,7 @@
 #include "gui/drag-value-ctrl.hh"
 #include "gui/events.hh"
 #include "gui/grid-ctrl.hh"
+#include "gui/grid-dialog.hh"
 #include "gui/spin-button.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/fwd-bind.hh"
@@ -40,6 +41,7 @@ namespace faint{
 void update_grid_toggle_button(const Grid&, wxButton*, const ArtContainer&);
 
 Grid get_active_grid(int delta=0){
+  // Fixme
   Grid g(get_app_context().GetActiveCanvas().GetGrid());
   g.SetSpacing(std::max(g.Spacing() + delta, 1));
   return g;
@@ -80,12 +82,21 @@ DragValueCtrl* grid_text(wxWindow* parent,
 
   DragValueCtrl* text = new DragValueCtrl(parent,
     IntRange(min_t(1)),
-    Description("Drag to adjust grid spacing. Right-Click to disable grid."),
+    Description("Grid: Drag to adjust spacing. Right-Click to disable. Double-click for dialog"),
     DragCursor(art.Get(Cursor::DRAG_SCALE)),
     HoverCursor(art.Get(Cursor::MOVE_POINT)),
     statusInfo);
   showhide.push_back(text);
   text->Hide();
+  events::on_mouse_left_double_click(text,
+    [](const IntPoint&){
+      auto& app = get_app_context();
+      auto result = show_grid_dialog(nullptr,
+        get_active_grid(),
+        app.GetDialogContext());
+      result.Visit(set_active_grid);
+    });
+
   sizer->Add(text, 0, wxALIGN_CENTER_VERTICAL);
   return text;
 }
