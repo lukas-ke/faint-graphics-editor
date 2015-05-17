@@ -113,6 +113,7 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
     return g;
   };
 
+  center_over_parent(dlg);
   return c.ShowModal(*dlg) == DialogChoice::OK ?
     option(get_grid()) : no_option();
 }

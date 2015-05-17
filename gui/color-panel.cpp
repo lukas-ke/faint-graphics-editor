@@ -57,7 +57,6 @@ public:
     m_zoom = std::make_unique<ZoomCtrl>(this, status);
     sizer->Add(m_zoom->AsWindow(), 0, wxALL, spacing);
 
-
     auto showGridDialog =
       [&](){
       auto& canvas = app.GetActiveCanvas();
