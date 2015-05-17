@@ -16,9 +16,7 @@
 #include <algorithm>
 #include "wx/button.h"
 #include "wx/sizer.h"
-#include "wx/spinbutt.h"
-#include "app/canvas.hh"
-#include "app/get-app-context.hh"
+#include "wx/spinbutt.h" // For wxEVT_SPIN_...
 #include "gui/art-container.hh"
 #include "gui/drag-value-ctrl.hh"
 #include "gui/events.hh"
@@ -31,37 +29,38 @@
 
 namespace faint{
 
+// Border doesn't look nice on GTK, show it only on windows
 #ifdef __WXMSW__
 #define GRIDCONTROL_BORDER_STYLE wxBORDER_THEME
 #else
 #define GRIDCONTROL_BORDER_STYLE wxBORDER_NONE
 #endif
 
-void update_grid_toggle_button(const Grid&, wxButton*, const ArtContainer&);
+static void update_grid_toggle_button(const Grid& g,
+  wxButton* button,
+  const ArtContainer& art)
+{
+  button->SetBitmap(art.Get(g.Enabled() ? Icon::GRID_OFF : Icon::GRID_ON));
+  button->SetToolTip(g.Enabled() ? "Disable Grid" : "Enable Grid");
+}
 
-Grid get_active_grid(int delta=0){
-  // Fixme
-  Grid g(get_app_context().GetActiveCanvas().GetGrid());
+static Grid offset_spacing(Grid g, int delta=0){
   g.SetSpacing(std::max(g.Spacing() + delta, 1));
   return g;
 }
 
-void set_active_grid(const Grid& g){
-  Canvas& canvas = get_app_context().GetActiveCanvas();
-  canvas.SetGrid(g);
-  canvas.Refresh();
-}
-
-static void set_active_grid_spacing(int spacing){
-  Grid g(get_active_grid());
+static void set_active_grid_spacing(Accessor<Grid>& gridAccess, int spacing){
+  Grid g = gridAccess.Get();
   g.SetSpacing(spacing);
-  set_active_grid(g);
+  gridAccess.Set(g);
 }
 
 static std::unique_ptr<SpinButton> grid_spinbutton(wxWindow* parent,
   wxSizer* sizer,
   winvec_t& showhide)
 {
+  // Create the buttons for single-stepping the spacing
+
   auto spinButton = std::make_unique<SpinButton>(parent,
     IntSize(40,50),
     "Adjust Grid Spacing");
@@ -105,6 +104,8 @@ wxButton* grid_toggle_button(wxWindow* parent,
   wxSizer* sizer,
   const ArtContainer& art)
 {
+  // Create the button that enables/disables the grid
+
   wxButton* button = noiseless_button(parent, "", Tooltip(""),
     wxSize(60,50));
   update_grid_toggle_button(false, button, art);
@@ -112,22 +113,16 @@ wxButton* grid_toggle_button(wxWindow* parent,
   return button;
 }
 
-void update_grid_toggle_button(const Grid& g,
-  wxButton* button,
-  const ArtContainer& art)
-{
-  button->SetBitmap(art.Get(g.Enabled() ? Icon::GRID_OFF : Icon::GRID_ON));
-  button->SetToolTip(g.Enabled() ? "Disable Grid" : "Enable Grid");
-}
-
 GridCtrl::GridCtrl(wxWindow* parent,
   const ArtContainer& art,
   StatusInterface& statusInfo,
-  const DialogFunc& showDialog)
+  const DialogFunc& showDialog,
+  const Accessor<Grid>& grid)
   : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
     wxTAB_TRAVERSAL|GRIDCONTROL_BORDER_STYLE),
     m_art(art),
-    m_enabled(false)
+    m_enabled(false),
+    m_grid(grid)
 {
   m_sizer = new wxBoxSizer(wxHORIZONTAL);
   m_txtCurrentSize = grid_text(this, m_sizer, m_showhide, m_art, statusInfo,
@@ -147,18 +142,22 @@ GridCtrl::GridCtrl(wxWindow* parent,
 
   events::on_idle(this, [this](){
     if (m_newValue.IsSet()){
-      set_active_grid_spacing(m_newValue.Take());
+      // Update the text in idle-handler, presumably to avoid refresh
+      // glitches when dragging the value.
+      set_active_grid_spacing(m_grid, m_newValue.Take());
     }
   });
 
   bind(this, wxEVT_SPIN_UP,
    [this](){
-     m_newValue.Set(get_active_grid(+1).Spacing());
+      auto g = offset_spacing(m_grid.Get(), +1);
+      m_newValue.Set(g.Spacing());
    });
 
   bind(this, wxEVT_SPIN_DOWN,
     [this](){
-      m_newValue.Set(get_active_grid(-1).Spacing());
+      auto g = offset_spacing(m_grid.Get(), -1);
+      m_newValue.Set(g.Spacing());
     });
 
   bind_fwd(this, EVT_FAINT_DRAG_VALUE_CHANGE,
@@ -175,17 +174,17 @@ void GridCtrl::EnableGrid(bool enable){
     window->Show(m_enabled);
   }
 
-  Grid g(get_active_grid());
+  Grid g(m_grid.Get());
   g.SetEnabled(m_enabled);
   m_txtCurrentSize->SetValue(g.Spacing());
   update_grid_toggle_button(g, m_btnToggle, m_art);
-  set_active_grid(g);
+  m_grid.Set(g);
   SetSizerAndFit(m_sizer);
   send_control_resized_event(this);
 }
 
 void GridCtrl::Update(){
-  Grid g(get_active_grid());
+  Grid g = m_grid.Get();
   m_txtCurrentSize->SetValue(g.Spacing());
   const bool enabled = g.Enabled();
 

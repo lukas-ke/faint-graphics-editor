@@ -57,9 +57,10 @@ public:
     m_zoom = std::make_unique<ZoomCtrl>(this, status);
     sizer->Add(m_zoom->AsWindow(), 0, wxALL, spacing);
 
-    m_grid = make_dumb<GridCtrl>(this, art, status,
+
+    auto showGridDialog =
       [&](){
-        auto& canvas = app.GetActiveCanvas();
+      auto& canvas = app.GetActiveCanvas();
 
         auto result = show_grid_dialog(nullptr,
           canvas.GetGrid(),
@@ -69,7 +70,19 @@ public:
           canvas.SetGrid(grid);
           canvas.Refresh();
         });
+      };
+
+    Accessor<Grid> gridAccess(
+      [&](){
+        return app.GetActiveCanvas().GetGrid();
+      },
+      [&](const Grid& grid){
+        auto& canvas = app.GetActiveCanvas();
+        canvas.SetGrid(grid);
+        canvas.Refresh();
       });
+
+    m_grid = make_dumb<GridCtrl>(this, art, status, showGridDialog, gridAccess);
 
     sizer->Add(m_grid.get(), 0, wxALL, spacing);
 

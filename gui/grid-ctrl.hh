@@ -19,8 +19,9 @@
 #include <memory>
 #include <vector>
 #include "wx/panel.h"
+#include "util/accessor.hh"
+#include "util/grid.hh"
 #include "util/optional.hh"
-
 
 class wxButton;
 
@@ -40,7 +41,8 @@ public:
   GridCtrl(wxWindow* parent,
     const ArtContainer&,
     StatusInterface&,
-    const DialogFunc& showGridDialog);
+    const DialogFunc& showGridDialog,
+    const Accessor<Grid>&);
 
   // Update the control to match external changes e.g. canvas change
   // or grid disabled via Python
@@ -51,11 +53,13 @@ private:
   const ArtContainer& m_art;
   wxButton* m_btnToggle;
   bool m_enabled;
+  Accessor<Grid> m_grid;
   Optional<int> m_newValue;
   std::vector<wxWindow*> m_showhide;
   wxSizer* m_sizer;
   std::unique_ptr<SpinButton> m_spinButton;
   DragValueCtrl* m_txtCurrentSize;
+
 };
 
 } // namespace
