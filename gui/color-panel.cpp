@@ -16,11 +16,13 @@
 #include "wx/panel.h"
 #include "wx/sizer.h"
 #include "app/app-context.hh" // Fixme: Remove
+#include "app/canvas.hh"
 #include "geo/int-size.hh"
 #include "gui/color-panel.hh"
 #include "gui/events.hh"
 #include "gui/frame-ctrl.hh"
 #include "gui/grid-ctrl.hh"
+#include "gui/grid-dialog.hh"
 #include "gui/palette-ctrl.hh"
 #include "gui/selected-color-ctrl.hh"
 #include "gui/zoom-ctrl.hh"
@@ -55,7 +57,20 @@ public:
     m_zoom = std::make_unique<ZoomCtrl>(this, status);
     sizer->Add(m_zoom->AsWindow(), 0, wxALL, spacing);
 
-    m_grid = make_dumb<GridCtrl>(this, art, status);
+    m_grid = make_dumb<GridCtrl>(this, art, status,
+      [&](){
+        auto& canvas = app.GetActiveCanvas();
+
+        auto result = show_grid_dialog(nullptr,
+          canvas.GetGrid(),
+          app.GetDialogContext());
+
+        result.Visit([&](const Grid& grid){
+          canvas.SetGrid(grid);
+          canvas.Refresh();
+        });
+      });
+
     sizer->Add(m_grid.get(), 0, wxALL, spacing);
 
     m_frameCtrl = make_dumb<FrameCtrl>(this, app, status, art);

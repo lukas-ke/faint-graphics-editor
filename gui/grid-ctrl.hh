@@ -15,10 +15,12 @@
 
 #ifndef FAINT_GRID_CTRL_HH
 #define FAINT_GRID_CTRL_HH
+#include <functional>
 #include <memory>
 #include <vector>
 #include "wx/panel.h"
 #include "util/optional.hh"
+
 
 class wxButton;
 
@@ -31,9 +33,14 @@ class StatusInterface;
 
 using winvec_t = std::vector<wxWindow*>;
 
+using DialogFunc = std::function<void()>;
+
 class GridCtrl : public wxPanel {
 public:
-  GridCtrl(wxWindow* parent, const ArtContainer&, StatusInterface&);
+  GridCtrl(wxWindow* parent,
+    const ArtContainer&,
+    StatusInterface&,
+    const DialogFunc& showGridDialog);
 
   // Update the control to match external changes e.g. canvas change
   // or grid disabled via Python

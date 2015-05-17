@@ -23,7 +23,6 @@
 #include "gui/drag-value-ctrl.hh"
 #include "gui/events.hh"
 #include "gui/grid-ctrl.hh"
-#include "gui/grid-dialog.hh"
 #include "gui/spin-button.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/fwd-bind.hh"
@@ -76,25 +75,26 @@ DragValueCtrl* grid_text(wxWindow* parent,
   wxSizer* sizer,
   winvec_t& showhide,
   const ArtContainer& art,
-  StatusInterface& statusInfo)
+  StatusInterface& statusInfo,
+  const DialogFunc& showDialog)
 {
   // Create the drag-adjustable grid spacing text
 
   DragValueCtrl* text = new DragValueCtrl(parent,
     IntRange(min_t(1)),
-    Description("Grid: Drag to adjust spacing. Right-Click to disable. Double-click for dialog"),
+    Description(
+     "Grid: Drag to adjust spacing. "
+     "Right-Click to disable. "
+     "Double-click for dialog"),
     DragCursor(art.Get(Cursor::DRAG_SCALE)),
     HoverCursor(art.Get(Cursor::MOVE_POINT)),
     statusInfo);
   showhide.push_back(text);
   text->Hide();
+
   events::on_mouse_left_double_click(text,
-    [](const IntPoint&){
-      auto& app = get_app_context();
-      auto result = show_grid_dialog(nullptr,
-        get_active_grid(),
-        app.GetDialogContext());
-      result.Visit(set_active_grid);
+    [=](const IntPoint&){
+      showDialog();
     });
 
   sizer->Add(text, 0, wxALIGN_CENTER_VERTICAL);
@@ -122,14 +122,16 @@ void update_grid_toggle_button(const Grid& g,
 
 GridCtrl::GridCtrl(wxWindow* parent,
   const ArtContainer& art,
-  StatusInterface& statusInfo)
+  StatusInterface& statusInfo,
+  const DialogFunc& showDialog)
   : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
     wxTAB_TRAVERSAL|GRIDCONTROL_BORDER_STYLE),
     m_art(art),
     m_enabled(false)
 {
   m_sizer = new wxBoxSizer(wxHORIZONTAL);
-  m_txtCurrentSize = grid_text(this, m_sizer, m_showhide, m_art, statusInfo);
+  m_txtCurrentSize = grid_text(this, m_sizer, m_showhide, m_art, statusInfo,
+    showDialog);
   m_spinButton = grid_spinbutton(this, m_sizer, m_showhide);
   m_btnToggle = grid_toggle_button(this, m_sizer, art);
 
