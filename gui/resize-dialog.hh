@@ -24,7 +24,7 @@
 
 namespace faint{
 
-class ArtContainer;
+class Art;
 class IntRect;
 class Paint;
 enum class ScaleQuality;
@@ -56,7 +56,7 @@ public:
 };
 
 void show_resize_dialog(DialogContext&,
-  const ArtContainer&,
+  const Art&,
   std::unique_ptr<ResizeDialogContext>);
 
 } // namespace

@@ -6,7 +6,7 @@
 
 namespace faint{
 class AppContext;
-class ArtContainer;
+class Art;
 
 AppContext& get_app_context(){
   assert(false);

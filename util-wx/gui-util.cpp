@@ -78,7 +78,7 @@ wxColour get_gui_deselected_color(){
   return wxColour(255,255,255);
 }
 
-wxIcon get_icon(ArtContainer& art, Icon iconId){
+wxIcon get_icon(const Art& art, Icon iconId){
   wxIcon icon;
   icon.CopyFromBitmap(art.Get(iconId));
   return icon;

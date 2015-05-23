@@ -21,7 +21,7 @@
 
 namespace faint{
 
-class ArtContainer;
+class Art;
 class CanvasChangeEvent;
 class CanvasPanel;
 
@@ -32,7 +32,7 @@ class TabCtrlImpl;
 class TabCtrl {
 public:
   TabCtrl(wxWindow* parent,
-    const ArtContainer&,
+    const Art&,
     AppContext&,
     StatusInterface&);
   wxWindow* AsWindow();

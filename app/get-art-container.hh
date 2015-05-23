@@ -18,8 +18,8 @@
 
 namespace faint{
 
-class ArtContainer;
-const ArtContainer& get_art_container();
+class Art;
+const Art& get_art_container();
 
 } // namespace
 

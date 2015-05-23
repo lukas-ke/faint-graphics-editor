@@ -36,7 +36,7 @@ class wxFileDropTarget;
 
 namespace faint{
 
-class ArtContainer;
+class Art;
 class IntPoint;
 class PosInfo;
 class ToolModifiers;
@@ -81,7 +81,7 @@ public:
     ImageList&&,
     const initially_dirty&,
     wxFileDropTarget*,
-    const ArtContainer&,
+    const Art&,
     AppContext&,
     StatusInterface&);
   bool AcceptsFocus() const override;
@@ -180,7 +180,7 @@ private:
   void SetFaintCursor(Cursor);
   void UndoObject(Command*);
 
-  const ArtContainer& m_art;
+  const Art& m_art;
 
   CanvasId m_canvasId;
   CommandHistory m_commands;

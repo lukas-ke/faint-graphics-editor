@@ -19,7 +19,7 @@
 
 namespace faint{
 
-class ArtContainer;
+class Art;
 class DialogContext;
 class Canvas;
 class Settings;
@@ -42,10 +42,10 @@ Optional<BitmapCommand*> show_pinch_whirl_dialog(wxWindow&,
 
 Optional<Command*> show_rotate_dialog(wxWindow&,
   const Canvas&, // Fixme: Why?
-  const ArtContainer&,
+  const Art&,
   DialogContext&);
 
-dialog_func bind_show_rotate_dialog(const ArtContainer&, DialogContext&);
+dialog_func bind_show_rotate_dialog(const Art&, DialogContext&);
 
 void show_threshold_dialog(DialogContext&, const Settings&);
 

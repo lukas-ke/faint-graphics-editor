@@ -43,7 +43,7 @@ class wxTextCtrl;
 class wxWindow;
 
 namespace faint{
-class ArtContainer;
+class Art;
 
 void console_message(const utf8_string&);
 
@@ -67,7 +67,7 @@ wxColour get_gui_selected_color();
 
 wxColour get_gui_deselected_color();
 
-wxIcon get_icon(ArtContainer&, Icon);
+wxIcon get_icon(const Art&, Icon);
 
 wxIconBundle bundle_icons(const wxIcon&, const wxIcon&);
 

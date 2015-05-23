@@ -61,7 +61,8 @@ const auto style = wxAUI_NB_DEFAULT_STYLE | wxWANTS_CHARS;
 
 class TabCtrlImpl : public wxAuiNotebook {
 public:
-  TabCtrlImpl(wxWindow* parent, const ArtContainer& art,
+  TabCtrlImpl(wxWindow* parent,
+    const Art& art,
     AppContext& app,
     StatusInterface& status)
     : wxAuiNotebook(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, style),
@@ -234,12 +235,12 @@ public:
   }
 private:
   AppContext& m_app;
-  const ArtContainer& m_art;
+  const Art& m_art;
   StatusInterface& m_statusInfo;
 };
 
 TabCtrl::TabCtrl(wxWindow* parent,
-  const ArtContainer& art,
+  const Art& art,
   AppContext& app,
   StatusInterface& status)
 {

@@ -92,7 +92,7 @@ CanvasPanel::CanvasPanel(wxWindow* parent,
   ImageList&& images,
   const initially_dirty& startDirty,
   wxFileDropTarget* fileDropTarget,
-  const ArtContainer& art,
+  const Art& art,
   AppContext& app,
   StatusInterface& statusInfo)
   : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, g_panel_style),

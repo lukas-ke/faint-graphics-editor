@@ -51,7 +51,7 @@ class Toolbar::ToolbarImpl{
 public:
   ToolbarImpl(wxWindow* parent,
     StatusInterface& status,
-    ArtContainer& art)
+    Art& art)
     : m_activeButton(nullptr),
       m_groupButton(nullptr),
       m_panel(create_panel(parent))
@@ -169,7 +169,7 @@ private:
     return button;
   }
 
-  wxSizer* CreateToolButtons(ArtContainer& art, StatusInterface& status){
+  wxSizer* CreateToolButtons(Art& art, StatusInterface& status){
     auto sizer = new wxGridSizer(0, 2, 0, 0);
 
     auto add_tool =
@@ -277,7 +277,7 @@ private:
   IntSettingCtrl* m_layerChoice;
 };
 
-Toolbar::Toolbar(wxWindow* parent, StatusInterface& status, ArtContainer& art){
+Toolbar::Toolbar(wxWindow* parent, StatusInterface& status, Art& art){
   m_impl = make_dumb<ToolbarImpl>(parent, status, art);
 }
 

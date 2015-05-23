@@ -64,7 +64,7 @@ class RotateChoicePanel : public wxPanel{
 
 public:
   RotateChoicePanel(wxWindow* parent,
-    const ArtContainer& art,
+    const Art& art,
     cmd_event_func horizontal_flip,
     cmd_event_func vertical_flip,
     cmd_event_func rotate,
@@ -99,7 +99,7 @@ public:
     set_accelerators(this, (acc));
   }
 
-  wxSizer* CreateLevelRow(const ArtContainer& art,
+  wxSizer* CreateLevelRow(const Art& art,
     Accelerators& acc,
     cmd_event_func select_level_tool)
   {
@@ -150,7 +150,7 @@ private:
 class AngleChoicePanel : public wxPanel{
 public:
   AngleChoicePanel(wxWindow* parent,
-    const ArtContainer& art,
+    const Art& art,
     const RotateChoicePanel& siblingPanel,
     cmd_event_func rotate)
     : wxPanel(parent, wxID_ANY),
@@ -170,7 +170,7 @@ public:
     return Angle::Deg(parse_int_value(m_textCtrl, 90));
   }
 
-  void CreateEntryRow(const ArtContainer& art,
+  void CreateEntryRow(const Art& art,
     const RotateChoicePanel& siblingPanel,
     Accelerators& acc,
     cmd_event_func rotate)
@@ -209,7 +209,7 @@ private:
 
 class RotateDialog : public wxDialog{
 public:
-  RotateDialog(wxWindow& parent, wxString targetName, const ArtContainer& art)
+  RotateDialog(wxWindow& parent, wxString targetName, const Art& art)
     : wxDialog(&parent, wxID_ANY, "Flip/Rotate " + targetName),
       m_cmdFunc(dummy_function),
       m_firstPanel(nullptr),
@@ -283,7 +283,7 @@ private:
 
 Optional<Command*> show_rotate_dialog(wxWindow& parent,
   const Canvas& canvas,
-  const ArtContainer& art,
+  const Art& art,
   DialogContext& c)
 {
   RotateDialog dlg(parent, get_rotate_target_name(canvas), art);
@@ -293,7 +293,7 @@ Optional<Command*> show_rotate_dialog(wxWindow& parent,
     no_option();
 }
 
-dialog_func bind_show_rotate_dialog(const ArtContainer& art,
+dialog_func bind_show_rotate_dialog(const Art& art,
   DialogContext& dialogContext)
 {
   return [&](wxWindow& window, DialogFeedback&, const Canvas& canvas){

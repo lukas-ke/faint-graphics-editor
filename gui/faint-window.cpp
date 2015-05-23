@@ -188,7 +188,7 @@ public:
 
 static void initialize_panels(wxFrame& frame, FaintWindowContext& app,
   FaintPanels& panels,
-  ArtContainer& art,
+  Art& art,
   const PaintMap& palette)
 {
   panels.menubar = std::make_unique<Menubar>(frame, app, art);
@@ -396,7 +396,7 @@ static void select_tool(ToolId id, FaintState& state, FaintPanels& panels,
     ActiveCanvas(app));
 }
 
-FaintWindow::FaintWindow(ArtContainer& art,
+FaintWindow::FaintWindow(Art& art,
   const PaintMap& palette,
   HelpFrame* helpFrame,
   InterpreterFrame* interpreterFrame,

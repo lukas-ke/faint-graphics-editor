@@ -26,7 +26,7 @@ class wxFrame;
 
 namespace faint{
 
-class ArtContainer;
+class Art;
 class ZoomLevel;
 
 class RecentFiles {
@@ -44,7 +44,7 @@ class Menubar{
   // The menubar at the top of the main frame. Handles creation,
   // enabling/disabling and so on.
 public:
-  Menubar(wxFrame&, AppContext&, const ArtContainer&);
+  Menubar(wxFrame&, AppContext&, const Art&);
   ~Menubar();
 
   // Disable shortcuts that might interfere with text entry

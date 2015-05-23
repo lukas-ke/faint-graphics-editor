@@ -89,7 +89,7 @@ def _write_load_function(paths):
         cpp_file.write('#include "util-wx/file-path-util.hh"\n')
         cpp_file.write('\n')
         cpp_file.write('namespace faint{\n')
-        cpp_file.write('void load_faint_resources(faint::ArtContainer& art) {\n')
+        cpp_file.write('void load_faint_resources(faint::Art& art) {\n')
         cpp_file.write('\n')
         cpp_file.write('  // Cursors\n')
         for cursor_file in _cursor_files(paths):
@@ -117,7 +117,7 @@ def _write_load_function(paths):
         hh_file.write("\n")
         hh_file.write('namespace faint{\n')
         hh_file.write("\n")
-        hh_file.write('void load_faint_resources(ArtContainer&);\n')
+        hh_file.write('void load_faint_resources(Art&);\n')
         hh_file.write("\n")
         hh_file.write('} // namespace\n')
         hh_file.write("\n")

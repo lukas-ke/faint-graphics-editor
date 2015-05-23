@@ -18,7 +18,7 @@
 
 namespace faint{
 
-class ArtContainer;
+class Art;
 class StatusInterface;
 
 class AppContext;
@@ -26,7 +26,7 @@ class AppContext;
 class FrameCtrl{
   // Control for selecting and reordering animation frames (and such).
 public:
-  FrameCtrl(wxWindow*, AppContext&, StatusInterface&, const ArtContainer&);
+  FrameCtrl(wxWindow*, AppContext&, StatusInterface&, const Art&);
   ~FrameCtrl();
 
   wxWindow* AsWindow();

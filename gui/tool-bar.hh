@@ -22,12 +22,12 @@ class wxWindow;
 
 namespace faint{
 
-class ArtContainer;
+class Art;
 class StatusInterface;
 
 class Toolbar{
 public:
-  Toolbar(wxWindow*, StatusInterface&, ArtContainer&);
+  Toolbar(wxWindow*, StatusInterface&, Art&);
   wxWindow* AsWindow();
   void SendLayerChoiceEvent(Layer);
   void SendToolChoiceEvent(ToolId);

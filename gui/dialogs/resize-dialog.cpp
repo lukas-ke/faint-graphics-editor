@@ -77,7 +77,7 @@ private:
   enum class FocusMode{CONSIDER_FOCUS, IGNORE_FOCUS};
 
 public:
-  ResizeDialog(const ArtContainer& art,
+  ResizeDialog(const Art& art,
     std::unique_ptr<ResizeDialogContext> ctx)
     : m_art(art),
       m_ctx(std::move(ctx)),
@@ -411,7 +411,7 @@ private:
       ScaleQuality::BILINEAR;
   }
 
-  const ArtContainer& m_art;
+  const Art& m_art;
   std::unique_ptr<ResizeDialogContext> m_ctx;
   unique_dialog_ptr m_dialog;
   Settings m_settings;
@@ -426,7 +426,7 @@ private:
 };
 
 void show_resize_dialog(DialogContext& c,
-  const ArtContainer& art,
+  const Art& art,
   std::unique_ptr<ResizeDialogContext> rdc)
 {
   c.Show(std::make_unique<ResizeDialog>(art, std::move(rdc)));

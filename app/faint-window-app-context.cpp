@@ -186,7 +186,7 @@ std::unique_ptr<WindowFeedbackImpl<T>> create_window_feedback(AppContext& app,
 }
 
 FaintDialogContext::FaintDialogContext(AppContext& app,
-  const ArtContainer& art,
+  const Art& art,
   FaintWindow& faintWindow)
   : m_app(app),
     m_faintWindow(faintWindow),
@@ -380,7 +380,7 @@ void FaintWindowExtraOverlay::Draw(FaintDC& dc,
 
 
 FaintWindowContext::FaintWindowContext(FaintWindow& window,
-  const ArtContainer& art,
+  const Art& art,
   wxStatusBar& statusbar,
   HelpFrame& helpFrame,
   InterpreterFrame& interpreterFrame)

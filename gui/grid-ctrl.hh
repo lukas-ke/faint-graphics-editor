@@ -27,7 +27,7 @@ class wxButton;
 
 namespace faint{
 
-class ArtContainer;
+class Art;
 class DragValueCtrl;
 class SpinButton;
 class StatusInterface;
@@ -39,7 +39,7 @@ using DialogFunc = std::function<void()>;
 class GridCtrl : public wxPanel {
 public:
   GridCtrl(wxWindow* parent,
-    const ArtContainer&,
+    const Art&,
     StatusInterface&,
     const DialogFunc& showGridDialog,
     const Accessor<Grid>&);
@@ -50,7 +50,7 @@ public:
 
 private:
   void EnableGrid(bool);
-  const ArtContainer& m_art;
+  const Art& m_art;
   wxButton* m_btnToggle;
   bool m_enabled;
   Accessor<Grid> m_grid;

@@ -243,7 +243,7 @@ public:
     return *m_pythonContext;
   }
 
-  const ArtContainer& GetArtContainer() const{
+  const Art& GetArt() const{
     return m_art;
   }
 
@@ -438,7 +438,7 @@ private:
   }
 
   std::unique_ptr<AppContext> m_appContext;
-  ArtContainer m_art;
+  Art m_art;
   int m_callNum = 0;
   CommandLine m_cmd;
   std::unique_ptr<FaintInstance> m_faintInstance;
@@ -463,8 +463,8 @@ PythonContext& get_python_context(){
   return wxGetApp().GetPythonContext();
 }
 
-const ArtContainer& get_art_container(){
-  return wxGetApp().GetArtContainer();
+const Art& get_art_container(){
+  return wxGetApp().GetArt();
 }
 
 } // namespace

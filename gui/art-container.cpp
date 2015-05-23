@@ -35,19 +35,19 @@ static wxCursor cur_from_bmp(const wxBitmap& bmp, const HotSpot& hotSpot){
   return wxCursor(img);
 }
 
-wxBitmap ArtContainer::Get(Icon iconId) const{
+wxBitmap Art::Get(Icon iconId) const{
   return m_icons.at(iconId);
 }
 
-const wxCursor& ArtContainer::Get(Cursor cursorId) const{
+const wxCursor& Art::Get(Cursor cursorId) const{
   return m_cursors.at(cursorId);
 }
 
-void ArtContainer::Add(const wxCursor& cursor, Cursor cursorId){
+void Art::Add(const wxCursor& cursor, Cursor cursorId){
   m_cursors[cursorId] = cursor;
 }
 
-void ArtContainer::Load(const wxString& filename, Icon iconId){
+void Art::Load(const wxString& filename, Icon iconId){
   wxFileName fn_filename(filename);
   if (fn_filename.IsRelative()){
     fn_filename.MakeAbsolute(m_rootPath);
@@ -77,7 +77,7 @@ static void throw_unless_single_frame(const cur_vec& cursors,
   }
 }
 
-void ArtContainer::Load(const wxString& filename, Cursor cursorId){
+void Art::Load(const wxString& filename, Cursor cursorId){
   wxFileName fn_filename(filename);
   if (fn_filename.IsRelative()){
     fn_filename.MakeAbsolute(m_rootPath);
@@ -102,7 +102,7 @@ void ArtContainer::Load(const wxString& filename, Cursor cursorId){
     });
 }
 
-void ArtContainer::SetRoot(const DirPath& rootPath){
+void Art::SetRoot(const DirPath& rootPath){
   m_rootPath = to_wx(rootPath.Str());
 }
 

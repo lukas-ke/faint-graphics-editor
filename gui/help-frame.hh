@@ -21,7 +21,7 @@ class wxIcon;
 
 namespace faint{
 
-class ArtContainer;
+class Art;
 class DirPath;
 
 class HelpFrame {
@@ -29,7 +29,7 @@ class HelpFrame {
 // Used instead of the wxHtmlHelpFrame to allow more customization,
 // like closing on F1.
 public:
-  HelpFrame(const DirPath& rootDir, const ArtContainer&);
+  HelpFrame(const DirPath& rootDir, const Art&);
   ~HelpFrame();
   void Close();
   bool HasFocus() const;

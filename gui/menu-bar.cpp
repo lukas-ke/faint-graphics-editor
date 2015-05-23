@@ -268,7 +268,7 @@ private:
 
 class Menubar::MenubarImpl{
 public:
-  void Initialize(wxFrame& frame, AppContext& app, const ArtContainer& art){
+  void Initialize(wxFrame& frame, AppContext& app, const Art& art){
     m_menuRef = new MenuRefWX(new wxMenuBar());
     wxMenu* fileMenu = new wxMenu();
     Add(fileMenu, wxID_NEW, Label("New\tCtrl+N", "Create a new image"),
@@ -653,7 +653,7 @@ public:
       });
   }
 
-  MenubarImpl(wxFrame& frame, AppContext& app, const ArtContainer& art)
+  MenubarImpl(wxFrame& frame, AppContext& app, const Art& art)
     : m_entryMode(EntryMode::NONE),
       m_eventHandler(*frame.GetEventHandler()),
       m_maxId(wxID_HIGHEST+1),
@@ -818,7 +818,7 @@ private:
   bool m_undoing;
 };
 
-Menubar::Menubar(wxFrame& frame, AppContext& app, const ArtContainer& art)
+Menubar::Menubar(wxFrame& frame, AppContext& app, const Art& art)
   : m_impl(nullptr)
 {
   m_impl = new MenubarImpl(frame, app, art);

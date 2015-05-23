@@ -22,7 +22,7 @@ class wxWindow;
 namespace faint{
 
 class AppContext;
-class ArtContainer;
+class Art;
 class ColorChoice;
 class ColorPanelImpl;
 class Paint;
@@ -39,7 +39,7 @@ public:
     const PaintMap& palette,
     AppContext&,
     StatusInterface&,
-    const ArtContainer&);
+    const Art&);
   void AddToPalette(const Paint&);
   wxWindow* AsWindow();
   void Freeze();

@@ -8,14 +8,14 @@
 
 namespace faint{
 class AppContext;
-class ArtContainer;
+class Art;
 
 AppContext& get_app_context(){
   assert(false);
   throw std::logic_error("Stub get_app_context called");
 }
 
-const ArtContainer& get_art_container(){
+const Art& get_art_container(){
   assert(false);
   throw std::logic_error("Stub get_art_container called");
 }

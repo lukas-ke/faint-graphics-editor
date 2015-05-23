@@ -30,7 +30,7 @@ namespace faint{
 
 ToolSettingPanel::ToolSettingPanel(wxWindow* parent,
   StatusInterface& status,
-  ArtContainer& art,
+  Art& art,
   DialogContext& dialogContext,
   const StringSource& unitStrings)
   : m_panel(create_panel(parent))

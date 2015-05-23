@@ -32,7 +32,7 @@
 namespace faint{
 
 static auto create_grid_ctrl(wxWindow* parent, AppContext& app,
-  const ArtContainer& art,
+  const Art& art,
   StatusInterface& status)
 {
   auto showGridDialog =
@@ -68,7 +68,7 @@ public:
     const PaintMap& palette,
     AppContext& app,
     StatusInterface& status,
-    const ArtContainer& art)
+    const Art& art)
     : wxPanel(parent)
   {
     // The spacing between controls in this panel
@@ -116,7 +116,7 @@ ColorPanel::ColorPanel(wxWindow* parent,
   const PaintMap& palette,
   AppContext& app,
   StatusInterface& status,
-  const ArtContainer& art)
+  const Art& art)
   : m_impl(make_dumb<ColorPanelImpl>(parent, palette, app, status,
       art))
 {}

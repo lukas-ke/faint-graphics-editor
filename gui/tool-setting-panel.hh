@@ -21,7 +21,7 @@ class wxWindow;
 
 namespace faint{
 
-class ArtContainer;
+class Art;
 class DialogContext;
 class Settings;
 class StatusInterface;
@@ -32,7 +32,7 @@ class ToolSettingPanel{
 public:
   ToolSettingPanel(wxWindow* parent,
     StatusInterface&,
-    ArtContainer&,
+    Art&,
     DialogContext&,
     const StringSource& units);
 

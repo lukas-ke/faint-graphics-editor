@@ -35,7 +35,7 @@ void add_gui_tests(wxBookCtrlBase*,
   faint::StatusInterface&,
   faint::DialogContext&);
 
-namespace faint{const ArtContainer& get_art_container();} // Fixme: Should not need this function in a test.
+namespace faint{const Art& get_art_container();} // Fixme: Should not need this function in a test.
 
 class GuiTestStatusInterface : public faint::StatusInterface{
 public:
@@ -97,7 +97,7 @@ create_window_feedback(const T& onClose){
 
 class GuiTestDialogContext : public faint::DialogContext{
 public:
-  GuiTestDialogContext(wxWindow* parent, const faint::ArtContainer& art)
+  GuiTestDialogContext(wxWindow* parent, const faint::Art& art)
     : m_parent(parent),
       m_sliderCursors(art.Get(faint::Cursor::HORIZONTAL_SLIDER),
         art.Get(faint::Cursor::VERTICAL_SLIDER))
@@ -181,14 +181,14 @@ public:
     return true;
   }
 
-  faint::ArtContainer m_art;
+  faint::Art m_art;
 };
 
 wxIMPLEMENT_APP(GuiTestApp);
 
 namespace faint{
 
-const ArtContainer& get_art_container(){
+const Art& get_art_container(){
   // Fixme: Should not need this function in a test.
   return wxGetApp().m_art;
 }

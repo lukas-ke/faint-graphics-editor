@@ -13,8 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_ART_CONTAINER_HH
-#define FAINT_ART_CONTAINER_HH
+#ifndef FAINT_ART_HH
+#define FAINT_ART_HH
 #include <map>
 #include "wx/bitmap.h"
 #include "wx/cursor.h"
@@ -24,12 +24,12 @@ namespace faint{
 
 class DirPath;
 
-class ArtContainer{
+class Art{
   // Handles bitmap loading and storage for application art (e.g.
   // icons, buttons). Supports setting a root path for interpreting
   // relative paths.
 public:
-  ArtContainer() = default;
+  Art() = default;
   wxBitmap Get(Icon id) const;
   const wxCursor& Get(Cursor id) const;
   void Load(const wxString& filename, Cursor id);
@@ -37,8 +37,8 @@ public:
   void Add(const wxCursor&, Cursor id);
   void SetRoot(const DirPath&);
 
-  ArtContainer(const ArtContainer&) = delete;
-  ArtContainer& operator=(const ArtContainer&) = delete;
+  Art(const Art&) = delete;
+  Art& operator=(const Art&) = delete;
 private:
   std::map<Cursor, wxCursor> m_cursors;
   std::map<Icon, wxBitmap> m_icons;

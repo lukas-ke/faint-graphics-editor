@@ -34,7 +34,7 @@ class ToolPanel {
 public:
   ToolPanel(wxWindow* parent,
     StatusInterface&,
-    ArtContainer&,
+    Art&,
     DialogContext&,
     const StringSource& unitStrings);
   ~ToolPanel();

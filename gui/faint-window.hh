@@ -23,7 +23,7 @@
 
 namespace faint{
 
-class ArtContainer;
+class Art;
 class FaintWindowImpl;
 class HelpFrame;
 class InterpreterFrame;
@@ -32,7 +32,7 @@ class FilePath;
 
 class FaintWindow{
 public:
-  FaintWindow(ArtContainer&,
+  FaintWindow(Art&,
     const PaintMap& palette,
     HelpFrame*,
     InterpreterFrame*,

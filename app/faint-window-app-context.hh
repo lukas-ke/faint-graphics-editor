@@ -54,7 +54,7 @@ using from_control = LessDistinct<bool, 0>;
 
 class FaintDialogContext final : public DialogContext{
 public:
-  FaintDialogContext(AppContext&, const ArtContainer&, FaintWindow&);
+  FaintDialogContext(AppContext&, const Art&, FaintWindow&);
 
   SliderCursors& GetSliderCursors() override;
   void Show(std::unique_ptr<CommandWindow>&& w) override;
@@ -99,7 +99,7 @@ private:
 
 class FaintWindowContext final : public AppContext {
 public:
-  FaintWindowContext(FaintWindow&, const ArtContainer&,
+  FaintWindowContext(FaintWindow&, const Art&,
     wxStatusBar&, HelpFrame&, InterpreterFrame&);
   void AddFormat(Format* fileFormat) override;
   void AddToPalette(const Paint& paint) override;

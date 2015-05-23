@@ -24,7 +24,7 @@ namespace faint{
 
 ToolPanel::ToolPanel(wxWindow* parent,
   StatusInterface& status,
-  ArtContainer& art,
+  Art& art,
   DialogContext& dialogContext,
   const StringSource& unitStrings)
 {

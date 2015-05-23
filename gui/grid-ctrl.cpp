@@ -38,7 +38,7 @@ namespace faint{
 
 static void update_grid_toggle_button(const Grid& g,
   wxButton* button,
-  const ArtContainer& art)
+  const Art& art)
 {
   button->SetBitmap(art.Get(g.Enabled() ? Icon::GRID_OFF : Icon::GRID_ON));
   button->SetToolTip(g.Enabled() ? "Disable Grid" : "Enable Grid");
@@ -73,7 +73,7 @@ static std::unique_ptr<SpinButton> grid_spinbutton(wxWindow* parent,
 DragValueCtrl* grid_text(wxWindow* parent,
   wxSizer* sizer,
   winvec_t& showhide,
-  const ArtContainer& art,
+  const Art& art,
   StatusInterface& statusInfo,
   const DialogFunc& showDialog)
 {
@@ -102,7 +102,7 @@ DragValueCtrl* grid_text(wxWindow* parent,
 
 wxButton* grid_toggle_button(wxWindow* parent,
   wxSizer* sizer,
-  const ArtContainer& art)
+  const Art& art)
 {
   // Create the button that enables/disables the grid
 
@@ -114,7 +114,7 @@ wxButton* grid_toggle_button(wxWindow* parent,
 }
 
 GridCtrl::GridCtrl(wxWindow* parent,
-  const ArtContainer& art,
+  const Art& art,
   StatusInterface& statusInfo,
   const DialogFunc& showDialog,
   const Accessor<Grid>& grid)

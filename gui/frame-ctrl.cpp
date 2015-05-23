@@ -403,7 +403,7 @@ public:
   FrameCtrlImpl(wxWindow* parent,
     AppContext& app,
     StatusInterface& status,
-    const ArtContainer& art)
+    const Art& art)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
         wxTAB_TRAVERSAL|FRAMECTRL_BORDER_STYLE),
       m_app(app),
@@ -466,7 +466,7 @@ private:
 
 FrameCtrl::FrameCtrl(wxWindow* parent, AppContext& app,
   StatusInterface& status,
-  const ArtContainer& art)
+  const Art& art)
 {
   m_impl = new FrameCtrlImpl(parent, app, status, art);
 }

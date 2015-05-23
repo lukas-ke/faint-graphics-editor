@@ -311,7 +311,7 @@ static page_filename link_to_filename(const wxString& str){
 
 class HelpFrame::HelpFrameImpl : public wxFrame {
 public:
-  HelpFrameImpl(const wxString& rootDir, const ArtContainer& art)
+  HelpFrameImpl(const wxString& rootDir, const Art& art)
     : wxFrame(null_parent(), wxID_ANY, "Faint Help"),
       m_html(nullptr),
       m_tree(nullptr),
@@ -464,7 +464,7 @@ private:
   bool m_updateOnTree;
 };
 
-HelpFrame::HelpFrame(const DirPath& rootDir, const ArtContainer& art)
+HelpFrame::HelpFrame(const DirPath& rootDir, const Art& art)
   : m_impl(make_dumb<HelpFrameImpl>(to_wx(rootDir.Str()), art))
 {
   restore_persisted_state(m_impl.get(), storage_name("HelpFrame"));
