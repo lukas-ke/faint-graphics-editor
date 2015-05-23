@@ -18,11 +18,11 @@
 #include "wx/statusbr.h"
 #include "app/app-context.hh"
 #include "app/context-commands.hh"
+#include "app/faint-window-app-context.hh"
 #include "bitmap/draw.hh"
 #include "gui/command-window.hh"
 #include "gui/dialogs/resize-dialog-options.hh"
 #include "gui/faint-window.hh"
-#include "gui/faint-window-app-context.hh"
 #include "gui/help-frame.hh"
 #include "gui/interpreter-frame.hh"
 #include "gui/tab-ctrl.hh" // Fixme: Remove

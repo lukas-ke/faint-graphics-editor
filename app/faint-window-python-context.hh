@@ -16,6 +16,7 @@
 #ifndef FAINT_WINDOW_PYTHON_CONTEXT_HH
 #define FAINT_WINDOW_PYTHON_CONTEXT_HH
 #include <set>
+#include "gui/faint-window.hh"
 #include "gui/interpreter-frame.hh"
 #include "python/python-context.hh"
 
