@@ -206,7 +206,7 @@ public:
           else {
             SetHighlightCloseFrame(false);
             m_status.SetMainText(get_frame_label(frame, true));
-            SetCursor(get_art_container().Get(Cursor::ARROW));
+            SetCursor(get_art().Get(Cursor::ARROW));
           }
         }
         else{
@@ -224,9 +224,9 @@ public:
           else if (distance(pos, m_dragInfo.dragStart) > 5) {
             m_dragInfo.active = true;
             if (ctrlHeld){
-              SetCursor(get_art_container().Get(Cursor::DRAG_COPY_FRAME));
+              SetCursor(get_art().Get(Cursor::DRAG_COPY_FRAME));
             }
-            SetCursor(get_art_container().Get(Cursor::DRAG_FRAME));
+            SetCursor(get_art().Get(Cursor::DRAG_FRAME));
           }
         }
       });
@@ -322,11 +322,11 @@ private:
     if (ctrlHeld){
       if (!m_dragInfo.copy){
         m_dragInfo.copy = true;
-        SetCursor(get_art_container().Get(Cursor::DRAG_COPY_FRAME));
+        SetCursor(get_art().Get(Cursor::DRAG_COPY_FRAME));
       }
     }
     else if (m_dragInfo.copy){
-      SetCursor(get_art_container().Get(Cursor::DRAG_FRAME));
+      SetCursor(get_art().Get(Cursor::DRAG_FRAME));
       m_dragInfo.copy = false;
     }
   }

@@ -94,10 +94,10 @@ public:
         m_hovered = true;
         if (m_mouse.HasCapture()){
           SetAnchorFromPos(pos);
-          SetCursor(get_art_container().Get(Cursor::BLANK));
+          SetCursor(get_art().Get(Cursor::BLANK));
         }
         else{
-          SetCursor(get_art_container().Get(Cursor::CROSSHAIR));
+          SetCursor(get_art().Get(Cursor::CROSSHAIR));
         }
       });
 

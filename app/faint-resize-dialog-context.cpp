@@ -114,7 +114,7 @@ private:
 
 void show_resize_dialog(AppContext& app){
   show_resize_dialog(app.GetDialogContext(),
-    get_art_container(),
+    get_art(),
     std::make_unique<FaintResizeDialogContext>(app));
 }
 

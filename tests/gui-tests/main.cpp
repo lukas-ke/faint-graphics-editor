@@ -35,7 +35,7 @@ void add_gui_tests(wxBookCtrlBase*,
   faint::StatusInterface&,
   faint::DialogContext&);
 
-namespace faint{const Art& get_art_container();} // Fixme: Should not need this function in a test.
+namespace faint{const Art& get_art();} // Fixme: Should not need this function in a test.
 
 class GuiTestStatusInterface : public faint::StatusInterface{
 public:
@@ -136,7 +136,7 @@ public:
   GuiTestFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     : wxFrame(nullptr, wxID_ANY, title, pos, size),
       m_dialogContext(this,
-        faint::get_art_container()) // Fixme
+        faint::get_art()) // Fixme
   {
     wxMenu *menuFile = new wxMenu;
     menuFile->Append(wxID_EXIT);
@@ -188,7 +188,7 @@ wxIMPLEMENT_APP(GuiTestApp);
 
 namespace faint{
 
-const Art& get_art_container(){
+const Art& get_art(){
   // Fixme: Should not need this function in a test.
   return wxGetApp().m_art;
 }

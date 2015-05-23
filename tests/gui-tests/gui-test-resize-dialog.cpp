@@ -160,7 +160,7 @@ void gui_test_resize_dialog(wxWindow* p, faint::StatusInterface&,
           }
           append_text(log, "Show: " + title + "\n");
           show_resize_dialog(dialogContext,
-            get_art_container(),
+            get_art(),
             make_ctx(log, title, bg, allowNearest, allowResize));
         });
       return b;

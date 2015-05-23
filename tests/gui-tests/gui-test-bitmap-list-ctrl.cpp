@@ -27,7 +27,7 @@ void gui_test_bitmap_list_ctrl(wxWindow* p, faint::StatusInterface& status,
   faint::DialogContext&)
 {
   using namespace faint;
-  auto& art = get_art_container();
+  auto& art = get_art();
   const IntSize bitmapSize(to_faint(art.Get(Icon::BRUSH_RECT).GetSize()));
   {
     auto c = new BitmapListCtrl(p,

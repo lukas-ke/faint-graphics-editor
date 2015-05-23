@@ -81,7 +81,7 @@ public:
       m_gradient,
       dialogContext);
     set_pos(m_slider->AsWindow(), {0, size.h - LinearGradientSlider::HEIGHT});
-    set_cursor(m_panel, get_art_container().Get(Cursor::CROSSHAIR));
+    set_cursor(m_panel, get_art().Get(Cursor::CROSSHAIR));
 
     bind_fwd(m_panel, wxEVT_LEFT_DOWN,
       [this](wxMouseEvent& event){

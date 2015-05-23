@@ -112,10 +112,10 @@ public:
         else{
           int handle = WhichHandle(pos.x);
           if (handle <= 1){
-            SetCursor(get_art_container().Get(Cursor::HORIZONTAL_SLIDER));
+            SetCursor(get_art().Get(Cursor::HORIZONTAL_SLIDER));
           }
           else{
-            SetCursor(get_art_container().Get(Cursor::RESIZE_WE));
+            SetCursor(get_art().Get(Cursor::RESIZE_WE));
           }
         }
       });

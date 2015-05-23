@@ -155,10 +155,10 @@ static void dialog_resize(){
 Show the rotation dialog (for rotating the image or selection)." */
 static void dialog_rotate(){
   AppContext& app = get_app_context();
-  // Fixme: def(rotate-bad-art-container)Bad get_art_container;
-  // get_art_container here is problematic - should be accessed
+  // Fixme: \def(rotate-bad-art-container)Bad get_art;
+  // get_art here is problematic - should be accessed
   // via some context
-  app.ModalFull(bind_show_rotate_dialog(get_art_container(),
+  app.ModalFull(bind_show_rotate_dialog(get_art(),
       app.GetDialogContext()));
 }
 

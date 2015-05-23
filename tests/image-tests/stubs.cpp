@@ -15,9 +15,9 @@ AppContext& get_app_context(){
   throw std::logic_error("Stub get_app_context called");
 }
 
-const Art& get_art_container(){
+const Art& get_art(){
   assert(false);
-  throw std::logic_error("Stub get_art_container called");
+  throw std::logic_error("Stub get_art called");
 }
 
 class PythonContext;

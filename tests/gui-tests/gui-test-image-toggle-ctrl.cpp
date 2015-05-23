@@ -28,7 +28,7 @@ void gui_test_image_toggle_ctrl(wxWindow* p, faint::StatusInterface& status,
   faint::DialogContext&)
 {
   using namespace faint;
-  auto& art = get_art_container();
+  auto& art = get_art();
 
   const IntSize bitmapSize(28, 23);
   {
@@ -40,6 +40,6 @@ void gui_test_image_toggle_ctrl(wxWindow* p, faint::StatusInterface& status,
       {ToggleImage(art.Get(Icon::BRUSH_CIRCLE), 1, "Circle"),
        ToggleImage(art.Get(Icon::BRUSH_RECT), 0, "Rect"),
        ToggleImage(art.Get(Icon::BRUSH_EXPERIMENTAL), 2, "Experimental")},
-      Axis::VERTICAL);    
+      Axis::VERTICAL);
   }
 }

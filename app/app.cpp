@@ -463,7 +463,7 @@ PythonContext& get_python_context(){
   return wxGetApp().GetPythonContext();
 }
 
-const Art& get_art_container(){
+const Art& get_art(){
   return wxGetApp().GetArt();
 }
 
