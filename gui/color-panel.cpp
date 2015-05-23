@@ -31,6 +31,37 @@
 
 namespace faint{
 
+static auto create_grid_ctrl(wxWindow* parent, AppContext& app,
+  const ArtContainer& art,
+  StatusInterface& status)
+{
+  auto showGridDialog =
+    [&](){
+    auto& canvas = app.GetActiveCanvas();
+
+    auto result = show_grid_dialog(nullptr,
+      canvas.GetGrid(),
+      app.GetDialogContext());
+
+    result.Visit([&](const Grid& grid){
+        canvas.SetGrid(grid);
+        canvas.Refresh();
+      });
+  };
+
+  Accessor<Grid> gridAccess(
+    [&](){
+      return app.GetActiveCanvas().GetGrid();
+    },
+    [&](const Grid& grid){
+      auto& canvas = app.GetActiveCanvas();
+      canvas.SetGrid(grid);
+      canvas.Refresh();
+    });
+
+  return make_dumb<GridCtrl>(parent, art, status, showGridDialog, gridAccess);
+}
+
 class ColorPanelImpl : public wxPanel {
 public:
   ColorPanelImpl(wxWindow* parent,
@@ -57,32 +88,7 @@ public:
     m_zoom = std::make_unique<ZoomCtrl>(this, status);
     sizer->Add(m_zoom->AsWindow(), 0, wxALL, spacing);
 
-    auto showGridDialog =
-      [&](){
-      auto& canvas = app.GetActiveCanvas();
-
-        auto result = show_grid_dialog(nullptr,
-          canvas.GetGrid(),
-          app.GetDialogContext());
-
-        result.Visit([&](const Grid& grid){
-          canvas.SetGrid(grid);
-          canvas.Refresh();
-        });
-      };
-
-    Accessor<Grid> gridAccess(
-      [&](){
-        return app.GetActiveCanvas().GetGrid();
-      },
-      [&](const Grid& grid){
-        auto& canvas = app.GetActiveCanvas();
-        canvas.SetGrid(grid);
-        canvas.Refresh();
-      });
-
-    m_grid = make_dumb<GridCtrl>(this, art, status, showGridDialog, gridAccess);
-
+    m_grid = create_grid_ctrl(this, app, art, status);
     sizer->Add(m_grid.get(), 0, wxALL, spacing);
 
     m_frameCtrl = make_dumb<FrameCtrl>(this, app, status, art);

@@ -43,6 +43,8 @@ namespace faint{
 MAKE_FAINT_COMMAND_EVENT(PICKED_HUE_SAT);
 
 class LightnessBackground : public SliderBackground{
+  // The background for the lightness-slider (L), Shows the range of
+  // lightness values for the current hue and saturation
 public:
   explicit LightnessBackground(const HS& hueSat)
     : m_hueSat(hueSat)
@@ -50,17 +52,17 @@ public:
 
   void Draw(Bitmap& bmp, const IntSize& size, SliderDir) override{
     if (!bitmap_ok(m_bitmap) || m_bitmap.GetSize() != size){
-      InitializeBitmap(size);
+      m_bitmap = lightness_gradient_bitmap(m_hueSat, size);
     }
+
     blit(at_top_left(m_bitmap), onto(bmp));
   }
+
   SliderBackground* Clone() const override{
     return new LightnessBackground(*this);
   }
+
 private:
-  void InitializeBitmap(const IntSize& size){
-    m_bitmap = lightness_gradient_bitmap(m_hueSat, size);
-  }
   Bitmap m_bitmap;
   HS m_hueSat;
 };
