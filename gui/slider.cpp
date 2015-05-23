@@ -104,12 +104,7 @@ public:
       m_value(values.GetValue())
   {
     SetInitialSize(wxSize(20,20)); // Minimum size
-    if (m_dir == SliderDir::HORIZONTAL){
-      cursors.SetHorizontal(this);
-    }
-    else{
-      cursors.SetVertical(this);
-    }
+    cursors.Set(this, m_dir);
 
     events::on_mouse_left_down(this,
       [this](const IntPoint& mousePos){

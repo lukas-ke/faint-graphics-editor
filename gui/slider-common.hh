@@ -58,8 +58,7 @@ public:
   SliderCursors(const SliderCursors&) = delete;
   virtual ~SliderCursors() = default;
 
-  virtual void SetHorizontal(wxWindow*) const = 0;
-  virtual void SetVertical(wxWindow*) const = 0;
+  virtual void Set(wxWindow*, SliderDir) const = 0;
 };
 
 double pos_to_value(const int pos, const int length, const ClosedIntRange&);

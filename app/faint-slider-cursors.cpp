@@ -24,12 +24,9 @@ FaintSliderCursors::FaintSliderCursors(const wxCursor& horizontal,
     m_vertical(vertical)
 {}
 
-void FaintSliderCursors::SetHorizontal(wxWindow* w) const{
-  set_cursor(w, m_horizontal);
-}
-
-void FaintSliderCursors::SetVertical(wxWindow* w) const{
-  set_cursor(w, m_vertical);
+void FaintSliderCursors::Set(wxWindow* w, SliderDir dir) const{
+  set_cursor(w,
+    dir == SliderDir::HORIZONTAL ? m_horizontal : m_vertical);
 }
 
 } // namespace

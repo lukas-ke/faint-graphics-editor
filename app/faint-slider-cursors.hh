@@ -21,14 +21,12 @@
 namespace faint{
 
 class FaintSliderCursors final : public SliderCursors{
-public:
-FaintSliderCursors(const wxCursor& horizontal,
+ public:
+  FaintSliderCursors(const wxCursor& horizontal,
     const wxCursor& vertical);
-  // Fixme: Replace with Set(SliderDir, wxWindow*).
-  void SetHorizontal(wxWindow*) const override;
-  void SetVertical(wxWindow*) const override;
-
   FaintSliderCursors(const FaintSliderCursors&) = delete;
+
+  void Set(wxWindow*, SliderDir) const override;
 private:
   wxCursor m_horizontal;
   wxCursor m_vertical;
