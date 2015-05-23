@@ -24,7 +24,6 @@
 namespace faint{
 
 class Slider : public wxPanel{
-  // Fixme: Hide this class in impl
 public:
   Slider(wxWindow* parent);
   virtual int GetValue() const = 0;
