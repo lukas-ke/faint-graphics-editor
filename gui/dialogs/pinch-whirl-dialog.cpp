@@ -33,7 +33,7 @@ namespace faint{
 class PinchWhirlDialog : public wxDialog {
 public:
   PinchWhirlDialog(wxWindow& parent,
-    const Getter<SliderCursors&>& sliderCursors,
+    const SliderCursors& sliderCursors,
     DialogFeedback& feedback)
     : wxDialog(&parent, wxID_ANY, "Pinch and Whirl",
         wxDefaultPosition,
@@ -65,7 +65,7 @@ public:
       SliderDir::HORIZONTAL,
       BorderedSliderMarker(),
       SliderMidPointBackground(),
-      m_sliderCursors(),
+      m_sliderCursors,
       ui::horizontal_slider_size);
 
     auto lblWhirl = label(this, "Whirl");
@@ -74,7 +74,7 @@ public:
       SliderDir::HORIZONTAL,
       BorderedSliderMarker(),
       SliderMidPointBackground(),
-      m_sliderCursors(),
+      m_sliderCursors,
       ui::horizontal_slider_size);
 
     make_uniformly_sized({lblPinch, lblWhirl});
@@ -141,15 +141,14 @@ private:
   Slider* m_whirlSlider;
   wxCheckBox* m_enablePreviewCheck;
   DialogFeedback& m_feedback;
-  Getter<SliderCursors&> m_sliderCursors;
+  const SliderCursors& m_sliderCursors;
 };
 
 Optional<BitmapCommand*> show_pinch_whirl_dialog(wxWindow& parent,
   DialogContext& c,
   DialogFeedback& feedback)
 {
-  auto get_cursors = [&c]() -> SliderCursors& {return c.GetSliderCursors();};
-  PinchWhirlDialog dlg(parent, get_cursors, feedback);
+  PinchWhirlDialog dlg(parent, c.GetSliderCursors(), feedback);
 
   const bool ok = c.ShowModal(dlg) == DialogChoice::OK && dlg.ValuesModified();
   return ok ?

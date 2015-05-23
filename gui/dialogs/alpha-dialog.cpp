@@ -67,7 +67,7 @@ static void set_feedback(const Bitmap& src,
 
 class AlphaDialog : public CommandWindow{
 public:
-  AlphaDialog(const Getter<SliderCursors&>& sliderCursors)
+  AlphaDialog(const SliderCursors& sliderCursors)
     : m_dialog(null_dialog()),
       m_sliderCursors(sliderCursors)
   {
@@ -94,7 +94,7 @@ public:
       SliderDir::HORIZONTAL,
       BorderedSliderMarker(),
       AlphaBackground(ColRGB(77,109,243)),
-      m_sliderCursors(),
+      m_sliderCursors,
       ui::horizontal_slider_size,
       update_preview);
 
@@ -158,16 +158,14 @@ private:
   }
 
   Slider* m_alphaSlider = nullptr;
-
   unique_dialog_ptr m_dialog;
   Settings m_settings;
   Bitmap m_bitmap;
-  Getter<SliderCursors&> m_sliderCursors;
+  const SliderCursors& m_sliderCursors;
 };
 
 void show_alpha_dialog(DialogContext& c){
-  auto get_cursors = [&c]() -> SliderCursors& {return c.GetSliderCursors();};
-  c.Show(std::make_unique<AlphaDialog>(get_cursors));
+  c.Show(std::make_unique<AlphaDialog>(c.GetSliderCursors()));
 }
 
 } // namespace

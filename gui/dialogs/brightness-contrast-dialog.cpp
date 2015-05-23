@@ -40,7 +40,7 @@ static bool enable_preview_default(const Bitmap& bmp){
 class BrightnessContrastDialog : public wxDialog {
 public:
   BrightnessContrastDialog(wxWindow& parent,
-    Getter<SliderCursors&> sliderCursors,
+    const SliderCursors& sliderCursors,
     DialogFeedback& feedback)
     : wxDialog(&parent,
       wxID_ANY,
@@ -72,7 +72,7 @@ public:
       SliderDir::HORIZONTAL,
       BorderedSliderMarker(),
       SliderMidPointBackground(),
-      m_sliderCursors(),
+      m_sliderCursors,
       ui::horizontal_slider_size);
 
     auto lblContrast = label(this, "&Contrast");
@@ -81,7 +81,7 @@ public:
       SliderDir::HORIZONTAL,
       BorderedSliderMarker(),
       SliderMidPointBackground(),
-      m_sliderCursors(),
+      m_sliderCursors,
       ui::horizontal_slider_size);
 
     make_uniformly_sized({lblContrast, lblBrightness});
@@ -150,15 +150,14 @@ private:
   Slider* m_contrastSlider = nullptr;
   wxCheckBox* m_enablePreview = nullptr;
   DialogFeedback& m_feedback;
-  Getter<SliderCursors&> m_sliderCursors;
+  const SliderCursors& m_sliderCursors;
 };
 
 Optional<BitmapCommand*> show_brightness_contrast_dialog(wxWindow& parent,
   DialogContext& c,
   DialogFeedback& feedback)
 {
-  auto get_cursors = [&c]() -> SliderCursors& {return c.GetSliderCursors();};
-  BrightnessContrastDialog dlg(parent, get_cursors, feedback);
+  BrightnessContrastDialog dlg(parent, c.GetSliderCursors(), feedback);
 
   auto r = c.ShowModal(dlg);
   return (r == DialogChoice::OK && dlg.ValuesModified()) ?

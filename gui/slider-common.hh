@@ -16,7 +16,7 @@
 #ifndef FAINT_SLIDER_COMMON_HH
 #define FAINT_SLIDER_COMMON_HH
 
-class wxWindow; // Fixme: Unhappy about showing here.
+class wxWindow;
 
 namespace faint{
 

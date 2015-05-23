@@ -13,7 +13,6 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include <functional>
 #include <memory>
 #include "wx/dialog.h"
 #include "wx/notebook.h"
@@ -21,6 +20,7 @@
 #include "bitmap/paint.hh"
 #include "bitmap/pattern.hh"
 #include "geo/limits.hh"
+#include "gui/dialog-context.hh"
 #include "gui/paint-dialog.hh"
 #include "gui/paint-dialog/gradient-panel.hh"
 #include "gui/paint-dialog/hsl-panel.hh"
@@ -32,7 +32,6 @@
 #include "util-wx/gui-util.hh"
 #include "util-wx/key-codes.hh"
 #include "util/optional.hh"
-#include "gui/dialog-context.hh"
 
 namespace faint{
 
@@ -74,10 +73,6 @@ static Gradient gradient_from_color(const Color& c){
   return Gradient(g);
 }
 
-static auto cursor_getter(DialogContext& c){
-  return [&c]() -> SliderCursors& {return c.GetSliderCursors();};
-}
-
 class PaintDialog : public wxDialog {
 public:
   PaintDialog(wxWindow* parent,
@@ -92,7 +87,7 @@ public:
     sizer->Add(m_tabs);
 
     m_panelHSL = std::make_unique<PaintPanel_HSL>(m_tabs,
-      cursor_getter(dialogContext));
+      dialogContext.GetSliderCursors());
     m_tabs->AddPage(m_panelHSL->AsWindow(), "HSL");
 
     #ifdef __wxMSW__
@@ -233,7 +228,7 @@ private:
 };
 
 static std::unique_ptr<PaintPanel_HSL> init_color_dialog_panel(wxWindow* bgPanel,
-  const Getter<SliderCursors&>& sliderCursors,
+  const SliderCursors& sliderCursors,
   wxDialog* dlg)
 {
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
@@ -248,7 +243,7 @@ static std::unique_ptr<PaintPanel_HSL> init_color_dialog_panel(wxWindow* bgPanel
 class ColorDialog : public wxDialog {
 public:
   ColorDialog(wxWindow* parent, const wxString& title,
-    const Getter<SliderCursors&>& sliderCursors,
+    const SliderCursors& sliderCursors,
     const Color& initialColor)
     : wxDialog(parent, wxID_ANY, title)
   {
@@ -274,7 +269,7 @@ Optional<Color> show_color_only_dialog(wxWindow* parent,
   DialogContext& context)
 {
   ColorDialog dlg(parent, title,
-    cursor_getter(context),
+    context.GetSliderCursors(),
     initial);
   return context.ShowModal(dlg) == DialogChoice::OK ?
     option(dlg.GetColor()) : no_option();

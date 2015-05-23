@@ -39,7 +39,7 @@ static bool enable_preview_default(const Bitmap& bmp){
 class SharpnessDialog : public wxDialog {
 public:
   SharpnessDialog(wxWindow& parent,
-    Getter<SliderCursors&> sliderCursors,
+    const SliderCursors& sliderCursors,
     DialogFeedback& feedback)
     : wxDialog(&parent, wxID_ANY, "Sharpness", wxDefaultPosition, wxDefaultSize,
         wxDEFAULT_DIALOG_STYLE | wxWANTS_CHARS | wxRESIZE_BORDER),
@@ -66,7 +66,7 @@ public:
       SliderDir::HORIZONTAL,
       BorderedSliderMarker(),
       SliderMidPointBackground(),
-      m_sliderCursors(),
+      m_sliderCursors,
       IntSize(200, 20));
 
     using namespace layout;
@@ -141,15 +141,14 @@ private:
   wxCheckBox* m_enablePreview;
   DialogFeedback& m_feedback;
   Slider* m_sharpnessSlider;
-  Getter<SliderCursors&> m_sliderCursors;
+  const SliderCursors& m_sliderCursors;
 };
 
 Optional<BitmapCommand*> show_sharpness_dialog(wxWindow& parent,
   DialogContext& c,
   DialogFeedback& feedback)
 {
-  auto get_cursors = [&c]() -> SliderCursors& {return c.GetSliderCursors();};
-  SharpnessDialog dlg(parent, get_cursors, feedback);
+  SharpnessDialog dlg(parent, c.GetSliderCursors(), feedback);
 
   bool ok = c.ShowModal(dlg) == DialogChoice::OK && dlg.ValidSharpness();
   return ok ?

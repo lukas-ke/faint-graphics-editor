@@ -26,7 +26,7 @@ class Color;
 
 class PaintPanel_HSL{
 public:
-  PaintPanel_HSL(wxWindow* parent, const Getter<SliderCursors&>&);
+  PaintPanel_HSL(wxWindow* parent, const SliderCursors&);
   ~PaintPanel_HSL();
   wxWindow* AsWindow();
   Color GetColor() const;

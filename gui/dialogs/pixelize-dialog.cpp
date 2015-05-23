@@ -35,7 +35,7 @@ static bool enable_preview_default(const Bitmap& bmp){
 class PixelizeDialog : public wxDialog {
 public:
   PixelizeDialog(wxWindow& parent,
-    Getter<SliderCursors&> sliderCursors,
+    const SliderCursors& sliderCursors,
     DialogFeedback& feedback)
     : wxDialog(&parent, wxID_ANY, "Pixelize", wxDefaultPosition, wxDefaultSize,
       wxDEFAULT_DIALOG_STYLE | wxWANTS_CHARS | wxRESIZE_BORDER),
@@ -64,7 +64,7 @@ public:
       SliderDir::HORIZONTAL,
       BorderedSliderMarker(),
       SliderRectangleBackground(),
-      m_sliderCursors(),
+      m_sliderCursors,
       IntSize(200, 20));
 
     set_sizer(this, create_column({
@@ -123,15 +123,14 @@ private:
   Slider* m_pixelSizeSlider;
   wxCheckBox* m_enablePreview;
   DialogFeedback& m_feedback;
-  Getter<SliderCursors&> m_sliderCursors;
+  const SliderCursors& m_sliderCursors;
 };
 
 Optional<BitmapCommand*> show_pixelize_dialog(wxWindow& parent,
   DialogContext& c,
   DialogFeedback& feedback)
 {
-  auto get_cursors = [&c]() -> SliderCursors& {return c.GetSliderCursors();};
-  PixelizeDialog dlg(parent, get_cursors, feedback);
+  PixelizeDialog dlg(parent, c.GetSliderCursors(), feedback);
   bool ok = c.ShowModal(dlg) == DialogChoice::OK && dlg.ValuesModified();
   return ok ?
     option(dlg.GetCommand()) :
