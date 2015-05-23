@@ -21,7 +21,7 @@
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "commands/bitmap-cmd.hh"
-#include "gui/art-container.hh"
+#include "gui/art.hh"
 #include "gui/command-window.hh"
 #include "gui/dialog-context.hh"
 #include "gui/slider-common.hh"

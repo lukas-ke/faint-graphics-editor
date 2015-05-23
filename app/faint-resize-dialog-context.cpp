@@ -17,7 +17,7 @@
 #include "app/canvas.hh"
 #include "app/context-commands.hh"
 #include "app/faint-resize-dialog-context.hh"
-#include "app/get-art-container.hh" // Fixme: Pass it instead
+#include "app/get-art.hh" // Fixme: Pass it instead
 #include "bitmap/bitmap.hh"
 #include "commands/rescale-cmd.hh"
 #include "commands/resize-cmd.hh"

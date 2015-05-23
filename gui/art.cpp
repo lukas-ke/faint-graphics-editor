@@ -19,7 +19,7 @@
 #include "wx/cursor.h"
 #include "bitmap/bitmap.hh"
 #include "formats/bmp/file-cur.hh"
-#include "gui/art-container.hh"
+#include "gui/art.hh"
 #include "text/formatting.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-path.hh"

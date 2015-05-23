@@ -20,7 +20,7 @@
 #include "app/context-commands.hh"
 #include "app/get-app-context.hh"
 #include "geo/measure.hh"
-#include "gui/art-container.hh"
+#include "gui/art.hh"
 #include "gui/ui-constants.hh"
 #include "text/formatting.hh"
 #include "tools/tool-id.hh"

@@ -27,11 +27,10 @@
 #include "bitmap/color.hh"
 #include "geo/int-point.hh"
 #include "geo/int-rect.hh"
-#include "gui/art-container.hh"
+#include "gui/art.hh"
 #include "text/utf8-string.hh"
 #include "util-wx/file-path.hh"
 #include "util/pos-info.hh"
-
 
 namespace faint{
 

@@ -26,7 +26,7 @@
 #include "gui/help-frame.hh"
 #include "gui/interpreter-frame.hh"
 #include "gui/tab-ctrl.hh" // Fixme: Remove
-#include "gui/art-container.hh"
+#include "gui/art.hh"
 #include "gui/transparency-style.hh"
 #include "rendering/extra-overlay.hh"
 #include "util-wx/convert-wx.hh"

@@ -13,7 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "app/get-art-container.hh"
+#include "app/get-art.hh"
 #include "bitmap/color.hh"
 #include "bitmap/paint.hh"
 #include "geo/int-point.hh"

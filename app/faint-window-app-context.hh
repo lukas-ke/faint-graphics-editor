@@ -17,7 +17,7 @@
 #define FAINT_WINDOW_APP_CONTEXT_HH
 #include "app/app-context.hh"
 #include "app/faint-slider-cursors.hh"
-#include "gui/art-container.hh"
+#include "gui/art.hh"
 #include "gui/canvas-panel.hh" // Fixme
 #include "gui/command-window.hh"
 #include "gui/dialogs/resize-dialog-options.hh" // Fixme: impl

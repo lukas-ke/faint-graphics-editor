@@ -13,9 +13,9 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "app/get-art-container.hh"
+#include "app/get-art.hh"
 #include "geo/int-point.hh"
-#include "gui/art-container.hh"
+#include "gui/art.hh"
 #include "gui/bitmap-list-ctrl.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-wx.hh"

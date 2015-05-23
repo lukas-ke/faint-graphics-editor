@@ -22,7 +22,7 @@
 #include "geo/int-rect.hh"
 #include "geo/int-size.hh"
 #include "geo/rect.hh"
-#include "gui/art-container.hh"
+#include "gui/art.hh"
 #include "gui/command-window.hh"
 #include "gui/math-text-ctrl.hh"
 #include "gui/resize-dialog.hh"

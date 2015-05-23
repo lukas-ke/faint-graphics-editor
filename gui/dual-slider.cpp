@@ -16,12 +16,12 @@
 #include <algorithm>
 #include "wx/bitmap.h"
 #include "wx/dcclient.h"
-#include "app/get-art-container.hh" // Fixme: Pass it (or cursors) instead
+#include "app/get-art.hh" // Fixme: Pass it (or cursors) instead
 #include "app/resource-id.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/draw.hh"
 #include "geo/line.hh"
-#include "gui/art-container.hh"
+#include "gui/art.hh"
 #include "gui/dual-slider.hh"
 #include "gui/mouse-capture.hh"
 #include "util-wx/bind-event.hh"

@@ -22,7 +22,7 @@
 #include "geo/geo-func.hh"
 #include "geo/scale.hh"
 #include "geo/size.hh"
-#include "gui/art-container.hh"
+#include "gui/art.hh"
 #include "gui/canvas-panel.hh"
 #include "gui/canvas-panel-contexts.hh"
 #include "rendering/paint-canvas.hh"

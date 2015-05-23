@@ -20,7 +20,7 @@
 #include "wx/html/htmlwin.h"
 #include "wx/splitter.h"
 #include "wx/treectrl.h"
-#include "gui/art-container.hh"
+#include "gui/art.hh"
 #include "gui/help-frame.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"

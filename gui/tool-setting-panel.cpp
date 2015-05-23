@@ -13,7 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "gui/art-container.hh"
+#include "gui/art.hh"
 #include "gui/drop-down-ctrl.hh"
 #include "gui/font-ctrl.hh"
 #include "gui/freezer.hh"

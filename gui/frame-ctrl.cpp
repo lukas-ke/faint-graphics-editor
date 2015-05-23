@@ -23,13 +23,13 @@
 #include "wx/sizer.h"
 #include "app/app-context.hh"
 #include "app/canvas.hh"
-#include "app/get-art-container.hh" // Fixme: pass it instead
+#include "app/get-art.hh" // Fixme: pass it instead
 #include "commands/frame-cmd.hh"
 #include "geo/int-point.hh"
 #include "geo/int-rect.hh"
 #include "geo/int-size.hh"
 #include "geo/measure.hh"
-#include "gui/art-container.hh"
+#include "gui/art.hh"
 #include "gui/frame-ctrl.hh"
 #include "gui/mouse-capture.hh"
 #include "text/formatting.hh"

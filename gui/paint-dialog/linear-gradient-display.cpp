@@ -16,7 +16,7 @@
 #include "wx/bitmap.h"
 #include "wx/dcclient.h"
 #include "wx/window.h" // For allowing Bind
-#include "app/get-art-container.hh"
+#include "app/get-art.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "bitmap/draw.hh"
@@ -25,7 +25,7 @@
 #include "geo/geo-func.hh"
 #include "geo/int-point.hh"
 #include "geo/line.hh"
-#include "gui/art-container.hh"
+#include "gui/art.hh"
 #include "gui/dialog-context.hh"
 #include "gui/mouse-capture.hh"
 #include "gui/paint-dialog/gradient-slider.hh"

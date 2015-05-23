@@ -19,7 +19,7 @@
 #include "bitmap/color.hh"
 #include "bitmap/draw.hh"
 #include "geo/int-size.hh"
-#include "gui/art-container.hh"
+#include "gui/art.hh"
 #include "gui/events.hh"  // LayerChangeEvent
 #include "gui/image-toggle-ctrl.hh"
 #include "gui/setting-events.hh"

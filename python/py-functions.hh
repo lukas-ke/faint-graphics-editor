@@ -22,7 +22,7 @@
 #include <sstream>
 #include <iostream> // for print_to_stdout
 #include "python/py-include.hh"
-#include "app/get-art-container.hh" // Fixme: \ref(rotate-bad-art-container)
+#include "app/get-art.hh" // Fixme: \ref(rotate-bad-art)
 #include "app/canvas.hh"
 #include "app/frame.hh"
 #include "app/get-app-context.hh"
@@ -155,7 +155,7 @@ static void dialog_resize(){
 Show the rotation dialog (for rotating the image or selection)." */
 static void dialog_rotate(){
   AppContext& app = get_app_context();
-  // Fixme: \def(rotate-bad-art-container)Bad get_art;
+  // Fixme: \def(rotate-bad-art)Bad get_art;
   // get_art here is problematic - should be accessed
   // via some context
   app.ModalFull(bind_show_rotate_dialog(get_art(),

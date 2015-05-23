@@ -19,7 +19,7 @@
 #include "wx/textctrl.h"
 #include "app/canvas.hh"
 #include "app/get-app-context.hh" // For use image
-#include "app/get-art-container.hh"
+#include "app/get-art.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "bitmap/draw.hh"
@@ -27,7 +27,7 @@
 #include "geo/geo-func.hh"
 #include "geo/int-rect.hh"
 #include "geo/line.hh"
-#include "gui/art-container.hh"
+#include "gui/art.hh"
 #include "gui/mouse-capture.hh"
 #include "gui/paint-dialog/pattern-panel.hh"
 #include "gui/ui-constants.hh"

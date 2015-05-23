@@ -25,7 +25,7 @@
 #include "wx/persist/toplevel.h"
 #include "app/get-app-context.hh"
 #include "gui/accelerator-entry.hh"
-#include "gui/art-container.hh"
+#include "gui/art.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/gui-util.hh"
 #include "util/image-props.hh"
