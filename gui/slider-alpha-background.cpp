@@ -49,13 +49,6 @@ AlphaBackground::AlphaBackground(const ColRGB& rgb)
   m_bgPattern = Paint(Pattern(bg));
 }
 
-AlphaBackground::AlphaBackground(const AlphaBackground& other)
-  : SliderBackground(),
-    m_bitmap(other.m_bitmap),
-    m_bgPattern(other.m_bgPattern),
-    m_rgb(other.m_rgb)
-{}
-
 void AlphaBackground::Draw(Bitmap& bmp, const IntSize& size, SliderDir dir){
   if (!bitmap_ok(m_bitmap) || m_bitmap.GetSize() != size){
     m_bitmap = alpha_background_bitmap(m_rgb, size, dir);

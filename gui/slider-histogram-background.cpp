@@ -31,14 +31,6 @@ SliderHistogramBackground::SliderHistogramBackground(
     m_fg(fg)
 {}
 
-SliderHistogramBackground::SliderHistogramBackground(
-  const SliderHistogramBackground& other)
-  : SliderBackground(),
-    m_bitmap(other.m_bitmap),
-    m_values(other.m_values),
-    m_fg(other.m_fg)
-{}
-
 void SliderHistogramBackground::Draw(Bitmap& bmp, const IntSize& size, SliderDir){
   if (!bitmap_ok(m_bitmap) || m_bitmap.GetSize() != size){
     InitializeBitmap(size);

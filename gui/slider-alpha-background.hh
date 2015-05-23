@@ -25,7 +25,6 @@ namespace faint{
 class AlphaBackground : public SliderBackground{
 public:
   AlphaBackground(const ColRGB&);
-  AlphaBackground(const AlphaBackground&);
   void Draw(Bitmap&, const IntSize&, SliderDir) override;
   SliderBackground* Clone() const override;
 

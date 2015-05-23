@@ -48,8 +48,8 @@ class SliderMidPointBackground final : public SliderBackground{
   // Background which indicates the middle of the slider range with a
   // line.
 public:
-  void Draw(Bitmap&, const IntSize&, SliderDir) override;
   SliderBackground* Clone() const override;
+  void Draw(Bitmap&, const IntSize&, SliderDir) override;
 };
 
 class SliderCursors{

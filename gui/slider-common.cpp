@@ -60,7 +60,6 @@ static IntLineSegment get_mid_line(const IntSize& size, SliderDir dir){
 void SliderMidPointBackground::Draw(Bitmap& bmp, const IntSize& size,
   SliderDir dir)
 {
-  // draw_slider_bg_rect(bmp, size);
   draw_styled_slider_bg_rect(bmp, size);
   draw_line(bmp, get_mid_line(size, dir),
     {color_inactive_caption(), 3, LineStyle::SOLID, LineCap::BUTT});
