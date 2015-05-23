@@ -60,35 +60,40 @@ Slider* create_slider(wxWindow* parent,
   SliderDir,
   const SliderMarker&,
   const SliderBackground&,
+  const SliderCursors&,
   const IntSize& initialSize);
 
 Slider* create_slider(wxWindow* parent,
   const BoundedInt&,
   SliderDir,
   const SliderBackground&,
+  const SliderCursors&,
   const IntSize& initialSize);
 
 Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
-  const SliderMarker& marker,
-  const SliderBackground& background,
+  const SliderMarker&,
+  const SliderBackground&,
+  const SliderCursors&,
   const IntSize& initialSize,
   const std::function<void()>& onChange);
 
 Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
-  const SliderBackground& background,
+  const SliderBackground&,
+  const SliderCursors&,
   const IntSize& initialSize,
   const std::function<void()>& onChange);
 
 Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
-  SliderDir dir,
-  const SliderMarker& marker,
-  const SliderBackground& background,
-  const IntSize& initialSize,
+  SliderDir,
+  const SliderMarker&,
+  const SliderBackground&,
+  const SliderCursors&,
+  const IntSize&,
   const std::function<void(int)>& onChange);
 
 } // namespace

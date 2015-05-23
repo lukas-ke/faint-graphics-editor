@@ -27,13 +27,18 @@ class Settings;
 void show_alpha_dialog(DialogContext&);
 
 Optional<BitmapCommand*> show_brightness_contrast_dialog(wxWindow&,
+  DialogContext&,
   DialogFeedback&);
 
-Optional<BitmapCommand*> show_color_balance_dialog(wxWindow&, DialogFeedback&);
+Optional<BitmapCommand*> show_color_balance_dialog(wxWindow&,
+  DialogContext&,
+  DialogFeedback&);
 
 void show_faint_about_dialog(wxWindow* parent, DialogContext&);
 
-Optional<BitmapCommand*> show_pinch_whirl_dialog(wxWindow&, DialogFeedback&);
+Optional<BitmapCommand*> show_pinch_whirl_dialog(wxWindow&,
+  DialogContext&,
+  DialogFeedback&);
 
 Optional<Command*> show_rotate_dialog(wxWindow&,
   const Canvas&, // Fixme: Why?
@@ -44,9 +49,13 @@ dialog_func bind_show_rotate_dialog(const ArtContainer&, DialogContext&);
 
 void show_threshold_dialog(DialogContext&, const Settings&);
 
-Optional<BitmapCommand*> show_pixelize_dialog(wxWindow&, DialogFeedback&);
+Optional<BitmapCommand*> show_pixelize_dialog(wxWindow&,
+  DialogContext&,
+  DialogFeedback&);
 
-Optional<BitmapCommand*> show_sharpness_dialog(wxWindow&, DialogFeedback&);
+Optional<BitmapCommand*> show_sharpness_dialog(wxWindow&,
+  DialogContext&,
+  DialogFeedback&);
 
 } // namespace
 

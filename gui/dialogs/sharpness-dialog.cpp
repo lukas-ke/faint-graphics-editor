@@ -20,7 +20,9 @@
 #include "bitmap/filter.hh"
 #include "bitmap/gaussian-blur.hh"
 #include "commands/function-cmd.hh"
+#include "gui/dialog-context.hh"
 #include "gui/slider.hh"
+#include "util/accessor.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/gui-util.hh"
 #include "util-wx/key-codes.hh"
@@ -36,13 +38,16 @@ static bool enable_preview_default(const Bitmap& bmp){
 
 class SharpnessDialog : public wxDialog {
 public:
-  SharpnessDialog(wxWindow& parent, DialogFeedback& feedback)
+  SharpnessDialog(wxWindow& parent,
+    Getter<SliderCursors&> sliderCursors,
+    DialogFeedback& feedback)
     : wxDialog(&parent, wxID_ANY, "Sharpness", wxDefaultPosition, wxDefaultSize,
         wxDEFAULT_DIALOG_STYLE | wxWANTS_CHARS | wxRESIZE_BORDER),
       m_bitmap(feedback.GetBitmap()),
       m_enablePreview(nullptr),
       m_feedback(feedback),
-      m_sharpnessSlider(nullptr)
+      m_sharpnessSlider(nullptr),
+      m_sliderCursors(sliderCursors)
   {
     // Create the member-controls in intended tab-order (placement follows)
     m_enablePreview = create_checkbox(this, "&Preview",
@@ -61,6 +66,7 @@ public:
       SliderDir::HORIZONTAL,
       BorderedSliderMarker(),
       SliderMidPointBackground(),
+      m_sliderCursors(),
       IntSize(200, 20));
 
     using namespace layout;
@@ -135,16 +141,20 @@ private:
   wxCheckBox* m_enablePreview;
   DialogFeedback& m_feedback;
   Slider* m_sharpnessSlider;
+  Getter<SliderCursors&> m_sliderCursors;
 };
 
 Optional<BitmapCommand*> show_sharpness_dialog(wxWindow& parent,
+  DialogContext& c,
   DialogFeedback& feedback)
 {
-  SharpnessDialog dlg(parent, feedback);
-  if (dlg.ShowModal() == wxID_OK && dlg.ValidSharpness()){
-    return option(dlg.GetCommand());
-  }
-  return no_option();
+  auto get_cursors = [&c]() -> SliderCursors& {return c.GetSliderCursors();};
+  SharpnessDialog dlg(parent, get_cursors, feedback);
+
+  bool ok = c.ShowModal(dlg) == DialogChoice::OK && dlg.ValidSharpness();
+  return ok ?
+    option(dlg.GetCommand()) :
+    no_option();
 }
 
 } // namespace

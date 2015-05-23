@@ -20,8 +20,10 @@
 #include "bitmap/filter.hh"
 #include "gui/accelerator-entry.hh"
 #include "gui/command-dialog.hh"
+#include "gui/dialog-context.hh"
 #include "gui/slider.hh"
 #include "gui/ui-constants.hh"
+#include "util/accessor.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/key-codes.hh"
@@ -37,7 +39,9 @@ static bool enable_preview_default(const Bitmap& bmp){
 
 class BrightnessContrastDialog : public wxDialog {
 public:
-  BrightnessContrastDialog(wxWindow& parent, DialogFeedback& feedback)
+  BrightnessContrastDialog(wxWindow& parent,
+    Getter<SliderCursors&> sliderCursors,
+    DialogFeedback& feedback)
     : wxDialog(&parent,
       wxID_ANY,
       "Brightness and Contrast",
@@ -45,7 +49,8 @@ public:
       wxDefaultSize,
       wxDEFAULT_DIALOG_STYLE | wxWANTS_CHARS | wxRESIZE_BORDER),
       m_bitmap(feedback.GetBitmap()),
-      m_feedback(feedback)
+      m_feedback(feedback),
+      m_sliderCursors(sliderCursors)
   {
     using namespace layout;
 
@@ -67,6 +72,7 @@ public:
       SliderDir::HORIZONTAL,
       BorderedSliderMarker(),
       SliderMidPointBackground(),
+      m_sliderCursors(),
       ui::horizontal_slider_size);
 
     auto lblContrast = label(this, "&Contrast");
@@ -75,6 +81,7 @@ public:
       SliderDir::HORIZONTAL,
       BorderedSliderMarker(),
       SliderMidPointBackground(),
+      m_sliderCursors(),
       ui::horizontal_slider_size);
 
     make_uniformly_sized({lblContrast, lblBrightness});
@@ -143,16 +150,19 @@ private:
   Slider* m_contrastSlider = nullptr;
   wxCheckBox* m_enablePreview = nullptr;
   DialogFeedback& m_feedback;
+  Getter<SliderCursors&> m_sliderCursors;
 };
 
 Optional<BitmapCommand*> show_brightness_contrast_dialog(wxWindow& parent,
+  DialogContext& c,
   DialogFeedback& feedback)
 {
-  BrightnessContrastDialog dlg(parent, feedback);
-  if (dlg.ShowModal() == wxID_OK && dlg.ValuesModified()){
-    return option(dlg.GetCommand());
-  }
-  return no_option();
+  auto get_cursors = [&c]() -> SliderCursors& {return c.GetSliderCursors();};
+  BrightnessContrastDialog dlg(parent, get_cursors, feedback);
+
+  auto r = c.ShowModal(dlg);
+  return (r == DialogChoice::OK && dlg.ValuesModified()) ?
+    option(dlg.GetCommand()) : no_option();
 }
 
 } // namespace

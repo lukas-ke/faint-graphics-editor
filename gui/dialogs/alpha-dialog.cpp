@@ -22,6 +22,7 @@
 #include "gui/slider.hh"
 #include "gui/slider-alpha-background.hh"
 #include "gui/ui-constants.hh"
+#include "util/accessor.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/gui-util.hh"
@@ -66,8 +67,9 @@ static void set_feedback(const Bitmap& src,
 
 class AlphaDialog : public CommandWindow{
 public:
-  AlphaDialog()
-    : m_dialog(null_dialog())
+  AlphaDialog(const Getter<SliderCursors&>& sliderCursors)
+    : m_dialog(null_dialog()),
+      m_sliderCursors(sliderCursors)
   {
     m_settings.Set(ts_AlphaBlending, false);
     m_settings.Set(ts_Bg, Paint(color_white));
@@ -92,6 +94,7 @@ public:
       SliderDir::HORIZONTAL,
       BorderedSliderMarker(),
       AlphaBackground(ColRGB(77,109,243)),
+      m_sliderCursors(),
       ui::horizontal_slider_size,
       update_preview);
 
@@ -155,13 +158,16 @@ private:
   }
 
   Slider* m_alphaSlider = nullptr;
+
   unique_dialog_ptr m_dialog;
   Settings m_settings;
   Bitmap m_bitmap;
+  Getter<SliderCursors&> m_sliderCursors;
 };
 
 void show_alpha_dialog(DialogContext& c){
-  c.Show(std::make_unique<AlphaDialog>());
+  auto get_cursors = [&c]() -> SliderCursors& {return c.GetSliderCursors();};
+  c.Show(std::make_unique<AlphaDialog>(get_cursors));
 }
 
 } // namespace

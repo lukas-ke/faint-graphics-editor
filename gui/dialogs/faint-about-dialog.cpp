@@ -133,8 +133,8 @@ static auto create_about_dialog(wxWindow* parent){
   return dlg;
 }
 
-void show_faint_about_dialog(wxWindow* parent, DialogContext& dialogContext){
-  dialogContext.ShowModal(*create_about_dialog(parent));
+void show_faint_about_dialog(wxWindow* parent, DialogContext& c){
+  c.ShowModal(*create_about_dialog(parent));
 }
 
 } // namespace

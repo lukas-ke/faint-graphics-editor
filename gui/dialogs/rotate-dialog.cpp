@@ -284,13 +284,13 @@ private:
 Optional<Command*> show_rotate_dialog(wxWindow& parent,
   const Canvas& canvas,
   const ArtContainer& art,
-  DialogContext& dialogContext)
+  DialogContext& c)
 {
   RotateDialog dlg(parent, get_rotate_target_name(canvas), art);
-  if (dialogContext.ShowModal(dlg) == DialogChoice::OK){
-    return option(dlg.GetCommand(canvas));
-  }
-  return no_option();
+
+  return c.ShowModal(dlg) == DialogChoice::OK ?
+    option(dlg.GetCommand(canvas)) :
+    no_option();
 }
 
 dialog_func bind_show_rotate_dialog(const ArtContainer& art,

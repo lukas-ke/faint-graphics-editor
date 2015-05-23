@@ -17,6 +17,7 @@
 #include "wx/dialog.h"
 #include "bitmap/bitmap-templates.hh"
 #include "commands/function-cmd.hh"
+#include "gui/dialog-context.hh"
 #include "gui/dual-slider.hh"
 #include "gui/slider-histogram-background.hh"
 #include "gui/ui-constants.hh"
@@ -139,13 +140,13 @@ private:
 };
 
 Optional<BitmapCommand*> show_color_balance_dialog(wxWindow& parent,
+  DialogContext& c,
   DialogFeedback& feedback)
 {
   ColorBalanceDialog dlg(parent, feedback);
-  if (dlg.ShowModal() == wxID_OK){
-    return option(dlg.GetCommand());
-  }
-  return no_option();
+  return (c.ShowModal(dlg) == DialogChoice::OK) ?
+    option(dlg.GetCommand()) :
+    no_option();
 }
 
 } // namespace

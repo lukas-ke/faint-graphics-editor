@@ -17,8 +17,10 @@
 #include "wx/dialog.h"
 #include "wx/sizer.h"
 #include "bitmap/bitmap-templates.hh"
+#include "gui/dialog-context.hh"
 #include "gui/slider.hh"
 #include "gui/ui-constants.hh"
+#include "util/accessor.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/gui-util.hh"
 #include "util-wx/key-codes.hh"
@@ -30,7 +32,9 @@ namespace faint{
 
 class PinchWhirlDialog : public wxDialog {
 public:
-  PinchWhirlDialog(wxWindow& parent, DialogFeedback& feedback)
+  PinchWhirlDialog(wxWindow& parent,
+    const Getter<SliderCursors&>& sliderCursors,
+    DialogFeedback& feedback)
     : wxDialog(&parent, wxID_ANY, "Pinch and Whirl",
         wxDefaultPosition,
         wxDefaultSize,
@@ -39,7 +43,8 @@ public:
       m_pinchSlider(nullptr),
       m_whirlSlider(nullptr),
       m_enablePreviewCheck(nullptr),
-      m_feedback(feedback)
+      m_feedback(feedback),
+      m_sliderCursors(sliderCursors)
   {
     using namespace layout;
 
@@ -60,6 +65,7 @@ public:
       SliderDir::HORIZONTAL,
       BorderedSliderMarker(),
       SliderMidPointBackground(),
+      m_sliderCursors(),
       ui::horizontal_slider_size);
 
     auto lblWhirl = label(this, "Whirl");
@@ -68,6 +74,7 @@ public:
       SliderDir::HORIZONTAL,
       BorderedSliderMarker(),
       SliderMidPointBackground(),
+      m_sliderCursors(),
       ui::horizontal_slider_size);
 
     make_uniformly_sized({lblPinch, lblWhirl});
@@ -134,16 +141,20 @@ private:
   Slider* m_whirlSlider;
   wxCheckBox* m_enablePreviewCheck;
   DialogFeedback& m_feedback;
+  Getter<SliderCursors&> m_sliderCursors;
 };
 
 Optional<BitmapCommand*> show_pinch_whirl_dialog(wxWindow& parent,
+  DialogContext& c,
   DialogFeedback& feedback)
 {
-  PinchWhirlDialog dlg(parent, feedback);
-  if (dlg.ShowModal() == wxID_OK && dlg.ValuesModified()){
-    return option(dlg.GetCommand());
-  }
-  return no_option();
+  auto get_cursors = [&c]() -> SliderCursors& {return c.GetSliderCursors();};
+  PinchWhirlDialog dlg(parent, get_cursors, feedback);
+
+  const bool ok = c.ShowModal(dlg) == DialogChoice::OK && dlg.ValuesModified();
+  return ok ?
+    option(dlg.GetCommand()) :
+    no_option();
 }
 
 } // namespace

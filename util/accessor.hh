@@ -20,6 +20,12 @@
 namespace faint{
 
 template<typename T>
+using Getter = std::function<T()>;
+
+template<typename T>
+using Setter = std::function<void(const T&)>;
+
+template<typename T>
 class Accessor{
   // Class template for accessing and setting a value presumably owned
   // by someone else, through constructor specified getter and setter
@@ -30,15 +36,13 @@ class Accessor{
   // refresh requirements and such. These details are instead handled
   // where the Accessor is instantiated.
 public:
-  using getter_t = std::function<T()>;
-  using setter_t = std::function<void(const T&)>;
-  Accessor(const getter_t& getter, const setter_t& setter)
+  Accessor(const Getter<T>& getter, const Setter<T>& setter)
     : Get(getter),
       Set(setter)
   {}
 
-  getter_t Get;
-  setter_t Set;
+  Getter<T> Get;
+  Setter<T> Set;
 };
 
 } // namespace

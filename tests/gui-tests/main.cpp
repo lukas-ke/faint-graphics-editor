@@ -23,6 +23,7 @@
 #include "gui/art-container.hh"
 #include "gui/command-window.hh"
 #include "gui/dialog-context.hh"
+#include "gui/slider-common.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-path.hh"
@@ -33,6 +34,7 @@ void add_gui_tests(wxBookCtrlBase*,
   faint::StatusInterface&,
   faint::DialogContext&);
 
+namespace faint{const ArtContainer& get_art_container();} // Fixme: Should not need this function in a test.
 
 class GuiTestStatusInterface : public faint::StatusInterface{
 public:
@@ -92,16 +94,42 @@ create_window_feedback(const T& onClose){
   return std::make_unique<GuiTestWindowFeedbackImpl<T>>(onClose);
 }
 
+class GuiTestSliderCursors : public faint::SliderCursors{
+public:
+  GuiTestSliderCursors(wxCursor horizontal, wxCursor vertical)
+    : m_horizontal(horizontal),
+      m_vertical(vertical)
+  {}
+
+  void SetHorizontal(wxWindow* w) const{
+    w->SetCursor(m_horizontal);
+  }
+
+  void SetVertical(wxWindow* w) const{
+    w->SetCursor(m_vertical);
+  }
+
+  wxCursor m_horizontal;
+  wxCursor m_vertical;
+};
+
 class GuiTestDialogContext : public faint::DialogContext{
 public:
-  GuiTestDialogContext(wxWindow* parent)
-    : m_parent(parent)
+  GuiTestDialogContext(wxWindow* parent, const faint::ArtContainer& art)
+    : m_parent(parent),
+      m_sliderCursors(art.Get(faint::Cursor::HORIZONTAL_SLIDER),
+        art.Get(faint::Cursor::VERTICAL_SLIDER))
   {
     m_windowFeedback = std::move(create_window_feedback(
       [this](faint::BitmapCommand* cmd){
         OnClosed(cmd);
       }));
   }
+
+  faint::SliderCursors& GetSliderCursors() override{
+    return m_sliderCursors;
+  }
+
   void Show(std::unique_ptr<faint::CommandWindow>&& w) override{
     assert(w != nullptr);
     m_commandWindow = std::move(w);
@@ -118,13 +146,15 @@ private:
   std::unique_ptr<faint::CommandWindow> m_commandWindow;
   std::unique_ptr<faint::WindowFeedback> m_windowFeedback;
   wxWindow* m_parent;
+  GuiTestSliderCursors m_sliderCursors;
 };
 
 class GuiTestFrame: public wxFrame {
 public:
   GuiTestFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     : wxFrame(nullptr, wxID_ANY, title, pos, size),
-      m_dialogContext(this)
+      m_dialogContext(this,
+        faint::get_art_container()) // Fixme
   {
     wxMenu *menuFile = new wxMenu;
     menuFile->Append(wxID_EXIT);

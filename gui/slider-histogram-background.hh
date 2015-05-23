@@ -25,6 +25,7 @@ namespace faint{
 class SliderHistogramBackground : public SliderBackground{
 public:
   SliderHistogramBackground(const std::vector<int>& values, const ColRGB& fg);
+  SliderHistogramBackground(const SliderHistogramBackground&);
   void Draw(Bitmap&, const IntSize&, SliderDir) override;
   SliderBackground* Clone() const override;
 private:

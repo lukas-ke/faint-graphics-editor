@@ -32,6 +32,7 @@
 #include "util-wx/gui-util.hh"
 #include "util-wx/key-codes.hh"
 #include "util/optional.hh"
+#include "gui/dialog-context.hh"
 
 namespace faint{
 
@@ -73,6 +74,10 @@ static Gradient gradient_from_color(const Color& c){
   return Gradient(g);
 }
 
+static auto cursor_getter(DialogContext& c){
+  return [&c]() -> SliderCursors& {return c.GetSliderCursors();};
+}
+
 class PaintDialog : public wxDialog {
 public:
   PaintDialog(wxWindow* parent,
@@ -86,7 +91,8 @@ public:
     wxSizer* sizer = new wxBoxSizer(wxVERTICAL);
     sizer->Add(m_tabs);
 
-    m_panelHSL = std::make_unique<PaintPanel_HSL>(m_tabs);
+    m_panelHSL = std::make_unique<PaintPanel_HSL>(m_tabs,
+      cursor_getter(dialogContext));
     m_tabs->AddPage(m_panelHSL->AsWindow(), "HSL");
 
     #ifdef __wxMSW__
@@ -227,10 +233,11 @@ private:
 };
 
 static std::unique_ptr<PaintPanel_HSL> init_color_dialog_panel(wxWindow* bgPanel,
+  const Getter<SliderCursors&>& sliderCursors,
   wxDialog* dlg)
 {
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-  auto colorPanel = std::make_unique<PaintPanel_HSL>(bgPanel);
+  auto colorPanel = std::make_unique<PaintPanel_HSL>(bgPanel, sliderCursors);
   sizer->Add(colorPanel->AsWindow());
 
   sizer->Add(create_ok_cancel_buttons(bgPanel, dlg),
@@ -240,13 +247,15 @@ static std::unique_ptr<PaintPanel_HSL> init_color_dialog_panel(wxWindow* bgPanel
 }
 class ColorDialog : public wxDialog {
 public:
-  ColorDialog(wxWindow* parent, const wxString& title, const Color& initialColor)
+  ColorDialog(wxWindow* parent, const wxString& title,
+    const Getter<SliderCursors&>& sliderCursors,
+    const Color& initialColor)
     : wxDialog(parent, wxID_ANY, title)
   {
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
     auto bg = create_panel(this);
     sizer->Add(bg);
-    m_panelHSL = init_color_dialog_panel(bg, this);
+    m_panelHSL = init_color_dialog_panel(bg, sliderCursors, this);
     m_panelHSL->SetColor(initialColor);
     SetSizerAndFit(sizer);
     Center(wxBOTH);
@@ -264,7 +273,9 @@ Optional<Color> show_color_only_dialog(wxWindow* parent,
   const Color& initial,
   DialogContext& context)
 {
-  ColorDialog dlg(parent, title, initial);
+  ColorDialog dlg(parent, title,
+    cursor_getter(context),
+    initial);
   return context.ShowModal(dlg) == DialogChoice::OK ?
     option(dlg.GetColor()) : no_option();
 }

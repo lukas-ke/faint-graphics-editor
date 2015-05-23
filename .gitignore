@@ -4,4 +4,6 @@ faint
 *.exp
 *.lib
 *__pycache__*
+Doxyfile
+html
 generated

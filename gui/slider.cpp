@@ -15,14 +15,11 @@
 
 #include "wx/dcclient.h"
 #include "wx/panel.h"
-#include "app/get-art-container.hh" // Fixme: Pass cursor interface instead
-#include "app/resource-id.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "bitmap/draw.hh"
 #include "geo/int-rect.hh"
 #include "geo/line.hh"
-#include "gui/art-container.hh"
 #include "gui/mouse-capture.hh"
 #include "gui/slider.hh"
 #include "util-wx/bind-event.hh"
@@ -96,7 +93,8 @@ public:
     const BoundedInt& values,
     SliderDir dir,
     const SliderMarker& marker,
-    const SliderBackground& bg)
+    const SliderBackground& bg,
+    const SliderCursors& cursors)
     : Slider(parent),
       m_background(bg.Clone()),
       m_dir(dir),
@@ -106,9 +104,12 @@ public:
       m_value(values.GetValue())
   {
     SetInitialSize(wxSize(20,20)); // Minimum size
-    SetCursor(get_art_container().Get(m_dir == SliderDir::HORIZONTAL ?
-        Cursor::HORIZONTAL_SLIDER :
-        Cursor::VERTICAL_SLIDER));
+    if (m_dir == SliderDir::HORIZONTAL){
+      cursors.SetHorizontal(this);
+    }
+    else{
+      cursors.SetVertical(this);
+    }
 
     events::on_mouse_left_down(this,
       [this](const IntPoint& mousePos){
@@ -173,6 +174,7 @@ public:
   }
 
   ~SliderImpl(){
+    // Fixme: unique_ptr:s
     delete m_background;
     delete m_marker;
   }
@@ -238,11 +240,12 @@ Slider* create_slider(wxWindow* parent,
   SliderDir dir,
   const SliderMarker& marker,
   const SliderBackground& background,
+  const SliderCursors& sliderCursors,
   const IntSize& initialSize,
   const std::function<void()>& onChange)
 {
   return bind(create_slider(parent,
-      values, dir, marker, background, initialSize),
+      values, dir, marker, background, sliderCursors, initialSize),
     EVT_FAINT_SLIDER_CHANGE, std::move(onChange));
 }
 
@@ -251,9 +254,10 @@ Slider* create_slider(wxWindow* parent,
   SliderDir dir,
   const SliderMarker& marker,
   const SliderBackground& bg,
+  const SliderCursors& cursors,
   const IntSize& initialSize)
 {
-  SliderImpl* s = new SliderImpl(parent, values, dir, marker, bg);
+  SliderImpl* s = new SliderImpl(parent, values, dir, marker, bg, cursors);
   s->SetInitialSize(to_wx(initialSize));
   return s;
 }
@@ -262,9 +266,15 @@ Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
   const SliderBackground& bg,
+  const SliderCursors& cursors,
   const IntSize& initialSize)
 {
-  SliderImpl* s = new SliderImpl(parent, values, dir, LineSliderMarker(), bg);
+  SliderImpl* s = new SliderImpl(parent,
+    values,
+    dir,
+    LineSliderMarker(),
+    bg,
+    cursors);
   s->SetInitialSize(to_wx(initialSize));
   return s;
 }
@@ -273,10 +283,16 @@ Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
   const SliderBackground& background,
+  const SliderCursors& cursors,
   const IntSize& initialSize,
   std::function<void()>&& onChange)
 {
-  return bind(create_slider(parent, values, dir, background, initialSize),
+  return bind(create_slider(parent,
+      values,
+      dir,
+      background,
+      cursors,
+      initialSize),
     EVT_FAINT_SLIDER_CHANGE, std::move(onChange));
 }
 
@@ -285,11 +301,17 @@ Slider* create_slider(wxWindow* parent,
   SliderDir dir,
   const SliderMarker& marker,
   const SliderBackground& background,
+  const SliderCursors& cursors,
   const IntSize& initialSize,
   std::function<void(int)>&& onChange)
 {
   Slider* s = create_slider(parent,
-    values, dir, marker, background, initialSize);
+    values,
+    dir,
+    marker,
+    background,
+    cursors,
+    initialSize);
 
   events::on_slider_change(s, onChange);
   return s;

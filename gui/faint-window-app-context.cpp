@@ -26,6 +26,7 @@
 #include "gui/help-frame.hh"
 #include "gui/interpreter-frame.hh"
 #include "gui/tab-ctrl.hh" // Fixme: Remove
+#include "gui/art-container.hh"
 #include "gui/transparency-style.hh"
 #include "rendering/extra-overlay.hh"
 #include "util-wx/convert-wx.hh"
@@ -184,14 +185,21 @@ std::unique_ptr<WindowFeedbackImpl<T>> create_window_feedback(AppContext& app,
   return std::make_unique<WindowFeedbackImpl<T>>(app, onClose);
 }
 
-FaintDialogContext::FaintDialogContext(AppContext& app, FaintWindow& faintWindow)
+FaintDialogContext::FaintDialogContext(AppContext& app,
+  const ArtContainer& art,
+  FaintWindow& faintWindow)
   : m_app(app),
-    m_faintWindow(faintWindow)
+    m_faintWindow(faintWindow),
+    m_sliderCursors(art)
 {
   m_windowFeedback = std::move(create_window_feedback(app,
     [this](BitmapCommand* cmd){
       OnClosed(cmd);
     }));
+}
+
+SliderCursors& FaintDialogContext::GetSliderCursors(){
+  return m_sliderCursors;
 }
 
 void FaintDialogContext::Show(std::unique_ptr<CommandWindow>&& w){
@@ -371,10 +379,11 @@ void FaintWindowExtraOverlay::Draw(FaintDC& dc,
 
 
 FaintWindowContext::FaintWindowContext(FaintWindow& window,
+  const ArtContainer& art,
   wxStatusBar& statusbar,
   HelpFrame& helpFrame,
   InterpreterFrame& interpreterFrame)
-  : m_dialogContext(*this, window),
+  : m_dialogContext(*this, art, window),
     m_extraOverlay(m_dialogContext),
     m_faintWindow(window),
     m_helpFrame(helpFrame),
@@ -691,9 +700,10 @@ void FaintWindowContext::ModalFull(const dialog_func& show_dialog){
 void FaintWindowContext::Modal(const bmp_dialog_func& show_dialog){
   Canvas& canvas(GetActiveCanvas());
   DialogFeedbackImpl feedback(canvas);
-  BeginModalDialog();
-  auto maybeCmd = show_dialog(m_faintWindow.GetRawFrame(), feedback);
-  EndModalDialog();
+
+  auto maybeCmd = show_dialog(m_faintWindow.GetRawFrame(),
+    m_dialogContext,
+    feedback);
 
   maybeCmd.Visit(
     [&](BitmapCommand* cmd){
@@ -767,6 +777,19 @@ void FaintWindowContext::SetTabCtrl(TabCtrl* tabControl){ // Non virtual
   // (the initialization order of AppContext and panels
   // are a mess).
   m_tabControl.reset(tabControl);
+}
+
+FaintSliderCursors::FaintSliderCursors(const ArtContainer& art)
+  : m_horizontal(art.Get(Cursor::HORIZONTAL_SLIDER)),
+    m_vertical(art.Get(Cursor::VERTICAL_SLIDER))
+{}
+
+void FaintSliderCursors::SetHorizontal(wxWindow* w) const{
+  w->SetCursor(m_horizontal);
+}
+
+void FaintSliderCursors::SetVertical(wxWindow* w) const{
+  w->SetCursor(m_vertical);
 }
 
 } // namespace

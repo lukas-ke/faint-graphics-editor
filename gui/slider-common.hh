@@ -16,6 +16,8 @@
 #ifndef FAINT_SLIDER_COMMON_HH
 #define FAINT_SLIDER_COMMON_HH
 
+class wxWindow; // Fixme: Unhappy about showing here.
+
 namespace faint{
 
 class Bitmap;
@@ -27,24 +29,43 @@ enum class SliderDir{HORIZONTAL, VERTICAL};
 class SliderBackground{
   // Base class for slider background renderers.
 public:
+  SliderBackground() = default;
+  SliderBackground(const SliderBackground&) = delete;
   virtual ~SliderBackground() = default;
+
   virtual void Draw(Bitmap&, const IntSize&, SliderDir) = 0;
   virtual SliderBackground* Clone() const = 0;
 };
 
-class SliderRectangleBackground : public SliderBackground{
+class SliderRectangleBackground final : public SliderBackground{
   // Background filled with a solid color.
 public:
-  void Draw(Bitmap&, const IntSize&, SliderDir) override;
+  SliderRectangleBackground() = default;
+  SliderRectangleBackground(const SliderRectangleBackground&);
+
   SliderBackground* Clone() const override;
+  void Draw(Bitmap&, const IntSize&, SliderDir) override;
 };
 
-class SliderMidPointBackground : public SliderBackground{
+class SliderMidPointBackground final : public SliderBackground{
   // Background which indicates the middle of the slider range with a
   // line.
 public:
+  SliderMidPointBackground() = default;
+  SliderMidPointBackground(const SliderMidPointBackground&);
   void Draw(Bitmap&, const IntSize&, SliderDir) override;
   SliderBackground* Clone() const override;
+
+};
+
+class SliderCursors{
+public:
+  SliderCursors() = default;
+  SliderCursors(const SliderCursors&) = delete;
+  virtual ~SliderCursors() = default;
+
+  virtual void SetHorizontal(wxWindow*) const = 0;
+  virtual void SetVertical(wxWindow*) const = 0;
 };
 
 double pos_to_value(const int pos, const int length, const ClosedIntRange&);

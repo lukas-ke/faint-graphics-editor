@@ -15,6 +15,8 @@
 
 #ifndef FAINT_HSL_PANEL_HH
 #define FAINT_HSL_PANEL_HH
+#include "gui/slider-common.hh" // SliderCursors
+#include "util/accessor.hh"
 
 class wxWindow;
 
@@ -24,7 +26,7 @@ class Color;
 
 class PaintPanel_HSL{
 public:
-  PaintPanel_HSL(wxWindow* parent);
+  PaintPanel_HSL(wxWindow* parent, const Getter<SliderCursors&>&);
   ~PaintPanel_HSL();
   wxWindow* AsWindow();
   Color GetColor() const;

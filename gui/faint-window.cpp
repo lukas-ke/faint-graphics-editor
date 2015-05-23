@@ -411,7 +411,7 @@ FaintWindow::FaintWindow(ArtContainer& art,
 
   // Fixme: Who deletes?
   FaintWindowContext* appContext = new FaintWindowContext(*this,
-    create_faint_statusbar(frame), *helpFrame, *interpreterFrame);
+    art, create_faint_statusbar(frame), *helpFrame, *interpreterFrame);
 
   FaintWindowPythonContext* pythonContext = new
     FaintWindowPythonContext(*this, *interpreterFrame);

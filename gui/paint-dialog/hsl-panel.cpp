@@ -29,6 +29,7 @@
 #include "gui/static-bitmap.hh"
 #include "gui/ui-constants.hh"
 #include "text/formatting.hh"
+#include "util/accessor.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
@@ -48,6 +49,11 @@ class LightnessBackground : public SliderBackground{
 public:
   explicit LightnessBackground(const HS& hueSat)
     : m_hueSat(hueSat)
+  {}
+
+  LightnessBackground(const LightnessBackground& other)
+    : SliderBackground(),
+      m_hueSat(other.m_hueSat)
   {}
 
   void Draw(Bitmap& bmp, const IntSize& size, SliderDir) override{
@@ -149,8 +155,10 @@ private:
 
 class PaintPanel_HSL::PaintPanel_HSL_Impl : public wxPanel{
 public:
-  PaintPanel_HSL_Impl(wxWindow* parent)
-    : wxPanel(parent, wxID_ANY)
+  PaintPanel_HSL_Impl(wxWindow* parent,
+    const Getter<SliderCursors&>& sliderCursors)
+    : wxPanel(parent, wxID_ANY),
+      m_sliderCursors(sliderCursors)
   {
     m_hueSatPicker = new HueSatPicker(this);
     set_pos(m_hueSatPicker, IntPoint::Both(panel_padding));
@@ -169,6 +177,7 @@ public:
       SliderDir::VERTICAL,
       BorderedSliderMarker(),
       LightnessBackground(m_hueSatPicker->GetValue()),
+      m_sliderCursors(),
       IntSize(20, 240));
     set_pos(m_lightnessSlider, to_the_right_of(m_hueSatPicker));
 
@@ -177,6 +186,7 @@ public:
       SliderDir::VERTICAL,
       BorderedSliderMarker(),
       AlphaBackground(ColRGB(128,128,128)),
+      m_sliderCursors(),
       IntSize(20,255));
     set_pos(m_alphaSlider, to_the_right_of(m_lightnessSlider));
 
@@ -401,6 +411,7 @@ private:
   StaticBitmap* m_colorBitmap;
   wxTextCtrl* m_greenTxt;
   HueSatPicker* m_hueSatPicker;
+  Getter<SliderCursors&> m_sliderCursors;
   wxTextCtrl* m_hueTxt;
   Slider* m_lightnessSlider;
   wxTextCtrl* m_lightnessTxt;
@@ -409,8 +420,10 @@ private:
   wxTextCtrl* m_saturationTxt;
 };
 
-PaintPanel_HSL::PaintPanel_HSL(wxWindow* parent){
-  m_impl = new PaintPanel_HSL_Impl(parent);
+PaintPanel_HSL::PaintPanel_HSL(wxWindow* parent,
+  const Getter<SliderCursors&>& sliderCursors)
+{
+  m_impl = new PaintPanel_HSL_Impl(parent, sliderCursors);
 }
 
 PaintPanel_HSL::~PaintPanel_HSL(){

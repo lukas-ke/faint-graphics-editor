@@ -25,6 +25,7 @@ namespace faint{
 
 class Canvas;
 class Command;
+class DialogContext;
 
 class DialogFeedback{
   // Context for letting dialogs show feedback on a Bitmap
@@ -37,8 +38,10 @@ public:
   virtual void SetBitmap(Bitmap&&) = 0;
 };
 
-using bmp_dialog_func =
-  std::function<Optional<BitmapCommand*>(wxWindow&, DialogFeedback&)>;
+using bmp_dialog_func = std::function<Optional<BitmapCommand*>(
+  wxWindow&,
+  DialogContext&,
+  DialogFeedback&)>;
 
 using dialog_func =
   std::function<Optional<Command*>(wxWindow&, DialogFeedback&, Canvas&)>;

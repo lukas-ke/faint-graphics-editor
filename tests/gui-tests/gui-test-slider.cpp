@@ -15,6 +15,7 @@
 
 #include <random>
 #include "geo/int-point.hh"
+#include "gui/dialog-context.hh"
 #include "gui/dual-slider.hh"
 #include "gui/slider.hh"
 #include "gui/slider-alpha-background.hh"
@@ -38,13 +39,14 @@ static std::vector<int> histogram_test_values(){
 }
 
 void gui_test_slider(wxWindow* p, faint::StatusInterface&,
-  faint::DialogContext&)
+  faint::DialogContext& c)
 {
   using namespace faint;
   auto s1 = create_slider(p, BoundedInt(min_t(0), 45, max_t(120)),
     SliderDir::HORIZONTAL,
     LineSliderMarker(),
     SliderRectangleBackground(),
+    c.GetSliderCursors(),
     IntSize(200, 20));
   set_pos(s1, {10,10});
 
@@ -52,6 +54,7 @@ void gui_test_slider(wxWindow* p, faint::StatusInterface&,
     SliderDir::HORIZONTAL,
     BorderedSliderMarker(),
     SliderRectangleBackground(),
+    c.GetSliderCursors(),
     IntSize(200, 20));
   set_pos(s2, {10,40});
 
@@ -59,6 +62,7 @@ void gui_test_slider(wxWindow* p, faint::StatusInterface&,
     SliderDir::HORIZONTAL,
     BorderedSliderMarker(),
     AlphaBackground(ColRGB(255,0,0)),
+    c.GetSliderCursors(),
     IntSize(200, 20));
   set_pos(s3, {10,70});
 
@@ -66,6 +70,7 @@ void gui_test_slider(wxWindow* p, faint::StatusInterface&,
     SliderDir::HORIZONTAL,
     BorderedSliderMarker(),
     SliderHistogramBackground(histogram_test_values(), ColRGB(0,0,0)),
+    c.GetSliderCursors(),
     IntSize(200, 20));
   set_pos(s4, {10,100});
 
@@ -79,6 +84,7 @@ void gui_test_slider(wxWindow* p, faint::StatusInterface&,
     SliderDir::VERTICAL,
     BorderedSliderMarker(),
     SliderRectangleBackground(),
+    c.GetSliderCursors(),
     IntSize(20, 230));
   set_pos(s6, {10,160});
 
@@ -86,6 +92,7 @@ void gui_test_slider(wxWindow* p, faint::StatusInterface&,
     SliderDir::VERTICAL,
     BorderedSliderMarker(),
     AlphaBackground(ColRGB(0,0,255)),
+    c.GetSliderCursors(),
     IntSize(20, 230));
   set_pos(s7, {40,160});
 }

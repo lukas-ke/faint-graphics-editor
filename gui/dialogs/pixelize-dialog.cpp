@@ -16,7 +16,9 @@
 #include "wx/dialog.h"
 #include "wx/sizer.h"
 #include "bitmap/bitmap-templates.hh"
+#include "gui/dialog-context.hh"
 #include "gui/slider.hh"
+#include "util/accessor.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/gui-util.hh"
 #include "util-wx/key-codes.hh"
@@ -32,13 +34,16 @@ static bool enable_preview_default(const Bitmap& bmp){
 
 class PixelizeDialog : public wxDialog {
 public:
-  PixelizeDialog(wxWindow& parent, DialogFeedback& feedback)
+  PixelizeDialog(wxWindow& parent,
+    Getter<SliderCursors&> sliderCursors,
+    DialogFeedback& feedback)
     : wxDialog(&parent, wxID_ANY, "Pixelize", wxDefaultPosition, wxDefaultSize,
       wxDEFAULT_DIALOG_STYLE | wxWANTS_CHARS | wxRESIZE_BORDER),
       m_bitmap(feedback.GetBitmap()),
       m_pixelSizeSlider(nullptr),
       m_enablePreview(nullptr),
-      m_feedback(feedback)
+      m_feedback(feedback),
+      m_sliderCursors(sliderCursors)
   {
     using namespace layout;
 
@@ -59,6 +64,7 @@ public:
       SliderDir::HORIZONTAL,
       BorderedSliderMarker(),
       SliderRectangleBackground(),
+      m_sliderCursors(),
       IntSize(200, 20));
 
     set_sizer(this, create_column({
@@ -117,16 +123,19 @@ private:
   Slider* m_pixelSizeSlider;
   wxCheckBox* m_enablePreview;
   DialogFeedback& m_feedback;
+  Getter<SliderCursors&> m_sliderCursors;
 };
 
 Optional<BitmapCommand*> show_pixelize_dialog(wxWindow& parent,
+  DialogContext& c,
   DialogFeedback& feedback)
 {
-  PixelizeDialog dlg(parent, feedback);
-  if (dlg.ShowModal() == wxID_OK && dlg.ValuesModified()){
-    return option(dlg.GetCommand());
-  }
-  return no_option();
+  auto get_cursors = [&c]() -> SliderCursors& {return c.GetSliderCursors();};
+  PixelizeDialog dlg(parent, get_cursors, feedback);
+  bool ok = c.ShowModal(dlg) == DialogChoice::OK && dlg.ValuesModified();
+  return ok ?
+    option(dlg.GetCommand()) :
+    no_option();
 }
 
 } // namespace
