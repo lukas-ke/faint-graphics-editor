@@ -17,6 +17,7 @@
 #include "wx/filename.h"
 #include "wx/treebook.h"
 #include "wx/stdpaths.h"
+#include "app/faint-slider-cursors.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "commands/bitmap-cmd.hh"
@@ -94,25 +95,6 @@ create_window_feedback(const T& onClose){
   return std::make_unique<GuiTestWindowFeedbackImpl<T>>(onClose);
 }
 
-class GuiTestSliderCursors : public faint::SliderCursors{
-public:
-  GuiTestSliderCursors(wxCursor horizontal, wxCursor vertical)
-    : m_horizontal(horizontal),
-      m_vertical(vertical)
-  {}
-
-  void SetHorizontal(wxWindow* w) const{
-    w->SetCursor(m_horizontal);
-  }
-
-  void SetVertical(wxWindow* w) const{
-    w->SetCursor(m_vertical);
-  }
-
-  wxCursor m_horizontal;
-  wxCursor m_vertical;
-};
-
 class GuiTestDialogContext : public faint::DialogContext{
 public:
   GuiTestDialogContext(wxWindow* parent, const faint::ArtContainer& art)
@@ -146,7 +128,7 @@ private:
   std::unique_ptr<faint::CommandWindow> m_commandWindow;
   std::unique_ptr<faint::WindowFeedback> m_windowFeedback;
   wxWindow* m_parent;
-  GuiTestSliderCursors m_sliderCursors;
+  faint::FaintSliderCursors m_sliderCursors;
 };
 
 class GuiTestFrame: public wxFrame {

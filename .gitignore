@@ -1,9 +1,10 @@
-faint
 *.exe
 *.exe.manifest
 *.exp
 *.lib
+*.tmp
 *__pycache__*
 Doxyfile
 doxygen
+faint
 generated

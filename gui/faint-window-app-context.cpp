@@ -190,7 +190,8 @@ FaintDialogContext::FaintDialogContext(AppContext& app,
   FaintWindow& faintWindow)
   : m_app(app),
     m_faintWindow(faintWindow),
-    m_sliderCursors(art)
+    m_sliderCursors(art.Get(Cursor::HORIZONTAL_SLIDER),
+      art.Get(Cursor::VERTICAL_SLIDER))
 {
   m_windowFeedback = std::move(create_window_feedback(app,
     [this](BitmapCommand* cmd){
@@ -777,19 +778,6 @@ void FaintWindowContext::SetTabCtrl(TabCtrl* tabControl){ // Non virtual
   // (the initialization order of AppContext and panels
   // are a mess).
   m_tabControl.reset(tabControl);
-}
-
-FaintSliderCursors::FaintSliderCursors(const ArtContainer& art)
-  : m_horizontal(art.Get(Cursor::HORIZONTAL_SLIDER)),
-    m_vertical(art.Get(Cursor::VERTICAL_SLIDER))
-{}
-
-void FaintSliderCursors::SetHorizontal(wxWindow* w) const{
-  w->SetCursor(m_horizontal);
-}
-
-void FaintSliderCursors::SetVertical(wxWindow* w) const{
-  w->SetCursor(m_vertical);
 }
 
 } // namespace

@@ -16,11 +16,11 @@
 #ifndef FAINT_WINDOW_APP_CONTEXT_HH
 #define FAINT_WINDOW_APP_CONTEXT_HH
 #include "app/app-context.hh"
+#include "app/faint-slider-cursors.hh"
 #include "gui/art-container.hh"
 #include "gui/canvas-panel.hh" // Fixme
 #include "gui/command-window.hh"
 #include "gui/dialogs/resize-dialog-options.hh" // Fixme: impl
-#include "gui/slider-common.hh" // Fixme maybe.
 #include "gui/transparency-style.hh" // Fixme: impl
 #include "tools/tool.hh"
 #include "util/bound-setting.hh" // Fixme: For BoundSetting
@@ -51,19 +51,6 @@ private:
 };
 
 using from_control = LessDistinct<bool, 0>;
-
-class FaintSliderCursors final : public SliderCursors{
-public:
-  FaintSliderCursors(const ArtContainer&);
-  // Fixme: Replace with Set(SliderDir, wxWindow*).
-  void SetHorizontal(wxWindow*) const override;
-  void SetVertical(wxWindow*) const override;
-
-  FaintSliderCursors(const FaintSliderCursors&) = delete;
-private:
-  wxCursor m_horizontal;
-  wxCursor m_vertical;
-};
 
 class FaintDialogContext final : public DialogContext{
 public:
