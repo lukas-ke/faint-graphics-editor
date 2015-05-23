@@ -68,6 +68,8 @@ private:
 };
 
 class HueSatPicker : public wxPanel {
+  // The 2d-control for picking hue-values along the x-axis and
+  // saturation along the y-axis
 public:
   HueSatPicker(wxWindow* parent) :
     wxPanel(parent, wxID_ANY),
