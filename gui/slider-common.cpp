@@ -41,11 +41,6 @@ void SliderRectangleBackground::Draw(Bitmap& bmp, const IntSize& size,
   draw_styled_slider_bg_rect(bmp, size);
 }
 
-SliderRectangleBackground::SliderRectangleBackground(
-  const SliderRectangleBackground&)
-  : SliderBackground()
-{}
-
 SliderBackground* SliderRectangleBackground::Clone() const{
   return new SliderRectangleBackground(*this);
 }
@@ -70,11 +65,6 @@ void SliderMidPointBackground::Draw(Bitmap& bmp, const IntSize& size,
   draw_line(bmp, get_mid_line(size, dir),
     {color_inactive_caption(), 3, LineStyle::SOLID, LineCap::BUTT});
 }
-
-SliderMidPointBackground::SliderMidPointBackground(
-  const SliderMidPointBackground&)
-  : SliderBackground()
-{}
 
 SliderBackground* SliderMidPointBackground::Clone() const{
   return new SliderMidPointBackground(*this);

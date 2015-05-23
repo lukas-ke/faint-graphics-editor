@@ -5,5 +5,5 @@ faint
 *.lib
 *__pycache__*
 Doxyfile
-html
+doxygen
 generated

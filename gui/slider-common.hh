@@ -30,19 +30,16 @@ class SliderBackground{
   // Base class for slider background renderers.
 public:
   SliderBackground() = default;
-  SliderBackground(const SliderBackground&) = delete;
-  virtual ~SliderBackground() = default;
 
   virtual void Draw(Bitmap&, const IntSize&, SliderDir) = 0;
   virtual SliderBackground* Clone() const = 0;
+protected:
+  SliderBackground(const SliderBackground&) = default;
 };
 
 class SliderRectangleBackground final : public SliderBackground{
   // Background filled with a solid color.
 public:
-  SliderRectangleBackground() = default;
-  SliderRectangleBackground(const SliderRectangleBackground&);
-
   SliderBackground* Clone() const override;
   void Draw(Bitmap&, const IntSize&, SliderDir) override;
 };
@@ -51,11 +48,8 @@ class SliderMidPointBackground final : public SliderBackground{
   // Background which indicates the middle of the slider range with a
   // line.
 public:
-  SliderMidPointBackground() = default;
-  SliderMidPointBackground(const SliderMidPointBackground&);
   void Draw(Bitmap&, const IntSize&, SliderDir) override;
   SliderBackground* Clone() const override;
-
 };
 
 class SliderCursors{
