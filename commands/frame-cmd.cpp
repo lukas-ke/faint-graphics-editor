@@ -25,30 +25,27 @@
 namespace faint{
 
 class AddFrameCommand : public Command {
+  // Adds a Frame. Manages the Frame life-time.
 public:
   AddFrameCommand(const IntSize& size)
     : Command(CommandType::FRAME)
   {
     ImageInfo info(size, create_bitmap(false));
-    m_image = new Image(FrameProps(info));
+    m_image = std::make_unique<Image>(FrameProps(info));
   }
 
   AddFrameCommand(const Image& frame, const Index& index)
     : Command(CommandType::FRAME),
-      m_image(new Image(frame)),
+      m_image(std::make_unique<Image>(frame)),
       m_index(index)
   {}
 
-  ~AddFrameCommand(){
-    delete m_image;
-  }
-
   void Do(CommandContext& context) override{
     if (m_index.IsSet()){
-      context.AddFrame(m_image, m_index.Get());
+      context.AddFrame(m_image.get(), m_index.Get());
     }
     else {
-      context.AddFrame(m_image);
+      context.AddFrame(m_image.get());
     }
   }
 
@@ -57,11 +54,11 @@ public:
   }
 
   void Undo(CommandContext& context) override{
-    context.RemoveFrame(m_image);
+    context.RemoveFrame(m_image.get());
   }
 
 private:
-  Image* m_image;
+  std::unique_ptr<Image> m_image;
   Optional<Index> m_index;
 };
 
@@ -98,7 +95,7 @@ public:
     return "Remove Frame";
   }
 private:
-  Image* m_image;
+  Image* m_image; // Non-owning
   Index m_index;
 };
 

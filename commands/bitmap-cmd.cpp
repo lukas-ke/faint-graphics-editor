@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include <cassert>
+#include <memory>
 #include "bitmap/bitmap.hh"
 #include "bitmap/draw.hh" // subbitmap
 #include "commands/bitmap-cmd.hh"
@@ -29,18 +30,19 @@
 namespace faint{
 
 class BmpTargetBase : public Command{
+  // Adapter, BitmapCommand -> Command.
+  //
+  // This is a base for bitmap-commands which is specialized to allow
+  // special handling for different targets, for example the full
+  // image or a selected region.
 public:
   BmpTargetBase(CommandType type, BitmapCommand* cmd)
     : Command(type),
       m_cmd(cmd)
   {}
 
-  ~BmpTargetBase(){
-    delete m_cmd;
-  }
-
   void Do(CommandContext& ctx) override final {
-    DoBmp(m_cmd, ctx);
+    DoBmp(*m_cmd, ctx);
   }
 
   void Undo(CommandContext& ctx) override final{
@@ -52,19 +54,19 @@ public:
   }
 
 private:
-  virtual void DoBmp(BitmapCommand*, CommandContext&) = 0;
+  virtual void DoBmp(BitmapCommand&, CommandContext&) = 0;
   virtual void UndoBmp(CommandContext&) = 0;
-  BitmapCommand* m_cmd;
+  std::unique_ptr<BitmapCommand> m_cmd;
 };
 
-class BmpTargetImage : public BmpTargetBase {
+class BmpTargetImage final : public BmpTargetBase {
 public:
   BmpTargetImage(BitmapCommand* cmd)
     : BmpTargetBase(CommandType::RASTER, cmd)
   {}
 private:
-  void DoBmp(BitmapCommand* cmd, CommandContext& ctx) override{
-    cmd->Do(ctx.GetRawBitmap());
+  void DoBmp(BitmapCommand& cmd, CommandContext& ctx) override{
+    cmd.Do(ctx.GetRawBitmap());
   }
 
   void UndoBmp(CommandContext&) override{
@@ -72,16 +74,16 @@ private:
   }
 };
 
-class BmpTargetRectangle : public BmpTargetBase {
+class BmpTargetRectangle final : public BmpTargetBase {
 public:
   BmpTargetRectangle(BitmapCommand* cmd, const IntRect& rect)
     : BmpTargetBase(CommandType::RASTER, cmd),
       m_rect(rect)
   {}
 private:
-  void DoBmp(BitmapCommand* cmd, CommandContext& ctx) override{
+  void DoBmp(BitmapCommand& cmd, CommandContext& ctx) override{
     Bitmap bmp(subbitmap(ctx.GetRawBitmap(), m_rect));
-    cmd->Do(bmp);
+    cmd.Do(bmp);
     FaintDC& dc(ctx.GetDC());
     dc.Blit(bmp, floated(m_rect.TopLeft()), default_bitmap_settings());
   }
@@ -93,13 +95,13 @@ private:
   IntRect m_rect;
 };
 
-class BmpTargetSelection : public BmpTargetBase {
+class BmpTargetSelection final : public BmpTargetBase {
 public:
   BmpTargetSelection(BitmapCommand* cmd)
     : BmpTargetBase(CommandType::SELECTION, cmd)
   {}
 private:
-  void DoBmp(BitmapCommand* cmd, CommandContext& ctx) override{
+  void DoBmp(BitmapCommand& cmd, CommandContext& ctx) override{
     RasterSelection& selection = ctx.GetRasterSelection();
     assert(!selection.Empty());
     if (selection.Floating()){
@@ -107,7 +109,7 @@ private:
       if (m_old.NotSet()){
         m_old.Set(bmp);
       }
-      cmd->Do(bmp);
+      cmd.Do(bmp);
       selection.SetFloatingBitmap(bmp, selection.TopLeft());
     }
   }

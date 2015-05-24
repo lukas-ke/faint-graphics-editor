@@ -13,6 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include <memory>
 #include "commands/add-object-cmd.hh"
 #include "commands/command.hh"
 #include "objects/object.hh"
@@ -33,23 +34,19 @@ public:
       m_z(z)
   {}
 
-  ~AddObjectCommand(){
-    delete m_object;
-  }
-
   void Do(CommandContext& context) override{
     if (m_z == -1){
-      context.Add(m_object, select_added(then_false(m_select)),
+      context.Add(m_object.get(), select_added(then_false(m_select)),
         deselect_old(false));
     }
     else{
-      context.Add(m_object, m_z, select_added(then_false(m_select)),
+      context.Add(m_object.get(), m_z, select_added(then_false(m_select)),
         deselect_old(false));
     }
   }
 
   void Undo(CommandContext& context) override{
-    context.Remove(m_object);
+    context.Remove(m_object.get());
   }
 
   utf8_string Name() const override{
@@ -57,7 +54,7 @@ public:
   }
 
 private:
-  Object* m_object;
+  std::unique_ptr<Object> m_object;
   bool m_select;
   utf8_string m_name;
   int m_z;
