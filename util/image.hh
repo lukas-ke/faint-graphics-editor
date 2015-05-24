@@ -15,6 +15,7 @@
 
 #ifndef FAINT_IMAGE_HH
 #define FAINT_IMAGE_HH
+#include <memory>
 #include <vector>
 #include "bitmap/bitmap.hh"
 #include "geo/calibration.hh"
@@ -104,7 +105,7 @@ private:
   Either<Bitmap, ColorSpan> m_bg;
   Optional<Calibration> m_calibration;
   Delay m_delay;
-  ExpressionContext* m_expressionContext;
+  std::unique_ptr<ExpressionContext> m_expressionContext;
   HotSpot m_hotSpot;
   FrameId m_id;
   objects_t m_objects;

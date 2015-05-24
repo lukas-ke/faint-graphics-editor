@@ -15,28 +15,23 @@
 
 #ifndef FAINT_DEFAULT_CONSTRUCTIBLE_HH
 #define FAINT_DEFAULT_CONSTRUCTIBLE_HH
+#include <memory>
 #include <type_traits> // for assertions
 
 namespace faint{
 
-// Wrapper for non-default-constructible types
-// as a place-holder during parsing and such.
+// Wrapper for non-default-constructible types as a place-holder
+// during parsing and such.
 template<typename T>
 class DefaultConstructible{
 public:
   static_assert(!std::is_default_constructible<T>::value,
     "T already default constructible.");
-  DefaultConstructible()
-    : m_obj(nullptr)
-  {}
 
-  ~DefaultConstructible(){
-    delete m_obj;
-  }
+  DefaultConstructible(){}
 
   void Set(T&& t){
-    delete m_obj;
-    m_obj = new T(std::move(t));
+    m_obj = std::make_unique<T>(std::move(t));
   }
 
   operator const T&() const{
@@ -44,17 +39,15 @@ public:
     return *m_obj;
   }
 
-  DefaultConstructible(const DefaultConstructible& other)
-    : m_obj(nullptr)
-  {
+  DefaultConstructible(const DefaultConstructible& other){
     if (other.m_obj != nullptr){
-      m_obj = new T(*other.m_obj);
+      m_obj = std::make_unique<T>(*other.m_obj);
     }
   }
 
   DefaultConstructible& operator=(const DefaultConstructible&) = delete;
 private:
-  T* m_obj;
+  std::unique_ptr<T> m_obj;
 };
 
 } // namespace

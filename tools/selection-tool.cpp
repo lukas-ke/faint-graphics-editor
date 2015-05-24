@@ -33,19 +33,9 @@ public:
       m_objectSelectionTool(object_selection_tool(activeCanvas)),
       m_rasterSelectionTool(raster_selection_tool(allSettings, activeCanvas))
   {
-    if (layer == Layer::RASTER){
-      m_activeTool = m_rasterSelectionTool;
-    }
-    else{
-      m_activeTool = m_objectSelectionTool;
-    }
-  }
-
-  ~SelectionTool() override{
-    // Fixme: Use local objects instead.
-    // Make them "not tools".
-    delete m_rasterSelectionTool;
-    delete m_objectSelectionTool;
+    m_activeTool = layer == Layer::RASTER ?
+      m_rasterSelectionTool.get() :
+      m_objectSelectionTool.get();
   }
 
   ToolResult Char(const KeyInfo& key) override{
@@ -124,10 +114,10 @@ public:
 
   void SetLayer(Layer layer) override{
     if (layer == Layer::RASTER){
-      m_activeTool = m_rasterSelectionTool;
+      m_activeTool = m_rasterSelectionTool.get();
     }
     else if (layer == Layer::OBJECT){
-      m_activeTool = m_objectSelectionTool;
+      m_activeTool = m_objectSelectionTool.get();
     }
   }
 
@@ -141,8 +131,8 @@ public:
 
 private:
   Tool* m_activeTool;
-  Tool* m_objectSelectionTool;
-  Tool* m_rasterSelectionTool;
+  std::unique_ptr<Tool> m_objectSelectionTool;
+  std::unique_ptr<Tool> m_rasterSelectionTool;
 };
 
 Tool* selection_tool(Layer layer,

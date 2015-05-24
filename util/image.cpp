@@ -78,7 +78,7 @@ Image::Image(FrameProps&& props)
     m_original(),
     m_originalObjects(m_objects)
 {
-  m_expressionContext = new ImageExpressionContext(this);
+  m_expressionContext = std::make_unique<ImageExpressionContext>(this);
 }
 
 Image::Image(const Image& other)
@@ -88,14 +88,23 @@ Image::Image(const Image& other)
     m_original()
 {
   m_originalObjects = m_objects = clone(other.GetObjects());
-  m_expressionContext = new ImageExpressionContext(this);
+  m_expressionContext = std::make_unique<ImageExpressionContext>(this);
 }
 
 Image::Image()
   : m_bg(ColorSpan(color_white, IntSize(1,1))),
     m_delay(0)
 {
-  m_expressionContext = new ImageExpressionContext(this);
+  m_expressionContext = std::make_unique<ImageExpressionContext>(this);
+}
+
+Image::~Image(){
+  // Delete the objects the image was created with - any other objects
+  // are deleted when the corresponding AddObject-commands are
+  // deleted.
+  for (Object* obj : m_originalObjects){
+    delete obj;
+  }
 }
 
 Bitmap& Image::ConvertColorSpanToBitmap(){
@@ -126,16 +135,6 @@ void Image::SetBitmap(const Bitmap& bmp){
 
 void Image::SetBitmap(Bitmap&& bmp){
   m_bg.Set(std::move(bmp));
-}
-
-Image::~Image(){
-  // Delete the objects the image was created with - any other objects
-  // are deleted when the corresponding AddObject-commands are
-  // deleted.
-  for (Object* obj : m_originalObjects){
-    delete obj;
-  }
-  delete m_expressionContext;
 }
 
 ExpressionContext& Image::GetExpressionContext() const{
