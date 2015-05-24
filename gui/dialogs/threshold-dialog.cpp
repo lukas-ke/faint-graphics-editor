@@ -35,8 +35,9 @@ SliderHistogramBackground threshold_histogram_background(const Bitmap& bmp){
 
 class ThresholdDialog : public CommandWindow{
 public:
-  ThresholdDialog(const Settings& s)
-    : m_dialog(null_dialog())
+  ThresholdDialog(const Settings& s, const SliderCursors& cursors)
+    : m_dialog(null_dialog()),
+      m_sliderCursors(cursors)
   {
     m_settings.Set(ts_Fg, s.GetDefault(ts_Fg, Paint(color_black)));
     m_settings.Set(ts_Bg, s.GetDefault(ts_Bg, Paint(color_white)));
@@ -65,6 +66,7 @@ public:
     m_slider = create_dual_slider(raw(m_dialog),
       fractional_bounded_interval<threshold_range_t>(0.2, 0.8),
       threshold_histogram_background(m_bitmap),
+      m_sliderCursors,
       ui::tall_horizontal_slider_size,
       [&](const Interval&, bool){
         if (get(m_enablePreview)){
@@ -154,10 +156,11 @@ private:
   Settings m_settings;
   Bitmap m_bitmap;
   WindowFeedback* m_feedback = nullptr;
+  const SliderCursors& m_sliderCursors;
 };
 
 void show_threshold_dialog(DialogContext& c, const Settings& s){
-  c.Show(std::make_unique<ThresholdDialog>(s));
+  c.Show(std::make_unique<ThresholdDialog>(s, c.GetSliderCursors()));
 }
 
 } // namespace

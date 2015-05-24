@@ -57,7 +57,8 @@ public:
   DualSliderImpl(wxWindow* parent,
     const ClosedIntRange& range,
     const Interval& startInterval,
-    const SliderBackground& bg)
+    const SliderBackground& bg,
+    const SliderCursors& cursors)
     : DualSlider(parent),
       m_anchor(0),
       m_anchorV1(0.0),
@@ -74,6 +75,7 @@ public:
     assert(m_range.Has(m_v2));
 
     SetInitialSize(wxSize(20,20)); // Minimum size
+    cursors.Set(this, SliderDir::HORIZONTAL);
 
     events::on_mouse_left_down(this,
       [this](const IntPoint& pos){
@@ -285,9 +287,10 @@ DualSlider* DualSlider::Create(wxWindow* parent,
   const ClosedIntRange& range,
   const Interval& startInterval,
   const SliderBackground& bg,
+  const SliderCursors& cursors,
   const IntSize& initialSize)
 {
-  auto* s = new DualSliderImpl(parent, range, startInterval, bg);
+  auto* s = new DualSliderImpl(parent, range, startInterval, bg, cursors);
   s->SetInitialSize(to_wx(initialSize));
   return s;
 }

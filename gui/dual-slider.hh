@@ -36,6 +36,7 @@ private:
   friend DualSlider* create_dual_slider(wxWindow*,
     const StaticBoundedInterval<MINB, MAXB>&,
     const SliderBackground&,
+    const SliderCursors&,
     const IntSize&,
     const FUNC&);
 
@@ -43,13 +44,15 @@ private:
   friend DualSlider* create_dual_slider(wxWindow*,
     const StaticBoundedInterval<MINB, MAXB>&,
     const SliderBackground&,
+    const SliderCursors&,
     const IntSize&);
 
   static DualSlider* Create(wxWindow* parent,
     const ClosedIntRange&,
     const Interval&,
     const SliderBackground&,
-    const IntSize& size);
+    const SliderCursors&,
+    const IntSize&);
 };
 
 namespace events {
@@ -65,6 +68,7 @@ template<int MINB, int MAXB>
 DualSlider* create_dual_slider(wxWindow* parent,
   const StaticBoundedInterval<MINB, MAXB>& values,
   const SliderBackground& bg,
+  const SliderCursors& cursors,
   const IntSize& initialSize)
 {
   using RangeType = StaticBoundedInterval<MINB, MAXB>;
@@ -72,6 +76,7 @@ DualSlider* create_dual_slider(wxWindow* parent,
     make_closed_range(RangeType::min_allowed, RangeType::max_allowed),
     values.GetInterval(),
     bg,
+    cursors,
     initialSize);
 }
 
@@ -80,6 +85,7 @@ template<int MINB, int MAXB, typename FUNC>
 DualSlider* create_dual_slider(wxWindow* parent,
   const StaticBoundedInterval<MINB, MAXB>& values,
   const SliderBackground& bg,
+  const SliderCursors& cursors,
   const IntSize& initialSize,
   const FUNC& onChange)
 {
@@ -88,6 +94,7 @@ DualSlider* create_dual_slider(wxWindow* parent,
     make_closed_range(RangeType::min_allowed, RangeType::max_allowed),
     values.GetInterval(),
     bg,
+    cursors,
     initialSize);
   events::on_slider_change(s, onChange);
   return s;

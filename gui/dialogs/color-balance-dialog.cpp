@@ -32,7 +32,9 @@ namespace faint{
 
 class ColorBalanceDialog : public wxDialog {
 public:
-  ColorBalanceDialog(wxWindow& parent, DialogFeedback& feedback)
+  ColorBalanceDialog(wxWindow& parent,
+    const SliderCursors& sliderCursors,
+    DialogFeedback& feedback)
     : wxDialog(&parent, wxID_ANY, "Color Balance",
       wxDefaultPosition, wxDefaultSize,
       wxDEFAULT_DIALOG_STYLE | wxWANTS_CHARS | wxRESIZE_BORDER),
@@ -41,7 +43,8 @@ public:
       m_feedback(feedback),
       m_redSlider(nullptr),
       m_greenSlider(nullptr),
-      m_blueSlider(nullptr)
+      m_blueSlider(nullptr),
+      m_sliderCursors(sliderCursors)
   {
     // Create the member-controls in intended tab-order (placement follows)
     m_enablePreview = create_checkbox(this, "&Preview", true,
@@ -60,6 +63,7 @@ public:
       return create_dual_slider(this,
         fractional_bounded_interval<color_range_t>(0.2, 0.8),
         SliderHistogramBackground(histogram, bg),
+        m_sliderCursors,
         ui::horizontal_slider_size);
     };
 
@@ -137,13 +141,14 @@ private:
   DualSlider* m_redSlider;
   DualSlider* m_greenSlider;
   DualSlider* m_blueSlider;
+  const SliderCursors& m_sliderCursors;
 };
 
 Optional<BitmapCommand*> show_color_balance_dialog(wxWindow& parent,
   DialogContext& c,
   DialogFeedback& feedback)
 {
-  ColorBalanceDialog dlg(parent, feedback);
+  ColorBalanceDialog dlg(parent, c.GetSliderCursors(), feedback);
   return (c.ShowModal(dlg) == DialogChoice::OK) ?
     option(dlg.GetCommand()) :
     no_option();
