@@ -27,15 +27,11 @@ class RescaleCommand : public Command {
 public:
   RescaleCommand(const IntSize& size, ScaleQuality quality)
     : Command(CommandType::HYBRID),
+      m_objectResize(nullptr),
       m_size(size),
       m_oldSize(0,0), // Proper value set later
-      m_quality(quality),
-      m_objectResize(nullptr)
+      m_quality(quality)
   {}
-
-  ~RescaleCommand(){
-    delete m_objectResize;
-  }
 
   void Do(CommandContext& context) override{
     Size oldSize(floated(context.GetImageSize()));
@@ -45,8 +41,8 @@ public:
     if (m_objectResize == nullptr && context.HasObjects()){
       // Use the top left corner of the image as origin for object scaling.
       const Point origin(0,0);
-      m_objectResize = get_scale_command(context.GetObjects(),
-        Scale(New(floated(m_size)), oldSize), origin);
+      m_objectResize.reset(get_scale_command(context.GetObjects(),
+        Scale(New(floated(m_size)), oldSize), origin));
     }
 
     if (m_objectResize != nullptr){
@@ -82,10 +78,10 @@ public:
   }
 
 private:
+  std::unique_ptr<Command> m_objectResize;
   IntSize m_size;
   IntSize m_oldSize;
   ScaleQuality m_quality;
-  Command* m_objectResize;
 };
 
 Command* rescale_command(const IntSize& size, ScaleQuality quality){

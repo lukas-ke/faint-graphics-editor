@@ -13,6 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include <memory>
 #include "commands/command.hh"
 #include "commands/set-raster-selection-cmd.hh"
 #include "geo/geo-func.hh"
@@ -60,8 +61,7 @@ public:
       m_appendCommand(appendCommand),
       m_name(name),
       m_newState(newState.Get()),
-      m_oldState(oldState.Get()),
-      m_optionsCommand(nullptr)
+      m_oldState(oldState.Get())
   {}
 
   SetRasterSelectionCommand(const NewSelectionState& newState,
@@ -74,13 +74,8 @@ public:
       m_appendCommand(appendCommand),
       m_name(name),
       m_newState(newState.Get()),
-      m_oldState(oldState.Get()),
-      m_optionsCommand(nullptr)
+      m_oldState(oldState.Get())
   {}
-
-  ~SetRasterSelectionCommand(){
-    delete m_optionsCommand;
-  }
 
   Command* GetDWIM() override{
     return m_altNewState.Visit(
@@ -139,7 +134,7 @@ public:
     // Fixme: Remove?
     // ..Presumably this refers to using a command bunch instead
     // ..of appending the selections to the selection.
-    m_optionsCommand = cmd;
+    m_optionsCommand.reset(cmd);
   }
 
   SetRasterSelectionCommand& operator=(const SetRasterSelectionCommand&) = delete;
@@ -150,7 +145,7 @@ private:
   const utf8_string m_name;
   SelectionState m_newState;
   SelectionState m_oldState;
-  SetSelectionOptionsCommand* m_optionsCommand;
+  std::unique_ptr<SetSelectionOptionsCommand> m_optionsCommand;
 };
 
 class MoveRasterSelectionCommand : public Command {

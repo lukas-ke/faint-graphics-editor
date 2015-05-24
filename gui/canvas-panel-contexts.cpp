@@ -13,6 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include <memory>
 #include "app/app-context.hh"
 #include "commands/command.hh"
 #include "geo/geo-func.hh"
@@ -33,14 +34,9 @@ class CommandContextImpl : public TargetableCommandContext{
 public:
   CommandContextImpl(CanvasPanel& canvas, ImageList& images)
     : m_canvas(canvas),
-      m_dc(nullptr),
       m_frame(nullptr),
       m_images(images)
   {}
-
-  ~CommandContextImpl(){
-    delete m_dc;
-  }
 
   void Add(Object* obj,
     const select_added& select,
@@ -86,10 +82,10 @@ public:
     if (m_dc == nullptr){
       m_dc = m_frame->GetBackground().Visit(
         [](Bitmap& bmp){
-          return new FaintDC(bmp);
+          return std::make_unique<FaintDC>(bmp);
         },
         [&](const ColorSpan&){
-          return new FaintDC(m_frame->ConvertColorSpanToBitmap());
+          return std::make_unique<FaintDC>(m_frame->ConvertColorSpanToBitmap());
         });
     }
 
@@ -205,14 +201,13 @@ private:
     m_frame = frame;
   }
 
-  // Non virtual
   void Reset(){
-    delete m_dc;
-    m_dc = nullptr;
+    m_dc.reset(nullptr);
   }
+
   CanvasPanel& m_canvas;
-  FaintDC* m_dc;
-  Image* m_frame;
+  std::unique_ptr<FaintDC> m_dc;
+  Image* m_frame; // Non-owning
   ImageList& m_images;
 };
 

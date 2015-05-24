@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include <algorithm>
+#include <memory>
 #include "wx/bitmap.h"
 #include "wx/dcclient.h"
 #include "app/get-art.hh" // Fixme: Pass it (or cursors) instead
@@ -130,10 +131,6 @@ public:
     events::no_op_erase_background(this);
   }
 
-  ~DualSliderImpl(){
-    delete m_background;
-  }
-
   Interval GetSelectedInterval() const override{
     return m_range.Constrain(make_interval(floored(m_v1), floored(m_v2)));
   }
@@ -203,8 +200,7 @@ public:
   }
 
   void SetBackground(const SliderBackground& bg) override{
-    delete m_background;
-    m_background = bg.Clone();
+    m_background.reset(bg.Clone());
     Refresh();
   }
 
@@ -257,7 +253,7 @@ public:
   int m_anchor; // For moving the entire area
   double m_anchorV1;
   double m_anchorV2;
-  SliderBackground* m_background;
+  std::unique_ptr<SliderBackground> m_background;
   wxBitmap m_bitmap;
   MouseCapture m_mouse;
   ClosedIntRange m_range;

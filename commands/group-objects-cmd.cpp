@@ -34,10 +34,6 @@ public:
       m_select(select.Get())
   {}
 
-  ~GroupObjectsCommand(){
-    delete m_group;
-  }
-
   void Do(CommandContext& context) override{
     // Initialize on the first run
     if (m_objectDepths.empty()){
@@ -53,7 +49,7 @@ public:
       depth = std::max(depth, context.GetObjectZ(obj));
       context.Remove(obj);
     }
-    context.Add(m_group, depth, select_added(m_select), deselect_old(false));
+    context.Add(m_group.get(), depth, select_added(m_select), deselect_old(false));
   }
 
   utf8_string Name() const override{
@@ -61,7 +57,7 @@ public:
   }
 
   void Undo(CommandContext& context) override{
-    context.Remove(m_group);
+    context.Remove(m_group.get());
     for (size_t i = 0; i!= m_objects.size(); i++){
       context.Add(m_objects[i], m_objectDepths[i], select_added(false),
         deselect_old(false));
@@ -71,11 +67,11 @@ public:
   // Necessary for returning the group as a Python-object when
   // grouping via Python
   Object* GetComposite(){
-    return m_group;
+    return m_group.get();
   }
 
 private:
-  Object* m_group;
+  std::unique_ptr<Object> m_group;
   std::vector<int> m_objectDepths;
   objects_t m_objects;
   bool m_select;

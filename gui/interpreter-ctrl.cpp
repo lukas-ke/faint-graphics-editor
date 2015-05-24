@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include <algorithm> // std::min
+#include <memory>
 #include <vector>
 #include "wx/textctrl.h"
 #include "bitmap/color.hh"
@@ -180,7 +181,6 @@ public:
       m_acDict(),
       m_completion(m_acDict)
   {
-    m_fileCompletion = new FileAutoComplete();
     m_inputStart = 0;
     m_getKey = false;
     m_currRowStart = 0;
@@ -319,7 +319,7 @@ public:
           // Forget autocompletion state when a new entry is performed
           // (shift is ignored to support shift+tab, and it does not
           // cause an entry)
-          m_fileCompletion->Forget();
+          m_fileCompletion.Forget();
           m_completion.Forget();
         }
 
@@ -465,10 +465,6 @@ public:
         WriteText(wxString(event.GetChar()));
         StyleLine();
       });
-  }
-
-  ~InterpreterImpl(){
-    delete m_fileCompletion;
   }
 
   void AddNames(const std::vector<utf8_string>& names){
@@ -721,9 +717,9 @@ private:
       pos = 0;
     }
 
-    wxString adjust = m_fileCompletion->Has() ?
-      (shiftDown ? m_fileCompletion->Previous() : m_fileCompletion->Next()) :
-      m_fileCompletion->Complete(std::string(text));
+    wxString adjust = m_fileCompletion.Has() ?
+      (shiftDown ? m_fileCompletion.Previous() : m_fileCompletion.Next()) :
+      m_fileCompletion.Complete(std::string(text));
 
     Remove(m_inputStart + resigned(pos) + 1, GetLastPosition());
     AppendText(adjust);
@@ -777,7 +773,7 @@ private:
   bool m_getKey;
   faint::AutoComplete m_acDict;
   AutoCompleteState m_completion;
-  FileAutoComplete* m_fileCompletion;
+  FileAutoComplete m_fileCompletion;
   std::vector<wxString> m_history;
   size_t m_historyIndex;
   int m_indentDepth;
