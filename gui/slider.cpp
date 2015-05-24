@@ -168,19 +168,12 @@ public:
     events::no_op_erase_background(this);
   }
 
-  ~SliderImpl(){
-    // Fixme: unique_ptr:s
-    delete m_background;
-    delete m_marker;
-  }
-
   int GetValue() const override{
     return static_cast<int>(m_value);
   }
 
   void SetBackground(const SliderBackground& background) override{
-    delete m_background;
-    m_background = background.Clone();
+    m_background.reset(background.Clone());
     Refresh();
   }
 
@@ -204,10 +197,10 @@ private:
     m_bitmap = to_wx_bmp(bmp);
   }
 
-  SliderBackground* m_background;
+  std::unique_ptr<SliderBackground> m_background;
   wxBitmap m_bitmap;
   SliderDir m_dir;
-  SliderMarker* m_marker;
+  std::unique_ptr<SliderMarker> m_marker;
   MouseCapture m_mouse;
   ClosedIntRange m_range;
   double m_value;

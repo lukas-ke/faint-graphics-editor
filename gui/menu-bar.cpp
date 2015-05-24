@@ -269,7 +269,7 @@ private:
 class Menubar::MenubarImpl{
 public:
   void Initialize(wxFrame& frame, AppContext& app, const Art& art){
-    m_menuRef = new MenuRefWX(new wxMenuBar());
+    m_menuRef = std::make_unique<MenuRefWX>(new wxMenuBar());
     wxMenu* fileMenu = new wxMenu();
     Add(fileMenu, wxID_NEW, Label("New\tCtrl+N", "Create a new image"),
       [&](){app.NewDocument(app.GetDefaultImageInfo());});
@@ -611,7 +611,7 @@ public:
 
     frame.SetMenuBar(m_menuRef->m_menu);
 
-    m_recentFiles = new RecentFilesImpl(m_recentFilesMenu,
+    m_recentFiles = std::make_unique<RecentFilesImpl>(m_recentFilesMenu,
       openAllRecentId,
       clearRecentId);
 
@@ -664,11 +664,6 @@ public:
       m_undoing(false)
   {
     Initialize(frame, app, art);
-  }
-
-  ~MenubarImpl(){
-    delete m_menuRef;
-    delete m_recentFiles;
   }
 
   void AddShortcutDisable(int id, const Label& label){
@@ -809,10 +804,10 @@ private:
   EntryMode m_entryMode;
   wxEvtHandler& m_eventHandler;
   int m_maxId;
-  MenuRefWX* m_menuRef;
+  std::unique_ptr<MenuRefWX> m_menuRef;
   std::vector<ToggleLabel> m_notWhileTexting;
   std::vector<BoundMenuPred> m_predicates;
-  RecentFiles* m_recentFiles;
+  std::unique_ptr<RecentFiles> m_recentFiles;
   wxMenu* m_recentFilesMenu;
   bool m_redoing;
   bool m_undoing;
