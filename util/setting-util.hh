@@ -15,6 +15,7 @@
 
 #ifndef FAINT_SETTING_UTIL_HH
 #define FAINT_SETTING_UTIL_HH
+#include <memory>
 #include "util/distinct.hh"
 #include "util/setting-id.hh"
 
@@ -64,7 +65,7 @@ Brush get_brush(const Settings&);
 Paint get_fg(const Settings&);
 
 class Filter;
-Filter* get_filter(const Settings& s);
+std::unique_ptr<Filter> get_filter(const Settings&);
 
 // Get extra size required for filters and Line width
 Padding get_padding(const Settings&);

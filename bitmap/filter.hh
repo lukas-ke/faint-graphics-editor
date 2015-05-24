@@ -15,6 +15,7 @@
 
 #ifndef FAINT_FILTER_HH
 #define FAINT_FILTER_HH
+#include <memory>
 #include <vector>
 #include "bitmap/bitmap-fwd.hh"
 #include "bitmap/paint-fwd.hh"
@@ -54,11 +55,12 @@ Bitmap subtract(const Bitmap& lhs, const Bitmap& rhs);
 Bitmap unsharp_mask_fast(const Bitmap&, double blurSigma);
 Bitmap unsharp_mask_exact(const Bitmap&, double blurSigma);
 
-Filter* get_shadow_filter();
-Filter* get_invert_filter();
-Filter* get_pinch_whirl_filter();
-Filter* get_pixelize_filter();
-Filter* get_stroke_filter();
+using FilterPtr = std::unique_ptr<Filter>;
+FilterPtr get_shadow_filter();
+FilterPtr get_invert_filter();
+FilterPtr get_pinch_whirl_filter();
+FilterPtr get_pixelize_filter();
+FilterPtr get_stroke_filter();
 void invert(Bitmap&);
 
 using color_range_t = StaticBoundedInterval<0,255>;

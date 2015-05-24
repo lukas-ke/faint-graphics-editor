@@ -341,25 +341,24 @@ std::vector<int> blue_histogram(Bitmap& bmp){
   return v;
 }
 
-Filter* get_invert_filter(){
-  return new FunctionFilter<0, invert>();
+FilterPtr get_invert_filter(){
+  return std::make_unique<FunctionFilter<0, invert> >();
 }
 
-Filter* get_stroke_filter(){
-  return new FilterStroke();
+FilterPtr get_stroke_filter(){
+  return std::make_unique<FilterStroke>();
 }
 
-Filter* get_shadow_filter(){
-  return new FilterShadow();
+FilterPtr get_shadow_filter(){
+  return std::make_unique<FilterShadow>();
 }
 
 void pixelize_5(Bitmap& bmp){
   pixelize(bmp, 5);
 }
 
-Filter* get_pixelize_filter(){
-  using namespace std::placeholders;
-  return new FunctionFilter<0, pixelize_5>();
+FilterPtr get_pixelize_filter(){
+  return std::make_unique<FunctionFilter<0, pixelize_5>>();
 }
 
 void invert(Bitmap& bmp){
@@ -448,8 +447,8 @@ void filter_pinch_whirl_forward(Bitmap& bmp){
   filter_pinch_whirl(bmp, 0.5, Angle::Rad(0.5));
 }
 
-Filter* get_pinch_whirl_filter(){
-  return new FunctionFilter<10, filter_pinch_whirl_forward>();
+FilterPtr get_pinch_whirl_filter(){
+  return std::make_unique<FunctionFilter<10, filter_pinch_whirl_forward>>();
 }
 
 } // namespace

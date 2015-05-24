@@ -391,7 +391,7 @@ void FaintDC::Blend(const Offsat<AlphaMap>& alpha,
     return;
   }
 
-  Filter* f = get_filter(s);
+  auto f = get_filter(s);
   if (f != nullptr){
     // Fixme: Need to offset the alpha-map and such.
     Padding p(f->GetPadding());
@@ -401,7 +401,6 @@ void FaintDC::Blend(const Offsat<AlphaMap>& alpha,
       get_fg(s, m_origin, anchor));
     f->Apply(bmp);
     blend(offsat(bmp, imagePt - offset), onto(m_bitmap));
-    delete f;
   }
   else{
     IntRect r(floored(-m_origin), m_bitmap.GetSize());
@@ -422,10 +421,9 @@ void FaintDC::Clear(const Color& color){
 }
 
 void FaintDC::DrawRasterEllipse(const Tri& tri, const Settings& s){
-  Filter* f = get_filter(s);
+  auto f = get_filter(s);
   if (f != nullptr){
     DrawRasterEllipse(tri, *f, s);
-    delete f;
     return;
   }
   IntRect r(floored(tri.P0() * m_sc + m_origin),
@@ -510,10 +508,9 @@ void FaintDC::DrawRasterPolyLine(const std::vector<Point>& points,
 }
 
 void FaintDC::DrawRasterRect(const Tri& tri, const Settings& s){
-  Filter* f = get_filter(s);
+  auto f = get_filter(s);
   if (f != 0){
     DrawRasterRect(tri, *f, s);
-    delete f;
     return;
   }
   IntRect r(floored(tri.P0() * m_sc + m_origin),

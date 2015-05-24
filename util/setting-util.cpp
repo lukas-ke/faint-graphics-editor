@@ -138,7 +138,7 @@ Paint get_fg(const Settings& s){
   return explicitSwap ? s.Get(ts_Bg) : s.Get(ts_Fg);
 }
 
-Filter* get_filter(const Settings& s){
+std::unique_ptr<Filter> get_filter(const Settings& s){
   int filterNum = s.GetDefault(ts_Filter, 0);
   if (filterNum == 0){
     return nullptr;
@@ -164,14 +164,18 @@ Filter* get_filter(const Settings& s){
   }
 }
 
-Padding get_padding(const Settings& s){
-  Padding p = Padding::All(border(s) ? rounded(s.Get(ts_LineWidth)) : 0) +
+static auto get_filter_padding(const Settings& s){
+  auto f = get_filter(s);
+  return f == nullptr ? Padding::None() : f->GetPadding();
+}
+
+static auto get_fill_or_edge_padding(const Settings& s){
+  return Padding::All(border(s) ? rounded(s.Get(ts_LineWidth)) : 0) +
     Padding::Divide(s.GetDefault(ts_BrushSize, 0));
-  Filter* f = get_filter(s);
-  if (f == nullptr){
-    return p;
-  }
-  return p + f->GetPadding();
+}
+
+Padding get_padding(const Settings& s){
+  return get_fill_or_edge_padding(s) + get_filter_padding(s);
 }
 
 // Todo: Move to selection util or smth
