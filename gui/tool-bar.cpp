@@ -15,6 +15,7 @@
 
 #include <vector>
 #include "wx/sizer.h"
+#include "app/resource-id.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "bitmap/draw.hh"

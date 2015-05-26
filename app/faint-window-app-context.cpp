@@ -191,7 +191,9 @@ FaintDialogContext::FaintDialogContext(AppContext& app,
   : m_app(app),
     m_faintWindow(faintWindow),
     m_sliderCursors(art.Get(Cursor::HORIZONTAL_SLIDER),
-      art.Get(Cursor::VERTICAL_SLIDER))
+      art.Get(Cursor::VERTICAL_SLIDER),
+      art.Get(Cursor::RESIZE_WE),
+      art.Get(Cursor::RESIZE_NS))
 {
   m_windowFeedback = std::move(create_window_feedback(app,
     [this](BitmapCommand* cmd){

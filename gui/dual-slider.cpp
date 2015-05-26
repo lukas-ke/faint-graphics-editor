@@ -17,12 +17,10 @@
 #include <memory>
 #include "wx/bitmap.h"
 #include "wx/dcclient.h"
-#include "app/get-art.hh" // Fixme: Pass it (or cursors) instead
 #include "app/resource-id.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/draw.hh"
 #include "geo/line.hh"
-#include "gui/art.hh"
 #include "gui/dual-slider.hh"
 #include "gui/mouse-capture.hh"
 #include "util-wx/bind-event.hh"
@@ -54,6 +52,8 @@ DualSlider::DualSlider(wxWindow* parent)
 
 class DualSliderImpl : public DualSlider{
 public:
+  enum class Handle{START, MIDDLE, END};
+
   DualSliderImpl(wxWindow* parent,
     const ClosedIntRange& range,
     const Interval& startInterval,
@@ -64,18 +64,19 @@ public:
       m_anchorV1(0.0),
       m_anchorV2(0.0),
       m_background(bg.Clone()),
+      m_cursors(cursors),
       m_mouse(this),
       m_range(range),
       m_v1(startInterval.Lower()),
       m_v2(startInterval.Upper()),
-      m_which(0)
+      m_which(Handle::START)
   {
     assert(m_v1 < m_v2);
     assert(m_range.Has(m_v1));
     assert(m_range.Has(m_v2));
 
     SetInitialSize(wxSize(20,20)); // Minimum size
-    cursors.Set(this, SliderDir::HORIZONTAL);
+    m_cursors.Set(this, SliderDir::HORIZONTAL);
 
     events::on_mouse_left_down(this,
       [this](const IntPoint& pos){
@@ -102,7 +103,7 @@ public:
         if (m_mouse.HasCapture()){
           int x = pos.x;
           int w = GetSize().GetWidth();
-          if (m_which != 2){
+          if (m_which != Handle::MIDDLE){
             UpdateFromPos(m_range.Constrain(pos_to_value(x, w, m_range)),
               m_which);
           }
@@ -113,12 +114,11 @@ public:
           SendSliderChangeEvent();
         }
         else{
-          int handle = WhichHandle(pos.x);
-          if (handle <= 1){
-            SetCursor(get_art().Get(Cursor::HORIZONTAL_SLIDER));
+          if (WhichHandle(pos.x) == Handle::MIDDLE){
+            m_cursors.SetOffsetCursor(this, SliderDir::HORIZONTAL);
           }
           else{
-            SetCursor(get_art().Get(Cursor::RESIZE_WE));
+            m_cursors.Set(this, SliderDir::HORIZONTAL);
           }
         }
       });
@@ -143,15 +143,15 @@ public:
     }
     int x = pos.x;
     m_special = special;
-    int handle = WhichHandle(x);
-    if (handle == 2){
+    auto handle = WhichHandle(x);
+    if (handle == Handle::MIDDLE){
       m_anchor = x;
       m_anchorV1 = m_v1;
       m_anchorV2 = m_v2;
     }
     m_which = handle;
 
-    if (m_which != 2){
+    if (m_which != Handle::MIDDLE){
       UpdateFromPos(m_range.Constrain(pos_to_value(x, GetSize().
             GetWidth(), m_range)), m_which);
     }
@@ -223,16 +223,16 @@ public:
     }
   }
 
-  void UpdateFromPos(double value, int which){
-    if (which == 0){
+  void UpdateFromPos(double value, Handle which){
+    if (which == Handle::START){
       m_v1 = value;
     }
-    else if (which == 1){
+    else if (which == Handle::END){
       m_v2 = value;
     }
   }
 
-  int WhichHandle(int x){
+  Handle WhichHandle(int x){
     IntSize sz(to_faint(GetSize()));
     const int x0 = value_to_pos(m_v1, sz.w, m_range);
     const int x1 = value_to_pos(m_v2, sz.w, m_range);
@@ -242,13 +242,13 @@ public:
     int dxA = std::abs(xMid - x);
 
     if (dx0 <= dx1 && (dx0 <= dxA || dxA > 5)){
-      return 0;
+      return Handle::START;
     }
     else if (dx1 < dx0 && (dx1 < dxA || dxA > 5)){
-      return 1;
+      return Handle::END;
     }
     else {
-      return 2;
+      return Handle::MIDDLE;
     }
   }
 
@@ -257,11 +257,12 @@ public:
   double m_anchorV2;
   std::unique_ptr<SliderBackground> m_background;
   wxBitmap m_bitmap;
+  const SliderCursors& m_cursors;
   MouseCapture m_mouse;
   ClosedIntRange m_range;
   double m_v1;
   double m_v2;
-  int m_which;
+  Handle m_which;
   bool m_special = false;
 };
 

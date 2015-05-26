@@ -18,11 +18,13 @@
 #include <map>
 #include "wx/bitmap.h"
 #include "wx/cursor.h"
-#include "app/resource-id.hh"
 
 namespace faint{
 
 class DirPath;
+
+enum class Cursor;
+enum class Icon;
 
 class Art{
   // Handles bitmap loading and storage for application art (e.g.

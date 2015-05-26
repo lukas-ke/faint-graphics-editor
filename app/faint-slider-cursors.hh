@@ -23,13 +23,19 @@ namespace faint{
 class FaintSliderCursors final : public SliderCursors{
  public:
   FaintSliderCursors(const wxCursor& horizontal,
-    const wxCursor& vertical);
+    const wxCursor& vertical,
+    const wxCursor& offsetHorizontal,
+    const wxCursor& offsetVertical);
   FaintSliderCursors(const FaintSliderCursors&) = delete;
 
   void Set(wxWindow*, SliderDir) const override;
+  void SetOffsetCursor(wxWindow*, SliderDir) const override;
+
 private:
   wxCursor m_horizontal;
   wxCursor m_vertical;
+  wxCursor m_offsetHorizontal;
+  wxCursor m_offsetVertical;
 };
 
 } // namespace

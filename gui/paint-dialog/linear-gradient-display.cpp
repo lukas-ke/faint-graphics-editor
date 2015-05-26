@@ -16,7 +16,8 @@
 #include "wx/bitmap.h"
 #include "wx/dcclient.h"
 #include "wx/window.h" // For allowing Bind
-#include "app/get-art.hh"
+#include "app/resource-id.hh"
+#include "app/get-art.hh" // Fixme
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "bitmap/draw.hh"

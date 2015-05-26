@@ -18,6 +18,7 @@
 #include "wx/treebook.h"
 #include "wx/stdpaths.h"
 #include "app/faint-slider-cursors.hh"
+#include "app/resource-id.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "commands/bitmap-cmd.hh"
@@ -100,7 +101,9 @@ public:
   GuiTestDialogContext(wxWindow* parent, const faint::Art& art)
     : m_parent(parent),
       m_sliderCursors(art.Get(faint::Cursor::HORIZONTAL_SLIDER),
-        art.Get(faint::Cursor::VERTICAL_SLIDER))
+        art.Get(faint::Cursor::VERTICAL_SLIDER),
+        art.Get(faint::Cursor::RESIZE_WE),
+        art.Get(faint::Cursor::RESIZE_NS))
   {
     m_windowFeedback = std::move(create_window_feedback(
       [this](faint::BitmapCommand* cmd){

@@ -59,6 +59,7 @@ public:
   virtual ~SliderCursors() = default;
 
   virtual void Set(wxWindow*, SliderDir) const = 0;
+  virtual void SetOffsetCursor(wxWindow*, SliderDir) const = 0;
 };
 
 double pos_to_value(const int pos, const int length, const ClosedIntRange&);
