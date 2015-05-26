@@ -23,7 +23,6 @@
 #include "wx/sizer.h"
 #include "app/app-context.hh"
 #include "app/canvas.hh"
-#include "app/get-art.hh" // Fixme: pass it instead
 #include "commands/frame-cmd.hh"
 #include "geo/int-point.hh"
 #include "geo/int-rect.hh"
@@ -120,14 +119,16 @@ static utf8_string get_frame_label(const Index& index, bool capitalize){
 class FrameListCtrl : public wxPanel {
 public:
   FrameListCtrl(wxWindow* parent,
-    const wxBitmap& closeFrameBitmap,
-    const wxBitmap& closeFrameHighlightBitmap,
     AppContext& app,
+    const Art& art,
     StatusInterface& status)
     : wxPanel(parent),
       m_app(app),
-      m_closeFrameBitmap(closeFrameBitmap),
-      m_closeFrameHighlightBitmap(closeFrameHighlightBitmap),
+      m_closeFrameBitmap(art.Get(Icon::CLOSE_FRAME)),
+      m_closeFrameHighlightBitmap(art.Get(Icon::CLOSE_FRAME_HIGHLIGHT)),
+      m_cursorArrow(art.Get(Cursor::ARROW)),
+      m_cursorDragCopyFrame(art.Get(Cursor::DRAG_COPY_FRAME)),
+      m_cursorDragFrame(art.Get(Cursor::DRAG_FRAME)),
       m_frameBoxSize(35, 38),
       m_highlightCloseFrame(false),
       m_mouse(this,
@@ -206,7 +207,7 @@ public:
           else {
             SetHighlightCloseFrame(false);
             m_status.SetMainText(get_frame_label(frame, true));
-            SetCursor(get_art().Get(Cursor::ARROW));
+            SetCursor(m_cursorArrow);
           }
         }
         else{
@@ -224,9 +225,9 @@ public:
           else if (distance(pos, m_dragInfo.dragStart) > 5) {
             m_dragInfo.active = true;
             if (ctrlHeld){
-              SetCursor(get_art().Get(Cursor::DRAG_COPY_FRAME));
+              SetCursor(m_cursorDragCopyFrame);
             }
-            SetCursor(get_art().Get(Cursor::DRAG_FRAME));
+            SetCursor(m_cursorDragFrame);
           }
         }
       });
@@ -322,14 +323,15 @@ private:
     if (ctrlHeld){
       if (!m_dragInfo.copy){
         m_dragInfo.copy = true;
-        SetCursor(get_art().Get(Cursor::DRAG_COPY_FRAME));
+        SetCursor(m_cursorDragCopyFrame);
       }
     }
     else if (m_dragInfo.copy){
-      SetCursor(get_art().Get(Cursor::DRAG_FRAME));
+      SetCursor(m_cursorDragFrame);
       m_dragInfo.copy = false;
     }
   }
+
   int GetDrawOffset(){
     wxSize sz = GetSize();
     if (m_bitmap.GetWidth() > sz.GetWidth()){
@@ -390,6 +392,9 @@ private:
   wxBitmap m_bitmap;
   wxBitmap m_closeFrameBitmap;
   wxBitmap m_closeFrameHighlightBitmap;
+  wxCursor m_cursorArrow;
+  wxCursor m_cursorDragCopyFrame;
+  wxCursor m_cursorDragFrame;
   FrameDragInfo m_dragInfo;
   wxSize m_frameBoxSize;
   bool m_highlightCloseFrame;
@@ -419,9 +424,8 @@ public:
     sizer->Add(addButton);
 
     m_listCtrl = new FrameListCtrl(this,
-      art.Get(Icon::CLOSE_FRAME),
-      art.Get(Icon::CLOSE_FRAME_HIGHLIGHT),
       app,
+      art,
       status);
     sizer->Add(m_listCtrl);
     SetSizer(sizer);

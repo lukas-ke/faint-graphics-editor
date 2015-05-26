@@ -523,7 +523,7 @@ public:
     Add(imageMenu,
       Label("&Resize...\tCtrl+E", "Scale or resize the image or selection"),
       [&](){
-        show_resize_dialog(app);
+        show_resize_dialog(app, art);
       });
 
     imageMenu->AppendSeparator();

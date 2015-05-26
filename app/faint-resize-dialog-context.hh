@@ -19,7 +19,8 @@
 namespace faint{
 
 class AppContext;
-void show_resize_dialog(AppContext&);
+class Art;
+void show_resize_dialog(AppContext&, const Art&);
 
 } // namespace
 

@@ -148,7 +148,7 @@ static void dialog_color_balance(){
 /* function: "dialog_resize()\n
 Show the image/selection resize dialog." */
 static void dialog_resize(){
-  show_resize_dialog(get_app_context());
+  show_resize_dialog(get_app_context(), get_art());
 }
 
 /* function: "dialog_rotate()\n
