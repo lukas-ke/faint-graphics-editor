@@ -13,36 +13,24 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_SELECTED_COLOR_CTRL_HH
-#define FAINT_SELECTED_COLOR_CTRL_HH
-#include "util/pick-paint.hh"
-
-class wxWindow;
+#ifndef FAINT_PICK_PAINT_HH
+#define FAINT_PICK_PAINT_HH
+#include <functional>
+#include "bitmap/paint.hh"
+#include "text/utf8-string.hh"
+#include "util/optional.hh"
 
 namespace faint{
 
-class ColorChoice;
-class IntSize;
 class StatusInterface;
 
-class SelectedColorCtrlImpl;
-
-class SelectedColorCtrl{
-public:
-  SelectedColorCtrl(wxWindow* parent,
-    const IntSize&,
-    StatusInterface&,
-    const pick_paint_f&);
-  ~SelectedColorCtrl();
-  wxWindow* AsWindow();
-  void UpdateColors(const ColorChoice&);
-  enum class Which{HIT_FG, HIT_BG, HIT_NEITHER};
-
-  SelectedColorCtrl(const SelectedColorCtrl&) = delete;
-  SelectedColorCtrl& operator=(const SelectedColorCtrl&) = delete;
-private:
-  SelectedColorCtrlImpl* m_impl;
-};
+// Function optionally returning a Paint. Typically used to provide a
+// color-picker dialog (e.g. a color dialog) to controls, which the
+// control can show when necessary.
+using pick_paint_f = std::function<Optional<Paint>(
+  const utf8_string&,
+  const Paint&,
+  StatusInterface&)>;
 
 } // namespace
 

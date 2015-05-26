@@ -15,15 +15,18 @@
 
 #include "wx/wx.h"
 #include "bitmap/color.hh"
+#include "bitmap/paint.hh"
 #include "geo/int-point.hh"
+#include "gui/dialog-context.hh"
 #include "gui/palette-ctrl.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util/paint-map.hh"
 #include "util/setting-id.hh"
+#include "util/optional.hh"
 
 void gui_test_palette_ctrl(wxWindow* p,
   faint::StatusInterface& status,
-  faint::DialogContext& dialogContext)
+  faint::DialogContext&)
 {
   using namespace faint;
 
@@ -34,10 +37,16 @@ void gui_test_palette_ctrl(wxWindow* p,
   paintMap.Append(Paint(Color(0,0,0)));
   paintMap.Append(Paint(Color(0,0,0, 100)));
 
-  PaletteCtrl c1(p, paintMap, status, dialogContext);
+  const auto pickPaint = [](const auto&, const auto&, auto&){
+    using namespace faint;
+    return Optional<Paint>(Paint(Color(255,0,255)));
+  };
+
+
+  PaletteCtrl c1(p, paintMap, status, pickPaint);
   set_pos(c1.AsWindow(), {10,10});
 
   // Another palette control for testing drag and drop between controls.
-  PaletteCtrl c2(p, paintMap, status, dialogContext);
+  PaletteCtrl c2(p, paintMap, status, pickPaint);
   set_pos(c2.AsWindow(), {10, 100});
 }

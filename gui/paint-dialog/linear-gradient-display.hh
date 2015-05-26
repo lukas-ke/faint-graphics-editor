@@ -18,6 +18,7 @@
 #include <memory>
 #include "bitmap/gradient.hh"
 
+class wxCursor;
 class wxWindow;
 
 namespace faint{
@@ -27,7 +28,10 @@ class IntSize;
 
 class LinearGradientDisplay{
 public:
-  LinearGradientDisplay(wxWindow* parent, const IntSize&, DialogContext&);
+  LinearGradientDisplay(wxWindow* parent,
+    const wxCursor& crosshair,
+    const IntSize&,
+    DialogContext&);
   ~LinearGradientDisplay();
   wxWindow* AsWindow();
   const LinearGradient& GetGradient() const;

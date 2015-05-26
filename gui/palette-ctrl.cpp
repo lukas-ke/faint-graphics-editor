@@ -21,7 +21,6 @@
 #include "gui/drop-source.hh"
 #include "gui/events.hh"
 #include "gui/mouse-capture.hh"
-#include "gui/paint-dialog.hh"
 #include "gui/palette-ctrl.hh"
 #include "gui/setting-events.hh"
 #include "text/formatting.hh"
@@ -49,11 +48,11 @@ public:
   PaletteCtrlImpl(wxWindow* parent,
     const PaintMap& palette,
     StatusInterface& status,
-    DialogContext& dialogContext)
+    const pick_paint_f& pickPaint)
     : wxPanel(parent, wxID_ANY),
       ColorDropTarget(this),
-      m_dialogContext(dialogContext),
       m_mouse(this),
+      m_pickPaint(pickPaint),
       m_statusInterface(status)
   {
     #ifdef __WXMSW__
@@ -214,11 +213,9 @@ private:
     // Highlight the edited color in the palette
     CreateBitmap(highlight(pos));
 
-    show_paint_dialog(nullptr,
-      "Edit Palette Color",
+    m_pickPaint("Edit Palette Color",
       m_paintMap.Get(pos),
-      m_statusInterface,
-      m_dialogContext).Visit(
+      m_statusInterface).Visit(
         [&](const Paint& paint){
           m_paintMap.Replace(pos, paint);
           SetFg(paint);
@@ -260,20 +257,20 @@ private:
     }
   }
 
-  DialogContext& m_dialogContext;
   MouseCapture m_mouse;
   wxBitmap m_bitmap;
   IntPoint m_dragStart;
   Optional<CellPos> m_highLight;
   PaintMap m_paintMap;
+  pick_paint_f m_pickPaint;
   StatusInterface& m_statusInterface;
 };
 
 PaletteCtrl::PaletteCtrl(wxWindow* parent,
   const PaintMap& palette,
   StatusInterface& status,
-  DialogContext& context)
-  : m_impl(make_dumb<PaletteCtrlImpl>(parent, palette, status, context))
+  const pick_paint_f& pickPaint)
+  : m_impl(make_dumb<PaletteCtrlImpl>(parent, palette, status, pickPaint))
 {}
 
 wxWindow* PaletteCtrl::AsWindow(){

@@ -21,22 +21,28 @@
 #include "util-wx/fwd-wx.hh"
 #include "util/color-choice.hh"
 #include "util/status-interface.hh"
+#include "gui/dialog-context.hh"
 
 void gui_test_selected_color_ctrl(wxWindow* p,
-  faint::StatusInterface& status, faint::DialogContext& ctx)
+  faint::StatusInterface& status, faint::DialogContext&)
 {
+  const auto pickPaint = [](const auto&, const auto&, auto&){
+    using namespace faint;
+    return Optional<Paint>(Paint(Color(255,0,255)));
+  };
+
   using namespace faint;
-  SelectedColorCtrl c1(p, IntSize(64, 64), status, ctx);
+  SelectedColorCtrl c1(p, IntSize(64, 64), status, pickPaint);
   c1.UpdateColors(ColorChoice({Paint(Color(128,0,100,50)), false},
       {Paint(Color(255,0,255)), false}));
   set_pos(c1.AsWindow(), {10,10});
 
-  SelectedColorCtrl c2(p, IntSize(64, 64), status, ctx);
+  SelectedColorCtrl c2(p, IntSize(64, 64), status, pickPaint);
   c2.UpdateColors(ColorChoice({Paint(Color(128,0,100,50)), true},
       {Paint(Color(255,0,255)), false}));
   set_pos(c2.AsWindow(), {10, 84});
 
-  SelectedColorCtrl c3(p, IntSize(64, 64), status, ctx);
+  SelectedColorCtrl c3(p, IntSize(64, 64), status, pickPaint);
   c3.UpdateColors(ColorChoice({Paint(Color(128,0,100,50)), false},
       {Paint(Color(255,0,255)), true}));
   set_pos(c3.AsWindow(), {10, 84 + 74});

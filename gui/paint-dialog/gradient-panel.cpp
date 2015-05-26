@@ -18,6 +18,7 @@
 #include "wx/dcclient.h"
 #include "wx/stattext.h"
 #include "wx/textctrl.h"
+#include "app/resource-id.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/draw.hh"
 #include "bitmap/pattern.hh"
@@ -27,7 +28,6 @@
 #include "geo/int-size.hh"
 #include "geo/line.hh"
 #include "geo/range.hh" // for constrained
-#include "gui/art.hh"
 #include "gui/bitmap-list-ctrl.hh"
 #include "gui/mouse-capture.hh"
 #include "gui/paint-dialog.hh"
@@ -77,6 +77,7 @@ static wxBitmap radial_icon(const IntSize& size){
 class PaintPanel_Gradient::PaintPanel_Gradient_Impl : public wxPanel{
 public:
   PaintPanel_Gradient_Impl(wxWindow* parent,
+    const wxCursor& crosshair,
     StatusInterface& statusInfo,
     DialogContext& dialogContext)
     : wxPanel(parent, wxID_ANY)
@@ -97,6 +98,7 @@ public:
       100);
 
     m_linearDisplay = std::make_unique<LinearGradientDisplay>(this,
+      crosshair,
       displaySize,
       dialogContext);
     set_pos(m_linearDisplay->AsWindow(), to_the_right_of(m_gradientTypeCtrl));
@@ -213,10 +215,12 @@ private:
 
 PaintPanel_Gradient::PaintPanel_Gradient(wxWindow* parent,
   const Color& bgColor,
+  const wxCursor& crosshair,
   StatusInterface& statusInfo,
   DialogContext& dialogContext)
 {
   m_impl = new PaintPanel_Gradient_Impl(parent,
+    crosshair,
     statusInfo,
     dialogContext);
   m_impl->SetBackgroundColour(to_wx(bgColor));

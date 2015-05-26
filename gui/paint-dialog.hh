@@ -19,16 +19,17 @@
 #include "gui/dialog-context.hh"
 #include "util/optional.hh"
 
-class wxString;
 class wxWindow;
 
 namespace faint{
 
+class Art;
 class StatusInterface;
+class utf8_string;
 
 // Shows a dialog for selecting an RGBA-color.
 Optional<Color> show_color_only_dialog(wxWindow* parent,
-  const wxString& title,
+  const utf8_string& title,
   const Color& initial,
   DialogContext&);
 
@@ -39,8 +40,9 @@ Optional<Color> show_color_only_dialog(wxWindow* parent,
 // the page will be initialized with.
 // Typically, the current selection should be used for initial.
 Optional<Paint> show_paint_dialog(wxWindow* parent,
-  const wxString& title,
+  const utf8_string& title,
   const Paint& initial,
+  const Art&,
   StatusInterface&,
   DialogContext&);
 

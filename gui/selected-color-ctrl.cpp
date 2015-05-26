@@ -23,9 +23,7 @@
 #include "geo/int-rect.hh"
 #include "geo/size.hh"
 #include "gui/color-data-object.hh"
-#include "gui/dialog-context.hh"
 #include "gui/events.hh"
-#include "gui/paint-dialog.hh"
 #include "gui/selected-color-ctrl.hh"
 #include "gui/setting-events.hh"
 #include "text/formatting.hh"
@@ -71,16 +69,17 @@ static wxBitmap selected_color_bitmap(const FlaggedPaint& p,
 class SelectedColorCtrlImpl : public wxPanel, public ColorDropTarget {
 public:
   using Which = SelectedColorCtrl::Which;
+
   SelectedColorCtrlImpl(wxWindow* parent,
     const IntSize& size,
     StatusInterface& statusInfo,
-    DialogContext& dialogContext)
+    const pick_paint_f& pickPaint)
     : wxPanel(parent, wxID_ANY),
       ColorDropTarget(this),
-      m_dialogContext(dialogContext),
       m_fg(Color(0,0,0)),
       m_bg(Color(0,0,0)),
       m_menuEventColor(Which::HIT_NEITHER),
+      m_pickPaint(pickPaint),
       m_statusInfo(statusInfo)
   {
     const IntPoint p0 = IntPoint::Both(0);
@@ -117,15 +116,13 @@ public:
         }
         m_statusInfo.SetMainText("");
         const Paint& paint(GetClickedPaint(hit));
-        wxString title(hit == Which::HIT_FG ?
+        utf8_string title(hit == Which::HIT_FG ?
           "Select Foreground Color" :
           "Select Background Color");
 
-        show_paint_dialog(nullptr,
-          title,
+        m_pickPaint(title,
           paint,
-          m_statusInfo,
-          m_dialogContext).Visit(
+          m_statusInfo).Visit(
             [&](const Paint& picked){
               SendChangeEvent(ToSetting(hit), picked);
             });
@@ -275,7 +272,6 @@ private:
       ts_Fg : ts_Bg;
   }
 
-  DialogContext& m_dialogContext;
   IntRect m_fgRect;
   IntRect m_bgRect;
   Paint m_fg;
@@ -283,16 +279,16 @@ private:
   wxBitmap m_fgBmp;
   wxBitmap m_bgBmp;
   Which m_menuEventColor;
+  pick_paint_f m_pickPaint;
   StatusInterface& m_statusInfo;
 };
 
 SelectedColorCtrl::SelectedColorCtrl(wxWindow* parent,
   const IntSize& size,
   StatusInterface& status,
-  DialogContext& context)
-
+  const pick_paint_f& pickPaint)
 {
-  m_impl = new SelectedColorCtrlImpl(parent, size, status, context);
+  m_impl = new SelectedColorCtrlImpl(parent, size, status, pickPaint);
 }
 
 SelectedColorCtrl::~SelectedColorCtrl(){

@@ -17,9 +17,11 @@
 #include "wx/dialog.h"
 #include "wx/notebook.h"
 #include "wx/sizer.h"
+#include "app/resource-id.hh"
 #include "bitmap/paint.hh"
 #include "bitmap/pattern.hh"
 #include "geo/limits.hh"
+#include "gui/art.hh"
 #include "gui/dialog-context.hh"
 #include "gui/paint-dialog.hh"
 #include "gui/paint-dialog/gradient-panel.hh"
@@ -77,6 +79,7 @@ class PaintDialog : public wxDialog {
 public:
   PaintDialog(wxWindow* parent,
     const wxString& title,
+    const Art& art,
     StatusInterface& statusInfo,
     DialogContext& dialogContext)
     : wxDialog(parent, wxID_ANY, title)
@@ -102,6 +105,7 @@ public:
 
     m_panelGradient = std::make_unique<PaintPanel_Gradient>(m_tabs,
       themeBg,
+      art.Get(Cursor::CROSSHAIR),
       statusInfo,
       dialogContext);
     m_tabs->AddPage(m_panelGradient->AsWindow(), "Gradient");
@@ -264,11 +268,11 @@ private:
 };
 
 Optional<Color> show_color_only_dialog(wxWindow* parent,
-  const wxString& title,
+  const utf8_string& title,
   const Color& initial,
   DialogContext& context)
 {
-  ColorDialog dlg(parent, title,
+  ColorDialog dlg(parent, to_wx(title),
     context.GetSliderCursors(),
     initial);
   return context.ShowModal(dlg) == DialogChoice::OK ?
@@ -276,12 +280,13 @@ Optional<Color> show_color_only_dialog(wxWindow* parent,
 }
 
 Optional<Paint> show_paint_dialog(wxWindow* parent,
-  const wxString& title,
+  const utf8_string& title,
   const Paint& initial,
+  const Art& art,
   StatusInterface& statusInfo,
   DialogContext& context)
 {
-  PaintDialog dlg(parent, title, statusInfo, context);
+  PaintDialog dlg(parent, to_wx(title), art, statusInfo, context);
   dlg.SetPaint(initial);
   return context.ShowModal(dlg) == DialogChoice::OK ?
     option(dlg.GetPaint()) :

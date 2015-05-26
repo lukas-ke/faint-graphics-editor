@@ -28,6 +28,7 @@ class PaintPanel_Gradient{
 public:
   PaintPanel_Gradient(wxWindow* parent,
     const Color& bgColor,
+    const wxCursor& crosshair,
     StatusInterface&,
     DialogContext&);
   ~PaintPanel_Gradient();

@@ -15,14 +15,13 @@
 
 #ifndef FAINT_PALETTE_CTRL_HH
 #define FAINT_PALETTE_CTRL_HH
-#include "gui/dialog-context.hh"
 #include "util/dumb-ptr.hh"
+#include "util/pick-paint.hh"
 
 class wxWindow;
 
 namespace faint{
 
-class Paint;
 class PaintMap;
 class Settings;
 class StatusInterface;
@@ -32,7 +31,7 @@ public:
   PaletteCtrl(wxWindow* parent,
     const PaintMap& palette,
     StatusInterface&,
-    DialogContext&);
+    const pick_paint_f&);
   wxWindow* AsWindow();
   void Add(const Paint&);
   void SetPalette(const PaintMap&);

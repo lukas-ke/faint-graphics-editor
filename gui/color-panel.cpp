@@ -23,6 +23,7 @@
 #include "gui/frame-ctrl.hh"
 #include "gui/grid-ctrl.hh"
 #include "gui/grid-dialog.hh"
+#include "gui/paint-dialog.hh"
 #include "gui/palette-ctrl.hh"
 #include "gui/selected-color-ctrl.hh"
 #include "gui/zoom-ctrl.hh"
@@ -74,15 +75,29 @@ public:
     // The spacing between controls in this panel
     const int spacing = 5;
 
+    const auto pickPaint = [&app, &art](const utf8_string& title,
+        const Paint& initial,
+        StatusInterface& status)
+      {
+        return show_paint_dialog(nullptr, // ?
+          title,
+          initial,
+          art,
+          status,
+          app.GetDialogContext());
+      };
+
+
     wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
     m_selectedColor = std::make_unique<SelectedColorCtrl>(this, IntSize(50,50),
-      status, app.GetDialogContext());
+      status, pickPaint);
+
     sizer->Add(m_selectedColor->AsWindow(), 0, wxALL, spacing);
 
     m_palette = std::make_unique<PaletteCtrl>(this,
       palette,
       status,
-      app.GetDialogContext());
+      pickPaint);
     sizer->Add(m_palette->AsWindow(), 0, wxALL | wxEXPAND | wxSHRINK, spacing);
 
     m_zoom = std::make_unique<ZoomCtrl>(this, status);
