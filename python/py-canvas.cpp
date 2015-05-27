@@ -286,6 +286,15 @@ static void canvas_flatten(Canvas& canvas, const BoundObjects& objects){
     get_flatten_command(check_ownership(image, objects), image));
 }
 
+/* method: "flattened() -> Bitmap\n
+Returns a copy of the background from this image as a Bitmap with the
+active selection (if any) and all objects rasterized.\n\n
+
+See also get_bitmap and get_stamped_bitmap." */
+static Bitmap canvas_flattened(Canvas& canvas){
+  return flatten(canvas.GetImage());
+}
+
 /* method: "get_bitmap()\n
 Returns a copy of the pixel data in the active frame as an
 ifaint.Bitmap, or none if the background is a color.\n\n
