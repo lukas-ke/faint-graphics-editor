@@ -70,7 +70,6 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
   auto dashed = create_checkbox(dlg, "&Dashed lines", grid.Dashed());
 
   using namespace layout;
-  auto itemSpacing = ItemSpacing(item_spacing);
   auto spacingRow = create_row(OuterSpacing(0), ItemSpacing(item_spacing),
     {labelSpacing, raw(editSpacing)});
 

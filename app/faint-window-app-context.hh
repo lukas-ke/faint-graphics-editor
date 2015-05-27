@@ -20,6 +20,7 @@
 #include "gui/canvas-panel.hh" // Fixme
 #include "gui/command-window.hh"
 #include "gui/dialogs/resize-dialog-options.hh" // Fixme: impl
+#include "gui/faint-window.hh" // Fixme: Consider forward declaration
 #include "gui/transparency-style.hh" // Fixme: impl
 #include "tools/tool.hh"
 #include "util/bound-setting.hh" // Fixme: For BoundSetting
@@ -67,12 +68,11 @@ private:
   void BeginModalDialog() override;
   void EndModalDialog() override;
   void OnClosed(BitmapCommand*);
-  FaintSliderCursors m_sliderCursors;
 
-private:
   AppContext& m_app;
   std::unique_ptr<CommandWindow> m_commandWindow;
   FaintWindow& m_faintWindow;
+  FaintSliderCursors m_sliderCursors;
   std::unique_ptr<WindowFeedback> m_windowFeedback;
 };
 
