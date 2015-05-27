@@ -17,6 +17,7 @@
 #include "wx/button.h"
 #include "wx/sizer.h"
 #include "wx/spinbutt.h" // For wxEVT_SPIN_...
+#include "app/resource-id.hh"
 #include "gui/art.hh"
 #include "gui/drag-value-ctrl.hh"
 #include "gui/events.hh"

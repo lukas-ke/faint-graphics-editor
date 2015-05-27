@@ -22,6 +22,7 @@
 #include "wx/frame.h"
 #include "app/get-art.hh"
 #include "app/one-instance.hh"
+#include "app/resource-id.hh"
 #include "app/write-exception-log.hh"
 #include "bitmap/color.hh"
 #include "bitmap/paint.hh"

@@ -13,13 +13,14 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include <map>
 #include <fstream>
+#include <map>
 #include "wx/toolbar.h"
 #include "wx/frame.h"
 #include "wx/html/htmlwin.h"
 #include "wx/splitter.h"
 #include "wx/treectrl.h"
+#include "app/resource-id.hh"
 #include "gui/art.hh"
 #include "gui/help-frame.hh"
 #include "util-wx/bind-event.hh"

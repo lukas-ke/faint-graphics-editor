@@ -14,7 +14,6 @@
 // permissions and limitations under the License.
 
 #include "wx/dcclient.h"
-#include "app/resource-id.hh"
 #include "geo/angle.hh"
 #include "geo/geo-func.hh"
 #include "geo/line.hh"

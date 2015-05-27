@@ -23,6 +23,7 @@
 #include "wx/sizer.h"
 #include "app/app-context.hh"
 #include "app/canvas.hh"
+#include "app/resource-id.hh"
 #include "commands/frame-cmd.hh"
 #include "geo/int-point.hh"
 #include "geo/int-rect.hh"

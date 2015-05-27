@@ -17,7 +17,6 @@
 #include <memory>
 #include "wx/bitmap.h"
 #include "wx/dcclient.h"
-#include "app/resource-id.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/draw.hh"
 #include "geo/line.hh"

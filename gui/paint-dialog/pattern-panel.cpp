@@ -20,6 +20,7 @@
 #include "app/canvas.hh"
 #include "app/get-app-context.hh" // For use image
 #include "app/get-art.hh"
+#include "app/resource-id.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "bitmap/draw.hh"

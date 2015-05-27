@@ -18,7 +18,6 @@
 #include "wx/dcclient.h"
 #include "wx/stattext.h"
 #include "wx/textctrl.h"
-#include "app/resource-id.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/draw.hh"
 #include "bitmap/pattern.hh"

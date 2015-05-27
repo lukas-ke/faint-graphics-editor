@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include "wx/button.h" // Fixme
+#include "app/resource-id.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "bitmap/paint.hh"

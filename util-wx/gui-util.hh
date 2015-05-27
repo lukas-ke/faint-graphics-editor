@@ -19,7 +19,6 @@
 #include <vector>
 #include "wx/accel.h"
 #include "wx/defs.h"
-#include "app/resource-id.hh"
 #include "formats/format.hh"
 #include "geo/primitive.hh"
 #include "gui/accelerator-entry.hh"
@@ -43,7 +42,9 @@ class wxTextCtrl;
 class wxWindow;
 
 namespace faint{
+
 class Art;
+enum class Icon;
 
 void console_message(const utf8_string&);
 
