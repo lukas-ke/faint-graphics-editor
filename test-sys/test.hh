@@ -106,7 +106,7 @@ inline bool test_write_error(int line, const char* text){
   return false;
 }
 
-#define VERIFY(C) ((C) ? true : test_write_error(__LINE__, #C ## " failed."))
+#define VERIFY(C) ((C) ? true : test_write_error(__LINE__, #C " failed."))
 
 #define NOT(C) if ((!C)){}else{ TEST_OUT << "  Error(" << __LINE__ << "): NOT " << #C << " failed." << std::endl; TEST_FAILED=true;}
 
