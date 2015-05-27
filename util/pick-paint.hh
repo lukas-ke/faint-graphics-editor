@@ -22,15 +22,12 @@
 
 namespace faint{
 
-class StatusInterface;
-
-// Function optionally returning a Paint. Typically used to provide a
-// color-picker dialog (e.g. a color dialog) to controls, which the
-// control can show when necessary.
+// Type of function optionally returning a Paint. Typically used to
+// provide a color-picker dialog (e.g. a color dialog) to controls,
+// which the control can show when necessary.
 using pick_paint_f = std::function<Optional<Paint>(
-  const utf8_string&,
-  const Paint&,
-  StatusInterface&)>;
+  const utf8_string& title,
+  const Paint& initial)>;
 
 } // namespace
 

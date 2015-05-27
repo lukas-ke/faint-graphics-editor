@@ -75,18 +75,15 @@ public:
     // The spacing between controls in this panel
     const int spacing = 5;
 
-    const auto pickPaint = [&app, &art](const utf8_string& title,
-        const Paint& initial,
-        StatusInterface& status)
-      {
-        return show_paint_dialog(nullptr, // ?
+    auto pickPaint =
+      [&app, &art, &status](const utf8_string& title, const Paint& initial){
+        return show_paint_dialog(nullptr, // Fixme: ?
           title,
           initial,
           art,
           status,
           app.GetDialogContext());
-      };
-
+    };
 
     wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
     m_selectedColor = std::make_unique<SelectedColorCtrl>(this, IntSize(50,50),

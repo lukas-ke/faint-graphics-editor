@@ -37,11 +37,10 @@ void gui_test_palette_ctrl(wxWindow* p,
   paintMap.Append(Paint(Color(0,0,0)));
   paintMap.Append(Paint(Color(0,0,0, 100)));
 
-  const auto pickPaint = [](const auto&, const auto&, auto&){
+  const auto pickPaint = [](const auto&, const auto&){
     using namespace faint;
-    return Optional<Paint>(Paint(Color(255,0,255)));
+    return option(Paint(color_magenta));
   };
-
 
   PaletteCtrl c1(p, paintMap, status, pickPaint);
   set_pos(c1.AsWindow(), {10,10});

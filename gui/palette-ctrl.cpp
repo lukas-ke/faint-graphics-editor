@@ -213,13 +213,11 @@ private:
     // Highlight the edited color in the palette
     CreateBitmap(highlight(pos));
 
-    m_pickPaint("Edit Palette Color",
-      m_paintMap.Get(pos),
-      m_statusInterface).Visit(
-        [&](const Paint& paint){
-          m_paintMap.Replace(pos, paint);
-          SetFg(paint);
-        });
+    m_pickPaint("Edit Palette Color", m_paintMap.Get(pos)).Visit(
+      [&](const Paint& paint){
+        m_paintMap.Replace(pos, paint);
+        SetFg(paint);
+      });
 
     // Clear the highlight
     CreateBitmap(no_highlight());

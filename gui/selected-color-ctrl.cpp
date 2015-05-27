@@ -120,12 +120,10 @@ public:
           "Select Foreground Color" :
           "Select Background Color");
 
-        m_pickPaint(title,
-          paint,
-          m_statusInfo).Visit(
-            [&](const Paint& picked){
-              SendChangeEvent(ToSetting(hit), picked);
-            });
+        m_pickPaint(title, paint).Visit(
+          [&](const Paint& picked){
+            SendChangeEvent(ToSetting(hit), picked);
+          });
       });
 
     events::on_mouse_right_down(this,

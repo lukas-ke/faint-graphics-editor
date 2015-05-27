@@ -26,9 +26,9 @@
 void gui_test_selected_color_ctrl(wxWindow* p,
   faint::StatusInterface& status, faint::DialogContext&)
 {
-  const auto pickPaint = [](const auto&, const auto&, auto&){
+  const auto pickPaint = [](const auto&, const auto&){
     using namespace faint;
-    return Optional<Paint>(Paint(Color(255,0,255)));
+    return option(Paint(color_magenta));
   };
 
   using namespace faint;
