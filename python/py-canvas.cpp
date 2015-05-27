@@ -286,12 +286,21 @@ static void canvas_flatten(Canvas& canvas, const BoundObjects& objects){
     get_flatten_command(check_ownership(image, objects), image));
 }
 
-/* method: "get_bitmap()\n
+/* method: "flattened() -> Bitmap\n
+Returns a copy of the background from this image as a Bitmap with the
+active selection (if any) and all objects rasterized.\n\n
+
+See also get_background and get_stamped_bitmap." */
+static Bitmap canvas_flattened(Canvas& canvas){
+  return flatten(canvas.GetImage());
+}
+
+/* method: "get_background()\n
 Returns a copy of the pixel data in the active frame as an
 ifaint.Bitmap, or none if the background is a color.\n\n
 
 To include a floating selection, use instead get_stamped_bitmap." */
-static const Optional<Bitmap>& canvas_get_bitmap(Canvas& canvas){
+static const Optional<Bitmap>& canvas_get_background(Canvas& canvas){
   return canvas.GetBackground().Get<Bitmap>();
 }
 
@@ -326,7 +335,7 @@ static Optional<IntPoint> canvas_get_point_overlay(Canvas& canvas){
 /* method: "get_stamped_bitmap()\n
 Returns a copy of the pixel data in the active frame as an
 ifaint.Bitmap. Any floating selection will be stamped onto the
-Bitmap." */
+Bitmap. Objects will not be included. " */
 static Bitmap canvas_get_stamped_bitmap(Canvas& canvas){
   return stamp_raster_selection(canvas.GetImage());
 }
