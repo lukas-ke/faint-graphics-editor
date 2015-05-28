@@ -58,7 +58,7 @@ public:
   SliderCursors(const SliderCursors&) = delete;
   virtual ~SliderCursors() = default;
 
-  virtual void Set(wxWindow*, SliderDir) const = 0;
+  virtual void SetHandleCursor(wxWindow*, SliderDir) const = 0;
   virtual void SetOffsetCursor(wxWindow*, SliderDir) const = 0;
 };
 

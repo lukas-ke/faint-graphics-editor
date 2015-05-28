@@ -18,24 +18,24 @@
 
 namespace faint{
 
-FaintSliderCursors::FaintSliderCursors(const wxCursor& horizontal,
-  const wxCursor& vertical,
-  const wxCursor& offsetHorizontal,
-  const wxCursor& offsetVertical)
-  : m_horizontal(horizontal),
-    m_vertical(vertical),
-    m_offsetHorizontal(offsetHorizontal),
-    m_offsetVertical(offsetVertical)
+FaintSliderCursors::FaintSliderCursors(const wxCursor& horizontalHandle,
+  const wxCursor& verticalHandle,
+  const wxCursor& horizontalOffset,
+  const wxCursor& verticalOffset)
+  : m_horizontalHandle(horizontalHandle),
+    m_horizontalOffset(horizontalOffset),
+    m_verticalHandle(verticalHandle),
+    m_verticalOffset(verticalOffset)
 {}
 
-void FaintSliderCursors::Set(wxWindow* w, SliderDir dir) const{
+void FaintSliderCursors::SetHandleCursor(wxWindow* w, SliderDir dir) const{
   set_cursor(w,
-    dir == SliderDir::HORIZONTAL ? m_horizontal : m_vertical);
+    dir == SliderDir::HORIZONTAL ? m_horizontalHandle : m_verticalHandle);
 }
 
 void FaintSliderCursors::SetOffsetCursor(wxWindow* w, SliderDir dir) const{
   set_cursor(w,
-    dir == SliderDir::HORIZONTAL ? m_offsetHorizontal : m_offsetVertical);
+    dir == SliderDir::HORIZONTAL ? m_horizontalOffset : m_verticalOffset);
 }
 
 } // namespace

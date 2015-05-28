@@ -75,7 +75,7 @@ public:
     assert(m_range.Has(m_v2));
 
     SetInitialSize(wxSize(20,20)); // Minimum size
-    m_cursors.Set(this, SliderDir::HORIZONTAL);
+    m_cursors.SetHandleCursor(this, SliderDir::HORIZONTAL);
 
     events::on_mouse_left_down(this,
       [this](const IntPoint& pos){
@@ -117,7 +117,7 @@ public:
             m_cursors.SetOffsetCursor(this, SliderDir::HORIZONTAL);
           }
           else{
-            m_cursors.Set(this, SliderDir::HORIZONTAL);
+            m_cursors.SetHandleCursor(this, SliderDir::HORIZONTAL);
           }
         }
       });

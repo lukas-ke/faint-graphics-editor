@@ -104,7 +104,7 @@ public:
       m_value(values.GetValue())
   {
     SetInitialSize(wxSize(20,20)); // Minimum size
-    cursors.Set(this, m_dir);
+    cursors.SetHandleCursor(this, m_dir);
 
     events::on_mouse_left_down(this,
       [this](const IntPoint& mousePos){

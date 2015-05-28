@@ -28,14 +28,14 @@ class FaintSliderCursors final : public SliderCursors{
     const wxCursor& offsetVertical);
   FaintSliderCursors(const FaintSliderCursors&) = delete;
 
-  void Set(wxWindow*, SliderDir) const override;
+  void SetHandleCursor(wxWindow*, SliderDir) const override;
   void SetOffsetCursor(wxWindow*, SliderDir) const override;
 
 private:
-  wxCursor m_horizontal;
-  wxCursor m_vertical;
-  wxCursor m_offsetHorizontal;
-  wxCursor m_offsetVertical;
+  wxCursor m_horizontalHandle;
+  wxCursor m_horizontalOffset;
+  wxCursor m_verticalHandle;
+  wxCursor m_verticalOffset;
 };
 
 } // namespace
