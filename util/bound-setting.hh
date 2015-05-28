@@ -34,7 +34,7 @@ public:
   {}
   template<typename BoolFunc, typename IntFunc, typename StrFunc,
            typename FloatFunc, typename ColorFunc>
-  bool Visit(const BoolFunc& boolFunc,
+  auto Visit(const BoolFunc& boolFunc,
     const IntFunc& intFunc,
     const StrFunc& strFunc,
     const FloatFunc& floatFunc,

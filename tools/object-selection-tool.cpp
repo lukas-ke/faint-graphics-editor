@@ -87,34 +87,16 @@ public:
   }
 
   bool Set(const BoundSetting& s) override{
-    Command* cmd = nullptr;
     const auto& objects = m_activeCanvas->GetObjectSelection();
 
-    s.Visit(
-      [&](BoolSetting s, BoolSetting::ValueType v) -> bool{
-        cmd = change_setting_objects(objects, s, v);
-        return true;
-      },
-      [&](IntSetting s, IntSetting::ValueType v){
-        cmd = change_setting_objects(objects, s, v);
-        return true;
-      },
-      [&](StringSetting s, StringSetting::ValueType v){
-        cmd = change_setting_objects(objects, s, v);
-        return true;
-      },
-      [&](FloatSetting s, FloatSetting::ValueType v){
-        cmd = change_setting_objects(objects, s, v);
-        return true;
-      },
-      [&](PaintSetting s, PaintSetting::ValueType v){
-        cmd = change_setting_objects(objects, s, v);
-        return true;
-      });
+    auto makeCmd = [&](const auto& s, const auto& v){
+      return change_setting_objects(objects, s, v);
+    };
 
+    Command* cmd = s.Visit(makeCmd, makeCmd, makeCmd, makeCmd, makeCmd);
     if (cmd != nullptr){
       m_settings.Update(s);
-      m_activeCanvas->RunCommand(cmd);
+      m_activeCanvas->RunCommand(cmd); // Fixme: Will this update m_settings again?
       return true;
     }
     return false;
