@@ -100,8 +100,8 @@ private:
 
 class Gradient{
 public:
-  explicit Gradient(const LinearGradient&);
-  explicit Gradient(const RadialGradient&);
+  Gradient(const LinearGradient&);
+  Gradient(const RadialGradient&);
   Gradient(const Gradient&);
   ~Gradient();
   const LinearGradient& GetLinear() const;

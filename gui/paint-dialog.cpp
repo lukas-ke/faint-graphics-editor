@@ -68,11 +68,8 @@ static Optional<Color> deserialize_color(const utf8_string& str){
   return valid_color(r,g,b,a) ? option(color_from_ints(r,g,b,a)) : no_option();
 }
 
-static Gradient gradient_from_color(const Color& c){
-  LinearGradient g;
-  g.Add(ColorStop(c, 0.0));
-  g.Add(ColorStop(color_white, 1.0));
-  return Gradient(g);
+static Gradient gradient_from_color(const Color& c1, const Color& c2){
+  return LinearGradient(Angle::Zero(), {{c1, 0.0}, {c2, 1.0}});
 }
 
 class PaintDialog : public wxDialog {
@@ -146,12 +143,12 @@ public:
     }
   }
 
-  void SetPaint(const Paint& paint){
+  void SetPaint(const Paint& paint, const Color& secondary){
     using namespace std::placeholders;
     visit(paint,
-      std::bind(&PaintDialog::SetColor, this, _1),
-      std::bind(&PaintDialog::SetPattern, this, _1),
-      std::bind(&PaintDialog::SetGradient, this, _1));
+      [&](const Color& c){SetColor(c, secondary);},
+      [&](const Pattern& p){SetPattern(p);},
+      [&](const Gradient& g){SetGradient(g);});
   }
 
 private:
@@ -209,9 +206,9 @@ private:
     assert(false);
   }
 
-  void SetColor(const Color& color){
+  void SetColor(const Color& color, const Color& secondary){
     m_panelHSL->SetColor(color);
-    m_panelGradient->SetGradient(gradient_from_color(color));
+    m_panelGradient->SetGradient(gradient_from_color(color, secondary));
     SelectTab(m_panelHSL->AsWindow());
   }
 
@@ -282,12 +279,13 @@ Optional<Color> show_color_only_dialog(wxWindow* parent,
 Optional<Paint> show_paint_dialog(wxWindow* parent,
   const utf8_string& title,
   const Paint& initial,
+  const Color& secondary,
   const Art& art,
   StatusInterface& statusInfo,
   DialogContext& context)
 {
   PaintDialog dlg(parent, to_wx(title), art, statusInfo, context);
-  dlg.SetPaint(initial);
+  dlg.SetPaint(initial, secondary);
   return context.ShowModal(dlg) == DialogChoice::OK ?
     option(dlg.GetPaint()) :
     no_option();

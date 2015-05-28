@@ -16,7 +16,8 @@
 #include "wx/panel.h"
 #include "wx/sizer.h"
 #include "app/app-context.hh" // Fixme: Remove
-#include "app/canvas.hh"
+#include "app/canvas.hh" // Fixme: Remove
+#include "util/setting-id.hh" // Fixme: Remove
 #include "geo/int-size.hh"
 #include "gui/color-panel.hh"
 #include "gui/events.hh"
@@ -76,25 +77,36 @@ public:
     const int spacing = 5;
 
     auto pickPaint =
-      [&app, &art, &status](const utf8_string& title, const Paint& initial){
+      [&app, &art, &status](const utf8_string& title, const Paint& initial,
+        const Color& secondary)
+      {
         return show_paint_dialog(nullptr, // Fixme: ?
           title,
           initial,
+          secondary,
           art,
           status,
           app.GetDialogContext());
     };
 
+    auto getBg = [&](){
+      return get_color_default(app.Get(ts_Bg), color_white);
+    };
+
     wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-    m_selectedColor = std::make_unique<SelectedColorCtrl>(this, IntSize(50,50),
-      status, pickPaint);
+    m_selectedColor = std::make_unique<SelectedColorCtrl>(this,
+      IntSize(50,50),
+      status,
+      pickPaint,
+      getBg);
 
     sizer->Add(m_selectedColor->AsWindow(), 0, wxALL, spacing);
 
     m_palette = std::make_unique<PaletteCtrl>(this,
       palette,
       status,
-      pickPaint);
+      pickPaint,
+      getBg);
     sizer->Add(m_palette->AsWindow(), 0, wxALL | wxEXPAND | wxSHRINK, spacing);
 
     m_zoom = std::make_unique<ZoomCtrl>(this, status);

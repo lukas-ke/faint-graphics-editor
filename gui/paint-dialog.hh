@@ -42,6 +42,7 @@ Optional<Color> show_color_only_dialog(wxWindow* parent,
 Optional<Paint> show_paint_dialog(wxWindow* parent,
   const utf8_string& title,
   const Paint& initial,
+  const Color& secondary,
   const Art&,
   StatusInterface&,
   DialogContext&);

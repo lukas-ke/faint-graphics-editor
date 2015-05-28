@@ -73,11 +73,13 @@ public:
   SelectedColorCtrlImpl(wxWindow* parent,
     const IntSize& size,
     StatusInterface& statusInfo,
-    const pick_paint_f& pickPaint)
+    const pick_paint_f& pickPaint,
+    const Getter<Color>& getSecondary)
     : wxPanel(parent, wxID_ANY),
       ColorDropTarget(this),
       m_fg(Color(0,0,0)),
       m_bg(Color(0,0,0)),
+      m_getSecondary(getSecondary),
       m_menuEventColor(Which::HIT_NEITHER),
       m_pickPaint(pickPaint),
       m_statusInfo(statusInfo)
@@ -120,7 +122,7 @@ public:
           "Select Foreground Color" :
           "Select Background Color");
 
-        m_pickPaint(title, paint).Visit(
+        m_pickPaint(title, paint, m_getSecondary()).Visit(
           [&](const Paint& picked){
             SendChangeEvent(ToSetting(hit), picked);
           });
@@ -276,6 +278,7 @@ private:
   Paint m_bg;
   wxBitmap m_fgBmp;
   wxBitmap m_bgBmp;
+  Getter<Color> m_getSecondary;
   Which m_menuEventColor;
   pick_paint_f m_pickPaint;
   StatusInterface& m_statusInfo;
@@ -284,9 +287,14 @@ private:
 SelectedColorCtrl::SelectedColorCtrl(wxWindow* parent,
   const IntSize& size,
   StatusInterface& status,
-  const pick_paint_f& pickPaint)
+  const pick_paint_f& pickPaint,
+  const Getter<Color>& getSecondary)
 {
-  m_impl = new SelectedColorCtrlImpl(parent, size, status, pickPaint);
+  m_impl = new SelectedColorCtrlImpl(parent,
+    size,
+    status,
+    pickPaint,
+    getSecondary);
 }
 
 SelectedColorCtrl::~SelectedColorCtrl(){

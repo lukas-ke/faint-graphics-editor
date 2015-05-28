@@ -17,6 +17,7 @@
 #define FAINT_PALETTE_CTRL_HH
 #include "util/dumb-ptr.hh"
 #include "util/pick-paint.hh"
+#include "util/accessor.hh"
 
 class wxWindow;
 
@@ -31,7 +32,8 @@ public:
   PaletteCtrl(wxWindow* parent,
     const PaintMap& palette,
     StatusInterface&,
-    const pick_paint_f&);
+    const pick_paint_f&,
+    const Getter<Color>& secondaryColor);
   wxWindow* AsWindow();
   void Add(const Paint&);
   void SetPalette(const PaintMap&);

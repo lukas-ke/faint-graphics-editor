@@ -48,11 +48,13 @@ public:
   PaletteCtrlImpl(wxWindow* parent,
     const PaintMap& palette,
     StatusInterface& status,
-    const pick_paint_f& pickPaint)
+    const pick_paint_f& pickPaint,
+    const Getter<Color>& getSecondary)
     : wxPanel(parent, wxID_ANY),
       ColorDropTarget(this),
       m_mouse(this),
       m_pickPaint(pickPaint),
+      m_getSecondary(getSecondary),
       m_statusInterface(status)
   {
     #ifdef __WXMSW__
@@ -213,10 +215,11 @@ private:
     // Highlight the edited color in the palette
     CreateBitmap(highlight(pos));
 
-    m_pickPaint("Edit Palette Color", m_paintMap.Get(pos)).Visit(
-      [&](const Paint& paint){
-        m_paintMap.Replace(pos, paint);
-        SetFg(paint);
+    m_pickPaint("Edit Palette Color", m_paintMap.Get(pos),
+      m_getSecondary()).Visit(
+        [&](const Paint& paint){
+          m_paintMap.Replace(pos, paint);
+          SetFg(paint);
       });
 
     // Clear the highlight
@@ -261,14 +264,20 @@ private:
   Optional<CellPos> m_highLight;
   PaintMap m_paintMap;
   pick_paint_f m_pickPaint;
+  Getter<Color> m_getSecondary;
   StatusInterface& m_statusInterface;
 };
 
 PaletteCtrl::PaletteCtrl(wxWindow* parent,
   const PaintMap& palette,
   StatusInterface& status,
-  const pick_paint_f& pickPaint)
-  : m_impl(make_dumb<PaletteCtrlImpl>(parent, palette, status, pickPaint))
+  const pick_paint_f& pickPaint,
+  const Getter<Color>& getSecondary)
+  : m_impl(make_dumb<PaletteCtrlImpl>(parent,
+      palette,
+      status,
+      pickPaint,
+      getSecondary))
 {}
 
 wxWindow* PaletteCtrl::AsWindow(){

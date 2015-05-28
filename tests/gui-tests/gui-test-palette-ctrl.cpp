@@ -37,15 +37,17 @@ void gui_test_palette_ctrl(wxWindow* p,
   paintMap.Append(Paint(Color(0,0,0)));
   paintMap.Append(Paint(Color(0,0,0, 100)));
 
-  const auto pickPaint = [](const auto&, const auto&){
+  const auto pickPaint = [](const auto&, const auto&, const auto&){
     using namespace faint;
     return option(Paint(color_magenta));
   };
 
-  PaletteCtrl c1(p, paintMap, status, pickPaint);
+  const auto getSecondary = [](){return color_magenta;};
+
+  PaletteCtrl c1(p, paintMap, status, pickPaint, getSecondary);
   set_pos(c1.AsWindow(), {10,10});
 
   // Another palette control for testing drag and drop between controls.
-  PaletteCtrl c2(p, paintMap, status, pickPaint);
+  PaletteCtrl c2(p, paintMap, status, pickPaint, getSecondary);
   set_pos(c2.AsWindow(), {10, 100});
 }

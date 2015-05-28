@@ -15,6 +15,7 @@
 
 #ifndef FAINT_SELECTED_COLOR_CTRL_HH
 #define FAINT_SELECTED_COLOR_CTRL_HH
+#include "util/accessor.hh"
 #include "util/pick-paint.hh"
 
 class wxWindow;
@@ -32,8 +33,10 @@ public:
   SelectedColorCtrl(wxWindow* parent,
     const IntSize&,
     StatusInterface&,
-    const pick_paint_f&);
+    const pick_paint_f&,
+    const Getter<Color>& getSecondary);
   ~SelectedColorCtrl();
+
   wxWindow* AsWindow();
   void UpdateColors(const ColorChoice&);
   enum class Which{HIT_FG, HIT_BG, HIT_NEITHER};

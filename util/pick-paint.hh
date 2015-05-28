@@ -27,7 +27,8 @@ namespace faint{
 // which the control can show when necessary.
 using pick_paint_f = std::function<Optional<Paint>(
   const utf8_string& title,
-  const Paint& initial)>;
+  const Paint& initial,
+  const Color& secondary)>;
 
 } // namespace
 
