@@ -29,7 +29,7 @@
 
 namespace faint{
 
-ColorSetting fg_or_bg(const PosInfo& info){
+PaintSetting fg_or_bg(const PosInfo& info){
   return info.modifiers.RightMouse() ?
     ts_Bg : ts_Fg;
 }

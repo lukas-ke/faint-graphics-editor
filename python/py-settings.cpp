@@ -105,8 +105,8 @@ static PyObject* settings_str(settingsObject* self){
     else if (settings.Has(StringSetting(raw[i].ToInt()))) {
       ss << settings.Get(StringSetting(raw[i].ToInt()));
     }
-    else if (settings.Has(ColorSetting(raw[i].ToInt()))) {
-      ss << settings.Get(ColorSetting(raw[i].ToInt()));
+    else if (settings.Has(PaintSetting(raw[i].ToInt()))) {
+      ss << settings.Get(PaintSetting(raw[i].ToInt()));
     }
     if (i != raw.size() - 1){
       ss << ", ";

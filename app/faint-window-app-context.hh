@@ -101,8 +101,8 @@ class FaintWindowContext final : public AppContext {
 public:
   FaintWindowContext(FaintWindow&, const Art&,
     wxStatusBar&, HelpFrame&, InterpreterFrame&);
-  void AddFormat(Format* fileFormat) override;
-  void AddToPalette(const Paint& paint) override;
+  void AddFormat(Format*) override;
+  void AddToPalette(const Paint&) override;
   void BeginModalDialog() override;
   void BeginTextEntry() override;
   void Close(Canvas& canvas) override;
@@ -110,18 +110,18 @@ public:
   void DialogSaveAs(Canvas& canvas, bool backup) override;
   void EndModalDialog() override;
   void EndTextEntry() override;
-  bool Exists(const CanvasId& id) override;
+  bool Exists(const CanvasId&) override;
   bool FaintWindowFocused() const override;
-  BoolSetting::ValueType Get(const BoolSetting& s) override;
-  StringSetting::ValueType Get(const StringSetting& s) override;
-  IntSetting::ValueType Get(const IntSetting& s) override;
-  ColorSetting::ValueType Get(const ColorSetting& s) override;
-  FloatSetting::ValueType Get(const FloatSetting& s) override;
+  BoolSetting::ValueType Get(const BoolSetting&) override;
+  StringSetting::ValueType Get(const StringSetting&) override;
+  IntSetting::ValueType Get(const IntSetting&) override;
+  PaintSetting::ValueType Get(const PaintSetting&) override;
+  FloatSetting::ValueType Get(const FloatSetting&) override;
   Interaction& GetInteraction() override;
   ExtraOverlay& GetExtraOverlay() override;
   Canvas& GetActiveCanvas() override;
   Tool* GetActiveTool() override;
-  Canvas& GetCanvas(const Index& i) override;
+  Canvas& GetCanvas(const Index&) override;
   Index GetCanvasCount() const override;
   Grid GetDefaultGrid() const override;
   ImageInfo GetDefaultImageInfo() override;
@@ -135,8 +135,8 @@ public:
   Settings GetToolSettings() const override;
   const TransparencyStyle& GetTransparencyStyle() const override;
   bool IsFullScreen() const override;
-  Canvas* Load(const FilePath& filePath, const change_tab& changeTab) override;
-  void Load(const FileList& filePaths) override;
+  Canvas* Load(const FilePath&, const change_tab&) override;
+  void Load(const FileList&) override;
   Canvas* LoadAsFrames(const FileList& paths,
     const change_tab& changeTab) override;
   void Maximize() override;
@@ -151,13 +151,13 @@ public:
   void RaiseWindow() override;
   bool Save(Canvas& canvas) override;
   void SelectTool(ToolId id) override;
-  void Set(const BoolSetting& s, BoolSetting::ValueType v) override;
-  void Set(const StringSetting& s, const StringSetting::ValueType& v) override;
-  void Set(const IntSetting& s, IntSetting::ValueType v) override;
-  void Set(const ColorSetting& s, ColorSetting::ValueType v) override;
-  void Set(const FloatSetting& s, FloatSetting::ValueType v) override;
-  void SetActiveCanvas(const CanvasId& id) override;
-  void SetDefaultGrid(const Grid& grid) override;
+  void Set(const BoolSetting&, BoolSetting::ValueType) override;
+  void Set(const StringSetting&, const StringSetting::ValueType&) override;
+  void Set(const IntSetting&, IntSetting::ValueType) override;
+  void Set(const PaintSetting&, PaintSetting::ValueType) override;
+  void Set(const FloatSetting&, FloatSetting::ValueType) override;
+  void SetActiveCanvas(const CanvasId&) override;
+  void SetDefaultGrid(const Grid&) override;
   void SetDefaultResizeDialogOptions(const ResizeDialogOptions& opts) override;
   void SetInterpreterBackground(const ColRGB& c) override;
   void SetInterpreterTextColor(const ColRGB& c) override;
@@ -175,10 +175,10 @@ public:
   int TabletGetCursor() override;
   // Note: Not an override, used directly by FaintWindow
   void TabletSetCursor(int tabletCursor);
-  void ToggleFullScreen(bool fullScreen) override;
+  void ToggleFullScreen(bool) override;
   void ToggleMaximize() override;
   void UpdateShownSettings() override;
-  void UpdateToolSettings(const Settings& s) override;
+  void UpdateToolSettings(const Settings&) override;
   bool FloatingWindowFocused() const; // Non-virtual <- Fixme: remove
   void SetTabCtrl(TabCtrl*); // Non virtual
 

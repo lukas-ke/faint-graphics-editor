@@ -30,7 +30,7 @@ const SettingTag<BoolSetting> EVT_FAINT_BOOL_SETTING_CHANGE(
   FAINT_BOOL_SETTING_CHANGE);
 
 const wxEventType FAINT_COLOR_SETTING_CHANGE = wxNewEventType();
-const SettingTag<ColorSetting> EVT_FAINT_COLOR_SETTING_CHANGE(
+const SettingTag<PaintSetting> EVT_FAINT_COLOR_SETTING_CHANGE(
   FAINT_COLOR_SETTING_CHANGE);
 
 const wxEventType FAINT_STRING_SETTING_CHANGE = wxNewEventType();

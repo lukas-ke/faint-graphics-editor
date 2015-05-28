@@ -371,7 +371,7 @@ bool resize_handles_enabled(const Object* obj){
   return point_edit_disabled(obj);
 }
 
-ColorSetting setting_used_for_fill(const Object* obj){
+PaintSetting setting_used_for_fill(const Object* obj){
   const Settings& s(obj->GetSettings());
   assert(s.Has(ts_FillStyle));
   return s.Get(ts_FillStyle) == FillStyle::FILL ?

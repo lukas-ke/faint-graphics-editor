@@ -75,7 +75,7 @@ public:
   ToolResult MouseDown(const PosInfo& info) override{
     return inside_canvas(info).Visit(
       [](const PosInside& info){
-        const ColorSetting colorId = fg_or_bg(info);
+        const auto paintSetting = fg_or_bg(info);
 
         const auto& bg = info->canvas.GetBitmap();
         if (should_pick_to_pattern(info) && bg.IsSet()){
@@ -85,11 +85,11 @@ public:
             floored(info->pos);
           Pattern pattern(bg.Get(),
             anchor, object_aligned_t(!anchorTopLeft));
-          get_app_context().Set(colorId, Paint(pattern));
+          get_app_context().Set(paintSetting, Paint(pattern));
           return ToolResult::NONE;
         }
 
-        get_app_context().Set(colorId, pattern_get_hovered_paint(info));
+        get_app_context().Set(paintSetting, pattern_get_hovered_paint(info));
         return ToolResult::NONE;
       },
 

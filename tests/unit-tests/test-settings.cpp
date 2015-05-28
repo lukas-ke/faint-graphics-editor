@@ -30,8 +30,8 @@ void test_settings(){
   BoolSetting bool2;
   IntSetting int1;
   IntSetting int2;
-  ColorSetting color1;
-  ColorSetting color2;
+  PaintSetting color1;
+  PaintSetting color2;
   StringSetting str1;
   StringSetting str2;
   EnumSetting<Enum1> enum1;
@@ -109,7 +109,7 @@ void test_settings(){
   EQUAL(s.Get(str1), "First");
   EQUAL(s.Get(str2), "Second");
 
-  // ColorSetting
+  // PaintSetting
   VERIFY(s.Lacks(color1));
   VERIFY(!s.Has(color1));
 
@@ -118,12 +118,12 @@ void test_settings(){
   EQUAL(s.Get(color1), red);
   VERIFY(!s.Has(color2));
 
-  // ColorSetting: No change update
+  // PaintSetting: No change update
   updated = s.Update(BoundSetting(color1, red));
   VERIFY(!updated);
   EQUAL(s.Get(color1), red);
 
-  // ColorSetting: Modifying update
+  // PaintSetting: Modifying update
   updated = s.Update(BoundSetting(color1, green));
   VERIFY(updated);
   EQUAL(s.Get(color1), green);

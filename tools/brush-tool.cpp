@@ -105,7 +105,7 @@ static std::vector<LineSegment> floated(const std::vector<IntLineSegment>& v){
 }
 
 static Settings maybe_offsat_paint(const Settings& s, const Brush& brush){
-  ColorSetting which = (s.Has(ts_SwapColors) && s.Get(ts_SwapColors)) ?
+  const auto which = (s.Has(ts_SwapColors) && s.Get(ts_SwapColors)) ?
     ts_Bg : ts_Fg;
   Settings s2(s);
   s2.Set(which, offsat_if_object_aligned(s.Get(which),

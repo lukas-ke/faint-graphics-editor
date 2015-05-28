@@ -59,7 +59,7 @@ using BoolSetting = Setting<bool>;
 using IntSetting = Setting<int>;
 using StringSetting = Setting<utf8_string>;
 using FloatSetting = Setting<coord>;
-using ColorSetting = Setting<Paint>;
+using PaintSetting = Setting<Paint>;
 
 template<typename ENUM_T>
 class EnumSetting{
@@ -225,7 +225,7 @@ private:
   SETTING_MAP(BoolSetting) m_BoolSettingMap;
   SETTING_MAP(IntSetting) m_IntSettingMap;
   SETTING_MAP(StringSetting) m_StringSettingMap;
-  SETTING_MAP(ColorSetting) m_ColorSettingMap;
+  SETTING_MAP(PaintSetting) m_PaintSettingMap;
   SETTING_MAP(FloatSetting) m_FloatSettingMap;
 };
 
@@ -236,7 +236,7 @@ void Settings::Set(const SettingType& s, const SettingType::ValueType& v);
 // --
 
 DECLARE_SETTER(BoolSetting)
-DECLARE_SETTER(ColorSetting)
+DECLARE_SETTER(PaintSetting)
 DECLARE_SETTER(IntSetting)
 DECLARE_SETTER(StringSetting)
 DECLARE_SETTER(FloatSetting)
@@ -248,7 +248,7 @@ const SettingType::ValueType& Settings::Get(const SettingType& s) const;
 // ---
 
 DECLARE_GETTER(BoolSetting)
-DECLARE_GETTER(ColorSetting)
+DECLARE_GETTER(PaintSetting)
 DECLARE_GETTER(IntSetting)
 DECLARE_GETTER(StringSetting)
 DECLARE_GETTER(FloatSetting)
@@ -261,7 +261,7 @@ const SettingType::ValueType& Settings::GetDefault(const SettingType&,\
 // ---
 
 DECLARE_GETTER_DEFAULT(BoolSetting)
-DECLARE_GETTER_DEFAULT(ColorSetting)
+DECLARE_GETTER_DEFAULT(PaintSetting)
 DECLARE_GETTER_DEFAULT(IntSetting)
 DECLARE_GETTER_DEFAULT(StringSetting)
 DECLARE_GETTER_DEFAULT(FloatSetting)

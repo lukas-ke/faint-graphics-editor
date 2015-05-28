@@ -26,7 +26,7 @@ public:
   BoundSetting(const IntSetting, IntSetting::ValueType);
   BoundSetting(const StringSetting&, const StringSetting::ValueType&);
   BoundSetting(const FloatSetting&, FloatSetting::ValueType);
-  BoundSetting(const ColorSetting&, const ColorSetting::ValueType&);
+  BoundSetting(const PaintSetting&, const PaintSetting::ValueType&);
   template<typename T>
   BoundSetting(const EnumSetting<T>& s,
     const typename EnumSetting<T>::ValueType& v)
@@ -58,8 +58,8 @@ public:
       return floatFunc(p.first, p.second);
     }
     else{
-      assert(m_colorSetting.IsSet());
-      const auto& p = m_colorSetting.Get();
+      assert(m_paintSetting.IsSet());
+      const auto& p = m_paintSetting.Get();
       return colorFunc(p.first, p.second);
     }
   }
@@ -68,7 +68,7 @@ private:
   Optional<std::pair<IntSetting, IntSetting::ValueType> > m_intSetting;
   Optional<std::pair<StringSetting, StringSetting::ValueType> > m_strSetting;
   Optional<std::pair<FloatSetting, FloatSetting::ValueType> > m_floatSetting;
-  Optional<std::pair<ColorSetting, ColorSetting::ValueType> > m_colorSetting;
+  Optional<std::pair<PaintSetting, PaintSetting::ValueType> > m_paintSetting;
 };
 
 } // namespace

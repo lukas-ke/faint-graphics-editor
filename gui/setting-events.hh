@@ -54,7 +54,7 @@ extern const wxEventType FAINT_BOOL_SETTING_CHANGE;
 extern const SettingTag<BoolSetting> EVT_FAINT_BOOL_SETTING_CHANGE;
 
 extern const wxEventType FAINT_COLOR_SETTING_CHANGE;
-extern const SettingTag<ColorSetting> EVT_FAINT_COLOR_SETTING_CHANGE;
+extern const SettingTag<PaintSetting> EVT_FAINT_COLOR_SETTING_CHANGE;
 
 extern const wxEventType FAINT_STRING_SETTING_CHANGE;
 extern const SettingTag<StringSetting> EVT_FAINT_STRING_SETTING_CHANGE;

@@ -259,14 +259,14 @@ private:
     }
   }
 
-  void SendChangeEvent(const ColorSetting& setting, const Paint& value){
-    SettingEvent<ColorSetting> event(setting, value,
+  void SendChangeEvent(const PaintSetting& setting, const Paint& value){
+    SettingEvent<PaintSetting> event(setting, value,
       FAINT_COLOR_SETTING_CHANGE);
     event.SetEventObject(this);
     GetEventHandler()->ProcessEvent(event);
   }
 
-  static ColorSetting ToSetting(Which hit){
+  static PaintSetting ToSetting(Which hit){
     assert(hit != Which::HIT_NEITHER);
     return hit == Which::HIT_FG ?
       ts_Fg : ts_Bg;

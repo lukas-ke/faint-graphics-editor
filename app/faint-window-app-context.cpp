@@ -461,7 +461,7 @@ IntSetting::ValueType FaintWindowContext::Get(const IntSetting& s){
   return m_faintWindow.GetShownSettings().Get(s);
 }
 
-ColorSetting::ValueType FaintWindowContext::Get(const ColorSetting& s){
+PaintSetting::ValueType FaintWindowContext::Get(const PaintSetting& s){
   return m_faintWindow.GetShownSettings().Get(s);
 }
 
@@ -644,7 +644,7 @@ void FaintWindowContext::Set(const IntSetting& s, IntSetting::ValueType v){
   change_setting(m_faintWindow, s, v, from_control(false), m_dialogContext);
 }
 
-void FaintWindowContext::Set(const ColorSetting& s, ColorSetting::ValueType v){
+void FaintWindowContext::Set(const PaintSetting& s, PaintSetting::ValueType v){
   change_setting(m_faintWindow, s, v, from_control(false), m_dialogContext);
 }
 

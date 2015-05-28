@@ -68,7 +68,7 @@ public:
   virtual BoolSetting::ValueType Get(const BoolSetting&) = 0;
   virtual StringSetting::ValueType Get(const StringSetting&) = 0;
   virtual IntSetting::ValueType Get(const IntSetting&) = 0;
-  virtual ColorSetting::ValueType Get(const ColorSetting&) = 0;
+  virtual PaintSetting::ValueType Get(const PaintSetting&) = 0;
   virtual FloatSetting::ValueType Get(const FloatSetting&) = 0;
   virtual Canvas& GetActiveCanvas() = 0;
   virtual Tool* GetActiveTool() = 0;
@@ -107,7 +107,7 @@ public:
   virtual void Set(const BoolSetting&, BoolSetting::ValueType) = 0;
   virtual void Set(const StringSetting&, const StringSetting::ValueType&) = 0;
   virtual void Set(const IntSetting&, IntSetting::ValueType) = 0;
-  virtual void Set(const ColorSetting&, ColorSetting::ValueType) = 0;
+  virtual void Set(const PaintSetting&, PaintSetting::ValueType) = 0;
   virtual void Set(const FloatSetting&, FloatSetting::ValueType) = 0;
   virtual void SetActiveCanvas(const CanvasId&) = 0;
   virtual void SetDefaultGrid(const Grid&) = 0;

@@ -24,7 +24,7 @@ class ObjText;
 
 // Whether actions should use the foreground or background color
 // depending on modifiers etc.
-ColorSetting fg_or_bg(const PosInfo&);
+PaintSetting fg_or_bg(const PosInfo&);
 
 class category_toolutil;
 

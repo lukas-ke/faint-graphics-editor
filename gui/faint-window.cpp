@@ -606,7 +606,7 @@ FaintWindow::FaintWindow(Art& art,
     });
 
   bind_fwd(m_impl->panels->color->AsWindow(), EVT_FAINT_COLOR_SETTING_CHANGE,
-    [this](const SettingEvent<ColorSetting>& e){
+    [this](const SettingEvent<PaintSetting>& e){
       change_setting(*this, e.GetSetting(), e.GetValue(), from_control(false),
         m_impl->appContext.GetDialogContext());
     });

@@ -107,7 +107,7 @@ public:
         cmd = change_setting_objects(objects, s, v);
         return true;
       },
-      [&](ColorSetting s, ColorSetting::ValueType v){
+      [&](PaintSetting s, PaintSetting::ValueType v){
         cmd = change_setting_objects(objects, s, v);
         return true;
       });

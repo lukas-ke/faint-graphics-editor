@@ -38,7 +38,7 @@ const SettingType::ValueType& v)\
 // ---
 
 DEFINE_SETTER(BoolSetting)
-DEFINE_SETTER(ColorSetting)
+DEFINE_SETTER(PaintSetting)
 DEFINE_SETTER(IntSetting)
 DEFINE_SETTER(StringSetting)
 DEFINE_SETTER(FloatSetting)
@@ -54,7 +54,7 @@ const SettingType::ValueType& Settings::Get(const SettingType& s) const { \
 // ---
 
 DEFINE_GETTER(BoolSetting)
-DEFINE_GETTER(ColorSetting)
+DEFINE_GETTER(PaintSetting)
 DEFINE_GETTER(IntSetting)
 DEFINE_GETTER(StringSetting)
 DEFINE_GETTER(FloatSetting)
@@ -68,7 +68,7 @@ template<> const SettingType::ValueType& Settings::GetDefault(const SettingType&
 // ---
 
 DEFINE_GETTER_DEFAULT(BoolSetting)
-DEFINE_GETTER_DEFAULT(ColorSetting)
+DEFINE_GETTER_DEFAULT(PaintSetting)
 DEFINE_GETTER_DEFAULT(IntSetting)
 DEFINE_GETTER_DEFAULT(StringSetting)
 DEFINE_GETTER_DEFAULT(FloatSetting)
@@ -89,8 +89,8 @@ bool Settings::Has(const BoolSetting& setting) const{
 }
 
 template<>
-bool Settings::Has(const ColorSetting& setting) const{
-  return (m_ColorSettingMap.find(setting) != m_ColorSettingMap.end());
+bool Settings::Has(const PaintSetting& setting) const{
+  return (m_PaintSettingMap.find(setting) != m_PaintSettingMap.end());
 }
 
 template<>
@@ -119,15 +119,15 @@ void Settings::Erase(const FloatSetting& setting){
 }
 
 template<>
-void Settings::Erase(const ColorSetting& setting){
-  m_ColorSettingMap.erase(setting);
+void Settings::Erase(const PaintSetting& setting){
+  m_PaintSettingMap.erase(setting);
 }
 
 bool Settings::Has(const UntypedSetting& s) const{
   return Has(IntSetting(s.ToInt())) ||
     Has(StringSetting(s.ToInt())) ||
     Has(BoolSetting(s.ToInt())) ||
-    Has(ColorSetting(s.ToInt())) ||
+    Has(PaintSetting(s.ToInt())) ||
     Has(FloatSetting(s.ToInt()));
 }
 
@@ -151,7 +151,7 @@ bool update_map_values(T& targetMap, const Settings& source){
 
 bool Settings::Update(const Settings& other){
   return update_map_values(m_BoolSettingMap, other) |
-    update_map_values(m_ColorSettingMap, other) |
+    update_map_values(m_PaintSettingMap, other) |
     update_map_values(m_FloatSettingMap, other) |
     update_map_values(m_IntSettingMap, other) |
     update_map_values(m_StringSettingMap, other);
@@ -159,7 +159,7 @@ bool Settings::Update(const Settings& other){
 
 bool Settings::Empty() const{
   return m_BoolSettingMap.empty() &&
-    m_ColorSettingMap.empty() &&
+    m_PaintSettingMap.empty() &&
     m_FloatSettingMap.empty() &&
     m_IntSettingMap.empty() &&
     m_StringSettingMap.empty();
@@ -193,8 +193,8 @@ bool Settings::Update(const BoundSetting& setting){
     [&](FloatSetting s, FloatSetting::ValueType v) -> bool{
       return update_map(s, v, m_FloatSettingMap);
     },
-    [&](ColorSetting s, ColorSetting::ValueType v) -> bool{
-      return update_map(s, v, m_ColorSettingMap);
+    [&](PaintSetting s, PaintSetting::ValueType v) -> bool{
+      return update_map(s, v, m_PaintSettingMap);
     });
 }
 
@@ -211,7 +211,7 @@ std::vector<UntypedSetting> Settings::GetRaw() const{
   append_as_untyped(untyped, m_BoolSettingMap);
   append_as_untyped(untyped, m_IntSettingMap);
   append_as_untyped(untyped, m_StringSettingMap);
-  append_as_untyped(untyped, m_ColorSettingMap);
+  append_as_untyped(untyped, m_PaintSettingMap);
   append_as_untyped(untyped, m_FloatSettingMap);
   return untyped;
 }
@@ -227,7 +227,7 @@ void update_map_content(T& targetMap, const T& otherMap){
 
 void Settings::UpdateAll(const Settings& other){
   update_map_content(m_BoolSettingMap, other.m_BoolSettingMap);
-  update_map_content(m_ColorSettingMap, other.m_ColorSettingMap);
+  update_map_content(m_PaintSettingMap, other.m_PaintSettingMap);
   update_map_content(m_FloatSettingMap, other.m_FloatSettingMap);
   update_map_content(m_IntSettingMap, other.m_IntSettingMap);
   update_map_content(m_StringSettingMap, other.m_StringSettingMap);
@@ -235,7 +235,7 @@ void Settings::UpdateAll(const Settings& other){
 
 void Settings::Clear(){
   m_BoolSettingMap.clear();
-  m_ColorSettingMap.clear();
+  m_PaintSettingMap.clear();
   m_FloatSettingMap.clear();
   m_IntSettingMap.clear();
   m_StringSettingMap.clear();
@@ -264,10 +264,10 @@ BoundSetting::BoundSetting(const FloatSetting& s, FloatSetting::ValueType v){
   m_floatSetting.Set(std::make_pair(s,v));
 }
 
-BoundSetting::BoundSetting(const ColorSetting& s,
-  const ColorSetting::ValueType& v)
+BoundSetting::BoundSetting(const PaintSetting& s,
+  const PaintSetting::ValueType& v)
 {
-  m_colorSetting.Set(std::make_pair(s,v));
+  m_paintSetting.Set(std::make_pair(s,v));
 }
 
 } // namespace

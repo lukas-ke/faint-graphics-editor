@@ -90,8 +90,8 @@ Settings remove_background_color(const Settings&);
 
 // Returns whether the ts_Fg or the ts_Bg is used to fill
 // with the given fill style.
-ColorSetting setting_used_for_fill(FillStyle);
-ColorSetting the_other_one(const ColorSetting&);
+PaintSetting setting_used_for_fill(FillStyle);
+PaintSetting the_other_one(const PaintSetting&);
 
 // Returns a copy of those settings updated with those.
 // Does not add new settings to these, only updates existing.

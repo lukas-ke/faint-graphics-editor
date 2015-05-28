@@ -77,7 +77,7 @@ class Color:
         self.py_name = py_name
         self.pretty_name = pretty_name
         self.doc_str = doc_str
-        self.cpp_type = "ColorSetting"
+        self.cpp_type = "PaintSetting"
 
     def get_type(self): # For backwards compat. with gencpp.py
         return "color"

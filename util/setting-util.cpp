@@ -246,12 +246,12 @@ Settings remove_background_color(const Settings& s){
   return out;
 }
 
-ColorSetting setting_used_for_fill(FillStyle fillStyle){
+PaintSetting setting_used_for_fill(FillStyle fillStyle){
   return fillStyle == FillStyle::FILL ?
     ts_Fg : ts_Bg;
 }
 
-ColorSetting the_other_one(const ColorSetting& s){
+PaintSetting the_other_one(const PaintSetting& s){
   return s == ts_Fg ? ts_Bg : ts_Fg;
 }
 

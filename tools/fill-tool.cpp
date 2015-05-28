@@ -114,7 +114,7 @@ public:
       return ToolResult::NONE;
     }
 
-    ColorSetting fillSetting(fg_or_bg(info));
+    const auto fillSetting = fg_or_bg(info);
     const Settings& s = GetSettings();
     const Paint fill = s.Get(fillSetting);
     if (is_raster(info.layerType) || no_fillable_object_hit(info)){
