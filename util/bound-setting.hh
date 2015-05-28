@@ -32,6 +32,7 @@ public:
     const typename EnumSetting<T>::ValueType& v)
     : BoundSetting(static_cast<IntSetting>(s), to_int(v))
   {}
+
   template<typename BoolFunc, typename IntFunc, typename StrFunc,
            typename FloatFunc, typename ColorFunc>
   auto Visit(const BoolFunc& boolFunc,
@@ -40,7 +41,6 @@ public:
     const FloatFunc& floatFunc,
     const ColorFunc& colorFunc) const
   {
-
     if (m_boolSetting.IsSet()){
       const auto& p = m_boolSetting.Get();
       return boolFunc(p.first, p.second);
@@ -63,6 +63,13 @@ public:
       return colorFunc(p.first, p.second);
     }
   }
+
+  template<typename T>
+  auto Visit(T f) const{
+    return Visit(f, f, f, f, f);
+  }
+
+
 private:
   Optional<std::pair<BoolSetting, BoolSetting::ValueType> > m_boolSetting;
   Optional<std::pair<IntSetting, IntSetting::ValueType> > m_intSetting;

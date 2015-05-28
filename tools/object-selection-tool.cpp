@@ -93,7 +93,7 @@ public:
       return change_setting_objects(objects, s, v);
     };
 
-    Command* cmd = s.Visit(makeCmd, makeCmd, makeCmd, makeCmd, makeCmd);
+    Command* cmd = s.Visit(makeCmd);
     if (cmd != nullptr){
       m_settings.Update(s);
       m_activeCanvas->RunCommand(cmd); // Fixme: Will this update m_settings again?
