@@ -15,6 +15,7 @@
 
 #include <memory>
 #include "app/canvas.hh"
+#include "bitmap/color-span.hh"
 #include "commands/command.hh"
 #include "commands/set-raster-selection-cmd.hh"
 #include "geo/adjust.hh"
@@ -23,7 +24,6 @@
 #include "geo/measure.hh"
 #include "tasks/select-raster-base.hh"
 #include "tasks/select-raster-move.hh"
-#include "util/color-span.hh"
 #include "util/image-util.hh"
 #include "util/pos-info.hh"
 #include "util/raster-selection.hh"

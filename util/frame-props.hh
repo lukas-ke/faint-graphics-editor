@@ -16,11 +16,11 @@
 #ifndef FAINT_FRAME_PROPS_HH
 #define FAINT_FRAME_PROPS_HH
 #include "bitmap/bitmap-fwd.hh"
+#include "bitmap/color-span.hh"
 #include "geo/calibration.hh"
 #include "geo/geo-fwd.hh"
 #include "geo/int-point.hh"
 #include "geo/int-size.hh"
-#include "util/color-span.hh"
 #include "util/delay.hh"
 #include "util/distinct.hh"
 #include "util/either.hh"

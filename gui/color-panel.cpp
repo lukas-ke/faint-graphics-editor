@@ -18,7 +18,7 @@
 #include "app/app-context.hh" // Fixme: Remove
 #include "app/canvas.hh" // Fixme: Remove
 #include "bitmap/bitmap.hh" // Fixme: Remove
-#include "util/color-span.hh" // Fixme: Remove
+#include "bitmap/color-span.hh" // Fixme: Remove
 #include "util/setting-id.hh" // Fixme: Remove
 #include "geo/int-size.hh"
 #include "gui/color-panel.hh"

@@ -13,9 +13,9 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include "bitmap/color-span.hh"
 #include "geo/geo-func.hh"
 #include "geo/int-rect.hh"
-#include "util/color-span.hh"
 
 namespace faint{
 

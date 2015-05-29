@@ -18,9 +18,9 @@
 #include <memory>
 #include <vector>
 #include "bitmap/bitmap.hh"
+#include "bitmap/color-span.hh"
 #include "geo/calibration.hh"
 #include "geo/geo-fwd.hh"
-#include "util/color-span.hh"
 #include "util/delay.hh"
 #include "util/either.hh"
 #include "util/hot-spot.hh"

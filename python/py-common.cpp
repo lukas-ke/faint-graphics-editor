@@ -17,15 +17,14 @@
 #include "app/get-app-context.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/bitmap-exception.hh"
+#include "bitmap/color-span.hh"
 #include "bitmap/draw.hh"
 #include "bitmap/filter.hh"
 #include "geo/int-rect.hh"
 #include "python/py-function-error.hh"
 #include "text/formatting.hh"
 #include "util-wx/clipboard.hh"
-#include "util/color-span.hh"
 #include "util/either.hh"
-
 
 namespace faint{
 

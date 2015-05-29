@@ -22,6 +22,7 @@
 #include "bitmap/bitmap.hh"
 #include "bitmap/bitmap-exception.hh"
 #include "bitmap/color.hh"
+#include "bitmap/color-span.hh"
 #include "bitmap/draw.hh"
 #include "bitmap/pattern.hh"
 #include "geo/geo-func.hh"
@@ -41,7 +42,6 @@
 #include "util-wx/make-event.hh"
 #include "util-wx/placement.hh"
 #include "util/color-bitmap-util.hh"
-#include "util/color-span.hh"
 #include "util/either.hh"
 #include "util/named-operator.hh"
 

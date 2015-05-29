@@ -18,6 +18,9 @@
 #include "bitmap/color.hh"
 #include "geo/int-size.hh"
 
+namespace faint{ class IntRect; }
+namespace faint{ class IntPoint; }
+
 namespace faint{
 
 class ColorSpan{
@@ -28,7 +31,6 @@ public:
   IntSize size;
 };
 
-class IntRect;
 bool fully_inside(const IntRect&, const ColorSpan&);
 bool invalid_pixel_pos(const IntPoint&, const ColorSpan&);
 
