@@ -17,11 +17,10 @@
 #include "wx/event.h"
 #include "wx/panel.h"
 #include "wx/textctrl.h"
-#include "app/canvas.hh"
-#include "app/get-app-context.hh" // For use image
-#include "app/get-art.hh"
-#include "app/resource-id.hh"
+#include "app/get-art.hh" // Fixme: Remove
+#include "app/resource-id.hh" // Fixme: Remove
 #include "bitmap/bitmap.hh"
+#include "bitmap/bitmap-exception.hh"
 #include "bitmap/color.hh"
 #include "bitmap/draw.hh"
 #include "bitmap/pattern.hh"
@@ -159,9 +158,10 @@ private:
 
 class PaintPanel_Pattern::PaintPanel_Pattern_Impl : public wxPanel{
 public:
-  PaintPanel_Pattern_Impl(wxWindow* parent)
+  PaintPanel_Pattern_Impl(wxWindow* parent, const Getter<Bitmap>& getBitmap)
     : wxPanel(parent, wxID_ANY),
       m_anchor(0,0),
+      m_getBitmap(getBitmap),
       m_objectAligned(nullptr),
       m_patternDisplay(nullptr)
   {
@@ -170,20 +170,14 @@ public:
 
     auto btnUseImage = create_button(this, "Use Image", below(m_patternDisplay),
       [this](){
-        // Fixme: Reveals everything.
-        AppContext& app = get_app_context();
-        const auto& background = app.GetActiveCanvas().GetBackground();
-        background.Visit(
-          [&](const Bitmap& bmp){
-            m_patternDisplay->SetPattern(Pattern(bmp));
-          },
-          [&](const ColorSpan& colorSpan){
-            // Not using the colorSpan size, since it might be huge, and
-            // it would be pointless with only one color.
-            const IntSize size(1,1);
-            m_patternDisplay->SetPattern(Pattern(Bitmap(size, colorSpan.color)));
-          });
-        UpdateDisplay();
+        try {
+          m_patternDisplay->SetPattern(Pattern(m_getBitmap()));
+          UpdateDisplay();
+        }
+        catch (const BitmapOutOfMemory&){
+          show_error_from_dialog(*this, Title("Out of memory"),
+            "Insufficient memory to use the image as a pattern.");
+        }
       });
 
 
@@ -292,14 +286,18 @@ private:
   }
 
   IntPoint m_anchor;
-  wxCheckBox* m_objectAligned; // Fixme: Perhaps this is rather anchor than align
-  PatternDisplay* m_patternDisplay;
   wxTextCtrl* m_anchorX;
   wxTextCtrl* m_anchorY;
+  Getter<Bitmap> m_getBitmap;
+  wxCheckBox* m_objectAligned; // Fixme: Perhaps this is rather anchor than align
+  PatternDisplay* m_patternDisplay;
+
 };
 
-PaintPanel_Pattern::PaintPanel_Pattern(wxWindow* parent){
-  m_impl = new PaintPanel_Pattern_Impl(parent);
+PaintPanel_Pattern::PaintPanel_Pattern(wxWindow* parent,
+  const Getter<Bitmap>& getBitmap)
+{
+  m_impl = new PaintPanel_Pattern_Impl(parent, getBitmap);
 }
 
 PaintPanel_Pattern::~PaintPanel_Pattern(){

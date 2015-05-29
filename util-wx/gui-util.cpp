@@ -168,6 +168,17 @@ void show_error(wxWindow& parent, const Title& title, const utf8_string& message
   show_error(&parent, title, message);
 }
 
+void show_error_from_dialog(wxWindow& parent,
+  const Title& title,
+  const utf8_string& message)
+{
+  wxMessageDialog dlg(&parent,
+    to_wx(message),
+    to_wx(title.Get()),
+    wxOK|wxICON_ERROR);
+  dlg.ShowModal();
+}
+
 bool show_init_error(const Title& title, const utf8_string& message){
   wxMessageDialog dlg(nullptr,
     to_wx(message),

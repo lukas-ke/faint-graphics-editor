@@ -16,6 +16,7 @@
 #ifndef FAINT_PATTERN_PANEL_HH
 #define FAINT_PATTERN_PANEL_HH
 #include "bitmap/pattern.hh"
+#include "util/accessor.hh"
 
 class wxWindow;
 
@@ -23,7 +24,8 @@ namespace faint{
 
 class PaintPanel_Pattern{
 public:
-  PaintPanel_Pattern(wxWindow* parent);
+  PaintPanel_Pattern(wxWindow* parent,
+    const Getter<Bitmap>& getBitmap);
   ~PaintPanel_Pattern();
   wxWindow* AsWindow();
   void Copy();

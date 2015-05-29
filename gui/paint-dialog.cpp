@@ -17,7 +17,10 @@
 #include "wx/dialog.h"
 #include "wx/notebook.h"
 #include "wx/sizer.h"
+#include "app/canvas.hh" // Fixme: Remove
+#include "app/get-app-context.hh" // Fixme: Remove
 #include "app/resource-id.hh"
+#include "bitmap/bitmap.hh" // Fixme: Remove
 #include "bitmap/paint.hh"
 #include "bitmap/pattern.hh"
 #include "geo/limits.hh"
@@ -28,6 +31,8 @@
 #include "gui/paint-dialog/hsl-panel.hh"
 #include "gui/paint-dialog/pattern-panel.hh"
 #include "text/formatting.hh"
+#include "util/either.hh" // Fixme: Remove
+#include "util/color-span.hh" // Fixme: Remove
 #include "util-wx/clipboard.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-wx.hh"
@@ -107,7 +112,21 @@ public:
       dialogContext);
     m_tabs->AddPage(m_panelGradient->AsWindow(), "Gradient");
 
-    m_panelPattern = std::make_unique<PaintPanel_Pattern>(m_tabs);
+    auto getBitmap = [](){
+      const auto& background = get_app_context().GetActiveCanvas().GetBackground();
+      return background.Visit(
+        [&](const Bitmap& bmp){
+          return bmp;
+        },
+        [&](const ColorSpan& colorSpan){
+          // Not using the colorSpan size, since it might be huge, and
+          // it would be pointless with only one color.
+          const IntSize size(1,1);
+          return Bitmap(size, colorSpan.color);
+        });
+    };
+
+    m_panelPattern = std::make_unique<PaintPanel_Pattern>(m_tabs, getBitmap);
     m_tabs->AddPage(m_panelPattern->AsWindow(), "Pattern");
 
     sizer->Add(create_ok_cancel_buttons(this),

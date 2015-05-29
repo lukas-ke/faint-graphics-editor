@@ -13,10 +13,14 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "wx/cursor.h"
-#include "wx/window.h"
+#include "bitmap/bitmap-exception.hh"
+#include "bitmap/bitmap.hh"
+#include "bitmap/color.hh"
 #include "gui/paint-dialog/pattern-panel.hh"
+#include "util-wx/fwd-wx.hh"
+#include "util-wx/layout-wx.hh"
 
+class wxWindow;
 namespace faint{ class StatusInterface; }
 namespace faint{ class DialogContext; }
 
@@ -25,6 +29,19 @@ void gui_test_pattern_panel(wxWindow* p,
   faint::DialogContext&)
 {
   using namespace faint;
-  faint::PaintPanel_Pattern patternPanel(p);
-  patternPanel.AsWindow()->SetSize(640, 480);
+
+  auto getBitmapGood = [](){
+    return Bitmap({10, 10}, color_magenta);
+  };
+
+  auto getBitmapBad = []() -> faint::Bitmap{
+    throw BitmapOutOfMemory("Oh no");
+  };
+
+  set_sizer(p,
+    layout::create_column({
+      create_label(p, "Functioning PatternPanel"),
+      faint::PaintPanel_Pattern(p, getBitmapGood).AsWindow(),
+      create_label(p, "Exceptions in PatternPanel"),
+      faint::PaintPanel_Pattern(p, getBitmapBad).AsWindow()}));
 }
