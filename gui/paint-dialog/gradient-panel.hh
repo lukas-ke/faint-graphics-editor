@@ -18,6 +18,7 @@
 #include "bitmap/color.hh"
 #include "bitmap/gradient.hh"
 
+class wxCursor;
 class wxWindow;
 
 namespace faint{

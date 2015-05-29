@@ -15,6 +15,7 @@
 
 #ifndef FAINT_PATTERN_PANEL_HH
 #define FAINT_PATTERN_PANEL_HH
+#include "bitmap/pattern.hh"
 
 class wxWindow;
 
