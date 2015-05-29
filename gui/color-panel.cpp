@@ -122,7 +122,7 @@ public:
 
     // Handle resizing child controls (e.g. color added to palette
     // or grid-control expanded).
-    bind(this, EVT_FAINT_CONTROL_RESIZED,
+    bind(this, EVT_FAINT_ControlResized,
       [&](){
         Layout();
         Refresh();

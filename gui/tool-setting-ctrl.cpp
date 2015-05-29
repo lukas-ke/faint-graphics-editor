@@ -41,7 +41,7 @@ bool IntSettingCtrl::UpdateControl(const Settings& s){
 
 void IntSettingCtrl::SendChangeEvent(){
   SettingEvent<IntSetting> event(m_setting, GetValue(),
-    FAINT_INT_SETTING_CHANGE);
+    FAINT_IntSettingChange);
   event.SetEventObject(this);
   GetEventHandler()->ProcessEvent(event);
 }
@@ -65,7 +65,7 @@ bool FloatSettingControl::UpdateControl(const Settings& s){
 
 void FloatSettingControl::SendChangeEvent(){
   SettingEvent<FloatSetting> event(m_setting, GetValue(),
-    FAINT_FLOAT_SETTING_CHANGE);
+    FAINT_FloatSettingChange);
   event.SetEventObject(this);
   GetEventHandler()->ProcessEvent(event);
 }
@@ -81,7 +81,7 @@ BoolSetting BoolSettingControl::GetSetting() const{
 
 void BoolSettingControl::SendChangeEvent(){
   SettingEvent<BoolSetting> event(m_setting, GetValue(),
-    FAINT_BOOL_SETTING_CHANGE);
+    FAINT_BoolSettingChange);
   event.SetEventObject(this);
   GetEventHandler()->ProcessEvent(event);
 }
@@ -107,7 +107,7 @@ StringSetting StringSettingControl::GetSetting() const{
 
 void StringSettingControl::SendChangeEvent(){
   SettingEvent<StringSetting> event(m_setting, GetValue(),
-    FAINT_STRING_SETTING_CHANGE);
+    FAINT_StringSettingChange);
   event.SetEventObject(this);
   GetEventHandler()->ProcessEvent(event);
 }

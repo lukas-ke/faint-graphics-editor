@@ -82,7 +82,7 @@ public:
   }
 
   void SendChangeEvent() override{
-    SettingsEvent event(m_settings, FAINT_SETTINGS_CHANGE);
+    SettingsEvent event(m_settings, FAINT_SettingsChange);
     event.SetEventObject(this);
     GetEventHandler()->ProcessEvent(event);
   }

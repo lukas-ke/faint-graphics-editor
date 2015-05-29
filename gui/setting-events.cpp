@@ -17,28 +17,28 @@
 
 namespace faint{
 
-const wxEventType FAINT_INT_SETTING_CHANGE = wxNewEventType();
-const SettingTag<IntSetting> EVT_FAINT_INT_SETTING_CHANGE(
-  FAINT_INT_SETTING_CHANGE);
+const wxEventType FAINT_IntSettingChange = wxNewEventType();
+const SettingTag<IntSetting> EVT_FAINT_IntSettingChange(
+  FAINT_IntSettingChange);
 
-const wxEventType FAINT_FLOAT_SETTING_CHANGE = wxNewEventType();
-const SettingTag<FloatSetting> EVT_FAINT_FLOAT_SETTING_CHANGE(
-  FAINT_FLOAT_SETTING_CHANGE);
+const wxEventType FAINT_FloatSettingChange = wxNewEventType();
+const SettingTag<FloatSetting> EVT_FAINT_FloatSettingChange(
+  FAINT_FloatSettingChange);
 
-const wxEventType FAINT_BOOL_SETTING_CHANGE = wxNewEventType();
-const SettingTag<BoolSetting> EVT_FAINT_BOOL_SETTING_CHANGE(
-  FAINT_BOOL_SETTING_CHANGE);
+const wxEventType FAINT_BoolSettingChange = wxNewEventType();
+const SettingTag<BoolSetting> EVT_FAINT_BoolSettingChange(
+  FAINT_BoolSettingChange);
 
-const wxEventType FAINT_COLOR_SETTING_CHANGE = wxNewEventType();
-const SettingTag<PaintSetting> EVT_FAINT_COLOR_SETTING_CHANGE(
-  FAINT_COLOR_SETTING_CHANGE);
+const wxEventType FAINT_PaintSettingChange = wxNewEventType();
+const SettingTag<PaintSetting> EVT_FAINT_PaintSettingChange(
+  FAINT_PaintSettingChange);
 
-const wxEventType FAINT_STRING_SETTING_CHANGE = wxNewEventType();
-const SettingTag<StringSetting> EVT_FAINT_STRING_SETTING_CHANGE(
-  FAINT_STRING_SETTING_CHANGE);
+const wxEventType FAINT_StringSettingChange = wxNewEventType();
+const SettingTag<StringSetting> EVT_FAINT_StringSettingChange(
+  FAINT_StringSettingChange);
 
-const wxEventType SWAP_COLORS = wxNewEventType();
-const wxEventTypeTag<wxCommandEvent> EVT_SWAP_COLORS(SWAP_COLORS);
+const wxEventType FAINT_SwapColors = wxNewEventType();
+const wxEventTypeTag<wxCommandEvent> EVT_FAINT_SwapColors(FAINT_SwapColors);
 
 SettingsEvent::SettingsEvent(const Settings& s, wxEventType type)
   : wxCommandEvent(type, -1),
@@ -49,8 +49,8 @@ const Settings& SettingsEvent::GetSettings() const{
   return m_settings;
 }
 
-const wxEventType FAINT_SETTINGS_CHANGE = wxNewEventType();
-const wxEventTypeTag<SettingsEvent> EVT_FAINT_SETTINGS_CHANGE(
-  FAINT_SETTINGS_CHANGE);
+const wxEventType FAINT_SettingsChange = wxNewEventType();
+const wxEventTypeTag<SettingsEvent> EVT_FAINT_SettingsChange(
+  FAINT_SettingsChange);
 
 } // namespace

@@ -196,23 +196,29 @@ static void harmonize_zoom(const Canvas& source, AppContext& app){
   }
 }
 
-enum ToggleShortcut{
-  TOGGLE_NEVER, // Never disable this shortcut
-  TOGGLE_ALPHABETIC, // Disable this shortcut during alphabetic entry,
-                     // but keep it for numeric entry
-  TOGGLE_ALL // Disable this shortcut when any entry field has focus
+enum class ToggleShortcut{
+
+  // Never disable this shortcut
+  NEVER,
+
+  // Disable this shortcut during alphabetic entry,
+  // but keep it for numeric entry
+  ALPHABETIC,
+
+  // Disable this shortcut when any entry field has focus
+  ALL
 };
 
 class Label{
 public:
-  Label(const utf8_string& label, ToggleShortcut toggle=TOGGLE_NEVER)
+  Label(const utf8_string& label, ToggleShortcut toggle=ToggleShortcut::NEVER)
     : m_label(to_wx(label)),
       m_toggle(toggle)
   {}
 
   Label(const utf8_string& label,
     const utf8_string& help,
-    ToggleShortcut toggle=TOGGLE_NEVER)
+    ToggleShortcut toggle=ToggleShortcut::NEVER)
     : m_label(to_wx(label)),
       m_help(to_wx(help)),
       m_toggle(toggle)
@@ -400,16 +406,16 @@ public:
     m_menuRef->Append(editMenu, "&Edit");
 
     wxMenu* viewMenu = new wxMenu();
-    Add(viewMenu, EVT_FAINT_ZOOM_IN,
-      Label("Zoom In\t+", "Zoom in one step", TOGGLE_ALPHABETIC),
+    Add(viewMenu, EVT_FAINT_ZoomIn,
+      Label("Zoom In\t+", "Zoom in one step", ToggleShortcut::ALPHABETIC),
       [&](){app.GetActiveCanvas().ZoomIn();});
 
-    Add(viewMenu, EVT_FAINT_ZOOM_OUT,
-      Label("Zoom Out\t-", "Zoom out one step", TOGGLE_ALPHABETIC),
+    Add(viewMenu, EVT_FAINT_ZoomOut,
+      Label("Zoom Out\t-", "Zoom out one step", ToggleShortcut::ALPHABETIC),
       [&](){app.GetActiveCanvas().ZoomOut();});
 
-    Add(viewMenu, FAINT_ZOOM_100_TOGGLE,
-      Label("Zoom 1:1\t*", TOGGLE_ALPHABETIC),
+    Add(viewMenu, FAINT_ZoomActualSizeToggle,
+      Label("Zoom 1:1\t*", ToggleShortcut::ALPHABETIC),
       [&](){
         Canvas& active = app.GetActiveCanvas();
         if (active.GetZoomLevel().At100()){
@@ -463,7 +469,7 @@ public:
     objectMenu->AppendSeparator();
 
     Add(objectMenu,
-      Label("Move &Forward\tF", TOGGLE_ALPHABETIC),
+      Label("Move &Forward\tF", ToggleShortcut::ALPHABETIC),
       MenuPred(MenuPred::CAN_MOVE_FORWARD),
       [&](){
         Canvas& active = app.GetActiveCanvas();
@@ -471,7 +477,7 @@ public:
       });
 
     Add(objectMenu,
-      Label("Move &Backward\tB", TOGGLE_ALPHABETIC),
+      Label("Move &Backward\tB", ToggleShortcut::ALPHABETIC),
       MenuPred(MenuPred::CAN_MOVE_BACKWARD),
       [&](){
         Canvas& active = app.GetActiveCanvas();
@@ -487,7 +493,7 @@ public:
       });
 
     Add(objectMenu, NewId(),
-      Label("Move to Back\tCtrl+B", TOGGLE_ALPHABETIC),
+      Label("Move to Back\tCtrl+B", ToggleShortcut::ALPHABETIC),
       MenuPred(MenuPred::CAN_MOVE_BACKWARD),
       [&](){
         Canvas& active = app.GetActiveCanvas();
@@ -616,36 +622,36 @@ public:
       clearRecentId);
 
     // Events from the zoom control
-    bind_menu(m_eventHandler, FAINT_ZOOM_100,
+    bind_menu(m_eventHandler, FAINT_ZoomActualSize,
       [&](){app.GetActiveCanvas().ZoomDefault();});
 
-    bind_menu(m_eventHandler, FAINT_ZOOM_IN_ALL,
-      [&](){
-        Canvas& active = app.GetActiveCanvas();
-        active.ZoomIn();
-        harmonize_zoom(active, app);
-      });
-
-    bind_menu(m_eventHandler, FAINT_ZOOM_OUT_ALL,
-      [&](){
-        Canvas& active = app.GetActiveCanvas();
-        active.ZoomOut();
-        harmonize_zoom(active, app);
-      });
-
-    bind_menu(m_eventHandler, FAINT_ZOOM_100_ALL,
+    bind_menu(m_eventHandler, FAINT_ZoomActualSizeAll,
       [&](){
         for (auto i : up_to(app.GetCanvasCount())){
           app.GetCanvas(i).ZoomDefault();
         }
       });
 
-    bind_menu(m_eventHandler, FAINT_ZOOM_FIT,
+    bind_menu(m_eventHandler, FAINT_ZoomInAll,
+      [&](){
+        Canvas& active = app.GetActiveCanvas();
+        active.ZoomIn();
+        harmonize_zoom(active, app);
+      });
+
+    bind_menu(m_eventHandler, FAINT_ZoomOutAll,
+      [&](){
+        Canvas& active = app.GetActiveCanvas();
+        active.ZoomOut();
+        harmonize_zoom(active, app);
+      });
+
+    bind_menu(m_eventHandler, FAINT_ZoomFit,
       [&](){
         app.GetActiveCanvas().ZoomFit();
       });
 
-    bind_menu(m_eventHandler, FAINT_ZOOM_FIT_ALL,
+    bind_menu(m_eventHandler, FAINT_ZoomFitAll,
       [&](){
         for (auto i : up_to(app.GetCanvasCount())){
           app.GetCanvas(i).ZoomFit();
@@ -669,9 +675,9 @@ public:
   void AddShortcutDisable(int id, const Label& label){
     ToggleShortcut toggle = label.GetToggle();
 
-    bool disableOnEntry = (toggle != TOGGLE_NEVER);
+    bool disableOnEntry = (toggle != ToggleShortcut::NEVER);
     if (disableOnEntry){
-      bool disableNumeric = (toggle == TOGGLE_ALL);
+      bool disableNumeric = (toggle == ToggleShortcut::ALL);
       m_notWhileTexting.push_back(ToggleLabel(id, label.GetLabelText(),
         disableNumeric));
     }
@@ -760,16 +766,16 @@ public:
   }
 
   void UpdateZoom(const ZoomLevel& zoom){
-    m_menuRef->Enable(FAINT_ZOOM_IN, !zoom.AtMax());
-    m_menuRef->Enable(FAINT_ZOOM_OUT, !zoom.AtMin());
+    m_menuRef->Enable(FAINT_ZoomIn, !zoom.AtMax());
+    m_menuRef->Enable(FAINT_ZoomOut, !zoom.AtMin());
     if (zoom.At100()){
-      m_menuRef->m_menu->SetLabel(FAINT_ZOOM_100_TOGGLE, "Zoom Fit\t*");
-      m_menuRef->m_menu->SetHelpString(FAINT_ZOOM_100_TOGGLE,
+      m_menuRef->m_menu->SetLabel(FAINT_ZoomActualSizeToggle, "Zoom Fit\t*");
+      m_menuRef->m_menu->SetHelpString(FAINT_ZoomActualSizeToggle,
         "Fit image in view");
     }
     else {
-      m_menuRef->m_menu->SetLabel(FAINT_ZOOM_100_TOGGLE, "Zoom 1:1\t*");
-      m_menuRef->m_menu->SetHelpString(FAINT_ZOOM_100_TOGGLE,
+      m_menuRef->m_menu->SetLabel(FAINT_ZoomActualSizeToggle, "Zoom 1:1\t*");
+      m_menuRef->m_menu->SetHelpString(FAINT_ZoomActualSizeToggle,
         "Zoom to actual size");
     }
   }

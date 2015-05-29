@@ -198,7 +198,7 @@ private:
 
   void SendChangeEvent(const PaintSetting& setting, const Paint& value){
     SettingEvent<PaintSetting> event(setting, value,
-      FAINT_COLOR_SETTING_CHANGE);
+      EVT_FAINT_PaintSettingChange);
     event.SetEventObject(this);
     GetEventHandler()->ProcessEvent(event);
   }

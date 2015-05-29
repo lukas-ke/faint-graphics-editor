@@ -427,24 +427,24 @@ FaintWindow::FaintWindow(Art& art,
     *appContext, *pythonContext,
     *helpFrame, *interpreterFrame);
 
-  bind_fwd(frame, EVT_FAINT_ADD_TO_PALETTE,
+  bind_fwd(frame, EVT_FAINT_AddToPalette,
     [&](const PaintEvent& event){
       AddToPalette(event.GetPaint());
   });
 
-  bind_fwd(frame, EVT_FAINT_OPEN_FILES,
+  bind_fwd(frame, EVT_FAINT_OpenFiles,
     [&](const OpenFilesEvent& event){
       Open(event.GetFileNames());
     });
 
-  bind_fwd(frame, EVT_FAINT_TOOL_CHANGE,
+  bind_fwd(frame, EVT_FAINT_ToolChange,
     [&](const ToolChangeEvent& event){
       select_tool(event.GetTool(), *m_impl->state,
         *m_impl->panels, m_impl->appContext);
       UpdateShownSettings();
     });
 
-  bind_fwd(frame, EVT_FAINT_COPY_COLOR_HEX,
+  bind_fwd(frame, EVT_FAINT_CopyColorHex,
     [this](const ColorEvent& event){
       Clipboard clipboard;
       if (!clipboard.Good()){
@@ -454,7 +454,7 @@ FaintWindow::FaintWindow(Art& art,
       clipboard.SetText(str_hex(event.GetColor()));
     });
 
-  bind_fwd(frame, EVT_FAINT_COPY_COLOR_RGB,
+  bind_fwd(frame, EVT_FAINT_CopyColorRgb,
     [this](const ColorEvent& event){
       Clipboard clipboard;
       if (!clipboard.Good()){
@@ -464,7 +464,7 @@ FaintWindow::FaintWindow(Art& art,
       clipboard.SetText(str_smart_rgba(event.GetColor()));
     });
 
-  bind(frame, EVT_SWAP_COLORS,
+  bind(frame, EVT_FAINT_SwapColors,
     [this](){
       auto& app(m_impl->appContext);
       auto oldFg = app.Get(ts_Fg);
@@ -481,7 +481,7 @@ FaintWindow::FaintWindow(Art& art,
       }
     });
 
-  bind(frame, EVT_SET_FOCUS_ENTRY_CONTROL,
+  bind(frame, EVT_FAINT_SetFocusEntryControl,
     [this](){
       if (m_impl->state->textEntryCount == 0){
         // Entry controls are numeric, not all shortcuts need to be
@@ -492,7 +492,7 @@ FaintWindow::FaintWindow(Art& art,
       m_impl->state->textEntryCount++;
     });
 
-  bind(frame, EVT_KILL_FOCUS_ENTRY_CONTROL,
+  bind(frame, EVT_FAINT_KillFocusEntryControl,
     [this](){
       EndTextEntry();
     });
@@ -526,7 +526,7 @@ FaintWindow::FaintWindow(Art& art,
       }
     });
 
-  bind_fwd(frame, EVT_FAINT_LAYER_CHANGE,
+  bind_fwd(frame, EVT_FAINT_LayerChange,
     [&](const LayerChangeEvent event){
       auto& state(*m_impl->state);
       auto& panels(*m_impl->panels);
@@ -572,31 +572,31 @@ FaintWindow::FaintWindow(Art& art,
 
   auto* toolPanel = m_impl->panels->tool->AsWindow();
 
-  bind_fwd(toolPanel, EVT_FAINT_INT_SETTING_CHANGE,
+  bind_fwd(toolPanel, EVT_FAINT_IntSettingChange,
     [this](const SettingEvent<IntSetting>& e){
       change_setting(*this, e.GetSetting(), e.GetValue(), from_control(true),
         m_impl->appContext.GetDialogContext());
     });
 
-  bind_fwd(toolPanel, EVT_FAINT_FLOAT_SETTING_CHANGE,
+  bind_fwd(toolPanel, EVT_FAINT_FloatSettingChange,
     [this](const SettingEvent<FloatSetting>& e){
       change_setting(*this, e.GetSetting(), e.GetValue(), from_control(true),
         m_impl->appContext.GetDialogContext());
     });
 
-  bind_fwd(toolPanel, EVT_FAINT_BOOL_SETTING_CHANGE,
+  bind_fwd(toolPanel, EVT_FAINT_BoolSettingChange,
     [this](const SettingEvent<BoolSetting>& e){
       change_setting(*this, e.GetSetting(), e.GetValue(), from_control(true),
         m_impl->appContext.GetDialogContext());
     });
 
-  bind_fwd(toolPanel, EVT_FAINT_STRING_SETTING_CHANGE,
+  bind_fwd(toolPanel, EVT_FAINT_StringSettingChange,
     [this](const SettingEvent<StringSetting>& e){
       change_setting(*this, e.GetSetting(), e.GetValue(), from_control(true),
         m_impl->appContext.GetDialogContext());
     });
 
-  bind_fwd(toolPanel,EVT_FAINT_SETTINGS_CHANGE,
+  bind_fwd(toolPanel,EVT_FAINT_SettingsChange,
     [this](const SettingsEvent& e){
       // Note that m_fromCtrl is not used when changing multiple
       // settings. This is because font dialog can change the font
@@ -605,7 +605,7 @@ FaintWindow::FaintWindow(Art& art,
       change_settings(*this, e.GetSettings());
     });
 
-  bind_fwd(m_impl->panels->color->AsWindow(), EVT_FAINT_COLOR_SETTING_CHANGE,
+  bind_fwd(m_impl->panels->color->AsWindow(), EVT_FAINT_PaintSettingChange,
     [this](const SettingEvent<PaintSetting>& e){
       change_setting(*this, e.GetSetting(), e.GetValue(), from_control(false),
         m_impl->appContext.GetDialogContext());

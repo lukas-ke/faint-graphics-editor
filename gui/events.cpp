@@ -18,47 +18,47 @@
 namespace faint{
 
 // Zoom command event definitions
-const wxEventType FAINT_ZOOM_IN = wxNewEventType();
-CommandEventTag EVT_FAINT_ZOOM_IN(FAINT_ZOOM_IN);
+const wxEventType FAINT_ZoomIn = wxNewEventType();
+CommandEventTag EVT_FAINT_ZoomIn(FAINT_ZoomIn);
 
-const wxEventType FAINT_ZOOM_IN_ALL = wxNewEventType();
-CommandEventTag EVT_FAINT_ZOOM_IN_ALL(FAINT_ZOOM_IN_ALL);
+const wxEventType FAINT_ZoomInAll = wxNewEventType();
+CommandEventTag EVT_FAINT_ZoomInAll(FAINT_ZoomInAll);
 
-const wxEventType FAINT_ZOOM_OUT = wxNewEventType();
-CommandEventTag EVT_FAINT_ZOOM_OUT(FAINT_ZOOM_OUT);
+const wxEventType FAINT_ZoomOut = wxNewEventType();
+CommandEventTag EVT_FAINT_ZoomOut(FAINT_ZoomOut);
 
-const wxEventType FAINT_ZOOM_OUT_ALL = wxNewEventType();
-CommandEventTag EVT_FAINT_ZOOM_OUT_ALL(FAINT_ZOOM_OUT_ALL);
+const wxEventType FAINT_ZoomOutAll = wxNewEventType();
+CommandEventTag EVT_FAINT_ZoomOutAll(FAINT_ZoomOutAll);
 
-const wxEventType FAINT_ZOOM_100 = wxNewEventType();
-CommandEventTag EVT_FAINT_ZOOM_100(FAINT_ZOOM_100);
+const wxEventType FAINT_ZoomActualSize = wxNewEventType();
+CommandEventTag EVT_FAINT_ZoomActualSize(FAINT_ZoomActualSize);
 
-const wxEventType FAINT_ZOOM_100_ALL = wxNewEventType();
-CommandEventTag EVT_FAINT_ZOOM_100_ALL(FAINT_ZOOM_100_ALL);
+const wxEventType FAINT_ZoomActualSizeToggle = wxNewId();
+CommandEventTag EVT_FAINT_ZoomActualSizeToggle(FAINT_ZoomActualSizeToggle);
 
-const wxEventType FAINT_ZOOM_FIT = wxNewEventType();
-CommandEventTag EVT_FAINT_ZOOM_FIT(FAINT_ZOOM_FIT);
+const wxEventType FAINT_ZoomActualSizeAll = wxNewEventType();
+CommandEventTag EVT_FAINT_ZoomActualSizeAll(FAINT_ZoomActualSizeAll);
 
-const wxEventType FAINT_ZOOM_FIT_ALL = wxNewEventType();
-CommandEventTag EVT_FAINT_ZOOM_FIT_ALL(FAINT_ZOOM_FIT_ALL);
+const wxEventType FAINT_ZoomFit = wxNewEventType();
+CommandEventTag EVT_FAINT_ZoomFit(FAINT_ZoomFit);
 
-const wxEventType FAINT_ZOOM_100_TOGGLE = wxNewId();
-CommandEventTag EVT_FAINT_ZOOM_100_TOGGLE(FAINT_ZOOM_100_TOGGLE);
+const wxEventType FAINT_ZoomFitAll = wxNewEventType();
+CommandEventTag EVT_FAINT_ZoomFitAll(FAINT_ZoomFitAll);
 
 
 // Control resized
-const wxEventType FAINT_CONTROL_RESIZED = wxNewEventType();
-CommandEventTag EVT_FAINT_CONTROL_RESIZED(FAINT_CONTROL_RESIZED);
+const wxEventType FAINT_ControlResized = wxNewEventType();
+CommandEventTag EVT_FAINT_ControlResized(FAINT_ControlResized);
 
 void send_control_resized_event(wxEvtHandler* handler){
-  wxCommandEvent sizeEvent(FAINT_CONTROL_RESIZED);
+  wxCommandEvent sizeEvent(FAINT_ControlResized);
   sizeEvent.SetEventObject(handler);
   handler->ProcessEvent(sizeEvent);
 }
 
 // PaintEvent
-const wxEventType FAINT_ADD_TO_PALETTE = wxNewEventType();
-const wxEventTypeTag<PaintEvent> EVT_FAINT_ADD_TO_PALETTE(FAINT_ADD_TO_PALETTE);
+const wxEventType FAINT_AddToPalette = wxNewEventType();
+const wxEventTypeTag<PaintEvent> EVT_FAINT_AddToPalette(FAINT_AddToPalette);
 
 PaintEvent::PaintEvent(wxEventType type, const Paint& paint)
   : wxCommandEvent(type, -1),
@@ -74,10 +74,10 @@ Paint PaintEvent::GetPaint() const{
 }
 
 // ColorEvent
-const wxEventType FAINT_COPY_COLOR_HEX = wxNewEventType();
-const wxEventType FAINT_COPY_COLOR_RGB = wxNewEventType();
-ColorEventTag EVT_FAINT_COPY_COLOR_HEX(FAINT_COPY_COLOR_HEX);
-ColorEventTag EVT_FAINT_COPY_COLOR_RGB(FAINT_COPY_COLOR_RGB);
+const wxEventType FAINT_CopyColorHex = wxNewEventType();
+const wxEventType FAINT_CopyColorRgb = wxNewEventType();
+ColorEventTag EVT_FAINT_CopyColorHex(FAINT_CopyColorHex);
+ColorEventTag EVT_FAINT_CopyColorRgb(FAINT_CopyColorRgb);
 
 ColorEvent::ColorEvent(wxEventType type, const Color& color)
   : wxCommandEvent(type, -1),
@@ -94,7 +94,7 @@ Color ColorEvent::GetColor() const{
 
 // ToolChangeEvent
 ToolChangeEvent::ToolChangeEvent(ToolId toolId)
-  : wxCommandEvent(FAINT_TOOL_CHANGE, -1),
+  : wxCommandEvent(FAINT_ToolChange, -1),
     m_toolId(toolId)
 {}
 
@@ -106,13 +106,13 @@ ToolId ToolChangeEvent::GetTool() const{
   return m_toolId;
 }
 
-const wxEventType FAINT_TOOL_CHANGE = wxNewEventType();
-const wxEventTypeTag<ToolChangeEvent> EVT_FAINT_TOOL_CHANGE(FAINT_TOOL_CHANGE);
+const wxEventType FAINT_ToolChange = wxNewEventType();
+const wxEventTypeTag<ToolChangeEvent> EVT_FAINT_ToolChange(FAINT_ToolChange);
 
 
 // LayerChangeEvent
 LayerChangeEvent::LayerChangeEvent(Layer layer)
-  : wxCommandEvent(FAINT_LAYER_CHANGE, -1),
+  : wxCommandEvent(FAINT_LayerChange, -1),
     m_layer(layer)
 {}
 
@@ -123,13 +123,14 @@ wxEvent* LayerChangeEvent::Clone() const{
 Layer LayerChangeEvent::GetLayer() const{
   return m_layer;
 }
-const wxEventType FAINT_LAYER_CHANGE = wxNewEventType();
-const wxEventTypeTag<LayerChangeEvent> EVT_FAINT_LAYER_CHANGE(FAINT_LAYER_CHANGE);
+
+const wxEventType FAINT_LayerChange = wxNewEventType();
+const wxEventTypeTag<LayerChangeEvent> EVT_FAINT_LayerChange(FAINT_LayerChange);
 
 
 // OpenFilesEvent
 OpenFilesEvent::OpenFilesEvent(const FileList& files)
-  : wxCommandEvent(FAINT_OPEN_FILES, -1),
+  : wxCommandEvent(FAINT_OpenFiles, -1),
     m_files(files)
 {}
 
@@ -141,13 +142,13 @@ const FileList& OpenFilesEvent::GetFileNames() const{
   return m_files;
 }
 
-const wxEventType FAINT_OPEN_FILES = wxNewEventType();
-const wxEventTypeTag<OpenFilesEvent> EVT_FAINT_OPEN_FILES(FAINT_OPEN_FILES);
+const wxEventType FAINT_OpenFiles = wxNewEventType();
+const wxEventTypeTag<OpenFilesEvent> EVT_FAINT_OpenFiles(FAINT_OpenFiles);
 
-const wxEventType SET_FOCUS_ENTRY_CONTROL = wxNewEventType();
-CommandEventTag EVT_SET_FOCUS_ENTRY_CONTROL(SET_FOCUS_ENTRY_CONTROL);
+const wxEventType FAINT_SetFocusEntryControl = wxNewEventType();
+CommandEventTag EVT_FAINT_SetFocusEntryControl(FAINT_SetFocusEntryControl);
 
-const wxEventType KILL_FOCUS_ENTRY_CONTROL = wxNewEventType();
-CommandEventTag EVT_KILL_FOCUS_ENTRY_CONTROL(KILL_FOCUS_ENTRY_CONTROL);
+const wxEventType FAINT_KillFocusEntryControl = wxNewEventType();
+CommandEventTag EVT_FAINT_KillFocusEntryControl(FAINT_KillFocusEntryControl);
 
 } // namespace

@@ -44,23 +44,23 @@ private:
 template<typename T>
 using SettingTag = wxEventTypeTag<SettingEvent<T>>;
 
-extern const wxEventType FAINT_INT_SETTING_CHANGE;
-extern const SettingTag<IntSetting> EVT_FAINT_INT_SETTING_CHANGE;
+extern const wxEventType FAINT_IntSettingChange;
+extern const SettingTag<IntSetting> EVT_FAINT_IntSettingChange;
 
-extern const wxEventType FAINT_FLOAT_SETTING_CHANGE;
-extern const SettingTag<FloatSetting> EVT_FAINT_FLOAT_SETTING_CHANGE;
+extern const wxEventType FAINT_FloatSettingChange;
+extern const SettingTag<FloatSetting> EVT_FAINT_FloatSettingChange;
 
-extern const wxEventType FAINT_BOOL_SETTING_CHANGE;
-extern const SettingTag<BoolSetting> EVT_FAINT_BOOL_SETTING_CHANGE;
+extern const wxEventType FAINT_BoolSettingChange;
+extern const SettingTag<BoolSetting> EVT_FAINT_BoolSettingChange;
 
-extern const wxEventType FAINT_COLOR_SETTING_CHANGE;
-extern const SettingTag<PaintSetting> EVT_FAINT_COLOR_SETTING_CHANGE;
+extern const wxEventType FAINT_PaintSettingChange;
+extern const SettingTag<PaintSetting> EVT_FAINT_PaintSettingChange;
 
-extern const wxEventType FAINT_STRING_SETTING_CHANGE;
-extern const SettingTag<StringSetting> EVT_FAINT_STRING_SETTING_CHANGE;
+extern const wxEventType FAINT_StringSettingChange;
+extern const SettingTag<StringSetting> EVT_FAINT_StringSettingChange;
 
-extern const wxEventType SWAP_COLORS;
-extern const wxEventTypeTag<wxCommandEvent> EVT_SWAP_COLORS;
+extern const wxEventType FAINT_SwapColors;
+extern const wxEventTypeTag<wxCommandEvent> EVT_FAINT_SwapColors;
 
 class SettingsEvent : public wxCommandEvent{
 public:
@@ -70,8 +70,8 @@ private:
   Settings m_settings;
 };
 
-extern const wxEventType FAINT_SETTINGS_CHANGE;
-extern const wxEventTypeTag<SettingsEvent> EVT_FAINT_SETTINGS_CHANGE;
+extern const wxEventType FAINT_SettingsChange;
+extern const wxEventTypeTag<SettingsEvent> EVT_FAINT_SettingsChange;
 
 } // namespace
 

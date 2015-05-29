@@ -74,21 +74,22 @@ public:
 
     events::on_button(m_btnZoomIn, [&](){
       bool ctrl = wxGetKeyState(WXK_CONTROL);
-      send_zoom_event(this, ctrl ? FAINT_ZOOM_IN_ALL : FAINT_ZOOM_IN);
+      send_zoom_event(this, ctrl ? FAINT_ZoomInAll : FAINT_ZoomIn);
     });
 
     events::on_button(m_btnZoomOut, [&](){
       bool ctrl = wxGetKeyState(WXK_CONTROL);
-      send_zoom_event(this, ctrl ? FAINT_ZOOM_OUT_ALL : FAINT_ZOOM_OUT);
+      send_zoom_event(this, ctrl ? FAINT_ZoomOutAll : FAINT_ZoomOut);
     });
 
     events::on_button(m_btnZoomFitOr100, [&](){
       bool ctrl = wxGetKeyState(WXK_CONTROL);
       if (m_fit){
-        send_zoom_event(this, ctrl ? FAINT_ZOOM_FIT_ALL : FAINT_ZOOM_FIT);
+        send_zoom_event(this, ctrl ? FAINT_ZoomFitAll : FAINT_ZoomFit);
       }
       else{
-        send_zoom_event(this, ctrl ? FAINT_ZOOM_100_ALL : FAINT_ZOOM_100);
+        send_zoom_event(this,
+          ctrl ? FAINT_ZoomActualSizeAll : FAINT_ZoomActualSize);
       }
     });
   }

@@ -236,24 +236,24 @@ private:
 
   void HandleMenuChoice(int action){
     if (action == menu_swap){
-      wxCommandEvent newEvent(EVT_SWAP_COLORS);
+      wxCommandEvent newEvent(EVT_FAINT_SwapColors);
       ProcessEvent(newEvent);
       return;
     }
     else{
       Paint paint(MenuTargetColor());
       if (action == menu_add){
-        PaintEvent newEvent(FAINT_ADD_TO_PALETTE, paint);
+        PaintEvent newEvent(FAINT_AddToPalette, paint);
         ProcessEvent(newEvent);
       }
       else if (action == menu_copyHex){
         assert(paint.IsColor()); // Should be unavailable for other than plain color
-        ColorEvent newEvent(FAINT_COPY_COLOR_HEX, paint.GetColor());
+        ColorEvent newEvent(FAINT_CopyColorHex, paint.GetColor());
         ProcessEvent(newEvent);
       }
       else if (action == menu_copyRgb){
         assert(paint.IsColor()); // Should be unavailable for other than plain color
-        ColorEvent newEvent(FAINT_COPY_COLOR_RGB, paint.GetColor());
+        ColorEvent newEvent(FAINT_CopyColorRgb, paint.GetColor());
         ProcessEvent(newEvent);
       }
     }
@@ -261,7 +261,7 @@ private:
 
   void SendChangeEvent(const PaintSetting& setting, const Paint& value){
     SettingEvent<PaintSetting> event(setting, value,
-      FAINT_COLOR_SETTING_CHANGE);
+      FAINT_PaintSettingChange);
     event.SetEventObject(this);
     GetEventHandler()->ProcessEvent(event);
   }

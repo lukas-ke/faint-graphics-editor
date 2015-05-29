@@ -88,7 +88,7 @@ public:
         event.Skip();
       });
 
-    bind_fwd(m_panel, EVT_FAINT_INT_SETTING_CHANGE,
+    bind_fwd(m_panel, EVT_FAINT_IntSettingChange,
       [&](const SettingEvent<IntSetting>& e){
         int layer = e.GetValue();
         LayerChangeEvent newEvent(to_layerstyle(layer));
@@ -163,7 +163,7 @@ private:
   {
     auto* button = tool_drop_down_button(m_panel, to_faint(g_toolButtonSize), tools);
     sizer->Add(button);
-    bind_fwd(button, EVT_FAINT_TOOL_CHANGE,
+    bind_fwd(button, EVT_FAINT_ToolChange,
       [&](ToolChangeEvent& event){
         SendToolChoiceEvent(event.GetTool());
       });

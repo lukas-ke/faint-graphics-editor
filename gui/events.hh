@@ -26,38 +26,39 @@ namespace faint{
 using CommandEventTag = const wxEventTypeTag<wxCommandEvent>;
 
 // Zoom command events declarations
-extern const wxEventType FAINT_ZOOM_IN;
-extern CommandEventTag EVT_FAINT_ZOOM_IN;
+extern const wxEventType FAINT_ZoomIn;
+extern CommandEventTag EVT_FAINT_ZoomIn;
 
-extern const wxEventType FAINT_ZOOM_IN_ALL;
-extern CommandEventTag EVT_FAINT_ZOOM_IN_ALL;
+extern const wxEventType FAINT_ZoomInAll;
+extern CommandEventTag EVT_FAINT_ZoomInAll;
 
-extern const wxEventType FAINT_ZOOM_OUT;
-extern CommandEventTag EVT_FAINT_ZOOM_OUT;
+extern const wxEventType FAINT_ZoomOut;
+extern CommandEventTag EVT_FAINT_ZoomOut;
 
-extern const wxEventType FAINT_ZOOM_OUT_ALL;
-extern CommandEventTag EVT_FAINT_ZOOM_OUT_ALL;
+extern const wxEventType FAINT_ZoomOutAll;
+extern CommandEventTag EVT_FAINT_ZoomOutAll;
 
-extern const wxEventType FAINT_ZOOM_100;
-extern CommandEventTag EVT_FAINT_ZOOM_100;
+extern const wxEventType FAINT_ZoomActualSize;
+extern CommandEventTag EVT_FAINT_ZoomActualSize;
 
-extern const wxEventType FAINT_ZOOM_100_ALL;
-extern CommandEventTag EVT_FAINT_ZOOM_100_ALL;
+extern const wxEventType FAINT_ZoomActualSizeAll;
+extern CommandEventTag EVT_FAINT_ZoomActualSizeAll;
 
-extern const wxEventType FAINT_ZOOM_FIT;
-extern CommandEventTag EVT_FAINT_ZOOM_FIT;
+extern const wxEventType FAINT_ZoomFit;
+extern CommandEventTag EVT_FAINT_ZoomFit;
 
-extern const wxEventType FAINT_ZOOM_FIT_ALL;
-extern CommandEventTag EVT_FAINT_ZOOM_FIT_ALL;
+extern const wxEventType FAINT_ZoomFitAll;
+extern CommandEventTag EVT_FAINT_ZoomFitAll;
 
-extern const wxEventType FAINT_ZOOM_100_TOGGLE;
-extern CommandEventTag EVT_FAINT_ZOOM_100_TOGGLE;
+extern const wxEventType FAINT_ZoomActualSizeToggle;
+extern CommandEventTag EVT_FAINT_ZoomActualSizeToggle;
 
 // Event for when a control changes size, so that parent-panels can
 // re-Layout
-extern CommandEventTag EVT_FAINT_CONTROL_RESIZED;
+extern CommandEventTag EVT_FAINT_ControlResized;
 
 void send_control_resized_event(wxEvtHandler*);
+
 
 // PaintEvent
 class PaintEvent : public wxCommandEvent{
@@ -69,8 +70,9 @@ private:
   Paint m_paint;
 };
 
-extern const wxEventType FAINT_ADD_TO_PALETTE;
-extern const wxEventTypeTag<PaintEvent> EVT_FAINT_ADD_TO_PALETTE;
+extern const wxEventType FAINT_AddToPalette;
+extern const wxEventTypeTag<PaintEvent> EVT_FAINT_AddToPalette;
+
 
 // ColorEvent
 class ColorEvent : public wxCommandEvent{
@@ -82,11 +84,12 @@ private:
   Color m_color;
 };
 
-extern const wxEventType FAINT_COPY_COLOR_HEX;
-extern const wxEventType FAINT_COPY_COLOR_RGB;
+extern const wxEventType FAINT_CopyColorHex;
+extern const wxEventType FAINT_CopyColorRgb;
 using ColorEventTag = const wxEventTypeTag<ColorEvent>;
-extern const ColorEventTag EVT_FAINT_COPY_COLOR_HEX;
-extern const ColorEventTag EVT_FAINT_COPY_COLOR_RGB;
+extern const ColorEventTag EVT_FAINT_CopyColorHex;
+extern const ColorEventTag EVT_FAINT_CopyColorRgb;
+
 
 // ToolChangeEvent
 class ToolChangeEvent : public wxCommandEvent{
@@ -97,8 +100,9 @@ public:
 private:
   ToolId m_toolId;
 };
-extern const wxEventType FAINT_TOOL_CHANGE;
-extern const wxEventTypeTag<ToolChangeEvent> EVT_FAINT_TOOL_CHANGE;
+
+extern const wxEventType FAINT_ToolChange;
+extern const wxEventTypeTag<ToolChangeEvent> EVT_FAINT_ToolChange;
 
 
 // LayerChangeEvent
@@ -111,8 +115,9 @@ private:
   Layer m_layer;
 };
 
-extern const wxEventType FAINT_LAYER_CHANGE;
-extern const wxEventTypeTag<LayerChangeEvent> EVT_FAINT_LAYER_CHANGE;
+extern const wxEventType FAINT_LayerChange;
+extern const wxEventTypeTag<LayerChangeEvent> EVT_FAINT_LayerChange;
+
 
 // OpenFilesEvent
 class OpenFilesEvent : public wxCommandEvent{
@@ -124,24 +129,17 @@ private:
   FileList m_files;
 };
 
-extern const wxEventType FAINT_OPEN_FILES;
-extern const wxEventTypeTag<OpenFilesEvent> EVT_FAINT_OPEN_FILES;
+extern const wxEventType FAINT_OpenFiles;
+extern const wxEventTypeTag<OpenFilesEvent> EVT_FAINT_OpenFiles;
+
 
 // Event for notifying that a text entry control has received or lost
 // focus (used to disable some Python binds)
-extern const wxEventType SET_FOCUS_ENTRY_CONTROL;
-extern const wxEventTypeTag<wxCommandEvent> EVT_SET_FOCUS_ENTRY_CONTROL;
+extern const wxEventType FAINT_SetFocusEntryControl;
+extern const wxEventTypeTag<wxCommandEvent> EVT_FAINT_SetFocusEntryControl;
 
-extern const wxEventType KILL_FOCUS_ENTRY_CONTROL;
-extern const wxEventTypeTag<wxCommandEvent> EVT_KILL_FOCUS_ENTRY_CONTROL;
-
-// Event for notifying that a text entry control has received or lost
-// focus (used to disable some Python binds)
-extern const wxEventType SET_FOCUS_ENTRY_CONTROL;
-extern const wxEventTypeTag<wxCommandEvent> EVT_SET_FOCUS_ENTRY_CONTROL;
-
-extern const wxEventType KILL_FOCUS_ENTRY_CONTROL;
-extern const wxEventTypeTag<wxCommandEvent> EVT_KILL_FOCUS_ENTRY_CONTROL;
+extern const wxEventType FAINT_KillFocusEntryControl;
+extern const wxEventTypeTag<wxCommandEvent> EVT_FAINT_KillFocusEntryControl;
 
 } // namespace
 

@@ -5,6 +5,7 @@
 #include "geo/angle.hh"
 
 namespace test{
+  // Specialization for using Angle with NEAR(...)
   template<> double to_double(const faint::Angle& a){
     return a.Rad();
   }
