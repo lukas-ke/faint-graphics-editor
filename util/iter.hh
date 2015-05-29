@@ -174,7 +174,7 @@ but_last_t<Container> but_last(const Container& container) {
 
 template<typename T>
 class enum_iter_t{
-  // Iterator for enums values.
+  // Iterator for enum values.
 public:
   enum_iter_t(T value)
     : m_value(static_cast<T2>(value))

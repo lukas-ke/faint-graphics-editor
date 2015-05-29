@@ -47,9 +47,9 @@ Paint get_hovered_paint(const PosInside&,
   const include_floating_selection&);
 
 enum class SearchMode{exact_object, include_grouped};
-// Retrieves the hovered selected object as a text object, or 0 if no
-// object is hovered, the object isn't selected or is not a text
-// object.
+// Retrieves the hovered selected object as a text object, or nullptr
+// if no object is hovered, the hovered object is not selected or is
+// not a text object.
 ObjText* hovered_selected_text(const PosInfo&,
   SearchMode searchMode=SearchMode::exact_object);
 

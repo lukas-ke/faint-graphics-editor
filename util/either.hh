@@ -142,9 +142,8 @@ private:
 
 template<typename T1, typename T2>
 class FrozenEither{
-  // Wrapper for Either which disallows changing the instantiated
-  // type. May still (if non-const) return the content as mutable
-  // references.
+  // Wrapper for Either which disallows replacing the held object. May
+  // still (if non-const) return the content as mutable references.
   //
   // Must not be stored past the lifetime of the contained Either
   // (read as: "must not be stored").
