@@ -16,12 +16,15 @@
 #include <algorithm>
 #include "wx/dcclient.h" // wxPaintDC
 #include "wx/textctrl.h"
+#include "app/get-art.hh" // Fixme: For cursors. Replace with parameters
+#include "app/resource-id.hh" // Fixme: For cursors. Replace with parameters.
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "bitmap/draw.hh"
 #include "bitmap/pattern.hh"
 #include "geo/int-range.hh"
 #include "geo/int-rect.hh"
+#include "gui/art.hh" // Fixme: Remove
 #include "gui/mouse-capture.hh"
 #include "gui/paint-dialog/hsl-panel.hh"
 #include "gui/slider.hh"
@@ -103,6 +106,7 @@ public:
       [this](const IntPoint& pos){
         SetFromPos(pos);
         m_mouse.Capture();
+        SetCursor(get_art().Get(Cursor::BLANK));
       });
 
     events::on_mouse_left_up(this, releaser(m_mouse));
@@ -111,6 +115,10 @@ public:
       [this](const IntPoint& pos){
         if (m_mouse.HasCapture()){
           SetFromPos(pos);
+          SetCursor(get_art().Get(Cursor::BLANK));
+        }
+        else{
+          SetCursor(get_art().Get(Cursor::CROSSHAIR));
         }
       });
   }
