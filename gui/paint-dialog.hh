@@ -17,6 +17,7 @@
 #define FAINT_PAINT_DIALOG_HH
 #include "bitmap/paint.hh"
 #include "gui/dialog-context.hh"
+#include "util/accessor.hh"
 #include "util/optional.hh"
 
 class wxWindow;
@@ -24,6 +25,7 @@ class wxWindow;
 namespace faint{
 
 class Art;
+class Bitmap;
 class StatusInterface;
 class utf8_string;
 
@@ -43,6 +45,7 @@ Optional<Paint> show_paint_dialog(wxWindow* parent,
   const utf8_string& title,
   const Paint& initial,
   const Color& secondary,
+  const Getter<Bitmap>&,
   const Art&,
   StatusInterface&,
   DialogContext&);

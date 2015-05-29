@@ -17,6 +17,8 @@
 #include "wx/sizer.h"
 #include "app/app-context.hh" // Fixme: Remove
 #include "app/canvas.hh" // Fixme: Remove
+#include "bitmap/bitmap.hh" // Fixme: Remove
+#include "util/color-span.hh" // Fixme: Remove
 #include "util/setting-id.hh" // Fixme: Remove
 #include "geo/int-size.hh"
 #include "gui/color-panel.hh"
@@ -30,6 +32,7 @@
 #include "gui/zoom-ctrl.hh"
 #include "util-wx/bind-event.hh"
 #include "util/dumb-ptr.hh"
+#include "util/either.hh"
 
 namespace faint{
 
@@ -77,13 +80,29 @@ public:
     const int spacing = 5;
 
     auto pickPaint =
-      [&app, &art, &status](const utf8_string& title, const Paint& initial,
+      [&app, &art, &status](const utf8_string& title,
+        const Paint& initial,
         const Color& secondary)
       {
+        auto getBitmap = [&app](){
+          const auto& background = app.GetActiveCanvas().GetBackground();
+          return background.Visit(
+            [&](const Bitmap& bmp) -> Bitmap{
+              return bmp;
+            },
+            [&](const ColorSpan& colorSpan){
+              // Not using the colorSpan size, since it might be huge, and
+              // it would be pointless with only one color.
+              const IntSize size(1,1);
+              return Bitmap(size, colorSpan.color);
+            });
+        };
+
         return show_paint_dialog(nullptr, // Fixme: ?
           title,
           initial,
           secondary,
+          getBitmap,
           art,
           status,
           app.GetDialogContext());
