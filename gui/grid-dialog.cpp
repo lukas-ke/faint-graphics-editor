@@ -70,10 +70,10 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
   auto dashed = create_checkbox(dlg, "&Dashed lines", grid.Dashed());
 
   using namespace layout;
-  auto spacingRow = create_row(OuterSpacing(0), ItemSpacing(item_spacing),
+  auto spacingRow = create_row(OuterSpacing(0), ui::item_spacing,
     {labelSpacing, raw(editSpacing)});
 
-  auto anchorRow = create_row(OuterSpacing(0), ItemSpacing(item_spacing),
+  auto anchorRow = create_row(OuterSpacing(0), ui::item_spacing,
     {labelX, raw(editX),
      labelY, raw(editY)});
 

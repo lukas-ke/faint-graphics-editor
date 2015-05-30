@@ -16,6 +16,7 @@
 #ifndef FAINT_LAYOUT_WX_HH
 #define FAINT_LAYOUT_WX_HH
 #include <vector>
+#include "gui/ui-constants.hh"
 #include "util/distinct.hh"
 
 class wxBoxSizer;
@@ -31,8 +32,6 @@ namespace faint{ namespace layout{
 
 class category_layout_wx;
 using Proportion = Distinct<int, category_layout_wx, 0>;
-using OuterSpacing = Distinct<int, category_layout_wx, 1>;
-using ItemSpacing = Distinct<int, category_layout_wx, 2>;
 
 extern const int EXPAND;
 extern const int DOWN;

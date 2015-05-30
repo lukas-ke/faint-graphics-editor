@@ -90,10 +90,10 @@ static auto create_about_dialog(wxWindow* parent){
         create_column(OuterSpacing(0), ItemSpacing(0), {
           raw(title_text(panel)),
           raw(version_text(panel))}),
-        {create_hline(panel), Proportion(0), EXPAND|DOWN, item_spacing},
+        {create_hline(panel), Proportion(0), EXPAND|DOWN, ui::item_spacing},
         {create_hyperlink(panel,
           "http://code.google.com/p/faint-graphics-editor/"),
-          Proportion(0), DOWN, item_spacing},
+          Proportion(0), DOWN, ui::item_spacing},
         raw(license_text(panel))}),
       Proportion(1), EXPAND|DOWN, panel_padding}}));
     return panel;

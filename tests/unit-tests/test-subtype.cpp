@@ -7,27 +7,62 @@
 void test_subtype(){
   using namespace faint;
 
-  class category_test_subtype;
-  using TestPointA = Subtype<IntPoint, category_test_subtype, 0>;
-  using TestPointB = Subtype<IntPoint, category_test_subtype, 1>;
-
-  static_assert(std::is_assignable<IntPoint&, TestPointA>::value,
-    "IntPoint should be assignable from SubType<IntPoint>");
-
-  static_assert(!std::is_assignable<TestPointA&, IntPoint>::value,
-    "SubType<IntPoint> should not be (implicitly) assignable from IntPoint");
-
-  static_assert(!std::is_assignable<TestPointA&, TestPointB>::value,
-    "Subtypes with different ids should not be assignable.");
-
   {
-    TestPointA tp(12, 24);
-    IntPoint ip(12, 24);
+    class category_test_subtype_0;
+    using TestPointA = Subtype<IntPoint, category_test_subtype_0, 0>;
+    using TestPointB = Subtype<IntPoint, category_test_subtype_0, 1>;
+
+    static_assert(std::is_assignable<IntPoint&, TestPointA>::value,
+      "IntPoint should be assignable from SubType<IntPoint>");
+
+    static_assert(!std::is_assignable<TestPointA&, IntPoint>::value,
+      "SubType<IntPoint> should not be (implicitly) assignable from IntPoint");
+
+    static_assert(!std::is_assignable<TestPointA&, TestPointB>::value,
+      "Subtypes with different ids should not be assignable.");
+
+    class category_test_subtype_1;
+    using TestPointC = Subtype<IntPoint, category_test_subtype_1, 0>;
+
+    static_assert(!std::is_assignable<TestPointA&, TestPointC>::value,
+      "Subtypes with different categories should not be assigxnable.");
+
+    const TestPointA tp(12, 24);
+    VERIFY(tp == tp); // Equal to self
+
+    const IntPoint ip(12, 24);
     VERIFY(tp == ip);
+
     IntPoint rawPoint(tp);
     VERIFY(rawPoint == tp && rawPoint == ip);
+
+    VERIFY(tp.x == 12); // Subtype supports natural member access
   }
-  TestPointA a(12,11);
-  TestPointB b(11,12);
-  VERIFY(a == a);
+
+  {
+    class category_test_primitive_subtype;
+    using IntA = PrimitiveSubtype<int, category_test_primitive_subtype, 0>;
+    using IntB = PrimitiveSubtype<int, category_test_primitive_subtype, 1>;
+
+    static_assert(std::is_assignable<int&, IntA>::value,
+      "T should be assignable from PrimitiveSubtype<T>");
+
+    static_assert(!std::is_assignable<IntA&, int>::value,
+      "PrimitiveSubType<T> should not not be (implicitly) assignable from T");
+
+    static_assert(!std::is_assignable<IntA&, IntB>::value,
+      "PrimitiveSubtype<T> with different ids should not be assignable.");
+
+    {
+      const int value = 10;
+      IntA a(value);
+      VERIFY(a == a);
+      VERIFY(a <= a);
+      // Operators available via type conversion
+      VERIFY(a == value);
+      VERIFY(a <= value);
+      VERIFY(a < value + 1);
+    }
+
+  }
 }

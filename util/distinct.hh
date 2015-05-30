@@ -67,7 +67,7 @@ using LessDistinct = Distinct<T, category_common, ID>;
 
 template <typename T>
 struct Order{
-  // Types for parameter ordering, when two same-type parameters
+  // Types for parameter ordering, used when two same-type parameters
   // represent something new and something old, to avoid mixing them
   // up.
   //
@@ -77,10 +77,29 @@ struct Order{
   using Old = Distinct<T, Order, 1>;
 };
 
+template<typename T>
+class Primitive{
+public:
+  explicit Primitive(T value) : m_value(value){}
+  Primitive() : m_value(){}
+
+  Primitive& operator=(T value){
+    m_value = value;
+    return *this;
+  }
+
+  operator T() const{
+    return m_value;
+  }
+
+private:
+  T m_value;
+};
+
 template<class T, class CATEGORY, int ID>
 class Subtype : public T {
-  // Same idea as the Distinct template, but retaining the base
-  // types interface.
+  // Same idea as the Distinct template, but retaining the interface
+  // of the base type.
   //
   // Like Distinct, this prevents passing a T when a Subtype<T> is
   // required, courtesy of the explicit constructors.
@@ -99,6 +118,9 @@ public:
 
   using base_type = T;
 };
+
+template<typename T, class Category, int ID>
+using PrimitiveSubtype = Subtype<Primitive<T>, Category, ID>;
 
 template<class T, class C1, class C2, int ID1, int ID2>
 void assert_same(const Subtype<T, C1, ID1>&,
