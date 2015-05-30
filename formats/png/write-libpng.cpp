@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include <png.h> // libpng
+#include "formats/faint-fopen.hh"
 #include "formats/png/png-util.hh"
 #include "formats/png/write-libpng.hh"
 #include "geo/limits.hh"
@@ -35,7 +36,7 @@ static void free_rows(png_bytep* rowPointers, png_uint_32 height){
   free(rowPointers);
 }
 
-PngWriteResult write_with_libpng(const char* path,
+PngWriteResult write_with_libpng(const FilePath& path,
   const Bitmap& bmp,
   const int colorType,
   const png_tEXt_map& textChunks)
@@ -50,7 +51,7 @@ PngWriteResult write_with_libpng(const char* path,
     return PngWriteResult::ERROR_CREATE_WRITE_STRUCT;
   }
 
-  FILE* f = fopen(path, "wb");
+  FILE* f = faint_fopen_write_binary(path);
   if (!f){
     return PngWriteResult::ERROR_OPEN_FILE;
   }

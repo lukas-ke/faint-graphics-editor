@@ -13,35 +13,16 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_WRITE_LIBPNG_HH
-#define FAINT_WRITE_LIBPNG_HH
-#include "formats/png/file-png.hh"
+#ifndef FAINT_FOPEN_HH
+#define FAINT_FOPEN_HH
+#include <cstdio>
 #include "util-wx/file-path.hh"
 
-namespace faint{
+namespace faint {
 
-enum class PngWriteResult{
-  OK,
-  ERROR_OPEN_FILE,
-  ERROR_CREATE_WRITE_STRUCT,
-  ERROR_CREATE_INFO_STRUCT,
-  ERROR_INIT_IO,
-  ERROR_WRITE_HEADER,
-  ERROR_WRITE_DATA,
-  ERROR_WRITE_END,
-  ERROR_WRITE_TEXT_KEY_ENCODING,
-  ERROR_WRITE_TEXT_VALUE_ENCODING,
-  ERROR_WRITE_TEXT_KEY_EMPTY,
-  ERROR_WRITE_TEXT_KEY_TOO_LONG,
-  ERROR_WRITE_TEXT_VALUE_TOO_LONG,
-  ERROR_WRITE_TOO_MANY_TEXT_CHUNKS
-};
+// Handles utf-8 also on Windows, MSVC:s fopen does not.
+FILE* faint_fopen_write_binary(const FilePath&);
 
-PngWriteResult write_with_libpng(const FilePath& path,
-  const Bitmap&,
-  const int colorType,
-  const png_tEXt_map& textChunks);
-
-} // namespace faint
+} // namespace
 
 #endif

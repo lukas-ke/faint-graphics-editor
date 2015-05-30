@@ -335,7 +335,7 @@ SaveResult write_png(const FilePath& path,
   PngColorType colorType,
   const png_tEXt_map& textChunks)
 {
-  PngWriteResult result = write_with_libpng(path.Str().c_str(), bmp,
+  PngWriteResult result = write_with_libpng(path, bmp,
     to_png_color_type(colorType),
     textChunks);
 
