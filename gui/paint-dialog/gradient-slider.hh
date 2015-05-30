@@ -28,6 +28,8 @@ class DialogContext;
 
 class ColorStopSliderImpl;
 
+// Fixme: These classes hold a reference to the passed in gradient. Surprising!
+
 class LinearGradientSlider{
 public:
   LinearGradientSlider(wxWindow* parent,

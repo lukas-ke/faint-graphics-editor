@@ -13,7 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "wx/wx.h"
+#include "wx/cursor.h"
+#include "wx/window.h"
 #include "gui/dialog-context.hh"
 #include "gui/paint-dialog/gradient-panel.hh"
 
