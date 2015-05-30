@@ -80,14 +80,14 @@ bool add(wxBoxSizer* sizer, const SizerItem& item){
 wxSizer* create_row(const std::vector<SizerItem>& items){
   wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
 
-  row->AddSpacer(panel_padding);
+  row->AddSpacer(ui::panel_padding);
   for (auto& item : but_last(items)){
     if (add(row, item)){
       row->AddSpacer(ui::item_spacing);
     }
   }
   add(row, items.back());
-  row->AddSpacer(panel_padding);
+  row->AddSpacer(ui::panel_padding);
   return row;
 }
 
@@ -128,12 +128,12 @@ wxSizer* create_row(OuterSpacing os, ItemSpacing is,
 
 wxSizer* create_row_outer_pad(const std::vector<SizerItem>& items){
   wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
-  row->AddSpacer(panel_padding);
+  row->AddSpacer(ui::panel_padding);
   for (auto& item : but_last(items)){
     add(row, item);
   }
   add(row, items.back());
-  row->AddSpacer(panel_padding);
+  row->AddSpacer(ui::panel_padding);
   return row;
 }
 
@@ -184,7 +184,7 @@ wxSizer* create_column(OuterSpacing os, ItemSpacing is,
 }
 
 wxSizer* create_column(const std::vector<SizerItem>& items){
-  return create_column(OuterSpacing(panel_padding), ui::item_spacing, items);
+  return create_column(OuterSpacing(ui::panel_padding), ui::item_spacing, items);
 
 }
 SizerItem grow(wxSizer* sizer){

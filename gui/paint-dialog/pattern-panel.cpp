@@ -166,7 +166,7 @@ public:
       m_patternDisplay(nullptr)
   {
     m_patternDisplay = new PatternDisplay(this);
-    set_pos(m_patternDisplay, IntPoint::Both(panel_padding));
+    set_pos(m_patternDisplay, IntPoint::Both(ui::panel_padding));
 
     auto btnUseImage = create_button(this, "Use Image", below(m_patternDisplay),
       [this](){

@@ -81,7 +81,7 @@ public:
     DialogContext& dialogContext)
     : wxPanel(parent, wxID_ANY)
   {
-    const auto displayTopLeft = IntPoint::Both(panel_padding);
+    const auto displayTopLeft = IntPoint::Both(ui::panel_padding);
 
     const IntSize bmpSize(28,23); // Fixme why hard coded here?
     m_gradientTypeCtrl = new BitmapListCtrl(this,
@@ -93,7 +93,8 @@ public:
     set_pos(m_gradientTypeCtrl, displayTopLeft);
 
     // Fixme: Hard coded 420, 100
-    const IntSize displaySize(420 - get_width(m_gradientTypeCtrl) - panel_padding,
+    const IntSize displaySize(420 - get_width(m_gradientTypeCtrl) -
+      ui::panel_padding,
       100);
 
     m_linearDisplay = std::make_unique<LinearGradientDisplay>(this,
@@ -110,7 +111,7 @@ public:
     m_radialDisplay->Hide();
 
     m_angleTextLabel = create_label(this, "&Angle",
-      IntPoint(panel_padding, bottom(m_linearDisplay->AsWindow()) + 10));
+      IntPoint(ui::panel_padding, bottom(m_linearDisplay->AsWindow()) + 10));
 
     m_angleTextCtrl = create_text_control(this, Width(50));
     set_pos(m_angleTextCtrl, to_the_right_middle_of(m_angleTextLabel,

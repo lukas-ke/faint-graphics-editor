@@ -53,7 +53,7 @@ public:
     m_window = new T(this, std::forward<Args>(args)...);
 
     if (pos == LabelPos::LEFT){
-      sz->Add(raw(m_label), 0, wxRIGHT|wxALIGN_CENTER, labelSpacing);
+      sz->Add(raw(m_label), 0, wxRIGHT|wxALIGN_CENTER, ui::label_spacing);
       sz->Add(as_window(m_window));
     }
     else if (pos == LabelPos::BELOW){

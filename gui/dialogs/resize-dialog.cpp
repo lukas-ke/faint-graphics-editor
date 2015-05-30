@@ -58,7 +58,7 @@ static WithLabel<wxButton>* defaultable_button(wxWindow* parent,
   FUNC&& f)
 {
   auto* withLabel = label_below<wxButton>(parent, "(Default)", wxID_ANY, "",
-    wxDefaultPosition, to_wx(big_button_size));
+    wxDefaultPosition, to_wx(ui::big_button_size));
   auto& b = withLabel->GetWindow();
   bind(&b, wxEVT_BUTTON, std::move(f));
   set_tooltip(b, toolTip);
@@ -169,7 +169,9 @@ public:
       m_rescale->HideLabel();
     }
 
-    auto cancelButton = create_button(m_dialog.get(), "Cancel", big_button_size,
+    auto cancelButton = create_button(m_dialog.get(),
+      "Cancel",
+      ui::big_button_size,
       cancel);
 
     auto size(m_ctx->GetSize().Visit(

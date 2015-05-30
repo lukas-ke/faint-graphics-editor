@@ -25,16 +25,19 @@ class category_ui_constants;
 using OuterSpacing = PrimitiveSubtype<int, category_ui_constants, 0>;
 using ItemSpacing = PrimitiveSubtype<int, category_ui_constants, 1>;
 
-const int panel_padding = 10;
-const int small_item_spacing = 5;
-constexpr IntSize big_button_size(85, 100);
-const int labelSpacing = 10;
+} // namespace
 
-namespace ui{
+namespace faint{ namespace ui{
+
+constexpr OuterSpacing panel_padding(10);
 constexpr ItemSpacing item_spacing(10);
+constexpr ItemSpacing small_item_spacing(5);
+constexpr ItemSpacing label_spacing(10);
 
 constexpr IntSize horizontal_slider_size(200, 20);
 constexpr IntSize tall_horizontal_slider_size(200, 50);
+constexpr IntSize big_button_size(85, 100);
+
 constexpr ColRGB nice_red(181, 0, 0);
 constexpr ColRGB nice_green(34, 177, 76);
 constexpr ColRGB nice_blue(47, 54, 153);

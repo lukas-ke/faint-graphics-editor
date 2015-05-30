@@ -169,7 +169,7 @@ public:
       m_sliderCursors(sliderCursors)
   {
     m_hueSatPicker = new HueSatPicker(this);
-    set_pos(m_hueSatPicker, IntPoint::Both(panel_padding));
+    set_pos(m_hueSatPicker, IntPoint::Both(ui::panel_padding));
     auto lblHue = create_label(this, "&Hue");
     m_hueTxt = BindKillFocus(CreateTextControl({min_t(0),max_t(240)},
       below(m_hueSatPicker)));
@@ -235,8 +235,8 @@ public:
       alphaPos));
     PlaceLabel(lblAlpha, m_alphaTxt);
 
-    SetInitialSize(wxSize(right_side(m_colorBitmap) + panel_padding,
-      bottom(m_saturationTxt) + panel_padding));
+    SetInitialSize(wxSize(right_side(m_colorBitmap) + ui::panel_padding,
+      bottom(m_saturationTxt) + ui::panel_padding));
     SetColor(Color(0,0,128,255));
 
     UpdateRGBA();

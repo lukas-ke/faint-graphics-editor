@@ -94,7 +94,7 @@ public:
               acc, key::E,
               rotate),
 
-          m_cancelButton = raw(create_cancel_button(this, big_button_size))}),
+          m_cancelButton = raw(create_cancel_button(this, ui::big_button_size))}),
 
         CreateLevelRow(art, acc, level)}));
     set_accelerators(this, (acc));
@@ -126,7 +126,7 @@ public:
     acc.push_back({keyCode, cmdEvtFunc});
     return raw(create_button(this,
       bmp,
-      big_button_size, // Fixme: Would be better to specify padding.
+      ui::big_button_size, // Fixme: Would be better to specify padding.
       tooltip,
       cmdEvtFunc));
 
@@ -182,14 +182,14 @@ public:
 
     m_rotateBtn = create_button(this,
       art.Get(Icon::ROTATE_DIALOG_ROTATE),
-      big_button_size,
+      ui::big_button_size,
       rotate);
     auto rotateKey = siblingPanel.GetRotateAccelerator();
     acc.push_back({rotateKey, rotate});
 
     set_pos(m_rotateBtn, siblingPanel.GetRotateButtonPos());
 
-    wxButton* cancelButton = create_cancel_button(this, big_button_size);
+    wxButton* cancelButton = create_cancel_button(this, ui::big_button_size);
     set_pos(cancelButton, siblingPanel.GetCancelButtonPos());
 
     set_pos(m_textCtrl, to_the_left_middle_of(raw(m_rotateBtn),

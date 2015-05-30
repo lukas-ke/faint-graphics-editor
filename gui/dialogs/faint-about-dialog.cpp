@@ -94,8 +94,8 @@ static auto create_about_dialog(wxWindow* parent){
         {create_hyperlink(panel,
           "http://code.google.com/p/faint-graphics-editor/"),
           Proportion(0), DOWN, ui::item_spacing},
-        raw(license_text(panel))}),
-      Proportion(1), EXPAND|DOWN, panel_padding}}));
+          raw(license_text(panel))}),
+      Proportion(1), EXPAND|DOWN, ui::panel_padding}}));
     return panel;
   };
 
@@ -104,7 +104,7 @@ static auto create_about_dialog(wxWindow* parent){
     set_sizer(panel, create_row({{
       create_column({
         raw(details_text(panel))}),
-      Proportion(1), EXPAND|UP|DOWN, panel_padding}}));
+      Proportion(1), EXPAND|UP|DOWN, ui::panel_padding}}));
 
     return panel;
   };

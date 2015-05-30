@@ -24,7 +24,7 @@ namespace faint{
 
 IntPoint below(window_t window){
   return {left_side(window),
-    bottom(window) + small_item_spacing};
+    bottom(window) + ui::small_item_spacing};
 }
 
 int bottom(window_t window){
@@ -44,11 +44,11 @@ int top(window_t window){
 }
 
 IntPoint to_the_right_of(window_t window){
-  return {right_side(window) + small_item_spacing, top(window)};
+  return {right_side(window) + ui::small_item_spacing, top(window)};
 }
 
 IntPoint to_the_left_middle_of(window_t window, const IntSize& size){
-  const auto x = get_pos(window).x - small_item_spacing - size.w;
+  const auto x = get_pos(window).x - ui::small_item_spacing - size.w;
   const auto y = top(window) +
     get_height(window) / 2 - size.h / 2;
   return {x, y};
