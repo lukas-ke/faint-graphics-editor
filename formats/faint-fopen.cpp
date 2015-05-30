@@ -38,6 +38,9 @@ int faint_open(const FilePath& path, int oflag, int pmode){
 
 namespace faint{
 
+#include <sys/stat.h>
+#include <fcntl.h>
+
 FILE* faint_fopen_write_binary(const FilePath& path){
   return fopen(path.Str().c_str(), "wb");
 }

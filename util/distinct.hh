@@ -80,8 +80,12 @@ struct Order{
 template<typename T>
 class Primitive{
 public:
-  explicit Primitive(T value) : m_value(value){}
+  constexpr Primitive(T value) : m_value(value){}
   Primitive() : m_value(){}
+  constexpr Primitive(const Primitive& other)
+    : m_value(other.m_value)
+  {}
+
 
   Primitive& operator=(T value){
     m_value = value;
@@ -107,7 +111,7 @@ class Subtype : public T {
   // On the other hand, a SubType<T> can be passed where a T is
   // required.
 public:
-  explicit Subtype(const T& val) :
+  explicit constexpr Subtype(const T& val) :
     T(val)
   {}
 
