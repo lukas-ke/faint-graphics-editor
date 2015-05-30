@@ -14,9 +14,9 @@
 // permissions and limitations under the License.
 
 #include "app/canvas.hh"
+#include "app/frame-iter.hh"
 #include "formats/bmp/file-cur.hh"
 #include "formats/format.hh"
-#include "util/frame-iter.hh"
 #include "util/image-props.hh"
 #include "util/image-util.hh"
 #include "util/image.hh"

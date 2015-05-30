@@ -14,10 +14,10 @@
 // permissions and limitations under the License.
 
 #include "app/canvas.hh"
+#include "app/frame-iter.hh"
 #include "bitmap/bitmap.hh"
 #include "formats/bmp/file-ico.hh"
 #include "formats/format.hh"
-#include "util/frame-iter.hh"
 #include "util/image-props.hh"
 #include "util/image-util.hh"
 #include "util/image.hh"

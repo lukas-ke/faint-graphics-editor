@@ -14,11 +14,11 @@
 // permissions and limitations under the License.
 
 #include "app/canvas.hh"
+#include "app/frame-iter.hh"
 #include "bitmap/quantize.hh"
 #include "formats/format.hh"
 #include "formats/gif/file-gif.hh"
 #include "text/formatting.hh"
-#include "util/frame-iter.hh"
 #include "util/generator-adapter.hh"
 #include "util/image.hh"
 #include "util/image-util.hh"
