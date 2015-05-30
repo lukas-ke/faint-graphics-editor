@@ -115,11 +115,37 @@ GifWriteResult write_with_giflib(const FilePath& path,
       }
     }
 
+
+
+    if (v.size() > 1) {
+      // Netscape loop extension
+      auto err = EGifPutExtensionLeader(gifFile, APPLICATION_EXT_FUNC_CODE);
+      if (err == GIF_ERROR){
+        return GifWriteResult::ERROR_OTHER;
+      }
+      err = EGifPutExtensionBlock(gifFile, 11, "NETSCAPE2.0");
+      if (err == GIF_ERROR){
+        return GifWriteResult::ERROR_OTHER;
+      }
+
+      // Hard-coded to loop-forever (last two bytes, 0x00, 0x00)
+      err = EGifPutExtensionBlock(gifFile, 3, "\x01" "\x00" "\x00");
+      if (err == GIF_ERROR){
+        return GifWriteResult::ERROR_OTHER;
+      }
+
+      err = EGifPutExtensionTrailer(gifFile);
+      if (err == GIF_ERROR){
+        return GifWriteResult::ERROR_OTHER;
+      }
+    }
+
     GraphicsControlBlock gcb;
     gcb.DisposalMode = DISPOSE_BACKGROUND;
     gcb.UserInputFlag = false;
     gcb.DelayTime = entry.delay.Get();
-    gcb.TransparentColor = entry.image.transparencyIndex.Or(NO_TRANSPARENT_COLOR);
+    gcb.TransparentColor =
+      entry.image.transparencyIndex.Or(NO_TRANSPARENT_COLOR);
 
     GifByteType extension[4];
     auto err = EGifGCBToExtension(&gcb, extension);
