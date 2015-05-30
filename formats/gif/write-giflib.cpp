@@ -14,17 +14,27 @@
 // permissions and limitations under the License.
 
 #include <memory>
+#include "formats/faint-fopen.hh"
 #include "formats/gif/write-giflib.hh"
 #include "formats/gif/giflib-5.0.5/gif_lib.h"
 #include "util/iter.hh"
+#include "util-wx/file-path.hh"
+#include <sys/stat.h>
+#include <fcntl.h>
 
 namespace {
 
 class GifFile{
   // Wrapper for automatically calling EGifCloseFile on a GifFileType*
 public:
-  explicit GifFile(const char* path){
-    f = EGifOpenFileName(path, false, nullptr);
+  explicit GifFile(const faint::FilePath& path) {
+    auto handle = faint_open(path,
+      O_WRONLY | O_CREAT | O_TRUNC,
+      S_IREAD | S_IWRITE);
+
+    f = (handle != -1) ?
+      EGifOpenFileHandle(handle, nullptr) :
+      nullptr;
   }
 
   ~GifFile(){
@@ -49,7 +59,7 @@ private:
 
 namespace faint{
 
-GifWriteResult write_with_giflib(const char* path,
+GifWriteResult write_with_giflib(const FilePath& path,
   const std::vector<GifFrame>& v)
 {
   assert(!v.empty());

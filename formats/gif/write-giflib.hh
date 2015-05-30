@@ -27,8 +27,7 @@ enum class GifWriteResult{
   ERROR_TOO_LARGE_PALETTE
 };
 
-GifWriteResult write_with_giflib(const char* path,
-  const std::vector<GifFrame>&);
+GifWriteResult write_with_giflib(const FilePath&, const std::vector<GifFrame>&);
 
 } // namespace
 

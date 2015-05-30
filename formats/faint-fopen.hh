@@ -23,6 +23,9 @@ namespace faint {
 // Handles utf-8 also on Windows, MSVC:s fopen does not.
 FILE* faint_fopen_write_binary(const FilePath&);
 
+// Handles utf-8 also on Windows, MSVC:s open does not.
+int faint_open(const FilePath&, int oflag, int pmode);
+
 } // namespace
 
 #endif

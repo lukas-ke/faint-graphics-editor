@@ -27,6 +27,11 @@ FILE* faint_fopen_write_binary(const FilePath& path){
   return _wfopen(filename_u16.c_str(), L"wb");
 }
 
+int faint_open(const FilePath& path, int oflag, int pmode){
+  const std::wstring filename_u16 = iostream_friendly(path);
+  return _wopen(filename_u16.c_str(), oflag, pmode);
+}
+
 } // namespace
 
 #else // Non-windows
@@ -35,6 +40,10 @@ namespace faint{
 
 FILE* faint_fopen_write_binary(const FilePath& path){
   return fopen(path.Str().c_str(), "wb");
+}
+
+int faint_open(const FilePath& path, int oflag, int pmode){
+  return open(path.Str().c_str(), oflag, pmode);
 }
 
 } // namespace

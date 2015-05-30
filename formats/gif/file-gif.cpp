@@ -782,7 +782,7 @@ static utf8_string to_string(GifWriteResult result, const FilePath& path){
 SaveResult write_gif(const FilePath& path,
   const std::vector<GifFrame>& images)
 {
-  auto result = write_with_giflib(path.Str().c_str(), images);
+  auto result = write_with_giflib(path, images);
   return result == GifWriteResult::OK ?
     SaveResult::SaveSuccessful() :
     SaveResult::SaveFailed(to_string(result, path));
