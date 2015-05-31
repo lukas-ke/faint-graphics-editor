@@ -68,16 +68,46 @@ void test_file_gif(){
     auto img = load_test_image(FileName("gauss-source.png"));
     auto mapped = quantized(img, Dithering::ON);
     std::vector<GifFrame> images = {{mapped, Delay(0)}};
-    auto result = write_gif(get_test_save_path(FileName("libgif.gif")), images);
+
+    auto savePath = get_test_save_path(FileName("single-frame.gif"));
+    auto result = write_gif(savePath, images);
     if (!result.Successful()){
       FAIL(result.ErrorDescription().c_str());
     }
-    // Fixme: Reload and check it.
+
+    // Reload and check with against gauss-dithered.png. This doesn't
+    // imply that gauss-dithered.png is perfect, it just intends to
+    // catch inadvertent changes.
+    auto key = load_test_image(FileName("gauss-dithered.png"));
+    ImageProps props;
+    read_gif(savePath, props);
+    ABORT_IF(props.GetNumFrames() != 1);
+    FWD(check_frame(props.GetFrame(0_idx), key));
   }
 
   {
-    // Read/write a gif, write it out with new delays
-    // reload it, and check the delays and content.
+    // Write a single frame with transparency
+    auto src = load_test_image(FileName("86-68-key-1.png"));
+    auto mapped = quantized(src, Dithering::ON);
+    std::vector<GifFrame> images = {{mapped, Delay(0)}};
+
+    auto savePath = get_test_save_path(FileName("single-frame-transparency.gif"));
+
+    auto result = write_gif(savePath, images);
+    if (!result.Successful()){
+      FAIL(result.ErrorDescription().c_str());
+    }
+
+    // Reload and check
+    ImageProps props;
+    read_gif(savePath, props);
+    ABORT_IF(props.GetNumFrames() != 1);
+    FWD(check_frame(props.GetFrame(0_idx), src));
+  }
+
+  {
+    // Read/write a gif, write it out with new delays reload it, and
+    // check the delays and content.
     ImageProps srcProps;
     read_gif(get_test_load_path(FileName("86-68.gif")), srcProps);
     ABORT_IF(srcProps.GetNumFrames() != 4);
