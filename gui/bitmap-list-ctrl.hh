@@ -32,7 +32,6 @@ class BitmapListCtrl : public wxPanel {
   // indicating the choices
   // Example: <../doc/bitmap-list-ctrl.png>
 public:
-  // Fixme: Rework this to take a list of bitmaps + status-texts, remove Add
   BitmapListCtrl(wxWindow* parent,
     const IntSize& imageSize,
     StatusInterface&,
