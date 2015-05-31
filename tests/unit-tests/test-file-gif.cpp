@@ -10,9 +10,14 @@
 
 namespace{
 
-// Fixme: Pass delay too!
-void check_frame(const faint::FrameProps& p, const faint::Bitmap& key){
+void check_frame(const faint::FrameProps& p,
+  const faint::Bitmap& key,
+  const faint::Delay& expectedDelay)
+{
   using namespace faint;
+
+  EQUAL(p.GetDelay().Get(), expectedDelay.Get());
+
   return p.GetBackground().Visit(
     [&](const Bitmap& bmp){
       EQUAL(bmp.GetSize(), key.GetSize());
@@ -57,10 +62,10 @@ void test_file_gif(){
     ImageProps props;
     read_gif(get_test_load_path(FileName("86-68.gif")), props);
     ABORT_IF(props.GetNumFrames() != 4);
-    FWD(check_frame(props.GetFrame(0_idx), keys[0]));
-    FWD(check_frame(props.GetFrame(1_idx), keys[1]));
-    FWD(check_frame(props.GetFrame(2_idx), keys[2]));
-    FWD(check_frame(props.GetFrame(3_idx), keys[3]));
+    FWD(check_frame(props.GetFrame(0_idx), keys[0], Delay(10)));
+    FWD(check_frame(props.GetFrame(1_idx), keys[1], Delay(10)));
+    FWD(check_frame(props.GetFrame(2_idx), keys[2], Delay(10)));
+    FWD(check_frame(props.GetFrame(3_idx), keys[3], Delay(10)));
   }
 
   {
@@ -82,7 +87,7 @@ void test_file_gif(){
     ImageProps props;
     read_gif(savePath, props);
     ABORT_IF(props.GetNumFrames() != 1);
-    FWD(check_frame(props.GetFrame(0_idx), key));
+    FWD(check_frame(props.GetFrame(0_idx), key, Delay(0)));
   }
 
   {
@@ -102,7 +107,7 @@ void test_file_gif(){
     ImageProps props;
     read_gif(savePath, props);
     ABORT_IF(props.GetNumFrames() != 1);
-    FWD(check_frame(props.GetFrame(0_idx), src));
+    FWD(check_frame(props.GetFrame(0_idx), src, Delay(0)));
   }
 
   {
@@ -145,8 +150,7 @@ void test_file_gif(){
     ABORT_IF(props.GetNumFrames() != 4);
     for (int i = 0; i != props.GetNumFrames().Get(); i++){
       const auto& frame = props.GetFrame(Index(i));
-      EQUAL(frame.GetDelay(), delays[i]);
-      FWD(check_frame(frame, keys[i]));
+      FWD(check_frame(frame, keys[i], delays[i]));
     }
   }
 }
