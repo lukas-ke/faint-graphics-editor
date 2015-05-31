@@ -26,55 +26,6 @@ void verify_post_checks(){
   POST_CHECKS.clear();
 }
 
-// Fixme: Move to own file (like run-bench.hh et al.)
-void run_test(void (*func)(), const std::string& fileName, int max_w, int& numFailed, bool silent){
-  // Test title
-  const std::string name = fileName.substr(0, fileName.size() - 4);
-  set_test_name(name);
-  if (!silent){
-    std::cout << name << ":" << std::string(static_cast<size_t>(max_w + 1) - name.size(), ' ') << std::flush;
-  }
-
-  // Run the test
-  try{
-    func();
-  }
-  catch (const AbortTestException&){
-    // Test will already have been flagged as failed.
-  }
-  catch (const std::runtime_error& e){
-    TEST_FAILED = true;
-    TEST_OUT << "  std::runtime_error: " << "\"" << e.what() << "\"" << std::endl;
-  }
-  catch (const std::exception& e){
-    TEST_FAILED = true;
-    TEST_OUT << "  Exception: " << "\"" << e.what() << "\"" << std::endl;
-  }
-
-  verify_post_checks();
-
-  // Append result to title
-  if (!silent){
-    std::cout <<(TEST_FAILED ? "FAIL" : "ok") << std::endl;
-  }
-
-  if (TEST_FAILED){
-    numFailed += 1;
-    if (silent){
-      // Heading was not printed when silent.
-      std::cout << name << ": FAIL" << std::endl;
-    }
-    std::cout << TEST_OUT.str();
-    TEST_FAILED = false;
-  }
-  else{
-    if (!silent){
-      std::cout << TEST_OUT.str();
-    }
-  }
-  TEST_OUT.str("");
-}
-
 int print_test_summary(const int numFailed){
   if (numFailed > 0){
     std::cout << std::endl;

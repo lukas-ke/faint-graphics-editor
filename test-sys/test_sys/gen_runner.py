@@ -4,7 +4,7 @@ import test_sys.gen_util as util
 
 class test_runner_info:
     test_type = "Test"
-    extra_includes = []
+    extra_includes = ["test-sys/run-test.hh"]
     extra_globals = []
     main_function_name = "run_tests"
     test_function_name = "run_test"
