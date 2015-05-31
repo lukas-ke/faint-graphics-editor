@@ -144,10 +144,12 @@ private:
 
 class GuiTestFrame: public wxFrame {
 public:
-  GuiTestFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
+  GuiTestFrame(const wxString& title,
+    const wxPoint& pos,
+    const wxSize& size,
+    const faint::Art& art)
     : wxFrame(nullptr, wxID_ANY, title, pos, size),
-      m_dialogContext(this,
-        faint::get_art()) // Fixme
+      m_dialogContext(this, art)
   {
     wxMenu *menuFile = new wxMenu;
     menuFile->Append(wxID_EXIT);
@@ -187,7 +189,8 @@ public:
     load_faint_resources(m_art);
     GuiTestFrame *frame = new GuiTestFrame("Faint GUI test",
       wxDefaultPosition,
-      wxSize(450, 340));
+      wxSize(450, 340),
+      m_art);
     frame->Show(true);
     return true;
   }
