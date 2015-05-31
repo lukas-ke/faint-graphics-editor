@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include <fstream>
 #include "wx/dir.h"
-#include "formats/wx/file-image-wx.hh"
+#include "formats/png/file-png.hh"
 #include "test-sys/test-name.hh"
 #include "text/formatting.hh"
 #include "tests/test-util/file-handling.hh"
@@ -22,9 +22,8 @@ FilePath get_test_load_path(const FileName& filename){
 
 static OrError<Bitmap> load_png(const FilePath& path){
   if (path.Extension() == FileExtension("png")){
-    return read_image_wx(path, wxBITMAP_TYPE_PNG);
+    return read_png(path);
   }
-
   return space_sep("Unsupported extension:", path.Extension().Str());
 }
 
@@ -41,7 +40,7 @@ Bitmap load_test_image(const FileName& fileName){
 }
 
 static SaveResult save_as_png(const Bitmap& bmp, const FilePath& path){
-  return write_image_wx(bmp, wxBITMAP_TYPE_PNG, path);
+  return write_png(path, bmp, PngColorType::RGB_ALPHA);
 }
 
 FilePath save_test_image(const Bitmap& bmp, const FileName& filename){

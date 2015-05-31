@@ -21,8 +21,7 @@ void check_frame(const faint::FrameProps& p,
   return p.GetBackground().Visit(
     [&](const Bitmap& bmp){
       EQUAL(bmp.GetSize(), key.GetSize());
-      // FIXME: Why ignore transparency?
-      VERIFY(equal_ignore_transparent(bmp, key));
+      VERIFY(equal(bmp, key));
     },
     [](const ColorSpan&){
       FAIL("Got color span instead of Bitmap");
@@ -31,14 +30,7 @@ void check_frame(const faint::FrameProps& p,
 
 faint::Bitmap load_key(const char* filename){
   using namespace faint;
-  auto bmp = load_test_image(faint::FileName(filename));
-
-  // Unfortunately, the png loading of the keys replaces the alpha
-  // transparency with a mask, which when undone gets color 0,0,0,0
-  // instead of the saved 255,255,255,0 // Fixme: Still true now that I use libpng?
-  replace_color_color(bmp, Old(color_transparent_black),
-    New(color_transparent_white));
-  return bmp;
+  return load_test_image(faint::FileName(filename));
 }
 
 std::ostream& operator<<(std::ostream& o, const faint::Delay& delay){
@@ -47,7 +39,6 @@ std::ostream& operator<<(std::ostream& o, const faint::Delay& delay){
 }
 
 } // namespace
-
 void test_file_gif(){
   using namespace faint;
 
@@ -55,6 +46,8 @@ void test_file_gif(){
                               load_key("86-68-key-2.png"),
                               load_key("86-68-key-3.png"),
                               load_key("86-68-key-4.png")};
+
+  EQUAL(get_color(keys[0], {0, 0}), Color(255,255,255,0));
 
   {
     // Read 86-68.gif, and check the frames frames against the
