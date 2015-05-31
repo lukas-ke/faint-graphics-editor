@@ -17,6 +17,7 @@
 #include "wx/filename.h"
 #include "wx/treebook.h"
 #include "wx/stdpaths.h"
+#include "app/faint-common-cursors.hh"
 #include "app/faint-slider-cursors.hh"
 #include "app/resource-id.hh"
 #include "bitmap/bitmap.hh"
@@ -100,6 +101,8 @@ class GuiTestDialogContext : public faint::DialogContext{
 public:
   GuiTestDialogContext(wxWindow* parent, const faint::Art& art)
     : m_parent(parent),
+      m_commonCursors(art.Get(faint::Cursor::BLANK),
+        art.Get(faint::Cursor::CROSSHAIR)),
       m_sliderCursors(art.Get(faint::Cursor::HORIZONTAL_SLIDER),
         art.Get(faint::Cursor::VERTICAL_SLIDER),
         art.Get(faint::Cursor::RESIZE_WE),
@@ -109,6 +112,10 @@ public:
       [this](faint::BitmapCommand* cmd){
         OnClosed(cmd);
       }));
+  }
+
+  faint::CommonCursors& GetCommonCursors() override{
+    return m_commonCursors;
   }
 
   faint::SliderCursors& GetSliderCursors() override{
@@ -131,6 +138,7 @@ private:
   std::unique_ptr<faint::CommandWindow> m_commandWindow;
   std::unique_ptr<faint::WindowFeedback> m_windowFeedback;
   wxWindow* m_parent;
+  faint::FaintCommonCursors m_commonCursors;
   faint::FaintSliderCursors m_sliderCursors;
 };
 

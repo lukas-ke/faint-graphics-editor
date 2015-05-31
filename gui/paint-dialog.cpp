@@ -17,11 +17,9 @@
 #include "wx/dialog.h"
 #include "wx/notebook.h"
 #include "wx/sizer.h"
-#include "app/resource-id.hh" // Fixme: Remove
 #include "bitmap/paint.hh"
 #include "bitmap/pattern.hh"
 #include "geo/limits.hh"
-#include "gui/art.hh" // Fixme: Remove
 #include "gui/dialog-context.hh"
 #include "gui/paint-dialog.hh"
 #include "gui/paint-dialog/gradient-panel.hh"
@@ -76,7 +74,6 @@ class PaintDialog : public wxDialog {
 public:
   PaintDialog(wxWindow* parent,
     const wxString& title,
-    const Art& art,
     StatusInterface& statusInfo,
     const Getter<Bitmap>& getBitmap,
     DialogContext& dialogContext)
@@ -88,6 +85,7 @@ public:
     sizer->Add(m_tabs);
 
     m_panelHSL = std::make_unique<PaintPanel_HSL>(m_tabs,
+      dialogContext.GetCommonCursors(),
       dialogContext.GetSliderCursors());
     m_tabs->AddPage(m_panelHSL->AsWindow(), "HSL");
 
@@ -103,12 +101,13 @@ public:
 
     m_panelGradient = std::make_unique<PaintPanel_Gradient>(m_tabs,
       themeBg,
-      art.Get(Cursor::CROSSHAIR),
       statusInfo,
       dialogContext);
     m_tabs->AddPage(m_panelGradient->AsWindow(), "Gradient");
 
-    m_panelPattern = std::make_unique<PaintPanel_Pattern>(m_tabs, getBitmap);
+    m_panelPattern = std::make_unique<PaintPanel_Pattern>(m_tabs,
+      dialogContext.GetCommonCursors(),
+      getBitmap);
     m_tabs->AddPage(m_panelPattern->AsWindow(), "Pattern");
 
     sizer->Add(create_ok_cancel_buttons(this),
@@ -230,11 +229,14 @@ private:
 };
 
 static std::unique_ptr<PaintPanel_HSL> init_color_dialog_panel(wxWindow* bgPanel,
+  const CommonCursors& commonCursors,
   const SliderCursors& sliderCursors,
   wxDialog* dlg)
 {
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-  auto colorPanel = std::make_unique<PaintPanel_HSL>(bgPanel, sliderCursors);
+  auto colorPanel = std::make_unique<PaintPanel_HSL>(bgPanel,
+    commonCursors,
+    sliderCursors);
   sizer->Add(colorPanel->AsWindow());
 
   sizer->Add(create_ok_cancel_buttons(bgPanel, dlg),
@@ -245,6 +247,7 @@ static std::unique_ptr<PaintPanel_HSL> init_color_dialog_panel(wxWindow* bgPanel
 class ColorDialog : public wxDialog {
 public:
   ColorDialog(wxWindow* parent, const wxString& title,
+    const CommonCursors& commonCursors,
     const SliderCursors& sliderCursors,
     const Color& initialColor)
     : wxDialog(parent, wxID_ANY, title)
@@ -252,7 +255,7 @@ public:
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
     auto bg = create_panel(this);
     sizer->Add(bg);
-    m_panelHSL = init_color_dialog_panel(bg, sliderCursors, this);
+    m_panelHSL = init_color_dialog_panel(bg, commonCursors, sliderCursors, this);
     m_panelHSL->SetColor(initialColor);
     SetSizerAndFit(sizer);
     Center(wxBOTH);
@@ -271,6 +274,7 @@ Optional<Color> show_color_only_dialog(wxWindow* parent,
   DialogContext& context)
 {
   ColorDialog dlg(parent, to_wx(title),
+    context.GetCommonCursors(),
     context.GetSliderCursors(),
     initial);
   return context.ShowModal(dlg) == DialogChoice::OK ?
@@ -282,11 +286,10 @@ Optional<Paint> show_paint_dialog(wxWindow* parent,
   const Paint& initial,
   const Color& secondary,
   const Getter<Bitmap>& getBitmap,
-  const Art& art,
   StatusInterface& statusInfo,
   DialogContext& context)
 {
-  PaintDialog dlg(parent, to_wx(title), art, statusInfo, getBitmap, context);
+  PaintDialog dlg(parent, to_wx(title), statusInfo, getBitmap, context);
   dlg.SetPaint(initial, secondary);
   return context.ShowModal(dlg) == DialogChoice::OK ?
     option(dlg.GetPaint()) :

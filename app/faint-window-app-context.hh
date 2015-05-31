@@ -16,6 +16,7 @@
 #ifndef FAINT_WINDOW_APP_CONTEXT_HH
 #define FAINT_WINDOW_APP_CONTEXT_HH
 #include "app/app-context.hh"
+#include "app/faint-common-cursors.hh"
 #include "app/faint-slider-cursors.hh"
 #include "gui/canvas-panel.hh" // Fixme
 #include "gui/command-window.hh"
@@ -58,6 +59,7 @@ public:
   FaintDialogContext(AppContext&, const Art&, FaintWindow&);
 
   SliderCursors& GetSliderCursors() override;
+  CommonCursors& GetCommonCursors() override;
   void Show(std::unique_ptr<CommandWindow>&& w) override;
   void UpdateSettings(const Settings&);
   void Reinitialize();
@@ -72,6 +74,7 @@ private:
   AppContext& m_app;
   std::unique_ptr<CommandWindow> m_commandWindow;
   FaintWindow& m_faintWindow;
+  FaintCommonCursors m_commonCursors;
   FaintSliderCursors m_sliderCursors;
   std::unique_ptr<WindowFeedback> m_windowFeedback;
 };

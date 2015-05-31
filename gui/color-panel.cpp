@@ -103,7 +103,6 @@ public:
           initial,
           secondary,
           getBitmap,
-          art,
           status,
           app.GetDialogContext());
     };

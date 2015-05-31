@@ -189,6 +189,7 @@ FaintDialogContext::FaintDialogContext(AppContext& app,
   const Art& art,
   FaintWindow& faintWindow)
   : m_app(app),
+    m_commonCursors(art.Get(Cursor::BLANK), art.Get(Cursor::CROSSHAIR)),
     m_faintWindow(faintWindow),
     m_sliderCursors(art.Get(Cursor::HORIZONTAL_SLIDER),
       art.Get(Cursor::VERTICAL_SLIDER),
@@ -203,6 +204,10 @@ FaintDialogContext::FaintDialogContext(AppContext& app,
 
 SliderCursors& FaintDialogContext::GetSliderCursors(){
   return m_sliderCursors;
+}
+
+CommonCursors& FaintDialogContext::GetCommonCursors(){
+  return m_commonCursors;
 }
 
 void FaintDialogContext::Show(std::unique_ptr<CommandWindow>&& w){

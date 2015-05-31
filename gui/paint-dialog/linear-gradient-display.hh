@@ -29,7 +29,6 @@ class IntSize;
 class LinearGradientDisplay{
 public:
   LinearGradientDisplay(wxWindow* parent,
-    const wxCursor& crosshair,
     const IntSize&,
     DialogContext&);
   ~LinearGradientDisplay();

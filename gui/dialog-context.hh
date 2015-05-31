@@ -22,6 +22,7 @@ class wxDialog;
 namespace faint{
 
 class CommandWindow;
+class CommonCursors;
 class SliderCursors;
 
 enum class DialogChoice{
@@ -36,6 +37,7 @@ public:
   // Shows a non-modal dialog
   virtual void Show(std::unique_ptr<CommandWindow>&&) = 0;
   virtual SliderCursors& GetSliderCursors() = 0;
+  virtual CommonCursors& GetCommonCursors() = 0;
 
 private:
   virtual void BeginModalDialog() = 0;

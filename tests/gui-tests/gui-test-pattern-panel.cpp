@@ -16,6 +16,7 @@
 #include "bitmap/bitmap-exception.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
+#include "gui/dialog-context.hh"
 #include "gui/paint-dialog/pattern-panel.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/layout-wx.hh"
@@ -26,7 +27,7 @@ namespace faint{ class DialogContext; }
 
 void gui_test_pattern_panel(wxWindow* p,
   faint::StatusInterface&,
-  faint::DialogContext&)
+  faint::DialogContext& c)
 {
   using namespace faint;
 
@@ -40,8 +41,12 @@ void gui_test_pattern_panel(wxWindow* p,
 
   set_sizer(p,
     layout::create_column({
+
       create_label(p, "Functioning PatternPanel"),
-      faint::PaintPanel_Pattern(p, getBitmapGood).AsWindow(),
+      faint::PaintPanel_Pattern(p, c.GetCommonCursors(),
+        getBitmapGood).AsWindow(),
+
       create_label(p, "Exceptions in PatternPanel"),
-      faint::PaintPanel_Pattern(p, getBitmapBad).AsWindow()}));
+        faint::PaintPanel_Pattern(p, c.GetCommonCursors(),
+          getBitmapBad).AsWindow()}));
 }

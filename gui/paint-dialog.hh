@@ -24,7 +24,6 @@ class wxWindow;
 
 namespace faint{
 
-class Art;
 class Bitmap;
 class StatusInterface;
 class utf8_string;
@@ -46,7 +45,6 @@ Optional<Paint> show_paint_dialog(wxWindow* parent,
   const Paint& initial,
   const Color& secondary,
   const Getter<Bitmap>&,
-  const Art&,
   StatusInterface&,
   DialogContext&);
 

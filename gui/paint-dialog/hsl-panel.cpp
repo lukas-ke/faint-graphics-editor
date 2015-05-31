@@ -16,15 +16,12 @@
 #include <algorithm>
 #include "wx/dcclient.h" // wxPaintDC
 #include "wx/textctrl.h"
-#include "app/get-art.hh" // Fixme: For cursors. Replace with parameters
-#include "app/resource-id.hh" // Fixme: For cursors. Replace with parameters.
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "bitmap/draw.hh"
 #include "bitmap/pattern.hh"
 #include "geo/int-range.hh"
 #include "geo/int-rect.hh"
-#include "gui/art.hh" // Fixme: Remove
 #include "gui/mouse-capture.hh"
 #include "gui/paint-dialog/hsl-panel.hh"
 #include "gui/slider.hh"
@@ -80,7 +77,7 @@ class HueSatPicker : public wxPanel {
   // The 2d-control for picking hue-values along the x-axis and
   // saturation along the y-axis
 public:
-  HueSatPicker(wxWindow* parent) :
+  HueSatPicker(wxWindow* parent, const CommonCursors& cursors) :
     wxPanel(parent, wxID_ANY),
     m_hslSize(241,241),
     m_hueSat(0.0,0.0),
@@ -103,22 +100,32 @@ public:
     });
 
     events::on_mouse_left_down(this,
-      [this](const IntPoint& pos){
+      [this, &cursors](const IntPoint& pos){
         SetFromPos(pos);
         m_mouse.Capture();
-        SetCursor(get_art().Get(Cursor::BLANK));
+        cursors.SetBlank(this);
       });
 
     events::on_mouse_left_up(this, releaser(m_mouse));
 
     events::on_mouse_motion(this,
-      [this](const IntPoint& pos){
+      [this, &cursors](const IntPoint& pos){
         if (m_mouse.HasCapture()){
-          SetFromPos(pos);
-          SetCursor(get_art().Get(Cursor::BLANK));
+          bool inside = SetFromPos(pos);
+          if (inside){
+            // Hide the cursor since the position-indicating cross is
+            // sufficient feedback
+            cursors.SetBlank(this);
+          }
+          else {
+            // Show the cursor also during adjustment to indicate the
+            // position if it is outside the hs-region, since the
+            // position cross will be clamped.
+            cursors.SetCrosshair(this);
+          }
         }
         else{
-          SetCursor(get_art().Get(Cursor::CROSSHAIR));
+          cursors.SetCrosshair(this);
         }
       });
   }
@@ -145,7 +152,7 @@ private:
     m_bmp = to_wx_bmp(hue_saturation_color_map(to_faint(m_hslSize)));
   }
 
-  void SetFromPos(const IntPoint& pos){
+  bool SetFromPos(const IntPoint& pos){
     int viewHue = std::max(0, std::min(pos.x, 240));
     m_hueSat.h = std::min((viewHue / 240.0) * 360.0, 359.0); // Fixme
     m_hueSat.s = 1.0 - std::max(0, std::min(pos.y, 240)) / 240.0;
@@ -153,6 +160,8 @@ private:
     wxCommandEvent newEvent(EVT_PICKED_HUE_SAT);
     newEvent.SetEventObject(this);
     ProcessEvent(newEvent);
+
+    return IntRect(IntPoint(0,0), IntPoint(240, 240)).Contains(pos);
   }
 
   wxBitmap m_bmp;
@@ -164,11 +173,13 @@ private:
 class PaintPanel_HSL::PaintPanel_HSL_Impl : public wxPanel{
 public:
   PaintPanel_HSL_Impl(wxWindow* parent,
-    const SliderCursors& sliderCursors)
+    const SliderCursors& sliderCursors,
+    const CommonCursors& commonCursors)
     : wxPanel(parent, wxID_ANY),
+      m_commonCursors(commonCursors),
       m_sliderCursors(sliderCursors)
   {
-    m_hueSatPicker = new HueSatPicker(this);
+    m_hueSatPicker = new HueSatPicker(this, commonCursors);
     set_pos(m_hueSatPicker, IntPoint::Both(ui::panel_padding));
     auto lblHue = create_label(this, "&Hue");
     m_hueTxt = BindKillFocus(CreateTextControl({min_t(0),max_t(240)},
@@ -417,21 +428,23 @@ private:
   wxTextCtrl* m_alphaTxt;
   wxTextCtrl* m_blueTxt;
   StaticBitmap* m_colorBitmap;
+  const CommonCursors& m_commonCursors;
   wxTextCtrl* m_greenTxt;
   HueSatPicker* m_hueSatPicker;
-  const SliderCursors& m_sliderCursors;
   wxTextCtrl* m_hueTxt;
   Slider* m_lightnessSlider;
   wxTextCtrl* m_lightnessTxt;
   std::map<wxTextCtrl*, IntRange> m_ranges;
   wxTextCtrl* m_redTxt;
   wxTextCtrl* m_saturationTxt;
+  const SliderCursors& m_sliderCursors;
 };
 
 PaintPanel_HSL::PaintPanel_HSL(wxWindow* parent,
+  const CommonCursors& commonCursors,
   const SliderCursors& sliderCursors)
 {
-  m_impl = new PaintPanel_HSL_Impl(parent, sliderCursors);
+  m_impl = new PaintPanel_HSL_Impl(parent, sliderCursors, commonCursors);
 }
 
 PaintPanel_HSL::~PaintPanel_HSL(){

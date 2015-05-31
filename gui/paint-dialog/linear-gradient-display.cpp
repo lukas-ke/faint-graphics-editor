@@ -24,6 +24,7 @@
 #include "geo/geo-func.hh"
 #include "geo/int-point.hh"
 #include "geo/line.hh"
+#include "gui/common-cursors.hh"
 #include "gui/dialog-context.hh"
 #include "gui/mouse-capture.hh"
 #include "gui/paint-dialog/gradient-slider.hh"
@@ -65,7 +66,6 @@ static IntPoint constrain_gradient_angle(const IntSize& sz, const IntPoint& p){
 class LinearGradientDisplay::LinearGradientDisplayImpl{
 public:
   LinearGradientDisplayImpl(wxWindow* parent,
-    const wxCursor& crosshair,
     const IntSize& size,
     DialogContext& dialogContext)
     : m_panel(create_panel(parent)),
@@ -80,7 +80,7 @@ public:
       m_gradient,
       dialogContext);
     set_pos(m_slider->AsWindow(), {0, size.h - LinearGradientSlider::HEIGHT});
-    set_cursor(m_panel, crosshair);
+    dialogContext.GetCommonCursors().SetCrosshair(m_panel);
 
     bind_fwd(m_panel, wxEVT_LEFT_DOWN,
       [this](wxMouseEvent& event){
@@ -188,12 +188,10 @@ private:
 };
 
 LinearGradientDisplay::LinearGradientDisplay(wxWindow* parent,
-  const wxCursor& crosshair,
   const IntSize& size,
   DialogContext& ctx)
 {
   m_impl = std::make_unique<LinearGradientDisplayImpl>(parent,
-    crosshair,
     size,
     ctx);
 }

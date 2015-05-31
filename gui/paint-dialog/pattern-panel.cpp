@@ -17,8 +17,6 @@
 #include "wx/event.h"
 #include "wx/panel.h"
 #include "wx/textctrl.h"
-#include "app/get-art.hh" // Fixme: Remove
-#include "app/resource-id.hh" // Fixme: Remove
 #include "bitmap/bitmap.hh"
 #include "bitmap/bitmap-exception.hh"
 #include "bitmap/color.hh"
@@ -28,7 +26,6 @@
 #include "geo/geo-func.hh"
 #include "geo/int-rect.hh"
 #include "geo/line.hh"
-#include "gui/art.hh"
 #include "gui/mouse-capture.hh"
 #include "gui/paint-dialog/pattern-panel.hh"
 #include "gui/ui-constants.hh"
@@ -63,7 +60,8 @@ static void draw_cross(Bitmap& bmp,
 
 class PatternDisplay : public wxPanel{
 public:
-  PatternDisplay(wxWindow* parent)
+  PatternDisplay(wxWindow* parent,
+    const CommonCursors& cursors)
     : wxPanel(parent, wxID_ANY),
       m_hovered(false),
       m_mouse(this),
@@ -90,14 +88,14 @@ public:
     events::on_mouse_left_up(this, releaser(m_mouse));
 
     events::on_mouse_motion(this,
-      [this](const IntPoint& pos){
+      [this, &cursors](const IntPoint& pos){
         m_hovered = true;
         if (m_mouse.HasCapture()){
           SetAnchorFromPos(pos);
-          SetCursor(get_art().Get(Cursor::BLANK));
+          cursors.SetBlank(this);
         }
         else{
-          SetCursor(get_art().Get(Cursor::CROSSHAIR));
+          cursors.SetCrosshair(this);
         }
       });
 
@@ -158,14 +156,16 @@ private:
 
 class PaintPanel_Pattern::PaintPanel_Pattern_Impl : public wxPanel{
 public:
-  PaintPanel_Pattern_Impl(wxWindow* parent, const Getter<Bitmap>& getBitmap)
+  PaintPanel_Pattern_Impl(wxWindow* parent,
+    const CommonCursors& cursors,
+    const Getter<Bitmap>& getBitmap)
     : wxPanel(parent, wxID_ANY),
       m_anchor(0,0),
       m_getBitmap(getBitmap),
       m_objectAligned(nullptr),
       m_patternDisplay(nullptr)
   {
-    m_patternDisplay = new PatternDisplay(this);
+    m_patternDisplay = new PatternDisplay(this, cursors);
     set_pos(m_patternDisplay, IntPoint::Both(ui::panel_padding));
 
     auto btnUseImage = create_button(this, "Use Image", below(m_patternDisplay),
@@ -295,9 +295,10 @@ private:
 };
 
 PaintPanel_Pattern::PaintPanel_Pattern(wxWindow* parent,
+  const CommonCursors& cursors,
   const Getter<Bitmap>& getBitmap)
 {
-  m_impl = new PaintPanel_Pattern_Impl(parent, getBitmap);
+  m_impl = new PaintPanel_Pattern_Impl(parent, cursors, getBitmap);
 }
 
 PaintPanel_Pattern::~PaintPanel_Pattern(){

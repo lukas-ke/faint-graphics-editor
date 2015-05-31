@@ -13,16 +13,23 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "gui/dialog-context.hh"
-#include "gui/paint-dialog/hsl-panel.hh"
+#include "app/faint-common-cursors.hh"
+#include "util-wx/fwd-wx.hh"
 
-namespace faint{ class StatusInterface; }
+namespace faint{
 
-void gui_test_hsl_panel(wxWindow* p, faint::StatusInterface&,
-  faint::DialogContext& c)
-{
-  using namespace faint;
-  faint::PaintPanel_HSL(p,
-    c.GetCommonCursors(),
-    c.GetSliderCursors());
+FaintCommonCursors::FaintCommonCursors(const wxCursor& blank,
+  const wxCursor& crosshair)
+  : m_blank(blank),
+    m_crosshair(crosshair)
+{}
+
+void FaintCommonCursors::SetBlank(wxWindow* w) const{
+  set_cursor(w, m_blank);
 }
+
+void FaintCommonCursors::SetCrosshair(wxWindow* w)const{
+  set_cursor(w, m_crosshair);
+}
+
+} // namespace

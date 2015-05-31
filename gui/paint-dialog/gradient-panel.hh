@@ -18,18 +18,17 @@
 #include "bitmap/color.hh"
 #include "bitmap/gradient.hh"
 
-class wxCursor;
 class wxWindow;
 
 namespace faint{
 
+class DialogContext;
 class StatusInterface;
 
 class PaintPanel_Gradient{
 public:
   PaintPanel_Gradient(wxWindow* parent,
     const Color& bgColor,
-    const wxCursor& crosshair,
     StatusInterface&,
     DialogContext&);
   ~PaintPanel_Gradient();

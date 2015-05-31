@@ -20,15 +20,15 @@
 
 namespace faint{ class StatusInterface; }
 
-void gui_test_gradient_panel(wxWindow* p, faint::StatusInterface& status,
-  faint::DialogContext& c)
+void gui_test_gradient_panel(wxWindow* p,
+  faint::StatusInterface& status,
+  faint::DialogContext& dialogContext)
 {
   using namespace faint;
   faint::PaintPanel_Gradient gradientPanel(p,
     color_white,
-    wxCursor(wxCURSOR_ARROW),
-    status, c);
+    status,
+    dialogContext);
 
   gradientPanel.AsWindow()->SetSize(640, 480);
-
 }
