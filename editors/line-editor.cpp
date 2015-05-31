@@ -13,7 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "app/canvas.hh" // Fixme: Unfortunate (for GetObjects(), GetGrid())
+#include "app/canvas.hh" // For GetObjects(), GetGrid()
 #include "editors/line-editor.hh"
 #include "geo/adjust.hh" // line_constrain
 #include "geo/geo-func.hh"
