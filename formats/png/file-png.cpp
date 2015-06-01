@@ -117,7 +117,7 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
   png_color* palette = nullptr;
   int numPalette = 0;
 
-  PngReadResult result = read_with_libpng(path.Str().c_str(),
+  PngReadResult result = read_with_libpng(path,
     &rows,
     &width,
     &height,

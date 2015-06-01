@@ -13,6 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include "formats/faint-fopen.hh"
 #include "formats/png/read-libpng.hh"
 
 #ifdef _MSC_VER
@@ -21,7 +22,7 @@
 
 namespace faint{
 
-PngReadResult read_with_libpng(const char* path,
+PngReadResult read_with_libpng(const FilePath& path,
   png_byte** rows,
   png_uint_32* width,
   png_uint_32* height,
@@ -32,7 +33,7 @@ PngReadResult read_with_libpng(const char* path,
   int* numPalette,
   std::map<utf8_string, utf8_string>& textChunks)
 {
-  FILE* f = fopen(path, "rb");
+  FILE* f = faint_fopen_read_binary(path);
   if (f == nullptr){
     return PngReadResult::ERROR_OPEN_FILE;
   }

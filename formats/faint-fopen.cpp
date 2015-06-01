@@ -27,6 +27,11 @@ FILE* faint_fopen_write_binary(const FilePath& path){
   return _wfopen(filename_u16.c_str(), L"wb");
 }
 
+FILE* faint_fopen_read_binary(const FilePath& path){
+  const std::wstring filename_u16 = iostream_friendly(path);
+  return _wfopen(filename_u16.c_str(), L"rb");
+}
+
 int faint_open(const FilePath& path, int oflag, int pmode){
   const std::wstring filename_u16 = iostream_friendly(path);
   return _wopen(filename_u16.c_str(), oflag, pmode);

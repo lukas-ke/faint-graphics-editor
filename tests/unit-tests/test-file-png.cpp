@@ -20,7 +20,7 @@ void test_file_png(){
         Bitmap withAlpha(bmp);
         set_alpha(withAlpha, 128);
 
-        auto out = get_test_save_path(FileName("out-rgb.png"));
+        auto out = get_test_save_path(suffix_u8_chars(FileName("out-rgb.png")));
         auto result = write_png(out, withAlpha, PngColorType::RGB);
         ABORT_IF(result.Failed());
 
@@ -47,7 +47,7 @@ void test_file_png(){
         // Set alpha to ensure it is retained when saving as RGBA
         set_alpha(bmp, 128);
 
-        auto out = get_test_save_path(FileName("out-rgba.png"));
+        auto out = get_test_save_path(suffix_u8_chars(FileName("out-rgba.png")));
         auto result = write_png(out, bmp, PngColorType::RGB_ALPHA);
         ABORT_IF(result.Failed());
 
@@ -70,7 +70,7 @@ void test_file_png(){
     maybeBmp.Visit(
       [](const Bitmap& bmp){
         ABORT_IF(bmp.GetSize() != IntSize(185, 185));
-        auto out = get_test_save_path(FileName("out-gray.png"));
+        auto out = get_test_save_path(suffix_u8_chars(FileName("out-gray.png")));
         auto result = write_png(out, bmp, PngColorType::GRAY);
         VERIFY(result.Successful());
 
@@ -95,7 +95,8 @@ void test_file_png(){
       [](Bitmap& bmp){
         ABORT_IF(bmp.GetSize() != IntSize(185, 185));
         set_alpha(bmp, 128);
-        auto out = get_test_save_path(FileName("out-gray-alpha.png"));
+
+        auto out = get_test_save_path(suffix_u8_chars(FileName("out-gray-alpha.png")));
         auto result = write_png(out, bmp, PngColorType::GRAY_ALPHA);
         VERIFY(result.Successful());
 
@@ -121,7 +122,7 @@ void test_file_png(){
       {"Second key", "Second value"}};
 
     // Save the png with tEXt
-    auto out = get_test_save_path(FileName("out-meta.png"));
+    auto out = get_test_save_path(suffix_u8_chars(FileName("out-meta.png")));
     const auto result = write_png(out, bmp, PngColorType::RGB_ALPHA, textChunks);
     write_png(out, bmp, PngColorType::RGB_ALPHA, textChunks);
     ABORT_IF(!result.Successful());

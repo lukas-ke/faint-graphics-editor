@@ -32,7 +32,7 @@ enum class PngReadResult{
   ERROR_MALLOC
 };
 
-PngReadResult read_with_libpng(const char* path,
+  PngReadResult read_with_libpng(const FilePath&,
   png_byte** rows,
   png_uint_32* width,
   png_uint_32* height,
