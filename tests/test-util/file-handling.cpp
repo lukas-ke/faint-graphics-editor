@@ -75,6 +75,7 @@ utf8_string u8_chars(){
   utf8_string s;
   s += utf8_char(hyphen);
   s += utf8_char(246);
+  s += utf8_char(1576);
   return s;
 }
 
