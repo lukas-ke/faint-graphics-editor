@@ -62,7 +62,8 @@ void test_file_gif(){
     auto mapped = quantized(img, Dithering::ON);
     std::vector<GifFrame> images = {{mapped, Delay(0)}};
 
-    auto savePath = get_test_save_path(FileName("single-frame.gif"));
+    auto filename = suffix_u8_chars(FileName("single-frame.gif"));
+    auto savePath = get_test_save_path(filename);
     auto result = write_gif(savePath, images);
     if (!result.Successful()){
       FAIL(result.ErrorDescription().c_str());
@@ -84,7 +85,8 @@ void test_file_gif(){
     auto mapped = quantized(src, Dithering::ON);
     std::vector<GifFrame> images = {{mapped, Delay(0)}};
 
-    auto savePath = get_test_save_path(FileName("single-frame-transparency.gif"));
+    auto outFile = suffix_u8_chars(FileName("single-frame-transparency.gif"));
+    auto savePath = get_test_save_path(outFile);
 
     auto result = write_gif(savePath, images);
     if (!result.Successful()){

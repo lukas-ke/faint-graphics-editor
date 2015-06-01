@@ -52,4 +52,5 @@ void test_file_cur(){
 
   // Fixme: Add 1-bit-per-pixel
   // Fixme: Add 4-bits-per-pixel
+  // Fixme: Writing
 }

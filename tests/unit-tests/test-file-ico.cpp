@@ -69,7 +69,7 @@ static FilePath test_write_ico(const FileName& fileName,
   const bmp_vec& bitmaps,
   IcoCompression compression)
 {
-  auto path = get_test_save_path(fileName);
+  auto path = get_test_save_path(suffix_u8_chars(fileName));
   ico_vec icons;
   for (const auto& bmp : bitmaps){
     icons.emplace_back(std::make_pair(bmp, compression));
