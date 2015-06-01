@@ -16,6 +16,7 @@
 #ifndef FAINT_FILE_PATH_HH
 #define FAINT_FILE_PATH_HH
 #include <string>
+#include <utility>
 #include <vector>
 #include "util/template-fwd.hh"
 
@@ -148,6 +149,10 @@ std::string iostream_friendly(const FilePath&);
 #endif
 
 Optional<FilePath> make_absolute_file_path(const utf8_string&);
+
+// Split the filename into root and extension, which if concatenated
+// are equal to the filename.
+std::pair<utf8_string, utf8_string> split_extension(const FileName&);
 
 } // namespace
 

@@ -16,6 +16,9 @@ Bitmap load_test_image(const FileName&);
 class ImageTable;
 void save_image_table(const ImageTable&);
 
+FileName suffix_u8_chars(const FileName&);
+
 } // namespace
+
 
 #endif

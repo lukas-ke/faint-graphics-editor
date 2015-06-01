@@ -29,7 +29,7 @@ constexpr utf8_char downwards_arrow_with_tip_leftwards(0x21b2);
 constexpr utf8_char eol(0x0a);
 constexpr utf8_char euro_sign(0x20ac);
 constexpr utf8_char exclamation_mark(0x21);
-constexpr utf8_char full_stop(0x2e);
+constexpr utf8_char full_stop(0x2e); // period
 constexpr utf8_char greek_capital_letter_delta(0x394);
 constexpr utf8_char greek_small_letter_pi(0x3c0);
 constexpr utf8_char hyphen(0x2D);

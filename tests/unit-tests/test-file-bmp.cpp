@@ -18,10 +18,12 @@ static void test_bitmap_read_write(const faint::FileName& fileName,
   read_bmp(get_test_load_path(fileName)).Visit(
     [&](const Bitmap& bmp){
       if (VERIFY(bmp == key)){
+
         // Save it again with specified quality
-        auto savePath = get_test_save_path(fileName);
+        auto savePath = get_test_save_path(suffix_u8_chars(fileName));
         auto saveResult = write_bmp(savePath, bmp, quality);
         if (VERIFY(saveResult.Successful())){
+          // re-read and check
           read_bmp(savePath).Visit(
             [&key](const Bitmap& bmp){
               VERIFY(bmp == key);

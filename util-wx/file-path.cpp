@@ -15,6 +15,7 @@
 
 #include "wx/dir.h"
 #include "wx/filename.h"
+#include "text/char-constants.hh"
 #include "text/utf8-string.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-path.hh"
@@ -329,5 +330,19 @@ Optional<FilePath> make_absolute_file_path(const utf8_string& path){
   pathWX = absoluted(pathWX);
   return option(FilePath::FromAbsoluteWx(pathWX));
 }
+
+// Split the filename into root and extension, which if concatenated
+// are equal to the filename.
+std::pair<utf8_string, utf8_string> split_extension(const FileName& f){
+  const utf8_string s = f.Str();
+  auto pos = s.rfind(full_stop);
+  if (pos == utf8_string::npos){
+    return {s, utf8_string()};
+  }
+  else{
+    return {s.substr(0, pos), s.substr(pos, s.size() - pos)};
+  }
+}
+
 
 } // namespace

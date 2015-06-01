@@ -4,6 +4,7 @@
 #include "wx/dir.h"
 #include "formats/png/file-png.hh"
 #include "test-sys/test-name.hh"
+#include "text/char-constants.hh"
 #include "text/formatting.hh"
 #include "tests/test-util/file-handling.hh"
 #include "tests/test-util/image-table.hh"
@@ -68,6 +69,18 @@ FilePath get_test_save_path(const FileName& fileName){
 void save_image_table(const ImageTable& table){
   std::ofstream f(get_test_save_path(FileName("index.html")).Str().c_str());
   f << table.ToHtml();
+}
+
+utf8_string u8_chars(){
+  utf8_string s;
+  s += utf8_char(hyphen);
+  s += utf8_char(246);
+  return s;
+}
+
+FileName suffix_u8_chars(const FileName& f){
+  auto p = split_extension(f);
+  return FileName(p.first + u8_chars() + p.second);
 }
 
 } // namespace

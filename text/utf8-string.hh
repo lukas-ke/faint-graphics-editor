@@ -45,6 +45,7 @@ public:
   size_t rfind(const utf8_char&, size_t start=npos) const;
   utf8_string& insert(size_t, const utf8_string&);
   utf8_string& insert(size_t, size_t, const utf8_char&);
+
   utf8_string& operator+=(const utf8_char&);
   utf8_string& operator+=(const utf8_string&);
   utf8_string& operator=(const utf8_string&);
