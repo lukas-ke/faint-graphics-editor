@@ -176,7 +176,6 @@ public:
     const SliderCursors& sliderCursors,
     const CommonCursors& commonCursors)
     : wxPanel(parent, wxID_ANY),
-      m_commonCursors(commonCursors),
       m_sliderCursors(sliderCursors)
   {
     m_hueSatPicker = new HueSatPicker(this, commonCursors);
@@ -428,7 +427,6 @@ private:
   wxTextCtrl* m_alphaTxt;
   wxTextCtrl* m_blueTxt;
   StaticBitmap* m_colorBitmap;
-  const CommonCursors& m_commonCursors;
   wxTextCtrl* m_greenTxt;
   HueSatPicker* m_hueSatPicker;
   wxTextCtrl* m_hueTxt;

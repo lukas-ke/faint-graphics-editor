@@ -33,11 +33,6 @@ faint::Bitmap load_key(const char* filename){
   return load_test_image(faint::FileName(filename));
 }
 
-std::ostream& operator<<(std::ostream& o, const faint::Delay& delay){
-  // Printer for EQUAL-macro
-  return o << delay.Get();
-}
-
 } // namespace
 void test_file_gif(){
   using namespace faint;

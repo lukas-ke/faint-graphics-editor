@@ -73,8 +73,8 @@ private:
 
   AppContext& m_app;
   std::unique_ptr<CommandWindow> m_commandWindow;
-  FaintWindow& m_faintWindow;
   FaintCommonCursors m_commonCursors;
+  FaintWindow& m_faintWindow;
   FaintSliderCursors m_sliderCursors;
   std::unique_ptr<WindowFeedback> m_windowFeedback;
 };
