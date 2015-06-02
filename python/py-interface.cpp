@@ -42,7 +42,8 @@ utf8_string format_error_info(const FaintPyExc& info){
       }
 
       // Put a '^'-under the start of the syntax error
-      errStr += ("    " + utf8_string(to_size_t(syntaxError.col - 1), space) +
+      errStr += ("    " +
+        utf8_string(to_size_t(syntaxError.col - 1), chars::space) +
         "^\n");
     }
   }

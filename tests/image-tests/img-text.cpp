@@ -7,6 +7,7 @@
 #include "bitmap/color.hh"
 #include "geo/tri.hh"
 #include "rendering/faint-dc.hh"
+#include "text/char-constants.hh"
 #include "text/formatting.hh"
 #include "util/default-settings.hh"
 #include "util/setting-id.hh"
@@ -21,8 +22,8 @@ static faint::Bitmap with_rect(const faint::Bitmap& src, const faint::Tri& r){
 void img_text(){
   using namespace faint;
   ImageTable t(get_test_name(), {"", "Text", "Ink extents", "Given bounds"});
-
-  const utf8_string text = "J" + utf8_char(246) + "rpsylta";
+  const utf8_string text = "J" + chars::latin_small_letter_o_with_diaresis +
+    "rpsylta";
 
   std::vector<std::pair<utf8_string, Settings> > settings;
 

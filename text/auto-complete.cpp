@@ -51,7 +51,7 @@ public:
       node->extend(word.substr(1, word.size() - 1));
     }
     else {
-      add(full_stop);
+      add(chars::full_stop);
     }
   }
 

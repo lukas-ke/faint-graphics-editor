@@ -34,7 +34,7 @@ void test_formatting(){
   EQUAL(str(Paint(Color(1,2,3,10))), "(RGBA: 1,2,3,10), #010203");
   EQUAL(str(Paint(Color(1,2,3,0))), "(RGBA: 1,2,3,0), #010203");
   EQUAL(str(Paint(Pattern(Bitmap(IntSize(10,10))))), "Pattern");
-  LinearGradient lg(Angle::Deg(90), {ColorStop({255,255,255},0.0),
+  LinearGradient lg(90_deg, {ColorStop({255,255,255},0.0),
     ColorStop({255,255,255},1.0)});
   RadialGradient rg(Point(10,10), Radii(10.0,20.0),
   {ColorStop({255,255,255},0.0), ColorStop({255,255,255},1.0)});
@@ -51,13 +51,13 @@ void test_formatting(){
   EQUAL(str_axis_adverb(Axis::VERTICAL), "Vertically");
 
   VERIFY(str_degrees_symbol(Angle::Deg(90)) == utf8_string("90.0") +
-   degree_sign);
+    chars::degree_sign);
   VERIFY(str_degrees_symbol(90_deg) == utf8_string("90.0") +
-    degree_sign);
+    chars::degree_sign);
 
   EQUAL(str_degrees(Angle::Deg(90)), "90.0");
   EQUAL(str_degrees(Angle::Deg(270)), "270.0");
-  VERIFY(str_degrees_int_symbol(90) == utf8_string("90") + degree_sign);
+  VERIFY(str_degrees_int_symbol(90) == utf8_string("90") + chars::degree_sign);
 
   EQUAL(str_center_radius(Point(1.0,2.0), Radii(10.0,12.0)),
     "c: 1.0,2.0 r: 10.0,12.0");
@@ -76,10 +76,10 @@ void test_formatting(){
   EQUAL(str_length(10.5), "10.5");
   EQUAL(str_length(10.0), "10.0");
   VERIFY(str_line_status(IntLineSegment(IntPoint(1,0),IntPoint(3,0))) ==
-    no_sep("1,0->3,0, length: 3, angle: 0", degree_sign));
+    no_sep("1,0->3,0, length: 3, angle: 0", chars::degree_sign));
 
   VERIFY(str_line_status_subpixel(LineSegment(Point(1,0),Point(3.1,0))) ==
-    no_sep("1,0->3,0, length: 2.1, angle: 0", degree_sign));
+    no_sep("1,0->3,0, length: 2.1, angle: 0", chars::degree_sign));
 
   EQUAL(str_percentage(1,10), "10%");
 

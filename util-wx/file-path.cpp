@@ -335,7 +335,7 @@ Optional<FilePath> make_absolute_file_path(const utf8_string& path){
 // are equal to the filename.
 std::pair<utf8_string, utf8_string> split_extension(const FileName& f){
   const utf8_string s = f.Str();
-  auto pos = s.rfind(full_stop);
+  auto pos = s.rfind(chars::full_stop);
   if (pos == utf8_string::npos){
     return {s, utf8_string()};
   }

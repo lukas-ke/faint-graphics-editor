@@ -17,9 +17,10 @@
 #define FAINT_CHAR_CONSTANTS_HH
 #include "text/utf8-char.hh"
 
-namespace faint{
+namespace faint{ namespace chars{
 
 constexpr utf8_char utf8_null(0x00);
+constexpr utf8_char arabic_letter_beh(0x628);
 constexpr utf8_char backslash(0x5c); // aka "reverse solidus"
 constexpr utf8_char bullet(0x2022);
 constexpr utf8_char comma(0x2c);
@@ -33,6 +34,7 @@ constexpr utf8_char full_stop(0x2e); // period
 constexpr utf8_char greek_capital_letter_delta(0x394);
 constexpr utf8_char greek_small_letter_pi(0x3c0);
 constexpr utf8_char hyphen(0x2D);
+constexpr utf8_char latin_small_letter_o_with_diaresis(0xf6);
 constexpr utf8_char left_parenthesis(0x28);
 constexpr utf8_char middle_dot(0x00b7);
 constexpr utf8_char no_break_space(0xc2a0);
@@ -47,11 +49,15 @@ constexpr utf8_char superscript_two(0xb2);
 constexpr utf8_char tab(0x9);
 constexpr utf8_char triple_prime(0x2034);
 
+}} // namespace
+
+namespace faint{
+
 inline bool is_punctuation(const utf8_char& ch){
-  return ch == comma ||
-    ch == exclamation_mark ||
-    ch == full_stop ||
-    ch == question_mark;
+  return ch == chars::comma ||
+    ch == chars::exclamation_mark ||
+    ch == chars::full_stop ||
+    ch == chars::question_mark;
 }
 
 } // namespace

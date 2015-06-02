@@ -242,7 +242,8 @@ utf8_string str_degrees(const Angle& angle){
 
 utf8_string str_degrees_symbol(const Angle& angle){
   std::stringstream ss;
-  ss << std::fixed << std::setprecision(1) << angle.Deg() << degree_sign.str();
+  ss << std::fixed << std::setprecision(1) << angle.Deg() <<
+    chars::degree_sign.str();
   return utf8_string(ss.str());
 }
 
@@ -251,7 +252,7 @@ utf8_string str_degrees_int_symbol(int angle){
   if (angle == 360){
     angle = 0;
   }
-  ss << angle << degree_sign.str();
+  ss << angle << chars::degree_sign.str();
   return utf8_string(ss.str());
 }
 

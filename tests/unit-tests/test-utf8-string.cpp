@@ -24,16 +24,16 @@ void test_utf8_string(){
   EQUAL(s.bytes(), s.size());
   EQUAL(s[0], utf8_char(0));
   EQUAL(s[127], utf8_char(127));
-  EQUAL(s.find(snowman), utf8_string::npos);
+  EQUAL(s.find(chars::snowman), utf8_string::npos);
 
   size_t preBytes = s.bytes();
-  EQUAL(snowman.bytes(), 3);
-  s += snowman;
+  EQUAL(chars::snowman.bytes(), 3);
+  s += chars::snowman;
   EQUAL(s.bytes(), preBytes + 3);
-  EQUAL(s[128], snowman);
+  EQUAL(s[128], chars::snowman);
 
-  EQUAL(s.find(snowman, 0), 128);
-  EQUAL(s.rfind(snowman), 128);
+  EQUAL(s.find(chars::snowman, 0), 128);
+  EQUAL(s.rfind(chars::snowman), 128);
 
   NOT(is_ascii(s));
   auto s2 = s + s;
@@ -52,7 +52,7 @@ void test_utf8_string(){
 
   utf8_string expr("Hello\\perimeter(rect1, mm)");
   EQUAL(expr.find(utf8_char("\\")), 5);
-  EQUAL(expr.find(backslash), 5);
+  EQUAL(expr.find(chars::backslash), 5);
 
   // Ascii
   EQUAL(utf8_char("A").codepoint(), 0x41);
@@ -93,7 +93,7 @@ void test_utf8_string(){
   EQUAL(utf8_char(0x1fffff).codepoint(), 0x1fffff);
 
   // Old favorite
-  EQUAL(snowman.codepoint(), 0x2603);
+  EQUAL(chars::snowman.codepoint(), 0x2603);
 
   EQUAL(utf8_char("0").bytes(), 1);
   EQUAL(utf8_char("0").codepoint(), 0x30);

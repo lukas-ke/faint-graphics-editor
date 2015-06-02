@@ -140,7 +140,7 @@ public:
   }
 
   void EatWhitespace(){
-    while (pos < str.size() && str[pos] == space){
+    while (pos < str.size() && str[pos] == chars::space){
       pos++;
     }
     storePos = pos;
@@ -223,7 +223,7 @@ static void parse_args(ParseState& st, const utf8_string& commandName){
   expr_list args;
 
   st.EatWhitespace();
-  if (st.Eat(right_parenthesis)){
+  if (st.Eat(chars::right_parenthesis)){
     // No arguments
     create_command(st, commandName, args);
   }
@@ -235,10 +235,10 @@ static void parse_args(ParseState& st, const utf8_string& commandName){
       }
       args.emplace_back(new Text(identifier));
       st.EatWhitespace();
-      if (st.Eat(comma)){
+      if (st.Eat(chars::comma)){
         st.EatWhitespace();
       }
-      else if (st.Eat(right_parenthesis)){
+      else if (st.Eat(chars::right_parenthesis)){
         create_command(st, commandName, args);
         return;
       }
@@ -252,9 +252,9 @@ static void parse_args(ParseState& st, const utf8_string& commandName){
 
 static void read_command(ParseState& st){
   size_t commandPos = st.pos;
-  assert(st.Eat(backslash));
+  assert(st.Eat(chars::backslash));
   utf8_string name = read_identifier(st);
-  if (st.Eat(left_parenthesis)){
+  if (st.Eat(chars::left_parenthesis)){
     parse_args(st, name);
   }
   else if (!create_constant(st, name)){
@@ -271,7 +271,7 @@ static void read_command(ParseState& st){
 
 static void read_any(ParseState& st){
   while (st.pos != st.str.size()){
-    size_t newPos = st.Find(utf8_char(backslash));
+    size_t newPos = st.Find(chars::backslash);
     if (newPos == utf8_string::npos){
       // No command found. Append the rest of the string
       st.Append(new Text(st.ConsumeTo(newPos)));
@@ -281,7 +281,7 @@ static void read_any(ParseState& st){
       throw ExpressionParseError(st.str.size(),
         "\\ at end of text, expected command name.");
     }
-    else if (st.str[newPos + 1] == backslash){
+    else if (st.str[newPos + 1] == chars::backslash){
       // Escaped backslash
       st.StoreTo(newPos);
       continue;
@@ -313,12 +313,12 @@ std::vector<utf8_string> expression_names(){
   std::vector<utf8_string> names;
   const auto& constants = constant_exprs();
   for (const auto& item : constants){
-    names.emplace_back(backslash + item.first);
+    names.emplace_back(chars::backslash + item.first);
   }
 
   const auto& commands = command_expr_names();
   for (const auto& name : commands){
-    names.emplace_back(backslash + name);
+    names.emplace_back(chars::backslash + name);
   }
   return names;
 }

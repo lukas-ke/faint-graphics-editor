@@ -21,12 +21,12 @@ namespace faint{
 
 #ifdef DEBUG_SPLIT_STRING
 const utf8_char wordBrk('>');
-const utf8_char& hardBrk = pilcrow_sign;
-const utf8_char& softBrk = downwards_arrow_with_tip_leftwards;
+const utf8_char& hardBrk = chars::pilcrow_sign;
+const utf8_char& softBrk = chars::downwards_arrow_with_tip_leftwards;
 #else
-const utf8_char& wordBrk = space;
-const utf8_char& hardBrk = space;
-const utf8_char& softBrk = space;
+const utf8_char& wordBrk = chars::space;
+const utf8_char& hardBrk = chars::space;
+const utf8_char& softBrk = chars::space;
 #endif
 
 static utf8_string split_word(const TextInfo& info,
@@ -51,12 +51,12 @@ static void split_line(const TextInfo& info,
 
   utf8_string line;
   do {
-    wordEnd = string.find(utf8_char(" "), wordStart);
+    wordEnd = string.find(chars::space, wordStart);
     if (wordEnd == std::string::npos){
       wordEnd = string.size();
     }
     utf8_string word = string.substr(wordStart, wordEnd - wordStart);
-    const coord width = info.GetWidth(line + space + word);
+    const coord width = info.GetWidth(line + chars::space + word);
     if (!line.empty() && width > maxWidth){
       result.push_back(TextLine::SoftBreak(width, line + softBrk));
       line.clear();
@@ -67,7 +67,7 @@ static void split_line(const TextInfo& info,
     }
 
     if (!line.empty()){
-      line += space;
+      line += chars::space;
     }
 
     line += word;
@@ -90,7 +90,7 @@ text_lines_t split_string(const TextInfo& info,
 
   text_lines_t result;
   do {
-    lineEnd = string.find(eol, lineStart);
+    lineEnd = string.find(chars::eol, lineStart);
     bool softBreak = lineEnd == std::string::npos;
     if (softBreak){
       lineEnd = string.size();

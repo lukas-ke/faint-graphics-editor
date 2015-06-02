@@ -73,9 +73,9 @@ void save_image_table(const ImageTable& table){
 
 utf8_string u8_chars(){
   utf8_string s;
-  s += utf8_char(hyphen);
-  s += utf8_char(246);
-  s += utf8_char(1576);
+  s += chars::hyphen;
+  s += chars::latin_small_letter_o_with_diaresis;
+  s += chars::arabic_letter_beh;
   return s;
 }
 

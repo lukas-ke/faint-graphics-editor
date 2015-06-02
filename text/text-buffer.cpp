@@ -175,27 +175,27 @@ void TextBuffer::insert(const utf8_string& str){
 }
 
 void TextBuffer::move_down(bool select){
-  size_t currLineStart = prev(eol);
+  size_t currLineStart = prev(chars::eol);
   size_t x = m_caret - currLineStart;
-  size_t pos = next(eol);
+  size_t pos = next(chars::eol);
   if (pos == m_data.size()){
     caret(pos, select);
   }
   else{
-    caret(std::min(pos + x, next(eol, pos + 1)),
+    caret(std::min(pos + x, next(chars::eol, pos + 1)),
       select);
   }
 }
 
 void TextBuffer::move_up(bool select){
-  size_t currLineStart = prev(eol);
+  size_t currLineStart = prev(chars::eol);
   if (currLineStart == 0){
     // Already on the first line, move to start of text
     caret(0, select);
     return;
   }
   size_t x = m_caret - currLineStart;
-  size_t prevLineStart = prev(eol, currLineStart);
+  size_t prevLineStart = prev(chars::eol, currLineStart);
   caret(std::min(prevLineStart + x, currLineStart), select);
 }
 
@@ -248,12 +248,12 @@ size_t TextBuffer::prev(const utf8_char& c, size_t pos) const{
   return found;
 }
 
-bool word_delimiter(const utf8_char& ch){
+static bool word_delimiter(const utf8_char& ch){
   return is_punctuation(ch) ||
-    ch == eol ||
-    ch == left_parenthesis ||
-    ch == right_parenthesis ||
-    ch == space;
+    ch == chars::eol ||
+    ch == chars::left_parenthesis ||
+    ch == chars::right_parenthesis ||
+    ch == chars::space;
 }
 
 CaretRange word_boundaries(size_t pos, const TextBuffer& buffer){

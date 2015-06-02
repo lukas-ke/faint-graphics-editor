@@ -6,9 +6,9 @@
 void test_auto_complete(){
   using namespace faint;
 
-  const auto euroStr = utf8_string(1, euro_sign);
-  const auto snowmanStr = utf8_string(1, snowman);
-  const auto sqSstr = utf8_string(1, superscript_two);
+  const auto euroStr = utf8_string(1, chars::euro_sign);
+  const auto snowmanStr = utf8_string(1, chars::snowman);
+  const auto sqSstr = utf8_string(1, chars::superscript_two);
 
   AutoComplete ac({euroStr,
         "a",

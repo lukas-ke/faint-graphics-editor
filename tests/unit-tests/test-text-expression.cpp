@@ -210,14 +210,14 @@ void test_text_expression(){
 
   EVAL_ERROR("Hello\\perimeter(not_real,mm)", "No object named \"not_real\".");
 
-  VALID_EXPRESSION("\\pi", utf8_string(1, greek_small_letter_pi));
+  VALID_EXPRESSION("\\pi", utf8_string(1, chars::greek_small_letter_pi));
 
-  VALID_EXPRESSION("\\pi\\pi", utf8_string(2, greek_small_letter_pi));
+  VALID_EXPRESSION("\\pi\\pi", utf8_string(2, chars::greek_small_letter_pi));
 
-  VALID_EXPRESSION("\\pi\\deg", utf8_string(1, greek_small_letter_pi) +
-    degree_sign);
+  VALID_EXPRESSION("\\pi\\deg", utf8_string(1, chars::greek_small_letter_pi) +
+    chars::degree_sign);
 
-  VALID_EXPRESSION("\\pi()", utf8_string(1, greek_small_letter_pi));
+  VALID_EXPRESSION("\\pi()", utf8_string(1, chars::greek_small_letter_pi));
 
   KNOWN_ERROR(get_valid("\\perimeter(text1,px)", c) != "0.00"); // \def(err1)
   VALID_EXPRESSION("\\width(text1,px)", "100.00");

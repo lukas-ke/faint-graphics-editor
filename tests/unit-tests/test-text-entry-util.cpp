@@ -17,24 +17,25 @@ void test_text_entry_util(){
   EQUAL(text.get()[11], utf8_char("a"));
 
   // Invalid character (null)
-  VERIFY(!handle_key_press(KeyPress(None, key::A, utf8_null), text));
+  VERIFY(!handle_key_press(KeyPress(None, key::A, chars::utf8_null), text));
   EQUAL(text.get()[11], utf8_char("a"));
 
   // Invalid character (replacement)
-  VERIFY(!handle_key_press(KeyPress(None, key::A, replacement_character), text));
+  VERIFY(!handle_key_press(KeyPress(None, key::A,
+    chars::replacement_character), text));
   EQUAL(text.get()[11], utf8_char("a"));
 
   // Navigation
-  VERIFY(handle_key_press(KeyPress(None, key::up, utf8_null), text));
+  VERIFY(handle_key_press(KeyPress(None, key::up, chars::utf8_null), text));
   EQUAL(text.caret(), 0);
   EQUAL(text.get()[11], utf8_char("a"));
 
-  VERIFY(handle_key_press(KeyPress(None, key::down, utf8_null), text));
+  VERIFY(handle_key_press(KeyPress(None, key::down, chars::utf8_null), text));
   EQUAL(text.caret(), 12);
   EQUAL(text.get()[11], utf8_char("a"));
 
   // Selection
-  VERIFY(handle_key_press(KeyPress(Shift, key::left, utf8_null), text));
+  VERIFY(handle_key_press(KeyPress(Shift, key::left, chars::utf8_null), text));
   EQUAL(text.caret(), 11);
   EQUAL(text.get_sel_range().from, 11);
   EQUAL(text.get_sel_range().to, 12);
@@ -42,6 +43,6 @@ void test_text_entry_util(){
   // Transpose
   EQUAL(text.get(), "Hello worlda");
   text.caret(5);
-  VERIFY(handle_key_press(KeyPress(Ctrl, key::T, utf8_null), text));
+  VERIFY(handle_key_press(KeyPress(Ctrl, key::T, chars::utf8_null), text));
   EQUAL(text.get(), "Hell oworlda");
 }

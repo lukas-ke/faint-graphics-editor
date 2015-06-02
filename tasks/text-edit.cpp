@@ -122,9 +122,9 @@ public:
     else if (info.key.Is(key::tab) && m_settings.Get(ts_ParseExpressions)){
       if (m_autoComplete.Empty()){
         auto& buf = m_textObject->GetTextBuffer();
-        size_t bs = buf.prev(backslash);
+        size_t bs = buf.prev(chars::backslash);
         // Fixme: Should prev give npos? Optional?
-        if (bs != 0 || (!buf.empty() && buf.at(0) == backslash)){
+        if (bs != 0 || (!buf.empty() && buf.at(0) == chars::backslash)){
           const utf8_string& s = buf.get().substr(bs, buf.caret() - bs);
           auto word = m_autoComplete.Complete(s);
           buf.select(CaretRange(bs, buf.caret()));
@@ -134,9 +134,9 @@ public:
       else{
         auto word = m_autoComplete.Next();
         auto& buf = m_textObject->GetTextBuffer();
-        size_t bs = buf.prev(backslash);
+        size_t bs = buf.prev(chars::backslash);
         // Fixme: Should prev give npos? Optional?
-        if (bs != 0 || (!buf.empty() && buf.at(0) == backslash)){
+        if (bs != 0 || (!buf.empty() && buf.at(0) == chars::backslash)){
           buf.select(CaretRange(bs, buf.caret()));
           buf.insert(word);
         }

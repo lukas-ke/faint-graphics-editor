@@ -34,7 +34,7 @@ static bool handle_special_key(const KeyPress& key, TextBuffer& text){
     return true;
   }
   else if (key.Is(key::enter)){
-    text.insert(eol);
+    text.insert(chars::eol);
     return true;
   }
   else if (key.Is(key::left)){
@@ -54,12 +54,12 @@ static bool handle_special_key(const KeyPress& key, TextBuffer& text){
     return true;
   }
   else if (key.Is(key::home)){
-    size_t newPos = text.prev(eol);
+    size_t newPos = text.prev(chars::eol);
     text.caret(newPos == 0 ? newPos : newPos + 1, select(key.Modifiers()));
     return true;
   }
   else if (key.Is(key::end)){
-    text.caret(text.next(eol), select(key.Modifiers()));
+    text.caret(text.next(chars::eol), select(key.Modifiers()));
     return true;
   }
   else if (key.Is(Ctrl, key::T)){
@@ -70,7 +70,7 @@ static bool handle_special_key(const KeyPress& key, TextBuffer& text){
 }
 
 static bool printable_char(const utf8_char& ch){
-  if (ch == replacement_character || ch == utf8_null){
+  if (ch == chars::replacement_character || ch == chars::utf8_null){
     return false;
   }
   return true;

@@ -219,13 +219,13 @@ static utf8_string as_text(int keycode, const Mod& modifiers){
 }
 
 KeyPress::KeyPress()
-  : m_ch(replacement_character),
+  : m_ch(chars::replacement_character),
     m_keyCode(0),
     m_modifiers(None)
 {}
 
 KeyPress::KeyPress(const Mod& modifiers, const Key& keyCode) :
-  m_ch(replacement_character),
+  m_ch(chars::replacement_character),
   m_keyCode(keyCode),
   m_modifiers(modifiers)
 {}
@@ -239,7 +239,7 @@ KeyPress::KeyPress(const Mod& modifiers,
 {}
 
 KeyPress::KeyPress(const Key& keyCode) :
-  m_ch(replacement_character),
+  m_ch(chars::replacement_character),
   m_keyCode(keyCode)
 {}
 

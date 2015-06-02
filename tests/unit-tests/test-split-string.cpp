@@ -103,9 +103,9 @@ void test_split_string(){
 
   {
     // Unicode
-    auto lines = split_string(ti, utf8_string(5,snowman) + " " +
-      utf8_string(5, greek_capital_letter_delta), max_width_t(60.0));
-    EQUAL(lines[0].text, utf8_string(5, snowman) + " ");
-    EQUAL(lines[1].text, utf8_string(5, greek_capital_letter_delta) + " ");
+    auto lines = split_string(ti, utf8_string(5, chars::snowman) + " " +
+      utf8_string(5, chars::greek_capital_letter_delta), max_width_t(60.0));
+    EQUAL(lines[0].text, utf8_string(5, chars::snowman) + " ");
+    EQUAL(lines[1].text, utf8_string(5, chars::greek_capital_letter_delta) + " ");
   }
 }

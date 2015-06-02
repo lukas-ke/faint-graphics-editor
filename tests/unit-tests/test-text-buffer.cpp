@@ -80,7 +80,7 @@ void test_text_buffer(){
     EQUALF(b.get_sel_range(), CaretRange(0,0), fmt);
     EQUAL(b.caret(), 8); // aardvark|
 
-    b.insert(eol);
+    b.insert(chars::eol);
     b.advance();
     EQUAL(b.caret(), 9); // aardvark^|
     EQUAL(b.get(), "aardvark\n");
@@ -88,9 +88,9 @@ void test_text_buffer(){
     b.devance();
     EQUAL(b.caret(), 8); // aardvark|^
 
-    EQUAL(b.next(eol), 8);
-    EQUAL(b.prev(eol), 0); // A bit weird to give 0 instead of npos.
-    EQUAL(b.next(snowman), 9); // A bit weird to give size instead of npos.
+    EQUAL(b.next(chars::eol), 8);
+    EQUAL(b.prev(chars::eol), 0); // A bit weird to give 0 instead of npos.
+    EQUAL(b.next(chars::snowman), 9); // A bit weird to give size instead of npos.
 
     b.caret(b.size());
     EQUAL(b.caret(), b.size());
@@ -106,13 +106,13 @@ void test_text_buffer(){
     EQUAL(b.get_selection(), " ");
 
     b.caret(9);
-    b.caret(b.next(eol), true);
+    b.caret(b.next(chars::eol), true);
     EQUAL(b.get_selection(), "Snaky: ...looks like we're shy one horse.");
 
     b.del();
     EQUAL(b.caret(), 9);
     EQUALF(b.get_sel_range(), CaretRange(0,0), fmt);
-    EQUAL(b.at(b.caret()), eol);
+    EQUAL(b.at(b.caret()), chars::eol);
     b.del();
     EQUAL(b.caret(), 9);
     EQUAL(b.at(b.caret()), utf8_char("H"));
