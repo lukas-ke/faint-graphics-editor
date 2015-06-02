@@ -444,7 +444,7 @@ void filter_pinch_whirl(Bitmap& bmp, coord pinch, const Angle& whirl){
 }
 
 void filter_pinch_whirl_forward(Bitmap& bmp){
-  filter_pinch_whirl(bmp, 0.5, Angle::Rad(0.5));
+  filter_pinch_whirl(bmp, 0.5, 0.5_rad);
 }
 
 FilterPtr get_pinch_whirl_filter(){

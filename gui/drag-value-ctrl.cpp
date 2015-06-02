@@ -52,7 +52,7 @@ static int drag_value(const IntPoint& p0,
   assert(dampening > 0);
   coord d = truncated(distance(p0, p1));
   Angle a = angle360_ccw({floated(p0), floated(p1)});
-  if (Angle::Deg(135) < a && a < Angle::Deg(315)){
+  if (135_deg < a && a < 315_deg){
     d *= -1;
   }
   return range.Constrain(value_p0 - truncated(d / dampening));

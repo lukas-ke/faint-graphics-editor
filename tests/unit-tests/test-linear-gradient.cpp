@@ -7,9 +7,9 @@ void test_linear_gradient(){
 
   {
     // Same all
-    auto lg1 = LinearGradient(Angle::Rad(2.0),
+    auto lg1 = LinearGradient(2.0_rad,
       {{Color(255,0,255), 0.0}, {Color(255,0,0), 1.0}});
-    auto lg2 = LinearGradient(Angle::Rad(2.0),
+    auto lg2 = LinearGradient(2.0_rad,
       {{Color(255,0,255), 0.0}, {Color(255,0,0), 1.0}});
     VERIFY(lg1 == lg2);
     VERIFY(!(lg1 < lg2));
@@ -21,9 +21,9 @@ void test_linear_gradient(){
 
   {
     // Different angle
-    auto lg1 = LinearGradient(Angle::Rad(2.0),
+    auto lg1 = LinearGradient(2.0_rad,
       {{Color(255,0,255), 0.0}, {Color(255,0,0), 1.0}});
-    auto lg2 = LinearGradient(Angle::Rad(3.0),
+    auto lg2 = LinearGradient(3.0_rad,
       {{Color(255,0,255), 0.0}, {Color(255,0,0), 1.0}});
     VERIFY(lg1 < lg2);
     VERIFY(lg2 > lg1);
@@ -35,9 +35,9 @@ void test_linear_gradient(){
 
   {
     // Different stop count
-    auto lg1 = LinearGradient(Angle::Rad(3.0),
+    auto lg1 = LinearGradient(3.0_rad,
       {{Color(255,0,255), 0.0}});
-    auto lg2 = LinearGradient(Angle::Rad(3.0),
+    auto lg2 = LinearGradient(3.0_rad,
       {{Color(255,0,255), 0.0}, {Color(255,0,0), 1.0}});
     VERIFY(lg1 < lg2);
     VERIFY(lg2 > lg1);
@@ -49,9 +49,9 @@ void test_linear_gradient(){
 
   {
     // Different color
-    auto lg1 = LinearGradient(Angle::Rad(3.0),
+    auto lg1 = LinearGradient(3.0_rad,
       {{Color(255,0,254), 0.0}, {Color(255,0,0), 1.0}});
-    auto lg2 = LinearGradient(Angle::Rad(3.0),
+    auto lg2 = LinearGradient(3.0_rad,
       {{Color(255,0,255), 0.0}, {Color(255,0,0), 1.0}});
     VERIFY(lg1 < lg2);
     VERIFY(lg2 > lg1);
@@ -63,9 +63,9 @@ void test_linear_gradient(){
 
   {
     // Different offset
-    auto lg1 = LinearGradient(Angle::Rad(3.0),
+    auto lg1 = LinearGradient(3.0_rad,
       {{Color(255,0,255), 0.0}, {Color(255,0,0), 0.5}});
-    auto lg2 = LinearGradient(Angle::Rad(3.0),
+    auto lg2 = LinearGradient(3.0_rad,
       {{Color(255,0,255), 0.0}, {Color(255,0,0), 1.0}});
     VERIFY(lg1 < lg2);
     VERIFY(lg2 > lg1);

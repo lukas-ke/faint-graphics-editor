@@ -46,33 +46,33 @@ Point adjust_to(const Point& o,
 }
 
 Point adjust_to_45(const Point& o, const Point& p){
-  const Angle angle = angle360_ccw({o, p});
-  coord dx = p.x - o.x;
-  coord dy = p.y - o.y;
+  const auto angle = angle360_ccw({o, p});
+  const auto dx = p.x - o.x;
+  const auto dy = p.y - o.y;
 
-  if (Angle::Deg(360 - 22.5) < angle || angle <= Angle::Deg(22.5)){
-    return Point(o.x + dx, o.y);
+  if (Angle::Deg(360 - 22.5) < angle || angle <= 22.5_deg){
+    return {o.x + dx, o.y};
   }
-  else if (Angle::Deg(22.5) < angle && angle <= Angle::Deg(67.5)){
-    return Point(o.x - dy, o.y + dy);
+  else if (22.5_deg < angle && angle <= 67.5_deg){
+    return {o.x - dy, o.y + dy};
   }
-  else if (Angle::Deg(67.5) < angle && angle <= Angle::Deg(110.5)){
-    return Point(o.x, o.y + dy);
+  else if (67.5_deg < angle && angle <= 110.5_deg){
+    return {o.x, o.y + dy};
   }
-  else if (Angle::Deg(110.5) < angle && angle <= Angle::Deg(157.5)){
-    return Point(o.x + dy, o.y + dy);
+  else if (110.5_deg < angle && angle <= 157.5_deg){
+    return {o.x + dy, o.y + dy};
   }
-  else if (Angle::Deg(157.5) < angle && angle <= Angle::Deg(202.5)){
-    return Point(o.x + dx, o.y);
+  else if (157.5_deg < angle && angle <= 202.5_deg){
+    return {o.x + dx, o.y};
   }
-  else if (Angle::Deg(202.5) < angle && angle <= Angle::Deg(247.5)){
-    return Point(o.x - dy, o.y + dy);
+  else if (202.5_deg < angle && angle <= 247.5_deg){
+    return {o.x - dy, o.y + dy};
   }
-  else if (Angle::Deg(247.5) < angle && angle <= Angle::Deg(292.5)){
-    return Point(o.x, o.y + dy);
+  else if (247.5_deg < angle && angle <= 292.5_deg){
+    return {o.x, o.y + dy};
   }
-  else if (Angle::Deg(292.5) < angle && angle < Angle::Deg(360 - 22.5)){
-    return Point(o.x + dy, o.y + dy);
+  else if (292.5_deg < angle && angle < Angle::Deg(360 - 22.5)){
+    return {o.x + dy, o.y + dy};
   }
   return p;
 }

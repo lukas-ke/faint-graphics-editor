@@ -56,10 +56,10 @@ static bool rather_short(const LineSegment& line){
 // the horizon (0 degrees)
 static Angle get_rotation_angle(const LineSegment& line){
   Angle angle = angle360_ccw(line);
-  if (angle <= Angle::Deg(90)){
+  if (angle <= 90_deg){
     return angle;
   }
-  else if (angle <= Angle::Deg(270)){
+  else if (angle <= 270_deg){
     return angle - pi;
   }
   return angle - 2 * pi;
