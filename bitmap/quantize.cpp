@@ -363,7 +363,7 @@ static Octree* generate_octree(const Bitmap& bmp,
             // Assign the color index
             cqcsub->index = colorMap.size();
             ColRGB rgb = get_rgb_from_octcube(isub, level + 1);
-            colorMap.push_back(Color(rgb,255));
+            colorMap.push_back(rgb);
             cqcsub->center = rgb;
           }
           cqc->numLeaves++;
@@ -388,7 +388,7 @@ static Octree* generate_octree(const Bitmap& bmp,
             // assign the color index
             cqc->index = colorMap.size();
             ColRGB rgb = get_rgb_from_octcube(i, level);
-            colorMap.push_back(Color(rgb,255));
+            colorMap.push_back(rgb);
             cqc->center = rgb;
           }
           else {
@@ -600,7 +600,7 @@ static MappedColors simply_index_it(const Bitmap& bmp){
   }
   const uchar lastColorIndex = convert(colors.size() - 1);
   ColorList indexToColor;
-  std::map<Color, uchar> colorToIndex;
+  std::map<ColRGB, uchar> colorToIndex;
   for (const auto& c : colors){
     colorToIndex[c] = static_cast<uchar>(indexToColor.size());
     indexToColor.push_back(c);

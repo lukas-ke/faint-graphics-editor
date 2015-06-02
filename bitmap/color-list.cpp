@@ -28,8 +28,8 @@ Bitmap bitmap_from_indexed_colors(const AlphaMap& alphaMap,
   for (int y = 0; y != sz.h; y++){
     for (int x = 0; x != sz.w; x++){
       uchar index = alphaMap.Get(x,y);
-      Color color = colorMap[index];
-      put_pixel_raw(dst, x, y, color);
+      auto color = colorMap[index];
+      put_pixel_raw(dst, x, y, with_alpha(color, 255));
     }
   }
   return dst;

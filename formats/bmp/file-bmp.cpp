@@ -56,10 +56,9 @@ static BitmapFileHeader create_bitmap_file_header(const PaletteColors& numColors
 static ColorList grayscale_color_table(){
   ColorList l;
   for (int i = 0; i != 256; i++){
-    l.push_back({static_cast<uchar>(i),
+    l.push_back(ColRGB(static_cast<uchar>(i),
       static_cast<uchar>(i),
-      static_cast<uchar>(i),
-      255});
+      static_cast<uchar>(i)));
   }
   return l;
 }

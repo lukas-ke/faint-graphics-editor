@@ -29,9 +29,9 @@ public:
     m_colors.reserve(256);
   }
 
-  void push_back(const Color& c){m_colors.push_back(c);}
+  void push_back(const ColRGB& c){m_colors.push_back(c);}
 
-  const Color& operator[](int i) const{
+  const ColRGB& operator[](int i) const{
     return m_colors[i];
   }
 
@@ -55,9 +55,9 @@ public:
     return m_colors.end();
   }
 
-  using value_type = Color;
+  using value_type = ColRGB;
 private:
-  std::vector<Color> m_colors;
+  std::vector<ColRGB> m_colors;
 };
 
 Bitmap bitmap_from_indexed_colors(const AlphaMap&, const ColorList&);

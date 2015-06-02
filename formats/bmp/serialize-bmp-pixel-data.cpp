@@ -168,10 +168,9 @@ Optional<ColorList> read_color_table(BinaryReader& in, int numColors){
     if (!in.good()){
       return {};
     }
-    l.push_back(Color(static_cast<unsigned char>(bytes[2]),
+    l.push_back(ColRGB(static_cast<unsigned char>(bytes[2]),
         static_cast<unsigned char>(bytes[1]),
-        static_cast<unsigned char>(bytes[0]),
-        255));
+        static_cast<unsigned char>(bytes[0])));
   }
   return option(l);
 }

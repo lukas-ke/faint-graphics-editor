@@ -23,9 +23,7 @@ using uint = unsigned int;
 
 class ColRGB{
   // RGB color, i.e. no alpha component, for when that distinction
-  // matters - otherwise plays second fiddle to faint::Color. The
-  // Col-prefix is there to avoid clashing with the Windows header
-  // RGB-macro which sometimes shows up uninvited.
+  // matters - otherwise plays second fiddle to faint::Color.
 public:
   constexpr ColRGB() : r(0), g(0), b(0){}
   constexpr ColRGB(uchar r, uchar g, uchar b) : r(r), g(g), b(b){}
@@ -46,7 +44,7 @@ public:
   constexpr Color(uchar r, uchar g, uchar b, uchar a = 255)
     : r(r), g(g), b(b), a(a)
   {}
-  constexpr Color(const ColRGB& c, uchar a=255) // Fixme: Consider explicit! This allows e.g. strip_alpha(ColRGB), fully_transparent(ColRGB) etc.
+  explicit constexpr Color(const ColRGB& c, uchar a=255)
     : r(c.r), g(c.g), b(c.b), a(a)
   {}
 

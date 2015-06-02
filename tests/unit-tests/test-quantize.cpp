@@ -17,7 +17,7 @@ void test_quantize(){
     const auto& colorList(q.palette);
     EQUAL(indices.GetSize(), IntSize(2,2));
     EQUAL(colorList.size(), 1);
-    EQUAL(colorList[0], Color(255,0,255));
+    EQUAL(colorList[0], ColRGB(255,0,255));
 
     for (int y = 0; y != 2; y++){
       for (int x = 0; x != 2; x++){
