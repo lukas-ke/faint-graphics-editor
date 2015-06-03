@@ -416,9 +416,8 @@ static std::vector<IconDirEntry> create_icon_dir_entries(const ico_vec& bitmaps,
 static std::vector<IconDirEntry> create_cursor_dir_entries(const cur_vec& cursors){
   std::vector<IconDirEntry> v;
 
-
-  int offset = resigned(struct_lengths<IconDir>() + resigned(cursors.size()) *
-    struct_lengths<IconDir>());
+  auto offset = struct_lengths<IconDir>() +
+    cursors.size() * struct_lengths<IconDirEntry>();
 
   for (size_t i = 0; i != cursors.size(); i++){
     const Bitmap& bmp = cursors[i].first;
@@ -471,12 +470,10 @@ SaveResult write_ico(const FilePath& filePath,  const ico_vec& bitmaps){
     }
   }
 
-  const IconDir iconDir = create_icon_dir_icon(bitmaps);
-  const auto iconDirEntries = create_icon_dir_entries(bitmaps,
-    pngData);
+  const auto iconDir = create_icon_dir_icon(bitmaps);
+  const auto iconDirEntries = create_icon_dir_entries(bitmaps, pngData);
+  const auto bmpHeaders = create_bitmap_headers(bitmaps, pngData);
 
-  std::vector<BitmapInfoHeader> bmpHeaders = create_bitmap_headers(bitmaps,
-    pngData);
   BinaryWriter out(filePath);
   if (!out.good()){
     return SaveResult::SaveFailed(error_open_file_write(filePath));
@@ -518,15 +515,15 @@ SaveResult write_cur(const FilePath& filePath, const cur_vec& cursors){
     }
   }
   IconDir iconDir = create_icon_dir_cursor(cursors);
-  auto iconDirEntries(create_cursor_dir_entries(cursors));
-  auto bmpHeaders(create_bitmap_headers(cursors));
+  auto iconDirEntries = create_cursor_dir_entries(cursors);
+  auto bmpHeaders = create_bitmap_headers(cursors);
+
   BinaryWriter out(filePath);
   if (!out.good()){
     return SaveResult::SaveFailed(error_open_file_write(filePath));
   }
 
   write_struct(out, iconDir);
-
   for (const auto& iconDirEntry : iconDirEntries){
     write_struct(out, iconDirEntry);
   }

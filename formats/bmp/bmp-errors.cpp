@@ -107,7 +107,7 @@ utf8_string error_no_images(){
 utf8_string error_truncated_bmp_header(size_t num, int len){
   return endline_sep("This icon file appears broken.\n",
     lbl_u("Image entry", num + 1),
-    space_sep(lbl("Header length", len),
+    space_sep(lbl("BITMAPINFOHEADER length", len),
       bracketed(space_sep("expected", str_int(BITMAPINFOHEADER_LENGTH)))));
 }
 
