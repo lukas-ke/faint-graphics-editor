@@ -78,15 +78,15 @@ static Bitmap read_bmp_or_throw(const FilePath& filePath){
   auto bitmapInfoHeader = read_struct_or_throw<BitmapInfoHeader>(in);
 
   if (invalid_header_length(bitmapInfoHeader.headerLen)){
-    throw ReadBmpError(error_truncated_bmp_header(0, bitmapInfoHeader.headerLen));
+    throw ReadBmpError(error_truncated_bmp_header(bitmapInfoHeader.headerLen));
   }
 
   if (bitmapInfoHeader.compression != Compression::BI_RGB){
-    throw ReadBmpError(error_compression(0, bitmapInfoHeader.compression));
+    throw ReadBmpError(error_compression(bitmapInfoHeader.compression));
   }
 
   if (bitmapInfoHeader.colorPlanes != 1){
-    throw ReadBmpError(error_color_planes(0, bitmapInfoHeader.colorPlanes));
+    throw ReadBmpError(error_color_planes(bitmapInfoHeader.colorPlanes));
   }
 
   const IntSize bmpSize(bitmapInfoHeader.width, bitmapInfoHeader.height);

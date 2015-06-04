@@ -74,6 +74,11 @@ struct struct_lengths_t<HEAD>{
   static const size_t value = StructInfo<HEAD>::bytes;
 };
 
+template<typename T>
+utf8_string struct_name(){
+  return StructInfo<T>::StructName();
+}
+
 template<class HEAD, class... Tail>
 constexpr size_t struct_lengths(){
   return struct_lengths_t<HEAD, Tail...>::value;

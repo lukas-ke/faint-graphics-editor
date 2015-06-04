@@ -59,15 +59,18 @@ static bool peek_png_signature(BinaryReader& in, const size_t i){
   return is_png(signature);
 }
 
-static void test_bitmap_header(size_t iconNum, const BitmapInfoHeader& h){
+static void test_bitmap_header(IconType type,
+  Index iconNum,
+  const BitmapInfoHeader& h)
+{
   if (invalid_header_length(h.headerLen)){
-    throw ReadBmpError(error_truncated_bmp_header(iconNum, h.headerLen));
+    throw ReadBmpError(error_truncated_bmp_header(type, iconNum, h.headerLen));
   }
   if (h.compression != Compression::BI_RGB){
-    throw ReadBmpError(error_compression(iconNum, h.compression));
+    throw ReadBmpError(error_compression(type, iconNum, h.compression));
   }
   if (h.colorPlanes != 1){
-    throw ReadBmpError(error_color_planes(iconNum, h.colorPlanes));
+    throw ReadBmpError(error_color_planes(type, iconNum, h.colorPlanes));
   }
 }
 
@@ -221,6 +224,10 @@ public:
       throw ReadBmpError(error_unknown_image_type(dir.imageType));
     }
   }
+
+  static IconType type(){
+    return IconType::CUR;
+  }
 };
 
 class Cur{
@@ -245,6 +252,10 @@ public:
     if (dir.imageCount == 0){
       throw ReadBmpError(error_no_images());
     }
+  }
+
+  static IconType type(){
+    return IconType::CUR;
   }
 };
 
@@ -288,7 +299,7 @@ typename BmpType::ResultType read_or_throw(const FilePath& filePath){
       };
 
       auto bmpHeader = read_struct_or_throw<BitmapInfoHeader>(in);
-      test_bitmap_header(i, bmpHeader);
+      test_bitmap_header(BmpType::type(), Index(i), bmpHeader);
       const IntSize imageSize(get_size(iconDirEntry));
 
       auto read_pixeldata = get_read_pixeldata_func(i, bmpHeader.bitsPerPixel);

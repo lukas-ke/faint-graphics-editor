@@ -15,6 +15,7 @@
 
 #include "formats/bmp/bmp-errors.hh"
 #include "formats/bmp/bmp-types.hh"
+#include "formats/bmp/serialize-bmp-types.hh"
 #include "text/formatting.hh"
 #include "util-wx/file-path.hh"
 
@@ -23,6 +24,16 @@ namespace faint{
 template<typename T>
 typename std::underlying_type<T>::type enum_value(T e){
   return static_cast<typename std::underlying_type<T>::type>(e);
+}
+
+static const utf8_string str_user(IconType type){
+  switch(type){
+  case IconType::CUR:
+    return "cursor";
+  case IconType::ICO:
+    return "icon";
+  }
+  return "icon";
 }
 
 utf8_string error_ico_too_many_images(size_t frames){
@@ -45,20 +56,45 @@ utf8_string error_bits_per_pixel(size_t num, int bitsPerPixel){
     lbl("Bits per pixel", bitsPerPixel));
 }
 
-utf8_string error_color_planes(size_t num, int planes){
-  return endline_sep(
-    "The number of color planes for this icon is invalid.\n",
-    lbl_u("Image entry", num + 1),
-    space_sep(lbl("Color planes", planes),
-      "(expected 1)"));
+utf8_string lbl_color_planes(int planes){
+  return space_sep(lbl("Color planes", planes), "(expected 1)");
 }
 
-utf8_string error_compression(size_t num, Compression compression){
+utf8_string error_color_planes(IconType type, Index num, int planes){
+  auto caption = space_sep("The number of color planes for this",
+    str_user(type),
+    "is not supported is invalid.\n");
+
+  return endline_sep(caption,
+    lbl("Image entry", str_user(num)),
+    lbl_color_planes(planes));
+}
+
+utf8_string error_color_planes(int planes){
   return endline_sep(
-    "The compression for this icon is not supported by Faint.\n",
-    lbl_u("Icon#", num + 1),
-    space_sep(lbl("Compression", enum_value(compression)),
-      enum_str(compression)));
+    "The number of color planes for this bitmap is not supported is invalid.\n",
+    lbl_color_planes(planes));
+}
+
+static utf8_string str_unsupported_compression(Compression c){
+  return space_sep(lbl("Compression", enum_value(c)),
+    enum_str(c));
+}
+
+utf8_string error_compression(Compression compression){
+  return endline_sep(
+    "The compression for this bitmap is not supported by Faint.\n",
+    str_unsupported_compression(compression));
+}
+
+utf8_string error_compression(IconType type, Index num, Compression compression){
+  auto caption = space_sep("The compression for this",
+    str_user(type),
+    "is not supported by Faint.\n");
+
+  return endline_sep(caption,
+    lbl_u(capitalized(str_user(type)) + "#", num.Get() + 1),
+    str_unsupported_compression(compression));
 }
 
 utf8_string error_dir_reserved(int value){
@@ -104,11 +140,22 @@ utf8_string error_no_images(){
     "The IconDir images entry is 0.";
 }
 
-utf8_string error_truncated_bmp_header(size_t num, int len){
-  return endline_sep("This icon file appears broken.\n",
-    lbl_u("Image entry", num + 1),
-    space_sep(lbl("BITMAPINFOHEADER length", len),
-      bracketed(space_sep("expected", str_int(BITMAPINFOHEADER_LENGTH)))));
+static utf8_string str_bmp_header_mismatch(int len){
+  auto headerName = struct_name<BitmapInfoHeader>();
+  auto expected = struct_lengths<BitmapInfoHeader>();
+  return space_sep(lbl(space_sep(headerName, "length"), len),
+    bracketed(space_sep("expected", str_int(expected))));
+}
+
+utf8_string error_truncated_bmp_header(IconType type, Index num, int len){
+  const auto caption = space_sep("This", str_user(type), "appears broken\n");
+  return endline_sep(caption,
+    lbl("Image entry", str_user(num)),
+    str_bmp_header_mismatch(len));
+}
+utf8_string error_truncated_bmp_header(int len){
+  return endline_sep("This bitmap appears broken.\n",
+    str_bmp_header_mismatch(len));
 }
 
 utf8_string error_bmp_data_ico(size_t num){

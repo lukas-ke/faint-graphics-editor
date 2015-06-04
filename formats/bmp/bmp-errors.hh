@@ -26,8 +26,13 @@ namespace faint{
 utf8_string error_ico_too_many_images(size_t);
 utf8_string error_bitmap_signature(uint16_t);
 utf8_string error_bits_per_pixel(size_t num, int bitsPerPixel);
-utf8_string error_color_planes(size_t num, int planes);
-utf8_string error_compression(size_t num, Compression);
+
+utf8_string error_color_planes(int planes);
+utf8_string error_color_planes(IconType, Index, int planes);
+
+utf8_string error_compression(Compression);
+utf8_string error_compression(IconType, Index, Compression);
+
 utf8_string error_dir_reserved(int value);
 utf8_string error_image(size_t num);
 utf8_string error_icon_is_cursor();
@@ -36,7 +41,8 @@ utf8_string error_open_file_read(const FilePath&);
 utf8_string error_open_file_write(const FilePath& path);
 utf8_string error_premature_eof(const char* structureName);
 utf8_string error_no_images();
-utf8_string error_truncated_bmp_header(size_t num, int len);
+utf8_string error_truncated_bmp_header(IconType, Index, int len);
+utf8_string error_truncated_bmp_header(int len);
 utf8_string error_bmp_data_ico(size_t num);
 utf8_string error_bmp_data_cur(size_t num);
 utf8_string error_truncated_png_data(const Index&);
