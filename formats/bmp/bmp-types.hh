@@ -57,8 +57,6 @@ enum class Compression : uint32_t {
 // invalid.
 const char* enum_str(Compression);
 
-const int BITMAPINFOHEADER_LENGTH = 40;
-
 class BitmapInfoHeader{
   // A Windows BITMAPINFOHEADER (a.k.a. DIB-header).
 public:
