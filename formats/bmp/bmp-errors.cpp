@@ -194,7 +194,7 @@ utf8_string error_bmp_data_cur(Index num){
 utf8_string error_truncated_png_data(const Index& num){
   return endline_sep("This icon file appears broken.\n",
     "Reading an embedded png-compressed image failed.",
-    lbl_u("Image entry", to_size_t(num) + 1));
+    str_entry(num));
 }
 
 utf8_string error_read_to_offset(Index num, int offset){
