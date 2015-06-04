@@ -178,11 +178,22 @@ T or_throw(const Optional<T>& o, const FUNC& f){
 }
 
 template<typename T>
-T read_struct_or_throw(BinaryReader& in){
+T read_struct_or_throw_ico(BinaryReader& in, IconType type,
+  const Optional<Index>& num={})
+{
+  auto o = read_struct<T>(in);
+  return or_throw(o,
+    [&](){
+      return error_premature_eof_ico(type, StructInfo<T>::StructName(), num);
+    });
+}
+
+template<typename T>
+T read_struct_or_throw_bmp(BinaryReader& in){
   auto o = read_struct<T>(in);
   return or_throw(o,
     [](){
-      return error_premature_eof(StructInfo<T>::StructName());
+      return error_premature_eof_bmp(StructInfo<T>::StructName());
     });
 }
 

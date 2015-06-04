@@ -36,6 +36,17 @@ static const utf8_string str_user(IconType type){
   return "icon";
 }
 
+static utf8_string caption(const utf8_string& start,
+  IconType type,
+  const utf8_string& end)
+{
+  return space_sep(start, str_user(type), end + "\n");
+}
+
+static utf8_string str_entry(Index index){
+  return lbl("Image entry:", str_user(index));
+}
+
 utf8_string error_ico_too_many_images(size_t frames){
   return endline_sep(
     "Too many frames for saving as icon.\n",
@@ -49,10 +60,10 @@ utf8_string error_bitmap_signature(uint16_t v){
       "expected", str_int(v)));
 }
 
-utf8_string error_bits_per_pixel(size_t num, int bitsPerPixel){
+utf8_string error_bits_per_pixel(Index num, int bitsPerPixel){
   return endline_sep(
     "The bits per pixel setting for this icon is not supported by Faint.\n",
-    lbl_u("Image entry", num + 1),
+    str_entry(num),
     lbl("Bits per pixel", bitsPerPixel));
 }
 
@@ -61,18 +72,16 @@ utf8_string lbl_color_planes(int planes){
 }
 
 utf8_string error_color_planes(IconType type, Index num, int planes){
-  auto caption = space_sep("The number of color planes for this",
-    str_user(type),
-    "is not supported is invalid.\n");
-
-  return endline_sep(caption,
-    lbl("Image entry", str_user(num)),
+  return endline_sep(
+    caption("The number of color planes for this", type,
+      "is not supported by Faint."),
+    str_entry(num),
     lbl_color_planes(planes));
 }
 
 utf8_string error_color_planes(int planes){
   return endline_sep(
-    "The number of color planes for this bitmap is not supported is invalid.\n",
+    "The number of color planes for this bitmap is not supported by Faint.\n",
     lbl_color_planes(planes));
 }
 
@@ -88,26 +97,23 @@ utf8_string error_compression(Compression compression){
 }
 
 utf8_string error_compression(IconType type, Index num, Compression compression){
-  auto caption = space_sep("The compression for this",
-    str_user(type),
-    "is not supported by Faint.\n");
-
-  return endline_sep(caption,
-    lbl_u(capitalized(str_user(type)) + "#", num.Get() + 1),
+  return endline_sep(
+    caption("The compression for this", type, "is not supported by Faint."),
+    str_entry(num),
     str_unsupported_compression(compression));
 }
 
-utf8_string error_dir_reserved(int value){
-  return endline_sep("This icon appears broken.\n",
+utf8_string error_dir_reserved(IconType type, int value){
+  return endline_sep(caption("This", type, "appears broken."),
     space_sep("The reserved entry of the IconDir is",
       str_int(value),
       "(expected: 0)"));
 }
 
-utf8_string error_image(size_t num){
-  return endline_sep("This icon appears broken.\n",
-    space_sep("Failed reading the header for image entry",
-      str_uint(num + 1)));
+utf8_string error_image(IconType type, Index num){
+  return endline_sep(
+    caption("This", type, "appears broken."),
+    space_sep("Failed reading the header for image entry", str_user(num)));
 }
 
 utf8_string error_icon_is_cursor(){
@@ -117,7 +123,7 @@ utf8_string error_icon_is_cursor(){
 
 utf8_string error_cursor_is_icon(){
   // Fixme: Consider allowing. Maybe make it a warning
-  return "Error: This supposed cursor file file contains.";
+  return "Error: This supposed cursor file contains icons.";
 }
 
 utf8_string error_open_file_read(const FilePath& path){
@@ -130,9 +136,24 @@ utf8_string error_open_file_write(const FilePath& path){
     lbl("Filename", path.Str()));
 }
 
-utf8_string error_premature_eof(const char* structureName){
-  return endline_sep("This icon appears broken.",
+utf8_string error_premature_eof_ico(IconType type,
+  const utf8_string& structureName,
+  const Optional<Index>& num)
+{
+  auto message = endline_sep(caption("This", type, "appears broken."),
     space_sep("Reading the", structureName, "failed."));
+  return num.Visit(
+    [&](const Index& index){
+      return endline_sep(message, str_entry(index));
+    },
+    [&message](){
+      return message;
+    });
+}
+
+utf8_string error_premature_eof_bmp(const utf8_string& structureName){
+  return endline_sep("This bitmap appears broken.\n"),
+    space_sep("Reading the", structureName, "failed.");
 }
 
 utf8_string error_no_images(){
@@ -158,16 +179,16 @@ utf8_string error_truncated_bmp_header(int len){
     str_bmp_header_mismatch(len));
 }
 
-utf8_string error_bmp_data_ico(size_t num){
+utf8_string error_bmp_data_ico(Index num){
   return endline_sep("This icon file appears broken.\n",
     "Reading the data for a bitmap failed.",
-    lbl_u("Image entry", num + 1));
+    str_entry(num));
 }
 
-utf8_string error_bmp_data_cur(size_t num){
+utf8_string error_bmp_data_cur(Index num){
   return endline_sep("This cursor file appears broken.\n",
     "Reading the data for a bitmap failed.",
-    lbl_u("Image entry", num + 1));
+    str_entry(num));
 }
 
 utf8_string error_truncated_png_data(const Index& num){
@@ -176,10 +197,10 @@ utf8_string error_truncated_png_data(const Index& num){
     lbl_u("Image entry", to_size_t(num) + 1));
 }
 
-utf8_string error_read_to_offset(size_t num, int offset){
+utf8_string error_read_to_offset(Index num, int offset){
   return endline_sep("This icon file appears broken.\n",
     "Seeking to an image offset failed.",
-    lbl_u("Image entry", num),
+    str_entry(num),
     lbl("At", str_hex(offset)));
 }
 

@@ -68,6 +68,10 @@ bool operator<=(const Index& index, size_t rhs){
   return lhs <= rhs;
 }
 
+bool operator>=(const Index& lhs, size_t rhs){
+  return to_size_t(lhs) >= rhs;
+}
+
 Index operator-(const Index& index, size_t rhs){
   size_t lhs = to_size_t(index.Get());
   assert(lhs >= rhs);

@@ -29,6 +29,7 @@
 #include "text/formatting.hh"
 #include "util-wx/encode-bitmap.hh"
 #include "util-wx/stream.hh"
+#include "util/index-iter.hh"
 #include "util/iter.hh"
 
 namespace faint{
@@ -48,12 +49,12 @@ static bool is_png(char* data){
     to_uint(data[7]) == 0x0a;
 }
 
-static bool peek_png_signature(BinaryReader& in, const size_t i){
+static bool peek_png_signature(BinaryReader& in, IconType type, Index i){
   std::streampos oldPos = in.tellg();
   char signature[8];
   in.read(signature, 8);
   if (!in.good() || in.eof()){
-    throw ReadBmpError(error_image(i));
+    throw ReadBmpError(error_image(type, i));
   }
   in.seekg(oldPos);
   return is_png(signature);
@@ -76,18 +77,19 @@ static void test_bitmap_header(IconType type,
 
 static void test_icon_dir_common(const IconDir& dir){
   if (dir.reserved != 0){
-    throw ReadBmpError(error_dir_reserved(dir.reserved));
+    throw ReadBmpError(error_dir_reserved(dir.imageType, dir.reserved));
   }
 }
 
-static auto read_icon_dir_entries(BinaryReader& in, int numIcons){
+static auto read_icon_dir_entries(BinaryReader& in, IconType type, Index numIcons){
   assert(numIcons >= 0);
   std::vector<IconDirEntry> v;
-  v.reserve(numIcons);
-  for (int i = 0; i != numIcons; i++){
-    auto entry = read_struct_or_throw<IconDirEntry>(in);
+  v.reserve(to_size_t(numIcons));
+
+  for (auto i : up_to(numIcons)){
+    auto entry = read_struct_or_throw_ico<IconDirEntry>(in, type, option(i));
     if (!in.good()){
-      throw ReadBmpError(error_premature_eof("ICONDIRENTRY"));
+      throw ReadBmpError(error_premature_eof_ico(type, "ICONDIRENTRY", option(i)));
     }
     v.push_back(entry);
   }
@@ -108,7 +110,7 @@ static Bitmap masked(const Bitmap& bmp, const AlphaMap& mask){
 }
 
 
-auto get_read_pixeldata_func(size_t num, int bitsPerPixel)
+auto get_read_pixeldata_func(const Index num, int bitsPerPixel)
   -> std::function<Optional<Bitmap>(BinaryReader&, const IntSize&)>
 {
   // Returns a function for reading pixeldata of the specified
@@ -207,7 +209,7 @@ static Optional<Bitmap> ico_read_png(BinaryReader& in, int len){
 class Ico{
 public:
   using ResultType = bmp_vec;
-  static auto error_bmp_data(size_t i){
+  static auto error_bmp_data(Index i){
     return error_bmp_data_ico(i);
   }
 
@@ -233,7 +235,7 @@ public:
 class Cur{
 public:
   using ResultType = cur_vec;
-  static auto error_bmp_data(size_t i){
+  static auto error_bmp_data(Index i){
     return error_bmp_data_cur(i);
   }
 
@@ -269,26 +271,34 @@ typename BmpType::ResultType read_or_throw(const FilePath& filePath){
     throw ReadBmpError(error_open_file_read(filePath));
   }
 
-  auto iconDir = read_struct_or_throw<IconDir>(in);
+  auto iconDir = read_struct_or_throw_ico<IconDir>(in,
+    BmpType::type(),
+    no_option());
+
   if (!in.good()){
-    throw ReadBmpError(error_premature_eof("ICONDIR"));
+    throw ReadBmpError(error_premature_eof_ico(BmpType::type(),
+      struct_name<IconDir>(),
+      no_option()));
   }
 
   BmpType::test_icon_dir(iconDir);
-  auto iconEntries(read_icon_dir_entries(in, iconDir.imageCount));
+  auto iconEntries(read_icon_dir_entries(in,
+    BmpType::type(),
+    Index(iconDir.imageCount)));
+
   if (!in.good()){
     throw ReadBmpError("ICONDIRENTRY");
   }
 
   typename BmpType::ResultType bitmaps;
-  for (size_t i = 0; i != iconEntries.size(); i++){
-    IconDirEntry& iconDirEntry = iconEntries[i];
+  for (auto i : up_to(iconEntries.size())){
+    IconDirEntry& iconDirEntry = iconEntries[to_size_t(i)];
     in.seekg(iconDirEntry.offset);
     if (!in.good() || in.eof()){
       throw ReadBmpError(error_read_to_offset(i, iconDirEntry.offset));
     }
 
-    if (peek_png_signature(in, i)){
+    if (peek_png_signature(in, BmpType::type(), i)){
       auto bmp = or_throw(ico_read_png(in, iconDirEntry.bytes),
         [i](){return error_truncated_png_data(Index(i));});
       BmpType::add(bitmaps, std::move(bmp), iconDirEntry);
@@ -298,7 +308,8 @@ typename BmpType::ResultType read_or_throw(const FilePath& filePath){
         return BmpType::error_bmp_data(i);
       };
 
-      auto bmpHeader = read_struct_or_throw<BitmapInfoHeader>(in);
+      auto bmpHeader = read_struct_or_throw_ico<BitmapInfoHeader>(in,
+        BmpType::type(), Index(i));
       test_bitmap_header(BmpType::type(), Index(i), bmpHeader);
       const IntSize imageSize(get_size(iconDirEntry));
 

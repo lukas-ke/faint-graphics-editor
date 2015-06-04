@@ -69,13 +69,13 @@ static Bitmap read_bmp_or_throw(const FilePath& filePath){
     throw ReadBmpError(error_open_file_read(filePath));
   }
 
-  auto bitmapFileHeader = read_struct_or_throw<BitmapFileHeader>(in);
+  auto bitmapFileHeader = read_struct_or_throw_bmp<BitmapFileHeader>(in);
 
   if (bitmapFileHeader.fileType != BITMAP_SIGNATURE){
     throw ReadBmpError(error_bitmap_signature(bitmapFileHeader.fileType));
   }
 
-  auto bitmapInfoHeader = read_struct_or_throw<BitmapInfoHeader>(in);
+  auto bitmapInfoHeader = read_struct_or_throw_bmp<BitmapInfoHeader>(in);
 
   if (invalid_header_length(bitmapInfoHeader.headerLen)){
     throw ReadBmpError(error_truncated_bmp_header(bitmapInfoHeader.headerLen));
