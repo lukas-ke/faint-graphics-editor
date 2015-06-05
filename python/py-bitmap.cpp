@@ -42,11 +42,11 @@ template<>
 struct MappedType<Bitmap&>{
   using PYTHON_TYPE = bitmapObject;
   static Bitmap& GetCppObject(bitmapObject* self){
-    return *self->bmp;
+    return self->bmp;
   }
 
   static bool Expired(bitmapObject* self){
-    return !bitmap_ok(*self->bmp);
+    return !bitmap_ok(self->bmp);
   }
 
   static void ShowError(bitmapObject*){
@@ -63,7 +63,7 @@ static void Bitmap_init(bitmapObject& self,
   const Optional<Paint>& bg)
 {
   try{
-    self.bmp = new Bitmap(size, bg.Or(Paint(color_white)));
+    self.bmp = Bitmap(size, bg.Or(Paint(color_white)));
   }
   catch (const BitmapOutOfMemory&){
     throw MemoryError("Failed allocating memory for Bitmap");
@@ -75,9 +75,19 @@ static utf8_string Bitmap_repr(Bitmap&){
 }
 
 static void Bitmap_dealloc(bitmapObject* self){
-  delete self->bmp;
-  self->bmp = nullptr;
   self->ob_base.ob_type->tp_free((PyObject*)self);
+}
+
+
+/* method: "__copy__()->bmp\nUsed by Python copy.copy"
+name: "__copy__" */
+static Bitmap Bitmap_copy(Bitmap&);
+
+/* method: "copy()->bmp\n
+Returns a copy of the bitmap."
+name: "copy" */
+static Bitmap Bitmap_copy(Bitmap& self){
+  return self;
 }
 
 /* method: "get_raw_rgb_string()->s\n

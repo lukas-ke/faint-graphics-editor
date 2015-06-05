@@ -854,7 +854,7 @@ static Bitmap* as_Bitmap(PyObject* obj, Py_ssize_t n){
     return nullptr;
   }
   bitmapObject* py_bitmap = (bitmapObject*)obj;
-  return py_bitmap->bmp;
+  return &(py_bitmap->bmp);
 }
 
 bool parse_flat(Bitmap& bmp, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
@@ -926,9 +926,14 @@ PyObject* build_result(const Bitmap& bmp){
   };
 
   assert(bitmap_ok(bmp));
-  Bitmap* newBitmap = nullptr;
+
   try{
-    newBitmap = new Bitmap(bmp);
+    bitmapObject* py_bitmap = (bitmapObject*)BitmapType.tp_alloc(&BitmapType, 0);
+    if (py_bitmap == nullptr){
+      return nullptr;
+    }
+    py_bitmap->bmp = bmp;
+    return (PyObject*)py_bitmap;
   }
   catch(const BitmapOutOfMemory&){
     return set_out_of_memory_error();
@@ -936,12 +941,6 @@ PyObject* build_result(const Bitmap& bmp){
   catch(const std::bad_alloc&){
     return set_out_of_memory_error();
   }
-  bitmapObject* py_bitmap = (bitmapObject*)BitmapType.tp_alloc(&BitmapType, 0);
-  if (py_bitmap == nullptr){
-    return nullptr;
-  }
-  py_bitmap->bmp = newBitmap;
-  return (PyObject*)py_bitmap;
 }
 
 PyObject* build_result(const BoundObject<Object>& obj){

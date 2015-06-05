@@ -354,7 +354,7 @@ static void py_blit_bitmap(const Bitmap& src,
   const IntPoint& topLeft,
   bitmapObject*& dst)
 {
-  blit(offsat(src, topLeft), onto(*(dst->bmp)));
+  blit(offsat(src, topLeft), onto(dst->bmp));
 }
 
 /* function: "tool([i])\n

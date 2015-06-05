@@ -15,16 +15,15 @@
 
 #ifndef FAINT_PY_BITMAP_HH
 #define FAINT_PY_BITMAP_HH
+#include "bitmap/bitmap.hh"
 
 namespace faint{
-
-class Bitmap;
 
 extern PyTypeObject BitmapType;
 
 struct bitmapObject{
   PyObject_HEAD
-  Bitmap* bmp;
+  Bitmap bmp;
 };
 
 } // namespace
