@@ -50,6 +50,10 @@ FILE* faint_fopen_write_binary(const FilePath& path){
   return fopen(path.Str().c_str(), "wb");
 }
 
+FILE* faint_fopen_read_binary(const FilePath& path){
+  return fopen(path.Str().c_str(), "rb");
+}
+
 int faint_open(const FilePath& path, int oflag, int pmode){
   return open(path.Str().c_str(), oflag, pmode);
 }

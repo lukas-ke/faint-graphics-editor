@@ -452,7 +452,7 @@ static std::vector<IconDirEntry> create_cursor_dir_entries(const cur_vec& cursor
     entry.bytes = convert(area(bmp.GetSize()) * 4 +
       and_map_bytes(bmp.GetSize()) +
       struct_lengths<BitmapInfoHeader>());
-    entry.offset = offset;
+    entry.offset = convert(offset);
     v.push_back(entry);
     offset += entry.bytes;
   }

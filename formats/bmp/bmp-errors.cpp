@@ -165,7 +165,7 @@ static utf8_string str_bmp_header_mismatch(int len){
   auto headerName = struct_name<BitmapInfoHeader>();
   auto expected = struct_lengths<BitmapInfoHeader>();
   return space_sep(lbl(space_sep(headerName, "length"), len),
-    bracketed(space_sep("expected", str_int(expected))));
+    bracketed(space_sep("expected", str_uint(expected))));
 }
 
 utf8_string error_truncated_bmp_header(IconType type, Index num, int len){

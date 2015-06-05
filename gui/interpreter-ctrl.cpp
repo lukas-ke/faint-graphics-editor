@@ -543,7 +543,8 @@ public:
       return;
     }
 
-    const auto prevChar = GetRange(pos - 1, pos).at(0);
+    // Cast to wxUniChar to avoid potentially expiring wxUniCharRef
+    const auto prevChar = wxUniChar(GetRange(pos - 1, pos).at(0));
 
     if (is_closing_brace(prevChar)){
       const wxString line = GetRange(m_inputStart, pos);
