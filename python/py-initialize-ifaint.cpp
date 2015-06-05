@@ -37,6 +37,7 @@
 #include "util/paint-map.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-parse.hh"
+#include "python/py-clipboard.hh"
 
 namespace faint{
 
@@ -71,21 +72,6 @@ void add_faint_types(PyObject* module){
   PyModule_AddObject(module, "LoadError", get_load_exception_type());
   PyModule_AddObject(module, "SaveError", get_save_exception_type());
 }
-
-static struct PyModuleDef faintInterfaceModule = {
-  PyModuleDef_HEAD_INIT,
-  "ifaint",
-  "ifaint\n\nThe built in functions and classes for faint-graphics-editor.\n",
-  -1, // m_size
-  faint_interface_methods, // m_methods
-  nullptr, // m_reload
-  nullptr, // m_traverse
-  nullptr, // m_clear
-  nullptr, // m_free
-};
-
-static PyObject* ifaintError;
-
 
 static struct PyModuleDef keyModule = {
   PyModuleDef_HEAD_INIT,
@@ -172,6 +158,40 @@ static PyObject* create_modifier_module(){
   return module;
 }
 
+static struct PyModuleDef faintClipboardModule {
+  PyModuleDef_HEAD_INIT,
+  "clipboard",
+  "clipboard\n\nFunctions for accessing the clipboard for copying "
+  "bitmaps and text.",
+  -1, // m_size
+  clipboard_methods, // m_methods
+  nullptr, // m_reload
+  nullptr, // m_traverse
+  nullptr, // m_clear
+  nullptr, // m_free
+};
+
+
+static PyObject* create_clipboard_module(){
+  PyObject* module_clipboard = PyModule_Create(&faintClipboardModule);
+  assert(module_clipboard != nullptr);
+  return module_clipboard;
+}
+
+static struct PyModuleDef faintInterfaceModule = {
+  PyModuleDef_HEAD_INIT,
+  "ifaint",
+  "ifaint\n\nThe built in functions and classes for faint-graphics-editor.\n",
+  -1, // m_size
+  faint_interface_methods, // m_methods
+  nullptr, // m_reload
+  nullptr, // m_traverse
+  nullptr, // m_clear
+  nullptr, // m_free
+};
+
+static PyObject* ifaintError;
+
 PyMODINIT_FUNC PyInit_ifaint(){
   PyObject* module_ifaint = PyModule_Create(&faintInterfaceModule);
   assert(module_ifaint != nullptr);
@@ -187,6 +207,7 @@ PyMODINIT_FUNC PyInit_ifaint(){
   PyModule_AddObject(module_ifaint, "key", create_key_module());
   PyModule_AddObject(module_ifaint, "mod", create_modifier_module());
   PyModule_AddObject(module_ifaint, "png", create_png_module());
+  PyModule_AddObject(module_ifaint, "clipboard", create_clipboard_module());
   return module_ifaint;
 }
 

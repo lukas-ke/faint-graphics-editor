@@ -179,7 +179,7 @@ PyObject* call_cpp_function(const FUNC& f, const Tuple& t){
 template<typename RET, RET Func()>
 PyObject* call_cpp_function(){
   try{
-    build_result(Func());
+    return build_result(Func());
   }
   catch (const PythonError& error){
     return set_error(error);
@@ -187,6 +187,21 @@ PyObject* call_cpp_function(){
   catch (const PresetFunctionError&){
     return nullptr;
   }
+}
+
+// Variant of call_cpp_function which does not catch exceptions.
+//
+// Used by FORWARD_PY, so that manual delegation of PyArg* to
+// functions reveals the exceptions to the user of FORWARD_PY, to
+// allow trying a function with a different signature.
+template<typename Tuple, typename RET, typename FUNC, class HEAD, class... Args>
+PyObject* call_cpp_function_no_catch(PyObject* pyArgs,
+  const FUNC& f,
+  const Tuple& t)
+{
+  Py_ssize_t len = PySequence_Length(pyArgs);
+  Py_ssize_t n = 0;
+  return ArgParse<RET, FUNC, HEAD, Args...>::ParseNext(t, pyArgs, n, len, f);
 }
 
 // -----------------------------------------------------------------------
@@ -252,15 +267,7 @@ struct free_zero_arg_t{
   // Zero arguments, free function
   template<RET Func()>
   static PyObject* PythonFunc(PyObject*, PyObject* /*args*/){
-    try{
-      return build_result(Func());
-    }
-    catch (const PythonError& error){
-      return set_error(error);
-    }
-    catch (const PresetFunctionError&){
-      return nullptr;
-    }
+    return call_cpp_function<RET, Func>();
   }
 };
 
@@ -290,6 +297,18 @@ struct free_n_arg_t{
   static PyObject* PythonFunc(PyObject*, PyObject* args){
     auto t = std::make_tuple();
     return call_cpp_function<decltype(t), RET, std::function<RET(Args...)>, Args...>
+      (args, std::function<RET(Args...)>(Func), t);
+  }
+};
+
+template<typename RET, class...Args>
+struct free_n_arg_no_except_t{
+  // >0 arguments, free function, no exception handling
+
+  template<RET Func(Args...)>
+  static PyObject* PythonFunc(PyObject*, PyObject* args){
+    auto t = std::make_tuple();
+    return call_cpp_function_no_catch<decltype(t), RET, std::function<RET(Args...)>, Args...>
       (args, std::function<RET(Args...)>(Func), t);
   }
 };
@@ -418,6 +437,9 @@ free_zero_arg_t<RET> free_resolve(RET(*func)());
 template<typename RET, class...Args>
 free_n_arg_t<RET, Args...> free_resolve(RET(*func)(Args...));
 
+template<typename RET, class...Args>
+free_n_arg_no_except_t<RET, Args...> free_resolve_no_except(RET(*func)(Args...));
+
 template<typename CLASS_T, typename RET>
 getter_t<CLASS_T, RET> get_resolve(RET(*func)(CLASS_T));
 
@@ -475,6 +497,8 @@ repr_t<PY_CLASS_T> repr_resolve(utf8_string(*func)(PY_CLASS_T));
 
 // For tp_repr
 #define REPR_FORWARDER(CppFunc)(reprfunc)decltype(repr_resolve(CppFunc))::PythonFunc<CppFunc>
+
+#define FORWARD_PY(CppFunc)decltype(free_resolve_no_except(CppFunc))::PythonFunc<CppFunc>
 
 } // namespace
 

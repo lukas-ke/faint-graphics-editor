@@ -849,7 +849,6 @@ bool parse_flat(Settings& s, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
 
 static Bitmap* as_Bitmap(PyObject* obj, Py_ssize_t n){
   if (!PyObject_IsInstance(obj, (PyObject*)&BitmapType)){
-
     PyErr_SetString(PyExc_ValueError, space_sep("Argument", str_ssize_t(n + 1), "must be a Bitmap").c_str()); // Fixme: Prevent overflow
     return nullptr;
   }
@@ -863,7 +862,8 @@ bool parse_flat(Bitmap& bmp, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   scoped_ref ref(PySequence_GetItem(args, n));
   Bitmap* tempBmp = as_Bitmap(ref.get(), n);
   if (tempBmp == nullptr){
-    return false;
+    PyErr_Clear();
+    throw TypeError(TypeName("Bitmap"), n);
   }
   n += 1;
 

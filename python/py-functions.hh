@@ -57,7 +57,6 @@
 #include "util/make-vector.hh"
 #include "util/optional.hh"
 #include "util/settings.hh"
-#include "util-wx/clipboard.hh"
 #include "util-wx/encode-bitmap.hh"
 #include "util-wx/file-path-util.hh"
 #include "util-wx/font.hh"
@@ -126,16 +125,6 @@ static void autosize_raster(BoundObject<ObjRaster>& bound){
 Resizes the object's text box to snugly fit the text." */
 static void autosize_text(BoundObject<ObjText>& bound){
   python_run_command(bound.Plain(), crop_text_region_command(bound.obj));
-}
-
-/* function: "copy_text(s)\n
-Copies s to the clipboard." */
-static void copy_text(const utf8_string& str){
-  Clipboard clipboard;
-  if (!clipboard.Good()){
-    throw OSError("Failed opening clipboard");
-  }
-  clipboard.SetText(str);
 }
 
 /* function: "dialog_color_balance()\n
