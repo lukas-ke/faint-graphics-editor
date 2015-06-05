@@ -50,6 +50,7 @@ const wxEventTypeTag<PythonKeyEvent> EVT_FAINT_PYTHON_KEY(FAINT_PYTHON_KEY);
 
 static const wxString brace_open = "({[";
 static const wxString brace_close = ")}]";
+static const wxString separators = " ([{.";
 
 static bool is_closing_brace(const wxChar& ch){
   return brace_close.find(ch) != wxString::npos;
@@ -537,14 +538,17 @@ public:
     SetStyle(BeginningOfLine(), EndOfLine(), GetDefaultStyle());
   }
 
+  wxUniChar GetChar(long pos) const{
+    return GetRange(pos, pos + 1).at(0);
+  }
+
   void StyleLine(){
     const auto pos = GetInsertionPoint();
     if (pos == 0 || ReadOnly(pos - 1)){
       return;
     }
 
-    // Cast to wxUniChar to avoid potentially expiring wxUniCharRef
-    const auto prevChar = wxUniChar(GetRange(pos - 1, pos).at(0));
+    const auto prevChar = GetChar(pos - 1);
 
     if (is_closing_brace(prevChar)){
       const wxString line = GetRange(m_inputStart, pos);
@@ -623,7 +627,7 @@ private:
 
     wxString text = GetRange(m_inputStart, fromPos);
     // Begin completing from the start of the identifier preceding the caret
-    size_t pos = text.find_last_of(" ([{.");
+    size_t pos = text.find_last_of(separators);
     if (pos != wxString::npos){
       text = text.substr(pos + 1, text.size() - pos);
     }
