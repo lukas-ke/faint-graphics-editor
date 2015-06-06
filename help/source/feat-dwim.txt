@@ -18,7 +18,7 @@ withbind:dwim();
 A DWIM-command can be undone and redone like other commands.
 
 == DWIM:able commands ==
-* \ref(auto_crop,Auto Crop) (\ref(feat-dwim-auto-crop.txt))
+* \ref(auto-crop,Auto Crop) (\ref(feat-dwim-auto-crop.txt))
 * \ref(feat-delete.txt) (\ref(feat-dwim-delete.txt))
 * Resize (\ref(feat-dwim-resize.txt))
 * Rotate (\ref(feat-dwim-rotate.txt))

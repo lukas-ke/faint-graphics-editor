@@ -5,7 +5,7 @@ These help topics will familiarize you with the basics of Faint, and
 especially things that may be different from other graphics
 editors.
 
-You are recommended to at least read \ref(rasterandobject), to use
-Faint effectively.
+You are recommended to at least read \ref(raster-and-object), to use
+Faint effectively. \ref(math-entry-fields)
 
 \child_summary

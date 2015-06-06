@@ -13,7 +13,7 @@ Cropping shrinks the image or certain selected objects.
 == Details ==
 There are three cropping methods: auto crop, crop to raster selection and crop objects.
 
-=== Auto crop {auto_crop} ===
+=== Auto crop {auto-crop} ===
 If no selection is active, the image is cropped automatically by
 removing contiguous colors from the edges.
 

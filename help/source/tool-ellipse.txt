@@ -1,7 +1,7 @@
 page:"Ellipse"
 summary:"Draw Ellipses"
 
-= \graphic(tool-ellipse.png) Ellipse (or circle) {tool_ellipse} =
+= \graphic(tool-ellipse.png) Ellipse (or circle) {tool-ellipse} =
 The Ellipse tool Draws ellipses or adds ellipse objects.
 
 *Settings*

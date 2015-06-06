@@ -10,7 +10,7 @@ different color.
 ||Before boundary fill||After boundary fill||
 
 == Using the fill tool ==
-The \ref(tool_fill,fill tool) performs a boundary fill if Shift is held.
+The \ref(tool-fill,fill tool) performs a boundary fill if Shift is held.
 
 == Using Python ==
 ||boundary_fill( (x,y), fill, boundary_color)||Boundary fill originating at x,y||

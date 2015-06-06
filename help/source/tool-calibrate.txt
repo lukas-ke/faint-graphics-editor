@@ -1,13 +1,13 @@
 page:"Calibrate"
 summary:"Convert pixels to measurements"
 
-= \graphic(tool-calibrate.png) Calibrate {tool_calibrate} =
+= \graphic(tool-calibrate.png) Calibrate {tool-calibrate} =
 The calibration tool is used to specify a distance in the image for
 calibrating the coordinate system.
 
 The calibration can be used to show measures of objects using
 \ref(ref-text-expressions.txt,text expressions) or the
-\ref(tool_tape_measure,tape measure tool).
+\ref(tool-tape-measure,tape measure tool).
 
 \image(tool-calibrate-example.png)
 

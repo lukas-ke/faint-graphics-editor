@@ -1,7 +1,7 @@
 page:"Picker"
 summary:"Select colors or patterns from the image"
 
-= \graphic(tool-picker.png) Color picker {tool_picker} =
+= \graphic(tool-picker.png) Color picker {tool-picker} =
 The color picker is used to select colors from the image. Use the left
 mouse button to use the targeted color as foreground color, and the
 right mouse button to use it as the background color. The color picker

@@ -17,11 +17,11 @@ Objects can be selected, and can then be adjusted. For an introduction, see
 * *Python*: select(objects)
 
 == Select specific object ==
-* *Tool*: Use the \ref(tool_object_selection,object selection tool)
+* *Tool*: Use the \ref(tool-object-selection,object selection tool)
 * *Python*: select('obj')
 
 == Deselect specific object ==
-* *Tool*: Use the \ref(tool_object_selection,selection tool)
+* *Tool*: Use the \ref(tool-object-selection,selection tool)
 * *Python*: deselect('obj')
 
 = Python notes =

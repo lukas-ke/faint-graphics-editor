@@ -5,7 +5,7 @@ summary:"Python function for clamping the raster selection to content"
 
 = Shrink selection =
 Shrinks the \ref(feat-raster-selection.txt,raster selection) to
-content, similar to an \ref(auto_crop,auto crop), but only for adjusting
+content, similar to an \ref(auto-crop,auto crop), but only for adjusting
 the selection.
 
 ||\image(feat-shrink-selection-pre.png)||\image(feat-shrink-selection-post.png)||

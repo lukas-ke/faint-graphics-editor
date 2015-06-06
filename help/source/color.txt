@@ -15,9 +15,9 @@ Single-click either the primary or the secondary color in the selected
 color control to adjust the color freely in the
 \ref(gui-color-selection-dialog.txt). Double click a color in the palette
 to adjust it with the color selection dialog. Colors can also be
-selected in an image, using the \ref(tool_picker).
+selected in an image, using the \ref(tool-picker).
 
-== Alpha {color_rgba} ==
+== Alpha {color-rgba} ==
 Faint uses RGBA-colors. That is, colors are defined by their relative
 amounts of red, green and blue with an additional 'alpha component'
 controlling the degree of translucency. With an alpha of 0, a color is
@@ -34,7 +34,7 @@ pattern is visible in the image, it means that the image will be
 partially transparent in that area (if saved to a
 \ref(formats.txt,file format) that supports alpha).
 
-== Gradients {color_gradient} ==
+== Gradients {color-gradient} ==
 Gradient transitions can be used as the primary or secondary "color".
 Faint indicates a gradient color item in the palette or as a selected color
 by rendering the gradient, like this: \image(color-gradient-icon.png) \br
@@ -45,13 +45,13 @@ by rendering the gradient, like this: \image(color-gradient-icon.png) \br
 Gradients can be configured in the \ref(gui-color-selection-dialog.txt) or
 using the Python-function 'set_fg'.
 
-== Patterns {color_pattern} ==
+== Patterns {color-pattern} ==
 Image patterns can be used instead of colors. Faint indicates patterns
 with this icon: \image(color-pattern-icon.png) \br
 
 Patterns are repeated where drawn, and can also be used for various
 image effects. Use the \ref(gui-color-selection-dialog.txt) or the
-\ref(tool_picker) to select an image to use as a pattern.
+\ref(tool-picker) to select an image to use as a pattern.
 ||\image(color-draw-with-pattern.png)||
 ||'Drawing with a pattern'||
 
@@ -60,4 +60,4 @@ as the pattern, the image state is stored as a color and can be
 selectively reverted using any of the drawing tools.
 
 || \image(color-selective-resaturation.png)||
-|| Desaturated image with color redrawn with the \ref(tool_brush,brush tool). ||
+|| Desaturated image with color redrawn with the \ref(tool-brush,brush tool). ||

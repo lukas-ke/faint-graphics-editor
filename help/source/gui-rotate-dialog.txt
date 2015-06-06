@@ -19,7 +19,7 @@ function withbind:dialog_rotate();
 ||\graphic(rotate-dialog-flip-vertical.png)|| /W/ || Flip (mirror) vertically ||
 ||\graphic(rotate-dialog-rotate-next.png)|| /E/ || Continues to the rotation options ||
 ||\graphic(rotate-dialog-rotate.png)|| /E/ || (..after continuing) rotates the specified number of degrees ||
-||\graphic(tool-level.png)|| /H/ || Selects the \ref(tool_level,level tool) and closes the dialog ||
+||\graphic(tool-level.png)|| /H/ || Selects the \ref(tool-level,level tool) and closes the dialog ||
 
 ---
 See also:

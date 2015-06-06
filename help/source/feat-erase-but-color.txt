@@ -5,7 +5,7 @@ summary:"Python function for clearing all colors except one"
 Replaces all colors, except a specified color, in an image.
 
 == Using the fill tool ==
-The \ref(tool_fill,fill tool) replaces all colors other than the clicked
+The \ref(tool-fill,fill tool) replaces all colors other than the clicked
 color if Ctrl+Shift is held.
 
 == Using Python ==

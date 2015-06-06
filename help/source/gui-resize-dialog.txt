@@ -12,7 +12,7 @@ To open the resize dialog use Image->Resize... (Ctrl+E) or the Python function w
 ||\image(gui-resize-dialog-image.png)||
 || /The standard resize dialog/ ||
 
-||\image(icon-info.png)||The width and height fields allow math, \ref(math_entry_fields,try it out!)||
+||\image(icon-info.png)||The width and height fields allow math, \ref(math-entry-fields,try it out!)||
 
 || *Element* || *Quick key* || *Description* ||
 || Proportional || P || When enabled and the width or the height is changed, the opposite parameter is updated to keep the relation intact. ||
@@ -27,7 +27,7 @@ To open the resize dialog use Image->Resize... (Ctrl+E) or the Python function w
 When no selection is active, the resize dialog will affect the
 entire image.
 
-== Math entry fields {math_entry_fields} ==
+== Math entry fields {math-entry-fields} ==
 The width and height entry fields support simple math expressions and specifying percentages. Some examples:
 || *Expression* || *Meaning* ||
 ||600 + 10||The width or height will be set to 610||

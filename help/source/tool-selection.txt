@@ -5,12 +5,12 @@ summary:"Tool for selecting objects or regions in the image"
 The selection tool is used for selecting raster areas when in the
 raster-layer or objects when in the object-layer.
 
-== Raster selection {tool_raster_selection} ==
+== Raster selection {tool-raster-selection} ==
 When the raster layer is active, the Selection tool selects and moves
 areas in the image. Many commands behave differently when a selection
 is active. For example, the "Crop" command will crop the image to the
 selection if there is one, otherwise the command will perform an
-\ref(auto_crop,auto crop).
+\ref(auto-crop,auto crop).
 
 *Settings*
 ||\graphic(choice-transparent.png)|| Transparent background: The selected background color will not be transferred when the selection is moved. ||
@@ -24,7 +24,7 @@ selection if there is one, otherwise the command will perform an
 ||\image(icon-info.png)|| Use Ctrl+Right-Click inside the selection to quickly pick a color to treat as transparent. Ctrl+Right-Click outside to select Opaque background. ||
 || || See \ref(feat-dwim-delete.txt) for a quick way to clear an area with the surrounding color ||
 
-== Object selection {tool_object_selection} ==
+== Object selection {tool-object-selection} ==
 When the object layer is active, the Selection tool is used to select,
 move, resize, rotate and otherwise adjust objects.
 

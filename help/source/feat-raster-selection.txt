@@ -13,7 +13,7 @@ rotated.
 * *Menu* (in Raster mode): Edit->Select All (Ctrl+A)
 
 == Select specific region ==
-* *Tool*: Use the \ref(tool_raster_selection,selection tool)
+* *Tool*: Use the \ref(tool-raster-selection,selection tool)
 * *Python* set_selection('rect')
 
 ---

@@ -9,7 +9,7 @@ Replaces a contiguous area of one color with a different color
 ||Before flood fill||After flood fill||
 
 == Using the fill tool ==
-The \ref(tool_fill,fill tool) flood fills from the click position.
+The \ref(tool-fill,fill tool) flood fills from the click position.
 
 == Using Python ==
 ||image.fill((x,y), paint)||Flood fill originating at x,y using the specified color, pattern or gradient.||

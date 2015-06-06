@@ -3,18 +3,18 @@ summary:"Calibrated image measures"
 
 = Calibration =
 Images can be calibrated using the
-\ref(tool_calibrate, calibration tool)
+\ref(tool-calibrate, calibration tool)
 to provide other units than pixels for the
-\ref(tool_tape_measure, tape-measure tool) or
+\ref(tool-tape-measure, tape-measure tool) or
 \ref(ref-text-expressions.txt,text expressions).
 
 == Use in text objects ==
-The calibrated area of a \ref(naming_objects,named) rectangle object shown in a
+The calibrated area of a \ref(naming-objects,named) rectangle object shown in a
 \ref(ref-text-expressions.txt, text object):
 
 \image(calibrated-area-name.png) \image(calibrated-area-edited.png) \image(calibrated-area-done.png)
 
 == Use with tape measure tool ==
-A calibrated reading with the \ref(tool_tape_measure,tape-measure) tool:
+A calibrated reading with the \ref(tool-tape-measure,tape-measure) tool:
 
 \image(tape-measure-mm.png)

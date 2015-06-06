@@ -4,9 +4,9 @@ summary:"Methods for resizing objects"
 \image(feat-icon-object.png) \image(feat-icon-tool.png) \image(feat-icon-dialog.png) \image(feat-icon-scriptable.png)
 
 = Resize objects =
-Objects in Faint can be resized with the \ref(feat_resize_objects_tool,object selection tool), the \ref(feat_resize_objects_dialog,resize dialog) or \ref(feat_resize_objects_scripting,scripting).
+Objects in Faint can be resized with the \ref(feat-resize-objects-tool,object selection tool), the \ref(feat-resize-objects-dialog,resize dialog) or \ref(feat-resize-objects-scripting,scripting).
 
-== Using the Object Selection tool {feat_resize_objects_tool} ==
+== Using the Object Selection tool {feat-resize-objects-tool} ==
 When the object selection tool is active, and objects are selected,
 handles for resizing are shown at the object bounding box.  To use the
 handles for resizing diagonally, click them and drag:
@@ -36,13 +36,13 @@ Image aligned resizing, unless proportional, will \ref(feat-skew.txt,skew) rotat
 ||\image(key-ctrl.png)||Hold while resizing to snap the handle to other objects or the grid||
 ||\image(mouse-right.png)||Right click inside objects to toggle alignment||
 
-== Using the resize dialog {feat_resize_objects_dialog} ==
+== Using the resize dialog {feat-resize-objects-dialog} ==
 The \ref(gui-resize-dialog.txt) resizes selected objects when
 object mode is active.
 
 \image(gui-resize-dialog-objects.png)
 
-== Scripting {feat_resize_objects_scripting} ==
+== Scripting {feat-resize-objects-scripting} ==
 The \ref(py-something.txt,set_tri) method of objects can be used to set their
 size (as well as position and rotation).
 ---

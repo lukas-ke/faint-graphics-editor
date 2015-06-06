@@ -4,7 +4,7 @@ summary:"Class representing linear gradients"
 = LinearGradient =
 \image(py-detached-copy.png)
 
-The LinearGradient class represents linear color \ref(color_gradient,gradients).
+The LinearGradient class represents linear color \ref(color-gradient,gradients).
 
 == LinearGradient methods ==
 \include(generated/py-linear-gradient-methods.txt)

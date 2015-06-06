@@ -19,7 +19,7 @@ The following expressions require parameters and are replaced by the result
 of some look-up.
 
 Expressions that refer to objects require an
-\ref(naming_objects,object name) as the first parameter.
+\ref(naming-objects,object name) as the first parameter.
 
 The expressions that require a unit support "px", or "px2" for areas.
 
