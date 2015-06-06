@@ -21,8 +21,8 @@ and adds them to to a PyMethodDef list saved to a new file.
 
 """
 import re
+from operator import itemgetter
 import os
-
 import build_sys.util.util as util
 
 
@@ -321,7 +321,7 @@ def _write_method_doc(file_name, entries):
     with open(file_name, 'w', newline='\n') as f:
         f.write('<table border="0">')
         f.write('<tr><td><b>Method</b></td><td><b>Description</b></td></tr>')
-        for items in entries:
+        for items in sorted(entries, key=itemgetter(3)):
             f.write('<tr><td valign="top">%s</td><td>%s</td></tr>' %
                     (items[3], _doc_to_html(items[4])))
         f.write('</table>')
