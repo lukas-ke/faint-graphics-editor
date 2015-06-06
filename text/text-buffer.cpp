@@ -165,7 +165,7 @@ utf8_string TextBuffer::get_selection() const{
 void TextBuffer::insert(const utf8_char& c){
   del_selection();
   m_data.insert(m_caret, 1, c);
-  m_caret+=1;
+  m_caret += 1;
 }
 
 void TextBuffer::insert(const utf8_string& str){
@@ -217,7 +217,6 @@ void TextBuffer::set(const utf8_string& s){
   m_data = s;
   select_none();
   m_caret = std::min(m_caret, m_data.size());
-
 }
 
 size_t TextBuffer::size() const{
