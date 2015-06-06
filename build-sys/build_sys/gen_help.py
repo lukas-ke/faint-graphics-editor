@@ -192,6 +192,13 @@ def parse_page_title(line):
     return line.split(":")[1].strip()[1:-1]
 
 
+def strip_final_paragraph(doc):
+    if doc[-1].__class__ == Paragraph:
+        # Strip paragraphs at the end
+        return doc[:-1]
+    return doc
+
+
 def parse_file(filename, prev, next, state):
     text = read_file(filename)
 
@@ -227,6 +234,7 @@ def parse_file(filename, prev, next, state):
         if verbatim:
             if line.strip() == "}}}":
                 verbatim = False
+
             else:
                 doc.append(Text(line))
             continue
@@ -283,6 +291,8 @@ def parse_file(filename, prev, next, state):
 
         if line.strip() == "":
             doc.append(Paragraph())
+
+        if line == chr(10):
             continue
 
         m = table_row.match(line)
@@ -326,6 +336,8 @@ def parse_file(filename, prev, next, state):
                 doc.append(VerbatimInclude(item[13:]))
             else:
                 doc.append(to_object(state, item))
+
+    doc = strip_final_paragraph(doc)
 
     if next is not None:
         doc.append(Footer(next, next.replace(".txt", ".html")))
