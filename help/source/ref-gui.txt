@@ -1,4 +1,4 @@
 page:"User Interface Reference"
 
 = User interface reference =
-child_summary
+\child_summary

@@ -8,4 +8,4 @@ editors.
 You are recommended to at least read \ref(rasterandobject), to use
 Faint effectively.
 
-child_summary
+\child_summary

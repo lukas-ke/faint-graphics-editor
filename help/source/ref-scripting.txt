@@ -8,4 +8,4 @@ interface for programatically drawing and customizing Faint. This interface is u
 This is a reference section, for an introduction to scripting in
 Faint, see instead \ref(scripting-intro.txt).
 
-child_summary
+\child_summary

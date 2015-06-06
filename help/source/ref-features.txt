@@ -4,7 +4,7 @@ page:"Feature Reference"
 This section is an attempt to describe all functionality in Faint as
 separate items, ordered alphabetically.
 
-The entries describe the various options for using a feature, be it
+The entries describe the various ways of using a feature such as
 dialogs, tools or scripting.
 
-child_summary
+\child_summary

@@ -30,7 +30,7 @@ re_comment = re.compile(r'#.*')
 re_summary = re.compile('^summary\:"(.+)"$')
 
 # Instruction to summarize child pages
-re_summarize_children = re.compile('^child_summary$')
+re_summarize_children = re.compile(r'^\\child_summary$')
 
 # Label for cross-referencing
 label = re.compile("^label\:(.*?)$")
