@@ -53,6 +53,7 @@ public:
     const select_added& select,
     const deselect_old& deselect) override
   {
+    assert(z >= 0);
     m_frame->Add(obj, z);
     if (select.Get()){
       m_canvas.SelectObject(obj, deselect);

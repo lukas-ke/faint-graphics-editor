@@ -35,15 +35,16 @@ public:
   {}
 
   void Do(CommandContext& context) override{
+    // Only select the added object on the first run, never on redo.
+    const auto select = select_added(then_false(m_select));
+
     m_z.Visit(
       [&](int z){
         // Insert at the given z-index
-        context.Add(m_object.get(), z, select_added(then_false(m_select)),
-          deselect_old(false));
+        context.Add(m_object.get(), z, select, deselect_old(false));
       },
       [&](){
-        context.Add(m_object.get(), select_added(then_false(m_select)),
-          deselect_old(false));
+        context.Add(m_object.get(), select, deselect_old(false));
       });
   }
 
