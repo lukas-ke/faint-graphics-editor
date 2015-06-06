@@ -308,12 +308,15 @@ class Reference:
     def to_html(self, state, **kwArgs):
         if self.target_label is None:
             self.target_label = self.state.labels.get(self.name, None)
+
         if self.target_label is None:
             raise(ContentError("Undefined label: %s" % self.name))
+
         if self.custom_label is not None:
             title = self.custom_label
         else:
             title = self.target_label.title
+
         return '<a href="%s">%s</a>' % (self.target_label.url, title)
 
 
@@ -390,11 +393,27 @@ class Tagged:
 
 
 class Title:
-    def __init__(self, text, level):
+    def __init__(self, text, level, label):
         self.text = text
         self.level = level
+        self.label = label
+
     def to_html(self, state, **kwArgs):
+        return self._within_label(self._format_heading())
+
+    def _within_label(self, text):
+        if self.label is not None:
+            return '<a name="%s">%s</a>' % (self.label, text)
+        return text
+
+    def _format_label(self):
+        if self.label is None:
+            return ""
+        return
+
+    def _format_heading(self):
         return "<h%d>%s</h%d>" % (self.level, self.text, self.level)
+
     def __repr__(self):
         return "Title"
 

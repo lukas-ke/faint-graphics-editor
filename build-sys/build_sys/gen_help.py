@@ -68,19 +68,28 @@ class ParseState:
         return "map%d" % self.map_num
 
 
-def match_title(state, line):
-    """Returns a match object if the line is matched by any title regex,
-    otherwise None.
+def match_title(state, line, target_file_name):
+    """Returns a tuple of the content, level and label if the line is
+    matched by any title regex, otherwise None.
 
     """
     for num, title in enumerate([title1, title2, title3]):
         match = title.match(line)
         if match:
             # Parse the title label (to support images and such)
+
+            raw_title_content = match.group(1)
+
             title_content = "".join([item.to_html(state) for item in
-                                parse_rest(state, match.group(1))])
+                                parse_rest(state, match.group(1))]).strip()
+
             heading_level = num + 1
-            return title_content, heading_level
+            label = match.group(2)
+            if label is not None:
+                state.labels[label] = Label(label, title_content,
+                                            target_file_name + "#" + label)
+            return title_content, heading_level, label
+
     return None
 
 
@@ -240,9 +249,9 @@ def parse_file(filename, prev, next, state):
         if m is not None:
             doc.append(HR())
             continue
-        m = match_title(state, line)
+        m = match_title(state, line, target_filename)
         if m is not None:
-            last_title = Title(m[0], m[1])
+            last_title = Title(m[0], m[1], m[2])
             doc.append(last_title)
             continue
         m = bullet.match(line)

@@ -18,9 +18,10 @@
 import re
 
 # Section-title regexes
-title1 = re.compile("^= (.*) =$")
-title2 = re.compile("^== (.*) ==$")
-title3 = re.compile("^=== (.*) ===$")
+title_content = " (.*?)(?:\{(.*?)\})? "
+title1 = re.compile("^=%s=$" % title_content)
+title2 = re.compile("^==%s==$" % title_content)
+title3 = re.compile("^===%s===$" % title_content)
 
 # Comment to end of line
 re_comment = re.compile(r'#.*')
