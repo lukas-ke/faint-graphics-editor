@@ -13,8 +13,8 @@ Cropping shrinks the image or certain selected objects.
 == Details ==
 There are three cropping methods: auto crop, crop to raster selection and crop objects.
 
-label:auto_crop
-*Auto crop:* If no selection is active, the image is cropped automatically by
+=== Auto crop {auto_crop} ===
+If no selection is active, the image is cropped automatically by
 removing contiguous colors from the edges.
 
 || \image(feat-autocrop-pre.png)||\image(feat-autocrop-post.png)||
@@ -22,13 +22,15 @@ removing contiguous colors from the edges.
 Auto-crop supports \ref(feat-dwim-auto-crop.txt,DWIM) after
 cropping ambiguously.
 
-*Crop to raster selection:* Crop will remove everything outside the selection.
+=== Crop to raster selection ===
+Crop will remove everything outside the selection.
 
 ||\image(feat-crop-raster-pre.png)||\image(feat-crop-raster-post.png)||
 || A raster selection is active || Ctrl+Alt+C crops away everything outside the selection ||
 
-*Crop objects:* Crop will be performed on each object if used with an
-object selection. Object crop is supported by Text Regions and Raster
+=== Crop objects ===
+Crop will be performed on each object if used with an object
+selection. Object crop is supported by Text Regions and Raster
 Objects.
 
 ||\image(feat-crop-objects-pre.png)||\image(feat-crop-objects-post.png)||

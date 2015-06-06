@@ -1,8 +1,7 @@
 page:"Fill"
 summary:"Fill regions or replace colors"
 
-= \graphic(tool-floodfill.png) Fill =
-label:tool_fill
+= \graphic(tool-floodfill.png) Fill {tool_fill} =
 The fill tool replaces the color in a contiguous area with the current
 primary or secondary color. It can also be used to replace a color in
 the entire image or all colors within a bounding color.

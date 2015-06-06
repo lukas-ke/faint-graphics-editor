@@ -1,9 +1,7 @@
 page:"Level"
 summary:"Tool aligning the image horizon"
 
-= \graphic(tool-level.png) Level =
-label:tool_level
-
+= \graphic(tool-level.png) Level {tool_level} =
 The level tool is used to straighten rotated images, or to align
 multiple images. The level tool is selected in the
 \ref(gui-rotate-dialog.txt).

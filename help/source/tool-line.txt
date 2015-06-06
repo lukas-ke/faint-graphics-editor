@@ -1,8 +1,7 @@
 page:"Line"
 summary:"Draw lines"
 
-= \graphic(tool-line.png) Line =
-label:tool_line
+= \graphic(tool-line.png) Line {tool_line} =
 The line tool is used to draw lines.
 
 *Settings*

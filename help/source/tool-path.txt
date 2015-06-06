@@ -1,9 +1,9 @@
 page:"Path"
 summary:"Draws arbitrary shape outlines"
 
-= \graphic(tool-path.png) Path =
-label:tool_path
-The path tool is used to draw arbitrary shape outlines. It is similar to \ref(tool-polygon.txt), but allows curved segments.
+= \graphic(tool-path.png) Path {tool_path} =
+The path tool is used to draw arbitrary shape outlines. It is similar
+to \ref(tool-polygon.txt), but allows curved segments.
 
 *Settings*
 ||\image(linewidth.png)|| Line Width || The width of the polygon edge ||

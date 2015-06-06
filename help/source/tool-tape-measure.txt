@@ -1,8 +1,7 @@
 page:"Tape measure"
 summary:"Show measurements in the image"
 
-= \graphic(tool-tape-measure.png) Tape measure =
-label:tool_tape_measure
+= \graphic(tool-tape-measure.png) Tape measure {tool_tape_measure} =
 The tape measure tool is used to read out measurements from an image.
 
 The tool provides either pixel measures or

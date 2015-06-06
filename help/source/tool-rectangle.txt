@@ -1,8 +1,7 @@
 page:"Rectangle"
 summary:"Draw rectangles"
 
-= \graphic(tool-rectangle.png) Rectangle =
-label:tool_rectangle
+= \graphic(tool-rectangle.png) Rectangle {tool_rectangle} =
 *Settings*
 ||\image(linewidth.png)|| Line Width ||
 ||\graphic(linestyle-solid.png) \graphic(linestyle-long-dash.png)|| Line Style ||

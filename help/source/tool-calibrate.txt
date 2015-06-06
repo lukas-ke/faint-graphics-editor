@@ -1,8 +1,7 @@
 page:"Calibrate"
 summary:"Convert pixels to measurements"
 
-= \graphic(tool-calibrate.png) Calibrate =
-label:tool_calibrate
+= \graphic(tool-calibrate.png) Calibrate {tool_calibrate} =
 The calibration tool is used to specify a distance in the image for
 calibrating the coordinate system.
 

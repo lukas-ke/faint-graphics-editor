@@ -1,8 +1,7 @@
 page:"Pen"
 summary:"Tool for single-pixel free-hand drawing"
 
-= \graphic(tool-pen.png) Pen =
-label:tool_pen
+= \graphic(tool-pen.png) Pen {tool_pen} =
 The pen tool is used for single pixel thick free hand drawing. The pen
 is active while a mouse button is held. The left mouse button draws
 using the foreground color, the right mouse button draws using the

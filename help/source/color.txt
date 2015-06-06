@@ -17,8 +17,7 @@ color control to adjust the color freely in the
 to adjust it with the color selection dialog. Colors can also be
 selected in an image, using the \ref(tool_picker).
 
-== Alpha ==
-label:color_rgba
+== Alpha {color_rgba} ==
 Faint uses RGBA-colors. That is, colors are defined by their relative
 amounts of red, green and blue with an additional 'alpha component'
 controlling the degree of translucency. With an alpha of 0, a color is
@@ -35,8 +34,7 @@ pattern is visible in the image, it means that the image will be
 partially transparent in that area (if saved to a
 \ref(formats.txt,file format) that supports alpha).
 
-== Gradients ==
-label:color_gradient
+== Gradients {color_gradient} ==
 Gradient transitions can be used as the primary or secondary "color".
 Faint indicates a gradient color item in the palette or as a selected color
 by rendering the gradient, like this: \image(color-gradient-icon.png) \br
@@ -47,8 +45,7 @@ by rendering the gradient, like this: \image(color-gradient-icon.png) \br
 Gradients can be configured in the \ref(gui-color-selection-dialog.txt) or
 using the Python-function 'set_fg'.
 
-== Patterns ==
-label:color_pattern
+== Patterns {color_pattern} ==
 Image patterns can be used instead of colors. Faint indicates patterns
 with this icon: \image(color-pattern-icon.png) \br
 

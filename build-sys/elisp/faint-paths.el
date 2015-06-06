@@ -34,6 +34,10 @@
   (interactive "sSearch term: ")
   (browse-url (concat "http://docs.wxwidgets.org/trunk/search.php?query=" term)))
 
-(defun faint-search (term)
+(defun faint-search-cpp (term)
   (interactive "sSearch term: ")
   (grep (concat "findstr /n /S " term " *.cpp")))
+
+(defun faint-search-txt (term)
+  (interactive "sSearch term: ")
+  (grep (concat "findstr /n /S " term " *.txt")))

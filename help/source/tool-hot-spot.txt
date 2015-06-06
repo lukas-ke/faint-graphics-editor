@@ -1,9 +1,7 @@
 page:"Hot Spot"
 summary:"Tool for setting the hot-spot (image anchor)"
 
-= \graphic(tool-hot-spot.png) Hot spot =
-label:tool_hot_spot
-
+= \graphic(tool-hot-spot.png) Hot spot {tool_hot_spot} =
 The hot spot tool is used to specify the image "hot spot", which is
 typically an anchor point.
 

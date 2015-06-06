@@ -1,8 +1,7 @@
 page:"Text"
 summary:"Add text"
 
-= \graphic(tool-text.png) Text =
-label:tool_text
+= \graphic(tool-text.png) Text {tool_text} =
 The text tool adds a text box for either static text or editable text
 objects. To create a text box, click in the image and drag to create a
 box, then enter text with the keyboard. To stop entering text, use the
