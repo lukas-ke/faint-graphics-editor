@@ -656,7 +656,7 @@ Command* get_replace_object_command(const OldObject& oldWrap,
   Object* old(oldWrap.Get());
   auto z = image.GetObjectZ(old);
   Command* removeCommand = delete_object_command(old, z, "");
-  Command* insertCommand = add_object_command(newObject, selectAdded, z, "");
+  Command* insertCommand = insert_object_command(newObject, selectAdded, z, "");
 
   return command_bunch(CommandType::OBJECT,
     bunch_name(space_sep(old->GetType(), "to", newObject->GetType())),

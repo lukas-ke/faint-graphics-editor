@@ -25,24 +25,26 @@ class AddObjectCommand : public Command {
 public:
   AddObjectCommand(Object* object,
     const select_added& select,
-    const utf8_string& name,
-    int z)
+    const Optional<int>& z,
+    const utf8_string& name)
     : Command(CommandType::OBJECT),
+      m_name(name),
       m_object(object),
       m_select(select.Get()),
-      m_name(name),
       m_z(z)
   {}
 
   void Do(CommandContext& context) override{
-    if (m_z == -1){
-      context.Add(m_object.get(), select_added(then_false(m_select)),
-        deselect_old(false));
-    }
-    else{
-      context.Add(m_object.get(), m_z, select_added(then_false(m_select)),
-        deselect_old(false));
-    }
+    m_z.Visit(
+      [&](int z){
+        // Insert at the given z-index
+        context.Add(m_object.get(), z, select_added(then_false(m_select)),
+          deselect_old(false));
+      },
+      [&](){
+        context.Add(m_object.get(), select_added(then_false(m_select)),
+          deselect_old(false));
+      });
   }
 
   void Undo(CommandContext& context) override{
@@ -54,26 +56,26 @@ public:
   }
 
 private:
+  utf8_string m_name;
   std::unique_ptr<Object> m_object;
   bool m_select;
-  utf8_string m_name;
-  int m_z;
+  Optional<int> m_z;
 };
 
 Command* add_object_command(Object* obj,
   const select_added& selectAdded,
   const utf8_string& name)
 {
-  return new AddObjectCommand(obj, selectAdded, name, -1);
+  return new AddObjectCommand(obj, selectAdded, no_option(), name);
 }
 
-Command* add_object_command(Object* obj,
+Command* insert_object_command(Object* obj,
   const select_added& selectAdded,
   int z,
   const utf8_string& name)
 {
-  assert(z >= -1);
-  return new AddObjectCommand(obj, selectAdded, name, z);
+  assert(z >= 0);
+  return new AddObjectCommand(obj, selectAdded, option(z), name);
 }
 
 } // namespace
