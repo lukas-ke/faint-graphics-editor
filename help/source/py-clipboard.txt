@@ -3,8 +3,8 @@ summary:"Module with clipboard methods"
 
 = clipboard =
 
-The 'faint.clipboard' module contains functions for storing and
-retrieving text or bitmaps to the clipboard.
+The 'faint.clipboard module contains functions for clipboard storing and
+retrieval of text and bitmaps.
 
 == Functions ==
 \include(generated/py-clipboard-methods.txt)

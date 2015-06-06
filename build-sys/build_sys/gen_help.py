@@ -76,8 +76,11 @@ def match_title(state, line):
     for num, title in enumerate([title1, title2, title3]):
         match = title.match(line)
         if match:
-            return "".join([item.to_html(state) for item in parse_rest(state,
-                                                                  match.group(1))]), num + 1
+            # Parse the title label (to support images and such)
+            title_content = "".join([item.to_html(state) for item in
+                                parse_rest(state, match.group(1))])
+            heading_level = num + 1
+            return title_content, heading_level
     return None
 
 
