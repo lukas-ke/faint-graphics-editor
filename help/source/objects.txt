@@ -44,8 +44,7 @@ points'.
 || \graphic(edit-points.png) || \image(editable-polygon.png) ||
 || The edit points setting. || A polygon with editable points ||
 
-== Naming objects ==
-label:naming_objects
+== Naming objects {naming_objects} ==
 Objects can be given names which can be used to refer to their
 properties from \ref(ref-text-expressions.txt,text expressions) in
 text objects.

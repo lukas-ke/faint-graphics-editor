@@ -80,36 +80,28 @@ consecutive box blurs is based on the code from this page:\br
 = Licenses =
 This section reproduces licenses Faint depends on directly or indirectly.
 
-== Apache license 2.0 ==
-label:apache-license
+== Apache license 2.0 {apache-license} ==
 Faint itself is licensed under the Apache license 2.0.
 
 \verbatim_include(../../LICENSE)
 
-= Expat license =
-label:expat-license
+= Expat license {expat-license} =
 \verbatim_include(licenses/expat-license.txt)
 
-= GIFLIB license =
-label:giflib-license
+= GIFLIB license {giflib-license} =
 \verbatim_include(../../formats/gif/giflib-5.0.5/COPYING)
 
-= GNU Lesser General Public License 2.1 =
-label:lgpl21
+= GNU Lesser General Public License 2.1 {lgpl21} =
 \verbatim_include(licenses/lgpl21.html)
 
-= Leptonica copyright notice =
-label:leptonica-copyright
+= Leptonica copyright notice {leptonica-copyright} =
 \verbatim_include(licenses/leptonica.txt)
 
-= libpng-license =
-label:libpng-license
+= libpng-license {libpng-license} =
 \verbatim_include(licenses/libpng.txt)
 
-= wxWindows Library License 3.1 =
-label:wx-license
+= wxWindows Library License 3.1 {wx-license} =
 \verbatim_include(licenses/wx-windows-license.txt)
 
-= zlib license =
-label:zlib-license
+= zlib license {zlib-license} =
 \verbatim_include(licenses/zlib-license.txt)

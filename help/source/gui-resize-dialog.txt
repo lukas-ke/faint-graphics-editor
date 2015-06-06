@@ -27,8 +27,7 @@ To open the resize dialog use Image->Resize... (Ctrl+E) or the Python function w
 When no selection is active, the resize dialog will affect the
 entire image.
 
-== Math entry fields ==
-label:math_entry_fields
+== Math entry fields {math_entry_fields} ==
 The width and height entry fields support simple math expressions and specifying percentages. Some examples:
 || *Expression* || *Meaning* ||
 ||600 + 10||The width or height will be set to 610||

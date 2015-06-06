@@ -33,7 +33,7 @@ re_summary = re.compile('^summary\:"(.+)"$')
 re_summarize_children = re.compile(r'^\\child_summary$')
 
 # Label for cross-referencing
-label = re.compile("^label\:(.*?)$")
+label = re.compile(r"^\\label\((.*?)\)$")
 
 # Bullet points for bullet lists
 bullet = re.compile("^\* (.*)$")
