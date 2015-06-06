@@ -101,7 +101,6 @@ ref-scripting.txt
 >py-canvas.txt
 >py-frame.txt
 >py-frame-props.txt
->py-functions.txt
 >py-grid.txt
 >py-interpreter.txt
 >py-image-props.txt
@@ -112,6 +111,8 @@ ref-scripting.txt
 >py-something.txt
 >py-tri.txt
 >py-window.txt
+>py-functions.txt
+>py-clipboard.txt
 ref-text-expressions.txt
 binds.txt
 tips.txt

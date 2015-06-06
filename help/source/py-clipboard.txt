@@ -1,0 +1,14 @@
+page:"clipboard"
+summary:"Module with clipboard methods"
+
+= clipboard =
+
+The 'faint.clipboard' module contains functions for storing and
+retrieving text or bitmaps to the clipboard.
+
+== Functions ==
+\include(generated/py-clipboard-methods.txt)
+
+---
+See also:\br
+\ref(py-bitmap.txt) - class storable to clipboard.
