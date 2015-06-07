@@ -27,6 +27,15 @@ void for_each_pt(const std::vector<PathPt>& pts, Funcs... funcs){
   }
 }
 
+template<typename... Funcs>
+void until_true_pt(const std::vector<PathPt>& pts, Funcs... funcs){
+  for (const PathPt& pt : pts){
+    if (pt.Visit(funcs...)){
+      return;
+    }
+  }
+}
+
 } // namespace
 
 #endif

@@ -88,7 +88,6 @@ public:
       });
     return attachPoints;
   }
-
   std::vector<ExtensionPoint> GetExtensionPoints() const override{
     if (m_points.Empty()){
       return {};
@@ -129,20 +128,20 @@ public:
     std::vector<Point> movablePts;
     movablePts.reserve(pathPts.size());
 
-    for (const PathPt& pt : pathPts){
-      if (pt.IsCubicBezier()){
-        movablePts.push_back(pt.p);
-        movablePts.push_back(pt.c);
-        movablePts.push_back(pt.d);
-      }
-      else if (pt.IsLine()){
-        movablePts.push_back(pt.p);
-      }
-      else if (pt.IsMove()){
-        movablePts.push_back(pt.p);
-      }
-      // Else?
-    }
+    for_each_pt(pathPts,
+      [ ](const ArcTo&){},
+      [ ](const Close&){},
+      [&](const CubicBezier& bezier){
+        movablePts.push_back(bezier.p);
+        movablePts.push_back(bezier.c);
+        movablePts.push_back(bezier.d);
+      },
+      [&](const LineTo& lineTo){
+        movablePts.push_back(lineTo.p);
+      },
+      [&](const MoveTo& moveTo){
+        movablePts.push_back(moveTo.p);
+      });
     return movablePts;
   }
 
@@ -151,7 +150,7 @@ public:
   }
 
   Point GetPoint(int index) const override{
-    return GetMovablePoints()[to_size_t(index)]; // Fixme: Slow
+    return GetMovablePoints()[to_size_t(index)];
   }
 
   IntRect GetRefreshRect() const override{
@@ -170,7 +169,7 @@ public:
     std::vector<PathPt> pathPts = m_points.GetPoints(m_tri);
     auto p0 = pathPts.at(index - 1); // Fixme: Check bounds
     pathPts.at(index).Visit(
-      [](const ArcTo&){
+      [ ](const ArcTo&){
         assert(false); // Not implemented
       },
       [&](const Close&){
@@ -186,7 +185,7 @@ public:
       [&](const LineTo&){
         m_points.InsertPointRaw(LineTo(pt), index);
       },
-      [](const MoveTo&){
+      [ ](const MoveTo&){
         assert(false); // Not implemented
       });
   }
@@ -195,43 +194,38 @@ public:
     assert(index >= 0);
     std::vector<PathPt> pathPts = m_points.GetPoints(m_tri);
     int at = 0;
-    // Fixme: Duplicates SetPoint
-    for (size_t i = 0; i != pathPts.size(); i++){
-      const PathPt& pt = pathPts[i];
-      if (pt.IsCubicBezier()){
+
+    auto unaryNonControlPoint =
+      [&](){
+        if (index == at){
+          return true;
+        }
+        at += 1;
+        return false;
+      };
+
+    bool controlPoint = false;
+    until_true_pt(pathPts,
+      [&](const ArcTo&){return unaryNonControlPoint();},
+      [&](const Close&){return unaryNonControlPoint();},
+      [&](const CubicBezier&){
         if (index <= at + 2){
-          if (index == at){
-            return false;
-          }
-          else if (index == at + 1){
-            return true;
-          }
-          else if (index == at + 2){
-            return true;
-          }
-          assert(false);
+          // The first bezier point is the end point, the remaining
+          // two are control points
+          controlPoint = index != at;
+          return true;
         }
         at += 3;
-      }
-      else if (pt.IsLine()){
-        if (index == at){
-          return false;
-        }
-        at += 1;
-      }
-      else if (pt.IsMove()){
-        if (index == at){
-          return false;
-        }
-        at += 1;
-      }
-      // Fixme: What of arc etc? :-x Use visit.
-    }
-    return false;
+        return false;
+      },
+      [&](const LineTo&){return unaryNonControlPoint();},
+      [&](const MoveTo&){return unaryNonControlPoint();});
+
+    return controlPoint;
   }
 
   int NumPoints() const override{
-    return resigned(GetMovablePoints().size()); // Fixme: slow.
+    return resigned(GetMovablePoints().size());
   }
 
   void RemovePoint(int index) override{
@@ -243,43 +237,57 @@ public:
   void SetPoint(const Point& pt, int index) override{
     assert(index >= 0);
     std::vector<PathPt> pathPts = m_points.GetPoints(m_tri);
+
+    // Current control-point index. Certain PathPts have control points,
+    // so this can be greater than the PathPt number.
     int at = 0;
 
     for (size_t i = 0; i != pathPts.size(); i++){
-      const PathPt& oldPt = pathPts[i];
-      if (oldPt.IsCubicBezier()){
-        if (index <= at + 2){
-          PathPt copy(oldPt);
+      const bool done = pathPts[i].Visit(
+        [&](const ArcTo&){
+          // ArcTo has no handles
+          return false;
+        },
+        [&](const Close&){
+          // Close has no handles
+          return false;
+        },
+        [&](const CubicBezier& b){
           if (index == at){
-            copy.p = pt;
+            m_points.SetPoint(m_tri, CubicBezier(pt, b.c, b.d), resigned(i));
+            return true;
           }
           else if (index == at + 1){
-            copy.c = pt;
+            m_points.SetPoint(m_tri, CubicBezier(b.p, pt, b.d), resigned(i));
+            return true;
           }
           else if (index == at + 2){
-            copy.d = pt;
+            m_points.SetPoint(m_tri, CubicBezier(b.p, b.c, pt), resigned(i));
+            return true;
           }
-          else{
-            assert(false);
+          else {
+            at += 3;
+            return false;
           }
-          m_points.SetPoint(m_tri, copy, resigned(i));
-          break;
-        }
-        at += 3;
-      }
-      else if (oldPt.IsLine()){
-        if (index == at){
-          m_points.SetPoint(m_tri, PathPt::LineTo(pt), resigned(i));
-          break;
-        }
-        at += 1;
-      }
-      else if (oldPt.IsMove()){
-        if (index == at){
-          m_points.SetPoint(m_tri, PathPt::MoveTo(pt), resigned(i));
-          break;
-        }
-        at += 1;
+        },
+        [&](const LineTo&){
+          if (index == at){
+            m_points.SetPoint(m_tri, PathPt::LineTo(pt), resigned(i));
+            return true;
+          }
+          at += 1;
+          return false;
+        },
+        [&](const MoveTo&){
+          if (index == at){
+            m_points.SetPoint(m_tri, PathPt::MoveTo(pt), resigned(i));
+            return true;
+          }
+          at += 1;
+          return false;
+        });
+      if (done){
+        break;
       }
     }
     SetTri(m_points.GetTri()); // Fixme
