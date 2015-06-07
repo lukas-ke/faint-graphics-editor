@@ -121,21 +121,6 @@ public:
           event.Skip();
         }
       });
-
-    events::on_resize(this, [this](){
-      m_updateScroll.Set(GetViewStart());
-    });
-
-    events::on_idle(this, [this](){
-      // The wxHtmlWindow scrolls to 0,0 on resize, which is annoying.
-      // this is an attempt at a workaround, but I guess it should adjust
-      // for the changed size.
-      if (m_updateScroll.IsSet()){
-        wxPoint pos(m_updateScroll.Get());
-        m_updateScroll.Clear();
-        Scroll(pos.x, pos.y);
-      }
-    });
   }
 
   void FaintLineDown(){
@@ -186,7 +171,6 @@ private:
   // (Approximate-) lines to keep from the current page while
   // scrolling a page, to make it easier to follow scrolling with pgdn, pgup
   static const int m_keep = 2;
-  Optional<wxPoint> m_updateScroll;
 };
 
 class HelpTree;

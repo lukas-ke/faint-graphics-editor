@@ -6,6 +6,6 @@ especially things that may be different from other graphics
 editors.
 
 You are recommended to at least read \ref(raster-and-object), to use
-Faint effectively. \ref(math-entry-fields)
+Faint effectively.
 
 \child_summary
