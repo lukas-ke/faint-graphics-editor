@@ -129,8 +129,8 @@ public:
     movablePts.reserve(pathPts.size());
 
     for_each_pt(pathPts,
-      [ ](const ArcTo&){},
-      [ ](const Close&){},
+      [](const ArcTo&){},
+      [](const Close&){},
       [&](const CubicBezier& bezier){
         movablePts.push_back(bezier.p);
         movablePts.push_back(bezier.c);
@@ -169,7 +169,7 @@ public:
     std::vector<PathPt> pathPts = m_points.GetPoints(m_tri);
     auto p0 = pathPts.at(index - 1); // Fixme: Check bounds
     pathPts.at(index).Visit(
-      [ ](const ArcTo&){
+      [](const ArcTo&){
         assert(false); // Not implemented
       },
       [&](const Close&){
@@ -185,7 +185,7 @@ public:
       [&](const LineTo&){
         m_points.InsertPointRaw(LineTo(pt), index);
       },
-      [ ](const MoveTo&){
+      [](const MoveTo&){
         assert(false); // Not implemented
       });
   }
@@ -265,7 +265,7 @@ public:
             m_points.SetPoint(m_tri, CubicBezier(b.p, b.c, pt), resigned(i));
             return true;
           }
-          else {
+          else{
             at += 3;
             return false;
           }
