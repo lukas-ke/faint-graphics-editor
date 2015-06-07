@@ -73,7 +73,6 @@ public:
           attachPoints.push_back(mid_point(prev, first));
         },
         [&](const CubicBezier& bezier){
-          // Fixme: allow subdivisions too
           attachPoints.push_back(bezier_point(0.5, prev, bezier));
           attachPoints.push_back(bezier.p);
           prev = bezier.p;
