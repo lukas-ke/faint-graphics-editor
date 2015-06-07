@@ -1,5 +1,4 @@
 main.txt
-basics.txt
 >user-interface.txt
 >raster-vs-object.txt
 >selection.txt

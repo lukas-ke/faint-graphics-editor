@@ -1,6 +1,16 @@
-page:"Faint Help"
+page:"Faint Basics"
 = \image(faint-icon.png) Faint user manual =
 
-If you are new to Faint, reading the \ref(basics.txt) is recommended.
+User documentation for Faint graphics editor.
 
 || \image(icon-info.png) ||*Navigating the help*: \br Space-bar scrolls the help text one page. \br Arrow-keys target the focused window (either the help index or the help text). Use Ctrl+'Arrow' to target the other window. \br Page Up and Page Down always target the help text window. ||
+
+= Basics =
+These help topics will familiarize you with the basics of Faint, and
+especially things that may be different from other graphics
+editors.
+
+You are recommended to at least read \ref(raster-and-object) to use
+Faint effectively.
+
+\child_summary
