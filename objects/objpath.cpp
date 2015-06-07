@@ -72,13 +72,17 @@ public:
           current = ap.p;
           i++;
         },
-        [](const Close&){},
+        [&](const Close&){
+          extensionPoints.push_back({mid_point(current, pathPts.front().p), i});
+          i++;
+        },
         [&](const CubicBezier& bezier){
           extensionPoints.push_back({bezier_point(0.5, current, bezier), i});
           current = bezier.p;
           i += 3;
         },
         [&](const LineTo& to){
+          extensionPoints.push_back({mid_point(current, to.p), i});
           current = to.p;
           i += 1;
         },
@@ -133,15 +137,22 @@ public:
   void InsertPoint(const Point& pt, int index) override{
     std::vector<PathPt> pathPts = m_points.GetPoints(m_tri);
     auto p0 = pathPts.at(index - 1); // Fixme: Check bounds
-    auto p = pathPts.at(index);
-    if (p.type == PathPt::Type::CubicBezier){
-      CubicBezier b(p.p, p.c, p.d);
-      auto bs = in_twain(p0.p, b);
-      bs.first.p = pt;
-      m_points.RemovePointRaw(index);
-      m_points.InsertPointRaw(bs.second, index);
-      m_points.InsertPointRaw(bs.first, index);
-    }
+    pathPts.at(index).Visit(
+      [](const ArcTo&){ assert(false);}, // Not implemented
+      [&](const Close&){
+        m_points.InsertPointRaw(LineTo(pt), index);
+      },
+      [&](const CubicBezier& b){
+        auto bs = in_twain(p0.p, b);
+        bs.first.p = pt;
+        m_points.RemovePointRaw(index);
+        m_points.InsertPointRaw(bs.second, index);
+        m_points.InsertPointRaw(bs.first, index);
+      },
+      [&](const LineTo&){
+        m_points.InsertPointRaw(LineTo(pt), index);
+      },
+      [](const MoveTo&){assert(false);}); // Not implemented
   }
 
   bool IsControlPoint(int index) const override{

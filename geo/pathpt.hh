@@ -110,7 +110,17 @@ public:
       p(bezier.p),
       c(bezier.c),
       d(bezier.d),
-      axisRotation(0_deg)
+      axisRotation(Angle::Zero()),
+      largeArcFlag(0),
+      sweepFlag(0)
+  {}
+
+  PathPt(const faint::LineTo& line)
+    : type(Type::LineTo),
+      p(line.p),
+      axisRotation(Angle::Zero()),
+      largeArcFlag(0),
+      sweepFlag(0)
   {}
 
   static PathPt CubicBezierTo(const Point& p, const Point& c, const Point& d){
