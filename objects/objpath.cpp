@@ -54,7 +54,41 @@ public:
   }
 
   std::vector<Point> GetAttachPoints() const override{
-    return std::vector<Point>();
+    std::vector<Point> attachPoints;
+    auto pts = m_points.GetPoints(m_tri);
+    if (pts.empty()){
+      return {};
+    }
+
+    const Point first = pts.front().p;
+    Point prev = first;
+
+    for (const auto& pt : pts){
+      pt.Visit(
+        [&](const ArcTo& arc){
+          // Fixme: Verify that p is end-point
+          prev = arc.p;
+        },
+        [&](const Close&){
+          attachPoints.push_back(mid_point(prev, first));
+        },
+        [&](const CubicBezier& bezier){
+          // Fixme: allow subdivisions too
+          attachPoints.push_back(bezier_point(0.5, prev, bezier));
+          attachPoints.push_back(bezier.p);
+          prev = bezier.p;
+        },
+        [&](const LineTo& to){
+          attachPoints.push_back(mid_point(prev, to.p));
+          attachPoints.push_back(to.p);
+          prev = to.p;
+        },
+        [&](const MoveTo& to){
+          attachPoints.push_back(to.p);
+          prev = to.p;
+        });
+    }
+    return attachPoints;
   }
 
   std::vector<ExtensionPoint> GetExtensionPoints() const override{
@@ -110,6 +144,7 @@ public:
       else if (pt.IsMove()){
         movablePts.push_back(pt.p);
       }
+      // Else?
     }
     return movablePts;
   }
