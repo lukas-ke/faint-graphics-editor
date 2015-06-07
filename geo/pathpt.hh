@@ -106,7 +106,8 @@ public:
   }
 
   PathPt(const CubicBezier& bezier)
-    : p(bezier.p),
+    : type(Type::CubicBezier),
+      p(bezier.p),
       c(bezier.c),
       d(bezier.d),
       axisRotation(0_deg)
