@@ -82,7 +82,7 @@ void LinearGradient::Add(const ColorStop& stop){
 }
 
 void LinearGradient::Remove(const Index& index){
-  assert(valid_index(index, m_stops));
+  assert(has_index(m_stops, index));
   m_stops.erase(begin(m_stops) + index.Get());
 }
 
@@ -99,7 +99,7 @@ bool LinearGradient::GetObjectAligned() const{
 }
 
 const ColorStop& LinearGradient::GetStop(const Index& index) const{
-  assert(valid_index(index, m_stops));
+  assert(has_index(m_stops, index));
   return m_stops[to_size_t(index)];
 }
 
@@ -116,7 +116,7 @@ void LinearGradient::SetObjectAligned(bool objectAligned){
 }
 
 void LinearGradient::SetStop(const Index& index, const ColorStop& stop){
-  assert(valid_index(index, m_stops));
+  assert(has_index(m_stops, index));
   m_stops[to_size_t(index)] = stop;
 }
 
@@ -205,7 +205,7 @@ Radii RadialGradient::GetRadii() const{
 }
 
 ColorStop RadialGradient::GetStop(const Index& index) const{
-  assert(valid_index(index, m_stops));
+  assert(has_index(m_stops, index));
   return m_stops[to_size_t(index)];
 }
 
@@ -214,7 +214,7 @@ const color_stops_t& RadialGradient::GetStops() const{
 }
 
 void RadialGradient::Remove(const Index& index){
-  assert(valid_index(index, m_stops));
+  assert(has_index(m_stops, index));
   m_stops.erase(begin(m_stops) + index.Get());
 }
 
@@ -231,7 +231,7 @@ void RadialGradient::SetRadii(const Radii& radii){
 }
 
 void RadialGradient::SetStop(const Index& index, const ColorStop& stop){
-  assert(valid_index(index, m_stops));
+  assert(has_index(m_stops, index));
   m_stops[to_size_t(index)] = stop;
 }
 

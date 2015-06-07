@@ -180,7 +180,7 @@ Index BitmapListCtrl::GetSelection() const {
 }
 
 void BitmapListCtrl::SetSelection(const Index& selection){
-  assert(valid_index(selection, m_images));
+  assert(has_index(m_images, selection));
   m_selection = selection;
   Refresh();
 }

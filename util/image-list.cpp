@@ -80,7 +80,7 @@ Image& ImageList::GetImage(const Index& index){
 }
 
 const Image& ImageList::GetImage(const Index& index) const{
-  assert(valid_index(index, m_images));
+  assert(has_index(m_images, index));
   return *m_images[to_size_t(index)];
 }
 
@@ -138,7 +138,7 @@ void ImageList::Remove(Image* image){
 }
 
 void ImageList::Remove(const Index& index){
-  assert(valid_index(index, m_images));
+  assert(has_index(m_images, index));
   m_images.erase(begin(m_images) + index.Get());
   if (to_size_t(m_active) >= m_images.size()){
     m_active = Index(resigned(m_images.size() - 1));

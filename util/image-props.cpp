@@ -57,7 +57,7 @@ FrameProps& ImageProps::AddFrame(Bitmap&& bmp, const FrameInfo& info){
 }
 
 FrameProps& ImageProps::GetFrame(const Index& index){
-  assert(valid_index(index, m_frames));
+  assert(has_index(m_frames, index));
   return m_frames[to_size_t(index.Get())];
 }
 

@@ -51,8 +51,8 @@ size_t to_size_t(const Index&);
 Index to_index(size_t);
 
 template<typename T>
-bool valid_index(const Index& index, const T& container){
-  return to_size_t(index.Get()) <= container.size();
+bool has_index(const T& container, const Index& index){
+  return to_size_t(index.Get()) < container.size();
 }
 
 constexpr Index operator "" _idx(unsigned long long i){
