@@ -16,6 +16,7 @@
 #ifndef FAINT_OBJECT_HH
 #define FAINT_OBJECT_HH
 #include <vector>
+#include "geo/point.hh"
 #include "util/id-types.hh"
 #include "util/optional.hh"
 #include "util/settings.hh"
@@ -34,6 +35,21 @@ extern const Color mask_outside;
 extern const Color mask_fill;
 extern const Color mask_no_fill;
 extern const Color mask_edge;
+
+class ExtensionPoint{
+public:
+  // The clickable position for extending the object with another
+  // point.
+  Point pos;
+
+  // The index used for referring to a point after it has been added
+  // at this extension.
+  int futureIndex;
+
+  operator Point() const{
+    return pos;
+  }
+};
 
 class Object {
 public:
@@ -58,7 +74,7 @@ public:
   ObjectId GetId() const;
 
   // Gets points at which additional points can be inserted
-  virtual std::vector<Point> GetExtensionPoints() const;
+  virtual std::vector<ExtensionPoint> GetExtensionPoints() const;
 
   // Gets the points that can be moved individually
   virtual std::vector<Point> GetMovablePoints() const;

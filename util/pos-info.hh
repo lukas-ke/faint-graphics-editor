@@ -64,8 +64,43 @@ private:
   bool m_secondary = false;
 };
 
+class MovableHandle{
+public:
+  static MovableHandle Move(object_handle_t pointIndex){
+    return MovableHandle(HandleType::MOVABLE_POINT,
+      pointIndex,
+      0);
+  }
+
+  static MovableHandle Extend(object_handle_t pointIndex,
+    object_handle_t extensionIndex)
+  {
+    return MovableHandle(HandleType::EXTENSION_POINT,
+      pointIndex,
+      extensionIndex);
+  }
+
+  HandleType type;
+
+  // The index for moving the point. Only valid after adding a point
+  // when type is EXTENSION_POINT.
+  object_handle_t pointIndex;
+
+  // Meaningful only if the handle is an extension handle. This is the
+  // index the object expects for the insertion.
+  object_handle_t extensionIndex;
+private:
+  MovableHandle(HandleType type,
+    object_handle_t pointIndex,
+    object_handle_t extensionIndex)
+    : type(type),
+      pointIndex(pointIndex),
+      extensionIndex(extensionIndex)
+  {}
+};
+
 // Either an index of a movable point or a resize-handle
-using EitherHandle = Either<Handle,std::pair<object_handle_t, HandleType> >;
+using EitherHandle = Either<Handle, MovableHandle>;
 
 // Clicked handle of object, if any
 using HandleInfo = Optional<EitherHandle>;

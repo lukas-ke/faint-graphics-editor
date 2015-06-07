@@ -30,6 +30,7 @@
 #include "geo/int-rect.hh"
 #include "geo/line.hh"
 #include "geo/offsat.hh"
+#include "geo/measure.hh"
 #include "geo/pathpt.hh"
 #include "geo/points.hh" // Fixme: For tri_from_points, which shouldn't be required here
 #include "geo/scale.hh"
@@ -42,6 +43,7 @@
 #include "util/optional.hh"
 #include "util/setting-util.hh"
 #include "util/settings.hh"
+#include "util/default-settings.hh"
 
 namespace faint{
 
@@ -704,7 +706,6 @@ void FaintDC::Path(const std::vector<PathPt>& points, const Settings& s){
   if (!rather_zero(patternTri)){
     m_cr->set_source_tri(patternTri);
   }
-
   for (const PathPt& pt : points){
     if (pt.IsMove()){
       m_cr->move_to(pt.p);

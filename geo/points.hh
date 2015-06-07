@@ -46,8 +46,11 @@ public:
   std::vector<Point> GetPointsDumb(const Tri&) const;
   Tri GetTri() const;
   void InsertPoint(const Tri&, const Point&, int index);
+  void InsertPoint(const Tri&, const PathPt&, int index);
+  void InsertPointRaw(const PathPt&, int index);
   PathPt PopBack();
   void RemovePoint(const Tri&, int index);
+  void RemovePointRaw(int index);
   void SetPoint(const Tri&, const Point&, int index);
   void SetPoint(const Tri&, const PathPt&, int index);
   void SetTri(const Tri&);

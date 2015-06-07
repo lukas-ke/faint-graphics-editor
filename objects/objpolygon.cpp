@@ -59,16 +59,16 @@ public:
     return with_mid_points_cyclic(Vertices());
   }
 
-  std::vector<Point> GetExtensionPoints() const override{
+  std::vector<ExtensionPoint> GetExtensionPoints() const override{
     std::vector<Point> points = Vertices();
     if (points.empty()){
-      return std::vector<Point>();
+      return {};
     }
 
     // Need to include the first point at the end, to get the midpoint on
     // the closing segment
     points.push_back(points[0]);
-    return mid_points(points);
+    return extension_index_from(1, mid_points(points));
   }
 
   std::vector<Point> GetMovablePoints() const override{

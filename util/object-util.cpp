@@ -516,4 +516,16 @@ bool toggle_edit_points(Object* object){
   return true;
 }
 
+std::vector<ExtensionPoint> extension_index_from(int start,
+  const std::vector<Point>& src)
+{
+  std::vector<ExtensionPoint> dst;
+  dst.reserve(src.size());
+  int i = start;
+  for (const auto& pt : src){
+    dst.push_back({pt, i++});
+  }
+  return dst;
+}
+
 } // namespace

@@ -13,8 +13,10 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include "geo/bezier.hh"
 #include "geo/geo-func.hh"
 #include "geo/int-rect.hh"
+#include "geo/measure.hh"
 #include "geo/points.hh"
 #include "objects/object.hh"
 #include "objects/objpath.hh"
@@ -53,6 +55,39 @@ public:
 
   std::vector<Point> GetAttachPoints() const override{
     return std::vector<Point>();
+  }
+
+  std::vector<ExtensionPoint> GetExtensionPoints() const override{
+    if (m_points.Empty()){
+      return {};
+    }
+    auto pathPts = m_points.GetPoints(m_tri);
+
+    Point current = pathPts.front().p;
+    std::vector<ExtensionPoint> extensionPoints;
+    int i = 0;
+    for (const auto& pt : pathPts){
+      pt.Visit(
+        [&](const ArcTo& ap){
+          current = ap.p;
+          i++;
+        },
+        [](const Close&){},
+        [&](const CubicBezier& bezier){
+          extensionPoints.push_back({bezier_point(0.5, current, bezier), i});
+          current = bezier.p;
+          i += 3;
+        },
+        [&](const LineTo& to){
+          current = to.p;
+          i += 1;
+        },
+        [&](const MoveTo& to){
+          current = to.p;
+          i += 1;
+        });
+    }
+    return extensionPoints;
   }
 
   std::vector<Point> GetMovablePoints() const override{
@@ -95,6 +130,20 @@ public:
     return "Path";
   }
 
+  void InsertPoint(const Point& pt, int index) override{
+    std::vector<PathPt> pathPts = m_points.GetPoints(m_tri);
+    auto p0 = pathPts.at(index - 1); // Fixme: Check bounds
+    auto p = pathPts.at(index);
+    if (p.type == PathPt::Type::CubicBezier){
+      CubicBezier b(p.p, p.c, p.d);
+      auto bs = in_twain(p0.p, b);
+      bs.first.p = pt;
+      m_points.RemovePointRaw(index);
+      m_points.InsertPointRaw(bs.second, index);
+      m_points.InsertPointRaw(bs.first, index);
+    }
+  }
+
   bool IsControlPoint(int index) const override{
     assert(index >= 0);
     std::vector<PathPt> pathPts = m_points.GetPoints(m_tri);
@@ -129,12 +178,19 @@ public:
         }
         at += 1;
       }
+      // Fixme: What of arc etc? :-x Use visit.
     }
     return false;
   }
 
   int NumPoints() const override{
     return resigned(GetMovablePoints().size()); // Fixme: slow.
+  }
+
+  void RemovePoint(int index) override{
+    // Fixme: When used for undo, this will deform the path.
+    assert(index >= 0);
+    m_points.RemovePointRaw(index);
   }
 
   void SetPoint(const Point& pt, int index) override{

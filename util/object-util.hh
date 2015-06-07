@@ -24,6 +24,7 @@ namespace faint{
 
 class Color;
 class ExpressionContext;
+class ExtensionPoint;
 class Grid;
 class ObjRaster;
 class Point;
@@ -138,6 +139,10 @@ bool toggle_object_aligned_resize(Object*);
 // Toggles ts_EditPoints for the object and returns true, or false if
 // the object does not support point editing.
 bool toggle_edit_points(Object*);
+
+// Returns a vector of extension points with the extension index
+// being the start value incremented by one for each point.
+std::vector<ExtensionPoint> extension_index_from(int, const std::vector<Point>&);
 
 } // namespace
 

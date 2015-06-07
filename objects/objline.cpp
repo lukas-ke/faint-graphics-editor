@@ -84,8 +84,9 @@ public:
     return with_mid_points(m_points.GetPointsDumb(m_tri));
   }
 
-  std::vector<Point> GetExtensionPoints() const override{
-    return mid_points(m_points.GetPointsDumb(m_tri));
+  std::vector<ExtensionPoint> GetExtensionPoints() const override{
+    auto raw = mid_points(m_points.GetPointsDumb(m_tri));
+    return extension_index_from(1, mid_points(m_points.GetPointsDumb(m_tri)));
   }
 
   Object* Clone() const override{

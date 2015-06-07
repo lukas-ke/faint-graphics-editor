@@ -53,9 +53,9 @@ public:
       d(d),
       p(p)
   {}
-  Point c;
-  Point d;
-  Point p;
+  Point c; // First control point
+  Point d; // Second control point
+  Point p; // End-point
 };
 
 class LineTo{
@@ -104,6 +104,13 @@ public:
   static PathPt LineTo(const Point& p){
     return PathPt(Type::LineTo, p);
   }
+
+  PathPt(const CubicBezier& bezier)
+    : p(bezier.p),
+      c(bezier.c),
+      d(bezier.d),
+      axisRotation(0_deg)
+  {}
 
   static PathPt CubicBezierTo(const Point& p, const Point& c, const Point& d){
     return PathPt(Type::CubicBezier, p, c, d);

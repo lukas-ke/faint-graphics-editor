@@ -34,6 +34,7 @@ Rect floated(const IntRect&);
 Size floated(const IntSize&);
 Point mid_point(const Point&, const Point&);
 std::vector<Point> mid_points(const std::vector<Point>&);
+
 IntRect padded(const IntRect&, const Padding&);
 Point point_from_size(const Size&);
 IntPoint point_from_size(const IntSize&);

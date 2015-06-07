@@ -60,11 +60,11 @@ bool Object::Extendable() const{
 }
 
 std::vector<Point> Object::GetAttachPoints() const{
-  return std::vector<Point>();
+  return {};
 }
 
-std::vector<Point> Object::GetExtensionPoints() const{
-  return std::vector<Point>();
+std::vector<ExtensionPoint> Object::GetExtensionPoints() const{
+  return {};
 }
 
 ObjectId Object::GetId() const{
@@ -72,7 +72,7 @@ ObjectId Object::GetId() const{
 }
 
 std::vector<Point> Object::GetMovablePoints() const {
-  return std::vector<Point>();
+  return {};
 }
 
 const Optional<utf8_string>& Object::GetName() const{

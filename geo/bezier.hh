@@ -1,5 +1,5 @@
 // -*- coding: us-ascii-unix -*-
-// Copyright 2014 Lukas Kemmer
+// Copyright 2015 Lukas Kemmer
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you
 // may not use this file except in compliance with the License. You
@@ -13,30 +13,27 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include <cmath>
-#include "geo/measure.hh"
+#ifndef FAINT_BEZIER_HH
+#define FAINT_BEZIER_HH
 #include "geo/pathpt.hh"
 
 namespace faint{
 
-coord distance(const Point& from, const CubicBezier& to, int subdivisions){
-  assert(subdivisions > 0);
+class Beziers{
+public:
+  Beziers(const CubicBezier& first, const CubicBezier& second)
+    : first(first), second(second)
+  {}
+  CubicBezier first;
+  CubicBezier second;
+};
 
-  Point previous(from);
-  coord length = 0.0;
-  for (int i = 1; i <= subdivisions; i++){
-    const double t(static_cast<double>(i) / subdivisions);
-    const Point current =
-      from * std::pow(1.0 - t, 3) +
-      3.0 * to.c * std::pow(1.0 - t, 2) * t +
-      3.0 * to.d * (1.0 - t) * std::pow(t, 2) +
-      to.p * std::pow(t, 3);
+// Returns the point on the bezier at the given offset
+// (0 <= t <= 1.0)
+Point bezier_point(coord t, const Point&, const CubicBezier&);
 
-    length += distance(previous, current);
-    previous = current;
-  }
-
-  return length;
-}
+Beziers in_twain(const Point& from, const CubicBezier& to);
 
 } // namespace
+
+#endif

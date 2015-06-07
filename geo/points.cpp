@@ -203,10 +203,19 @@ Tri Points::GetTri() const {
 }
 
 void Points::InsertPoint(const Tri& tri, const Point& p, int index){
+  InsertPoint(tri, PathPt::LineTo(p), index);
+}
+
+void Points::InsertPoint(const Tri& tri, const PathPt& p, int index){
   assert(index >= 0);
   m_points = GetPoints(tri);
-  m_points.insert(begin(m_points) + index, PathPt::LineTo(p));
+  m_points.insert(begin(m_points) + index, p);
   m_tri = tri_from_points(m_points);
+}
+
+void Points::InsertPointRaw(const PathPt& p, int index){
+  assert(index >= 0);
+  m_points.insert(begin(m_points) + index, p);
 }
 
 PathPt Points::PopBack(){
@@ -220,6 +229,10 @@ void Points::RemovePoint(const Tri& tri, int index){
   m_points = GetPoints(tri);
   m_points.erase(begin(m_points) + index);
   m_tri = tri_from_points(m_points);
+}
+
+void Points::RemovePointRaw(int index){
+  m_points.erase(begin(m_points) + index);
 }
 
 void Points::SetPoint(const Tri& tri, const Point& p, int index){

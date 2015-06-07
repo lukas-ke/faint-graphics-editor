@@ -193,18 +193,19 @@ ObjectInfo hit_test(const IntPoint& ptView,
         ptView, geo, objectHandleWidth);
 
       if (handleIndex != - 1){
-        handleInfo.Set(EitherHandle({handleIndex, HandleType::MOVABLE_POINT}));
+        handleInfo.Set(EitherHandle({MovableHandle::Move(handleIndex)}));
         hitStatus = Hit::BOUNDARY;
         selected = true;
         object = objTemp;
         break;
       }
 
+      auto extensionPoints = objTemp->GetExtensionPoints();
       handleIndex = point_hit_test(objTemp->GetExtensionPoints(),
         ptView, geo, objectHandleWidth);
       if (handleIndex != -1){
-        handleInfo.Set(EitherHandle(std::make_pair(handleIndex,
-          HandleType::EXTENSION_POINT)));
+        const auto& pt = extensionPoints[handleIndex];
+        handleInfo.Set(MovableHandle::Extend(pt.futureIndex, handleIndex));
         hitStatus = Hit::BOUNDARY;
         selected = true;
         object = objTemp;

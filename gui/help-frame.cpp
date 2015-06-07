@@ -427,7 +427,7 @@ public:
 
   void FaintShow(){
     if (!m_initialized){
-      m_html->LoadFile(wxFileName(m_rootDir + "/basics.html"));
+      m_html->LoadFile(wxFileName(m_rootDir + "/main.html"));
       m_initialized = true;
     }
     Show();

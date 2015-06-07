@@ -119,14 +119,13 @@ static utf8_string status_for_object(const PosInfo& info){
           return Sentence("Click to resize the", object_type(info));
         }
       },
-      [&](const std::pair<object_handle_t, HandleType>& handle){
-        HandleType handleType = handle.second;
-        if (handleType == HandleType::MOVABLE_POINT){
+      [&](const MovableHandle& handle){
+        if (handle.type == HandleType::MOVABLE_POINT){
           return info.object->CanRemovePoint() ?
             "Left Click=Move, Right Click=Delete." :
             "Left click to move the point.";
         }
-        else if(handleType == HandleType::EXTENSION_POINT){
+        else if(handle.type == HandleType::EXTENSION_POINT){
           return "Left Click and Drag to add a point.";
         }
         else{
@@ -279,14 +278,16 @@ static TaskResult clicked_selected(IdleSelectionState& impl, const PosInfo& info
             return TaskResult::COMMIT_AND_CHANGE;
           }
           else{
-            impl.newTask.Set(rotate_object_task(obj, info.handle.Get().Expect<Handle>()));
+            impl.newTask.Set(rotate_object_task(obj,
+                info.handle.Get().Expect<Handle>()));
             return TaskResult::CHANGE;
           }
         }
         else {
           if (copy){
             Object* newObject = obj->Clone();
-            impl.command.Set(get_appending_add_object_command(newObject, "Resize Clone"));
+            impl.command.Set(get_appending_add_object_command(newObject,
+              "Resize Clone"));
             impl.newTask.Set(select_object_resize(newObject,
               info.handle.Get().Expect<Handle>()));
             return TaskResult::COMMIT_AND_CHANGE;
@@ -298,14 +299,14 @@ static TaskResult clicked_selected(IdleSelectionState& impl, const PosInfo& info
         }
         return TaskResult::CHANGE;
       },
-      [&](const std::pair<object_handle_t, HandleType>& handle){
-        if (handle.second == HandleType::MOVABLE_POINT && point_edit_enabled(obj)){
+      [&](const MovableHandle& handle){
+        if (handle.type == HandleType::MOVABLE_POINT && point_edit_enabled(obj)){
           bool rightMouse = info.modifiers.RightMouse();
           // Right mouse means remove point for extendable objects
           if (rightMouse && obj->Extendable()){
             // Delete a point if possible
             if (obj->CanRemovePoint()){
-              impl.command.Set(remove_point_command(obj, handle.first));
+              impl.command.Set(remove_point_command(obj, handle.pointIndex));
               return TaskResult::COMMIT;
             }
             // Not possible to delete points for some reason (e.g. at
@@ -313,21 +314,20 @@ static TaskResult clicked_selected(IdleSelectionState& impl, const PosInfo& info
             return TaskResult::NONE;
           }
           else{
-            impl.newTask.Set(move_point_task(obj, handle.first,
-              obj->GetPoint(handle.first)));
+            impl.newTask.Set(move_point_task(obj, handle.pointIndex,
+              obj->GetPoint(handle.pointIndex)));
             return TaskResult::CHANGE;
           }
         }
-        else if (handle.second == HandleType::EXTENSION_POINT &&
+        else if (handle.type == HandleType::EXTENSION_POINT &&
           point_edit_enabled(obj))
         {
           if (info.modifiers.LeftMouse()){
             // Note: This hinges on the MovePointTask not requesting the point for
             // handleIndex + 1 before the command has run.
-            int handleIndex = handle.first;
-            impl.command.Set(get_appending_insert_command(obj, handle.first,
-                info.pos));
-            impl.newTask.Set(move_point_task(obj, handleIndex + 1, info.pos));
+            impl.command.Set(get_appending_insert_command(obj,
+              handle.extensionIndex, info.pos));
+            impl.newTask.Set(move_point_task(obj, handle.pointIndex, info.pos));
             return TaskResult::COMMIT_AND_CHANGE;
           }
         }
@@ -453,8 +453,8 @@ public:
       for (const Point& pt : obj->GetMovablePoints()){
         overlays.MovablePoint(pt);
       }
-      for (const Point& pt : obj->GetExtensionPoints()){
-        overlays.ExtensionPoint(pt);
+      for (const auto& pt : obj->GetExtensionPoints()){
+        overlays.ExtensionPoint(pt.pos);
       }
     }
   }
@@ -492,11 +492,11 @@ public:
               return Cursor::RESIZE_NS;
             }
           },
-          [&](const std::pair<object_handle_t, HandleType>& handle){
-            if (handle.second == HandleType::MOVABLE_POINT) {
+          [&](const MovableHandle& handle){
+            if (handle.type == HandleType::MOVABLE_POINT) {
               return Cursor::MOVE_POINT;
             }
-            else if (handle.second == HandleType::EXTENSION_POINT){
+            else if (handle.type == HandleType::EXTENSION_POINT){
               return Cursor::ADD_POINT;
             }
             else{
