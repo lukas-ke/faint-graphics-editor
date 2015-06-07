@@ -17,6 +17,7 @@
 #include "geo/geo-func.hh"
 #include "geo/int-rect.hh"
 #include "geo/measure.hh"
+#include "geo/pathpt-iter.hh"
 #include "geo/points.hh"
 #include "objects/object.hh"
 #include "objects/objpath.hh"
@@ -63,30 +64,28 @@ public:
     const Point first = pts.front().p;
     Point prev = first;
 
-    for (const auto& pt : pts){
-      pt.Visit(
-        [&](const ArcTo& arc){
-          // Fixme: Verify that p is end-point
-          prev = arc.p;
-        },
-        [&](const Close&){
-          attachPoints.push_back(mid_point(prev, first));
-        },
-        [&](const CubicBezier& bezier){
-          attachPoints.push_back(bezier_point(0.5, prev, bezier));
-          attachPoints.push_back(bezier.p);
-          prev = bezier.p;
-        },
-        [&](const LineTo& to){
-          attachPoints.push_back(mid_point(prev, to.p));
-          attachPoints.push_back(to.p);
-          prev = to.p;
-        },
-        [&](const MoveTo& to){
-          attachPoints.push_back(to.p);
-          prev = to.p;
-        });
-    }
+    for_each_pt(pts,
+      [&](const ArcTo& arc){
+        // Fixme: Verify that p is end-point
+        prev = arc.p;
+      },
+      [&](const Close&){
+        attachPoints.push_back(mid_point(prev, first));
+      },
+      [&](const CubicBezier& bezier){
+        attachPoints.push_back(bezier_point(0.5, prev, bezier));
+        attachPoints.push_back(bezier.p);
+        prev = bezier.p;
+      },
+      [&](const LineTo& to){
+        attachPoints.push_back(mid_point(prev, to.p));
+        attachPoints.push_back(to.p);
+        prev = to.p;
+      },
+      [&](const MoveTo& to){
+        attachPoints.push_back(to.p);
+        prev = to.p;
+      });
     return attachPoints;
   }
 
@@ -99,31 +98,29 @@ public:
     Point current = pathPts.front().p;
     std::vector<ExtensionPoint> extensionPoints;
     int i = 0;
-    for (const auto& pt : pathPts){
-      pt.Visit(
-        [&](const ArcTo& ap){
-          current = ap.p;
-          i++;
-        },
-        [&](const Close&){
-          extensionPoints.push_back({mid_point(current, pathPts.front().p), i});
-          i++;
-        },
-        [&](const CubicBezier& bezier){
-          extensionPoints.push_back({bezier_point(0.5, current, bezier), i});
-          current = bezier.p;
-          i += 3;
-        },
-        [&](const LineTo& to){
-          extensionPoints.push_back({mid_point(current, to.p), i});
-          current = to.p;
-          i += 1;
-        },
-        [&](const MoveTo& to){
-          current = to.p;
-          i += 1;
-        });
-    }
+    for_each_pt(pathPts,
+      [&](const ArcTo& ap){
+        current = ap.p;
+        i++;
+      },
+      [&](const Close&){
+        extensionPoints.push_back({mid_point(current, pathPts.front().p), i});
+        i++;
+      },
+      [&](const CubicBezier& bezier){
+        extensionPoints.push_back({bezier_point(0.5, current, bezier), i});
+        current = bezier.p;
+        i += 3;
+      },
+      [&](const LineTo& to){
+        extensionPoints.push_back({mid_point(current, to.p), i});
+        current = to.p;
+        i += 1;
+      },
+      [&](const MoveTo& to){
+        current = to.p;
+        i += 1;
+      });
     return extensionPoints;
   }
 
@@ -131,6 +128,7 @@ public:
     std::vector<PathPt> pathPts = m_points.GetPoints(m_tri);
     std::vector<Point> movablePts;
     movablePts.reserve(pathPts.size());
+
     for (const PathPt& pt : pathPts){
       if (pt.IsCubicBezier()){
         movablePts.push_back(pt.p);
@@ -172,7 +170,9 @@ public:
     std::vector<PathPt> pathPts = m_points.GetPoints(m_tri);
     auto p0 = pathPts.at(index - 1); // Fixme: Check bounds
     pathPts.at(index).Visit(
-      [](const ArcTo&){ assert(false);}, // Not implemented
+      [](const ArcTo&){
+        assert(false); // Not implemented
+      },
       [&](const Close&){
         m_points.InsertPointRaw(LineTo(pt), index);
       },
@@ -186,7 +186,9 @@ public:
       [&](const LineTo&){
         m_points.InsertPointRaw(LineTo(pt), index);
       },
-      [](const MoveTo&){assert(false);}); // Not implemented
+      [](const MoveTo&){
+        assert(false); // Not implemented
+      });
   }
 
   bool IsControlPoint(int index) const override{
