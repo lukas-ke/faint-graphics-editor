@@ -168,7 +168,6 @@ wxlibs_debug = [
     "wxmsw31ud_xrc.lib",
     "wxpngd.lib",
     "wxregexud.lib",
-    "wxscintillad.lib",
     "wxtiffd.lib",
     "wxzlibd.lib" ]
 
@@ -191,7 +190,6 @@ wxlibs_release = [
     "wxmsw31u_xrc.lib",
     "wxpng.lib",
     "wxregexu.lib",
-    "wxscintilla.lib",
     "wxtiff.lib",
     "wxzlib.lib" ]
 
