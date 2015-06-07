@@ -1028,50 +1028,41 @@ PyObject* build_result(const Paint& paint){
 }
 
 PyObject* build_result(const PathPt& pt){
-    if (pt.IsArc()){
-      PyObject* arcTo = PyList_New(8);
-      PyList_SetItem(arcTo, 0, PyUnicode_FromString("A"));
-      PyList_SetItem(arcTo, 1, PyFloat_FromDouble(pt.p.x));
-      PyList_SetItem(arcTo, 2, PyFloat_FromDouble(pt.p.y));
-      PyList_SetItem(arcTo, 3, PyFloat_FromDouble(pt.r.x));
-      PyList_SetItem(arcTo, 4, PyFloat_FromDouble(pt.r.y));
-      PyList_SetItem(arcTo, 5, PyFloat_FromDouble(pt.axisRotation.Deg()));
-      PyList_SetItem(arcTo, 6, PyLong_FromLong(pt.largeArcFlag));
-      PyList_SetItem(arcTo, 7, PyLong_FromLong(pt.sweepFlag));
-      return arcTo;
-    }
-    else if (pt.ClosesPath()){
-      PyObject* close = PyList_New(1);
-      PyList_SetItem(close, 0, PyUnicode_FromString("Z"));
-      return close;
-    }
-    else if (pt.IsCubicBezier()){
-      PyObject* bezier = PyList_New(7);
-      PyList_SetItem(bezier, 0, PyUnicode_FromString("C"));
-      PyList_SetItem(bezier, 1, PyFloat_FromDouble(pt.p.x));
-      PyList_SetItem(bezier, 2, PyFloat_FromDouble(pt.p.y));
-      PyList_SetItem(bezier, 3, PyFloat_FromDouble(pt.c.x));
-      PyList_SetItem(bezier, 4, PyFloat_FromDouble(pt.c.y));
-      PyList_SetItem(bezier, 5, PyFloat_FromDouble(pt.d.x));
-      PyList_SetItem(bezier, 6, PyFloat_FromDouble(pt.d.y));
-      return bezier;
-    }
-    else if (pt.IsLine()){
-      PyObject* lineTo = PyList_New(3);
-      PyList_SetItem(lineTo, 0, PyUnicode_FromString("L"));
-      PyList_SetItem(lineTo, 1, PyFloat_FromDouble(pt.p.x));
-      PyList_SetItem(lineTo, 2, PyFloat_FromDouble(pt.p.y));
-      return lineTo;
-    }
-    else if (pt.IsMove()){
-      PyObject* moveTo = PyList_New(3);
-      PyList_SetItem(moveTo, 0, PyUnicode_FromString("M"));
-      PyList_SetItem(moveTo, 1, PyFloat_FromDouble(pt.p.x));
-      PyList_SetItem(moveTo, 2, PyFloat_FromDouble(pt.p.y));
-      return moveTo;
-    }
-    assert(false);
-    return nullptr;
+  return pt.Visit(
+    [](const ArcTo& arc){
+      return make_py_list({PyUnicode_FromString("A"),
+        PyFloat_FromDouble(arc.p.x),
+        PyFloat_FromDouble(arc.p.y),
+        PyFloat_FromDouble(arc.r.x),
+        PyFloat_FromDouble(arc.r.y),
+        PyFloat_FromDouble(arc.axisRotation.Deg()),
+        PyLong_FromLong(arc.largeArcFlag),
+        PyLong_FromLong(arc.sweepFlag)});
+    },
+    [](const Close&){
+      return make_py_list({PyUnicode_FromString("Z")});
+    },
+    [](const CubicBezier& bezier){
+      return make_py_list({PyUnicode_FromString("C"),
+        PyFloat_FromDouble(bezier.p.x),
+        PyFloat_FromDouble(bezier.p.y),
+        PyFloat_FromDouble(bezier.c.x),
+        PyFloat_FromDouble(bezier.c.y),
+        PyFloat_FromDouble(bezier.d.x),
+        PyFloat_FromDouble(bezier.d.y)});
+    },
+    [](const LineTo& line){
+      return make_py_list({
+        PyUnicode_FromString("L"),
+        PyFloat_FromDouble(line.p.x),
+        PyFloat_FromDouble(line.p.y)});
+    },
+    [](const MoveTo& move){
+      return make_py_list({
+        PyUnicode_FromString("M"),
+        PyFloat_FromDouble(move.p.x),
+        PyFloat_FromDouble(move.p.y)});
+    });
 }
 
 PyObject* build_result(const Point& pos){

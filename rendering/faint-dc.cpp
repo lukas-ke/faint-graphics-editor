@@ -32,6 +32,7 @@
 #include "geo/offsat.hh"
 #include "geo/measure.hh"
 #include "geo/pathpt.hh"
+#include "geo/pathpt-iter.hh"
 #include "geo/points.hh" // Fixme: For tri_from_points, which shouldn't be required here
 #include "geo/scale.hh"
 #include "geo/tri.hh"
@@ -46,6 +47,140 @@
 #include "util/default-settings.hh"
 
 namespace faint{
+
+struct CairoArc{
+  Point center;
+  Radii r;
+  coord startAngleRad;
+  coord angleExtentRad;
+  coord xAxisRotationRad;
+};
+
+// Based on
+// http://commons.oreilly.com/wiki/index.php/SVG_Essentials/Paths#Elliptical_Arc
+// and
+// http://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
+static CairoArc cairo_arc_from_svg_arc(const Point& p0,
+  Radii r,
+  coord xAxisRotation,
+  int largeArcFlag,
+  int sweepFlag,
+  const Point& p)
+{
+
+  // Step 1: Compute x1', y1' (i.e. p1)
+  const Point d = (p0 - p) / 2.0;
+  xAxisRotation = std::fmod(xAxisRotation, 2 * math::pi);
+  coord cosAngle = std::cos(xAxisRotation);
+  coord sinAngle = std::sin(xAxisRotation);
+
+  const Point p1(cosAngle * d.x + sinAngle * d.y,
+    -sinAngle * d.x + cosAngle * d.y);
+
+  // F6.6 Correction of out of range radii
+  r = abs(r); // F.6.6.1
+  const Point p1sq = p1 * p1;
+  Radii rsq = r * r;
+
+  // Fixme: Ensure non-zero radius
+  coord radiusCheck = p1sq.x / rsq.x  + p1sq.y / rsq.y; // F.6.6.2
+  if (radiusCheck > 1){
+    r *= sqrt(radiusCheck); // F.6.6.3
+    rsq = r * r;
+  }
+
+  // Step 2: Compute cx', cy' (i.e. c1)
+  coord sign = (largeArcFlag == sweepFlag) ? - 1 : 1;
+  coord sq = ((rsq.x*rsq.y) - (rsq.x*p1sq.y) - (rsq.y*p1sq.x)) /
+    ((rsq.x*p1sq.y) + (rsq.y*p1sq.x));
+  sq = (sq < 0) ? 0 : sq;
+  coord coeff = sign * sqrt(sq);
+  Point c1(coeff * ((r.x * p1.y) / r.y),
+    coeff * -((r.y * p1.x) / r.x));
+
+  // Step 3: Compute cx, cy from cx', cy' (i.e. c from c1)
+  Point sp2 = (p0 + p) / 2.0;
+  Point c(sp2.x + (cosAngle * c1.x - sinAngle * c1.y),
+    sp2.y + (sinAngle * c1.x + cosAngle * c1.y));
+
+  // Step 4: Compute theta and delta (i.e. angle and angle extent)
+  coord ux = (p1.x - c1.x) / r.x;
+  coord uy = (p1.y - c1.y) / r.y;
+  coord vx = (-p1.x - c1.x) / r.x;
+  coord vy = (-p1.y - c1.y) / r.y;
+  coord n = sqrt(ux * ux + uy * uy);
+  coord pp = ux; // 1 * ux + 0 * uy
+  sign = (uy < 0) ? -1 : 1;
+
+  coord theta = sign * acos(pp / n);
+
+  n = sqrt((ux * ux + uy * uy) * (vx * vx + vy * vy));
+  pp = ux * vx + uy * vy;
+  sign = ((ux * vy - uy * vx) < 0) ? -1 : 1;
+  coord delta = sign * acos(pp / n);
+
+  if (sweepFlag == 0 && delta > 0){
+    delta -= 2 * math::pi;
+  }
+  else if (sweepFlag == 1 && delta < 0){
+    delta += 2 * math::pi;
+  }
+  delta = fmod(delta, 2*math::pi);
+  CairoArc result;
+  result.center = c;
+  result.r = r;
+  result.startAngleRad = theta;
+  result.angleExtentRad = delta;
+  result.xAxisRotationRad = xAxisRotation;
+  return result;
+}
+
+static void add_path(CairoContext& cr, const std::vector<PathPt>& points){
+  if (points.empty()){
+    return;
+  }
+
+  Point currPos = points.front().p;
+  for_each_pt(points,
+    [&](const ArcTo& a){
+      CairoSave cairoSave(cr);
+      CairoArc arc = cairo_arc_from_svg_arc(currPos,
+        a.r,
+        a.axisRotation.Rad(),
+        a.largeArcFlag,
+        a.sweepFlag,
+        a.p);
+      cr.translate(arc.center);
+      cr.rotate(a.axisRotation);
+
+      coord angle1 = arc.startAngleRad;
+      coord angle2 = arc.startAngleRad + arc.angleExtentRad;
+
+      cr.scale(arc.r.x, arc.r.y);
+      if (angle1 < angle2){
+        cr.arc(Point(0,0), 1.0, AngleSpan::Rad(angle1, angle2));
+      }
+      else{
+        cr.arc_negative(Point(0,0), 1.0, AngleSpan::Rad(angle1, angle2));
+      }
+      currPos = a.p;
+    },
+    [&](const Close&){
+      cr.close_path();
+    },
+    [&](const CubicBezier& b){
+      cr.curve_to(b.c, b.d, b.p);
+      currPos = b.p;
+    },
+    [&](const LineTo& l){
+      cr.line_to(l.p);
+      currPos = l.p;
+    },
+    [&](const MoveTo& m){
+      cr.move_to(m.p);
+      currPos = m.p;
+    });
+}
 
 static Paint get_bg(const Settings& s, const Point& origin){
   Paint bg = get_bg(s);
@@ -607,145 +742,19 @@ void FaintDC::Line(const LineSegment& line, const Settings& s){
   PolyLine(tri_from_points(pts), pts, s);
 }
 
-struct CairoArc{
-  Point center;
-  Radii r;
-  coord startAngleRad;
-  coord angleExtentRad;
-  coord xAxisRotationRad;
-};
-
-// Based on
-// http://commons.oreilly.com/wiki/index.php/SVG_Essentials/Paths#Elliptical_Arc
-// and
-// http://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
-static CairoArc cairo_arc_from_svg_arc(const Point& p0,
-  Radii r,
-  coord xAxisRotation,
-  int largeArcFlag,
-  int sweepFlag,
-  const Point& p)
-{
-
-  // Step 1: Compute x1', y1' (i.e. p1)
-  const Point d = (p0 - p) / 2.0;
-  xAxisRotation = std::fmod(xAxisRotation, 2 * math::pi);
-  coord cosAngle = std::cos(xAxisRotation);
-  coord sinAngle = std::sin(xAxisRotation);
-
-  const Point p1(cosAngle * d.x + sinAngle * d.y,
-    -sinAngle * d.x + cosAngle * d.y);
-
-  // F6.6 Correction of out of range radii
-  r = abs(r); // F.6.6.1
-  const Point p1sq = p1 * p1;
-  Radii rsq = r * r;
-
-  // Fixme: Ensure non-zero radius
-  coord radiusCheck = p1sq.x / rsq.x  + p1sq.y / rsq.y; // F.6.6.2
-  if (radiusCheck > 1){
-    r *= sqrt(radiusCheck); // F.6.6.3
-    rsq = r * r;
-  }
-
-  // Step 2: Compute cx', cy' (i.e. c1)
-  coord sign = (largeArcFlag == sweepFlag) ? - 1 : 1;
-  coord sq = ((rsq.x*rsq.y) - (rsq.x*p1sq.y) - (rsq.y*p1sq.x)) /
-    ((rsq.x*p1sq.y) + (rsq.y*p1sq.x));
-  sq = (sq < 0) ? 0 : sq;
-  coord coeff = sign * sqrt(sq);
-  Point c1(coeff * ((r.x * p1.y) / r.y),
-    coeff * -((r.y * p1.x) / r.x));
-
-  // Step 3: Compute cx, cy from cx', cy' (i.e. c from c1)
-  Point sp2 = (p0 + p) / 2.0;
-  Point c(sp2.x + (cosAngle * c1.x - sinAngle * c1.y),
-    sp2.y + (sinAngle * c1.x + cosAngle * c1.y));
-
-  // Step 4: Compute theta and delta (i.e. angle and angle extent)
-  coord ux = (p1.x - c1.x) / r.x;
-  coord uy = (p1.y - c1.y) / r.y;
-  coord vx = (-p1.x - c1.x) / r.x;
-  coord vy = (-p1.y - c1.y) / r.y;
-  coord n = sqrt(ux * ux + uy * uy);
-  coord pp = ux; // 1 * ux + 0 * uy
-  sign = (uy < 0) ? -1 : 1;
-
-  coord theta = sign * acos(pp / n);
-
-  n = sqrt((ux * ux + uy * uy) * (vx * vx + vy * vy));
-  pp = ux * vx + uy * vy;
-  sign = ((ux * vy - uy * vx) < 0) ? -1 : 1;
-  coord delta = sign * acos(pp / n);
-
-  if (sweepFlag == 0 && delta > 0){
-    delta -= 2 * math::pi;
-  }
-  else if (sweepFlag == 1 && delta < 0){
-    delta += 2 * math::pi;
-  }
-  delta = fmod(delta, 2*math::pi);
-  CairoArc result;
-  result.center = c;
-  result.r = r;
-  result.startAngleRad = theta;
-  result.angleExtentRad = delta;
-  result.xAxisRotationRad = xAxisRotation;
-  return result;
-}
-
 void FaintDC::Path(const std::vector<PathPt>& points, const Settings& s){
   if (points.empty()){
     return;
   }
 
   from_settings(*m_cr, s);
-  Point currPos = points.front().p;
 
   Tri patternTri(tri_from_points(points)); // Fixme: Pass tri instead
   if (!rather_zero(patternTri)){
     m_cr->set_source_tri(patternTri);
   }
-  for (const PathPt& pt : points){
-    if (pt.IsMove()){
-      m_cr->move_to(pt.p);
-      currPos = pt.p;
-    }
-    else if (pt.IsLine()){
-      m_cr->line_to(pt.p);
-      currPos = pt.p;
-    }
-    else if (pt.IsCubicBezier()){
-      m_cr->curve_to(pt.c, pt.d, pt.p);
-      currPos = pt.p;
-    }
-    else if (pt.ClosesPath()){
-      m_cr->close_path();
-    }
-    else if (pt.IsArc()){
-      CairoSave cairoSave(*m_cr);
-      CairoArc arc = cairo_arc_from_svg_arc(currPos,
-        pt.r,
-        pt.axisRotation.Rad(),
-        pt.largeArcFlag,
-        pt.sweepFlag,
-        pt.p);
-      m_cr->translate(arc.center);
-      m_cr->rotate(pt.axisRotation);
 
-      coord angle1 = arc.startAngleRad;
-      coord angle2 = arc.startAngleRad + arc.angleExtentRad;
-
-      m_cr->scale(arc.r.x, arc.r.y);
-      if (angle1 < angle2){
-        m_cr->arc(Point(0,0), 1.0, AngleSpan::Rad(angle1, angle2));
-      }
-      else{
-        m_cr->arc_negative(Point(0,0), 1.0, AngleSpan::Rad(angle1, angle2));
-      }
-      currPos = pt.p;
-    }
-  }
+  add_path(*m_cr, points);
   fill_and_or_stroke(*m_cr, s);
 }
 

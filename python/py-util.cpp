@@ -695,4 +695,12 @@ utf8_string str_ssize_t(Py_ssize_t v){
   return utf8_string(ss.str());
 }
 
+PyObject* make_py_list(const std::vector<PyObject*> v){
+  PyObject* l = PyList_New(v.size());
+  for (size_t i = 0; i != v.size(); i++){
+    PyList_SetItem(l, i, v[i]);
+  }
+  return l;
+}
+
 } // namespace
