@@ -108,7 +108,11 @@ class HelpWindow : public wxHtmlWindow{
 // for the help system.
 public:
   HelpWindow(wxWindow* parent)
-    : wxHtmlWindow(parent)
+    : wxHtmlWindow(parent,
+      wxID_ANY,
+      wxDefaultPosition,
+      wxDefaultSize,
+      wxHW_DEFAULT_STYLE | wxBORDER_THEME)
   {
     bind_fwd(this, wxEVT_KEY_DOWN,
       [this](wxKeyEvent& event){

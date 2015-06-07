@@ -32,9 +32,9 @@ namespace faint{
 
 // Border doesn't look nice on GTK, show it only on windows
 #ifdef __WXMSW__
-#define GRIDCONTROL_BORDER_STYLE wxBORDER_THEME
+const auto GRIDCONTROL_BORDER_STYLE = wxBORDER_THEME;
 #else
-#define GRIDCONTROL_BORDER_STYLE wxBORDER_NONE
+const auto GRIDCONTROL_BORDER_STYLE = wxBORDER_NONE;
 #endif
 
 static void update_grid_toggle_button(const Grid& g,
