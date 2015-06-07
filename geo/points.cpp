@@ -36,13 +36,15 @@ Tri tri_from_points(const std::vector<PathPt>& points){
     }
     topLeft = min_coords(topLeft, pt.p);
     bottomRight = max_coords(bottomRight, pt.p);
-    if (pt.IsCubicBezier()){
-      // Fixme: The bezier is always bounded by the end points and control
-      // points, but this isn't the tightest boundary.
-      topLeft = min_coords(topLeft, pt.c, pt.d);
-      bottomRight = max_coords(bottomRight, pt.c, pt.d);
-    }
+    pt.IfCubicBezier(
+      [&topLeft, &bottomRight](const CubicBezier& bezier){
+        // Fixme: The bezier is always bounded by the end points and control
+        // points, but this isn't the tightest boundary.
+        topLeft = min_coords(topLeft, bezier.c, bezier.d);
+        bottomRight = max_coords(bottomRight, bezier.c, bezier.d);
+      });
   }
+
   return Tri(topLeft,
     Point(bottomRight.x, topLeft.y),
     Point(topLeft.x, bottomRight.y));

@@ -31,6 +31,7 @@
 #include "bitmap/pattern.hh"
 #include "formats/png/file-png.hh"
 #include "geo/pathpt.hh"
+#include "geo/pathpt-iter.hh"
 #include "geo/offsat.hh"
 #include "gui/dialogs.hh"
 #include "app/faint-resize-dialog-context.hh" // Fixme
@@ -453,36 +454,35 @@ static void tool_hot_spot(){
 // Helper for to_svg_path
 static utf8_string points_to_svg_path_string(const std::vector<PathPt>& points){
   std::stringstream ss;
-  for (size_t i = 0; i != points.size(); i++){
-    const PathPt& pt = points[i];
-    if (pt.IsArc()){
+
+  for_each_pt(points,
+    [&ss](const ArcTo& a){
       ss << "A" << " " <<
-      pt.r.x << " " <<
-      pt.r.y << " " <<
-      pt.axisRotation.Deg() << " " <<
-      pt.largeArcFlag << " " <<
-      pt.sweepFlag << " " <<
-      pt.p.x << " " <<
-      pt.p.y << " ";
-    }
-    else if (pt.ClosesPath()){
+        a.r.x << " " <<
+        a.r.y << " " <<
+        a.axisRotation.Deg() << " " <<
+        a.largeArcFlag << " " <<
+        a.sweepFlag << " " <<
+        a.p.x << " " <<
+        a.p.y << " ";
+    },
+    [&ss](const Close&){
       ss << "z ";
-    }
-    else if (pt.IsCubicBezier()){
-      ss << "C " << pt.c.x << " " << pt.c.y << " " <<
-        pt.d.x << " " << pt.d.y << " " <<
-        pt.p.x << " " << pt.p.y << " ";
-    }
-    else if (pt.IsLine()){
-      ss << "L " << pt.p.x << " " << pt.p.y << " ";
-    }
-    else if (pt.IsMove()){
-      ss << "M " << pt.p.x << " " << pt.p.y << " ";
-    }
-    else {
-      assert(false); // Invalid PathPt type
-    }
-  }
+    },
+    [&ss](const CubicBezier& b){
+      ss << "C " <<
+        b.c.x << " " << b.c.y << " " <<
+        b.d.x << " " << b.d.y << " " <<
+        b.p.x << " " << b.p.y << " ";
+    },
+    [&ss](const LineTo& l){
+      ss << "L " <<
+        l.p.x << " " << l.p.y << " ";
+    },
+    [&ss](const MoveTo& m){
+      ss << "M " <<
+        m.p.x << " " << m.p.y << " ";
+    });
   std::string pathStr = ss.str();
   return utf8_string(pathStr.substr(0, pathStr.size() - 1));
 }

@@ -150,18 +150,6 @@ public:
     return type == Type::Close;
   }
 
-  bool IsArc() const{
-    return type == Type::ArcTo;
-  }
-
-  bool IsCubicBezier() const{
-    return type == Type::CubicBezier;
-  }
-
-  bool IsLine() const{
-    return type == Type::LineTo;
-  }
-
   bool IsMove() const{
     return type == Type::MoveTo;
   }
@@ -202,6 +190,13 @@ public:
 
     assert(false);
     return closeFunc(faint::Close());
+  }
+
+  template<typename CubicBezierFunc>
+  void IfCubicBezier(const CubicBezierFunc& f) const{
+    if (type == Type::CubicBezier){
+      f(faint::CubicBezier(p, c, d));
+    }
   }
 
 private:
