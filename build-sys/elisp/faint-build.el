@@ -7,19 +7,16 @@
 (require 'compile)
 (load-library "faint-paths.el")
 
-
 (defun faint-build ()
   (interactive)
   (when (= 0 (length faint-root))
     (user-error "faint-root not customized"))
   (compile (concat (faint-build-dir) "build.py --stdout")))
 
-
 (defun faint-clean ()
   "Clean all build output"
   (interactive)
   (compile (concat (faint-build-dir) "clean.py all")))
-
 
 (defun faint-fixme ()
   "Finds fixmes in source files, produces the list as
@@ -31,14 +28,21 @@ faux-compilation output"
 
 (global-set-key [(f5)] 'faint-build)
 (global-set-key [(control +)] 'next-error)
+(global-set-key [(meta +)] 'previous-error)
 (global-set-key [(control \?)] 'compilation-next-file)
 
-
-(defun faint-test ()
+(defun faint-run-unit-test ()
   (interactive)
-  (shell-command (concat (file-name-as-directory faint-root) "tests/test.exe&") "*test-results*"))
+  (let ((default-directory
+          (concat (file-name-as-directory faint-root) "/tests/")))
+    (shell-command
+     (concat (file-name-as-directory faint-root) "tests/run-unit-tests.exe&")
+     "*test-results*")))
 
-
-(defun faint-bench ()
+(defun faint-run-bench ()
   (interactive)
-  (shell-command (concat (file-name-as-directory faint-root) "tests/bench.exe&") "*benchmark-results*"))
+  (let ((default-directory
+          (concat (file-name-as-directory faint-root) "/tests/")))
+    (shell-command
+   (concat (file-name-as-directory faint-root) "tests/run-benchmarks.exe&")
+   "*benchmark-results*")))

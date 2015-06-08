@@ -1,6 +1,8 @@
 ;; Variable definitions for the paths used in the various faint-elisp
 ;; files.
 
+(provide 'faint-paths)
+
 (defcustom faint-root
   "" ; No default
   "Faint root folder"
@@ -25,6 +27,9 @@
   (concat (file-name-as-directory faint-root)
           (file-name-as-directory "build-sys")
           (file-name-as-directory "code_utils")))
+
+(defun faint-elisp-test-data-dir ()
+  (concat faint-root "/build-sys/elisp/test-data"))
 
 (defun faint-wx-doc ()
   (interactive)
