@@ -2,7 +2,6 @@
 
 (provide 'faint-help-mode)
 
-
 (defun faint-help-command-boundaries (pos)
   "Returns the (start . end)-boundaries of the faint-help-command
 at POS, if within a command, else nil.
@@ -29,9 +28,22 @@ Faint-help-commands look like this: \commandname(args)"
 
 
 (defun faint-help-fill-no-break-p ()
-  "Predicate for text segments that should not be split
-in fill-paragraph in faint-help-mode."
+  "Predicate for text segments that should not be split in
+fill-paragraph in faint-help-mode."
   (faint-help-within-command-p))
+
+
+(defface faint-heading-face
+  '((t :foreground "black" :background "gray" :weight bold))
+  "Face used to highlight headings in help sources."
+  :group 'font-lock-faces)
+
+
+(defconst faint-help-font-lock-keywords
+  (list
+   '("\\(=.*=\\)" . ''faint-heading-face)
+   '("\\\\\\w*(.*?)\\|\\\\br" . font-lock-builtin-face))
+  "Faint help source highlighting")
 
 
 (define-derived-mode faint-help-mode text-mode
@@ -45,7 +57,16 @@ in fill-paragraph in faint-help-mode."
   (set (make-local-variable 'paragraph-start) "\f\\|[ \t]*$")
 
   ;; Consider headings as paragraph separators
-  (set (make-local-variable 'paragraph-separate) "\\(=.*?=$\\)\\|[ \t\f]*$"))
+  (set (make-local-variable 'paragraph-separate) "\\(=.*?=$\\)\\|[ \t\f]*$")
+  (set (make-local-variable 'font-lock-defaults) (list
+   ;; (cons faint-help-regex-bold '(2 faint-help-bold-face))
+      (cons "\\(features\\)" '(0 (faint-command-face-2)))))
+
+
+  (set (make-local-variable 'font-lock-defaults)
+       '(faint-help-font-lock-keywords))
+  (font-lock-refresh-defaults))
+
 
 
 ;; Match help-files to this mode

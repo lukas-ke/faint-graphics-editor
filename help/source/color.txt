@@ -1,5 +1,6 @@
 page:"Color"
 summary:"Color and pattern selection"
+
 = Color =
 Faint features a primary and a secondary color choice.\br
 \image(selected-color-control.png)
