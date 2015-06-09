@@ -57,7 +57,8 @@ fill-paragraph in faint-help-mode."
   (set (make-local-variable 'paragraph-start) "\f\\|[ \t]*$")
 
   ;; Consider headings as paragraph separators
-  (set (make-local-variable 'paragraph-separate) "\\(=.*?=$\\)\\|[ \t\f]*$")
+  (set (make-local-variable 'paragraph-separate)
+       "\\(---$\\)\\|\\(=.*?=$\\)\\|[ \t\f]*$")
   (set (make-local-variable 'font-lock-defaults) (list
    ;; (cons faint-help-regex-bold '(2 faint-help-bold-face))
       (cons "\\(features\\)" '(0 (faint-command-face-2)))))
