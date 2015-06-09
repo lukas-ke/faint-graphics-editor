@@ -10,9 +10,9 @@ settings using a single key-press.
 
 For a list of the currently bound keys, see \ref(binds.txt).
 
-The Python function 'bind' is used for interactive binding, while 'bindc'
-and 'bindk' are used to specify binds in the configuration file. The 'binds'
-function lists the current key bindings.
+The Python function 'bind' is used for interactive binding, while
+'bindc' and 'bindk' are used to specify binds in the configuration
+file. The 'binds' function lists the current key bindings.
 
 == Interactive, bind() ==
 To bind a function to a key interactively, use the Python function
@@ -38,8 +38,9 @@ or Alt.
 
 == Non-interactive, bindc() and bindk() ==
 The regular bind() function requires an interactive key-press and is
-therefore not useful for specifying binds in the \ref(feat-config-file.txt,configuration file).
-For this, the alternative bindc and bindk functions should be used.
+therefore not useful for specifying binds in
+the \ref(feat-config-file.txt,configuration file). For this, the
+alternative bindc and bindk functions should be used.
 
 The bindc function accepts a character, specified as a string (e.g.
 "h"), a function and optional modifiers.
@@ -102,9 +103,8 @@ The binds() function lists the current binds in the interpreter.
 }}}
 
 Calling binds() with no argument lists all binds as the key name and
-the mapped function name.
-To include the documentation for the bound functions in the listing,
-pass True as the first argument:
+the mapped function name. To include the documentation for the bound
+functions in the listing, pass True as the first argument:
 
 {{{
 <font face="courier">binds(True)</font>

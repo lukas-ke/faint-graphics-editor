@@ -4,7 +4,8 @@ summary:"Class representing radial gradients"
 = RadialGradient =
 \image(py-detached-copy.png)
 
-The RadialGradient class represents radial color \ref(color-gradient,gradients).
+The RadialGradient class represents radial
+color \ref(color-gradient,gradients).
 
 == RadialGradient methods ==
 \include(generated/py-radial-gradient-methods.txt)

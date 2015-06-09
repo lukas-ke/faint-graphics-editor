@@ -4,7 +4,8 @@ summary:"Snapping a mid point to the 90-degree corners of two points"
 \image(feat-icon-object.png) \image(feat-icon-tool.png)
 
 = Snap to 90-degree points =
-Points in polylines and polygons can be snapped to form a 90-degree corner together with the neighbouring points.
+Points in polylines and polygons can be snapped to form a 90-degree
+corner together with the neighbouring points.
 
 ||\image(feat-90-snap-pre.png)||\image(feat-90-snap-post.png)||
 ||A diagonal line.||That line, with mid-point snapped to\br a 90-degree point||
@@ -16,7 +17,6 @@ Points in polylines and polygons can be snapped to form a 90-degree corner toget
 ||\image(key-ctrl.png)||Hold Ctrl while moving a point in a selected object. Move the point within snap-range of a corner formed by the moved point and its neighbours.||
 
 == Example ==
-
 ||A line objects connects two rectangles:||
 ||\image(feat-90-snap-1.png)||
 

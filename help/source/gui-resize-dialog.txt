@@ -7,7 +7,8 @@ dialog can be used for the entire image, a selected raster region or
 selected objects. The available functionality depends on the active
 selection.
 
-To open the resize dialog use Image->Resize... (Ctrl+E) or the Python function withbind:dialog_resize();
+To open the resize dialog use Image->Resize... (Ctrl+E) or the Python
+function withbind:dialog_resize();
 
 ||\image(gui-resize-dialog-image.png)||
 || /The standard resize dialog/ ||
@@ -24,11 +25,13 @@ To open the resize dialog use Image->Resize... (Ctrl+E) or the Python function w
 || Rescale || E || Scales the image and closes the dialog. ||
 
 == Resize/Rescale entire image ==
-When no selection is active, the resize dialog will affect the
-entire image.
+When no selection is active, the resize dialog will affect the entire
+image.
 
 == Math entry fields {math-entry-fields} ==
-The width and height entry fields support simple math expressions and specifying percentages. Some examples:
+The width and height entry fields support simple math expressions and
+specifying percentages. Some examples:
+
 || *Expression* || *Meaning* ||
 ||600 + 10||The width or height will be set to 610||
 ||600 + 10 * 4||The width or height will be set to 640||
@@ -38,9 +41,10 @@ The width and height entry fields support simple math expressions and specifying
 ||\image(icon-info.png)||To add a border to an image, select the desired border color as background, open the resize dialog and set the width and height to their current values plus an offset, e.g. 640 + 20, 480 + 20, then select Resize anchor center ('W'). ||
 
 == Copy width and height ==
-The size configured in one resize dialog can be copied for use in another.
-To copy both the width and height in the resize dialog, use Alt+C. To paste
-the copied width and height into a resize dialog use Alt+V.
+The size configured in one resize dialog can be copied for use in
+another. To copy both the width and height in the resize dialog, use
+Alt+C. To paste the copied width and height into a resize dialog use
+Alt+V.
 
 ||\image(icon-info.png)||Any string with two integers separated by a comma that has been copied to the clipboard can be pasted into a resize dialog.||
 

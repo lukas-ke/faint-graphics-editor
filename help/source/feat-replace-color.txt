@@ -6,8 +6,8 @@ summary:"Replacing a color with another"
 Replace a color in the image with a different color.
 
 == Using the fill tool ==
-The \ref(tool-fill,fill tool) replaces the clicked color in the
-entire image if Ctrl is held.
+The \ref(tool-fill,fill tool) replaces the clicked color in the entire
+image if Ctrl is held.
 
 == Using Python ==
 A function for replacing a color is available from the Python

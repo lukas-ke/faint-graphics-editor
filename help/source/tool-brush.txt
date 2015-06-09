@@ -2,7 +2,8 @@ page:"Brush"
 summary:"Free hand drawing with a variably sized brush"
 
 = \graphic(tool-brush.png) Brush {tool-brush} =
-The brush tool is used for free hand drawing with a variably shaped and sized "brush".
+The brush tool is used for free hand drawing with a variably shaped
+and sized "brush".
 
 \image(tool-brush-example.png) \br'Example brush-output'
 

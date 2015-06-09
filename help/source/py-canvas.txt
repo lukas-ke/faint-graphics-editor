@@ -4,9 +4,9 @@ summary:"Class representing images opened in Faint"
 = Canvas =
 \image(py-modifies-state.png)
 
-Canvas objects are used to modify an image opened in
-Faint. Modifications to an image through the Canvas interface are
-undoable actions, just like the manual image editing.
+Canvas objects are used to modify an image opened in Faint.
+Modifications to an image through the Canvas interface are undoable
+actions, just like the manual image editing.
 
 The active canvas is retrieved with 'get_active_image()'. Specific
 canvases can be retrieved from the automatic list 'images' or using

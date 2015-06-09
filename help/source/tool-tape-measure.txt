@@ -4,10 +4,11 @@ summary:"Show measurements in the image"
 = \graphic(tool-tape-measure.png) Tape measure {tool-tape-measure} =
 The tape measure tool is used to read out measurements from an image.
 
-The tool provides either pixel measures or
-\ref(feat-calibration.txt,calibrated units), and provides a convenient
-alternative to \ref(ref-text-expressions.txt,text-expressions) for viewing
-a length measure.
+The tool provides either pixel measures
+or \ref(feat-calibration.txt,calibrated units), and provides a
+convenient alternative
+to \ref(ref-text-expressions.txt,text-expressions) for viewing a
+length measure.
 
 *Settings*
 ||\image(tape-measure-drop-down.png)||Unit of measurement||

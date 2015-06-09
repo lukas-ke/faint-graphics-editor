@@ -2,7 +2,8 @@ page:"Zoom Control"
 summary:"The zoom-buttons in the lower panel"
 
 = The zoom control =
-The aptly named zoom control controls zoom. Changes affect the active image, unless Ctrl is held (see below).
+The aptly named zoom control controls zoom. Changes affect the active
+image, unless Ctrl is held (see below).
 
 ||\image(gui-zoom-control-fit.png)||\image(gui-zoom-control.png)||\image(gui-zoom-control-zoomed-out.png)||
 || When at 1:1 zoom, the zoom control has a fit option || When zoomed, fit is replaced by zoom to 1:1 || When zoomed out, the scale is expressed in percent ||

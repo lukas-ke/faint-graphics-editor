@@ -21,13 +21,15 @@ object, or use the text tool and click a selected text object once.
 ||\graphic(text-align-left.png)\graphic(text-align-center.png)\graphic(text-align-right.png)||Alignment||Whether the text should be left aligned, centered or right aligned||
 
 == Expressions ==
-Text objects can contain expressions which are evaluated if parsing is enabled.
+Text objects can contain expressions which are evaluated if parsing is
+enabled.
 
 ||\graphic(text-parsing.png)||Text expression parsing||
 
 The simple character expressions make it easier to type certain
 characters, like \delta for \image(text-delta.png). Some expressions
 reference objects, for example \area which shows the computed area of
-an object, either in pixels or a \ref(tool-calibrate.txt,calibrated unit).
+an object, either in pixels or
+a \ref(tool-calibrate.txt,calibrated unit).
 
 See the \ref(ref-text-expressions.txt,complete expression list).

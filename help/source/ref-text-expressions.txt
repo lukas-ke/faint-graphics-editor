@@ -5,9 +5,9 @@ tablestyle:fancy
 tablewidths:10%,10%,*
 
 = Text expressions =
-This page lists all expressions supported by the
-\ref(tool-text.txt,text tool) and text objects when parsing,
-\graphic(text-parsing.png), is enabled.
+This page lists all expressions supported by
+the \ref(tool-text.txt,text tool) and text objects when
+parsing, \graphic(text-parsing.png), is enabled.
 
 The expressions are shown as entered while the text is being edited,
 and are replaced by their result when editing has been completed.
@@ -15,16 +15,16 @@ and are replaced by their result when editing has been completed.
 \image(text-expression-editing.png) \image(text-expression-done.png)
 
 == Evaluated expressions ==
-The following expressions require parameters and are replaced by the result
-of some look-up.
+The following expressions require parameters and are replaced by the
+result of some look-up.
 
-Expressions that refer to objects require an
-\ref(naming-objects,object name) as the first parameter.
+Expressions that refer to objects require
+an \ref(naming-objects,object name) as the first parameter.
 
 The expressions that require a unit support "px", or "px2" for areas.
 
-When \ref(tool-calibrate.txt,calibrated), units with conversions to the
-calibration unit may be used, e.g. m for meters or m2 for square
+When \ref(tool-calibrate.txt,calibrated), units with conversions to
+the calibration unit may be used, e.g. m for meters or m2 for square
 meters if calibrated with a metric unit (such as m, cm or mm).
 
 ||*Expression*||*Evaluates to*||

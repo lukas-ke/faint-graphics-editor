@@ -1,8 +1,9 @@
 page:"Objects"
 summary:"Working with Objects"
 = Objects =
-Many \ref(tools.txt,tools) create objects when they're used in the object
-mode. As an example, the \ref(tool-line.txt,line tool) adds adjustable lines in the object mode.
+Many \ref(tools.txt,tools) create objects when they're used in the
+object mode. As an example, the \ref(tool-line.txt,line tool) adds
+adjustable lines in the object mode.
 
 To work with objects, select the object mode:\br
 \image(select-vector.png)
@@ -38,8 +39,7 @@ settings will affect the selected objects, instead of the tools.\br
 Lines, polygons and paths are constructed from multiple points which
 can be adjusted independently. Ellipses also have adjustable points
 used to limit them to arc segments. To edit the points of such an
-object, select it with the selection tool and enable 'Edit
-points'.
+object, select it with the selection tool and enable 'Edit points'.
 
 || \graphic(edit-points.png) || \image(editable-polygon.png) ||
 || The edit points setting. || A polygon with editable points ||

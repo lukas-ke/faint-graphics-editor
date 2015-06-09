@@ -2,6 +2,7 @@ page:"Flood Fill"
 summary:"Replace a contiguous area of one color with a different color"
 
 \image(feat-icon-raster.png) \image(feat-icon-tool.png) \image(feat-icon-scriptable.png)
+
 = Flood fill =
 Replaces a contiguous area of one color with a different color
 

@@ -3,10 +3,13 @@ page:"Tool Reference"
 tablestyle:fancy
 
 = Tool reference =
-This section describes all tools in Faint. This is a reference section, for an introduction, see instead \ref(tools.txt).
+This section describes all tools in Faint. This is a reference
+section, for an introduction, see instead \ref(tools.txt).
 
-In the following table, \image(supports-raster.png) indicates a tool which can target raster graphics, while
-\image(supports-object.png) indicates a tool which can target objects (see \ref(raster-vs-object.txt)).
+In the following table, \image(supports-raster.png) indicates a tool
+which can target raster graphics, while \image(supports-object.png)
+indicates a tool which can target objects
+(see \ref(raster-vs-object.txt)).
 
 || *Icon*|| *Name*|| *Description*|| *Supports*||
 ||\graphic(tool-selection.png)|| \ref(tool-selection.txt,Selection)|| Selects a region or objects to move or modify||\image(supports-raster.png)\image(supports-object.png)||

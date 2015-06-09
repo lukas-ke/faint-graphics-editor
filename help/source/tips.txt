@@ -19,6 +19,7 @@ more amazing than you might assume.
 
 == Use Ctrl+Right-Click to set Transparent background ==
 Hold control and right click in a dragged selection to set the clicked
-pixel as the \ref(feat-transparent-selection-bg.txt,transparent background)
-of the area. Ctrl+right click outside the selection to use no
-transparent background.
+pixel as
+the \ref(feat-transparent-selection-bg.txt,transparent background) of
+the area. Ctrl+right click outside the selection to use no transparent
+background.

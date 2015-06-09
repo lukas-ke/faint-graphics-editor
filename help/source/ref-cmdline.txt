@@ -2,7 +2,8 @@ page:"Command line"
 summary:"Command line parameters"
 
 = Command line options =
-This section describes the parameters Faint supports when started from the command line.
+This section describes the parameters Faint supports when started from
+the command line.
 
 \image(msw-cmd-line.png)
 

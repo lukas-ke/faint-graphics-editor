@@ -2,7 +2,8 @@ page:"Python Console"
 summary:"The Python scripting console"
 
 = The Python console =
-The Python Console in Faint is used for interactive \ref(scripting-intro.txt,scripting).
+The Python Console in Faint is used for
+interactive \ref(scripting-intro.txt,scripting).
 
 To show the console use Edit->Python Interpreter
 bind:dialog_python_console; The console can also be toggled with the
@@ -12,13 +13,14 @@ Python function withbind:dialog_python_console();.
 
 
 == Command history ==
-Use Ctrl+Up and Ctrl+Down to cycle through previous commands in the console.
+Use Ctrl+Up and Ctrl+Down to cycle through previous commands in the
+console.
 
 == Tab completion ==
-The console features limited tab completion for some function
-names. To use, type part of the function name and press the tab-key to
-cycle through possible completions. Tab can also be used to complete
-file paths (within quotes).
+The console features limited tab completion for some function names.
+To use, type part of the function name and press the tab-key to cycle
+through possible completions. Tab can also be used to complete file
+paths (within quotes).
 
 == Keyboard shortcuts ==
 || Escape || Close the console window ||

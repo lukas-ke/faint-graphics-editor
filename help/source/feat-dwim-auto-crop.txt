@@ -2,9 +2,10 @@ page:"DWIM-Auto-Crop"
 summary:"Toggle which region is auto-cropped to, after the fact"
 
 = Do-What-I-Mean Auto-Crop =
-Sometimes when using \ref(auto-crop,auto crop), two regions are equally
-likely targets. The DWIM-Auto-Crop feature is used after cropping
-removes the wrong region, to crop to the opposite side instead.
+Sometimes when using \ref(auto-crop,auto crop), two regions are
+equally likely targets. The DWIM-Auto-Crop feature is used after
+cropping removes the wrong region, to crop to the opposite side
+instead.
 
 == Method ==
 After performing an auto-crop, use

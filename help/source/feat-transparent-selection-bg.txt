@@ -14,8 +14,8 @@ Transparent Background. Select the color to make transparent as the
 secondary color by right clicking in the palette.
 
 *Quick method:* Use Ctrl+Right-Click inside the raster selection to
-quickly pick a color to treat as transparent. Ctrl+Right-Click
-outside to select Opaque background.
+quickly pick a color to treat as transparent. Ctrl+Right-Click outside
+to select Opaque background.
 
 == Example ==
 

@@ -2,13 +2,13 @@ page:"DWIM-Resize"
 summary:"Expand the image using the surrounding color"
 
 = Do-What-I-Mean Resize =
-The DWIM-resize feature uses the old image edge color as background for the new
-region after resizing.
+The DWIM-resize feature uses the old image edge color as background
+for the new region after resizing.
 
 == Method ==
-After resizing the drawing area (using for example the
-\ref(gui-image-resize-handles.txt) or the \ref(gui-resize-dialog.txt)), use
-* Python: withbind:dwim();
+After resizing the drawing area (using for example
+the \ref(gui-image-resize-handles.txt) or
+the \ref(gui-resize-dialog.txt)), use * Python: withbind:dwim();
 
 == Details ==
 Normally when expanding the drawing area, the new region is filled

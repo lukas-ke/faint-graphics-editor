@@ -11,5 +11,4 @@ Python function withbind:dialog_threshold();.
 
 \image(gui-threshold-dialog.png)
 
-
 See \ref(feat-threshold.txt) for more details.

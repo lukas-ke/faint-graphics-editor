@@ -2,7 +2,8 @@ page:"Grid Control"
 summary:"The control for grid-settings in the lower panel"
 
 = The grid control =
-The grid control enables and disables the snappable \ref(feat-grid.txt,Grid) and adjusts the grid-spacing.
+The grid control enables and disables the
+snappable \ref(feat-grid.txt,Grid) and adjusts the grid-spacing.
 
 ||\image(gui-grid-control-disabled.png)||\image(gui-grid-control-enabled.png)||
 || When disabled, the control is collapsed. || When enabled, the spacing can be adjusted ||

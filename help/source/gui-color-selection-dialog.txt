@@ -2,13 +2,17 @@ page:"Color Selection Dialog"
 summary:"The color selection dialog"
 
 = The color selection dialog =
-The color selection dialog is used for configuring \ref(color.txt,colors) (..and patterns and gradients). The dialog can adjust colors in the
-palette as well as the selected primary and secondary color.
+The color selection dialog is used for
+configuring \ref(color.txt,colors) (..and patterns and gradients). The
+dialog can adjust colors in the palette as well as the selected
+primary and secondary color.
 
 \image(gui-color-selection-dialog-hsl.png)
 
-To edit a palette color with this dialog, double-click a color in the
-\ref(gui-color-panel.txt). To edit the current foreground or background, single-click one of those in the \ref(gui-selected-color-control.txt).
+To edit a palette color with this dialog, double-click a color in
+the \ref(gui-color-panel.txt). To edit the current foreground or
+background, single-click one of those in
+the \ref(gui-selected-color-control.txt).
 
 The color selection dialog is divided in separate tabs for selecting
 either a single RGBA-color, a gradient or a bitmap pattern. When the

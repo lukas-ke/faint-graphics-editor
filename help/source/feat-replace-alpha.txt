@@ -2,7 +2,8 @@ page:"Replace Alpha"
 summary:"Python function for blending alpha values towards a color"
 
 = Replace alpha =
-Replace Alpha blends pixels with alpha values onto the specified color.
+Replace Alpha blends pixels with alpha values onto the specified
+color.
 
 ||\image(feat-replace-alpha-pre.png)||\image(feat-replace-alpha-white.png)||\image(feat-replace-alpha-magenta.png)||\image(feat-replace-alpha-red.png)||
 || Original image with alpha || Blended towards white || Blended towards magenta || Blended towards red ||

@@ -19,8 +19,8 @@ becoming fully opaque (alpha=255).
 Cursor files have a hot spot which specifies which point should anchor
 at the pointer coordinate.
 
-In Faint, the hot spot for an image can be set with the
-\ref(tool-hot-spot.txt,hot spot tool) or the Python function
+In Faint, the hot spot for an image can be set with
+the \ref(tool-hot-spot.txt,hot spot tool) or the Python function
 frame.set_hotspot (see \ref(py-frame.txt)).
 
 \image(gui-hot-spot.png)\br

@@ -10,6 +10,7 @@ certain points in objects.
 ||\image(feat-snap-object-points.png)||A line with end-points snapped to the center of a circle\br and the middle of the left side of a rectangle||
 
 To snap, hold \image(key-ctrl.png) while moving a point or drawing shapes.
+
 ---
 See also:\br
 * \ref(feat-grid.txt) for snapping to a grid

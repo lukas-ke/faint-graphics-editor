@@ -10,4 +10,6 @@ The Pattern class represents fill-\ref(color-pattern,patterns).
 \include(generated/py-pattern-methods.txt)
 
 ---
-See also \ref(py-linear-gradient.txt), \ref(py-radial-gradient.txt), \ref(py-bitmap.txt).
+See also
+\ref(py-linear-gradient.txt),
+\ref(py-radial-gradient.txt), \ref(py-bitmap.txt).

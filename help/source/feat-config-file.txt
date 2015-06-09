@@ -3,10 +3,9 @@ summary:"An automatically executed Python file for customizing Faint"
 
 \image(feat-icon-scriptable.png)
 = Configuration file =
-A user-specific python script file, .faint.py,
-is executed when Faint starts. This allows storing custom functions
-and key binds.  The location of the configuration file varies with
-operating systems.
+A user-specific python script file, .faint.py, is executed when Faint
+starts. This allows storing custom functions and key binds. The
+location of the configuration file varies with operating systems.
 
 This is the path to your configuration file:\br
 \pyconfigpath

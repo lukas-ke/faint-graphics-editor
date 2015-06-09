@@ -7,7 +7,6 @@ summary:"Class representing Faint Objects"
 The ill-named Something-class references a Faint object in a Canvas.
 
 == Properties ==
-
 \include(generated/py-something-properties.txt)
 
 == Methods ==

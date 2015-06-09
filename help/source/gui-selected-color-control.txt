@@ -7,16 +7,16 @@ summary:"The selected color control"
 The selected color control shows the currently selected primary and
 secondary color.
 
-Left clicking either color in this control opens the
-\ref(gui-color-selection-dialog.txt) for adjusting that color.
+Left clicking either color in this control opens
+the \ref(gui-color-selection-dialog.txt) for adjusting that color.
 
 Right clicking opens a context menu with some options for the clicked
 color.
 
 == Appearances ==
 When a raster or object selection is active, at least one color in the
-control will target the selection. This is indicated by a dashed border
-around the color:
+control will target the selection. This is indicated by a dashed
+border around the color:
 
 ||\image(gui-selected-color-selection-none.png)||Neither color targets a selection||
 ||\image(gui-selected-color-selection-both.png)||The colors target the foreground and background colors of selected objects||

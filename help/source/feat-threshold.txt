@@ -9,7 +9,6 @@ secondary color.
 ||\image(feat-desaturate-color.jpg)||\image(feat-threshold1.png)||\image(feat-threshold2.png)||\image(feat-threshold-pattern.png)||
 || /Original image/ || /Thresholded/ || /Thresholded differently/ || /Thresholded with patterns/ ||
 
-
 == Method ==
 To threshold the image, use either the \ref(gui-threshold-dialog.txt) or the
 Python function threshold(lower,upper).

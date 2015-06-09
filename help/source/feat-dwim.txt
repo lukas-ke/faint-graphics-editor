@@ -7,9 +7,9 @@ this is referred to as Do-What-I-Mean (DWIM).
 
 For example, when deleting a raster region, the DWIM-feature allows
 using the surrounding color rather than the secondary color. For
-Auto-crop (in ambiguous situations), DWIM allows toggling which
-region is cropped to. The DWIM for delete is purely for convenience,
-while the auto-crop DWIM extends the utility of auto crop.
+Auto-crop (in ambiguous situations), DWIM allows toggling which region
+is cropped to. The DWIM for delete is purely for convenience, while
+the auto-crop DWIM extends the utility of auto crop.
 
 DWIM is used after a command has been executed, and is triggered
 manually, using\br

@@ -16,12 +16,12 @@ may be a better alternative.
 Bitmaps do not support transparency.
 
 == 256 color bitmap (8bpp) ==
-When saving as an 8-bit per pixel bitmap, the saved image will be
-\ref(feat-quantize.txt,quantized) if it uses more than 256 distinct
+When saving as an 8-bit per pixel bitmap, the saved image will
+be \ref(feat-quantize.txt,quantized) if it uses more than 256 distinct
 colors.
 
 == Grayscale bitmap (8bpp) ==
 When saving as an 8-bit per pixel grayscale bitmap,the saved image is
 desaturated using unweighted desaturation. If weighted desaturation is
-required, the image should be desaturated manually first (see
-\ref(feat-desaturate.txt)).
+required, the image should be desaturated manually first
+(see \ref(feat-desaturate.txt)).

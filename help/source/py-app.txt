@@ -4,7 +4,7 @@ summary:"Interface for Faint application settings"
 = FaintApp =
 \image(py-modifies-state.png)
 
-Interface for Faint application settings.  Accessed via the predefined
+Interface for Faint application settings. Accessed via the predefined
 "app"-object
 
 == App properties ==

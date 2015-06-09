@@ -2,4 +2,6 @@ page:"Color balance"
 summary:"Adjusting the color balance"
 
 = Color balance =
-The color balance can be adjusted using either the \ref(gui-color-balance-dialog.txt) or the Python function color_balance.
+The color balance can be adjusted using either
+the \ref(gui-color-balance-dialog.txt) or the Python function
+color_balance.

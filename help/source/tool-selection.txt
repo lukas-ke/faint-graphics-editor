@@ -9,8 +9,8 @@ raster-layer or objects when in the object-layer.
 When the raster layer is active, the Selection tool selects and moves
 areas in the image. Many commands behave differently when a selection
 is active. For example, the "Crop" command will crop the image to the
-selection if there is one, otherwise the command will perform an
-\ref(auto-crop,auto crop).
+selection if there is one, otherwise the command will perform
+an \ref(auto-crop,auto crop).
 
 *Settings*
 ||\graphic(choice-transparent.png)|| Transparent background: The selected background color will not be transferred when the selection is moved. ||
@@ -29,9 +29,9 @@ When the object layer is active, the Selection tool is used to select,
 move, resize, rotate and otherwise adjust objects.
 
 To select an object, click inside it. To deselect all objects, click
-outside. Hold Ctrl to select multiple objects, or click
-outside objects, hold the mouse and drag to select all objects within
-a rectangle.
+outside. Hold Ctrl to select multiple objects, or click outside
+objects, hold the mouse and drag to select all objects within a
+rectangle.
 
 *Settings*\br
 ||\image(objselectsettings.png)|| The Object Selection tool makes the settings of all selected objects editable.\brWhen a setting is changed, the selected objects will be adjusted. Note that the current drawing settings will remain unchanged.||

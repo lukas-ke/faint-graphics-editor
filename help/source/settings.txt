@@ -8,8 +8,9 @@ When a tool is selected, the settings for the tool can be modified.
 The object selection tool allows adjusting the settings for the
 selected objects.
 
-The settings can also be changed via the
-\ref(scripting-intro.txt,Python interpreter), using the Python-name from the following table.
+The settings can also be changed via
+the \ref(scripting-intro.txt,Python interpreter), using the
+Python-name from the following table.
 
 tablestyle:fancy
 || *Icon* ||*Setting*||*Python name*||*Applies to*||
