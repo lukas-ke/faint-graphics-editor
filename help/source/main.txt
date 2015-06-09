@@ -1,4 +1,5 @@
 page:"Faint Basics"
+
 = \image(faint-icon.png) Faint user manual =
 
 User documentation for Faint graphics editor.

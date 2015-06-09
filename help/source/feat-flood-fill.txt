@@ -16,4 +16,5 @@ The \ref(tool-fill,fill tool) flood fills from the click position.
 ||image.fill((x,y), paint)||Flood fill originating at x,y using the specified color, pattern or gradient.||
 
 ---
-See also \ref(feat-boundary-fill.txt) for replacing colors bounded by a color.
+See also \ref(feat-boundary-fill.txt) for replacing colors bounded by
+a color.
