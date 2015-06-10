@@ -16,7 +16,7 @@ The instructions are written assuming that "c:\dev" is used as a root
 for checkouts etc., adapt this to your preferences
 
 ## Prerequisites
-* [Visual C++](https://www.visualstudio.com/en-us/downloads/visual-studio-2015-downloads-vs.aspx)
+* [Visual C++ Community Edition](https://www.visualstudio.com/en-us/downloads/visual-studio-2015-downloads-vs.aspx)
 * [git](https://git-scm.com/)
 
 ## 1. wxWidgets
@@ -84,7 +84,7 @@ build-config as follows:
     cd c:\dev\faint-graphics-editor\build
     build.py
 
-This creates build.cfg. Edit it so that it correctly points out
+This creates the build.cfg file. Edit it so that it correctly points out
 wxWidgets, Pango and Cairo.
 
 Example build.cfg:
@@ -117,7 +117,7 @@ Run build.py again
     build.py
 
 Faint should now build, producing the executable "Faint.exe" in the
-clone-folder (e.g c:\\dev\\faint\\faint.exe).
+root-folder (e.g c:\\dev\\faint\\faint.exe).
 
 ### Copy runtime libraries
 Copy the following dll:s from the Runtime packages downloaded in (3)
