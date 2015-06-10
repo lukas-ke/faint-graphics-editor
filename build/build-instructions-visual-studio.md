@@ -71,7 +71,7 @@ step 4).
 ## 4. Faint
 Without further ado...
 
-### Clone Faint (read only)
+### Clone the Faint trunk (read only)
     cd c:\dev
     git clone git@github.com:lukas-ke/faint-graphics-editor.git faint-graphics-editor
 
