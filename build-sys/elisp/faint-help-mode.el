@@ -41,7 +41,7 @@ fill-paragraph in faint-help-mode."
 
 (defconst faint-help-font-lock-keywords
   (list
-   '("\\(||\\)\\|\\(\\*.\\(.*?\\)\\*\\)\\|\\(=.*=\\)\\|\\(---$\\)" .
+   '("\\(||\\)\\|\\(\\*.\\(.*?\\)\\*\\)\\|\\(^=.*=$\\)\\|\\(---$\\)" .
      ''faint-heading-face) ; Double-quoted to get a variable
    '("\\\\\\w*(.*?)\\|\\\\br" . font-lock-builtin-face))
   "Faint help source highlighting")
