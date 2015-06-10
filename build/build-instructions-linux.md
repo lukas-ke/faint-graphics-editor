@@ -41,7 +41,7 @@ Python3.4 and its development headers are required.
 Finally!
 
 ### Clone the Faint trunk
-    cd c:\dev
+    cd ~/dev
     git clone git@github.com:lukas-ke/faint-graphics-editor.git faint-graphics-editor
 
 ### Create build.cfg
