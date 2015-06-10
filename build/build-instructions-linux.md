@@ -81,5 +81,5 @@ Run build.py again to build Faint.
 
 ### Start Faint
 
-    cd ~/dev/faint-graphics-editor/build
+    cd ~/dev/faint-graphics-editor/
     ./faint
