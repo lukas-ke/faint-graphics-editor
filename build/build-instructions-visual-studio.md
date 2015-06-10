@@ -69,6 +69,7 @@ step 4).
 * zlib runtime
 
 ## 4. Faint
+Without further ado...
 
 ### Clone Faint (read only)
     cd c:\dev
