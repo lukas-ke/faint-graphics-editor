@@ -153,13 +153,15 @@ static utf8_string status_for_object(const PosInfo& info){
     return Sentence("Left click to select the", object_type(info));
   }
   else if (info.object == nullptr){
-    return "Left click to draw an object-selection rectangle.";
+    return "Left click for selection rectangle. "
+      "Ctrl=Remove Shift=Add";
   }
   return "";
 }
 
 struct ClickedObject{
-  // Keeps track of whether a clicked object was selected when clicked
+  // Keeps track of whether a clicked object was selected already when
+  // it got clicked.
   Object* object;
   bool wasSelected;
 };

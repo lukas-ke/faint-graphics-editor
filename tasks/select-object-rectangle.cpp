@@ -37,6 +37,18 @@ static bool remove_enclosed(const PosInfo& info){
   return info.modifiers.Primary();
 }
 
+static void update_status(const PosInfo& info){
+  if (add_enclosed(info)){
+    info.status.SetMainText("Add objects to selection");
+  }
+  else if (remove_enclosed(info)){
+    info.status.SetMainText("Remove objects from selection");
+  }
+  else{
+    info.status.SetMainText("Select objects");
+  }
+}
+
 static void modify_selection(const PosInfo& info, const objects_t& enclosed){
   if (enclosed.empty()){
     return;
@@ -91,12 +103,14 @@ public:
   }
 
   TaskResult MouseUp(const PosInfo& info) override{
-    const objects_t enclosed = get_intersected(info.canvas.GetObjects(), Rect(m_p0, m_p1));
+    const objects_t enclosed = get_intersected(info.canvas.GetObjects(),
+      Rect(m_p0, m_p1));
     modify_selection(info, enclosed);
     return TaskResult::CHANGE;
   }
 
-  TaskResult MouseMove(const PosInfo&) override{
+  TaskResult MouseMove(const PosInfo& info) override{
+    update_status(info);
     return TaskResult::DRAW;
   }
 
