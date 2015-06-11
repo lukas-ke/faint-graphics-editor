@@ -63,6 +63,17 @@ def recreate_config(platform):
 
 
 def read_config(platform):
+    def check_folder(name, folder, expected_content):
+        """Verify that this folder (from an entry in the build.cfg) contains
+        some expected file.
+
+        """
+        if not os.path.exists(os.path.join(folder, expected_content)):
+            print("Error in build.cfg:\n %s: %s not found in \n %s"
+                  %(name, expected_content, folder))
+            exit(1)
+
+
     bo = bs.BuildOptions()
     bo.platform = platform
     config = configparser.RawConfigParser()
@@ -89,6 +100,15 @@ def read_config(platform):
     except configparser.NoOptionError as e:
         print("Error in build.cfg:", e)
         exit(1)
+
+    # Verify that the specified paths contain expected includes or folders
+    check_folder("wx_root", wx_root, "include/wx")
+    check_folder("cairo_include", cairo_include, "cairo.h")
+    check_folder("python_include", python_include, "python.h")
+    check_folder("pango_include", pango_include, "pango/pango.h")
+    check_folder("pnglib_include", pnglib_include, "png.h")
+    check_folder("glib_include", glib_include, "glib.h")
+    check_folder("glib_config_include", glib_config_include, "glibconfig.h")
 
     bo.extra_resource_root = wx_root
     if bo.platform == 'msw':
