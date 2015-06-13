@@ -37,7 +37,7 @@ static Settings spline_tool_settings(const Settings& allSettings){
 
 class SplineTool : public StandardTool, public HistoryContext{
 public:
-  SplineTool(const Settings& allSettings)
+  explicit SplineTool(const Settings& allSettings)
     : StandardTool(ToolId::SPLINE, spline_tool_settings(allSettings)),
       m_otherButton(MouseButton::RIGHT)
   {}

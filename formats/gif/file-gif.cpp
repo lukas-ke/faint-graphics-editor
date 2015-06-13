@@ -32,7 +32,7 @@ class LoadGifError{
   // Exception thrown for failures in gif-loading. Not meant to be
   // propagated outside load_gif.
 public:
-  LoadGifError(const utf8_string& error)
+  explicit LoadGifError(const utf8_string& error)
     : m_error(error)
   {}
 
@@ -46,7 +46,7 @@ private:
 
 class Alphabet{
 public:
-  Alphabet(int codeSize)
+  explicit Alphabet(int codeSize)
     : codeSize(codeSize),
       clearCode(1 << codeSize),
       endOfStreamCode(clearCode + 1)
@@ -134,7 +134,7 @@ private:
 class ColorTable{
   // A gif color table. Maps bytes to RGB-colors.
 public:
-  ColorTable(int entries){
+  explicit ColorTable(int entries){
     assert(entries >= 0);
     assert(entries <= 256);
     m_entries = entries;
@@ -159,7 +159,7 @@ public:
     return m_data;
   }
 
-  int RawLength(){
+  int RawLength() const{
     return m_entries * 3;
   }
 

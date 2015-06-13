@@ -107,7 +107,7 @@ class HelpWindow : public wxHtmlWindow{
 // avoid heavier dependencies (like wxWebView), this should be enough
 // for the help system.
 public:
-  HelpWindow(wxWindow* parent)
+  explicit HelpWindow(wxWindow* parent)
     : wxHtmlWindow(parent,
       wxID_ANY,
       wxDefaultPosition,

@@ -88,7 +88,7 @@ static Settings line_settings(const Settings& allSettings){
 
 class LineTool : public StandardTool, public HistoryContext{
 public:
-  LineTool(const Settings& allSettings)
+  explicit LineTool(const Settings& allSettings)
     : StandardTool(ToolId::LINE, line_settings(allSettings)),
       m_otherButton(MouseButton::RIGHT)
   {}

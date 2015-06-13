@@ -47,7 +47,7 @@ static void flip_vertically(const objects_t& objects, const Size& size){
 
 class FlipImageCommand : public Command{
 public:
-  FlipImageCommand(Axis axis) :
+  explicit FlipImageCommand(Axis axis) :
     Command(CommandType::HYBRID),
     m_axis(axis)
   {}

@@ -21,7 +21,7 @@ namespace faint{
 
 class BinaryReaderImpl{
 public:
-  BinaryReaderImpl(std::ifstream* stream)
+  explicit BinaryReaderImpl(std::ifstream* stream)
     : stream(stream)
   {}
 
@@ -67,7 +67,7 @@ BinaryReader& BinaryReader::ignore(std::streamsize n){
 
 class BinaryWriterImpl{
 public:
-  BinaryWriterImpl(std::ofstream* stream)
+  explicit BinaryWriterImpl(std::ofstream* stream)
     : stream(stream)
   {}
 

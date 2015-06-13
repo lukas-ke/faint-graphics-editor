@@ -46,7 +46,7 @@ static wxString get_title(CanvasPanel* canvas){
 
 class CanvasFileDropTarget : public wxFileDropTarget {
 public:
-  CanvasFileDropTarget(AppContext& app)
+  explicit CanvasFileDropTarget(AppContext& app)
     : m_app(app)
   {}
 

@@ -23,13 +23,13 @@ namespace faint{
 
 class Paint::PaintImpl{
 public:
-  PaintImpl(const Color& color)
+  explicit PaintImpl(const Color& color)
     : color(color)
   {}
-  PaintImpl(const Pattern& pattern)
+  explicit PaintImpl(const Pattern& pattern)
     : pattern(pattern)
   {}
-  PaintImpl(const Gradient& gradient)
+  explicit PaintImpl(const Gradient& gradient)
     : gradient(gradient)
   {}
   Optional<Color> color;

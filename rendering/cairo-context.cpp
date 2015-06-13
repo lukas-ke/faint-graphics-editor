@@ -372,7 +372,7 @@ std::string get_pango_version(){
 
 class CairoContextImpl{
 public:
-  CairoContextImpl(Bitmap& bmp)
+  explicit CairoContextImpl(Bitmap& bmp)
     : patternTri(Point(0,0), Point(100,0), 100.0)
   {
     this->surface = get_cairo_surface(bmp);

@@ -39,7 +39,7 @@ static void set_if_valid(Object* obj, const Tri& tri){
 
 class ResizeObjectBase : public StandardTask {
 public:
-  ResizeObjectBase(Object* object)
+  explicit ResizeObjectBase(Object* object)
     : m_object(object),
       m_oldTri(object->GetTri())
   {

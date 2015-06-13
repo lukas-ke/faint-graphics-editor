@@ -45,7 +45,7 @@ static Settings ellipse_settings(const Settings& allSettings){
 
 class EllipseTool : public StandardTool {
 public:
-  EllipseTool(const Settings& allSettings)
+  explicit EllipseTool(const Settings& allSettings)
     : StandardTool(ToolId::ELLIPSE, ellipse_settings(allSettings)),
       m_p0(0,0),
       m_p1(0,0),

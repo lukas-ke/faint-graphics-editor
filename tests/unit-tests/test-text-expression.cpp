@@ -48,7 +48,7 @@ private:
 
 class EqualText{
 public:
-  EqualText(const utf8_string& str)
+  explicit EqualText(const utf8_string& str)
     : m_str(str)
   {}
   void operator()(const utf8_string& str) const{
@@ -93,7 +93,7 @@ private:
 
 class EqualEvalError{
 public:
-  EqualEvalError(const utf8_string& d)
+  explicit EqualEvalError(const utf8_string& d)
     : m_description(d)
   {}
 

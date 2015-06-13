@@ -23,13 +23,13 @@ namespace faint{
 
 class DrawObjectCommand : public Command{
 public:
-  DrawObjectCommand(const its_yours_t<Object>& obj)
+  explicit DrawObjectCommand(const its_yours_t<Object>& obj)
     : Command(CommandType::RASTER),
       m_delete(true),
       m_object(obj.Get())
   {}
 
-  DrawObjectCommand(const just_a_loan_t<Object>& obj)
+  explicit DrawObjectCommand(const just_a_loan_t<Object>& obj)
     : Command(CommandType::RASTER),
       m_delete(false),
       m_object(obj.Get())

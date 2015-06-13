@@ -13,7 +13,7 @@
 using namespace faint;
 
 struct EqualRects1{
-  EqualRects1(const IntRect& r)
+  explicit EqualRects1(const IntRect& r)
     : m_r(r)
   {}
   void operator()(const IntRect& r) const{

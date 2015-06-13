@@ -26,7 +26,7 @@ using pat_map_t = std::map<PatternId, Bitmap>;
 
 class PatternRef{
 public:
-  PatternRef(const PatternId&);
+  explicit PatternRef(const PatternId&);
   PatternRef(const PatternRef&);
   ~PatternRef();
   const Bitmap& GetBitmap() const;

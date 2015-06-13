@@ -41,7 +41,7 @@ static label_t get_bmp_label(BitmapQuality quality){
 
 class FormatBMP : public Format{
 public:
-  FormatBMP(BitmapQuality quality)
+  explicit FormatBMP(BitmapQuality quality)
     : Format(FileExtension("bmp"),
       get_bmp_label(quality),
       can_save(true),

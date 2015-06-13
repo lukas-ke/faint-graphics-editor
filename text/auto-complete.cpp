@@ -35,7 +35,7 @@ public:
 
 class ACNode {
 public:
-  ACNode(const utf8_char& c)
+  explicit ACNode(const utf8_char& c)
     : m_char(c)
   {}
 

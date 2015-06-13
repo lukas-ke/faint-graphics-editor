@@ -53,6 +53,7 @@ public:
 
   LightnessBackground(const LightnessBackground& other)
     : SliderBackground(),
+      m_bitmap(other.m_bitmap),
       m_hueSat(other.m_hueSat)
   {}
 

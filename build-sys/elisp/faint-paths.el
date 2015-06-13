@@ -8,6 +8,11 @@
   "Faint root folder"
   :type 'file)
 
+(defcustom faint-cppcheck-command
+  "" ; No default
+  "Command for static code analysis using cppcheck"
+  :type 'file)
+
 (defun faint-defs-file-name ()
   (concat (file-name-as-directory faint-root)
           "build-sys/code_utils/defs-summary.txt"))

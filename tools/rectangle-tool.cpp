@@ -61,7 +61,7 @@ static Settings rectangle_tool_settings(const Settings& allSettings){
 
 class RectangleTool : public StandardTool {
 public:
-  RectangleTool(const Settings& allSettings)
+  explicit RectangleTool(const Settings& allSettings)
     : StandardTool(ToolId::RECTANGLE, rectangle_tool_settings(allSettings)),
       m_active(false)
   {}

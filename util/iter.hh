@@ -28,7 +28,7 @@ class ContainerType{
   // The specializations for wrappers (e.g. but_first_t) instead store
   // wrappers by value, as they would expire immediately otherwise.
 public:
-  ContainerType(const T& container)
+  explicit ContainerType(const T& container)
     : c(container)
   {}
   const T& c;
@@ -59,7 +59,7 @@ public:
 template<typename T>
 class ContainerType<reversed_t<T> >{
 public:
-  ContainerType(const reversed_t<T>& container)
+  explicit ContainerType(const reversed_t<T>& container)
     : c(container)
   {}
   const reversed_t<T> c;
@@ -81,7 +81,7 @@ class but_first_t {
 private:
   const ContainerType<Container> m_container;
 public:
-  but_first_t(const Container& c)
+  explicit but_first_t(const Container& c)
     : m_container(c)
   {}
 
@@ -108,7 +108,7 @@ auto first(const Container& c){
 template<typename T>
 class ContainerType<but_first_t<T> >{
 public:
-  ContainerType(const but_first_t<T>& container)
+  explicit ContainerType(const but_first_t<T>& container)
     : c(container)
   {}
 
@@ -126,7 +126,7 @@ class but_last_t {
 private:
   const ContainerType<Container> m_container;
 public:
-  but_last_t(const Container& c)
+  explicit but_last_t(const Container& c)
     : m_container(c)
   {}
 
@@ -159,7 +159,7 @@ private:
 template<typename T>
 class ContainerType<but_last_t<T> >{
 public:
-  ContainerType(const but_last_t<T>& container)
+  explicit ContainerType(const but_last_t<T>& container)
     : c(container)
   {}
   const but_last_t<T> c;
@@ -176,7 +176,7 @@ template<typename T>
 class enum_iter_t{
   // Iterator for enum values.
 public:
-  enum_iter_t(T value)
+  explicit enum_iter_t(T value)
     : m_value(static_cast<T2>(value))
   {}
 
@@ -264,7 +264,7 @@ class enumerate_t{
 private:
   const ContainerType<Container> m_container;
 public:
-  enumerate_t(const Container& c)
+  explicit enumerate_t(const Container& c)
     : m_container(c)
   {}
 

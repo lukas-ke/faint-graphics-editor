@@ -67,7 +67,7 @@ static void set_feedback(const Bitmap& src,
 
 class AlphaDialog : public CommandWindow{
 public:
-  AlphaDialog(const SliderCursors& sliderCursors)
+  explicit AlphaDialog(const SliderCursors& sliderCursors)
     : m_dialog(null_dialog()),
       m_sliderCursors(sliderCursors)
   {

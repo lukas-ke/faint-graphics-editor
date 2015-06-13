@@ -95,7 +95,7 @@ static Settings polygon_tool_settings(const Settings& allSettings){
 
 class PolygonTool : public StandardTool, public HistoryContext {
 public:
-  PolygonTool(const Settings& allSettings)
+  explicit PolygonTool(const Settings& allSettings)
     : StandardTool(ToolId::POLYGON, polygon_tool_settings(allSettings)),
       m_active(false),
       m_mouseButton(MouseButton::LEFT)

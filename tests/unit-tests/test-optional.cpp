@@ -10,7 +10,7 @@ namespace {
 
 class FailIfCopied{
 public:
-  FailIfCopied(int value)
+  explicit FailIfCopied(int value)
     : value(value),
       dummy(false)
   {}

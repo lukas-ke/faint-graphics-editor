@@ -103,7 +103,7 @@ void ColorDataObject::SetOperationType(wxDragResult result){
 class ColorDropTargetImpl : public wxDropTarget {
   // Impl-class to  hide the large wxDropTarget interface
 public:
-  ColorDropTargetImpl(ColorDropTarget* target);
+  explicit ColorDropTargetImpl(ColorDropTarget* target);
   bool OnDrop(wxCoord x, wxCoord y);
   virtual wxDragResult OnData(wxCoord x, wxCoord y, wxDragResult def);
 

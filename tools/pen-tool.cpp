@@ -69,7 +69,7 @@ static Settings pen_settings(const Settings& allSettings){
 
 class PenTool : public StandardTool {
 public:
-  PenTool(const Settings& allSettings)
+  explicit PenTool(const Settings& allSettings)
     : StandardTool(ToolId::PEN, pen_settings(allSettings)),
       m_active(false),
       m_constrainDir(ConstrainDir::NONE)

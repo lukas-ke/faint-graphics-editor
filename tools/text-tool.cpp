@@ -27,7 +27,7 @@ static Settings text_tool_settings(const Settings& allSettings){
 
 class TextTool : public MultiTool{
 public:
-  TextTool(const Settings& allSettings)
+  explicit TextTool(const Settings& allSettings)
     : MultiTool(ToolId::TEXT,
       default_task(text_idle_task(m_settings))),
       m_settings(text_tool_settings(allSettings))

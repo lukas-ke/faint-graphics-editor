@@ -25,7 +25,7 @@ using NewSize = Order<Size>::New;
 class Scale{
 public:
   constexpr Scale(coord x, coord y) : x(x), y(y) {}
-  constexpr Scale(coord xy) : x(xy), y(xy) {}
+  explicit constexpr Scale(coord xy) : x(xy), y(xy) {}
   Scale(const NewSize&, const Size&);
   Scale(int, int) = delete;
   coord x;

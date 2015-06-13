@@ -27,7 +27,7 @@ ExpressionEvalError::ExpressionEvalError(const utf8_string& description)
 
 class Text : public TextExpression{
 public:
-  Text(const utf8_string& text)
+  explicit Text(const utf8_string& text)
     : m_text(text)
   {}
 
@@ -155,7 +155,7 @@ public:
     return false;
   }
 
-  bool On(const utf8_char& ch){
+  bool On(const utf8_char& ch) const{
     return str[pos] == ch;
   }
 

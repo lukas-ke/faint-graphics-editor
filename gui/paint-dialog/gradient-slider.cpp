@@ -202,7 +202,7 @@ public:
     m_bmp = to_wx_bmp(bmp);
   }
 
-  const wxBitmap& GetBitmap(){
+  const wxBitmap& GetBitmap() const{
     return m_bmp;
   }
 

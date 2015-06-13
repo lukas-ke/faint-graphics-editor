@@ -37,7 +37,7 @@ namespace faint{
 
 class TextInfoDC : public TextInfo{
 public:
-  TextInfoDC(const Settings& settings)
+  explicit TextInfoDC(const Settings& settings)
     : m_bitmap(IntSize(10,10)),
       m_dc(m_bitmap),
       m_settings(settings)

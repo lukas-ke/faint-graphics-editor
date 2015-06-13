@@ -48,7 +48,7 @@ class SelectObjectSetName : public Task,
                             public TextContext,
                             public SelectionContext{
 public:
-  SelectObjectSetName(const ActiveCanvas& canvas) :
+  explicit SelectObjectSetName(const ActiveCanvas& canvas) :
     m_active(false),
     m_canvas(canvas)
   {

@@ -26,7 +26,7 @@ class Size;
 class Rect{
 public:
   Rect();
-  Rect(const std::pair<Point, Point>&);
+  explicit Rect(const std::pair<Point, Point>&);
   Rect(const Point&, const Point&);
   Rect(const Point&, const Size&);
   Size GetSize() const;

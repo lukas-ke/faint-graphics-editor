@@ -25,7 +25,7 @@ namespace faint{
 
 class ExtensionImpl{
  public:
-  ExtensionImpl(const utf8_string& extension)
+  explicit ExtensionImpl(const utf8_string& extension)
     : extension(extension)
   {}
 
@@ -72,7 +72,7 @@ bool FileExtension::operator==(const FileExtension& other) const{
 
 class DirPathImpl{
 public:
-  DirPathImpl(const wxString& dirPath)
+  explicit DirPathImpl(const wxString& dirPath)
     : dirPath(dirPath)
   {}
 
@@ -113,7 +113,7 @@ DirPath DirPath::SubDir(const char* dir) const{
 
 class FileNameImpl{
 public:
-  FileNameImpl(const wxString& fileName) :
+  explicit FileNameImpl(const wxString& fileName) :
     fileName(fileName)
   {}
   wxString fileName;
@@ -145,7 +145,7 @@ utf8_string FileName::Str() const{
 
 class PathImpl{
 public:
-  PathImpl(const wxFileName& path)
+  explicit PathImpl(const wxFileName& path)
     : path(path)
   {}
   wxFileName path;

@@ -66,7 +66,7 @@ private:
 template<typename T>
 class GuiTestWindowFeedbackImpl : public faint::WindowFeedback{
 public:
-  GuiTestWindowFeedbackImpl(const T& onClose) :
+  explicit GuiTestWindowFeedbackImpl(const T& onClose) :
     m_onClose(onClose)
   {}
 

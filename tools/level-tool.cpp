@@ -90,7 +90,7 @@ class LevelTool : public StandardTool{
   // Tool for rotating the image so that the specified line becomes
   // horizontal.
 public:
-  LevelTool(const Settings& allSettings) :
+  explicit LevelTool(const Settings& allSettings) :
     StandardTool(ToolId::LEVEL, level_tool_settings(allSettings)),
     m_active(false),
     m_editor(AllowConstrain(false), // Would interfere with scale option

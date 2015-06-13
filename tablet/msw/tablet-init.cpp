@@ -35,9 +35,10 @@ WTENABLE g_WTEnable = nullptr;
 WTOVERLAP g_WTOverlap = nullptr;
 
 namespace faint{namespace tablet{
+
 class InitError{
 public:
-  InitError(InitResult errorCode)
+  explicit InitError(InitResult errorCode)
     : m_errorCode(errorCode)
   {
     assert(m_errorCode != InitResult::OK);

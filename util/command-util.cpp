@@ -481,7 +481,7 @@ Command* get_move_objects_command(const objects_t& objects,
 
 class MergeIfSameObjects : public MergeCondition{
 public:
-  MergeIfSameObjects(const objects_t& objects)
+  explicit MergeIfSameObjects(const objects_t& objects)
     : m_objects(objects)
   {}
 

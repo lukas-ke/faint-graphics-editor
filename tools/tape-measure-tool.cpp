@@ -66,7 +66,7 @@ coord get_distance_scaling(const utf8_string& unit, const Calibration& c){
 
 class TapeMeasureTool : public StandardTool {
 public:
-  TapeMeasureTool(const Settings& allSettings)
+  explicit TapeMeasureTool(const Settings& allSettings)
     : StandardTool(ToolId::TAPE_MEASURE, measure_settings(allSettings)),
       m_editor(AllowConstrain(true), AllowSnap(true))
   {}

@@ -148,7 +148,7 @@ static FileList get_all(const RecentFiles& recent){
 // Wrapper to allow the MenuPredicate to be unaware of wxMenu.
 class MenuRefWX : public MenuReference{
 public:
-  MenuRefWX(wxMenuBar* menu)
+  explicit MenuRefWX(wxMenuBar* menu)
     : m_menu(menu)
   {}
 

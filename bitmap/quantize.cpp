@@ -76,7 +76,7 @@ static const int EXTRA_RESERVED_COLORS = 25; // "To avoid running out"
 class IndexTables{
 // Maps colors to indexes into an octree
 public:
-  IndexTables(int numLevels){
+  explicit IndexTables(int numLevels){
     assert(1 <= numLevels && numLevels <= 6);
     this->red = new unsigned int[256];
     this->green = new unsigned int[256];
@@ -150,7 +150,7 @@ public:
     delete[] this->blue;
   }
 
-  int GetIndex(const Color& c){
+  int GetIndex(const Color& c) const{
     return static_cast<int>(red[c.r] | green[c.g] | blue[c.b]);
   }
 
@@ -190,7 +190,7 @@ public:
   ColorNode*** colorNode_aa;
   ColorList colorMap;
 
-  Octree(const int CQ_NLEVELS)
+  explicit Octree(const int CQ_NLEVELS)
     : CQ_NLEVELS(CQ_NLEVELS)
   {
     colorNode_aa = new ColorNode**[CQ_NLEVELS + 1];

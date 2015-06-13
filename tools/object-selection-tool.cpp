@@ -70,7 +70,7 @@ static Command* change_settings_objects(const objects_t& objects,
 
 class ObjectSelectionTool : public MultiTool {
 public:
-  ObjectSelectionTool(const ActiveCanvas& activeCanvas)
+  explicit ObjectSelectionTool(const ActiveCanvas& activeCanvas)
     : MultiTool(ToolId::OTHER,
       default_task(select_object_idle(m_settings, activeCanvas))),
       m_activeCanvas(activeCanvas)

@@ -46,3 +46,14 @@ faux-compilation output"
     (shell-command
    (concat (file-name-as-directory faint-root) "tests/run-benchmarks.exe&")
    "*benchmark-results*")))
+
+(defun faint-cpp-check()
+  (interactive)
+  (compile (concat faint-cppcheck-command " "
+                   faint-root
+                   " --enable=all"
+                   " -q"
+                   " --template=gcc"
+                   " --inconclusive"
+                   " --suppress=assertWithSideEffect"
+                   " --suppress=unusedFunction")))

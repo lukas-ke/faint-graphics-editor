@@ -30,7 +30,7 @@ public:
 
 class OverlayCaret : public Overlay {
 public:
-  OverlayCaret(const LineSegment& caret)
+  explicit OverlayCaret(const LineSegment& caret)
     : m_caret(caret)
   {}
   void Paint(OverlayDC& dc) const override{
@@ -42,7 +42,7 @@ private:
 
 class OverlayConstrainPos : public Overlay {
 public:
-  OverlayConstrainPos(const Point& pos)
+  explicit OverlayConstrainPos(const Point& pos)
     : m_pos(pos)
   {}
   void Paint(OverlayDC& dc) const override{
@@ -54,7 +54,7 @@ private:
 
 class OverlayCorners : public Overlay {
 public:
-  OverlayCorners(const Tri& tri)
+  explicit OverlayCorners(const Tri& tri)
     : m_tri(tri)
   {}
   void Paint(OverlayDC& dc) const override{
@@ -66,7 +66,7 @@ private:
 
 class OverlayExtension : public Overlay {
 public:
-  OverlayExtension(const Point& point)
+  explicit OverlayExtension(const Point& point)
     : m_point(point)
   {}
   void Paint(OverlayDC& dc) const override{
@@ -78,7 +78,7 @@ private:
 
 class OverlayHorizontalLine : public Overlay {
 public:
-  OverlayHorizontalLine(coord y)
+  explicit OverlayHorizontalLine(coord y)
     : m_y(y)
   {}
   void Paint(OverlayDC& dc) const override{
@@ -90,7 +90,7 @@ private:
 
 class OverlayLine: public Overlay {
 public:
-  OverlayLine(const LineSegment& line)
+  explicit OverlayLine(const LineSegment& line)
     : m_line(line)
   {}
   void Paint(OverlayDC& dc) const override{
@@ -119,7 +119,7 @@ private:
 
 class OverlayMovable : public Overlay {
 public:
-  OverlayMovable(const Point& point)
+  explicit OverlayMovable(const Point& point)
     : m_point(point)
   {}
   void Paint(OverlayDC& dc) const override{
@@ -131,7 +131,7 @@ private:
 
 class OverlayPivot : public Overlay {
 public:
-  OverlayPivot(const Point& p)
+  explicit OverlayPivot(const Point& p)
     : m_pivot(p)
   {}
   void Paint(OverlayDC& dc) const override{
@@ -143,7 +143,7 @@ private:
 
 class OverlayPixel : public Overlay {
 public:
-  OverlayPixel(const IntPoint& p)
+  explicit OverlayPixel(const IntPoint& p)
     : m_pos(p)
   {}
   void Paint(OverlayDC& dc) const override{
@@ -155,7 +155,7 @@ private:
 
 class OverlayRectangle : public Overlay {
 public:
-  OverlayRectangle(const Rect& r)
+  explicit OverlayRectangle(const Rect& r)
     : m_rect(r)
   {}
   void Paint(OverlayDC& dc) const override{
@@ -167,7 +167,7 @@ private:
 
 class OverlayParallelogram : public Overlay {
 public:
-  OverlayParallelogram(const Tri& tri)
+  explicit OverlayParallelogram(const Tri& tri)
     : m_tri(tri)
   {}
   void Paint(OverlayDC& dc) const override{
@@ -212,7 +212,7 @@ private:
 
 class OverlayVerticalLine : public Overlay {
 public:
-  OverlayVerticalLine(coord x)
+  explicit OverlayVerticalLine(coord x)
     : m_x(x)
   {}
   void Paint(OverlayDC& dc) const override {

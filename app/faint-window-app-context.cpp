@@ -269,7 +269,7 @@ void FaintDialogContext::OnClosed(BitmapCommand* cmd){
 class DialogFeedbackImpl : public DialogFeedback{
   // Fixme: Remove in favor of WindowFeedbackImpl
 public:
-  DialogFeedbackImpl(Canvas& canvas)
+  explicit DialogFeedbackImpl(Canvas& canvas)
     : m_canvas(canvas)
   {}
 

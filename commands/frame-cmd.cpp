@@ -27,7 +27,7 @@ namespace faint{
 class AddFrameCommand : public Command {
   // Adds a Frame. Manages the Frame life-time.
 public:
-  AddFrameCommand(const IntSize& size)
+  explicit AddFrameCommand(const IntSize& size)
     : Command(CommandType::FRAME)
   {
     ImageInfo info(size, create_bitmap(false));
@@ -72,7 +72,7 @@ Command* add_frame_command(const Image& image, const Index& index){
 
 class RemoveFrameCommand : public Command {
 public:
-  RemoveFrameCommand(const Index& index)
+  explicit RemoveFrameCommand(const Index& index)
     : Command(CommandType::FRAME),
       m_image(nullptr),
       m_index(index)

@@ -81,7 +81,7 @@ public:
 
 class Command{
 public:
-  Command(CommandType);
+  explicit Command(CommandType);
   virtual ~Command() = default;
   virtual void Do(CommandContext&) = 0;
   // Do only the Raster part of the command

@@ -25,7 +25,7 @@ namespace faint{
 
 class TextIdle : public StandardTask {
 public:
-  TextIdle(Settings& s)
+  explicit TextIdle(Settings& s)
     : m_settings(s)
   {}
 

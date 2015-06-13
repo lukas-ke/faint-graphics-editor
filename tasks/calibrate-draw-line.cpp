@@ -31,7 +31,7 @@ class CalibrateDrawLine : public StandardTask{
   // Task for drawing a line for calibrating the image coordinate
   // system.
 public:
-  CalibrateDrawLine(const PosInfo& info)
+  explicit CalibrateDrawLine(const PosInfo& info)
     : m_editor(info, AllowConstrain(true), AllowSnap(true))
   {
     info.status.SetMainText("Draw measuring line.");

@@ -241,7 +241,7 @@ static unsigned int from_hex_str(const utf8_string& s){
 
 class UnicodeExpression : public TextExpression{
 public:
-  UnicodeExpression(expr_list& args){
+  explicit UnicodeExpression(expr_list& args){
     throw_if_wrong_arg_count("u", // Fixme: Duplication
       1, args);
     m_arg = std::move(args[0]);

@@ -32,7 +32,7 @@ namespace faint{
 class SliderEvent : public wxCommandEvent{
   // Fixme: Hide this class in impl
 public:
-  SliderEvent(int value);
+  explicit SliderEvent(int value);
   wxEvent* Clone() const override;
   int GetValue() const;
 private:

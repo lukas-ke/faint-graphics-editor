@@ -86,7 +86,7 @@ const wxEventType FAINT_PENDING_CHAR = wxNewEventType();
 
 class PendingCharEvent : public wxCommandEvent{
 public:
-  PendingCharEvent(wxChar c)
+  explicit PendingCharEvent(wxChar c)
     : wxCommandEvent(FAINT_PENDING_CHAR, -1),
       m_char(c)
   {}

@@ -266,7 +266,7 @@ class PathTool : public Tool{
   // The PathTool is not a StandardTool because it needs to react to
   // setting changes.
 public:
-  PathTool(const Settings& allSettings)
+  explicit PathTool(const Settings& allSettings)
     : Tool(ToolId::PATH),
       m_active(false),
       m_mouseButton(MouseButton::LEFT),

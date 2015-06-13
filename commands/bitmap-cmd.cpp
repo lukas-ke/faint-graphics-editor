@@ -61,7 +61,7 @@ private:
 
 class BmpTargetImage final : public BmpTargetBase {
 public:
-  BmpTargetImage(BitmapCommand* cmd)
+  explicit BmpTargetImage(BitmapCommand* cmd)
     : BmpTargetBase(CommandType::RASTER, cmd)
   {}
 private:
@@ -76,7 +76,7 @@ private:
 
 class BmpTargetRectangle final : public BmpTargetBase {
 public:
-  BmpTargetRectangle(BitmapCommand* cmd, const IntRect& rect)
+  explicit BmpTargetRectangle(BitmapCommand* cmd, const IntRect& rect)
     : BmpTargetBase(CommandType::RASTER, cmd),
       m_rect(rect)
   {}
@@ -97,7 +97,7 @@ private:
 
 class BmpTargetSelection final : public BmpTargetBase {
 public:
-  BmpTargetSelection(BitmapCommand* cmd)
+  explicit BmpTargetSelection(BitmapCommand* cmd)
     : BmpTargetBase(CommandType::SELECTION, cmd)
   {}
 private:

@@ -257,11 +257,11 @@ bool RadialGradient::operator>(const RadialGradient& other) const{
 
 class Gradient::GradientImpl{
 public:
-  GradientImpl(const LinearGradient& linear)
+  explicit GradientImpl(const LinearGradient& linear)
     : gradient(linear)
   {}
 
-  GradientImpl(const RadialGradient& radial)
+  explicit GradientImpl(const RadialGradient& radial)
     : gradient(radial)
   {}
 

@@ -49,8 +49,8 @@ struct MappedType<Settings&>{
 static std::ostream& operator<<(std::ostream& o, const Paint& paint){
   o << visit(paint,
     [](const Color& c){return bracketed(str_rgba(c));},
-    [](const Pattern&){return "Pattern";},
-    [](const Gradient&){return "Gradient";});
+    [](const Pattern&){return utf8_string("Pattern");},
+    [](const Gradient&){return utf8_string("Gradient");});
   return o;
 }
 

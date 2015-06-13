@@ -77,7 +77,7 @@ static Settings fill_settings(const Settings& allSettings){
 
 class FillTool : public StandardTool {
 public:
-  FillTool(const Settings& allSettings)
+  explicit FillTool(const Settings& allSettings)
     : StandardTool(ToolId::FLOOD_FILL, fill_settings(allSettings))
   {}
 

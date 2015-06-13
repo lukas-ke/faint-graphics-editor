@@ -124,7 +124,7 @@ utf8_string str_uint(int) = delete;
 class StrBtn{
 // Expresses a mouse button and its opposite as strings.
 public:
-  StrBtn(MouseButton);
+  explicit StrBtn(MouseButton);
   const utf8_string This(bool capital) const;
   const utf8_string Other(bool capital) const;
 private:

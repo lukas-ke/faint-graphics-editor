@@ -115,7 +115,7 @@ static Settings maybe_offsat_paint(const Settings& s, const Brush& brush){
 
 class BrushTool : public StandardTool {
 public:
-  BrushTool(const Settings& allSettings)
+  explicit BrushTool(const Settings& allSettings)
     : StandardTool(ToolId::BRUSH, brush_settings(allSettings)),
       m_alphaMap(IntSize(1, 1)),
       m_brush(circle_brush(1)),

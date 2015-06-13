@@ -53,20 +53,22 @@ static size_t get_sorted_insertion_pos(Object* obj,
 
 class ImageExpressionContext : public ExpressionContext{
 public:
-  ImageExpressionContext(Image* image)
+  explicit ImageExpressionContext(Image& image)
     : m_image(image)
  {}
 
   Optional<Calibration> GetCalibration() const override{
-    return m_image->GetCalibration();
+    return m_image.GetCalibration();
   }
 
   const Object* GetObject(const utf8_string& name) const override{
-    return get_by_name(m_image->GetObjects(), name);
+    return get_by_name(m_image.GetObjects(), name);
   }
 
+  ImageExpressionContext& operator=(const ImageExpressionContext&) = delete;
+
 private:
-  Image* m_image;
+  Image& m_image;
 };
 
 Image::Image(FrameProps&& props)
@@ -78,7 +80,7 @@ Image::Image(FrameProps&& props)
     m_original(),
     m_originalObjects(m_objects)
 {
-  m_expressionContext = std::make_unique<ImageExpressionContext>(this);
+  m_expressionContext = std::make_unique<ImageExpressionContext>(*this);
 }
 
 Image::Image(const Image& other)
@@ -88,14 +90,14 @@ Image::Image(const Image& other)
     m_original()
 {
   m_originalObjects = m_objects = clone(other.GetObjects());
-  m_expressionContext = std::make_unique<ImageExpressionContext>(this);
+  m_expressionContext = std::make_unique<ImageExpressionContext>(*this);
 }
 
 Image::Image()
   : m_bg(ColorSpan(color_white, IntSize(1,1))),
     m_delay(0)
 {
-  m_expressionContext = std::make_unique<ImageExpressionContext>(this);
+  m_expressionContext = std::make_unique<ImageExpressionContext>(*this);
 }
 
 Image::~Image(){
