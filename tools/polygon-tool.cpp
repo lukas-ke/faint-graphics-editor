@@ -93,7 +93,7 @@ static Settings polygon_tool_settings(const Settings& allSettings){
   return s;
 }
 
-  class PolygonTool : public StandardTool, public HistoryContext {
+class PolygonTool : public StandardTool, public HistoryContext {
 public:
   PolygonTool(const Settings& allSettings)
     : StandardTool(ToolId::POLYGON, polygon_tool_settings(allSettings)),

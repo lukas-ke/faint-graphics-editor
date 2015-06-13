@@ -2,18 +2,21 @@
 Tools that provide a HistoryContext typically feature a private
 undo-stack.
 
-AllowGlobalRedo() lets such tools inhibit the regular Redo, even if
-the tool currently has no redoable command.
+By specializing HistoryContext::AllowGlobalRedo() such tools can
+inhibit the regular "outside tool-"Redo, even when the tool currently
+has no redoable command.
 
 For example, When using the Polygon tool, points are added on left
 click. This can be undone with Ctrl+Z, and redone with Ctrl+Y. When
 there is nothing to redo in the tool (i.e. at the last added point),
-CanRedo() from the Polygon tool's HistoryContext will be false.
+its HistoryContext::CanRedo() will return false. Normally, the regular
+redo stack would now take precedence.
 
-However: AllowsGlobalRedo will be false even if CanRedo is false, since
-otherwise, if there was an image-level redo available, the tool would,
-surprisingly, be preempted on a call to Redo() and the image modified
-in the middle of point editing.
+However: the PolygonTool:s HistoryContext::AllowsGlobalRedo will be
+false even if CanRedo is false, since otherwise, if there was an
+image-level redo available, the tool would, surprisingly, be preempted
+on a call to Redo() and the image modified in the middle of point
+editing.
 
 A similar function for undo is not required, as the tool can simply be
 preempted when undone past its initial action.
