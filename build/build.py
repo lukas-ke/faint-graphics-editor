@@ -68,9 +68,13 @@ def read_config(platform):
         some expected file.
 
         """
-        if not os.path.exists(os.path.join(folder, expected_content)):
+        
+        full_path = os.path.expanduser(os.path.join(folder, expected_content))
+
+        if not os.path.exists(full_path):            
             print("Error in build.cfg:\n %s: %s not found in \n %s"
                   %(name, expected_content, folder))
+            print(full_path)
             exit(1)
 
 
@@ -104,7 +108,7 @@ def read_config(platform):
     # Verify that the specified paths contain expected includes or folders
     check_folder("wx_root", wx_root, "include/wx")
     check_folder("cairo_include", cairo_include, "cairo.h")
-    check_folder("python_include", python_include, "python.h")
+    check_folder("python_include", python_include, "Python.h")
     check_folder("pango_include", pango_include, "pango/pango.h")
     check_folder("pnglib_include", pnglib_include, "png.h")
     check_folder("glib_include", glib_include, "glib.h")
