@@ -107,9 +107,10 @@ struct WindowSettings {
 
 class FaintState{
 public:
-  FaintState(const Settings& s, bool silentMode)
+  FaintState(const Settings& s, bool silentMode, bool usePenTablet)
     : toolSettings(s),
-      silentMode(silentMode)
+      silentMode(silentMode),
+      usePenTablet(!silentMode && usePenTablet)
   {}
   Tool* activeTool = nullptr; // Fixme: Who deletes him?
   Layer layer = Layer::RASTER;
@@ -118,6 +119,7 @@ public:
   WindowSettings windowSettings;
   const bool silentMode;
   int textEntryCount = 0;
+  bool usePenTablet;
 };
 
 static wxStatusBar& create_faint_statusbar(wxFrame* frame){
@@ -400,14 +402,15 @@ FaintWindow::FaintWindow(Art& art,
   const PaintMap& palette,
   HelpFrame* helpFrame,
   InterpreterFrame* interpreterFrame,
-  bool silentMode)
+  bool silentMode,
+  bool usePenTablet)
 {
   // Deleted by wxWidgets
   auto* frame = new FaintFrame();
 
   std::unique_ptr<FaintPanels> panels(new FaintPanels);
   std::unique_ptr<FaintState> state(new FaintState(default_tool_settings(),
-      silentMode));
+      silentMode, usePenTablet));
 
   // Fixme: Who deletes?
   FaintWindowContext* appContext = new FaintWindowContext(*this,
@@ -767,8 +770,9 @@ void FaintWindow::Initialize(){
   NewDocument(m_impl->appContext.GetDefaultImageInfo());
 
   #ifdef __WXMSW__
+  auto& state = (*m_impl->state);
   // Fixme: Add common tablet init which is no-op on Linux (for now)
-  if (!m_impl->state->silentMode){
+  if (!state.silentMode && state.usePenTablet){
     tablet::InitResult tabletResult = tablet::initialize(wxGetInstance(),
       m_impl->frame->GetHWND());
 

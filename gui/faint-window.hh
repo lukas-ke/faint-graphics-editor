@@ -36,7 +36,8 @@ public:
     const PaintMap& palette,
     HelpFrame*,
     InterpreterFrame*,
-    bool silentMode);
+    bool silentMode,
+    bool initPenTablet);
   ~FaintWindow();
   void Initialize();
   void AddFormat(Format*);

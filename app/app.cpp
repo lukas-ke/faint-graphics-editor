@@ -58,7 +58,8 @@ struct CommandLine{
     preventServer(false),
     silentMode(false),
     script(false),
-    port(get_default_faint_port())
+    port(get_default_faint_port()),
+    usePenTablet(true)
   {}
   bool forceNew; // single instance
   bool preventServer; // single instance
@@ -68,6 +69,7 @@ struct CommandLine{
   utf8_string port;
   FileList files;
   utf8_string arg; // Script argument
+  bool usePenTablet;
 };
 
 static const wxCmdLineEntryDesc g_cmdLineDesc[] = {
@@ -77,6 +79,11 @@ static const wxCmdLineEntryDesc g_cmdLineDesc[] = {
 
   {wxCMD_LINE_SWITCH, "s", "silent",
    "Disables the GUI. Requires specifying a script with with --run.",
+   wxCMD_LINE_VAL_STRING,
+   wxCMD_LINE_PARAM_OPTIONAL},
+
+  {wxCMD_LINE_SWITCH, "", "no-pen-tablet",
+   "Disable initialization of pen tablet.",
    wxCMD_LINE_VAL_STRING,
    wxCMD_LINE_PARAM_OPTIONAL},
 
@@ -250,6 +257,7 @@ public:
 
   bool OnCmdLineParsed(wxCmdLineParser& parser) override{
     m_cmd.silentMode = parser.Found("s");
+    m_cmd.usePenTablet = !m_cmd.silentMode && !parser.Found("no-pen-tablet");
     m_cmd.forceNew = parser.Found("i");
     m_cmd.preventServer = parser.Found("ii");
     m_cmd.port = get_string(parser, "port", get_default_faint_port());
@@ -343,7 +351,8 @@ public:
       default_palette(),
       m_helpFrame.get(),
       m_interpreterFrame.get(),
-      m_cmd.silentMode);
+      m_cmd.silentMode,
+      m_cmd.usePenTablet);
 
     m_faintWindow->SetIcons(get_icon(m_art, Icon::FAINT16),
       get_icon(m_art, Icon::FAINT32));
