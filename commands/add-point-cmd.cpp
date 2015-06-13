@@ -27,11 +27,12 @@ public:
     : Command(CommandType::OBJECT),
       m_object(object),
       m_pointIndex(pointIndex),
-      m_point(point)
+      m_point(point),
+      m_undoFunc()
   {}
 
   void Do(CommandContext&) override{
-    m_object->InsertPoint(m_point, m_pointIndex);
+    m_undoFunc = m_object->InsertPoint(m_point, m_pointIndex);
   }
 
   utf8_string Name() const override{
@@ -39,7 +40,7 @@ public:
   }
 
   void Undo(CommandContext&) override{
-    m_object->RemovePoint(m_pointIndex);
+    m_undoFunc();
   }
 
   AddPointCommand& operator=(const AddPointCommand&) = delete;
@@ -48,6 +49,7 @@ private:
   Object* m_object;
   int m_pointIndex;
   Point m_point;
+  std::function<void()> m_undoFunc;
 };
 
 Command* add_point_command(Object* object, int pointIndex, const Point& point){

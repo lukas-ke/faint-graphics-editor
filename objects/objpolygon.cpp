@@ -104,10 +104,17 @@ public:
     SetTri(m_points.GetTri()); // Fixme
   }
 
-  void InsertPoint(const Point& pt, int index) override{
+  UndoAddFunc InsertPoint(const Point& pt, int index) override{
     assert(index >= 0);
+    Tri oldTri = m_tri;
+    auto undoFunc = [=](){
+      m_points.RemovePoint(oldTri, index);
+      SetTri(oldTri);
+    };
+
     m_points.InsertPoint(m_tri, pt, index);
     SetTri(m_points.GetTri());
+    return undoFunc;
   }
 
   void RemovePoint(int index) override{

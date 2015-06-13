@@ -48,7 +48,7 @@ Long overdue release!
   cairo path or pango layout. The pango layout rendering is "wobbly"
   if the text is rotated on windows, but often looks better than
   rendering as a cairo-path when not rotated. Only available via
-  Python, obj.text_render_style = 'pangolayout' or 'cairopath'
+  Python, `obj.text_render_style = 'pangolayout'` or `'cairopath'`.
 
 - Added checkbox for nearest neighbour scaling to resize dialog for
   image and raster selection.
@@ -140,6 +140,8 @@ Long overdue release!
   `f.get_selected()`
 
 - [Python] Added `pinch_whirl` to `Canvas`.
+
+- [Python] Added `copy` to `Bitmap`, for duplicating a Bitmap.
 
 - [Help] All Python functions for showing dialogs are listed in the help.
 

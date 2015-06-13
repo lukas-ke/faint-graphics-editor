@@ -15,6 +15,7 @@
 
 #ifndef FAINT_OBJECT_HH
 #define FAINT_OBJECT_HH
+#include <functional>
 #include <vector>
 #include "geo/point.hh"
 #include "util/id-types.hh"
@@ -50,6 +51,8 @@ public:
     return pos;
   }
 };
+
+using UndoAddFunc = std::function<void()>;
 
 class Object {
 public:
@@ -94,7 +97,11 @@ public:
   virtual utf8_string GetType() const = 0;
   virtual bool HitTest(const Point&);
   bool Inactive() const;
-  virtual void InsertPoint(const Point&, int index);
+
+  // Insert a point at the given index. Returns a closure for undo,
+  // since undo may be more involved than "RemovePoint" (e.g. when
+  // splitting a bezier path)
+  virtual UndoAddFunc InsertPoint(const Point&, int index);
   virtual bool IsControlPoint(int index) const;
   virtual int NumPoints() const;
   virtual void RemovePoint(int index);

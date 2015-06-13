@@ -114,8 +114,9 @@ bool Object::Inactive() const{
   return !m_active;
 }
 
-void Object::InsertPoint(const Point&, int){
+UndoAddFunc Object::InsertPoint(const Point&, int){
   assert(false);
+  return [](){};
 }
 
 bool Object::IsControlPoint(int) const{

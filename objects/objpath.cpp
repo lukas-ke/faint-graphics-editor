@@ -165,28 +165,41 @@ public:
     return "Path";
   }
 
-  void InsertPoint(const Point& pt, int index) override{
+  UndoAddFunc InsertPoint(const Point& pt, int index) override{
     std::vector<PathPt> pathPts = m_points.GetPoints(m_tri);
     auto p0 = pathPts.at(index - 1); // Fixme: Check bounds
-    pathPts.at(index).Visit(
-      [](const ArcTo&){
+    return pathPts.at(index).Visit(
+      [](const ArcTo&) -> std::function<void()>{
         assert(false); // Not implemented
+        return [](){};
       },
-      [&](const Close&){
+      [&](const Close&) -> std::function<void()>{
         m_points.InsertPointRaw(LineTo(pt), index);
+        return [=](){
+          m_points.RemovePointRaw(index);
+        };
       },
-      [&](const CubicBezier& b){
+      [&](const CubicBezier& b) -> std::function<void()>{
         auto bs = in_twain(p0.p, b);
         bs.first.p = pt;
+        auto old = m_points.GetPoints(m_tri)[index];
         m_points.RemovePointRaw(index);
         m_points.InsertPointRaw(bs.second, index);
         m_points.InsertPointRaw(bs.first, index);
+
+        return [=](){
+          m_points.RemovePointRaw(index);
+          m_points.RemovePointRaw(index);
+          m_points.InsertPointRaw(old, index);
+        };
       },
-      [&](const LineTo&){
+      [&](const LineTo&) -> std::function<void()>{
         m_points.InsertPointRaw(LineTo(pt), index);
+        return [](){};
       },
-      [](const MoveTo&){
+      [](const MoveTo&) -> std::function<void()>{
         assert(false); // Not implemented
+        return [](){};
       });
   }
 
