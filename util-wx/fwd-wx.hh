@@ -223,7 +223,7 @@ wxBookCtrlBase* create_notebook(window_t parent);
 void add_page(wxBookCtrlBase*, window_t, const utf8_string&);
 void set_selection(wxBookCtrlBase*, int);
 
-wxWindow* create_hyperlink(window_t parent, const utf8_string url);
+wxWindow* create_hyperlink(window_t parent, const utf8_string& url);
 
 class wxWidgetsVersion{
 public:

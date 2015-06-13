@@ -92,15 +92,15 @@ public:
     : m_obj(nullptr)
   {}
 
-explicit Optional(PT& obj) :
+  explicit Optional(PT& obj) :
     m_obj(opthelper<T>::create(obj))
   {}
 
-explicit Optional(const PT& obj) :
+  explicit Optional(const PT& obj) :
       m_obj(opthelper<T>::create(obj))
   {}
 
-  Optional(const PT&& obj) :
+  Optional(PT&& obj) :
     m_obj(opthelper<T>::create(std::move(obj)))
   {}
 
@@ -199,7 +199,7 @@ explicit Optional(const PT& obj) :
 
   void Set(PT&& obj){
     opthelper<T>::clean_up(m_obj);
-    m_obj = opthelper<T>::create(obj);
+    m_obj = opthelper<T>::create(std::move(obj));
   }
 
   template<typename FUNC>

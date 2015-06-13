@@ -34,7 +34,7 @@ class Art;
 
 class FaintResizeDialogContext : public ResizeDialogContext{
 public:
-  FaintResizeDialogContext(AppContext& app)
+  explicit FaintResizeDialogContext(AppContext& app)
     : m_app(app)
   {}
 

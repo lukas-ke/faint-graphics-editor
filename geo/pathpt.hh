@@ -60,17 +60,13 @@ public:
 
 class LineTo{
 public:
-  LineTo(const Point& p)
-    : p(p)
-  {}
+  explicit LineTo(const Point& p) : p(p) {}
   Point p;
 };
 
 class MoveTo{
 public:
-  MoveTo(const Point& p)
-    : p(p)
-  {}
+  explicit MoveTo(const Point& p) : p(p) {}
   Point p;
 };
 

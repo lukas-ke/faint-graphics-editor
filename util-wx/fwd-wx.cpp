@@ -569,7 +569,7 @@ void set_selection(wxBookCtrlBase* book, int pageNum){
   book->SetSelection(pageNum);
 }
 
-wxWindow* create_hyperlink(window_t parent, const utf8_string url){
+wxWindow* create_hyperlink(window_t parent, const utf8_string& url){
   auto urlWx = to_wx(url);
   return new wxHyperlinkCtrl(parent.w, wxID_ANY, urlWx, urlWx);
 }

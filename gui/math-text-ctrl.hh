@@ -37,12 +37,15 @@ class MathTextCtrl{
 public:
   MathTextCtrl(wxWindow* parent, coord value);
   MathTextCtrl(wxWindow* parent, coord value, const events::coord_func& onChange);
+  MathTextCtrl(const MathTextCtrl&) = delete;
+
   wxWindow* AsWindow();
   void FitSizeTo(const utf8_string&);
   void SetValue(coord);
   coord GetValue() const;
   coord GetOldValue() const;
   bool HasFocus() const;
+
 private:
   class MathTextCtrlImpl;
   MathTextCtrlImpl* m_textCtrl;

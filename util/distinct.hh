@@ -86,7 +86,6 @@ public:
     : m_value(other.m_value)
   {}
 
-
   Primitive& operator=(T value){
     m_value = value;
     return *this;

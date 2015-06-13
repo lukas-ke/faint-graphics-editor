@@ -54,7 +54,7 @@ public:
     return m_rawId;
   }
 private:
-  FaintID(int id){
+  explicit FaintID(int id){
     m_rawId = id;
   }
   int m_rawId;
