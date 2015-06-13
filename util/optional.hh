@@ -49,7 +49,7 @@ struct opthelper{
 
 template<typename T>
 struct opthelper<T&>{
-  // Non-const reference type, the Optional points to the external
+  // Mutable reference type, the Optional points to the external
   // object. Only instantiatable from non-const reference. Not
   // destroyed when replaced or cleared.
   static T* create(T& obj){
@@ -63,7 +63,7 @@ struct opthelper<T&>{
 
 template<typename T>
 struct opthelper<const T&>{
-  // Non-const reference type, the Optional points to the external
+  // Const reference type, the Optional points to the external
   // object. Not destroyed when replaced or cleared.
   static const T* create(const T& obj){
     return &obj;
@@ -86,19 +86,21 @@ class Optional{
   // assert. This is less error prone than using pointers and not as
   // bulky as a boolean and a member.
 public:
+  using PT = typename plain_type<T>::type;
+
   Optional()
     : m_obj(nullptr)
   {}
 
-explicit Optional(typename plain_type<T>::type& obj) :
+explicit Optional(PT& obj) :
     m_obj(opthelper<T>::create(obj))
   {}
 
-explicit Optional(const typename plain_type<T>::type& obj) :
+explicit Optional(const PT& obj) :
       m_obj(opthelper<T>::create(obj))
   {}
 
-  Optional(const typename plain_type<T>::type&& obj) :
+  Optional(const PT&& obj) :
     m_obj(opthelper<T>::create(std::move(obj)))
   {}
 
@@ -183,21 +185,19 @@ explicit Optional(const typename plain_type<T>::type& obj) :
     return m_obj == nullptr;
   }
 
-  const typename plain_type<T>::type& Or(const typename plain_type<T>::type&
-    alternative) const
-  {
+  const PT& Or(const PT& alternative) const{
     if (m_obj == nullptr){
       return alternative;
     }
     return *m_obj;
   }
 
-  void Set(const typename plain_type<T>::type & obj){
+  void Set(const PT& obj){
     opthelper<T>::clean_up(m_obj);
     m_obj = opthelper<T>::create(obj);
   }
 
-  void Set(typename plain_type<T>::type&& obj){
+  void Set(PT&& obj){
     opthelper<T>::clean_up(m_obj);
     m_obj = opthelper<T>::create(obj);
   }
