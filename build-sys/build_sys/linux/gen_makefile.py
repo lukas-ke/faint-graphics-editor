@@ -17,47 +17,115 @@
 
 import os
 
+CC_OPTIONS_COMMON = [
+    "Wall",
+    "Wextra",
+    "Werror", # Treat warnings as errors
+    "pedantic",
+    "ansi",
+    "Wconversion",
+    "Wno-strict-aliasing", # No aliasing warnings
+    "Wno-sign-conversion", # No sign conversion warnings
+    "std=c++14", # C++14-conformance
+    "c", # Do not invoke linker
+]
+
+CC_OPTIONS_DEBUG = [
+    "g",
+]
+
+CC_OPTIONS_RELEASE = [
+    "O2", # Optimization level
+]
+
+GCC_SPECIFIC_WARNINGS = [
+    'Wuseless-cast',
+    #'Wzero-as-null-pointer-constant',
+]
+
+
 def compiler_specific_warnings(cc):
-    if cc == 'gcc' or cc == 'g++':
-        return ' '.join(
-            [
-                '-Wuseless-cast',
-                #'-Wzero-as-null-pointer-constant',
-            ])
+    if cc in ('gcc', 'g++'):
+        return GCC_SPECIFIC_WARNINGS
     else:
-        return ''
-        
+        return []
+
+
+def get_cc_options_list(cc, debug):
+    options = CC_OPTIONS_COMMON[:]
+    if debug:
+        options.extend(CC_OPTIONS_DEBUG)
+    else:
+        options.extend(CC_OPTIONS_RELEASE)
+        options.extend(compiler_specific_warnings(cc))
+    return options
+
+
+def get_includes_list(opts):
+    includes = ["-isystem " + include
+                 for include in opts.system_include_folders]
+    includes.extend(['-I%s' % include
+                     for include in opts.include_folders])
+    return includes
+
+
+def format_options(options):
+    return " ".join(['-%s' % opt for opt in options])
+
+
+def str_CCFLAGS(cc, debug):
+    return ('CCFLAGS=%s\n\n' %
+            format_options(get_cc_options_list(cc, debug)))
+
+
+def str_INCLUDES(includes):
+    return ("INCLUDES=%s\n" %
+            " \\\n  ".join(includes))
+
+
+def str_WXFLAGS(opts):
+    return ("WXFLAGS:=$(shell %s/wx-config --cxxflags)\n\n" %
+            opts.wx_root)
+
+
+def o_from_cpp(f):
+    b = os.path.basename(f)
+    b = b.replace(".cpp", ".o")
+    b = b.replace(".c", ".o")
+    return b
+
+
+def str_target_all(cppFiles, objRoot):
+    objFiles = [os.path.join(objRoot, o_from_cpp(f))
+                      for f in cppFiles]
+
+    objFilesStr = " \\\n  ".join(objFiles)
+
+    return "all: %s\n\n" % objFilesStr
+
+
+def str_target_obj(objRoot, cppFile, cc):
+    objName = os.path.join(objRoot, o_from_cpp(cppFile))
+    return ('%s: %s\n' % (objName, cppFile) +
+            '\t%s $(CCFLAGS) $(INCLUDES) $(WXFLAGS) $< -o $@\n\n' % cc)
+
+
+def without_msw(fileList):
+    return [f for f in fileList if "/msw/" not in f]
+
+
 def gen_makefile(fileList, opts, debug, cc):
     makefile_name = "generated_makefile"
     objRoot = opts.get_obj_root()
-    makefile = open(makefile_name, 'w')
+    cppFiles = without_msw(fileList)
 
-    includes = [ "-isystem " +
-        include for include in opts.system_include_folders]
-    includes.extend([
-        "-I%s" % include for include in opts.include_folders])
+    with open(makefile_name, 'w') as makefile:
+        makefile.write(str_CCFLAGS(cc, debug))
+        makefile.write(str_INCLUDES(get_includes_list(opts)))
+        makefile.write(str_WXFLAGS(opts))
+        makefile.write(str_target_all(cppFiles, objRoot))
 
-    makefile.write("INCLUDES=%s\n" % " \\\n  ".join(includes))
-    # Fixme: Re-add Werror in both debug, release.
-    # Fixme: In fact, put it in lists instead, like for msvc
-    if debug:
-        makefile.write("CCFLAGS=-Wall -Wextra -Werror -pedantic -ansi -Wconversion -Wno-strict-aliasing -Wno-sign-conversion -std=c++14 -g -c %s\n" % 
-                       compiler_specific_warnings(cc))        
-    else:
-        makefile.write("CCFLAGS=-Wall -Wextra -Werror -pedantic -ansi -Wconversion -O2 -Wno-sign-conversion -Wno-strict-aliasing -std=c++14 -Wunused -fdiagnostics-show-option -c %s\n" %
-                       compiler_specific_warnings(cc))
+        for f in cppFiles:
+            makefile.write(str_target_obj(objRoot, f, cc))
 
-    makefile.write("WXFLAGS:=$(shell %s/wx-config --cxxflags)\n" % opts.wx_root)
-    makefile.write("\n")
-    makefile.write("all: " + " \\\n  ".join([os.path.join(objRoot, os.path.basename(f).replace(".cpp", ".o").replace(".c", ".o")) for f in fileList if '/msw/' not in f])) # Fixme: Ugly way to exclude msw
-    makefile.write('\n\n')
-
-    for f in fileList:
-        if '/msw/' in f: # Fixme: Ugly way to exclude msw
-            continue
-        objName = os.path.join(objRoot, os.path.basename(f).replace(".cpp", ".o").replace(".c", ".o"))
-        makefile.write('%s: %s\n' % (objName, f))
-        makefile.write('\t%s $(CCFLAGS) $(INCLUDES) $(WXFLAGS) $< -o $@\n' % cc)
-        makefile.write('\n')
-
-    return makefile_name
+        return makefile_name
