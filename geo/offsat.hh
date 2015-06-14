@@ -31,8 +31,8 @@ public:
       m_offset(offset)
   {}
 
-  Offsat(const Offsat&& other)
-    : m_obj(other.m_obj),
+  Offsat(Offsat&& other)
+    : m_obj(std::move(other.m_obj)),
       m_offset(other.m_offset)
   {}
 

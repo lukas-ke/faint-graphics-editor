@@ -56,7 +56,7 @@ public:
     paint(paint), lineWidth(lineWidth), lineStyle(style)
   {}
 
-  BorderSettings(const Paint&& paint, int lineWidth, LineStyle style) :
+  BorderSettings(Paint&& paint, int lineWidth, LineStyle style) :
     paint(std::move(paint)), lineWidth(lineWidth), lineStyle(style)
   {}
 
@@ -87,7 +87,7 @@ public:
     : paint(b.paint), lineWidth(b.lineWidth), lineStyle(b.lineStyle), cap(cap)
   {}
 
-  LineSettings(const BorderSettings&& b, LineCap cap)
+  LineSettings(BorderSettings&& b, LineCap cap)
     : paint(std::move(b.paint)), lineWidth(b.lineWidth), lineStyle(b.lineStyle),
       cap(cap)
   {}
