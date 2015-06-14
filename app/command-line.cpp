@@ -60,7 +60,12 @@ const char* CMD_NEW_INSTANCE_LONG = "new-instance";
 
 const char* CMD_NO_SERVER = "no-server";
 
+#ifndef __WXMSW__
+// On Windows, DDE is used for IPC.
+// Unfortunately I didn't get Unix domain sockets to work
+// on Linux with wxWidgets, so I use regular TCP ports.
 const char* CMD_SERVER_PORT = "port";
+#endif
 
 const char* CMD_RUN_SCRIPT = "run";
 
@@ -96,10 +101,12 @@ static const wxCmdLineEntryDesc g_cmdLineDesc[] = {
    wxCMD_LINE_VAL_STRING,
    wxCMD_LINE_PARAM_OPTIONAL},
 
+  #ifndef __WXMSW__
   {wxCMD_LINE_OPTION, "", CMD_SERVER_PORT,
    "Specify port used for IPC.",
    wxCMD_LINE_VAL_STRING,
    wxCMD_LINE_PARAM_OPTIONAL},
+  #endif
 
   {wxCMD_LINE_OPTION, "", CMD_RUN_SCRIPT,
    "Run a Python script file after loading images",
@@ -108,7 +115,8 @@ static const wxCmdLineEntryDesc g_cmdLineDesc[] = {
 
   {wxCMD_LINE_OPTION, "", CMD_SCRIPT_ARG,
    "Custom argument stored in ifaint.cmd_arg.", // Fixme: Duplication
-   wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL},
+   wxCMD_LINE_VAL_STRING,
+   wxCMD_LINE_PARAM_OPTIONAL},
 
   { // Sentinel
     wxCMD_LINE_NONE, "", "", "",
@@ -120,6 +128,21 @@ void init_command_line_parser(wxCmdLineParser& p){
   p.SetDesc(g_cmdLineDesc);
 }
 
+#ifdef __WXMSW__
+const char* FAINT_DDE_SERVICE_NAME = "faint-graphics-editor-ipc";
+utf8_string get_port_or_service(wxCmdLineParser&){
+  // Service name for DDE
+  return FAINT_DDE_SERVICE_NAME;
+}
+
+static bool valid_port(const std::string& port){
+  return port == FAINT_DDE_SERVICE_NAME;
+}
+#else
+utf8_string get_port_or_service(wxCmdLineParser& p){
+  return get_string(p, CMD_SERVER_PORT, get_default_faint_port());
+}
+
 static bool valid_port(const std::string& str){
   if (std::all_of(begin(str), end(str), [](auto v){return std::isdigit(v);})){
     std::stringstream ss(str);
@@ -129,6 +152,7 @@ static bool valid_port(const std::string& str){
   }
   return false;
 }
+#endif
 
 OrError<CommandLine> get_parsed_command_line(wxCmdLineParser& p){
   CommandLine cmd;
@@ -136,7 +160,7 @@ OrError<CommandLine> get_parsed_command_line(wxCmdLineParser& p){
   cmd.usePenTablet = !cmd.silentMode && !p.Found(CMD_NO_PEN_TABLET);
   cmd.forceNew = p.Found(CMD_NEW_INSTANCE_LONG);
   cmd.preventServer = p.Found(CMD_NO_SERVER);
-  cmd.port = get_string(p, CMD_SERVER_PORT, get_default_faint_port());
+  cmd.port = get_port_or_service(p);
   cmd.arg = get_string(p, CMD_SCRIPT_ARG, "");
 
   utf8_string scriptPath = get_string(p, CMD_RUN_SCRIPT);
@@ -149,7 +173,8 @@ OrError<CommandLine> get_parsed_command_line(wxCmdLineParser& p){
 
   if (cmd.silentMode && cmd.scriptPath.NotSet()){
     return {space_sep("Error:", no_sep("--", CMD_SILENT_LONG),
-      "requires a script specified with", no_sep("--", CMD_RUN_SCRIPT), "<scriptname>")};
+      "requires a script specified with", no_sep("--", CMD_RUN_SCRIPT),
+    "<scriptname>")};
   }
 
   for (size_t i = 0; i!= p.GetParamCount(); i++){

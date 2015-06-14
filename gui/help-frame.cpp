@@ -50,7 +50,8 @@ static bool send_event(wxWindow* window, int eventId){
 }
 
 static bool is_web_link(const wxHtmlLinkInfo& link){
-  return link.GetHref().StartsWith("http://");
+  auto href = link.GetHref();
+  return href.StartsWith("http://") || href.StartsWith("https://");
 }
 
 static bool is_help_link(const wxHtmlLinkInfo& link){

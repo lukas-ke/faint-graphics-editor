@@ -206,10 +206,13 @@ public:
     // to write it on unhandled exception.
     m_crashFile = get_crash_file();
 
+    // Start Faint as the unique instance or send arguments to an
+    // already running instance (unless prevented by command line
+    // switches).
     m_faintInstance = create_faint_instance(m_cmd.files,
       allow_server(!m_cmd.preventServer),
       force_start(m_cmd.forceNew),
-      "~/.faint-graphics-editor-ipc");
+      m_cmd.port.c_str());
 
     if (!m_faintInstance->AllowStart()){
       return false;

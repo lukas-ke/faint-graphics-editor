@@ -16,7 +16,12 @@ tablewidths:10%,10%,*
 || ||--noserver||The started Faint instance will not attempt to start a server and become a single instance.||
 || ||--run|| Runs the specified \ref(scripting-intro.txt,Python script).||
 || ||--arg|| Stores the specified string in ifaint.cmd_arg for access from Python.||
-|| ||--port||Specify the port number to use for running a single instance of Faint. Useful if the default port seems to be occupied.||
+|| ||--port||Specify the port number to use for running a single instance of Faint. Useful if the default port seems to be occupied. Not available on Windows (see \ref(no-port,below)).||
+
+== No port numbers on Windows? {no-port} ==
+On Windows,
+\extref(https://en.wikipedia.org/wiki/Dynamic_Data_Exchange DDE) is
+used, so port numbers are not required for interprocess comunication.
 
 == Examples ==
 tablestyle:plain

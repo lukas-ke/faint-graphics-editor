@@ -19,9 +19,7 @@ import codecs
 import os
 import re
 
-def html_link(url, label=None):
-    if label is None:
-        label = url
+def html_link(url, label):
     return '<a href="%s">%s</a>' % (url, label)
 
 def check_table_style(table_style):
@@ -100,10 +98,16 @@ class ExternalReference:
     def __init__(self, url):
         if not url.startswith("http://") and not url.startswith("https://"):
             raise ContentError('External url not prefixed by http://. "%s"' % url)
-        self.url = url
+
+        values = url.split(" ")
+        if len(values) == 2:
+            self.url = values[0]
+            self.label = values[1]
+        else:
+            self.url = self.label = values[0]
 
     def to_html(self, state, **kwArgs):
-        return html_help_image("icon-extref.png") + html_link(self.url)
+        return html_help_image("icon-extref.png") + html_link(self.url, self.label)
 
 
 class Footer:
