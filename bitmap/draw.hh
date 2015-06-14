@@ -15,6 +15,7 @@
 
 #ifndef FAINT_DRAW_HH
 #define FAINT_DRAW_HH
+#include <utility> // std::move
 #include "bitmap/paint.hh"
 #include "geo/offsat.hh"
 #include "util/distinct.hh"
