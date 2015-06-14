@@ -31,6 +31,7 @@
 #include "text/utf8-string.hh"
 #include "util/index-iter.hh"
 #include "util/iter.hh"
+#include "util/make-vector.hh"
 #include "util/setting-id.hh"
 #include "util/settings.hh"
 
@@ -518,6 +519,11 @@ void CairoContext::pango_text(const Tri& t,
   restore();
 }
 
+static Point transformed(const Point& pt, const cairo_matrix_t& m){
+  return Point(m.xx * pt.x + m.xy * pt.y + m.x0,
+    m.yx * pt.x + m.yy * pt.y + m.y0);
+}
+
 std::vector<PathPt> CairoContext::get_text_path(const Tri& t,
   const utf8_string& text,
   const Settings& s)
@@ -532,39 +538,50 @@ std::vector<PathPt> CairoContext::get_text_path(const Tri& t,
 
   translate(p0);
   rotate(t.GetAngle());
+
   if (t.Height() < 0){
     scale(1, -1);
   }
 
-  // Offset to anchor at the top
-  Point offset(0, get_font_ascent(s));
-  translate(offset);
+  // Offset to anchor at the top of the text instead of the baseline.
+  translate(Point(0, get_font_ascent(s)));
+
+  cairo_matrix_t mtx;
+  cairo_get_matrix(m_impl->cr.get(), &mtx);
 
   PangoLayoutLine* line = pango_layout_get_line(layout.get(), 0);
   pango_cairo_layout_line_path(m_impl->cr.get(), line);
+
   std::vector<PathPt> path;
+  auto add = [&mtx, &path](const PathPt& pt){
+    assert(pt.type != PathPt::Type::ArcTo);
+    PathPt p2(pt);
+    p2.p = transformed(p2.p, mtx);
+    p2.c = transformed(p2.c, mtx);
+    p2.d = transformed(p2.d, mtx);
+    path.push_back(p2);
+  };
+
   // Fixme: Check for nullptr
   auto cairoPath(manage(cairo_copy_path(m_impl->cr.get())));
-  Point delta = p0 + offset;
+
   for (int i = 0; i < cairoPath->num_data; i += cairoPath->data[i].header.length){
     cairo_path_data_t* data = &cairoPath->data[i];
     switch (data->header.type) {
     case CAIRO_PATH_MOVE_TO:
-      path.push_back(PathPt::MoveTo(Point(data[1].point.x, data[1].point.y) +
-        delta));
+      add(PathPt::MoveTo(Point(data[1].point.x, data[1].point.y)));
       break;
     case CAIRO_PATH_LINE_TO:
-      path.push_back(PathPt::LineTo(Point(data[1].point.x,
-            data[1].point.y) + delta));
+      add(PathPt::LineTo(Point(data[1].point.x, data[1].point.y)));
       break;
     case CAIRO_PATH_CURVE_TO:
-      path.push_back(PathPt::CubicBezierTo(
-        Point(data[3].point.x, data[3].point.y) + delta,
-        Point(data[1].point.x, data[1].point.y) + delta,
-        Point(data[2].point.x, data[2].point.y) + delta));
+      add(PathPt::CubicBezierTo(
+        Point(data[3].point.x, data[3].point.y),
+        Point(data[1].point.x, data[1].point.y),
+        Point(data[2].point.x, data[2].point.y)));
       break;
     case CAIRO_PATH_CLOSE_PATH:
-      path.push_back(PathPt::PathCloser());
+      add(PathPt::PathCloser());
       break;
     }
   }

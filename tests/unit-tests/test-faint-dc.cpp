@@ -103,14 +103,13 @@ void test_faint_dc(){
     {
       // Unrotated
       auto path = dc.GetTextPath(t, "Hello world", default_text_settings());
-      EQUAL(path.size(), 153);
-
+      ASSERT(!path.empty());
       ASSERT(dc.IsOk());
+      EQUAL(path.size(), 153);
+      VERIFY(path.front().type == PathPt::Type::MoveTo);
 
-      // Stateless
-      auto path2 = dc.GetTextPath(t, "Hello world", default_text_settings());
-      EQUAL(path2.size(), 153);
-      VERIFY(path == path2);
+      // Verify that GetTextPath is stateless
+      VERIFY(path == dc.GetTextPath(t, "Hello world", default_text_settings()));
     }
   }
 }
