@@ -85,6 +85,9 @@ public:
   void stroke();
   void translate(const Point&);
 
+  // Clears the current path
+  void new_path();
+
   void new_sub_path();
 
   CairoContext(const CairoContext&) = delete;

@@ -25,7 +25,7 @@ public:
   }
 };
 
-}
+} // namespace
 
 void test_split_string(){
   using namespace faint;

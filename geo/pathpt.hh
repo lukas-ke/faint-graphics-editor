@@ -195,6 +195,38 @@ public:
     }
   }
 
+  bool operator==(const PathPt& other) const{
+    if (type != other.type){
+      return false;
+    }
+
+    switch (type){
+    case Type::ArcTo:
+      return p == other.p &&
+        r == other.r &&
+        axisRotation == other.axisRotation &&
+        largeArcFlag == other.largeArcFlag &&
+        sweepFlag == other.sweepFlag;
+
+    case Type::Close:
+      return true;
+
+    case Type::CubicBezier:
+      return p == other.p &&
+        c == other.c &&
+        d == other.d;
+
+    case Type::LineTo:
+      return p == other.p;
+
+    case Type::MoveTo:
+      return p == other.p;
+    }
+
+    assert(false);
+    return false;
+  }
+
 private:
   PathPt(Type t)
     : type(t),

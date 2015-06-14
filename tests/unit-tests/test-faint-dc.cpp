@@ -4,6 +4,8 @@
 #include "bitmap/color.hh"
 #include "bitmap/draw.hh"
 #include "geo/int-rect.hh"
+#include "geo/pathpt.hh"
+#include "geo/tri.hh"
 #include "rendering/faint-dc.hh"
 #include "util/default-settings.hh"
 #include "util/settings.hh"
@@ -89,5 +91,26 @@ void test_faint_dc(){
          {'g', color_magenta},
          {'b', color_blue},
          {' ', color_magenta}}));
+  }
+
+  {
+    Bitmap bmp(IntSize(10,10), color_magenta);
+    // GetTextPath
+    FaintDC dc(bmp);
+    ASSERT(dc.IsOk());
+    auto t = tri_from_rect({Point(0,0), Point(100,10)});
+
+    {
+      // Unrotated
+      auto path = dc.GetTextPath(t, "Hello world", default_text_settings());
+      EQUAL(path.size(), 153);
+
+      ASSERT(dc.IsOk());
+
+      // Stateless
+      auto path2 = dc.GetTextPath(t, "Hello world", default_text_settings());
+      EQUAL(path2.size(), 153);
+      VERIFY(path == path2);
+    }
   }
 }

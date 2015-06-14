@@ -524,7 +524,6 @@ std::vector<PathPt> CairoContext::get_text_path(const Tri& t,
 {
   // Fixme: Lots of the following duplicates text drawing!
 
-  set_source(s.Get(ts_Fg)); // Fixme
   save();
   const Point p0(t.P0());
   auto fd(get_font_description(s));
@@ -543,10 +542,9 @@ std::vector<PathPt> CairoContext::get_text_path(const Tri& t,
 
   PangoLayoutLine* line = pango_layout_get_line(layout.get(), 0);
   pango_cairo_layout_line_path(m_impl->cr.get(), line);
-
   std::vector<PathPt> path;
+  // Fixme: Check for nullptr
   auto cairoPath(manage(cairo_copy_path(m_impl->cr.get())));
-
   Point delta = p0 + offset;
   for (int i = 0; i < cairoPath->num_data; i += cairoPath->data[i].header.length){
     cairo_path_data_t* data = &cairoPath->data[i];
@@ -556,7 +554,8 @@ std::vector<PathPt> CairoContext::get_text_path(const Tri& t,
         delta));
       break;
     case CAIRO_PATH_LINE_TO:
-      path.push_back(PathPt::LineTo(Point(data[1].point.x, data[1].point.y) + delta));
+      path.push_back(PathPt::LineTo(Point(data[1].point.x,
+            data[1].point.y) + delta));
       break;
     case CAIRO_PATH_CURVE_TO:
       path.push_back(PathPt::CubicBezierTo(
@@ -569,9 +568,13 @@ std::vector<PathPt> CairoContext::get_text_path(const Tri& t,
       break;
     }
   }
-
   restore();
+  new_path();
   return path;
+}
+
+void CairoContext::new_path(){
+  cairo_new_path(m_impl->cr);
 }
 
 void CairoContext::new_sub_path(){
