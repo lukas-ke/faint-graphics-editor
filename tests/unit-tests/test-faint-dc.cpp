@@ -105,7 +105,11 @@ void test_faint_dc(){
       auto path = dc.GetTextPath(t, "Hello world", default_text_settings());
       ASSERT(!path.empty());
       ASSERT(dc.IsOk());
-      EQUAL(path.size(), 153);
+
+      // "Hello world" ought to contain at least a bunch of vertices
+      // regardless of font.
+      VERIFY(path.size() > 50);
+
       VERIFY(path.front().type == PathPt::Type::MoveTo);
 
       // Verify that GetTextPath is stateless
