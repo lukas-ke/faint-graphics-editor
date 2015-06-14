@@ -22,6 +22,12 @@
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-path.hh"
 
+#ifdef __WXMSW__
+static_assert(wxUSE_DDE_FOR_IPC == 1, "DDE should be used for IPC on windows");
+#else
+static_assert(wxUSE_DDE_FOR_IPC == 0, "TCP should be used for IPC on non-windows");
+#endif
+
 namespace faint{
 
 const char* LOCALHOST = "localhost";
@@ -98,12 +104,12 @@ public:
   }
 };
 
-static void show_start_server_error(const wxString& port){
+static void show_start_server_error(const wxString& serviceName){
     std::stringstream ss;
     ss << "Failed to create an IPC-service" << std::endl << std::endl <<
       "Using a single instance of Faint, and passing file names to the "
       "running instance will not work." << std::endl <<
-      "Port: " << port;
+      "Service name: " << serviceName;
     wxLogError(ss.str().c_str());
 }
 
@@ -181,7 +187,7 @@ static std::unique_ptr<wxSingleInstanceChecker> get_instance_checker(){
 std::unique_ptr<FaintInstance> create_faint_instance(const FileList& cmdLineFiles,
   const allow_server& allowServer,
   const force_start& forceStart,
-  const std::string& port)
+  const std::string& serviceName)
 {
   // Create the first instance, if possible
   std::unique_ptr<wxSingleInstanceChecker> singleInst(get_instance_checker());
@@ -189,7 +195,7 @@ std::unique_ptr<FaintInstance> create_faint_instance(const FileList& cmdLineFile
   if (!singleInst->IsAnotherRunning()){
     std::unique_ptr<wxServer> server;
     if (allowServer.Get()){
-      server = start_faint_server(port);
+      server = start_faint_server(serviceName);
     }
     else{
       singleInst.reset(nullptr);
@@ -205,7 +211,7 @@ std::unique_ptr<FaintInstance> create_faint_instance(const FileList& cmdLineFile
 
   if (cmdLineFiles.empty()){
     // Faint is running since previously, so just raise the window.
-    if (raise_existing_window(port)){
+    if (raise_existing_window(serviceName)){
       return std::make_unique<FaintInstanceImpl>(nullptr, nullptr,
         allow_start(false));
     }
@@ -217,7 +223,7 @@ std::unique_ptr<FaintInstance> create_faint_instance(const FileList& cmdLineFile
 
   // Faint is running since previously and should be passed the
   // filenames from this instance.
-  if (send_paths_to_server(cmdLineFiles, port)){
+  if (send_paths_to_server(cmdLineFiles, serviceName)){
     // The files were sent to the running instance. Prevent
     // this instance from starting.
     return std::make_unique<FaintInstanceImpl>(nullptr, nullptr,

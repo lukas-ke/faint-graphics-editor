@@ -207,8 +207,9 @@ public:
     m_crashFile = get_crash_file();
 
     m_faintInstance = create_faint_instance(m_cmd.files,
-      allow_server(!m_cmd.preventServer), force_start(m_cmd.forceNew),
-      m_cmd.port.str());
+      allow_server(!m_cmd.preventServer),
+      force_start(m_cmd.forceNew),
+      "~/.faint-graphics-editor-ipc");
 
     if (!m_faintInstance->AllowStart()){
       return false;

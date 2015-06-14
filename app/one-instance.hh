@@ -35,7 +35,7 @@ using force_start = Distinct<bool, FaintInstance, 1>;
 std::unique_ptr<FaintInstance> create_faint_instance(const FileList& cmdLineFiles,
   const allow_server&,
   const force_start&,
-  const std::string& port);
+  const std::string& serviceName);
 
 } // namespace
 
