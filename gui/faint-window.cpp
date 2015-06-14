@@ -833,6 +833,10 @@ void FaintWindow::NextTab() {
 }
 
 void FaintWindow::Open(const FileList& paths){
+  if (paths.empty()){
+    return;
+  }
+
   auto& panels(*m_impl->panels);
 
   if (panels.tabControl->GetCanvasCount() > 0){

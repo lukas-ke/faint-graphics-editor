@@ -251,11 +251,15 @@ FileList::FileList(const FileList& other){
   }
 }
 
+FileList::FileList(FileList&& other)
+  : m_files(std::move(other.m_files))
+{}
+
 FileList::~FileList(){
   clear();
 }
 
-  const FilePath& FileList::back() const{
+const FilePath& FileList::back() const{
   assert(!m_files.empty());
   return *m_files.back();
 }
@@ -290,6 +294,15 @@ void FileList::push_back(const FilePath& path){
 
 size_t FileList::size() const{
   return m_files.size();
+}
+
+FileList& FileList::operator=(const FileList& other){
+  return operator=(FileList(other));
+}
+
+FileList& FileList::operator=(FileList&& other){
+  m_files = std::move(other.m_files);
+  return *this;
 }
 
 bool exists(const FilePath& path){

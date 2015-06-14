@@ -14,12 +14,10 @@
 // permissions and limitations under the License.
 
 #include <algorithm>
-#include <cctype>
-#include <sstream>
 #include "wx/app.h"
-#include "wx/cmdline.h"
 #include "wx/filename.h"
 #include "wx/frame.h"
+#include "app/command-line.hh"
 #include "app/get-art.hh"
 #include "app/one-instance.hh"
 #include "app/resource-id.hh"
@@ -47,94 +45,6 @@
 #include "util/settings.hh"
 
 namespace faint{
-
-static utf8_string get_default_faint_port(){
-  return utf8_string("3793");
-}
-
-struct CommandLine{
-  CommandLine() :
-    forceNew(false),
-    preventServer(false),
-    silentMode(false),
-    script(false),
-    port(get_default_faint_port()),
-    usePenTablet(true)
-  {}
-  bool forceNew; // single instance
-  bool preventServer; // single instance
-  bool silentMode;
-  bool script;
-  Optional<FilePath> scriptPath;
-  utf8_string port;
-  FileList files;
-  utf8_string arg; // Script argument
-  bool usePenTablet;
-};
-
-static const wxCmdLineEntryDesc g_cmdLineDesc[] = {
-  {wxCMD_LINE_SWITCH, "h", "help",
-    "Displays help on the command line parameters",
-   wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP},
-
-  {wxCMD_LINE_SWITCH, "s", "silent",
-   "Disables the GUI. Requires specifying a script with with --run.",
-   wxCMD_LINE_VAL_STRING,
-   wxCMD_LINE_PARAM_OPTIONAL},
-
-  {wxCMD_LINE_SWITCH, "", "no-pen-tablet",
-   "Disable initialization of pen tablet.",
-   wxCMD_LINE_VAL_STRING,
-   wxCMD_LINE_PARAM_OPTIONAL},
-
-  {wxCMD_LINE_PARAM, "e", "whatev", "Image files", wxCMD_LINE_VAL_STRING,
-   wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_PARAM_MULTIPLE},
-
-  {wxCMD_LINE_SWITCH, "i", "newinst", "Force new instance",
-   wxCMD_LINE_VAL_STRING,
-   wxCMD_LINE_PARAM_OPTIONAL},
-
-  {wxCMD_LINE_SWITCH, "ii", "noserver",
-   "Prevent this instance from becoming a main app", wxCMD_LINE_VAL_STRING,
-   wxCMD_LINE_PARAM_OPTIONAL},
-
-  {wxCMD_LINE_OPTION, "", "port",
-   "Specify port used for IPC.", wxCMD_LINE_VAL_STRING,
-   wxCMD_LINE_PARAM_OPTIONAL},
-
-  {wxCMD_LINE_OPTION, "", "run",
-   "Run a Python script file after loading images",
-   wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL},
-
-  {wxCMD_LINE_OPTION, "arg", "arg",
-   "Custom argument stored in ifaint.cmd_arg.", // Fixme: Duplication
-   wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL},
-
-  {wxCMD_LINE_NONE, "", "", "",
-   wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL} // Sentinel
-};
-
-static utf8_string get_string(const wxCmdLineParser& parser,
-  const std::string& name,
-  const utf8_string& defaultStr=utf8_string(""))
-{
-  wxString str;
-  parser.Found(name, &str);
-  if (str.empty()){
-    return defaultStr;
-  }
-  return to_faint(str);
-}
-
-static bool valid_port(const std::string& str){
-  if (std::all_of(begin(str), end(str), [](auto v){return std::isdigit(v);})){
-    std::stringstream ss(str);
-    int i = 0;
-    ss >> i;
-    return 0 <= i && i <= 65535;
-  }
-  return false;
-}
 
 utf8_string format_run_script_error(const FilePath& path,
   const FaintPyExc& err)
@@ -256,39 +166,15 @@ public:
   }
 
   bool OnCmdLineParsed(wxCmdLineParser& parser) override{
-    m_cmd.silentMode = parser.Found("s");
-    m_cmd.usePenTablet = !m_cmd.silentMode && !parser.Found("no-pen-tablet");
-    m_cmd.forceNew = parser.Found("i");
-    m_cmd.preventServer = parser.Found("ii");
-    m_cmd.port = get_string(parser, "port", get_default_faint_port());
-    m_cmd.arg = get_string(parser, "arg", "");
-    utf8_string scriptPath = get_string(parser, "run");
-    m_cmd.scriptPath = make_absolute_file_path(scriptPath);
-
-    if (!valid_port(m_cmd.port.str())){
-      console_message(space_sep("Error: Invalid port specified",
-        bracketed(m_cmd.port.str().c_str())));
-      return false;
-    }
-
-    if (m_cmd.silentMode && m_cmd.scriptPath.NotSet()){
-      console_message("Error: --silent requires a script specified with "
-        "--run <scriptname>");
-      return false;
-    }
-
-    for (size_t i = 0; i!= parser.GetParamCount(); i++){
-      const wxString param(parser.GetParam(i));
-      wxFileName absPath(absoluted(wxFileName(param)));
-      if (absPath.IsDir()){
-        console_message(space_sep(
-          "Error: Folder path specified on command line - image path expected",
-          bracketed(to_faint(param))));
+    return get_parsed_command_line(parser).Visit(
+      [&](const CommandLine& cmd){
+        m_cmd = cmd;
+        return true;
+      },
+      [](const utf8_string& error){
+        console_message(error);
         return false;
-      }
-      m_cmd.files.push_back(FilePath::FromAbsoluteWx(absPath));
-    }
-    return true;
+      });
   }
 
   bool OnExceptionInMainLoop() override{
@@ -394,8 +280,8 @@ public:
     return true;
   }
 
-  void OnInitCmdLine(wxCmdLineParser& parser) override{
-    parser.SetDesc(g_cmdLineDesc);
+  void OnInitCmdLine(wxCmdLineParser& p) override{
+    init_command_line_parser(p);
   }
 
   void RunScript(const FilePath& scriptPath){

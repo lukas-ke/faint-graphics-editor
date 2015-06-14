@@ -117,6 +117,7 @@ class FileList{
   // to add a default constructor to FilePath
 public:
   FileList();
+  FileList(FileList&&);
   FileList(const FileList&);
   ~FileList();
   const FilePath& back() const;
@@ -128,7 +129,8 @@ public:
   void push_back(const FilePath&);
   size_t size() const;
 
-  FileList& operator=(const FileList&) = delete;
+  FileList& operator=(const FileList&);
+  FileList& operator=(FileList&&);
 private:
   std::vector<FilePath*> m_files;
 };
