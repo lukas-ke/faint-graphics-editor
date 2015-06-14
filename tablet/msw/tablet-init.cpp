@@ -53,7 +53,7 @@ private:
 };
 
 void load_wintab32_dll(){
-  g_winTabInstance = LoadLibraryA("Wintab32.dll");
+  g_winTabInstance = LoadLibrary("Wintab32.dll");
 
   if (!g_winTabInstance){
     auto errorCode = GetLastError();
