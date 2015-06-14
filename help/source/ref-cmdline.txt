@@ -13,7 +13,8 @@ tablewidths:10%,10%,*
 ||-h||--help||Displays the command line help||
 ||-s||--silent||Disables the user interface. Only meaningful with --run. Will exit after running the script specified with --run.||
 ||-i||--new-instance|| Force a new instance, allows starting another instance of Faint instead of raising the already started instance.||
-|| ||--noserver||The started Faint instance will not attempt to start a server and become a single instance.||
+|| ||--no-server||The started Faint instance will not attempt to start a server and become a single instance.||
+|| ||--no-tablet||Prevent initialization of pen tablets (Windows only).||
 || ||--run|| Runs the specified \ref(scripting-intro.txt,Python script).||
 || ||--arg|| Stores the specified string in ifaint.cmd_arg for access from Python.||
 || ||--port||Specify the port number to use for running a single instance of Faint. Useful if the default port seems to be occupied. Not available on Windows (see \ref(no-port,below)).||

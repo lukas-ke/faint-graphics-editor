@@ -53,7 +53,9 @@ const char* CMD_HELP_LONG = "help";
 const char* CMD_SILENT_SHORT = "s";
 const char* CMD_SILENT_LONG = "silent";
 
+#ifdef __WXMSW__
 const char* CMD_NO_PEN_TABLET = "no-tablet";
+#endif
 
 const char* CMD_NEW_INSTANCE_SHORT = "i";
 const char* CMD_NEW_INSTANCE_LONG = "new-instance";
@@ -81,10 +83,12 @@ static const wxCmdLineEntryDesc g_cmdLineDesc[] = {
    wxCMD_LINE_VAL_STRING,
    wxCMD_LINE_PARAM_OPTIONAL},
 
+  #ifdef __WXMSW__
   {wxCMD_LINE_SWITCH, "", CMD_NO_PEN_TABLET,
    "Disable initialization of pen tablet.",
    wxCMD_LINE_VAL_STRING,
    wxCMD_LINE_PARAM_OPTIONAL},
+  #endif
 
   {wxCMD_LINE_PARAM, "", "",
    "Image files",
@@ -138,6 +142,10 @@ utf8_string get_port_or_service(wxCmdLineParser&){
 static bool valid_port(const std::string& port){
   return port == FAINT_DDE_SERVICE_NAME;
 }
+
+static bool use_pen_tablet(const wxCmdLineParser& p){
+  return !p.Found(CMD_NO_PEN_TABLET);
+}
 #else
 utf8_string get_port_or_service(wxCmdLineParser& p){
   return get_string(p, CMD_SERVER_PORT, get_default_faint_port());
@@ -152,12 +160,16 @@ static bool valid_port(const std::string& str){
   }
   return false;
 }
+
+static bool use_pen_tablet(const wxCmdLineParser&){
+  return false;
+}
 #endif
 
 OrError<CommandLine> get_parsed_command_line(wxCmdLineParser& p){
   CommandLine cmd;
   cmd.silentMode = p.Found(CMD_SILENT_LONG);
-  cmd.usePenTablet = !cmd.silentMode && !p.Found(CMD_NO_PEN_TABLET);
+  cmd.usePenTablet = !cmd.silentMode && use_pen_tablet(p);
   cmd.forceNew = p.Found(CMD_NEW_INSTANCE_LONG);
   cmd.preventServer = p.Found(CMD_NO_SERVER);
   cmd.port = get_port_or_service(p);
