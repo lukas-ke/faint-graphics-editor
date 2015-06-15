@@ -28,7 +28,7 @@ namespace faint{
 
 static GifFrame to_gif_frame(const Image& f){
   return {quantized(flatten(f), Dithering::ON), f.GetDelay()};
-};
+}
 
 static auto find_mismatch(const std::vector<IntSize>& sizes){
   return find_if_iter(sizes, not_equal_to(sizes.front()));

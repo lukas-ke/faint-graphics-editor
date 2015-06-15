@@ -72,12 +72,12 @@ public:
     m_window = f(this);
 
     if (pos == LabelPos::LEFT){
-      sz->Add(m_label, 0, wxRIGHT|wxALIGN_CENTER, ui::label_spacing);
+      sz->Add(raw(m_label), 0, wxRIGHT|wxALIGN_CENTER, ui::label_spacing);
       sz->Add(m_window, 1, wxEXPAND);
     }
     else if (pos == LabelPos::BELOW){
       sz->Add(m_window, 1, wxEXPAND);
-      sz->Add(m_label, 0, wxALIGN_CENTER);
+      sz->Add(raw(m_label), 0, wxALIGN_CENTER);
     }
     SetSizerAndFit(sz);
   }

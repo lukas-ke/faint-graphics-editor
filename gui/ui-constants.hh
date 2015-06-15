@@ -29,10 +29,10 @@ using ItemSpacing = PrimitiveSubtype<int, category_ui_constants, 1>;
 
 namespace faint{ namespace ui{
 
-constexpr OuterSpacing panel_padding({10});
-constexpr ItemSpacing item_spacing({10});
-constexpr ItemSpacing small_item_spacing({5});
-constexpr ItemSpacing label_spacing({10});
+constexpr OuterSpacing panel_padding{{10}};
+constexpr ItemSpacing item_spacing{{10}};
+constexpr ItemSpacing small_item_spacing{{5}};
+constexpr ItemSpacing label_spacing{{10}};
 
 constexpr IntSize horizontal_slider_size(200, 20);
 constexpr IntSize tall_horizontal_slider_size(200, 50);

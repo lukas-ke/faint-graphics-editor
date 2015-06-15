@@ -23,7 +23,6 @@ CC_OPTIONS_COMMON = [
     "Werror", # Treat warnings as errors
     "pedantic",
     "ansi",
-    "Wconversion",
     "Wno-strict-aliasing", # No aliasing warnings
     "Wno-sign-conversion", # No sign conversion warnings
     "std=c++14", # C++14-conformance
@@ -39,16 +38,20 @@ CC_OPTIONS_RELEASE = [
 ]
 
 GCC_SPECIFIC_WARNINGS = [
-    'Wuseless-cast',
+    #'Wuseless-cast',
     #'Wzero-as-null-pointer-constant',
+    #'Wconversion',
 ]
 
+CLANG_SPECIFIC_WARNINGS = [
+    'Wconversion',
+]
 
 def compiler_specific_warnings(cc):
     if cc in ('gcc', 'g++'):
         return GCC_SPECIFIC_WARNINGS
     else:
-        return []
+        return CLANG_SPECIFIC_WARNINGS
 
 
 def get_cc_options_list(cc, debug):

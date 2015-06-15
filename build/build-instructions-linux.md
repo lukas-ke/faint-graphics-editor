@@ -72,6 +72,8 @@ dependencies correctly, example:
     parallell_compiles=4
     etags_folder=
 
+* compiler can be either gcc or clang
+
 ### Build Faint
 
 Run build.py again to build Faint.

@@ -26,7 +26,7 @@ namespace faint{
 
 static auto to_cursor(const Image& frame){
   return std::make_pair(flatten(frame), frame.GetHotSpot());
-};
+}
 
 class FormatCUR : public Format {
 public:
