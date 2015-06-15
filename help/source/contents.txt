@@ -38,7 +38,7 @@ ref-tools.txt
 ref-gui.txt
 >gui-brightness-contrast-dialog.txt
 >gui-color-balance-dialog.txt
->ref-cmdline.txt
+>ref-command-line.txt
 >gui-color-panel.txt
 >gui-color-selection-dialog.txt
 >gui-frame-control.txt
