@@ -42,7 +42,7 @@ Finally!
 
 ### Clone the Faint trunk
     cd ~/dev
-    git clone git@github.com:lukas-ke/faint-graphics-editor.git faint-graphics-editor
+    git clone https://github.com/lukas-ke/faint-graphics-editor.git faint-graphics-editor
 
 ### Create build.cfg
 
