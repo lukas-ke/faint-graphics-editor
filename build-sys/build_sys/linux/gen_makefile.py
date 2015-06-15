@@ -44,7 +44,7 @@ GCC_SPECIFIC_WARNINGS = [
 ]
 
 CLANG_SPECIFIC_WARNINGS = [
-    'Wconversion',
+    #'Wconversion',
 ]
 
 def compiler_specific_warnings(cc):
