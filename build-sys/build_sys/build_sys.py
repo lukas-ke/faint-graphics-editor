@@ -251,9 +251,12 @@ def build(opts, cmdline):
             to_compile.add(clean_file_name(gen_build_info.run(opts.project_root,
                                                               cmd_opts.version)))
 
-        print("* Compiling.")
-        print('  %d cpp files modified + %d indirectly (of %d total).' %
-              (len(modified), len(depModified), len(opts.source_files)))
+        print("* Compiling (%s)." % opts.compiler)
+        print('  %d cpp %s modified + %d indirectly (of %d total).' %
+              (len(modified),
+               "files" if len(modified) > 1 else "file",
+               len(depModified),
+               len(opts.source_files)))
         timed(compile, list(sorted(list(to_compile))), opts,
                 out, err, debug=cmd_opts.debug)
     else:
