@@ -254,7 +254,7 @@ def build(opts, cmdline):
         print("* Compiling (%s)." % opts.compiler)
         print('  %d cpp %s modified + %d indirectly (of %d total).' %
               (len(modified),
-               "files" if len(modified) > 1 else "file",
+               "files" if len(modified) == 0 or len(modified) > 1 else "file",
                len(depModified),
                len(opts.source_files)))
         timed(compile, list(sorted(list(to_compile))), opts,
