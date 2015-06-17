@@ -355,49 +355,62 @@ static TaskResult clicked_handle(IdleSelectionState& impl,
     });
 }
 
-static TaskResult clicked_selected(IdleSelectionState& impl, const PosInfo& info){
+static TaskResult change_raster_background(IdleSelectionState& impl,
+  ObjRaster* obj,
+  const Point& pos)
+{
+  Color color(color_at(obj, pos));
+  impl.command.Set(get_change_raster_background_command(obj, color));
+  return TaskResult::COMMIT;
+}
 
-  if (info.handle.IsSet()){
-    return clicked_handle(impl, info.handle.Get(), info);
-  }
-
-  Object* obj(info.object);
+static TaskResult clicked_in_object(IdleSelectionState& impl, const PosInfo& info){
+  auto obj = info.object;
   auto hit = info.hitStatus;
-  if (hit == Hit::INSIDE || hit == Hit::NEARBY  || hit == Hit::BOUNDARY){
-    if (mod_clone_rotate_toggle(info)){
-      // Clicked inside object with clone/deselect modifier. Cloning
-      // or deselecting depends on drag-distance, see Motion(..).
-      if (info.modifiers.RightMouse()){
-        if (is_raster_object(info.object)){
-          // Handle ctrl+right-mouse on a raster object (set background)
-          ObjRaster* rasterObj = as_ObjRaster(info.object);
-          Color color(color_at(rasterObj, info.pos));
-          impl.command.Set(get_change_raster_background_command(rasterObj, color));
-          return TaskResult::COMMIT;
-        }
-        return TaskResult::NONE;
-      }
 
-      impl.SetClickedObject(obj, info.pos, was_selected(true));
-      return TaskResult::NONE;
+  if (mod_clone_rotate_toggle(info)){
+    // Clicked inside object with clone/deselect modifier. Cloning
+    // or deselecting depends on drag-distance, see Motion(..).
+
+    if (info.modifiers.RightMouse()){
+      // Ctrl+right-mouse on a raster object sets transparent
+      // background
+      return is_raster_object(obj) ?
+        change_raster_background(impl, as_ObjRaster(obj), info.pos) :
+        TaskResult::NONE;
     }
-    else if (info.modifiers.RightMouse()){
-        bool toggledAlign = toggle_object_aligned_resize(info.object);
-        if (toggledAlign){
-          impl.fullRefresh = true;
-          return TaskResult::DRAW;
-        }
-        return TaskResult::NONE;
+
+    impl.SetClickedObject(obj, info.pos, was_selected(true));
+    return TaskResult::NONE;
+  }
+  else if (info.modifiers.RightMouse()){
+    bool toggledAlign = toggle_object_aligned_resize(info.object);
+    if (toggledAlign){
+      impl.fullRefresh = true;
+      return TaskResult::DRAW;
     }
+    return TaskResult::NONE;
+  }
+  else if (info.modifiers.LeftMouse()){
     impl.Reset();
     impl.newTask.Set(move_object_task(obj,
-      info.canvas.GetObjectSelection(),
-      info.pos - obj->GetTri().P0(),
-      MoveMode::MOVE));
+        info.canvas.GetObjectSelection(),
+        info.pos - obj->GetTri().P0(),
+        MoveMode::MOVE));
     return TaskResult::CHANGE;
   }
-  assert(false); // Can't happen
   return TaskResult::NONE;
+
+}
+
+static TaskResult clicked_selected(IdleSelectionState& impl, const PosInfo& info){
+  return info.handle.Visit(
+    [&](const EitherHandle& handle){
+      return clicked_handle(impl, handle, info);
+    },
+    [&](){
+      return clicked_in_object(impl, info);
+    });
 }
 
 static TaskResult clicked_unselected(IdleSelectionState& impl,
@@ -578,13 +591,11 @@ public:
 
   TaskResult MouseDown(const PosInfo& info) override{
     info.status.SetMainText("");
-    if (info.object == nullptr){
-      return clicked_nothing(m_impl, info);
-    }
-    else if (info.objSelected){
-      return clicked_selected(m_impl, info);
-    }
-    return clicked_unselected(m_impl, info);
+    auto f =
+      info.object == nullptr ? clicked_nothing :
+        info.objSelected ? clicked_selected :
+          clicked_unselected;
+    return f(m_impl, info);
   }
 
   TaskResult MouseUp(const PosInfo& info) override{
