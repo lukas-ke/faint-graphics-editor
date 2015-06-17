@@ -44,6 +44,27 @@ public:
 
 } // namespace
 
+class True{};
+class False{};
+
+template<typename T>
+constexpr bool is_false(){
+  return std::is_same<T, False>::value;
+}
+
+template<typename T>
+constexpr bool is_true(){
+  return std::is_same<T, True>::value;
+}
+
+template<typename T>
+auto has_or(const T& t)
+ -> typename std::enable_if<
+   std::is_same<decltype(t.Or(typename T::PT())), typename T::PT>::value,
+   True>::type;
+
+False has_or(...);
+
 void test_optional(){
   using namespace faint;
 
@@ -60,6 +81,8 @@ void test_optional(){
   VERIFY(!optional.IsSet());
   VERIFY(!optional);
 
+  static_assert(is_true<decltype(has_or(optional))>(),
+    "Optional of value type lacks Or-method");
   EQUAL(optional.Or(alt).GetSize(), altSize);
   optional.Visit(FAIL_IF_CALLED());
   optional.Visit(FAIL_IF_CALLED(), FAIL_UNLESS_CALLED());
@@ -95,7 +118,10 @@ void test_optional(){
   int i = 7;
   Optional<int&> oi(i);
   oi.Get() = 8;
+
   EQUAL(i, 8);
+  static_assert(is_false<decltype(has_or(oi))>(),
+    "Optional of reference type has Or-method.");
 
   // Non-reference
   int j = 7;

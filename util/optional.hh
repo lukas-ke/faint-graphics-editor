@@ -185,7 +185,14 @@ public:
     return m_obj == nullptr;
   }
 
-  const PT& Or(const PT& alternative) const{
+  // Returns the value or the specified alternative.
+  //
+  // Note: Not available for Optionals holding reference types, since
+  // this would either risk returning an expiring reference to the
+  // alternative argument or, if returning as value type, copying a
+  // held value object not meant to be copied or not supporting copy.
+  template<typename T2=T>
+  typename std::enable_if<!std::is_reference<T2>::value, T2>::type Or(const PT& alternative) const{
     if (m_obj == nullptr){
       return alternative;
     }
