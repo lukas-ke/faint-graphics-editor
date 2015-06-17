@@ -263,82 +263,105 @@ static Command* get_appending_add_object_command(Object* obj,
     new AppendCommandType<TriCommand>());
 }
 
+static TaskResult clicked_movable_handle(IdleSelectionState& impl,
+  const MovableHandle& handle,
+  const PosInfo& info)
+{
+  auto obj = info.object;
+  assert(point_edit_enabled(obj));
+
+  if (handle.type == HandleType::MOVABLE_POINT){
+    const bool removePoint = info.modifiers.RightMouse();
+
+    if (removePoint){
+      if(obj->Extendable() && obj->CanRemovePoint()){
+        impl.command.Set(remove_point_command(obj, handle.pointIndex));
+        return TaskResult::COMMIT;
+      }
+
+      // Not possible to delete points for some reason (e.g. at
+      // minimum number of points or not extendable) - do nothing.
+      return TaskResult::NONE;
+    }
+    else{
+      impl.newTask.Set(move_point_task(obj, handle.pointIndex,
+          obj->GetPoint(handle.pointIndex)));
+      return TaskResult::CHANGE;
+    }
+  }
+  else if (handle.type == HandleType::EXTENSION_POINT){
+    if (!info.modifiers.LeftMouse()){
+      return TaskResult::NONE;
+    }
+
+    // Note: This hinges on the MovePointTask not requesting the point for
+    // handleIndex + 1 before the command has run.
+    impl.command.Set(get_appending_insert_command(obj,
+        handle.extensionIndex, info.pos));
+    impl.newTask.Set(move_point_task(obj, handle.pointIndex, info.pos));
+    return TaskResult::COMMIT_AND_CHANGE;
+  }
+  return TaskResult::NONE;
+}
+
+static TaskResult clicked_boundary_handle(IdleSelectionState& impl,
+  const Handle& handle,
+  const PosInfo& info)
+{
+  auto obj = info.object;
+  bool copy = info.modifiers.RightMouse();
+  if (mod_rotate(info) && corner_handle(handle)){
+    // Rotate the object around the corner handle
+    if (copy){
+      Object* newObject = obj->Clone();
+      impl.command.Set(get_appending_add_object_command(newObject,
+          "Rotate Clone"));
+      impl.newTask.Set(rotate_object_task(newObject, handle));
+      return TaskResult::COMMIT_AND_CHANGE;
+    }
+    else{
+      impl.newTask.Set(rotate_object_task(obj, handle));
+      return TaskResult::CHANGE;
+    }
+  }
+  else {
+    if (copy){
+      Object* newObject = obj->Clone();
+      impl.command.Set(get_appending_add_object_command(newObject,
+          "Resize Clone"));
+      impl.newTask.Set(select_object_resize(newObject,
+          info.handle.Get().Expect<Handle>()));
+      return TaskResult::COMMIT_AND_CHANGE;
+    }
+    else{
+      impl.newTask.Set(select_object_resize(obj,
+          info.handle.Get().Expect<Handle>()));
+    }
+  }
+  return TaskResult::CHANGE;
+}
+
+static TaskResult clicked_handle(IdleSelectionState& impl,
+  const EitherHandle& handle,
+  const PosInfo& info)
+{
+  auto obj = info.object;
+  return handle.Visit(
+    [&](const Handle& handle){
+      return clicked_boundary_handle(impl, handle, info);
+    },
+    [&](const MovableHandle& handle){
+      return clicked_movable_handle(impl, handle, info);
+    });
+}
+
 static TaskResult clicked_selected(IdleSelectionState& impl, const PosInfo& info){
-  Object* obj(info.object);
+
   if (info.handle.IsSet()){
-    return info.handle.Get().Visit(
-      [&](const Handle& handle){
-        bool copy = info.modifiers.RightMouse();
-        if (mod_rotate(info) && corner_handle(handle)){
-          // Rotate the object around the corner handle
-          if (copy){
-            Object* newObject = obj->Clone();
-            impl.command.Set(get_appending_add_object_command(newObject,
-              "Rotate Clone"));
-            impl.newTask.Set(rotate_object_task(newObject,
-              info.handle.Get().Expect<Handle>()));
-            return TaskResult::COMMIT_AND_CHANGE;
-          }
-          else{
-            impl.newTask.Set(rotate_object_task(obj,
-                info.handle.Get().Expect<Handle>()));
-            return TaskResult::CHANGE;
-          }
-        }
-        else {
-          if (copy){
-            Object* newObject = obj->Clone();
-            impl.command.Set(get_appending_add_object_command(newObject,
-              "Resize Clone"));
-            impl.newTask.Set(select_object_resize(newObject,
-              info.handle.Get().Expect<Handle>()));
-            return TaskResult::COMMIT_AND_CHANGE;
-          }
-          else{
-            impl.newTask.Set(select_object_resize(obj,
-              info.handle.Get().Expect<Handle>()));
-          }
-        }
-        return TaskResult::CHANGE;
-      },
-      [&](const MovableHandle& handle){
-        if (handle.type == HandleType::MOVABLE_POINT && point_edit_enabled(obj)){
-          bool rightMouse = info.modifiers.RightMouse();
-          // Right mouse means remove point for extendable objects
-          if (rightMouse){
-            if(obj->Extendable()){
-              // Delete a point if possible
-              if (obj->CanRemovePoint()){
-                impl.command.Set(remove_point_command(obj, handle.pointIndex));
-                return TaskResult::COMMIT;
-              }
-            }
-            // Not possible to delete points for some reason (e.g. at
-            // minimum number of points or not extendable) - do nothing.
-            return TaskResult::NONE;
-          }
-          else{
-            impl.newTask.Set(move_point_task(obj, handle.pointIndex,
-              obj->GetPoint(handle.pointIndex)));
-            return TaskResult::CHANGE;
-          }
-        }
-        else if (handle.type == HandleType::EXTENSION_POINT &&
-          point_edit_enabled(obj))
-        {
-          if (info.modifiers.LeftMouse()){
-            // Note: This hinges on the MovePointTask not requesting the point for
-            // handleIndex + 1 before the command has run.
-            impl.command.Set(get_appending_insert_command(obj,
-              handle.extensionIndex, info.pos));
-            impl.newTask.Set(move_point_task(obj, handle.pointIndex, info.pos));
-            return TaskResult::COMMIT_AND_CHANGE;
-          }
-        }
-        return TaskResult::NONE;
-      });
+    return clicked_handle(impl, info.handle.Get(), info);
   }
 
+  Object* obj(info.object);
   auto hit = info.hitStatus;
   if (hit == Hit::INSIDE || hit == Hit::NEARBY  || hit == Hit::BOUNDARY){
     if (mod_clone_rotate_toggle(info)){
