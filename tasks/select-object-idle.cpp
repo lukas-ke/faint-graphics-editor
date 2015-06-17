@@ -305,14 +305,16 @@ static TaskResult clicked_selected(IdleSelectionState& impl, const PosInfo& info
         if (handle.type == HandleType::MOVABLE_POINT && point_edit_enabled(obj)){
           bool rightMouse = info.modifiers.RightMouse();
           // Right mouse means remove point for extendable objects
-          if (rightMouse && obj->Extendable()){
-            // Delete a point if possible
-            if (obj->CanRemovePoint()){
-              impl.command.Set(remove_point_command(obj, handle.pointIndex));
-              return TaskResult::COMMIT;
+          if (rightMouse){
+            if(obj->Extendable()){
+              // Delete a point if possible
+              if (obj->CanRemovePoint()){
+                impl.command.Set(remove_point_command(obj, handle.pointIndex));
+                return TaskResult::COMMIT;
+              }
             }
             // Not possible to delete points for some reason (e.g. at
-            // minimum number of points) - do nothing.
+            // minimum number of points or not extendable) - do nothing.
             return TaskResult::NONE;
           }
           else{
