@@ -399,8 +399,8 @@ static TaskResult clicked_in_object(IdleSelectionState& impl, const PosInfo& inf
         MoveMode::MOVE));
     return TaskResult::CHANGE;
   }
-  return TaskResult::NONE;
 
+  return TaskResult::NONE;
 }
 
 static TaskResult clicked_selected(IdleSelectionState& impl, const PosInfo& info){
