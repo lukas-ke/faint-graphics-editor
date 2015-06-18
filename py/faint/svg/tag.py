@@ -1,0 +1,7 @@
+circle = ns_svg('circle')
+ellipse= ns_svg('ellipse')
+line = ns_svg('line')
+path = ns_svg('path')
+polygon = ns_svg('polygon')
+polyline = ns_svg('polyline')
+rect = ns_svg('rect')
