@@ -15,7 +15,11 @@
 # implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-"""GraphViz dot-file loading."""
+"""GraphViz dot-file loading.
+
+Call init_dot_format() to add support for loading .dot-files.
+
+"""
 
 import platform
 import subprocess as sp
