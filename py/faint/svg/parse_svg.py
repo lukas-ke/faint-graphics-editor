@@ -317,7 +317,8 @@ def parse_group(node, state, id_to_etree_node=None):
         result = func(child, state)
         if result.__class__ is not int:
             # Expected an object id from the function
-            state.add_warning("Failed parsing child %s of group %s" %
+            # Fixme: maybe_id_ref uses parentheses which looks weird here.
+            state.add_warning("Failed parsing child%s of group%s" %
                               (maybe_id_ref(child), maybe_id_ref(node)))
         else:
             object_ids.append(result)
@@ -508,7 +509,7 @@ def parse_text(node, state):
                     text_str += "\n"
 
     text_id = state.props.Text((x, y, w, h), text_str, settings)
-    svg_baseline_to_faint(text_id, state)    
+    svg_baseline_to_faint(text_id, state)
     state.transform_object(text_id)
     return text_id
 
