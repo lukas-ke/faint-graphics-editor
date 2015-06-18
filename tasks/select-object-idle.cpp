@@ -345,7 +345,6 @@ static TaskResult clicked_handle(IdleSelectionState& impl,
   const EitherHandle& handle,
   const PosInfo& info)
 {
-  auto obj = info.object;
   return handle.Visit(
     [&](const Handle& handle){
       return clicked_boundary_handle(impl, handle, info);
@@ -366,7 +365,6 @@ static TaskResult change_raster_background(IdleSelectionState& impl,
 
 static TaskResult clicked_in_object(IdleSelectionState& impl, const PosInfo& info){
   auto obj = info.object;
-  auto hit = info.hitStatus;
 
   if (mod_clone_rotate_toggle(info)){
     // Clicked inside object with clone/deselect modifier. Cloning
