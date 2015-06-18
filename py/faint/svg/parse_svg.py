@@ -52,6 +52,10 @@ from . parse import (
     svg_length_attr_dumb,
 )
 
+import faint.svg.tag as tag
+ns_svg = tag.ns_svg
+ns_faint = tag.ns_faint
+
 from . ifaint_util import (mul_matrix_tri,
                            to_faint_cap_str,
                            fill_style)
@@ -156,8 +160,8 @@ def parse_pattern_node(node, state, id_to_etree_node):
         return None
 
     for child in node:
-        if child.tag == ns_svg('image'):
-            encoding, data = parse_embedded_image_data(child.get(ns_xlink('href')))
+        if child.tag == tag.image:
+            encoding, data = parse_embedded_image_data(child.get(tag.xlink.href))
             if encoding == "png":
                 return node_id, ifaint.Pattern(ifaint.bitmap_from_png_string(data))
     state.add_warning('Failed parsing pattern with id=%s' % node_id)
@@ -230,7 +234,7 @@ def parse_linear_gradient_node(node, state, id_to_etree_node=None):
     if len(stops) == 0:
         # No color stops, follow references
         # FIXME: Can there both be stops and a reference?
-        xlink = node.get(ns_xlink('href'))
+        xlink = node.get(tag.xlink.href)
         if xlink is not None:
             stops = get_linked_stops(xlink, state, id_to_etree_node)
         else:
@@ -262,7 +266,7 @@ def parse_radial_gradient_node(node, state, id_to_etree_node=None):
     if len(stops) == 0:
         # No color stops, follow references
         # FIXME: Can there both be stops and a reference?
-        xlink = node.get(ns_xlink('href'))
+        xlink = node.get(tag.xlink.href)
         if xlink is not None:
             stops = get_linked_stops(xlink, state, id_to_etree_node)
         else:
@@ -513,20 +517,6 @@ def parse_text(node, state):
     state.transform_object(text_id)
     return text_id
 
-def ns_svg(item_name):
-    """Prepends the svg xml-namespace to the item name."""
-    return '{http://www.w3.org/2000/svg}' + item_name
-
-
-def ns_xlink(item_name):
-    """Prepends the xlink xml-namespace to the item name."""
-    return '{http://www.w3.org/1999/xlink}' + item_name
-
-
-def ns_faint(item_name):
-    """Prepends the faint xml-namespace to the item name."""
-    return '{http://www.code.google.com/p/faint-graphics-editor}' + item_name
-
 
 def is_faint_type(node, expected):
     """True if the node has a faint:type attribute with value matching
@@ -578,7 +568,7 @@ def parse_image_as_background(node, state):
     attribute and sets it as the background.
 
     """
-    image_str = node.get(ns_xlink('href'))
+    image_str = node.get(tag.xlink.href)
     image_type, data = parse_embedded_image_data(image_str)
     assert image_type == 'png'
     state.props.set_background(ifaint.bitmap_from_png_string(data))
@@ -594,7 +584,7 @@ def parse_image(node, state):
     w = svg_length_attr(node.get('width', '0.0'), state)
     h = svg_length_attr(node.get('height', '0.0'), state)
 
-    image_str = node.get(ns_xlink('href'))
+    image_str = node.get(tag.xlink.href)
     if image_str is None:
         state.add_warning("Ignored image element with no data.")
         return
@@ -774,21 +764,21 @@ def object_common(func):
 
 
 svg_shape_element_functions = {
-    ns_svg('circle'): object_common(parse_circle),
-    ns_svg('ellipse'): object_common(parse_ellipse),
-    ns_svg('line'): object_common(parse_line),
-    ns_svg('path'): object_common(parse_path_custom),
-    ns_svg('polygon'): object_common(parse_polygon_custom),
-    ns_svg('polyline'): object_common(parse_polyline),
-    ns_svg('rect'): parse_rect_custom,
+    tag.circle : object_common(parse_circle),
+    tag.ellipse : object_common(parse_ellipse),
+    tag.line : object_common(parse_line),
+    tag.path : object_common(parse_path_custom),
+    tag.polygon: object_common(parse_polygon_custom),
+    tag.polyline : object_common(parse_polyline),
+    tag.rect : parse_rect_custom,
 }
 
 svg_structural_element_functions = {
-    ns_svg('defs'): parse_defs,
-    ns_svg('g'): object_common(parse_group),
-    ns_svg('svg'): _not_implemented, # nested SVG
-    ns_svg('symbol'): _not_implemented,
-    ns_svg('use'): _not_implemented
+    tag.defs: parse_defs,
+    tag.g: object_common(parse_group),
+    tag.svg: _not_implemented, # nested SVG
+    tag.symbol: _not_implemented,
+    tag.use: _not_implemented
 }
 
 svg_content_functions = dict_union(
@@ -798,7 +788,7 @@ svg_content_functions = dict_union(
     svg_structural_element_functions,
     svg_gradient_element_functions,
     {
-        ns_svg('a'): _not_implemented,
+        tag.a: _not_implemented,
         ns_svg('altGlyphDef'): _not_implemented,
         ns_svg('clipPath'): _not_implemented,
         ns_svg('color-profile'): _not_implemented,
@@ -806,16 +796,16 @@ svg_content_functions = dict_union(
         ns_svg('filter'): _not_implemented,
         ns_svg('font'): _not_implemented,
         ns_svg('font-face'): _not_implemented,
-        ns_svg('foreignObject'): _not_implemented,
-        ns_svg('image') : parse_image_custom,
+        tag.foreignObject: _not_implemented,
+        tag.image : parse_image_custom,
         ns_svg('marker'): _not_implemented_marker,
         ns_svg('mask'): _not_implemented,
         ns_svg('pattern'): _not_implemented,
         ns_svg('script'): _not_implemented,
         ns_svg('style'): _not_implemented,
-        ns_svg('switch'): parse_switch,
-        ns_svg('text') : object_common(parse_text),
-        ns_svg('view') : _not_implemented
+        tag.switch: parse_switch,
+        tag.text: object_common(parse_text),
+        tag.view: _not_implemented
     }
 )
 
@@ -826,28 +816,28 @@ svg_group_content_functions = dict_union(
     svg_structural_element_functions,
     svg_gradient_element_functions,
     {
-        ns_svg('a'): _not_implemented,
+        tag.a: _not_implemented,
         ns_svg('altGlyphDef'): _not_implemented,
-        ns_svg('clipPath') : _not_implemented,
+        ns_svg('clipPath'): _not_implemented,
         ns_svg('color-profile') : _not_implemented,
         ns_svg('cursor'): _not_implemented,
         ns_svg('filter'): _not_implemented,
         ns_svg('font'): _not_implemented,
         ns_svg('font-face'): _not_implemented,
-        ns_svg('foreignObject'): _not_implemented,
+        tag.foreignObject: _not_implemented,
 
         # Fixme: Shouldn't image in group go directly for the
         # non-background parsing?
-        ns_svg('image') : parse_image_custom,
+        tag.image: parse_image_custom,
 
         ns_svg('marker'): _not_implemented_marker,
         ns_svg('mask'): _not_implemented,
         ns_svg('pattern'): _not_implemented,
         ns_svg('script'): _not_implemented,
         ns_svg('style'): _not_implemented,
-        ns_svg('switch'): parse_switch,
-        ns_svg('text') : parse_text,
-        ns_svg('view'): _not_implemented,
+        tag.switch: parse_switch,
+        tag.text: parse_text,
+        tag.view: _not_implemented,
     })
 
 svg_switch_element_content_functions = dict_union(
@@ -855,20 +845,20 @@ svg_switch_element_content_functions = dict_union(
     svg_descriptive_element_functions,
     svg_shape_element_functions,
     {
-        ns_svg('a'): _not_implemented,
-        ns_svg('foreignObject'): _not_implemented,
-        ns_svg('g'): parse_group,
-        ns_svg('image') : parse_image,
-        ns_svg('svg'): _not_implemented, # Nested SVG
-        ns_svg('switch'): parse_switch,
-        ns_svg('text'): parse_text,
-        ns_svg('use'): _not_implemented,
+        tag.a: _not_implemented,
+        tag.foreignObject: _not_implemented,
+        tag.g: parse_group,
+        tag.image: parse_image,
+        tag.svg: _not_implemented, # Nested SVG
+        tag.switch: parse_switch,
+        tag.svg: parse_text,
+        tag.use: _not_implemented,
     })
 
 svg_descriptive_element_functions = {
-    ns_svg('desc') : _not_implemented,
-    ns_svg('metadata') : _not_implemented,
-    ns_svg('title') : _not_implemented,
+    ns_svg('desc'): _not_implemented,
+    ns_svg('metadata'): _not_implemented,
+    tag.title: _not_implemented,
 }
 
 svg_defs_content_functions = dict_union(
@@ -879,25 +869,25 @@ svg_defs_content_functions = dict_union(
     svg_structural_element_functions,
     svg_gradient_element_functions,
     {
-      ns_svg('a'): _not_implemented,
-      ns_svg('altGlyphDef'): _not_implemented,
-      ns_svg('clipPath'): _not_implemented,
-      ns_svg('colorProfile'): _not_implemented,
-      ns_svg('cursor'): _not_implemented,
-      ns_svg('filter'): _not_implemented,
-      ns_svg('font'): _not_implemented,
-      ns_svg('font-face'): _not_implemented,
-      ns_svg('foreignObject'): _not_implemented,
-      ns_svg('image'): _not_implemented,
-      ns_svg('marker'): _not_implemented_marker,
-      ns_svg('mask'): _not_implemented,
-      ns_svg('pattern'): parse_pattern_node,
-      ns_svg('script'): _not_implemented,
-      ns_svg('style'): _not_implemented,
-      ns_svg('switch'): parse_switch,
-      ns_svg('text'): _not_implemented,
-      ns_svg('view'): _not_implemented,
-      ns_faint('calibration'): parse_faint_calibration,
+        tag.a: _not_implemented,
+        ns_svg('altGlyphDef'): _not_implemented,
+        ns_svg('clipPath'): _not_implemented,
+        ns_svg('colorProfile'): _not_implemented,
+        ns_svg('cursor'): _not_implemented,
+        ns_svg('filter'): _not_implemented,
+        ns_svg('font'): _not_implemented,
+        ns_svg('font-face'): _not_implemented,
+        tag.foreignObject: _not_implemented,
+        tag.image: _not_implemented,
+        ns_svg('marker'): _not_implemented_marker,
+        ns_svg('mask'): _not_implemented,
+        ns_svg('pattern'): parse_pattern_node,
+        ns_svg('script'): _not_implemented,
+        ns_svg('style'): _not_implemented,
+        ns_svg('switch'): parse_switch,
+        tag.text: _not_implemented,
+        tag.view: _not_implemented,
+        tag.faint.calibration: parse_faint_calibration,
     })
 
 supported_svg_features = [

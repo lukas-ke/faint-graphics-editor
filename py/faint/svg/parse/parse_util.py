@@ -391,6 +391,16 @@ class Matrix:
         return ((Matrix.translation(dx, dy) * Matrix.rotation(rad)) *
             Matrix.translation(-dx, -dy))
 
+
+    def values(self):
+        return self.a, self.b, self.c, self.d, self.e, self.f
+
+    def str_2d(self):
+        return "%s %s %s\n%s %s %s\n0 0 1" % (
+            (self.a, self.c, self.e,
+             self.b, self.d, self.f))
+
+
     def __mul__(self, m2):
         m1 = self
         return Matrix(
