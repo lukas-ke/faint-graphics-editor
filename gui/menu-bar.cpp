@@ -503,6 +503,14 @@ public:
     objectMenu->AppendSeparator();
 
     Add(objectMenu,
+      Label("Pixel-&Snap", "Offset objects to reduce blurring"),
+      MenuPred(MenuPred::HAS_OBJECTS),
+      [&](){
+        Canvas& active = app.GetActiveCanvas();
+        active.RunCommand(context_pixel_snap(active));
+      });
+
+    Add(objectMenu,
       Label("Become &Path", "Turn the selected objects into Path objects"),
       MenuPred(MenuPred::OBJECT_SELECTION),
       [&](){

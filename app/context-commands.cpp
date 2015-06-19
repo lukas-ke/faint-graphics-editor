@@ -17,6 +17,7 @@
 #include "app/context-commands.hh"
 #include "app/get-app-context.hh"
 #include "bitmap/auto-crop.hh" // Fixme: Move most-common-yada to color-counting
+#include "commands/command-bunch.hh"
 #include "commands/flip-rotate-cmd.hh"
 #include "commands/group-objects-cmd.hh"
 #include "geo/axis.hh"
@@ -170,6 +171,36 @@ Command* context_offset(Canvas& canvas, const IntPoint& delta){
       canvas.SetScrollPos(canvas.GetScrollPos() + delta);
       return nullptr;
     });
+}
+
+static Command* pixel_snap(const objects_t& objects){
+  if (objects.empty()){
+    return nullptr;
+  }
+
+  std::vector<Command*> cmds;
+  for (auto obj : objects){
+    auto* cmd = get_pixel_snap_command(obj);
+    if (obj != nullptr){
+      cmds.push_back(cmd);
+    }
+  }
+  if (cmds.empty()){
+    return nullptr;
+  }
+  else if (cmds.size() == 1){
+    return cmds.front();
+  }
+  else{
+    return perhaps_bunch(CommandType::OBJECT, bunch_name("Pixel Snap"),
+      cmds);
+  }
+}
+
+Command* context_pixel_snap(Canvas& canvas){
+  const objects_t& objectSelection(canvas.GetImage().GetObjectSelection());
+  return objectSelection.empty() ? pixel_snap(canvas.GetImage().GetObjects())
+    : pixel_snap(objectSelection);
 }
 
 Command* context_rotate90cw(const Canvas& canvas){

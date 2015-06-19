@@ -70,6 +70,8 @@ Command* context_objects_to_path(Canvas&);
 
 Command* context_offset(Canvas&, const IntPoint& delta);
 
+Command* context_pixel_snap(Canvas&);
+
 Command* context_rotate90cw(const Canvas&);
 
 Command* context_rotate(const Canvas&, const Angle&, const Paint& bg);
