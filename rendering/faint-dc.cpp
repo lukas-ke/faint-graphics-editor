@@ -234,66 +234,14 @@ bool overextends(const IntPoint& p, const Bitmap& bmp){
   return p.x >= sz.w || p.y >= sz.h;
 }
 
-inline void realign_cairo_fill(coord& x, coord& y, coord scale){
-  x = static_cast<int>(x * scale + 0.5) / scale;
-  y = static_cast<int>(y * scale + 0.5) / scale;
-}
-
-Point realign_cairo_fill(const Point& p, coord scale){
-  Point p2(p);
-  realign_cairo_fill(p2.x, p2.y, scale);
-  return p2;
-}
-
-inline void realign_cairo_odd_stroke(coord& x, coord& y, coord scale){
-  x = (static_cast<int>(x * scale + 0.5) + 0.5) / scale;
-  y = (static_cast<int>(y * scale + 0.5) + 0.5) / scale;
-}
-
-Point realign_cairo_odd_stroke(const Point& p, coord scale){
-  return Point((static_cast<int>(p.x * scale + 0.5) + 0.5) / scale,
-    (static_cast<int>(p.y * scale + 0.5) + 0.5) / scale);
-}
-
-void realign_cairo(coord& x, coord& y, const Settings& s, coord scale){
-  // Cairo aligns fill-operations and strokes with even strokewidths
-  // at integer coordinates.  Strokes and fills at half-integer
-  // coordinates appear smeared (especially obvious is the case of
-  // single pixel horizontal and vertical lines).
-  coord lineWidth = s.Get(ts_LineWidth);
-  const bool fillOnly = s.Has(ts_FillStyle) &&
-    s.Get(ts_FillStyle) == FillStyle::FILL;
-  const bool even = int(lineWidth * scale + 0.5) % 2 == 0;
-  if (even || fillOnly){
-    // Round to nearest integer coordinate for strokes with even linewidth
-    // or fills
-    realign_cairo_fill(x, y, scale);
-  }
-  else {
-    // Round to nearest .5 for strokes with odd linewidth
-    realign_cairo_odd_stroke(x, y, scale);
-  }
-}
-
-Point realign_cairo(const Point& p, const Settings& s, coord scale){
-  coord x = p.x;
-  coord y = p.y;
-  realign_cairo(x, y, s, scale);
-  return Point(x,y);
-}
-
 void draw_arrow_head(CairoContext& cr, const Arrowhead& arrowHead,
-  coord lineWidth, coord sc)
+  coord lineWidth)
 {
   Settings s;
   s.Set(ts_LineWidth, lineWidth);
-  Point p0(realign_cairo(arrowHead.P0(), s, sc));
-  Point p1(realign_cairo(arrowHead.P1(), s, sc));
-  Point p2(realign_cairo(arrowHead.P2(), s, sc));
-
-  cr.move_to(p0);
-  cr.line_to(p1);
-  cr.line_to(p2);
+  cr.move_to(arrowHead.P0());
+  cr.line_to(arrowHead.P1());
+  cr.line_to(arrowHead.P2());
   cr.close_path();
   cr.fill();
 }
@@ -797,8 +745,7 @@ void FaintDC::PolyLine(const Tri& tri, const std::vector<Point>& points,
   m_cr->set_source_tri(tri);
 
   // Move to the first point
-  const Point p0(realign_cairo(points[0], s, m_sc));
-  m_cr->move_to(p0);
+  m_cr->move_to(points.front());
 
   // Add line segments to all consecutive points except (normally-)
   // the last to allow adjustment for arrowhead. If the two last
@@ -809,8 +756,7 @@ void FaintDC::PolyLine(const Tri& tri, const std::vector<Point>& points,
   size_t firstEnd = skipTwo ? points.size() - 2 : points.size() - 1;
   // Add line segments to all consecutive points except the last
   for (size_t i = 0; i != firstEnd; i++){
-    const Point pt(realign_cairo(points[i], s, m_sc));
-    m_cr->line_to(pt);
+    m_cr->line_to(points[i]);
   }
 
   // The source point for the last line segment.  If the last two
@@ -821,14 +767,12 @@ void FaintDC::PolyLine(const Tri& tri, const std::vector<Point>& points,
   const Point to(points.back());
   if (has_front_arrow(s)){
     Arrowhead a(get_arrowhead(LineSegment(from, to), s.Get(ts_LineWidth)));
-    Point anchor = realign_cairo(a.LineAnchor(), s, m_sc);
-    m_cr->line_to(anchor);
+    m_cr->line_to(a.LineAnchor());
     m_cr->stroke();
-    draw_arrow_head(*m_cr, a, s.Get(ts_LineWidth), m_sc);
+    draw_arrow_head(*m_cr, a, s.Get(ts_LineWidth));
   }
   else {
-    Point p(realign_cairo(to, s, m_sc));
-    m_cr->line_to(p);
+    m_cr->line_to(to);
     m_cr->stroke();
   }
 }
@@ -846,18 +790,10 @@ void FaintDC::Polygon(const Tri& tri, const std::vector<Point>& points,
   }
 
   from_settings(*m_cr, s);
-  const Point& p0 = points[0];
-  coord x(p0.x);
-  coord y(p0.y);
-  realign_cairo(x, y, s, m_sc);
   m_cr->set_source_tri(tri);
-  m_cr->move_to(Point(x, y)); // Fixme
+  m_cr->move_to(points.front());
   for (size_t i = 1; i != points.size(); i++){
-    const Point& p(points[i]);
-    x = p.x;
-    y = p.y;
-    realign_cairo(x, y, s, m_sc);
-    m_cr->line_to(Point(x, y));
+    m_cr->line_to(points[i]);
   }
   m_cr->close_path();
   fill_and_or_stroke(*m_cr, s);
