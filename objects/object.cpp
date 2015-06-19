@@ -127,6 +127,10 @@ int Object::NumPoints() const{
   return 0;
 }
 
+Optional<CmdFuncs> Object::PixelSnapFunc(){
+  return {};
+}
+
 void Object::RemovePoint(int){
   assert(false);
 }

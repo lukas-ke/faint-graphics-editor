@@ -825,3 +825,16 @@ from ifaint import *
 
 import faint.util
 bindk(key.delete, faint.util.erase_selection, mod.ctrl)
+
+def is_iterable(v):
+    try:
+        it = iter(v)
+        return True
+    except TypeError:
+        return False
+
+def pixel_snap(objects):
+    if not is_iterable(objects):
+        objects = [objects,]
+    for obj in objects:
+        obj.pixel_snap()

@@ -85,6 +85,11 @@ coord tan(const Angle& a){
   return std::tan(a.Rad());
 }
 
+bool multiple_of_90(const Angle& a){
+  auto radians = std::fmod(a.Rad(), math::pi / 2);
+  return -coord_epsilon < radians && radians < coord_epsilon;
+}
+
 Angle normalized(const Angle& a){
   auto radians = std::fmod(a.Rad(), 2 * math::pi);
   return (radians < 0) ?

@@ -144,6 +144,9 @@ bool toggle_edit_points(Object*);
 // being the start value incremented by one for each point.
 std::vector<ExtensionPoint> extension_index_from(int, const std::vector<Point>&);
 
+Point pixel_snap_xy(const Point&, coord lineWidth);
+Tri pixel_snap(const Tri&, coord lineWidth);
+
 } // namespace
 
 #endif

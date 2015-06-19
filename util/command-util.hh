@@ -186,6 +186,8 @@ private:
   Axis m_axis;
 };
 
+Command* get_pixel_snap_command(Object* obj);
+
 } // namespace
 
 #endif

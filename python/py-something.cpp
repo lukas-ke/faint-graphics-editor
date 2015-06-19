@@ -256,6 +256,12 @@ static int Smth_num_objs(const BoundObject<Object>& self){
   return self.obj->GetObjectCount();
 }
 
+/* method: "pixel_snap()\n
+ Aligns the object with the pixel grid to avoid smearing." */
+static void Smth_pixel_snap(const BoundObject<Object>& self){
+  python_run_command(self, get_pixel_snap_command(self.obj));
+}
+
 /* method: "rect()->(x,y,w,h)\nReturns the bounding rectangle." */
 static Rect Smth_rect(const BoundObject<Object>& self){
   return bounding_rect(self.obj->GetTri());

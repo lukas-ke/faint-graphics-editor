@@ -65,7 +65,10 @@ constexpr Angle Angle::Rad(coord a){
 }
 
 constexpr Angle pi(Angle::Rad(math::pi));
+constexpr Angle half_pi(Angle::Rad(math::pi / 2));
 constexpr Angle tau(Angle::Rad(math::tau));
+
+bool multiple_of_90(const Angle&);
 
 constexpr Angle Angle::Deg(coord a){
   return Angle(math::radians_from_degrees(a));

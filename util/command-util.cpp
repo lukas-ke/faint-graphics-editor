@@ -921,4 +921,37 @@ Command* OperationFlip::DoRasterSelection(const Image& image) const{
     });
 }
 
+class PixelSnap : public Command{
+public:
+  PixelSnap(const CmdFuncs& funcs)
+    : Command(CommandType::OBJECT),
+      m_funcs(funcs)
+  {}
+
+  void Do(CommandContext&) override{
+    m_funcs.Do();
+  }
+
+  utf8_string Name() const override{
+    return "Pixel Snap";
+  }
+
+  void Undo(CommandContext&) override{
+    m_funcs.Undo();
+  }
+
+  Object* m_object;
+  CmdFuncs m_funcs;
+};
+
+Command* get_pixel_snap_command(Object* obj){
+  return obj->PixelSnapFunc().Visit(
+    [](const CmdFuncs& funcs){
+      return new PixelSnap(funcs);
+    },
+    [](){
+      return nullptr;
+    });
+}
+
 } // namespace faint

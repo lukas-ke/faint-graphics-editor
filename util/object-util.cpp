@@ -256,6 +256,10 @@ bool lacks(const objects_t& objects, const Object* obj){
   return std::find(begin(objects), end(objects), obj) == end(objects);
 }
 
+bool multiple_of_90_deg(const Angle& a){
+  return fmod(a.Rad(), math::half_pi) < 0.0001;
+}
+
 Point next_point(Object* obj, int index){
   const int end = obj->NumPoints();
   assert(index < end);
@@ -526,6 +530,16 @@ std::vector<ExtensionPoint> extension_index_from(int start,
     dst.push_back({pt, i++});
   }
   return dst;
+}
+
+Point pixel_snap_xy(const Point& p, coord){ // Fixme: Use lineWidth
+  return floated(rounded(p)) + Point::Both(0.5);
+}
+
+Tri pixel_snap(const Tri& t, coord lineWidth){ // Fixme: Use lineWidth
+  return Tri(pixel_snap_xy(t.P0(), lineWidth),
+    pixel_snap_xy(t.P1(), lineWidth),
+    pixel_snap_xy(t.P2(), lineWidth));
 }
 
 } // namespace

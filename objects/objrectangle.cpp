@@ -84,6 +84,24 @@ public:
     return GetHorizontalPoint();
   }
 
+  Optional<CmdFuncs> PixelSnapFunc(){
+    if (m_tri.Skew() != 0 || !multiple_of_90(m_tri.GetAngle())){
+      // No reason to pixel snap a skewed or rotated rectangle.
+      return {};
+    }
+
+    auto undoFunc = [oldTri=m_tri,this](){
+      SetTri(oldTri);
+    };
+
+    auto doFunc =
+      [newTri=pixel_snap(m_tri, m_settings.Get(ts_LineWidth)),this]
+      (){SetTri(newTri);};
+
+
+    return CmdFuncs(doFunc, undoFunc);
+  }
+
   void SetPoint(const Point& p, int index) override{
     assert(index < 1);
     Point projected = projection(p, unbounded(P0_P1(m_tri)));

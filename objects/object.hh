@@ -53,6 +53,18 @@ public:
 };
 
 using UndoAddFunc = std::function<void()>;
+using UndoFunc = std::function<void()>;
+
+class CmdFuncs{
+public:
+  CmdFuncs(const std::function<void()>& Do,
+    const std::function<void()>& Undo)
+    : Do(Do),
+      Undo(Undo)
+  {}
+  std::function<void()> Do;
+  std::function<void()> Undo;
+};
 
 class Object {
 public:
@@ -104,6 +116,7 @@ public:
   virtual UndoAddFunc InsertPoint(const Point&, int index);
   virtual bool IsControlPoint(int index) const;
   virtual int NumPoints() const;
+  virtual Optional<CmdFuncs> PixelSnapFunc();
   virtual void RemovePoint(int index);
   template<typename T> void Set(const T& s, typename T::ValueType);
   void SetActive(bool active=true);
