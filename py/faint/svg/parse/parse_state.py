@@ -399,10 +399,10 @@ def svg_length_attr_dumb(value_str, props, full_span):
     value, unit = m.groups()
     if unit == "%":
         # Fixme: More work required.
-        if full_span.__class__ == float:
-            return (full_span * 100) / float(value)
+        if full_span.__class__ == float: # Fixme: Disallow non-float!
+            return float(value)/100 * full_span
         else:
-            return (full_span[0] * 100) / float(value)
+            return float(value)/100 * full_span[0]
     elif unit in ABSOLUTE_UNIT_FACTORS:
         return float(value) * ABSOLUTE_UNIT_FACTORS[unit]
     elif unit in ('em','ex'):

@@ -63,6 +63,11 @@ import ifaint
 
 _DEBUG_SVG = False
 
+
+def getter_default(node, default_value):
+    return lambda attr : node.get(attr, default_value)
+
+
 def parse_color_stops(nodes, state):
     """Parses the color stop nodes for a gradient node.
     Returns a list of offsets to colors.
@@ -302,11 +307,15 @@ def parse_faint_tri_attr(node):
 def parse_ellipse(node, state):
     """Parses an SVG <ellipse>-element."""
     state = state.updated(node)
-    bounding_rect = center_based_to_rect(
-        svg_coord_attr(node.get("cx", "0.0"), state),
-        svg_coord_attr(node.get("cy", "0.0"), state),
-        svg_coord_attr(node.get("rx", "0.0"), state),
-        svg_coord_attr(node.get("ry", "0.0"), state))
+
+    get = getter_default(node, '0')
+    cx, cy = get('cx'), get('cy')
+    cx, cy = svg_point_attr(cx, cy, state)
+
+    rx, ry = get('rx'), get('ry')
+    rx, ry = svg_point_attr(rx, ry, state)
+
+    bounding_rect = center_based_to_rect(cx, cy, rx, ry)
     return state.props.Ellipse(bounding_rect, state.settings)
 
 
@@ -657,10 +666,9 @@ def parse_rect(node, state):
     """Parses an SVG <rect> element."""
     state = state.updated(node)
 
-    def get(attr):
-        return node.get(attr, '0')
+    get = getter_default(node, '0')
 
-    x, y = svg_coord_attr(get('x'), state), svg_coord_attr(get('y'), state)
+    x, y = svg_point_attr(get('x'), get('y'), state)
     w, h = svg_size_attr(get('width'), get('height'), state)
 
     state.settings.rx = svg_length_attr(get('rx'), state)
@@ -1065,10 +1073,17 @@ supported_svg_features = [
 
 
 def svg_size_attr(w_str, h_str, state):
-    """Parses an svg coordinate attribute."""
+    """Parses a pair of coordinates, scaling percentages."""
 
     return (svg_length_attr_dumb(w_str, state.props, state.viewPort[2]),
             svg_length_attr_dumb(h_str, state.props, state.viewPort[3]))
+
+
+def svg_point_attr(x_str, y_str, state):
+    """Parses a pair of coordinates, scaling percentages."""
+
+    return (svg_length_attr_dumb(x_str, state.props, state.viewPort[2]),
+            svg_length_attr_dumb(y_str, state.props, state.viewPort[3]))
 
 
 def svg_coord_attr(coord_str, state):
