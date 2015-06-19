@@ -61,6 +61,7 @@ from . ifaint_util import (mul_matrix_tri,
                            fill_style)
 import ifaint
 
+
 _DEBUG_SVG = False
 
 
@@ -325,7 +326,7 @@ def parse_group(node, state, id_to_etree_node=None):
     state = state.updated(node)
     # Parse the children of the group
     object_ids = []
-    for child, func in match_children(node, svg_group_content_functions):
+    for child, func in match_children(node, included_svg_group_content_functions):
         result = func(child, state)
         if result.__class__ is not int:
             # Expected an object id from the function
@@ -817,6 +818,16 @@ svg_content_functions = dict_union(
     }
 )
 
+if _DEBUG_SVG:
+    ignored_svg_group_content = []
+else:
+    ignored_svg_group_content = [
+        # Exclude certain elements unsupported by Faint in group nodes,
+        # to remove warnings about failing parsing a child for hopefully
+        # less important children
+        ns_svg('title')
+    ]
+
 svg_group_content_functions = dict_union(
     svg_animation_element_functions,
     svg_descriptive_element_functions,
@@ -847,6 +858,10 @@ svg_group_content_functions = dict_union(
         tag.text: object_common(parse_text),
         tag.view: _not_implemented,
     })
+
+included_svg_group_content_functions = {key: svg_group_content_functions[key]
+                                        for key in svg_group_content_functions
+                                        if key not in ignored_svg_group_content}
 
 svg_switch_element_content_functions = dict_union(
     svg_animation_element_functions,
