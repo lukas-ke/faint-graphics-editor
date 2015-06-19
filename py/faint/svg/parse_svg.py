@@ -460,8 +460,8 @@ def parse_text(node, state):
     state = state.updated(node)
 
     # Fixme: Should support <coordinate-list>
-    x = svg_length_attr(node.get('x', '0'), state)
-    y = svg_length_attr(node.get('y', '0'), state)
+    get = getter_default(node, '0')
+    x, y = svg_point_attr(get('x'), get('y'), state)
 
     boxed, w, h = parse_faint_text_size_attrs(node, state)
     # Fixme: Parse dx, dy lists etc.
