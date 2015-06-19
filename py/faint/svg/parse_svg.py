@@ -307,7 +307,6 @@ def parse_ellipse(node, state):
         svg_coord_attr(node.get("cy", "0.0"), state),
         svg_coord_attr(node.get("rx", "0.0"), state),
         svg_coord_attr(node.get("ry", "0.0"), state))
-
     return state.props.Ellipse(bounding_rect, state.settings)
 
 
@@ -322,13 +321,14 @@ def parse_group(node, state, id_to_etree_node=None):
         if result.__class__ is not int:
             # Expected an object id from the function
             # Fixme: maybe_id_ref uses parentheses which looks weird here.
-            state.add_warning("Failed parsing child%s of group%s" %
-                              (maybe_id_ref(child), maybe_id_ref(node)))
+            state.add_warning("Failed parsing child %s%s of group%s" %
+                              (child.tag, maybe_id_ref(child), maybe_id_ref(node)))
         else:
             object_ids.append(result)
 
     if len(object_ids) == 0:
-        return
+        # Empty group
+        return None
 
     return state.props.Group(object_ids)
 
@@ -514,7 +514,6 @@ def parse_text(node, state):
 
     text_id = state.props.Text((x, y, w, h), text_str, settings)
     svg_baseline_to_faint(text_id, state)
-    state.transform_object(text_id)
     return text_id
 
 
@@ -664,7 +663,6 @@ def parse_rect(node, state):
     state.settings.rx = rx
     state.settings.ry = ry
     r = state.props.Rect(pts, state.settings)
-    state.transform_object(r)
     return r
 
 def parse_rect_custom(node, state):
@@ -756,8 +754,6 @@ def object_common(func):
         if obj_id is not None:
             state.transform_object(obj_id)
             set_name(node, obj_id, state.props)
-        else:
-            print(node)
         return obj_id
 
     return update_object
@@ -836,7 +832,7 @@ svg_group_content_functions = dict_union(
         ns_svg('script'): _not_implemented,
         ns_svg('style'): _not_implemented,
         tag.switch: parse_switch,
-        tag.text: parse_text,
+        tag.text: object_common(parse_text),
         tag.view: _not_implemented,
     })
 
@@ -847,11 +843,11 @@ svg_switch_element_content_functions = dict_union(
     {
         tag.a: _not_implemented,
         tag.foreignObject: _not_implemented,
-        tag.g: parse_group,
-        tag.image: parse_image,
+        tag.g: object_common(parse_group),
+        tag.image: object_common(parse_image),
         tag.svg: _not_implemented, # Nested SVG
         tag.switch: parse_switch,
-        tag.svg: parse_text,
+        tag.svg: object_common(parse_text),
         tag.use: _not_implemented,
     })
 
@@ -1075,7 +1071,7 @@ def svg_coord_attr(coord_str, state):
         if float(value) == 0:
             return 0
         else:
-            return (state.containerSize[0] * 100) / float(value)
+            return (state.viewPort[2] * 100) / float(value)
     elif unit in ABSOLUTE_UNIT_FACTORS:
         return float(value) * ABSOLUTE_UNIT_FACTORS[unit]
     elif unit in ('em', 'ex'):
@@ -1095,35 +1091,46 @@ def check_svg_size(size):
     return size
 
 
-def svg_size(svg_node, image_props, view_box_str):
-    """Returns w, h from the svg node."""
-    # Fixme: Truncating the svg width, height (Faint limitation)
-    # Fixme: Use what for container size here? Easier if not outermost, I guess
-
-    default_w = view_box_str[2]
-    default_h = view_box_str[3]
-
-    svg_w = svg_node.get('width', default_w)
-    svg_h = svg_node.get('height', default_h)
-
-    # Fixme: I guess viewbox should be converted, not float:ed
-    w2 = int(svg_length_attr_dumb(svg_w, image_props, full_span=float(default_w)))
-    h2 = int(svg_length_attr_dumb(svg_h, image_props, full_span=float(default_h)))
-    return check_svg_size((w2, h2))
-
-
-def get_viewbox(node, default=('0','0','640','480')):
+# Fixme: Use image width, height for default viewbox
+def get_viewbox(node):
     """Returns the viewbox from the node as a sequence of four strings,
     x, y, w, h."""
 
     # Available for: svg, symbol (via use), image, foreignObject
     viewBox = node.get('viewBox') # pylint:disable=invalid-name
     if viewBox is None:
-        return default
+        return None
 
     # Fixme: Handle preserveAspectRatio
-    x, y, w, h = [v for v in viewBox.split(' ')]
+    # Fixme: Can also use commas
+    x, y, w, h = [float(v) for v in viewBox.split(' ')]
     return x, y, w, h
+
+
+def establish_viewPort(svg_node, image_props, view_box):
+    # Use the viewBox width and height if width, height not specified
+    if view_box is not None:
+        default_w = view_box[2]
+        default_h = view_box[3]
+    else:
+        default_w = 640.0
+        default_h = 480.0
+
+    svg_w = svg_node.get('width', None)
+    svg_h = svg_node.get('height', None)
+
+    if svg_w is None:
+        svg_w = default_w
+    if svg_h is None:
+        svg_h = default_h
+
+
+    # Fixme: I guess viewbox should be converted, not float:ed
+    w2 = svg_length_attr_dumb(svg_w, image_props, full_span=float(default_w))
+    h2 = svg_length_attr_dumb(svg_h, image_props, full_span=float(default_h))
+    w2, h2 = check_svg_size((w2, h2))
+
+    return [0, 0, w2, h2]
 
 
 def parse_svg_root_node(svg_node, image_props, system_language):
@@ -1132,16 +1139,22 @@ def parse_svg_root_node(svg_node, image_props, system_language):
 
     """
 
-    # Fixme: Check if SVG element can have transform
+    # Fixme: Check if SVG element can have transform (Probably)
+    viewBox = get_viewbox(svg_node)
+    viewPort = establish_viewPort(svg_node, image_props, viewBox)
+    if viewBox is None:
+        viewBox = viewPort
 
-    view_box = get_viewbox(svg_node)
-    props = image_props.add_frame(svg_size(svg_node, image_props, view_box))
-    state = ParseState(props, system_language=system_language)
+    props = image_props.add_frame((viewPort[2], viewPort[3]))
 
-    # Fixme: Convert instead of float
-    x0, y0 = float(view_box[0]), float(view_box[1])
-    if x0 != 0 or y0 != 0:
-        state.ctm = Matrix.translation(-x0, -y0) * state.ctm
+    # Fixme: What of translation?
+    ctm = Matrix.scale(viewPort[2] / viewBox[2], viewPort[3] / viewBox[3])
+
+    state = ParseState(props,
+                       ctm=ctm,
+                       viewPort=viewPort,
+                       viewBox=viewBox,
+                       system_language=system_language)
 
     for child in svg_node:
         if child.tag in svg_content_functions:
@@ -1159,7 +1172,7 @@ def parse_doc(path, image_props, system_language="en"):
         ET.register_namespace("svg", "{http://www.w3.org/2000/svg}")
         tree = ET.parse(path)
         root = tree.getroot()
-        if root.tag == ns_svg("svg"):
+        if root.tag == ns_svg('svg'):
             parse_svg_root_node(root, image_props, system_language)
         else:
             raise ifaint.LoadError("Root element was not <svg>.")

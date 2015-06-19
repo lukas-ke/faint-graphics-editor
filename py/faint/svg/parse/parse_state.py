@@ -44,12 +44,14 @@ class ParseState:
 
     """
 
-    def __init__(self, frame_props,
+    def __init__(self,
+                 frame_props,
                  ctm=None,
                  settings=None,
                  ids=None,
                  currentColor=None,
-                 containerSize=None,
+                 viewPort=None,
+                 viewBox=None,
                  system_language="en"):
 
         self.props = frame_props
@@ -59,14 +61,19 @@ class ParseState:
         self.ids = {} if ids is None else ids
         self.currentColor = ((255, 0, 0) if currentColor is None
                              else currentColor)
-        self.containerSize = ((0.0, 0.0)
-                              if containerSize is None else containerSize)
+        self.viewBox = viewBox
+        self.viewPort= viewPort
+
 
         # ISO 639-1 language code
         self.system_language = system_language
 
-
-    def modified(self, ctm=None, settings=None, currentColor=None, containerSize=None):
+    def modified(self,
+                 ctm=None,
+                 settings=None,
+                 currentColor=None,
+                 viewPort=None,
+                 viewBox=None):
         """Returns a new ParseState for recursing, with optionally updated
         transformation matrix or settings. The props is unchanged.
 
@@ -77,15 +84,22 @@ class ParseState:
             settings = self.settings
         if currentColor is None:
             currentColor = self.currentColor
-        if containerSize is None:
-            containerSize = self.containerSize
-        return ParseState(self.props, ctm, settings, self.ids,
-                             currentColor, containerSize, self.system_language)
+        if viewPort is None:
+            viewPort = self.viewPort
+        if viewBox is None:
+            viewBox = self.viewBox
+        return ParseState(self.props,
+                          ctm,
+                          settings,
+                          self.ids,
+                          currentColor,
+                          viewPort=viewPort,
+                          viewBox=viewBox,
+                          system_language=self.system_language)
 
 
     def transform_object(self, object_id):
         """Transform the object with object_id in props with the CTM."""
-
         tri = self.props.get_obj_tri(object_id)
         tri = mul_matrix_tri(self.ctm, tri)
         self.props.set_obj_tri(object_id, tri)
@@ -402,4 +416,7 @@ def svg_length_attr_dumb(value_str, props, full_span):
 
 def svg_length_attr(value_str, state):
     """Parses an svg length attribute."""
-    return svg_length_attr_dumb(value_str, state.props, state.containerSize)
+    # Fixme: Need to discern x, y
+    full_span = (state.viewBox[2], state.viewBox[3])
+    return svg_length_attr_dumb(value_str, state.props,
+                                full_span)
