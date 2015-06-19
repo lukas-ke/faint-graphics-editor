@@ -6,19 +6,19 @@
     width="50"
     height="50" >
   <g>
-    <rect x="0" y="0"
+    <rect x="10" y="10"
           width="10" height="5"
           stroke="black" fill="none"/>
 
-    <rect x="20" y="0"
+    <rect x="30" y="10"
           width="10" height="5"
           stroke="black" fill="none"/>
 
-    <rect x="0" y="20"
+    <rect x="10" y="30"
           width="10" height="5"
           stroke="black" fill="none"/>
 
-    <rect x="20" y="20"
+    <rect x="30" y="30"
           width="10" height="5"
           stroke="black" fill="none"/>
   </g>
