@@ -656,13 +656,17 @@ def parse_rect_as_background(node, state):
 def parse_rect(node, state):
     """Parses an SVG <rect> element."""
     state = state.updated(node)
-    pts = [svg_coord_attr(node.get(s, '0'), state)
-           for s in ('x', 'y', 'width', 'height')]
-    rx = svg_length_attr(node.get('rx', '0'), state)
-    ry = svg_length_attr(node.get('ry', '0'), state)
-    state.settings.rx = rx
-    state.settings.ry = ry
-    r = state.props.Rect(pts, state.settings)
+
+    def get(attr):
+        return node.get(attr, '0')
+
+    x, y = svg_coord_attr(get('x'), state), svg_coord_attr(get('y'), state)
+    w, h = svg_size_attr(get('width'), get('height'), state)
+
+    state.settings.rx = svg_length_attr(get('rx'), state)
+    state.settings.ry = svg_length_attr(get('ry'), state)
+
+    r = state.props.Rect((x, y, w, h), state.settings)
     return r
 
 def parse_rect_custom(node, state):
@@ -1058,6 +1062,14 @@ supported_svg_features = [
 ]
 
 # pylint:enable=invalid-name
+
+
+def svg_size_attr(w_str, h_str, state):
+    """Parses an svg coordinate attribute."""
+
+    return (svg_length_attr_dumb(w_str, state.props, state.viewPort[2]),
+            svg_length_attr_dumb(h_str, state.props, state.viewPort[3]))
+
 
 def svg_coord_attr(coord_str, state):
     """Parses an svg coordinate attribute."""
