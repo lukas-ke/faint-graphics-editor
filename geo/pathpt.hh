@@ -101,6 +101,15 @@ public:
     return PathPt(Type::LineTo, p);
   }
 
+  PathPt(const faint::ArcTo& arcTo)
+    : type(Type::ArcTo),
+      p(arcTo.p),
+      r(arcTo.r),
+      axisRotation(arcTo.axisRotation),
+      largeArcFlag(arcTo.largeArcFlag),
+      sweepFlag(arcTo.sweepFlag)
+  {}
+
   PathPt(const CubicBezier& bezier)
     : type(Type::CubicBezier),
       p(bezier.p),
@@ -111,12 +120,23 @@ public:
       sweepFlag(0)
   {}
 
+  PathPt(const faint::Close&)
+    : type(Type::Close),
+      axisRotation(Angle::Zero())
+  {}
+
   PathPt(const faint::LineTo& line)
     : type(Type::LineTo),
       p(line.p),
       axisRotation(Angle::Zero()),
       largeArcFlag(0),
       sweepFlag(0)
+  {}
+
+  PathPt(const faint::MoveTo& move)
+    : type(Type::MoveTo),
+      p(move.p),
+      axisRotation(Angle::Zero())
   {}
 
   static PathPt CubicBezierTo(const Point& p, const Point& c, const Point& d){

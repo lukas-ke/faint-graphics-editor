@@ -17,6 +17,7 @@
 #include "geo/geo-func.hh"
 #include "geo/int-rect.hh"
 #include "geo/measure.hh" // with_mid_points_cyclic
+#include "geo/pixel-snap.hh"
 #include "geo/points.hh"
 #include "objects/object.hh"
 #include "objects/objpolygon.hh"
@@ -125,6 +126,19 @@ public:
 
   int NumPoints() const override{
     return m_points.Size();
+  }
+
+  Optional<CmdFuncs> PixelSnapFunc(){
+    return {CmdFuncs(
+      [this](){
+        m_points = pixel_snap(m_points, m_settings.Get(ts_LineWidth));
+        m_tri = m_points.GetTri();
+      },
+      [oldPoints=m_points, oldTri=m_tri, this](){
+        m_points = oldPoints;
+        m_tri = oldTri;
+
+      })};
   }
 
   void SetTri(const Tri& t) override{

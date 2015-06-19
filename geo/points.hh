@@ -69,7 +69,6 @@ Points points_from_coords(const std::vector<coord>&);
 
 std::vector<PathPt> to_line_path(const std::vector<Point>&);
 
-
 } // namespace
 
 #endif

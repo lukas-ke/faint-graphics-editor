@@ -24,6 +24,7 @@
 #include "objects/objcomposite.hh"
 #include "objects/object.hh"
 #include "text/utf8-string.hh"
+#include "util/object-util.hh"
 #include "util/setting-id.hh"
 
 namespace faint{
@@ -63,17 +64,12 @@ public:
   {
     m_settings.Set(ts_AlignedResize, false);
     assert(!objects.empty());
-    Tri t = objects.front()->GetTri();
-    Point minPt = min_coords(t.P0(), t.P1(), t.P2(), t.P3());
-    Point maxPt = max_coords(t.P0(), t.P1(), t.P2(), t.P3());
-    for (const Object* obj : m_objects){
-      t = obj->GetTri();
-      m_objTris.push_back(t);
-      minPt = min_coords(minPt, min_coords(t.P0(), t.P1(), t.P2(), t.P3()));
-      maxPt = max_coords(maxPt, max_coords(t.P0(), t.P1(), t.P2(), t.P3()));
+
+    for (const auto obj : m_objects){
+      m_objTris.push_back(obj->GetTri());
     }
 
-    SetTri(tri_from_rect(Rect(minPt, maxPt)));
+    SetTri(tri_from_rect(bounding_rect(m_objects)));
     m_origTri = GetTri();
     for (Tri& objTri : m_objTris){
       objTri = Tri(objTri.P0() - m_origTri.P0(), objTri.P1() - m_origTri.P0(),
@@ -160,6 +156,38 @@ public:
     }
     return points;
   }
+
+  Optional<CmdFuncs> PixelSnapFunc(){
+
+    std::vector<CmdFunc> doFuncs;
+    std::vector<CmdFunc> undoFuncs;
+
+    for (Object* obj : m_objects){
+      obj->PixelSnapFunc().Visit(
+        [&](const CmdFuncs& f){
+          doFuncs.push_back(f.Do);
+          undoFuncs.push_back(f.Undo);
+        });
+    }
+    if (doFuncs.empty()){
+      return {};
+    }
+
+    return {CmdFuncs(
+      [doFuncs = std::move(doFuncs), this](){
+         for (const auto& f : doFuncs){
+           f();
+         }
+         SetTri(tri_from_rect(bounding_rect(m_objects)));
+       },
+      [oldTri = m_tri, undoFuncs = std::move(undoFuncs), this](){
+         for (const auto& f : undoFuncs){
+           f();
+         }
+         SetTri(oldTri);
+      })};
+  }
+
 
   void SetTri(const Tri& tri) override{
     assert(valid(tri));

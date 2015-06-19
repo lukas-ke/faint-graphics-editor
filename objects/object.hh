@@ -54,16 +54,17 @@ public:
 
 using UndoAddFunc = std::function<void()>;
 using UndoFunc = std::function<void()>;
+using CmdFunc = std::function<void()>;
 
 class CmdFuncs{
 public:
-  CmdFuncs(const std::function<void()>& Do,
-    const std::function<void()>& Undo)
+  CmdFuncs(const CmdFunc& Do,
+    const CmdFunc& Undo)
     : Do(Do),
       Undo(Undo)
   {}
-  std::function<void()> Do;
-  std::function<void()> Undo;
+  CmdFunc Do;
+  CmdFunc Undo;
 };
 
 class Object {

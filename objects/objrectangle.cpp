@@ -19,6 +19,7 @@
 #include "geo/line.hh"
 #include "geo/measure.hh"
 #include "geo/pathpt.hh"
+#include "geo/pixel-snap.hh"
 #include "geo/tri.hh"
 #include "objects/object.hh"
 #include "objects/objrectangle.hh"

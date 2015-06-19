@@ -50,7 +50,7 @@ ObjRaster* as_ObjRaster(Object* obj){
 
 Rect bounding_rect(const objects_t& objects){
   assert(!objects.empty());
-  Tri t(objects[0]->GetTri());
+  Tri t(objects.front()->GetTri());
   Point minPt = min_coords(t.P0(), t.P1(), t.P2(), t.P3());
   Point maxPt = max_coords(t.P0(), t.P1(), t.P2(), t.P3());
   for (const Object* obj : but_first(objects)){
@@ -530,16 +530,6 @@ std::vector<ExtensionPoint> extension_index_from(int start,
     dst.push_back({pt, i++});
   }
   return dst;
-}
-
-Point pixel_snap_xy(const Point& p, coord){ // Fixme: Use lineWidth
-  return floated(rounded(p)) + Point::Both(0.5);
-}
-
-Tri pixel_snap(const Tri& t, coord lineWidth){ // Fixme: Use lineWidth
-  return Tri(pixel_snap_xy(t.P0(), lineWidth),
-    pixel_snap_xy(t.P1(), lineWidth),
-    pixel_snap_xy(t.P2(), lineWidth));
 }
 
 } // namespace
