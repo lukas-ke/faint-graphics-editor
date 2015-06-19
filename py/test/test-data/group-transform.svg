@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+    width="210"
+    height="110" >
+
+  <g>
+    <line x1="10" y1="0" x2="10" y2="35" stroke="gray"/>
+    <line x1="60" y1="0" x2="60" y2="35" stroke="gray"/>
+    <line x1="0" y1="5" x2="70" y2="5" stroke="gray"/>
+    <line x1="0" y1="25" x2="70" y2="25" stroke="gray"/>
+    <g transform="translate(10,5)">
+      <rect x="0" width="50" height="20" stroke="black" fill="none"/>
+      <ellipse cx="25" cy="10" rx="25" ry="10" stroke="black" fill="none"/>
+    </g>
+  </g>
+
+  <g>
+    <line x1="100" y1="0" x2="100" y2="35" stroke="gray"/>
+    <line x1="200" y1="0" x2="200" y2="35" stroke="gray"/>
+    <line x1="90" y1="5" x2="210" y2="5" stroke="gray"/>
+    <line x1="90" y1="25" x2="210" y2="25" stroke="gray"/>
+
+    <g transform="translate(100 5) scale(2 1)">
+      <rect x="0" width="50" height="20" stroke="black" fill="none"/>
+      <ellipse cx="25" cy="10" rx="25" ry="10" stroke="black" fill="none"/>
+    </g>
+  </g>
+
+  <g>
+    <line x1="10" y1="50" x2="10" y2="110" stroke="gray"/>
+    <line x1="60" y1="50" x2="60" y2="110" stroke="gray"/>
+    <line x1="0" y1="60" x2="70" y2="60" stroke="gray"/>
+    <line x1="0" y1="100" x2="70" y2="100" stroke="gray"/>
+
+    <g transform="translate(10 60) scale(1 2)">
+      <rect x="0" width="50" height="20" stroke="black" fill="none"/>
+      <ellipse cx="25" cy="10" rx="25" ry="10" stroke="black" fill="none"/>
+    </g>
+  </g>
+
+  <g>
+    <line x1="100" y1="50" x2="100" y2="110" stroke="gray"/>
+    <line x1="200" y1="50" x2="200" y2="110" stroke="gray"/>
+    <line x1="90" y1="60" x2="210" y2="60" stroke="gray"/>
+    <line x1="90" y1="100" x2="210" y2="100" stroke="gray"/>
+
+    <g transform="translate(100 60) scale(2 2)">
+      <rect x="0" width="50" height="20" stroke="black" fill="none"/>
+      <ellipse cx="25" cy="10" rx="25" ry="10" stroke="black" fill="none"/>
+    </g>
+  </g>
+
+</svg>
