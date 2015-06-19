@@ -25,8 +25,11 @@ namespace faint{
 
 Point pixel_snap_xy(const Point&, coord lineWidth);
 Tri pixel_snap(const Tri&, coord lineWidth);
+Tri pixel_snap_middle(const Tri&);
+
 class Points;
 Points pixel_snap(const Points&, coord lineWidth);
+
 
 } // namespace
 

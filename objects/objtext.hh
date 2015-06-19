@@ -50,6 +50,7 @@ public:
   TextBuffer& GetTextBuffer();
 
   bool HasSelectedRange() const;
+  Optional<CmdFuncs> PixelSnapFunc() override;
   coord RowHeight() const;
   void SetCaretPos(size_t, bool select);
   void SetEdited(bool);

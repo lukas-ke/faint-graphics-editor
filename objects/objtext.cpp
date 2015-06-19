@@ -20,6 +20,7 @@
 #include "geo/int-rect.hh"
 #include "geo/int-size.hh"
 #include "geo/pathpt.hh"
+#include "geo/pixel-snap.hh"
 #include "geo/size.hh"
 #include "objects/objtext.hh"
 #include "rendering/faint-dc.hh"
@@ -366,6 +367,20 @@ utf8_string ObjText::GetType() const{
 
 bool ObjText::HasSelectedRange() const{
   return !m_textBuf.get_sel_range().Empty();
+}
+
+Optional<CmdFuncs> ObjText::PixelSnapFunc(){
+  if (m_tri.Skew() != 0 || !multiple_of_90(m_tri.GetAngle())){
+    return {};
+  }
+
+  return {CmdFuncs(
+     [this](){
+       m_tri = pixel_snap_middle(m_tri);
+     },
+     [oldTri = m_tri, this](){
+       m_tri = oldTri;
+     })};
 }
 
 coord ObjText::RowHeight() const{
