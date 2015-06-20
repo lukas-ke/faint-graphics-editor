@@ -386,7 +386,7 @@ def parse_path_as_ellipse(node, state):
 
 
 def parse_polygon(node, state):
-    """Parses an SVG <path>-element."""
+    """Parses an SVG <polygon>-element."""
     state = state.updated(node)
     points = parse_points(node.get('points', ''))
     if len(points) % 2 != 0:
