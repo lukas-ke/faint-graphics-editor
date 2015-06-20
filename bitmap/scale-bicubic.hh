@@ -13,8 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_BICUBIC_RESCALE_HH
-#define FAINT_BICUBIC_RESCALE_HH
+#ifndef FAINT_SCALE_BICUBIC_HH
+#define FAINT_SCALE_BICUBIC_HH
 #include "bitmap/bitmap.hh"
 #include "geo/scale.hh"
 

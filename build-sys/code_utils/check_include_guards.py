@@ -18,28 +18,83 @@
 import os
 from core import enumerate_files, get_root_dir
 
-def _create_include_guard(file_path):
-    file_name = os.path.split(file_path)[1]
-    suffix = file_name.upper().replace(".", "_").replace("-","_")
-    if suffix.startswith("FAINT_"):
-        # Files which begin with faint- should not
-        # require the include guard to start with FAINT_FAINT
-        return suffix
+
+def collapsed_faint(file_name, guard):
+    """Returns the include-guard with a double FAINT_-prefix reduced to
+    one.
+
+    This allow include guards for files named "faint-" to start with
+    a single "FAINT_"  prefix."""
+
+    if file_name.startswith("faint-") and guard.startswith("FAINT_FAINT_"):
+        return guard[6:]
     else:
-        return "FAINT_" + suffix
+        return None
 
-def _check_include_guards(file_path):
-    expected_guard = _create_include_guard(file_path)
-    f = open(file_path)
-    text = f.read()
-    f.close()
 
-    if text.find("#ifndef %s" % expected_guard) == -1:
+def create_include_guard_id(file_path):
+    """Returns a list of valid include guard identifiers for the given
+    path.
+
+    """
+    file_name = os.path.split(file_path)[1]
+    guard_id = "FAINT_" + file_name.upper().replace(".", "_").replace("-","_")
+
+    collapsed = collapsed_faint(file_name, guard_id)
+    if collapsed is not None:
+        return (guard_id, collapsed)
+    return (guard_id,)
+
+
+def include_guard(guard_id):
+    return "#ifndef %s" % guard_id
+
+
+def find_one_off_guard(text, file_path, guard_id):
+    file_name = os.path.split(file_path)[1]
+    g = ("#ifdef %s\n"
+         "#error %s included twice\n"
+         "#else\n"
+         "#define %s\n"
+         "#endif")
+    g = g % (guard_id, file_name, guard_id)
+    if text.find(g) != -1:
+        return True
+    return False
+
+
+def find_normal_guard(text, guard_id):
+    return text.find(include_guard(guard_id)) != -1
+
+
+def find_guard_define(text, file_path, guard_ids):
+    for guard_id in guard_ids:
+        if find_normal_guard(text, guard_id):
+            return guard_id
+        elif find_one_off_guard(text, file_path, guard_id):
+            return guard_id
+    return None
+
+
+def check_include_guards(file_path):
+    """Prints a message if the include guard in the file does not match
+    the expected include guard.
+
+    """
+    with open(file_path) as f:
+        text = f.read()
+
+    guard_ids = create_include_guard_id(file_path)
+    used_id = find_guard_define(text, file_path, guard_ids)
+    if used_id is not None:
+        return used_id
+    else:
         print("%s: Invalid include guard" % file_path)
-        print("Expected: %s" % expected_guard)
-    return expected_guard
+        print("Expected: %s" % " or ".join(guard_ids))
+        return None
 
-def _ignored(file_path):
+
+def ignored(file_path):
     parts = ["test-sources",
              "msw_warn.hh",
              "generated", # Fixme: Consider including
@@ -59,9 +114,10 @@ if __name__ == '__main__':
     include_guards = []
 
     for file_path in enumerate_files(root_dir, (".hh",)):
-        if _ignored(file_path.replace("\\", "/")):
+        if ignored(file_path.replace("\\", "/")):
             continue
-        include_guard = _check_include_guards(file_path)
-        if include_guard in include_guards:
-            print("%s: Expected include guard collision" % file_path)
-        include_guards.append(include_guard)
+        guard_id = check_include_guards(file_path)
+        if guard_id is not None:
+            if guard_id in include_guards:
+                print("%s: Expected include guard collision" % file_path)
+            include_guards.append(guard_id)
