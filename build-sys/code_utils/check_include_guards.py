@@ -101,12 +101,13 @@ def check_include_guards(file_path):
 
 
 def ignored(file_path):
-    parts = ["test-sources",
-             "generated", # Fixme: Consider including
+    parts = [
+        "test-sources", # Build script test files
+        "generated", # Fixme: Consider including
 
-             # The various test categories (e.g. unit tests, benchmarks) have
-             # variants of this file. Just ignore them for these checks.
-             "gen/defines.hh",
+        # The various test categories (e.g. unit tests, benchmarks) have
+        # variants of this file. Just ignore them for these checks.
+        "gen/defines.hh",
     ]
     for part in parts:
         if file_path.find(part) != -1:
