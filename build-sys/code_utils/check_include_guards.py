@@ -98,7 +98,6 @@ def ignored(file_path):
     parts = ["test-sources",
              "msw_warn.hh",
              "generated", # Fixme: Consider including
-             "py-functions.hh", # Fixme: Consider including
              # Fixme: Consider including´test-util,
              # adding e.g. a pattern to allow FAINT_TEST_...
              "test-util/",
