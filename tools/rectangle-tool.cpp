@@ -118,7 +118,7 @@ public:
 
   ToolResult MouseMove(const PosInfo& info) override{
     if (!m_active){
-      info.status.SetText(str(info.pos));
+      info.status.SetText(str_floor(info.pos));
       return ToolResult::NONE;
     }
 

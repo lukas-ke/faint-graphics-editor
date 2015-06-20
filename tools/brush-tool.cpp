@@ -198,7 +198,7 @@ public:
 
   ToolResult MouseMove(const PosInfo& info) override{
     info.status.SetMainText("");
-    info.status.SetText(str(info.pos), 0);
+    info.status.SetText(str_floor(info.pos), 0);
 
     Point pos(info.pos);
     if (!m_drawCursor){

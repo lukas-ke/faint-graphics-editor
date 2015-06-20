@@ -24,7 +24,7 @@ void test_formatting(){
   EQUAL(quoted("hello world"), "\"hello world\"");
   EQUAL(str(IntPoint(1,2)), "1,2");
   EQUAL(str(IntSize(1,2)), "1,2");
-  EQUAL(str(Point(1.1, 2.3)), "1,2");
+  EQUAL(str_floor(Point(1.1, 2.3)), "1,2");
 
   EQUAL(str_user(0_idx), "1");
   EQUAL(str_coder(0_idx), "0");

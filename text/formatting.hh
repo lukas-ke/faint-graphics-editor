@@ -59,7 +59,7 @@ utf8_string quoted(const utf8_string&);
 utf8_string str(const IntPoint&);
 utf8_string str(const IntSize&);
 utf8_string str(const Size&, const Precision&);
-utf8_string str(const Point&);
+utf8_string str_floor(const Point&);
 
 // Returns the index one-based as a string (i.e. offset +1).
 utf8_string str_user(const Index&);

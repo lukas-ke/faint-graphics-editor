@@ -76,7 +76,7 @@ public:
     else {
       info.status.SetMainText("Click to start drawing a text-box");
     }
-    info.status.SetText(str(info.pos));
+    info.status.SetText(str_floor(info.pos));
     return TaskResult::NONE;
   }
 

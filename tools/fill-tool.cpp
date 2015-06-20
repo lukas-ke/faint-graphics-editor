@@ -210,13 +210,13 @@ public:
         info->status.SetText(space_sep(str(get_hovered_paint(info,
           include_hidden_fill(true),
           include_floating_selection(false))),
-          bracketed(str(info->pos))));
+          bracketed(str_floor(info->pos))));
 
       },
       [&info](){
         // Outside
         info.status.SetMainText("");
-        info.status.SetText(bracketed(str(info.pos)));
+        info.status.SetText(bracketed(str_floor(info.pos)));
       });
     return ToolResult::NONE;
   }

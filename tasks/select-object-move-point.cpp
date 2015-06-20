@@ -160,7 +160,7 @@ public:
     m_object->SetPoint(p, m_pointIndex);
     utf8_string statusString = m_object->StatusString();
     info.status.SetText(statusString.empty() ?
-      str(p) : statusString, 0);
+      str_floor(p) : statusString, 0);
     return TaskResult::DRAW;
   }
 

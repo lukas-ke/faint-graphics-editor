@@ -63,9 +63,7 @@ static utf8_string str_two_ints(int i1, int i2){
   return utf8_string(ss.str());
 }
 
-utf8_string str(const Point& p){
-  // Floor to get rid of decimals and indicate the targeted pixel.
-  // Fixme: Surprising?
+utf8_string str_floor(const Point& p){
   return str(floored(p));
 }
 

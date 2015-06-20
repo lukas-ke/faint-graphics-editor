@@ -111,19 +111,19 @@ public:
           info->status.SetMainText("Click to use image as pattern");
           info->status.SetText(should_anchor_topleft(info) ?
             "Anchor: Top Left (0,0)" :
-            space_sep("Anchor:", bracketed(str((info->pos)))));
+            space_sep("Anchor:", bracketed(str_floor((info->pos)))));
         }
         else{
           Paint paint(pattern_get_hovered_paint(info));
           info->status.SetMainText("");
           info->status.SetText(space_sep(str(paint),
-            bracketed(str(info->pos))));
+            bracketed(str_floor(info->pos))));
         }
       },
       [&info](){
         // Outside
         info.status.SetMainText("");
-        info.status.SetText(bracketed(str(info.pos)));
+        info.status.SetText(bracketed(str_floor(info.pos)));
       });
     return ToolResult::NONE;
   }

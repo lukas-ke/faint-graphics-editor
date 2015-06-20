@@ -614,7 +614,7 @@ public:
   }
 
   TaskResult MouseMove(const PosInfo& info) override{
-    info.status.SetText(str(info.pos));
+    info.status.SetText(str_floor(info.pos));
 
     if (!m_impl.mouseDown || !is_drag(m_impl.clickPos, info.pos)){
       // There's no action for motion when not dragging with mouse held.

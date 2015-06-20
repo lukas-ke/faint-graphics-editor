@@ -208,7 +208,7 @@ public:
           str_degrees_symbol(GetHorizonAngle()) + ".",
           "Right click to define horizon."));
       }
-      info.status.SetText(str(info.pos), 0);
+      info.status.SetText(str_floor(info.pos), 0);
       return ToolResult::NONE;
     }
     else{

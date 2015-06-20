@@ -118,7 +118,7 @@ public:
   }
 
   ToolResult MouseMove(const PosInfo& info) override{
-    info.status.SetText(str(info.pos), 0);
+    info.status.SetText(str_floor(info.pos), 0);
     if (m_active){
       m_points.AdjustBack(info.pos);
       StrBtn btn(m_otherButton);

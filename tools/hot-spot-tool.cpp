@@ -93,7 +93,7 @@ public:
   ToolResult MouseMove(const PosInfo& info) override{
     info.status.SetMainText("Left click to set hot-spot position "
       "(Right=All frames)");
-    info.status.SetText(str(info.pos),0);
+    info.status.SetText(str_floor(info.pos),0);
 
     // Update the old hot-spot from the image for showing as an
     // overlay

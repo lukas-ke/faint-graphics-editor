@@ -126,7 +126,7 @@ public:
 
   ToolResult MouseMove(const PosInfo& info) override{
     Point pos = info.pos;
-    info.status.SetText(str(pos), 0);
+    info.status.SetText(str_floor(pos), 0);
 
     if (!m_active){
       m_constrainDir = ConstrainDir::NONE;

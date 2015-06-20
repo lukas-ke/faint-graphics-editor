@@ -206,7 +206,7 @@ public:
         {m_points.BaBack().p, m_points.Back().p}), 0);
     }
     else{
-      info.status.SetText(str(info.pos), 0);
+      info.status.SetText(str_floor(info.pos), 0);
     }
 
     if (!m_active){

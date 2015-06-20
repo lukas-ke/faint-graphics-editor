@@ -238,7 +238,7 @@ public:
 
   TaskResult MouseMove(const PosInfo& info) override{
     info.status.SetMainText("Use Ctrl+Enter to stop editing");
-    info.status.SetText(str(info.pos));
+    info.status.SetText(str_floor(info.pos));
     return TaskResult::NONE;
   }
 

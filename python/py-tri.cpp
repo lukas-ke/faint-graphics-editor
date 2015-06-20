@@ -129,9 +129,9 @@ static void tri_init(triObject& self,
 
 static utf8_string tri_repr(Tri& self){
   return no_sep("Tri",bracketed(comma_sep(
-    bracketed(str(self.P0())),
-    bracketed(str(self.P1())),
-    bracketed(str(self.P2())))));
+    bracketed(str_floor(self.P0())),
+    bracketed(str_floor(self.P1())),
+    bracketed(str_floor(self.P2())))));
 }
 
 /* property: "angle\n

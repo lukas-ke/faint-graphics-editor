@@ -371,7 +371,7 @@ public:
     else {
       info.status.SetMainText("Click to draw a selection rectangle.");
     }
-    info.status.SetText(str(info.pos), 0);
+    info.status.SetText(str_floor(info.pos), 0);
     return TaskResult::NONE;
   }
 
