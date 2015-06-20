@@ -37,8 +37,14 @@ def create_include_guard_id(file_path):
     path.
 
     """
+
+    if file_path.find("test-util") != -1:
+        PREFIX = "FAINT_TEST_"
+    else:
+        PREFIX = "FAINT_"
+
     file_name = os.path.split(file_path)[1]
-    guard_id = "FAINT_" + file_name.upper().replace(".", "_").replace("-","_")
+    guard_id = PREFIX + file_name.upper().replace(".", "_").replace("-","_")
 
     collapsed = collapsed_faint(file_name, guard_id)
     if collapsed is not None:
@@ -96,11 +102,10 @@ def check_include_guards(file_path):
 
 def ignored(file_path):
     parts = ["test-sources",
-             "msw_warn.hh",
              "generated", # Fixme: Consider including
-             # Fixme: Consider including´test-util,
-             # adding e.g. a pattern to allow FAINT_TEST_...
-             "test-util/",
+
+             # The various test categories (e.g. unit tests, benchmarks) have
+             # variants of this file. Just ignore them for these checks.
              "gen/defines.hh",
     ]
     for part in parts:

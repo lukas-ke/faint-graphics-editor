@@ -1,6 +1,6 @@
 // -*- coding: us-ascii-unix -*-
-#ifndef FAINT_WX_TEST_UTIL_HH
-#define FAINT_WX_TEST_UTIL_HH
+#ifndef FAINT_TEST_WX_TEST_UTIL_HH
+#define FAINT_TEST_WX_TEST_UTIL_HH
 
 class wxBitmap;
 

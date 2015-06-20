@@ -13,6 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#ifndef FAINT_MSW_WARN_HH
+#define FAINT_MSW_WARN_HH
 #ifndef _WIN32
 #error msw_warn.hh included on non-VC compiler
 #endif
@@ -47,3 +49,5 @@
 
 // Produced too many warnings from wxWidgets (some old rev though)
 // #pragma warning(default:4242) // conversion from 'type1' to 'type2', possible loss of data
+
+#endif

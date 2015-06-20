@@ -1,6 +1,6 @@
 // -*- coding: us-ascii-unix -*
-#ifndef FAINT_BITMAP_TEST_UTIL_HH
-#define FAINT_BITMAP_TEST_UTIL_HH
+#ifndef FAINT_TEST_BITMAP_TEST_UTIL_HH
+#define FAINT_TEST_BITMAP_TEST_UTIL_HH
 
 namespace faint{
 
