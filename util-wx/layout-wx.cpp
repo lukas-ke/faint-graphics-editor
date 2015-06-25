@@ -36,7 +36,7 @@ SizerItem::SizerItem(wxWindow* item, Proportion p, int flags, int border)
 {}
 
 SizerItem::SizerItem(wxWindow* item)
-  : flags(wxALIGN_CENTER_VERTICAL),
+  : flags(wxALIGN_CENTER),
     windowItem(item)
 {}
 
@@ -56,7 +56,7 @@ SizerItem::SizerItem(wxSizer* item, Proportion p, int flags, int border)
 {}
 
 SizerItem::SizerItem(wxSizer* item)
-  : flags(wxALIGN_CENTER_VERTICAL),
+  : flags(wxALIGN_CENTER),
     sizerItem(item)
 {}
 
