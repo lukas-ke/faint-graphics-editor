@@ -29,12 +29,12 @@ Bitmap scale_nearest(const Bitmap& src, int scale){
   uchar* p_dst = scaled.m_data;
   const uchar* p_src = src.m_data;
 
-  for (int i = 0; i < h2; i++){ // Fixme: use j (=ydst)
-    for (int j = 0; j < w2; j++){ // Fixme: use i (=xdst)
-      x2 = ((j*x_ratio)>>16);
-      y2 = ((i*y_ratio)>>16);
+  for (int j = 0; j < h2; j++){
+    for (int i = 0; i < w2; i++){
+      x2 = ((i*x_ratio)>>16);
+      y2 = ((j*y_ratio)>>16);
 
-      uchar* rDst = p_dst + i * (scaled.m_row_stride) + j * ByPP;
+      uchar* rDst = p_dst + j * (scaled.m_row_stride) + i * ByPP;
       const uchar* rSrc = p_src + y2 * (src.m_row_stride) + x2 * ByPP;
 
       *(rDst + 0) = *rSrc;
@@ -57,12 +57,12 @@ Bitmap scale_nearest(const Bitmap& src, const Scale& scale){
   uchar* p_dst = scaled.m_data;
   const uchar* p_src = src.m_data;
 
-  for (int i = 0; i< h2; i++){
-    for (int j = 0; j < w2; j++){
-      x2 = ((j*x_ratio)>>16);
-      y2 = ((i*y_ratio)>>16);
+  for (int j = 0; j < h2; j++){
+    for (int i = 0; i < w2; i++){
+      x2 = ((i*x_ratio)>>16);
+      y2 = ((j*y_ratio)>>16);
 
-      uchar* rDst = p_dst + i * (scaled.m_row_stride) + j * ByPP;
+      uchar* rDst = p_dst + j * (scaled.m_row_stride) + i * ByPP;
       const uchar* rSrc = p_src + y2 * (src.m_row_stride) + x2 * ByPP;
 
       *(rDst + 0) = *rSrc;

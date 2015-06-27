@@ -7,8 +7,9 @@
 
 void test_scale_nearest(){
   using namespace faint;
-  Bitmap src = load_test_image(FileName("scale-nearest-source.png"));
-  Bitmap key = load_test_image(FileName("scale-nearest-key.png"));
-  Bitmap dst = scale_nearest(src, {2.0, 3.0});
+  const Bitmap src = load_test_image(FileName("scale-nearest-source.png"));
+  const Bitmap key = load_test_image(FileName("scale-nearest-key.png"));
+  const Bitmap dst = scale_nearest(src, {2.0, 3.0});
   VERIFY(equal(dst, key));
+  VERIFY(equal(scale_nearest(src, 2), scale_nearest(src, {2.0, 2.0})));
 }
