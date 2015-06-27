@@ -35,12 +35,12 @@ Bitmap scale_bilinear(const Bitmap& src, const Scale& scale){
   const coord y_ratio = floated(src.m_h - 1) / floated(newSize.h);
   const uchar* data = src.m_data;
 
-  for (int yDst = 0; yDst != newSize.h; yDst++){
-    for (int xDst = 0; xDst != newSize.w; xDst++){
-      int xSrc = truncated(x_ratio * xDst);
-      int ySrc = truncated(y_ratio * yDst);
-      const coord x_diff = x_ratio * xDst - xSrc;
-      const coord y_diff = y_ratio * yDst - ySrc;
+  for (int j = 0; j != newSize.h; j++){
+    for (int i = 0; i != newSize.w; i++){
+      int xSrc = truncated(x_ratio * i);
+      int ySrc = truncated(y_ratio * j);
+      const coord x_diff = x_ratio * i - xSrc;
+      const coord y_diff = y_ratio * j - ySrc;
       const int srcIndex = ySrc * src.m_row_stride + xSrc * ByPP;
       const_color_ptr a(data + srcIndex);
       const_color_ptr b(data + srcIndex + ByPP);
@@ -68,7 +68,7 @@ Bitmap scale_bilinear(const Bitmap& src, const Scale& scale){
         c.a*(y_diff)*(1-x_diff) +
         (d.a)*(x_diff*y_diff) + 0.5);
 
-      uchar* rDst = dst.m_data + yDst * (dst.m_row_stride) + xDst * ByPP;
+      uchar* rDst = dst.m_data + j * (dst.m_row_stride) + i * ByPP;
       *(rDst + iR) = red;
       *(rDst + iG) = green;
       *(rDst + iB) = blue;
