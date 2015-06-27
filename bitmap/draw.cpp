@@ -2036,7 +2036,7 @@ Bitmap scaled_subbitmap(const Bitmap& src, const Scale& scale,
   coord y_ratio = 1.0 / scale.y;
 
   const uchar* data = src.m_data;
-  for (int i = 0; i != newSize.h; i++){
+  for (int i = 0; i != newSize.h; i++){ // Fixme: Swap i and j here.
     for (int j = 0; j != newSize.w; j++){
       int x = truncated(x_ratio * j + r.x);
       int y = truncated(y_ratio * i + r.y);
