@@ -92,7 +92,7 @@ static auto create_about_dialog(wxWindow* parent){
           raw(version_text(panel))}),
         {create_hline(panel), Proportion(0), EXPAND|DOWN, ui::item_spacing},
         {create_hyperlink(panel,
-          "http://code.google.com/p/faint-graphics-editor/"),
+          "https://github.com/lukas-ke/faint-graphics-editor"),
           Proportion(0), DOWN, ui::item_spacing},
           raw(license_text(panel))}),
       Proportion(1), EXPAND|DOWN, ui::panel_padding}}));
