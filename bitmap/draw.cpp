@@ -2023,63 +2023,6 @@ Bitmap scale(const Bitmap& bmp, const Scale& scale, ScaleQuality quality){
   return Bitmap();
 }
 
-Bitmap scaled_subbitmap(const Bitmap& src, const Scale& scale,
-  const IntRect& r)
-{
-  assert(r.x >= 0);
-  assert(r.y >= 0);
-  IntSize newSize(rounded(r.w * scale.x), rounded(r.h * scale.y));
-  newSize.w = std::max(newSize.w, 1);
-  newSize.h = std::max(newSize.h, 1);
-  Bitmap scaled(newSize);
-  coord x_ratio = 1.0 / scale.x;
-  coord y_ratio = 1.0 / scale.y;
-
-  const uchar* data = src.m_data;
-  for (int j = 0; j != newSize.h; j++){
-    for (int i = 0; i != newSize.w; i++){
-      int x = truncated(x_ratio * i + r.x);
-      int y = truncated(y_ratio * j + r.y);
-      coord x_diff = (x_ratio * i + r.x) - x;
-      coord y_diff = (y_ratio * j + r.y) - y;
-      int index = y * src.m_row_stride + x * ByPP;
-
-      const_color_ptr a(data + index);
-      const_color_ptr b(data + index + ByPP);
-      const_color_ptr c(data + index + src.m_row_stride);
-      const_color_ptr d(data + index + src.m_row_stride + ByPP);
-
-      uchar blue = static_cast<uchar>((a.b)*(1-x_diff)*(1-y_diff) +
-        (b.b)*(x_diff)*(1-y_diff) +
-        (c.b)*(y_diff)*(1-x_diff) +
-        (d.b)*(x_diff*y_diff));
-
-      uchar green = static_cast<uchar>(a.g*(1-x_diff)*(1-y_diff) +
-        b.g*(x_diff)*(1-y_diff) +
-        (c.g)*(y_diff)*(1-x_diff) +
-        (d.g)*(x_diff*y_diff));
-
-      uchar red = static_cast<uchar>(a.r * (1-x_diff)*(1-y_diff) +
-        b.r*(x_diff)*(1-y_diff) +
-        c.r*(y_diff)*(1-x_diff) +
-        (d.r)*(x_diff*y_diff));
-
-      uchar alpha = static_cast<uchar>(a.a * (1-x_diff)*(1-y_diff) +
-        b.a*(x_diff)*(1-y_diff) +
-        c.a*(y_diff)*(1-x_diff) +
-        (d.a)*(x_diff*y_diff));
-
-      uchar* rDst = scaled.m_data + j * (scaled.m_row_stride) + i * ByPP;
-
-      *(rDst + iR) = red;
-      *(rDst + iG) = green;
-      *(rDst + iB) = blue;
-      *(rDst + iA) = alpha;
-    }
-  }
-  return scaled;
-}
-
 void set_alpha(Bitmap& bmp, uchar a){
   uchar* data = bmp.GetRaw();
   const int stride = bmp.GetStride();

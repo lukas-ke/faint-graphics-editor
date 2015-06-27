@@ -160,7 +160,6 @@ IntSize rotate_scale_bilinear_size(const IntSize& oldSize,
 Bitmap rotate_scale_bilinear(const Bitmap&, const Angle&, const Scale&,
   const Paint& bg);
 Bitmap scale(const Bitmap&, const Scale&, ScaleQuality);
-Bitmap scaled_subbitmap(const Bitmap&, const Scale&, const IntRect&);
 void set_alpha(Bitmap&, uchar);
 void set_alpha_masked(Bitmap&, uchar, const Mask&);
 Bitmap subbitmap(const Bitmap&, const IntRect&);
