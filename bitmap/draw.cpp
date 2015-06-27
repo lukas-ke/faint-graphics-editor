@@ -28,6 +28,7 @@
 #include "bitmap/scale-bicubic.hh"
 #include "bitmap/scale-bilinear.hh"
 #include "bitmap/scale-nearest.hh"
+#include "bitmap/scale-quality.hh"
 #include "geo/axis.hh"
 #include "geo/geo-func.hh"
 #include "geo/geo-list-points.hh"
@@ -39,7 +40,6 @@
 #include "geo/range.hh"
 #include "geo/scale.hh"
 #include "geo/size.hh"
-#include "util/common-fwd.hh" // Fixme: For ScaleQuality
 #include "util/make-vector.hh"
 #include "util/optional.hh"
 

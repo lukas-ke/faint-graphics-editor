@@ -18,6 +18,7 @@
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "bitmap/paint.hh"
+#include "bitmap/scale-quality.hh"
 #include "geo/geo-func.hh"
 #include "geo/int-point.hh"
 #include "geo/int-rect.hh"

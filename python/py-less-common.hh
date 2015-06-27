@@ -16,6 +16,7 @@
 #ifndef FAINT_PY_LESS_COMMON_HH
 #define FAINT_PY_LESS_COMMON_HH
 #include "geo/points.hh"
+#include "bitmap/scale-quality.hh"
 
 namespace faint{
 

@@ -16,6 +16,7 @@
 #include <cassert>
 #include "app/canvas.hh"
 #include "app/canvas-handle.hh"
+#include "bitmap/scale-quality.hh"
 #include "commands/rescale-cmd.hh"
 #include "geo/adjust.hh"
 #include "geo/geo-func.hh"
