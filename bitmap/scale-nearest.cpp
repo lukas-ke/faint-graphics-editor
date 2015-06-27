@@ -29,7 +29,7 @@ Bitmap scale_nearest(const Bitmap& src, int scale){
   uchar* p_dst = scaled.m_data;
   const uchar* p_src = src.m_data;
 
-  for (int i = 0; i< h2; i++){ // Fixme: use j (=ydst)
+  for (int i = 0; i < h2; i++){ // Fixme: use j (=ydst)
     for (int j = 0; j < w2; j++){ // Fixme: use i (=xdst)
       x2 = ((j*x_ratio)>>16);
       y2 = ((i*y_ratio)>>16);
