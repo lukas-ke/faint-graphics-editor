@@ -2036,12 +2036,12 @@ Bitmap scaled_subbitmap(const Bitmap& src, const Scale& scale,
   coord y_ratio = 1.0 / scale.y;
 
   const uchar* data = src.m_data;
-  for (int i = 0; i != newSize.h; i++){ // Fixme: Swap i and j here.
-    for (int j = 0; j != newSize.w; j++){
-      int x = truncated(x_ratio * j + r.x);
-      int y = truncated(y_ratio * i + r.y);
-      coord x_diff = (x_ratio * j + r.x) - x;
-      coord y_diff = (y_ratio * i + r.y) - y;
+  for (int j = 0; j != newSize.h; j++){
+    for (int i = 0; i != newSize.w; i++){
+      int x = truncated(x_ratio * i + r.x);
+      int y = truncated(y_ratio * j + r.y);
+      coord x_diff = (x_ratio * i + r.x) - x;
+      coord y_diff = (y_ratio * j + r.y) - y;
       int index = y * src.m_row_stride + x * ByPP;
 
       const_color_ptr a(data + index);
@@ -2069,7 +2069,7 @@ Bitmap scaled_subbitmap(const Bitmap& src, const Scale& scale,
         c.a*(y_diff)*(1-x_diff) +
         (d.a)*(x_diff*y_diff));
 
-      uchar* rDst = scaled.m_data + i * (scaled.m_row_stride) + j * ByPP;
+      uchar* rDst = scaled.m_data + j * (scaled.m_row_stride) + i * ByPP;
 
       *(rDst + iR) = red;
       *(rDst + iG) = green;
