@@ -56,7 +56,7 @@ public:
   const Either<Bitmap, ColorSpan>& GetBackground() const;
   FrozenEither<Bitmap, ColorSpan> GetBackground();
 
-  // The time to remain on this image if saved as an animation. // Fixme: Or is it time before showing? Also, unit? (Given by Delay-class tbh)
+  // The time to remain on this image if saved as an animation.
   Delay GetDelay() const;
 
   ExpressionContext& GetExpressionContext() const;
