@@ -75,7 +75,7 @@ void gui_test_slider(wxWindow* p, faint::StatusInterface&,
   set_pos(s4, {10,100});
 
   auto s5 = create_dual_slider(p,
-    StaticBoundedInterval<0, 100>(Interval(0, 80)),
+    StaticBoundedInterval<0, 100>(Interval(min_t(0), max_t(80))),
     AlphaBackground(ColRGB(0,128,0)),
     c.GetSliderCursors(),
     IntSize(200, 20));

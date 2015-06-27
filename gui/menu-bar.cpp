@@ -296,7 +296,7 @@ public:
     // The events for recent files is bound separately (as the menu
     // items are added dynamically
     // Fixme: Add e.g. bind_range to bind-event.hh, instead of using .Bind
-    bind_menu(m_eventHandler, ClosedIntRange(wxID_FILE1, wxID_FILE1 + 10),
+    bind_menu(m_eventHandler, make_closed_range(wxID_FILE1, wxID_FILE1 + 10),
       [&](int eventId){
         int index = eventId - wxID_FILE1;
         FilePath filePath(GetRecentFiles().Get(to_size_t(index)));

@@ -118,7 +118,11 @@ void test_file_gif(){
           });
       };
 
-    auto delays = std::vector<Delay>({{10}, {20}, {30}, {40}});
+    auto delays = std::vector<Delay>{
+      Delay(10),
+      Delay(20),
+      Delay(30),
+      Delay(40)};
 
     std::vector<GifFrame> images = {
       {get_bmp(srcProps.GetFrame(0_idx)), delays[0]},

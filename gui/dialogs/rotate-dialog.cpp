@@ -114,7 +114,7 @@ public:
 
     using namespace layout;
     return create_row_outer_pad({levelButton,
-      {raw(label), 0, wxALIGN_CENTER_VERTICAL}});
+      {raw(label), Proportion(0), wxALIGN_CENTER_VERTICAL}});
   }
 
   wxWindow* CreateButton(const Tooltip& tooltip,

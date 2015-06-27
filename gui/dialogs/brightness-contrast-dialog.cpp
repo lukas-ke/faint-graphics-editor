@@ -89,11 +89,11 @@ public:
     SetSizerAndFit(create_column({
       create_row({raw(m_enablePreview)}),
       grow(create_row({
-        {raw(lblBrightness), 0, wxALIGN_CENTER_VERTICAL},
-        {m_brightnessSlider, 1, wxEXPAND}})),
+        {raw(lblBrightness), Proportion(0), wxALIGN_CENTER_VERTICAL},
+        {m_brightnessSlider, Proportion(1), wxEXPAND}})),
       grow(create_row({
-        {raw(lblContrast), 0, wxALIGN_CENTER_VERTICAL},
-        {m_contrastSlider, 1, wxEXPAND}})),
+        {raw(lblContrast), Proportion(0), wxALIGN_CENTER_VERTICAL},
+        {m_contrastSlider, Proportion(1), wxEXPAND}})),
       center(create_row_no_pad({
         make_default(this, create_ok_button(this)),
           create_cancel_button(this)}))

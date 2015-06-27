@@ -88,10 +88,10 @@ public:
     set_sizer(this, create_column({
       create_row({raw(m_enablePreviewCheck)}),
       grow(create_row({
-       {raw(lblPinch), 0, wxALIGN_CENTER_VERTICAL},
+        {raw(lblPinch), Proportion(0), wxALIGN_CENTER_VERTICAL},
         grow(m_pinchSlider)})),
       grow(create_row({
-        {raw(lblWhirl), 0, wxALIGN_CENTER_VERTICAL},
+         {raw(lblWhirl), Proportion(0), wxALIGN_CENTER_VERTICAL},
          grow(m_whirlSlider)})),
       center(create_row_no_pad({
         make_default(this, create_ok_button(this)),

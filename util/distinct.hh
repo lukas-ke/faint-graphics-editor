@@ -37,7 +37,7 @@ public:
     m_obj(obj)
   {}
 
-  Distinct(T&& obj) :
+  explicit Distinct(T&& obj) :
     m_obj(std::move(obj))
   {}
 

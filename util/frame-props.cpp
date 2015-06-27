@@ -73,9 +73,7 @@ FrameProps::FrameProps(const Bitmap& bmp, const objects_t& objects)
     m_delay(0),
     m_hotSpot(0,0),
     m_objects(objects)
-{
-  m_delay = 0;
-}
+{}
 
 FrameProps::FrameProps(const Bitmap& bmp, const FrameInfo& info)
   : m_background(bmp),
@@ -161,7 +159,7 @@ void FrameProps::RemoveObject(Object* obj){
 
 void FrameProps::SetBackground(const Either<Bitmap, ColorSpan>& bg){
   m_background = bg;
-  m_delay = 0;
+  m_delay = Delay(0);
   m_hotSpot = HotSpot(0,0);
 }
 

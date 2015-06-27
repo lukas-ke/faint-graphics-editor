@@ -274,7 +274,7 @@ private:
       return ToolResult::NONE;
     }
 
-    m_command.Set(new BrushCommand(r.TopLeft(),
+    m_command.Set(new BrushCommand(UpperLeft(r.TopLeft()),
       m_alphaMap.SubCopy(r),
       m_first, maybe_offsat_paint(GetSettings(), m_brush)));
     return ToolResult::COMMIT;

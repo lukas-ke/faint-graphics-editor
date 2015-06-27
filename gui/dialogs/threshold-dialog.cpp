@@ -77,7 +77,7 @@ public:
     using namespace layout;
     set_sizer(m_dialog.get(), create_column({
       create_row({raw(m_enablePreview)}),
-      grow(create_row({{m_slider, 1, wxEXPAND}})),
+      grow(create_row({{m_slider, Proportion(1), wxEXPAND}})),
       center(create_row_no_pad({make_default(m_dialog.get(),
       create_button(m_dialog.get(), "&OK",ok)),
         create_button(m_dialog.get(), "Cancel", cancel)}))}));

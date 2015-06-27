@@ -202,7 +202,7 @@ public:
       create_row_outer_pad({raw(m_resizeTopLeft),
         raw(m_resizeCentered),
         raw(m_rescale),
-        {raw(cancelButton), 0, wxALIGN_TOP}})}));
+        {raw(cancelButton), Proportion(0), wxALIGN_TOP}})}));
 
     m_width->GetWindow().FitSizeTo("1024 (100%)");
     m_height->GetWindow().FitSizeTo("1024 (100%)");
