@@ -7,7 +7,10 @@
 void test_int_point(){
   using namespace faint;
 
-  static_assert(std::is_literal_type<IntPoint>::value, "IntPoint not literal");
+  static_assert(std::is_literal_type<IntPoint>::value,
+    "IntPoint not literal");
+  static_assert(std::is_trivially_copyable<IntPoint>::value,
+    "IntPoint not trivially copyable");
 
   IntPoint p0;
   EQUAL(p0, IntPoint(0,0));
