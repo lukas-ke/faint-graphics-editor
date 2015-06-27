@@ -5,7 +5,6 @@
 #include "bitmap/color.hh"
 #include "bitmap/draw.hh"
 
-
 void test_boundary_fill(){
   using namespace faint;
 

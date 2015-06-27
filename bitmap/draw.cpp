@@ -14,8 +14,8 @@
 // permissions and limitations under the License.
 
 #include <algorithm>
+#include <functional>
 #include <unordered_set>
-#include <set> // Fixme: Remove if using unordered_set all over.
 #include "bitmap/alpha-map.hh"
 #include "bitmap/auto-crop.hh"
 #include "bitmap/bitmap.hh"
@@ -42,6 +42,21 @@
 #include "geo/size.hh"
 #include "util/make-vector.hh"
 #include "util/optional.hh"
+
+namespace std{
+
+template<>
+struct hash<faint::IntPoint>{
+  typedef faint::IntPoint argument_type;
+  typedef std::size_t result_type;
+
+  result_type operator()(const faint::IntPoint& pt) const{
+    // http://stackoverflow.com/a/2634715
+    return (51 + std::hash<int>()(pt.x)) * 51 + std::hash<int>()(pt.y);
+  }
+};
+
+} // namespace
 
 namespace faint{
 
@@ -1144,7 +1159,7 @@ static void boundary_fill_color(Bitmap& bmp, const IntPoint& pos,
     return;
   }
   std::vector<IntPoint> v;
-  std::set<IntPoint> used; // Fixme: Consider unordered_set
+  std::unordered_set<IntPoint> used;
   v.push_back(pos);
 
   for (uint i = 0; i != v.size(); i++){
@@ -1239,7 +1254,7 @@ void boundary_fill_pattern_relative(Bitmap& bmp, const IntPoint& pos,
 
   Bitmap filled(bmp);
   std::vector<IntPoint> v;
-  std::set<IntPoint> used; // Fixme: Consider unordered_set
+  std::unordered_set<IntPoint> used;
   v.push_back(pos);
 
   const Bitmap& patBmp(pattern.GetBitmap());
@@ -1340,7 +1355,7 @@ void boundary_fill_gradient(Bitmap& bmp, const IntPoint& pos,
     color_white);
 
   std::vector<IntPoint> v;
-  std::set<IntPoint> used; // Fixme: Consider unordered_set
+  std::unordered_set<IntPoint> used;
   v.push_back(pos);
 
   // Min and max filled pixels, used to determine the gradient rectangle
