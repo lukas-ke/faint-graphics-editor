@@ -5,14 +5,15 @@
 
 namespace faint{
 
-const Conversions& get(const std::map<utf8_string, Conversions>& c, const utf8_string& unit)
+const Conversions& get(const std::map<utf8_string, Conversions>& c,
+  const utf8_string& unit)
 {
   auto it = c.find(unit);
   VERIFY(it != end(c));
   return it->second;
 }
 
-}
+} // namespace
 
 void test_text_expression_conversions(){
   using namespace faint;
