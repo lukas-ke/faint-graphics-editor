@@ -6,7 +6,8 @@
 
 void test_scale_bicubic(){
   using namespace faint;
-  Bitmap src = load_test_image(FileName("bicubic-source.png"));
-  Bitmap dst = scale_bicubic(src, {2.0, 2.0});
-  VERIFY(dst.m_w == src.m_w * 2);
+  const Bitmap src = load_test_image(FileName("bicubic-source.png"));
+  const Bitmap key = load_test_image(FileName("bicubic-key.png"));
+  Bitmap dst = scale_bicubic(src, {2.0, 3.0});
+  VERIFY(dst == key);
 }
