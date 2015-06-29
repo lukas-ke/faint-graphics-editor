@@ -15,7 +15,6 @@
 # implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-import codecs
 import os
 import re
 
@@ -37,7 +36,9 @@ def html_help_image(filename):
 
 def html_image_map(state, map_file_name, image_file_name):
     map_name = state.new_map_name()
-    lines = codecs.open(_get_source_image_path(map_file_name)).read().decode("ascii")
+    with open(_get_source_image_path(map_file_name), encoding="ascii") as f:
+        lines = f.read()
+
     if lines.find('\r') != -1:
         raise ContentError("Non-unix endline (\\r) in %s" % map_file_name)
 
@@ -291,12 +292,14 @@ class PythonSample:
 
     def to_html(self, state, **kwArgs):
         text = '<font face="courier">'
-        f = open('../help/example_py/%s' % self.filename)
-        lines = [l.rstrip() for l in f.readlines()]
+        with open('../help/example_py/%s' % self.filename) as f:
+            lines = [l.rstrip() for l in f.readlines()]
+
         try:
             lines = lines[lines.index("#start") + 1:]
         except ValueError:
-            raise ContentError('PythonSample %s missing #start-comment' % self.filename)
+            raise ContentError('PythonSample %s missing #start-comment'
+                               % self.filename)
         text += '<br>'.join([self._py_line(l) for l in lines])
         text += '</font>'
         return text
@@ -434,9 +437,9 @@ class VerbatimInclude:
     def to_html(self, state, **kwArgs):
         with open(self.path) as f:
             text = f.read()
-            if not self.path.endswith(".html"):
-                text = re.sub("^([ ]+)", escape_space, text, flags=re.MULTILINE)
-                text = text.replace("\n", "<br>")
+        if not self.path.endswith(".html"):
+            text = re.sub("^([ ]+)", escape_space, text, flags=re.MULTILINE)
+            text = text.replace("\n", "<br>")
 
         return ('<table border="1" width="100%"><tr>' +
                 '<td bgcolor="#ffffff" width="100%">' +
