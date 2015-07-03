@@ -31,6 +31,7 @@
 namespace faint{
 
 class Bitmap;
+class Grid;
 
 class category_imageinfo;
 using create_bitmap = Distinct<bool, category_imageinfo, 0>;
@@ -70,6 +71,7 @@ public:
   const Either<Bitmap, ColorSpan>& GetBackground() const;
   const Optional<Calibration>& GetCalibration() const;
   Delay GetDelay() const;
+  const Optional<Grid>& GetGrid() const;
   HotSpot GetHotSpot() const;
   Object* GetObject(const Index&);
   bool HasObject(const Index&) const;
@@ -77,11 +79,13 @@ public:
   void RemoveObject(Object*);
   void SetBackground(const Either<Bitmap, ColorSpan>&);
   void SetCalibration(const Calibration&);
+  void SetGrid(const Grid&);
   objects_t TakeObjects();
 private:
   objects_t m_allObjects;
   Either<Bitmap, ColorSpan> m_background;
   Optional<Calibration> m_calibration;
+  Optional<Grid> m_grid;
   Delay m_delay;
   HotSpot m_hotSpot;
   objects_t m_objects;

@@ -16,6 +16,7 @@
 #include "bitmap/bitmap.hh"
 #include "objects/object.hh"
 #include "util/frame-props.hh"
+#include "util/grid.hh"
 #include "util/index.hh"
 #include "util/object-util.hh"
 
@@ -134,6 +135,10 @@ Delay FrameProps::GetDelay() const{
   return m_delay;
 }
 
+const Optional<Grid>& FrameProps::GetGrid() const{
+  return m_grid;
+}
+
 HotSpot FrameProps::GetHotSpot() const{
   return m_hotSpot;
 }
@@ -165,6 +170,10 @@ void FrameProps::SetBackground(const Either<Bitmap, ColorSpan>& bg){
 
 void FrameProps::SetCalibration(const Calibration& c){
   m_calibration.Set(c);
+}
+
+void FrameProps::SetGrid(const Grid& g){
+  m_grid.Set(g);
 }
 
 objects_t FrameProps::TakeObjects(){

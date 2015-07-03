@@ -34,6 +34,7 @@ view = ns_svg('view')
 
 class faint:
     calibration = ns_faint('calibration')
+    grid = ns_faint('grid')
 
 class xlink:
     href = ns_xlink('href')

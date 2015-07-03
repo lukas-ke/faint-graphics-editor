@@ -260,7 +260,8 @@ def create_background_color(image):
     element.set('fill', to_rgb_color(color))
     return element
 
-def create_calibration(calibration):
+
+def create_calibration_element(calibration):
     """Creates a calibration line for the defs"""
     x1,y1,x2,y2 = calibration[0]
     length = calibration[1]
@@ -275,6 +276,20 @@ def create_calibration(calibration):
     element.set('length', str(length))
     element.set('unit', str(unit))
     return element
+
+
+def create_grid_element(grid):
+    """Creates a faint-grid element"""
+    x, y = grid.anchor
+    color = grid.color
+    element = ET.Element('faint:grid')
+    element.set('x', str(x))
+    element.set('y', str(y))
+    element.set('dashed', str(grid.dashed))
+    element.set('enabled', str(grid.enabled))
+    element.set('spacing', str(grid.spacing))
+    return element
+
 
 def create_defs_child_element(obj, element_id):
     """Creates an SVG element to be appended to the <defs>-element."""
@@ -764,7 +779,9 @@ def to_string(canvas):
 
     calibration = canvas.get_calibration()
     if calibration is not None:
-        defs.append(create_calibration(calibration))
+        defs.append(create_calibration_element(calibration))
+
+    defs.append(create_grid_element(canvas.grid))
 
     return _PREAMBLE + ET.tostring(root, encoding="unicode")
 

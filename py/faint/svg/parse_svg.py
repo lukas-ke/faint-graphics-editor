@@ -117,7 +117,7 @@ def parse_defs(node, state, id_to_etree_node=None):
             # Ignore ignored markers for now, since I add them for
             # arrowhead, arrowtail.
             pass
-        elif item == 'calibration':
+        elif item == 'calibration' or item == 'grid':
             # Fully handled by function.
             pass
         else:
@@ -214,6 +214,14 @@ def parse_faint_calibration(node, state, id_to_etree_node=None):
     state.props.set_calibration((points, length, unit))
     return 'calibration'
 
+
+def parse_faint_grid(node, state, id_to_etree_node=None):
+    x = svg_coord_attr(node.get('x'))
+    y = svg_coord_attr(node.get('y'))
+    dashed = node.get('dashed') == 'True'
+    enabled = node.get('enabled') == 'True'
+    spacing = svg_length_attr(node.get('spacing'))
+    state.props.set_grid((x, y), dashed, enabled, int(spacing))
 
 def parse_linear_gradient_node(node, state, id_to_etree_node=None):
     """Parses a linear gradient element"""
