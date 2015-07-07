@@ -18,6 +18,7 @@
 #include "python/py-image-props.hh"
 #include "python/mapped-type.hh"
 #include "python/py-ugly-forward.hh"
+#include "util/grid.hh"
 #include "util/image-props.hh"
 
 namespace faint{
@@ -83,6 +84,19 @@ Sets an error state described by the string s for this ImageProps.
 This will inhibit opening a new image tab." */
 static void imageprops_set_error(ImageProps& self, const utf8_string& err){
   self.SetError(err);
+}
+
+/* method: "set_grid((x,y), dashed, enabled, spacing)\n
+Specify the grid." */
+static void frameprops_set_grid(ImageProps& self,
+  const Point& anchor,
+  bool dashed,
+  bool enabled,
+  int spacing)
+{
+  Grid g(enabled, spacing, default_grid_color(), anchor);
+  g.SetDashed(dashed);
+  self.SetGrid(g);
 }
 
 /* method: "add_warning(s)\n

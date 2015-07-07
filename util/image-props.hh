@@ -17,6 +17,7 @@
 #define FAINT_IMAGE_PROPS_HH
 #include "text/utf8-string.hh"
 #include "util/frame-props.hh"
+#include "util/grid.hh"
 #include "util/index.hh"
 
 namespace faint{
@@ -34,14 +35,17 @@ public:
   void AddWarning(const utf8_string&);
   utf8_string GetError() const;
   FrameProps& GetFrame(const Index&);
+  Grid GetGrid() const;
   Index GetNumFrames() const;
   int GetNumWarnings() const;
   utf8_string GetWarning(int) const;
   bool IsOk() const;
+  void SetGrid(const Grid&);
   void SetError(const utf8_string&);
 private:
   utf8_string m_error;
   std::vector<FrameProps> m_frames;
+  Grid m_grid;
   bool m_ok;
   std::vector<utf8_string> m_warnings;
 };

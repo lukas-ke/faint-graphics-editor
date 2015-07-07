@@ -33,7 +33,6 @@
 #include "python/py-util.hh"
 #include "util/default-settings.hh"
 #include "util/frame-props.hh"
-#include "util/grid.hh"
 #include "util/image-props.hh"
 #include "util/setting-util.hh"
 
@@ -239,19 +238,6 @@ static void frameprops_set_calibration(const BoundFrameProps& self,
   const Calibration& c)
 {
   self.frame.SetCalibration(c);
-}
-
-/* method: "set_grid((x,y), dashed, enabled, spacing)\n
-Specifies a grid.." */
-static void frameprops_set_grid(const BoundFrameProps& self,
-  const Point& anchor,
-  bool dashed,
-  bool enabled,
-  int spacing)
-{
-  Grid g(enabled, spacing, default_grid_color(), anchor);
-  g.SetDashed(dashed);
-  self.frame.SetGrid(g);
 }
 
 /* method: "set_obj_tri(id, tri)\n

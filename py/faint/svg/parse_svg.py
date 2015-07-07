@@ -212,16 +212,18 @@ def parse_faint_calibration(node, state, id_to_etree_node=None):
     length = svg_length_attr(node.get('length'), state)
     unit = node.get('unit')
     state.props.set_calibration((points, length, unit))
-    return 'calibration'
+    return 'calibration' # Fixme: To avoid warning. Find better method
 
 
 def parse_faint_grid(node, state, id_to_etree_node=None):
-    x = svg_coord_attr(node.get('x'))
-    y = svg_coord_attr(node.get('y'))
+    x = svg_coord_attr(node.get('x'), state)
+    y = svg_coord_attr(node.get('y'), state)
     dashed = node.get('dashed') == 'True'
     enabled = node.get('enabled') == 'True'
-    spacing = svg_length_attr(node.get('spacing'))
-    state.props.set_grid((x, y), dashed, enabled, int(spacing))
+    spacing = svg_length_attr(node.get('spacing'), state)
+    state.set_grid((x, y), dashed, enabled, int(spacing))
+    return 'grid' # Fixme: To avoid warning. Find better method
+
 
 def parse_linear_gradient_node(node, state, id_to_etree_node=None):
     """Parses a linear gradient element"""
@@ -919,6 +921,7 @@ svg_defs_content_functions = dict_union(
         tag.text: _not_implemented,
         tag.view: _not_implemented,
         tag.faint.calibration: parse_faint_calibration,
+        tag.faint.grid: parse_faint_grid,
     })
 
 supported_svg_features = [
@@ -1195,12 +1198,13 @@ def parse_svg_root_node(svg_node, image_props, system_language):
     if viewBox is None:
         viewBox = viewPort
 
-    props = image_props.add_frame((viewPort[2], viewPort[3]))
+    frame_props = image_props.add_frame((viewPort[2], viewPort[3]))
 
     # Fixme: What of translation?
     ctm = Matrix.scale(viewPort[2] / viewBox[2], viewPort[3] / viewBox[3])
 
-    state = ParseState(props,
+    state = ParseState(image_props,
+                       frame_props,
                        ctm=ctm,
                        viewPort=viewPort,
                        viewBox=viewBox,

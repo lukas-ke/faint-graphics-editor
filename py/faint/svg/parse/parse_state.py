@@ -45,6 +45,7 @@ class ParseState:
     """
 
     def __init__(self,
+                 image_props,
                  frame_props,
                  ctm=None,
                  settings=None,
@@ -54,6 +55,7 @@ class ParseState:
                  viewBox=None,
                  system_language="en"):
 
+        self.image_props = image_props
         self.props = frame_props
         self.ctm = Matrix.identity() if ctm is None else ctm
         self.settings = (node_default_settings() if settings is None
@@ -88,7 +90,8 @@ class ParseState:
             viewPort = self.viewPort
         if viewBox is None:
             viewBox = self.viewBox
-        return ParseState(self.props,
+        return ParseState(self.image_props,
+                          self.props,
                           ctm,
                           settings,
                           self.ids,
@@ -96,6 +99,11 @@ class ParseState:
                           viewPort=viewPort,
                           viewBox=viewBox,
                           system_language=self.system_language)
+
+
+    def set_grid(self, *args, **kwArgs):
+        print("Set grid")
+        self.image_props.set_grid(*args, **kwArgs)
 
 
     def transform_object(self, object_id):

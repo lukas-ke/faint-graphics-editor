@@ -61,6 +61,10 @@ FrameProps& ImageProps::GetFrame(const Index& index){
   return m_frames[to_size_t(index.Get())];
 }
 
+Grid ImageProps::GetGrid() const{
+  return m_grid;
+}
+
 Index ImageProps::GetNumFrames() const{
   return to_index(m_frames.size());
 }
@@ -90,6 +94,10 @@ bool ImageProps::IsOk() const{
 void ImageProps::SetError(const utf8_string& error){
   m_error = error;
   m_ok = false;
+}
+
+void ImageProps::SetGrid(const Grid& grid){
+  m_grid = grid;
 }
 
 void ImageProps::AddWarning(const utf8_string& warning){

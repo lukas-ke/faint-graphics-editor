@@ -21,12 +21,15 @@
 
 namespace faint{
 
-ImageList::ImageList(ImageProps&& props){
+ImageList::ImageList(ImageProps&& props)
+  : m_grid(props.GetGrid())
+{
   InitAdd(std::move(props));
 }
 
 ImageList::ImageList(ImageList&& source)
   : m_active(source.m_active),
+    m_grid(source.m_grid),
     m_images(source.m_images),
     m_owned(source.m_owned)
 {
@@ -35,6 +38,10 @@ ImageList::ImageList(ImageList&& source)
 }
 
 ImageList::ImageList(std::vector<ImageProps>&& props){
+  if (!props.empty()){
+    // Fixme: What case is this? How decide which grid to use?
+    m_grid = props.front().GetGrid();
+  }
   for (ImageProps& p : props){
     InitAdd(std::move(p));
   }
