@@ -116,6 +116,7 @@ def parse_defs(node, state, id_to_etree_node=None):
         elif item == 'marker':
             # Ignore ignored markers for now, since I add them for
             # arrowhead, arrowtail.
+            # Fixme: These should be indexed for referencing.
             pass
         elif item == 'calibration' or item == 'grid':
             # Fully handled by function.
