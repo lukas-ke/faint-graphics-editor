@@ -64,6 +64,10 @@ Index ImageList::GetActiveIndex() const{
   return m_active;
 }
 
+Grid ImageList::GetGrid() const{
+  return m_grid;
+}
+
 Index ImageList::GetIndex(const Image& img) const{
   for (size_t i = 0; i != m_images.size(); i++){
     if (m_images[i] == &img){
@@ -160,6 +164,10 @@ void ImageList::Reorder(const NewIndex& newIndex, const OldIndex& oldIndex){
 
 void ImageList::SetActiveIndex(const Index& index){
   m_active = index;
+}
+
+void ImageList::SetGrid(const Grid& g){
+  m_grid = g;
 }
 
 } // namespace faint

@@ -100,7 +100,6 @@ CanvasPanel::CanvasPanel(wxWindow* parent,
     m_contexts(app),
     m_images(std::move(images)),
     m_mouse(this, OnLoss([=](){Preempt(PreemptOption::ALLOW_COMMAND);})),
-    m_state(app.GetDefaultGrid()),
     m_statusInfo(statusInfo)
 {
   bind_fwd(this, wxEVT_CHAR,
@@ -266,6 +265,7 @@ CanvasPanel::CanvasPanel(wxWindow* parent,
       m_images.Active(),
       template_drawable(m_images.Active().GetObjects()),
       m_state,
+      m_images.GetGrid(),
       to_faint(GetUpdateRegion().GetBox()),
       m_mirage.bitmap,
       g_canvasBg,
@@ -508,7 +508,7 @@ Optional<FilePath> CanvasPanel::GetFilePath() const{
 }
 
 Grid CanvasPanel::GetGrid() const{
-  return m_state.grid;
+  return m_images.GetGrid();
 }
 
 const ImageList& CanvasPanel::GetImageList() const{
@@ -868,7 +868,7 @@ void CanvasPanel::SetFaintScrollPos(const IntPoint& pos){
 }
 
 void CanvasPanel::SetGrid(const Grid& g){
-  m_state.grid = g;
+  m_images.SetGrid(g);
   SendGridChangeEvent();
 }
 

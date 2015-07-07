@@ -15,6 +15,7 @@
 
 #ifndef FAINT_IMAGE_LIST_HH
 #define FAINT_IMAGE_LIST_HH
+#include "util/grid.hh"
 #include "util/index.hh"
 
 namespace faint{
@@ -34,6 +35,7 @@ public:
   // ImageList is destroyed.
   void AppendShared(Image*);
   Index GetActiveIndex() const;
+  Grid GetGrid() const;
   Image& GetImage(const Index&);
   Image& GetImage(const FrameId&);
   const Image& GetImage(const Index&) const;
@@ -50,6 +52,7 @@ public:
   void Remove(Image*);
   void Reorder(const NewIndex&, const OldIndex&);
   void SetActiveIndex(const Index&);
+  void SetGrid(const Grid&);
 
   ImageList(const ImageList&) = delete;
   ImageList& operator=(const ImageList&) = delete;
@@ -58,6 +61,7 @@ private:
   Index m_active = 0_idx;
   std::vector<Image*> m_images;
   std::vector<Image*> m_owned;
+  Grid m_grid;
 };
 
 } // namespace faint

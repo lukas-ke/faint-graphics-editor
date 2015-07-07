@@ -241,6 +241,7 @@ static void blit(wxDC& dst, wxDC& src, const IntRect& r){
 void paint_overlays(wxDC& dc,
   coord zoom,
   const CanvasState& state,
+  const Grid& grid,
   const PaintInfo& info,
   const IntRect& updateRegion,
   const Image& active,
@@ -261,8 +262,8 @@ void paint_overlays(wxDC& dc,
     info.bmpSize,
     objectHandleWidth);
 
-  if (state.grid.Enabled()){
-    overlayDC.GridLines(state.grid, info.imageRegion.TopLeft(), scaled.GetSize());
+  if (grid.Enabled()){
+    overlayDC.GridLines(grid, info.imageRegion.TopLeft(), scaled.GetSize());
   }
 
   if (shouldDrawVector){
@@ -300,6 +301,7 @@ void paint_canvas(wxDC& paintDC,
   const Image& active, // Fixme: Try to reduce to Bitmap
   Drawable&& objects,
   const CanvasState& state,
+  const Grid& grid,
   const IntRect& updateRegion,
   const std::weak_ptr<Bitmap>& weakBitmapMirage,
   const ColRGB& canvasBg,
@@ -408,6 +410,7 @@ void paint_canvas(wxDC& paintDC,
     paint_overlays(memDC,
       zoom,
       state,
+      grid,
       info,
       updateRegion,
       active,

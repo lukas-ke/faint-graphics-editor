@@ -23,12 +23,7 @@ namespace faint{
 
 class CanvasState{
 public:
-  explicit CanvasState(const Grid& g)
-    : grid(g)
-  {}
-
   CanvasGeo geo;
-  Grid grid;
   Optional<IntPoint> pointOverlay;
 };
 
