@@ -59,9 +59,9 @@ public:
 private:
   void InitAdd(ImageProps&&);
   Index m_active = 0_idx;
+  Grid m_grid;
   std::vector<Image*> m_images;
   std::vector<Image*> m_owned;
-  Grid m_grid;
 };
 
 } // namespace faint
