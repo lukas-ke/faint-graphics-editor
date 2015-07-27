@@ -16,6 +16,12 @@
 #ifndef FAINT_RUN_TEST_HH
 #define FAINT_RUN_TEST_HH
 
+void fail_on_exception(const std::string& type, const std::string& what){
+  TEST_FAILED = true;
+  TEST_OUT << "  Exception: \"" << what << "\" " << "(" << type << ")" <<
+    std::endl;
+}
+
 void run_test(void (*func)(),
   const std::string& fileName,
   int max_w,
@@ -37,13 +43,17 @@ void run_test(void (*func)(),
   catch (const AbortTestException&){
     // Test will already have been flagged as failed.
   }
+  catch (const std::logic_error& e){
+    fail_on_exception("std::logic_error", e.what());
+  }
   catch (const std::runtime_error& e){
-    TEST_FAILED = true;
-    TEST_OUT << "  std::runtime_error: " << "\"" << e.what() << "\"" << std::endl;
+    fail_on_exception("std::runtime_error", e.what());
+  }
+  catch (const std::out_of_range& e){
+    fail_on_exception("std::out_of_range", e.what());
   }
   catch (const std::exception& e){
-    TEST_FAILED = true;
-    TEST_OUT << "  Exception: " << "\"" << e.what() << "\"" << std::endl;
+    fail_on_exception("std::exception", e.what());
   }
 
   verify_post_checks();

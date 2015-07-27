@@ -30,6 +30,4 @@ void test_objpath(){
   NOT(path->IsControlPoint(1)); // CurveTo end
   VERIFY(path->IsControlPoint(2)); // CurveTo c
   VERIFY(path->IsControlPoint(3)); // CurveTo d
-
-  // TODO: Test the UndoFunc from point insertion, it has issues.
 }
