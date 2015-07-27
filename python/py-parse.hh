@@ -204,10 +204,6 @@ bool parse_flat(std::vector<T>& vec, PyObject* args, Py_ssize_t& n, Py_ssize_t l
   return true;
 }
 
-#ifdef _MSC_VER
-#pragma warning(disable:4503) // Decorated name length exceeded
-#endif
-
 // Parse flat for maps (dictionaries)
 template<typename T1, typename T2>
 bool parse_item(std::map<T1, T2>& theMap, PyObject* args,
