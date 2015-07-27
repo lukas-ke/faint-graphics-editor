@@ -32,6 +32,7 @@ Command* insert_object_command(Object*,
   const select_added&,
   int z,
   const utf8_string& name="Add");
+
 } // namespace
 
 #endif
