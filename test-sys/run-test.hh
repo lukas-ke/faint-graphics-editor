@@ -43,14 +43,14 @@ void run_test(void (*func)(),
   catch (const AbortTestException&){
     // Test will already have been flagged as failed.
   }
+  catch (const std::out_of_range& e){
+    fail_on_exception("std::out_of_range", e.what());
+  }
   catch (const std::logic_error& e){
     fail_on_exception("std::logic_error", e.what());
   }
   catch (const std::runtime_error& e){
     fail_on_exception("std::runtime_error", e.what());
-  }
-  catch (const std::out_of_range& e){
-    fail_on_exception("std::out_of_range", e.what());
   }
   catch (const std::exception& e){
     fail_on_exception("std::exception", e.what());

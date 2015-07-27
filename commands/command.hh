@@ -84,6 +84,7 @@ public:
   explicit Command(CommandType);
   virtual ~Command() = default;
   virtual void Do(CommandContext&) = 0;
+
   // Do only the Raster part of the command
   // (Calls Do(...) by default, but must be overridden for Hybrid commands)
   virtual void DoRaster(CommandContext&);
@@ -104,6 +105,7 @@ public:
   // flag the image has dirty - but should still support undo/redo.
   virtual bool ModifiesState() const;
   virtual utf8_string Name() const = 0;
+
   // Commands that change the image size (e.g. cropping, scaling) can
   // translate a point, expressed in image coordinates, relative to
   // the transformation.
