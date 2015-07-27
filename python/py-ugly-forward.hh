@@ -428,8 +428,8 @@ struct setter_t{
 template<typename CLASS_T, typename RET>
 zero_arg_t<CLASS_T, RET> resolve(RET(*func)(CLASS_T));
 
-template<typename CLASS_T, class RET, class...Args>
-n_arg_t<CLASS_T, RET, Args...> resolve(RET(*func)(CLASS_T, Args...));
+template<typename CLASS_T, class RET, class Arg, class...Args>
+n_arg_t<CLASS_T, RET, Arg, Args...> resolve(RET(*func)(CLASS_T, Arg, Args...));
 
 template<typename RET>
 free_zero_arg_t<RET> free_resolve(RET(*func)());
@@ -446,8 +446,8 @@ getter_t<CLASS_T, RET> get_resolve(RET(*func)(CLASS_T));
 template<typename CLASS_T, typename T1>
 setter_t<CLASS_T, T1> set_resolve(void(*func)(CLASS_T, T1));
 
-template<typename PY_CLASS_T, class...Args>
-init_n_arg_t<PY_CLASS_T, Args...> init_resolve(void(*func)(PY_CLASS_T, Args...));
+template<typename PY_CLASS_T, class Arg, class...Args>
+init_n_arg_t<PY_CLASS_T, Arg, Args...> init_resolve(void(*func)(PY_CLASS_T, Arg, Args...));
 
 template<typename PY_CLASS_T>
 init_zero_arg_t<PY_CLASS_T> init_resolve(void(*func)(PY_CLASS_T));
