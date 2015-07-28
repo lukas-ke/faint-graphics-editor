@@ -4,8 +4,7 @@ All notable changes to Faint graphics editor are documented in this file.
 ## [Unreleased][unreleased]
 Long overdue release!
 
-**Highlights**:
-
+### Highlights
 - Hotspot, Calibration and Tape-measure tools.
 - Expression support in text objects.
 - Improved SVG handling.
