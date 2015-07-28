@@ -324,7 +324,7 @@ def center_on_selected():
     """Centers the view on the selected object."""
     objects = ifaint.get_selected()
     if len(objects) > 0:
-        ifaint.center(objects[0].tri().center())
+        ifaint.center(objects[0].tri.center())
 
 def _toggle_selection_type():
     """Toggles between raster and object selection"""
