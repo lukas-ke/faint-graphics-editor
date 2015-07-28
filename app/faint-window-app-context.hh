@@ -79,7 +79,7 @@ private:
   std::unique_ptr<WindowFeedback> m_windowFeedback;
 };
 
-class FaintWindowExtraOverlay : public ExtraOverlay{
+class FaintWindowExtraOverlay final : public ExtraOverlay{
 public:
   // Fixme: Weird class. Use the WindowFeedback instead?
   FaintWindowExtraOverlay(FaintDialogContext&);
@@ -90,7 +90,7 @@ private:
   FaintDialogContext& m_dialogContext;
 };
 
-class FaintWindowInteraction : public Interaction{
+class FaintWindowInteraction final : public Interaction{
 public:
   FaintWindowInteraction(FaintDialogContext&);
   bool MouseMove(const PosInfo&) override;

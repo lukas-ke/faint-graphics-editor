@@ -24,8 +24,9 @@ class PosInfo;
 class ExtraOverlay{
 // Fixme: Rename or remove or something
 public:
-  ~ExtraOverlay(){}
   virtual void Draw(FaintDC&, Overlays&, const PosInfo&) = 0;
+protected:
+  ~ExtraOverlay() = default;
 };
 
 } // namespace
