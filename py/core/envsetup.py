@@ -298,7 +298,8 @@ def pick_color_bg():
         return
 
 def _pick_pattern_fg():
-    pattern = ifaint.Pattern(ifaint.get_mouse_pos(), ifaint.get_active_image().get_bitmap())
+    pattern = ifaint.Pattern(ifaint.get_active_image().get_background(),
+        ifaint.get_mouse_pos())
     pattern.set_object_aligned(True)
     ifaint.set_fg(pattern)
 ifaint.pick_pattern_fg = _pick_pattern_fg;
