@@ -76,7 +76,7 @@ app.open_files((test_file("file.color"),))
 assert len(images) == 3
 
 # No bitmap allocated
-assert images[2].get_bitmap() is None
+assert images[2].get_background() is None
 
 
 # Bitmap background
@@ -88,7 +88,7 @@ add_format(bitmap_background, None, "Bitmap background", "bitmap")
 app.open_files((test_file("file.bitmap"),))
 
 assert len(images) == 4
-assert(images[3].get_bitmap().get_size() == (10,10))
+assert(images[3].get_background().get_size() == (10,10))
 
 os.remove(test_file("file.noframe"))
 os.remove(test_file("file.oldprops"))

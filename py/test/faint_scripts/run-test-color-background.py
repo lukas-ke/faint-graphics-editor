@@ -30,7 +30,7 @@ def test():
 
     # No bitmap allocated
 
-    log.error_if(images[1].get_bitmap() is not None, "Bitmap was allocated.")
+    log.error_if(images[1].get_background() is not None, "Bitmap was allocated.")
     log.error_if(images[1].test_has_bitmap(), "test_has_bitmap() True")
 
     images[1].auto_crop()
@@ -53,7 +53,7 @@ def test():
 
     log.error_if(len(images) != 3, "Failed opening file.bitmap")
 
-    log.error_if(not (images[2].get_bitmap().get_size() == (10,10)),
+    log.error_if(not (images[2].get_background().get_size() == (10,10)),
                  "file.bitmap - Wrong size")
 
     os.remove(test_file("file.color"))

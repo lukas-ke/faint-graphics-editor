@@ -134,7 +134,7 @@ def test(fail_if):
 
     # Save and reload png
     png_path = os.path.abspath("out/test_py_api_impl.png")
-    write_png(get_active_image().get_bitmap(), png_path,
+    write_png(get_active_image().get_background(), png_path,
         png.RGB_ALPHA,
         {"first key": "first value",
         "second key": "second value"})
