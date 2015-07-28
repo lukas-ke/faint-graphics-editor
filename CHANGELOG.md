@@ -86,7 +86,7 @@ Long overdue release!
 
 - Mid-points in polygon lines can now be snapped to.
 
-- Added --no-tablet command-line option, for disabling pen-tablet
+- Added `--no-tablet` command-line option, for disabling pen-tablet
   initialization on Windows.
 
 - Added dialog for editing grid settings. Show by double clicking
@@ -95,7 +95,7 @@ Long overdue release!
 - Added loading of 16bpp png files. Note: They will be truncated to
   8bpp.
 
-- [SVG] New fillstyle for objects: 'none'. Mostly to appease svg. Only
+- [SVG] New fillstyle for objects: `'none'`. Mostly to appease svg. Only
   settable via scripting.
 
 - [SVG] Reworked svg parser
@@ -141,7 +141,7 @@ Long overdue release!
 - [Python] Added comparison operations for Objects, based on their
   identifiers.
 
-- [Python] Added property Canvas.command_name to allow
+- [Python] Added property `Canvas.command_name` to allow
   specifying the undo/redo name for an upcoming command, to provide
   meaningful alternatives to "Undo Python Commands (3)"
 
@@ -151,7 +151,7 @@ Long overdue release!
   - `faint.util.erase_rows`
   - `faint.util.erase_selection`
 
-    Erase selection is bound to Ctrl+Delete
+  Erase selection is bound to Ctrl+Delete
 
 - [Python] Added `crop` method for Raster objects, which auto-crops them.
 
@@ -170,7 +170,8 @@ Long overdue release!
 
 - [Python] Added `copy` to `Bitmap`, for duplicating a Bitmap.
 
-- [Python] Added clipboard module.
+- [Python] Added `clipboard` module, for copying/pasting text and
+  Bitmaps.
 
 - [Help] All Python functions for showing dialogs are listed in the help.
 
@@ -220,6 +221,9 @@ Long overdue release!
 - [Help] Removed the outdated tutorial section.
 
 ### Changed
+- Merged raster and object selection into the same tool. The current
+  layer choice (object or raster) determines what gets selected.
+
 - Objects were previously shifted to full or half pixel intervals
   (depending on their line width) so that their edges rendered
   sharply.This feature has been removed, as it caused a saved SVG to
@@ -227,11 +231,9 @@ Long overdue release!
 
   Horizontal and vertical lines will now appear smeared if of odd size
   and at an exact pixel.
-  This can be adjusted manually using the new Pixel snap option in the
+  This can be adjusted manually using the new Pixel-snap command in the
   Objects-menu.
   
-- Merged raster and object selection into the same tool.
-
 - Images are no longer required to have a raster a background, a color
   can be used instead. This reduces memory use when loading large
   vector images. A background is created silently when needed instead.
@@ -267,22 +269,23 @@ Long overdue release!
 - [Python] Functions throw `MemoryError` in some cases when allocations
   fail.
 
-- [Python] `Canvas.set_size` accepts patterns as well.
+- [Python] `Canvas.set_size` now accepts patterns as well as rgba
+  colors for filling extended regions.
 
 - [Python] `Canvas.set_size` size argument must now be parenthesized:
   `images[0].set_size((640,480),get_fg())`.
 
-- [Python] function `insert_bitmap` now stamps any current floating before
-  inserting the bitmap as the new selection.
+- [Python] function `insert_bitmap` now stamps any current floating
+  selection before inserting the bitmap as the new selection.
 
-- [Python] The `auto_crop` methods of Bitmap, Frame and Canvas return `True` if
-  anything was cropped, `False` otherwise.
+- [Python] The `auto_crop` methods of `Bitmap`, `Frame` and `Canvas`
+  return `True` if anything was cropped, `False` otherwise.
 
 - [Python] Changed exception type when opening the clipboard fails
   from `ValueError` to `OSError`.
 
-- [Python] Setters for integers and floats state the passed in value,
-  not only the ranges when outside:  
+- [Python] Setter error message for integers and floats now state the
+  given value, not only the ranges, when outside:  
     `>>> set_linewidth(9000)`    
     `ValueError: Argument for set_linewidth 9000.0 outside range [0, 255].`.
 
@@ -427,7 +430,7 @@ Long overdue release!
 - [Python] Fixed invalid implementation of comparison for Faint classes
   which eventually depleted the reference counts of `Py_True` and `Py_False`
 
-- [Python] Made Popen call used by dot-format[2] (in `extra.py`)
+- [Python] Made Popen call used by dot-format[2] in `extra.py`
   Linux-compatible.
 
 - [Python] Added methods `next_up`, `next_down`, `next_left`, `next_right`,
