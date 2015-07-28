@@ -16,7 +16,7 @@
 #ifndef FAINT_RANGE_HH
 #define FAINT_RANGE_HH
 #include <cassert>
-#include <climits> // C++11 (VC): For INT_MAX, std::numeric_limits<int>::max() is not compile-time without constexpr. Not fixed yet in VC2015 preview.
+#include <limits>
 #include "geo/int-size.hh"
 #include "util/distinct.hh"
 
@@ -126,7 +126,8 @@ private:
 };
 
 template<int MIN_BOUND>
-using LowerBoundedInt = StaticBoundedInt<MIN_BOUND, INT_MAX>;
+using LowerBoundedInt = StaticBoundedInt<MIN_BOUND,
+  std::numeric_limits<int>::max()>;
 
 template<int MIN_BOUND, int MAX_BOUND>
 class StaticBoundedInterval{

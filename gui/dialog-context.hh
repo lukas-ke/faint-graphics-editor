@@ -39,6 +39,9 @@ public:
   virtual SliderCursors& GetSliderCursors() = 0;
   virtual CommonCursors& GetCommonCursors() = 0;
 
+protected:
+  ~DialogContext() = default;
+
 private:
   virtual void BeginModalDialog() = 0;
   virtual void EndModalDialog() = 0;

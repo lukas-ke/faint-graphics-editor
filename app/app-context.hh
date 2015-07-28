@@ -49,6 +49,8 @@ class Interaction{
   // Fixme: Extend. Consider using as forward for tools too.
 public:
   virtual bool MouseMove(const PosInfo&) = 0;
+protected:
+  ~Interaction() = default;
 };
 
 class AppContext {
