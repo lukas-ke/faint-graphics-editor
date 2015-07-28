@@ -125,7 +125,7 @@ static utf8_string status_for_object(const PosInfo& info){
             "Left Click=Move, Right Click=Delete." :
             "Left click to move the point.";
         }
-        else if(handle.type == HandleType::EXTENSION_POINT){
+        else if (handle.type == HandleType::EXTENSION_POINT){
           return "Left Click and Drag to add a point.";
         }
         else{
@@ -274,7 +274,7 @@ static TaskResult clicked_movable_handle(IdleSelectionState& impl,
     const bool removePoint = info.modifiers.RightMouse();
 
     if (removePoint){
-      if(obj->Extendable() && obj->CanRemovePoint()){
+      if (obj->Extendable() && obj->CanRemovePoint()){
         impl.command.Set(remove_point_command(obj, handle.pointIndex));
         return TaskResult::COMMIT;
       }
