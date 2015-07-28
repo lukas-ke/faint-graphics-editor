@@ -862,8 +862,8 @@ void FaintWindow::Open(const FileList& paths){
     }
   }
   catch (const BitmapOutOfMemory&){
-    show_error(m_impl->frame.get(), Title("Insufficient memory to load "
-      "all images."), "Out of memory");
+    show_error(m_impl->frame.get(), Title("Out of memory"),
+      "Insufficient memory to load all images.");
   }
 
   if (get_canvas_count(panels) == 0){
