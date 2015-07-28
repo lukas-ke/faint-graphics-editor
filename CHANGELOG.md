@@ -11,6 +11,7 @@ Long overdue release!
 - Improved SVG handling.
 - More properties, less methods in Python API.
 - Merged raster and vector selection tools.
+- Removed line sharpening
 
 ### Added
 - Added hot-spot tool, for setting the hot spot in a frame. This was
@@ -31,6 +32,9 @@ Long overdue release!
   wide." becomes e.g. "The rectangle is 22 mm wide".
 
 - Added rounded rectangles.
+
+- Added menu option `Pixel-snap` which aligns objects with the pixel grid,
+  taking line width into account, so that edges are rendered sharply.
 
 - Added `--arg` command line option which stores the specified value
   as a string in `ifaint.cmd_arg, for use with command line scripts.
@@ -77,6 +81,21 @@ Long overdue release!
   - rotate dialog
   - threshold dialog
 
+- Points can now be inserted in paths by clicking extension points.
+
+- Points in paths can now be snapped to.
+
+- Mid-points in polygon lines can now be snapped to.
+
+- Added --no-tablet command-line option, for disabling pen-tablet
+  initialization on Windows.
+
+- Added dialog for editing grid settings. Show by double clicking
+  the grid-size panel.
+
+- Added loading of 16bpp png files. Note: They will be truncated to
+  8bpp.
+
 - [SVG] New fillstyle for objects: 'none'. Mostly to appease svg. Only
   settable via scripting.
 
@@ -93,9 +112,15 @@ Long overdue release!
  - Path: Added 't' and 'T' operators.
  - Added svg 'switch'-element support.
 
+- [SVG] Grid settings are saved to SVG images, so that the grid is
+  retained when opening. This is Faint-specific, not part of SVG.
+
 - [Python] Added: `obj.get_text_evaluated`.
 
 - [Python] Added: `obj.get_text_raw`
+
+- [Python] Added: `write_png` function. Allows specifying color type
+  and tEXt entries.
 
 - [Python] New object method: `obj.set_name(s)`, sets the name used
   for referring to objects from expressions in text objects.
@@ -104,6 +129,9 @@ Long overdue release!
   of objects.
 
 - [Python] Added new function `encode_bitmap_png`
+
+- [Python] Added new method `Image.flattened`, which returns
+  the image with all objects rasterized and any selection stamped.
 
 - [Python] New method `Bitmap.fill`
 
@@ -143,6 +171,8 @@ Long overdue release!
 
 - [Python] Added `copy` to `Bitmap`, for duplicating a Bitmap.
 
+- [Python] Added clipboard module.
+
 - [Help] All Python functions for showing dialogs are listed in the help.
 
 - [Help] Documented how each file format handles transparency.
@@ -150,12 +180,19 @@ Long overdue release!
 - [Help] Added a license information page.
 
 - [Help] Added Python names of settings to the settings overview.
+
   
 ### Removed
 - Removed palette text file, using instead a built-in hard-coded palette.
   The palette can be still be modified using the Python `palette`-object.
 
-- [Python] Removed the non-gaussian blur function
+- [Python] Removed `Image.get_bitmap` method. Use
+  `Image.get_background` instead.
+
+- [Python] Removed the `copy_text` function. Use instead
+  `clipboard.set(str)`
+
+- [Python] Removed the non-gaussian `blur` function
 
 - [Python] Removed `obj.get_text` (in favor of `obj.get_text_evaluated`,
   `obj.get_text_raw`.
@@ -181,7 +218,19 @@ Long overdue release!
 - [Python] Removed Bitmap method `flood_fill`, which did not check
   boundaries, in favor of `fill(...)`, which does.
 
+- [Help] Removed the outdated tutorial section.
+
 ### Changed
+- Objects were previously shifted to full or half pixel intervals
+  (depending on their line width) so that their edges rendered
+  sharply.This feature has been removed, as it caused a saved SVG to
+  appear different from the edited image in Faint.
+
+  Horizontal and vertical lines will now appear smeared if of odd size
+  and at an exact pixel.
+  This can be adjusted manually using the new Pixel snap option in the
+  Objects-menu.
+  
 - Merged raster and object selection into the same tool.
 
 - Images are no longer required to have a raster a background, a color
@@ -244,8 +293,16 @@ Long overdue release!
 - [Python] Renamed object method `o.as_object_path` to `o.become_path`.
 
 ### Fixed
+- Corrected palette length for 8bpp bitmaps.
+
+- Improved gif save.
+
+- Fixed incorrect delay when loading gif.
+
 - Improved text placement to avoid clipping umlauts.
- 
+
+- Become path now retains object name.
+
 - Fixed floating raster selection appearing on top of objects when
   flattening an image.
 
@@ -322,6 +379,8 @@ Long overdue release!
 - Fixed data offset in saved 8-bit-bitmaps.
 
 - Fixed errors in 1bpp cursor loading.
+
+- Fixed text converted to part appearing duplicated until refresh.
 
 - [SVG] Set the background color when saving an SVG with uniform background
   color.
