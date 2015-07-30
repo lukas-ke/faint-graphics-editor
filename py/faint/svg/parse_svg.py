@@ -1164,11 +1164,11 @@ def get_viewbox(node):
 def establish_viewPort(svg_node, image_props, view_box):
     # Use the viewBox width and height if width, height not specified
     if view_box is not None:
-        default_w = view_box[2]
-        default_h = view_box[3]
+        default_w = str(view_box[2])
+        default_h = str(view_box[3])
     else:
-        default_w = 640.0
-        default_h = 480.0
+        default_w = "640.0"
+        default_h = "480.0"
 
     svg_w = svg_node.get('width', None)
     svg_h = svg_node.get('height', None)
@@ -1177,7 +1177,6 @@ def establish_viewPort(svg_node, image_props, view_box):
         svg_w = default_w
     if svg_h is None:
         svg_h = default_h
-
 
     # Fixme: I guess viewbox should be converted, not float:ed
     w2 = svg_length_attr_dumb(svg_w, image_props, full_span=float(default_w))
