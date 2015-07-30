@@ -96,7 +96,7 @@ public:
     return *m_bitmap;
   }
 
-  void SetBitmap(const Bitmap& bitmap) override{
+  void SetPreview(const Bitmap& bitmap) override{
     if (m_bitmap == nullptr){
       m_bitmap  = std::make_shared<Bitmap>(bitmap);
     }

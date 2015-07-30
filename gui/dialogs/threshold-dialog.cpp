@@ -132,7 +132,7 @@ private:
   }
 
   void UpdatePreview(){
-    m_feedback->SetBitmap(onto_new(threshold, m_bitmap, GetCurrentRange(),
+    m_feedback->SetPreview(onto_new(threshold, m_bitmap, GetCurrentRange(),
       m_settings.Get(ts_Fg), m_settings.Get(ts_Bg)));
   }
 
@@ -147,7 +147,7 @@ private:
   }
 
   void ResetPreview(){
-    m_feedback->SetBitmap(m_bitmap);
+    m_feedback->SetPreview(m_bitmap);
   }
 
   wxCheckBox* m_enablePreview = nullptr;

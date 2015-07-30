@@ -50,7 +50,7 @@ static Optional<Color> get_mask_color(const Settings& s){
   return {};
 }
 
-static void set_feedback(const Bitmap& src,
+static void set_preview(const Bitmap& src,
   uchar alpha,
   WindowFeedback& feedback,
   const Settings& s)
@@ -58,10 +58,10 @@ static void set_feedback(const Bitmap& src,
   get_mask_color(s).Visit(
     [&](const Color& c){
       const auto mask = mask_not_color(src, c);
-      feedback.SetBitmap(onto_new(set_alpha_masked, src, alpha, mask));
+      feedback.SetPreview(onto_new(set_alpha_masked, src, alpha, mask));
     },
     [&](){
-      feedback.SetBitmap(onto_new(set_alpha, src, alpha));
+      feedback.SetPreview(onto_new(set_alpha, src, alpha));
     });
 }
 
@@ -81,7 +81,7 @@ public:
     auto ok = [&](){Close(feedback, true);};
 
     events::void_func update_preview = [this, &feedback](){
-      set_feedback(m_bitmap, GetAlpha(), feedback, m_settings);
+      set_preview(m_bitmap, GetAlpha(), feedback, m_settings);
     };
 
     m_bitmap = feedback.GetBitmap();
@@ -134,7 +134,7 @@ public:
 
   void Reinitialize(WindowFeedback& feedback) override{
     m_bitmap = feedback.GetBitmap();
-    set_feedback(m_bitmap, GetAlpha(), feedback, m_settings);
+    set_preview(m_bitmap, GetAlpha(), feedback, m_settings);
   }
 
   const Settings& GetSettings() const override{

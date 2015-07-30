@@ -33,7 +33,7 @@ public:
   virtual void Closed(BitmapCommand*) = 0;
 
   virtual Bitmap GetBitmap() = 0;
-  virtual void SetBitmap(const Bitmap&) = 0; // Fixme: Rename to SetPreview
+  virtual void SetPreview(const Bitmap&) = 0;
 
   virtual void Reset() = 0; // Fixme: Do not expose this here, should not be visible to the command windows.
   virtual void UpdateSettings(const Settings&) = 0; // Fixme: Do not expose this here, should not be visible to the command windows.
