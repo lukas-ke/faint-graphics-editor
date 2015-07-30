@@ -29,7 +29,7 @@ class ToolWrapper;
 // True if the tool targets the raster layer. If so, any raster
 // selection outline should be drawn, and raster-selection
 // related menu options should be enabled
-bool should_draw_raster(const ToolWrapper&, Layer); // Fixme: Move?
+bool should_draw_raster(const ToolWrapper&, Layer);
 
 // True if the tool targets the vector/object layer. If so, selected
 // object handles will be drawn, and object-selection related menu

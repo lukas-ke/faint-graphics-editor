@@ -14,9 +14,9 @@
 // permissions and limitations under the License.
 
 #include "bitmap/color-ptr.hh"
-#include "bitmap/draw.hh" // Fixme: For flip
+#include "bitmap/draw.hh" // For flip
 #include "bitmap/scale-bilinear.hh"
-#include "geo/axis.hh" // Fixme: For flip
+#include "geo/axis.hh" // For flip
 #include "geo/geo-func.hh"
 #include "geo/range.hh" // constrained
 #include "geo/scale.hh"

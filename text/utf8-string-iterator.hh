@@ -17,8 +17,7 @@
 #define FAINT_UTF8_STRING_ITERATOR_HH
 #include <iterator>
 #include <memory>
-#include "text/utf8.hh" // fixme
-#include "text/utf8-char.hh" // fixme
+#include "text/utf8-char.hh"
 
 namespace faint{
 

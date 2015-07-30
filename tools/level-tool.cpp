@@ -140,7 +140,7 @@ public:
     }
 
     m_editor.MouseUp(info);
-    level_line_status(info, GetAngle(), m_horizon.IsSet()); // Fixme
+    level_line_status(info, GetAngle(), m_horizon.IsSet());
     m_active = false;
 
     const auto line = m_editor.GetLine();
