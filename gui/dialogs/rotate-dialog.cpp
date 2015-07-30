@@ -155,7 +155,7 @@ public:
     const RotateChoicePanel& siblingPanel,
     cmd_event_func rotate)
     : wxPanel(parent, wxID_ANY),
-      m_textCtrl(nullptr)
+      m_angleTextCtrl(nullptr)
   {
     SetSize(siblingPanel.GetSize());
     Accelerators acc;
@@ -164,11 +164,11 @@ public:
   }
 
   bool Modified() const{
-    return get_text(m_textCtrl) != "90";
+    return get_text(m_angleTextCtrl) != "90";
   }
 
   Angle GetAngle() const{
-    return Angle::Deg(parse_int_value(m_textCtrl, 90));
+    return Angle::Deg(parse_int_value(m_angleTextCtrl, 90));
   }
 
   void CreateEntryRow(const Art& art,
@@ -177,8 +177,8 @@ public:
     cmd_event_func rotate)
   {
     wxStaticText* label = create_label(this, "&Degrees");
-    m_textCtrl = create_text_control(this, "90");
-    fit_size_to(m_textCtrl, "9999999");
+    m_angleTextCtrl = create_text_control(this, "90");
+    fit_size_to(m_angleTextCtrl, "9999999");
 
     m_rotateBtn = create_button(this,
       art.Get(Icon::ROTATE_DIALOG_ROTATE),
@@ -192,19 +192,19 @@ public:
     wxButton* cancelButton = create_cancel_button(this, ui::big_button_size);
     set_pos(cancelButton, siblingPanel.GetCancelButtonPos());
 
-    set_pos(m_textCtrl, to_the_left_middle_of(raw(m_rotateBtn),
-      get_size(m_textCtrl)));
-    set_pos(label, to_the_left_middle_of(raw(m_textCtrl), get_size(label)));
+    set_pos(m_angleTextCtrl, to_the_left_middle_of(raw(m_rotateBtn),
+      get_size(m_angleTextCtrl)));
+    set_pos(label, to_the_left_middle_of(raw(m_angleTextCtrl), get_size(label)));
   }
 
   void FocusEntry(){
     set_focus(m_rotateBtn);
-    set_focus(m_textCtrl);
-    select_all(m_textCtrl);
+    set_focus(m_angleTextCtrl);
+    select_all(m_angleTextCtrl);
   }
 
 private:
-  wxTextCtrl* m_textCtrl; // Fixme: Rename (e.g. angleTextCtrl)
+  wxTextCtrl* m_angleTextCtrl;
   wxButton* m_rotateBtn;
 };
 
