@@ -26,7 +26,7 @@
 #include "tasks/select-object-set-name.hh"
 #include "tasks/task.hh"
 #include "text/text-buffer.hh"
-#include "tools/tool.hh" // Fixme: For TextContext et al., move to new file
+#include "tools/tool-contexts.hh"
 #include "util-wx/key-codes.hh"
 #include "util/pos-info.hh"
 
