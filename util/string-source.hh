@@ -13,21 +13,18 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_DROP_DOWN_CTRL_HH
-#define FAINT_DROP_DOWN_CTRL_HH
-#include "gui/gui-string-types.hh"
-#include "gui/tool-setting-ctrl.hh"
-
-class wxWindow;
+#ifndef FAINT_STRING_SOURCE_HH
+#define FAINT_STRING_SOURCE_HH
+#include <vector>
+#include "text/utf8-string.hh"
 
 namespace faint{
 
-class StringSource;
-
-StringSettingControl* create_drop_down(wxWindow* parent,
-  const StringSetting&,
-  const StringSource&,
-  const Tooltip&);
+class StringSource{
+public:
+  virtual ~StringSource(){}
+  virtual std::vector<utf8_string> Get() const = 0;
+};
 
 } // namespace
 

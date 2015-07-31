@@ -26,7 +26,6 @@
 #include "bitmap/bitmap-exception.hh"
 #include "gui/canvas-panel.hh"
 #include "gui/color-panel.hh"
-#include "gui/drop-down-ctrl.hh" // Fixme: For StringSource
 #include "gui/events.hh"
 #include "gui/faint-window.hh"
 #include "gui/freezer.hh"
@@ -46,6 +45,7 @@
 #include "util/image-props.hh"
 #include "util/index-iter.hh"
 #include "util/mouse.hh"
+#include "util/string-source.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/clipboard.hh"
 #include "util-wx/convert-wx.hh"

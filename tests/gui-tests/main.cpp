@@ -82,7 +82,7 @@ public:
     return faint::Bitmap(faint::IntSize(10,10), faint::Color(255,0,255));
   }
 
-  void SetBitmap(const faint::Bitmap&) override{}
+  void SetPreview(const faint::Bitmap&) override{}
   void Reset() override{}
   void UpdateSettings(const faint::Settings&) override{}
   void Reinitialize() override{}
