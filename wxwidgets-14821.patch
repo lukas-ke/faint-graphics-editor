@@ -1,0 +1,84 @@
+Index: auibook.cpp
+===================================================================
+--- auibook.cpp	(revision 76358)
++++ auibook.cpp	(working copy)
+@@ -3019,77 +3019,8 @@
+ 
+ void wxAuiNotebook::OnNavigationKeyNotebook(wxNavigationKeyEvent& event)
+ {
+-    if ( event.IsWindowChange() ) {
+-        // change pages
+-        // FIXME: the problem with this is that if we have a split notebook,
+-        // we selection may go all over the place.
+-        AdvanceSelection(event.GetDirection());
+-    }
+-    else {
+-        // we get this event in 3 cases
+-        //
+-        // a) one of our pages might have generated it because the user TABbed
+-        // out from it in which case we should propagate the event upwards and
+-        // our parent will take care of setting the focus to prev/next sibling
+-        //
+-        // or
+-        //
+-        // b) the parent panel wants to give the focus to us so that we
+-        // forward it to our selected page. We can't deal with this in
+-        // OnSetFocus() because we don't know which direction the focus came
+-        // from in this case and so can't choose between setting the focus to
+-        // first or last panel child
+-        //
+-        // or
+-        //
+-        // c) we ourselves (see MSWTranslateMessage) generated the event
+-        //
+-        wxWindow * const parent = GetParent();
+-
+-        // the wxObject* casts are required to avoid MinGW GCC 2.95.3 ICE
+-        const bool isFromParent = event.GetEventObject() == (wxObject*) parent;
+-        const bool isFromSelf = event.GetEventObject() == (wxObject*) this;
+-
+-        if ( isFromParent || isFromSelf )
+-        {
+-            // no, it doesn't come from child, case (b) or (c): forward to a
+-            // page but only if direction is backwards (TAB) or from ourselves,
+-            if ( GetSelection() != wxNOT_FOUND &&
+-                    (!event.GetDirection() || isFromSelf) )
+-            {
+-                // so that the page knows that the event comes from it's parent
+-                // and is being propagated downwards
+-                event.SetEventObject(this);
+-
+-                wxWindow *page = GetPage(GetSelection());
+-                if ( !page->GetEventHandler()->ProcessEvent(event) )
+-                {
+-                    page->SetFocus();
+-                }
+-                //else: page manages focus inside it itself
+-            }
+-            else // otherwise set the focus to the notebook itself
+-            {
+-                SetFocus();
+-            }
+-        }
+-        else
+-        {
+-            // it comes from our child, case (a), pass to the parent, but only
+-            // if the direction is forwards. Otherwise set the focus to the
+-            // notebook itself. The notebook is always the 'first' control of a
+-            // page.
+-            if ( !event.GetDirection() )
+-            {
+-                SetFocus();
+-            }
+-            else if ( parent )
+-            {
+-                event.SetCurrentFocus(this);
+-                parent->GetEventHandler()->ProcessEvent(event);
+-            }
+-        }
+-    }
++    // Fixme: Work-around for Faint Issue 116.
++    event.Skip();
+ }
+ 
+ void wxAuiNotebook::OnTabButton(wxAuiNotebookEvent& evt)
