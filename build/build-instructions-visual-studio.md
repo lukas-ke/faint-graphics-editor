@@ -112,7 +112,7 @@ only used for generating an installer and tags for the emacs editor
 respectively.
 
 ### Build Faint
-Run build.py again
+Run build.py again (from the Visual Studio 2015 command prompt!):
 
     build.py
 
