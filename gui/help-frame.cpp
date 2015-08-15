@@ -28,6 +28,7 @@
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/gui-util.hh"
 #include "util-wx/make-event.hh"
+#include "util-wx/slice-wx.hh"
 #include "util/distinct.hh"
 #include "util/optional.hh"
 
@@ -258,11 +259,11 @@ private:
 
       size_t sep = s.find(";");
       assert(sep != wxString::npos);
-      page_filename filename(s.substr(sep + 1));
-      wxString name = s.substr(0, sep);
+      wxString name = slice_up_to(s, sep);
+      page_filename filename(slice_from(s, sep + 1));
       bool child = name[0] == '>';
       if (child){
-        name = name.substr(1);
+        name = slice_from(name, 1);
       }
       if (child){
         AddChildPage(currentParent, name, filename);
@@ -288,7 +289,7 @@ static page_filename parse_page_filename(const wxString& str){
   if (pos == wxString::npos){
     return page_filename("");
   }
-  return page_filename(str.substr(pos + 1));
+  return page_filename(slice_from(str, pos + 1));
 }
 
 static page_filename link_to_filename(const wxString& str){
@@ -296,7 +297,7 @@ static page_filename link_to_filename(const wxString& str){
   if (pos == wxString::npos){
     return page_filename(wxString(str));
   }
-  return page_filename(str.substr(0, pos));
+  return page_filename(slice_up_to(str, pos));
 }
 
 class HelpFrame::HelpFrameImpl : public wxFrame {
