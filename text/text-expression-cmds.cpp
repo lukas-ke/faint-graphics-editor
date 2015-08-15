@@ -20,6 +20,7 @@
 #include "objects/object.hh"
 #include "text/char-constants.hh"
 #include "text/formatting.hh"
+#include "text/slice.hh"
 #include "text/string-util.hh"
 #include "text/text-expression.hh"
 #include "text/text-expression-cmds.hh"
@@ -187,7 +188,7 @@ private:
     assert(!unit.empty());
 
     // Strip "2" (for square)., e.g. mm2->mm
-    return unit.substr(0, unit.size() - 1);
+    return slice_up_to(unit, -1);
   }
 
   coord AdjustConversion(coord conversion) const override{
@@ -204,7 +205,7 @@ private:
     const conversions_map_t& c) const override
   {
     if (ends(unit, with("2"))){
-      auto desquared(unit.substr(0, unit.size() - 1));
+      auto desquared(slice_up_to(unit, -1));
       if (desquared != unit_px && c.find(desquared) == end(c)){
         throw ExpressionEvalError(space_sep("Unknown unit:", unit + "."));
       }

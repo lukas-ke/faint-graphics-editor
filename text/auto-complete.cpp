@@ -48,7 +48,7 @@ public:
 
   void extend(const utf8_string& word){
     if (!word.empty()){
-      ACNode* node = add(word[0]);
+      ACNode* node = add(word.front());
       node->extend(slice_from(word, 1));
     }
     else {
@@ -69,11 +69,11 @@ public:
   }
 
   ACNode* find(const utf8_string& str){
-    if (str.size() == 1 && str[0] == m_char){
+    if (str.size() == 1 && str.front() == m_char){
       return this;
     }
     if (str.size() > 1){
-      if (m_char != str[0]){
+      if (m_char != str.front()){
         return nullptr;
       }
       for (size_t i = 0; i != m_children.size(); i++){
@@ -128,13 +128,13 @@ AutoComplete::~AutoComplete(){
 
 void AutoComplete::add(const utf8_string& word){
   for (size_t i = 0; i != m_nodes.size(); i++){
-    if (m_nodes[i]->m_char == word[0]){
+    if (m_nodes[i]->m_char == word.front()){
       m_nodes[i]->extend(slice_from(word, 1));
       return;
     }
   }
 
-  ACNode* node = new ACNode(word[0]);
+  ACNode* node = new ACNode(word.front());
   m_nodes.push_back(node);
   node->extend(slice_from(word, 1));
 }
@@ -144,7 +144,7 @@ Words AutoComplete::match(const utf8_string& str){
   w->m_node = nullptr;
   for (size_t i = 0; i != m_nodes.size(); i++){
     ACNode* node = m_nodes[i];
-    if (node->m_char == str[0]){
+    if (node->m_char == str.front()){
       ACNode* found = node->find(str);
       if (found != nullptr){
         w->m_node = found;
