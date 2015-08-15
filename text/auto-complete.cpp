@@ -200,7 +200,7 @@ size_t Words::size() const{
 
   std::vector<utf8_string> words;
   const utf8_string& base = m_impl->m_base;
-  m_impl->m_node->all_words(words, base.substr(0, base.size() - 1));
+  m_impl->m_node->all_words(words, slice_up_to(base, -1));
   return words.size();
 }
 
@@ -208,7 +208,7 @@ utf8_string Words::get(size_t i) const{
   assert(m_impl->m_node != nullptr);
   std::vector<utf8_string> words;
   const utf8_string& base = m_impl->m_base;
-  m_impl->m_node->all_words(words, base.substr(0, base.size() - 1));
+  m_impl->m_node->all_words(words, slice_up_to(base, - 1));
   return words[i];
 }
 
