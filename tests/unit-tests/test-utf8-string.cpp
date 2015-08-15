@@ -95,6 +95,64 @@ void test_utf8_string(){
     }
   }
 
+  { // utf8_string::insert(size_t, const utf8_string&)
+    {
+      utf8_string s("abc");
+      s.insert(0, "hello");
+      EQUAL(s, "helloabc");
+    }
+
+    {
+      utf8_string s("abc");
+      s.insert(2, "hello");
+      EQUAL(s, "abhelloc");
+    }
+
+    {
+      utf8_string s("abc");
+      s.insert(3, "hello");
+      EQUAL(s, "abchello");
+    }
+
+    {
+      utf8_string s("abc");
+      VERIFY(threw_out_of_range(
+        [&s](){
+          s.insert(4, "hello");
+        }));
+      EQUAL(s, "abc"); // unmodified
+    }
+  }
+
+  { // utf8_string::insert(size_t, size_t, const utf8_char&)
+    {
+      utf8_string s("abc");
+      s.insert(0, 4, utf8_char("x"));
+      EQUAL(s, "xxxxabc");
+    }
+
+    {
+      utf8_string s("abc");
+      s.insert(2, 4, utf8_char("x"));
+      EQUAL(s, "abxxxxc");
+    }
+
+    {
+      utf8_string s("abc");
+      s.insert(3, 4, utf8_char("x"));
+      EQUAL(s, "abcxxxx");
+    }
+
+    {
+      utf8_string s("abc");
+      VERIFY(threw_out_of_range(
+        [&s](){
+          s.insert(4, 4, utf8_char("x"));
+        }));
+      EQUAL(s, "abc"); // unmodified
+    }
+  }
+
   { // misc
 
     // A string with all ascii code points

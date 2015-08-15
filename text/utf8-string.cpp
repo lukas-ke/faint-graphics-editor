@@ -102,11 +102,19 @@ utf8_string& utf8_string::erase(size_t pos, size_t n){
 }
 
 utf8_string& utf8_string::insert(size_t pos, const utf8_string& inserted){
+  if (pos > utf8::num_characters(m_data)){
+    throw std::out_of_range("invalid insertion index");
+  }
+
   m_data.insert(utf8::char_num_to_byte_num_checked(pos, m_data), inserted.str());
   return *this;
 }
 
 utf8_string& utf8_string::insert(size_t pos, size_t num, const utf8_char& c){
+  if (pos > utf8::num_characters(m_data)){
+    throw std::out_of_range("invalid insertion index");
+  }
+
   insert(pos, utf8_string(num, c));
   return *this;
 }
