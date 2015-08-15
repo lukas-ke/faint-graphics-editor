@@ -77,7 +77,7 @@ public:
         return nullptr;
       }
       for (size_t i = 0; i != m_children.size(); i++){
-        ACNode* node = m_children[i]->find(str.substr(1, str.size() - 1));
+        ACNode* node = m_children[i]->find(slice_from(str, 1));
         if (node != nullptr){
           return node;
         }
@@ -129,14 +129,14 @@ AutoComplete::~AutoComplete(){
 void AutoComplete::add(const utf8_string& word){
   for (size_t i = 0; i != m_nodes.size(); i++){
     if (m_nodes[i]->m_char == word[0]){
-      m_nodes[i]->extend(word.substr(1, word.size() - 1));
+      m_nodes[i]->extend(slice_from(word, 1));
       return;
     }
   }
 
   ACNode* node = new ACNode(word[0]);
   m_nodes.push_back(node);
-  node->extend(word.substr(1, word.size() - 1));
+  node->extend(slice_from(word, 1));
 }
 
 Words AutoComplete::match(const utf8_string& str){

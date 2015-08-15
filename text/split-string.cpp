@@ -25,10 +25,10 @@ static utf8_string split_word(const TextInfo& info,
   text_lines_t& result)
 {
   // Just break the word in half.
-  const utf8_string half(string.substr(0, string.size() / 2));
+  const utf8_string half(slice_up_to(string, string.size() / 2));
   const coord width = info.GetWidth(half);
   result.push_back(TextLine::SoftBreak(width, half));
-  return string.substr(string.size() / 2, string.size() - string.size() / 2);
+  return slice_from(string, string.size() / 2);
 }
 
 // Split a line at suitable positions to make it shorter than
@@ -46,7 +46,7 @@ static void split_line(const TextInfo& info,
     if (wordEnd == std::string::npos){
       wordEnd = string.size();
     }
-    utf8_string word = string.substr(wordStart, wordEnd - wordStart);
+    utf8_string word = slice(string, wordStart, wordEnd);
     const coord width = info.GetWidth(line + chars::space + word);
     if (!line.empty() && width > maxWidth){
       result.push_back(TextLine::SoftBreak(width, line + chars::space));
@@ -87,20 +87,19 @@ text_lines_t split_string(const TextInfo& info,
       lineEnd = string.size();
     }
 
-    const coord width = info.GetWidth(string.substr(lineStart,
-      lineEnd - lineStart));
+    const coord width = info.GetWidth(slice(string, lineStart, lineEnd));
     if (maxWidth.NotSet() || width < maxWidth.Get()){
       if (softBreak){
         result.push_back(TextLine::SoftBreak(width,
-          string.substr(lineStart, lineEnd - lineStart) + chars::space));
+          slice(string, lineStart, lineEnd) + chars::space));
       }
       else {
         result.push_back(TextLine::HardBreak(width,
-          string.substr(lineStart, lineEnd - lineStart) + chars::space));
+          slice(string, lineStart, lineEnd) + chars::space));
       }
     }
     else {
-      split_line(info, string.substr(lineStart, lineEnd - lineStart),
+      split_line(info, slice(string, lineStart, lineEnd),
         maxWidth.Get(), result);
     }
 

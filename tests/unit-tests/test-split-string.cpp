@@ -125,7 +125,8 @@ void test_split_string(){
   }
 
   {
-    // String ending with end-line
+    // String ending with an end-line, without max width limit should
+    // be split at the end line, and contain an empty last line.
     TextInfo_split_string ti(px_per_char(10));
     auto lines = split_string(ti, "asdf\n", no_option());
 

@@ -28,6 +28,7 @@
 #include "geo/scale.hh"
 #include "text/char-constants.hh"
 #include "text/formatting.hh"
+#include "text/slice.hh"
 #include "util/generator-adapter.hh"
 #include "util/index.hh"
 #include "util/iter.hh"
@@ -43,14 +44,14 @@ utf8_string capitalized(const utf8_string& s){
   if (s.empty()){
     return s;
   }
-  return toupper(s[0]) + s.substr(1);
+  return toupper(s[0]) + slice_from(s, 1);
 }
 
 utf8_string decapitalized(const utf8_string& s){
   if (s.empty()){
     return s;
   }
-  return tolower(s[0]) + s.substr(1);
+  return tolower(s[0]) + slice_from(s, 1);
 }
 
 utf8_string quoted(const utf8_string& s){
