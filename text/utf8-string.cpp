@@ -30,6 +30,7 @@ utf8_string::utf8_string(size_t n, const utf8_char& ch){
     m_data += ch.str();
   }
 }
+
 utf8_string::utf8_string(const utf8_char& ch)
   : utf8_string(1, ch)
 {}
@@ -128,7 +129,8 @@ utf8_char utf8_string::operator[](size_t i) const{
 size_t utf8_string::find(const utf8_char& ch, size_t start) const{
   // Since the leading byte has a unique pattern, using regular
   // std::string find should be OK, I think.
-  size_t pos = m_data.find(ch.str(), utf8::char_num_to_byte_num_checked(start, m_data));
+  size_t pos = m_data.find(ch.str(),
+    utf8::char_num_to_byte_num_checked(start, m_data));
   if (pos == npos){
     return pos;
   }
@@ -158,8 +160,8 @@ utf8_string& utf8_string::operator=(const utf8_string& other){
   }
   m_data = other.m_data;
   return *this;
-
 }
+
 utf8_string& utf8_string::operator+=(const utf8_char& ch){
   m_data += ch.str();
   return *this;
