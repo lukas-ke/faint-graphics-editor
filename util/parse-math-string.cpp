@@ -13,10 +13,9 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include <vector>
-#include <stack>
 #include <sstream>
-#include "geo/primitive.hh"
+#include <stack>
+#include <vector>
 #include "util/parse-math-string.hh"
 
 namespace faint{

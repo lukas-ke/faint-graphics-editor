@@ -16,6 +16,7 @@
 #include <cassert>
 #include "geo/size.hh"
 #include "geo/tri.hh"
+#include "text/slice.hh"
 #include "text/text-buffer.hh"
 #include "util/text-geo.hh"
 
@@ -125,8 +126,8 @@ std::vector<Tri> text_selection_region(const TextInfo& info,
   TextPos s0 = index_to_row_column(lines, selection.from);
   TextPos s1 = index_to_row_column(lines, selection.to);
 
-  auto size0 = info.TextSize(lines[s0.row].text.substr(0, s0.col));
-  auto size1 = info.TextSize(lines[s1.row].text.substr(0, s1.col));
+  auto size0 = info.TextSize(slice_up_to(lines[s0.row].text, s0.col));
+  auto size1 = info.TextSize(slice_up_to(lines[s1.row].text, s1.col));
 
   std::vector<Tri> rectangles;
   const coord rowHeight = info.ComputeRowHeight();
