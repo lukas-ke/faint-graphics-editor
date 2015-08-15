@@ -31,6 +31,7 @@ public:
   explicit utf8_string(const utf8_char&);
   utf8_string(const char*);
 
+  utf8_char at(size_t pos) const;
   size_t bytes() const;
   utf8_string substr(size_t pos, size_t n=std::string::npos) const;
   const std::string& str() const;
@@ -39,7 +40,7 @@ public:
 
   // The number of code points in the string
   size_t size() const;
-  utf8_string& erase(size_t, size_t n=npos);
+  utf8_string& erase(size_t index=0, size_t n=npos);
   bool empty() const;
   size_t find(const utf8_char&, size_t start=0) const;
   size_t rfind(const utf8_char&, size_t start=npos) const;
