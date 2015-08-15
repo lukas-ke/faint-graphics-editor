@@ -24,6 +24,8 @@ namespace faint{
 class IntSize;
 
 class TextInfo{
+  // Interface for retrieving info about the pixel size of a string in
+  // a given context.
 public:
   virtual ~TextInfo() = default;
   virtual int GetWidth(const utf8_string&) const = 0;
@@ -32,9 +34,15 @@ public:
 };
 
 class TextLine{
+  // A line of text, presumably reformatted by splitting to fit within
+  // a certain width.
 public:
+  // Text line broken by reflowing at a space
   static TextLine SoftBreak(coord, const utf8_string&);
+
+  // Text line split at a hard endline character
   static TextLine HardBreak(coord, const utf8_string&);
+
   bool hardBreak;
   utf8_string text;
   coord width;

@@ -106,6 +106,15 @@ text_lines_t split_string(const TextInfo& info,
     lineStart = lineEnd + 1;
 
   } while (lineEnd != string.size());
+
+  if (!result.empty()){
+    // Remove trailing space from last line
+    // Fixme: Nicen up
+    if (!result.back().hardBreak){ // Fixme: Can it even end on hard-break?
+      result.back().text = result.back().text.substr(0, result.back().text.size() - 1);
+    }
+  }
+
   return result;
 }
 

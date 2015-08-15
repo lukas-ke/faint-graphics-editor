@@ -50,9 +50,7 @@ void test_split_string(){
       max_width_t(280.0));
 
     ASSERT(lines.size() == 1);
-    // Fixme: Figure out why I add an extra space, and get rid of it
-    // probably
-    EQUAL(lines[0].text, "This is sort of a sentence. ");
+    EQUAL(lines[0].text, "This is sort of a sentence.");
     NOT(lines[0].hardBreak);
   }
 
@@ -64,7 +62,7 @@ void test_split_string(){
     EQUAL(lines[0].text, "Hello ");
     NOT(lines[0].hardBreak);
 
-    EQUAL(lines[1].text, "world ");
+    EQUAL(lines[1].text, "world");
     NOT(lines[1].hardBreak);
   }
 
@@ -77,7 +75,7 @@ void test_split_string(){
     EQUAL(lines[0].text, "Hello "); // Fixme: extra space?
     VERIFY(lines[0].hardBreak);
 
-    EQUAL(lines[1].text, "world ");
+    EQUAL(lines[1].text, "world");
     NOT(lines[1].hardBreak);
   }
 
@@ -88,7 +86,7 @@ void test_split_string(){
     ASSERT(lines.size() == 2);
     EQUAL(lines[0].text, "Machiave");
     NOT(lines[0].hardBreak);
-    EQUAL(lines[1].text, "llianism ");
+    EQUAL(lines[1].text, "llianism");
     NOT(lines[1].hardBreak);
   }
 
@@ -114,7 +112,7 @@ void test_split_string(){
     EQUAL(lines[11].text, "craft or ");
     EQUAL(lines[12].text, "in ");
     EQUAL(lines[13].text, "general ");
-    EQUAL(lines[14].text, "conduct ");
+    EQUAL(lines[14].text, "conduct");
   }
 
   {
@@ -123,6 +121,6 @@ void test_split_string(){
     auto lines = split_string(ti, utf8_string(5, chars::snowman) + " " +
       utf8_string(5, chars::greek_capital_letter_delta), max_width_t(60.0));
     EQUAL(lines[0].text, utf8_string(5, chars::snowman) + " ");
-    EQUAL(lines[1].text, utf8_string(5, chars::greek_capital_letter_delta) + " ");
+    EQUAL(lines[1].text, utf8_string(5, chars::greek_capital_letter_delta));
   }
 }
