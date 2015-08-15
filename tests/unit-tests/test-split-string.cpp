@@ -4,16 +4,25 @@
 #include "text/char-constants.hh"
 #include "text/split-string.hh"
 #include "util/optional.hh"
+#include "util/distinct.hh"
 
 namespace{
 
 using namespace faint;
 
+class category_test_split_string;
+using px_per_char = Distinct<int, category_test_split_string, 0>;
+
 class TextInfo_split_string : public TextInfo{
 public:
+  TextInfo_split_string(px_per_char pixelsPerChar)
+    : m_pixelsPerChar(pixelsPerChar.Get())
+  {}
+
   int GetWidth(const utf8_string& str) const override{
-    // Use ten pixels for each character
-    return resigned(str.size()) * 10;
+    // For easier testing, simply make each character
+    // m_pixelsPerChar-wide, rather than requiring a font and dc.
+    return resigned(str.size()) * m_pixelsPerChar;
   }
 
   int ComputeRowHeight() const override{
@@ -23,16 +32,19 @@ public:
   IntSize TextSize(const faint::utf8_string&) const override{
     FAIL();
   }
+
+private:
+  int m_pixelsPerChar;
 };
 
 } // namespace
 
 void test_split_string(){
   using namespace faint;
-  TextInfo_split_string ti;
 
   {
     // No splitting
+    TextInfo_split_string ti(px_per_char(10));
     auto lines = split_string(ti,
       "This is sort of a sentence.",
       max_width_t(280.0));
@@ -46,6 +58,7 @@ void test_split_string(){
 
   {
     // Split at space
+    TextInfo_split_string ti(px_per_char(10));
     auto lines = split_string(ti, "Hello world", max_width_t(60.0));
     ASSERT(lines.size() == 2);
     EQUAL(lines[0].text, "Hello ");
@@ -57,6 +70,7 @@ void test_split_string(){
 
   {
     // Split at hard line break
+    TextInfo_split_string ti(px_per_char(10));
     auto lines = split_string(ti, "Hello\nworld", max_width_t(60.0));
     ASSERT(lines.size() == 2);
 
@@ -69,6 +83,7 @@ void test_split_string(){
 
   {
     // Split within word
+    TextInfo_split_string ti(px_per_char(10));
     auto lines = split_string(ti, "Machiavellianism", max_width_t(80.0));
     ASSERT(lines.size() == 2);
     EQUAL(lines[0].text, "Machiave ");
@@ -78,6 +93,7 @@ void test_split_string(){
   }
 
   {
+    TextInfo_split_string ti(px_per_char(10));
     // Split within word
     auto lines = split_string(ti,
       "Machiavellianism the employment of cunning and duplicity\nin statecraft or in general conduct", max_width_t(80.0));
@@ -102,6 +118,7 @@ void test_split_string(){
   }
 
   {
+    TextInfo_split_string ti(px_per_char(10));
     // Unicode
     auto lines = split_string(ti, utf8_string(5, chars::snowman) + " " +
       utf8_string(5, chars::greek_capital_letter_delta), max_width_t(60.0));
