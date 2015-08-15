@@ -51,7 +51,7 @@
 #include "python/py-settings.hh"
 #include "python/py-util.hh"
 #include "python/py-interface.hh"
-#include "text/slice-utf8.hh"
+#include "text/slice.hh"
 #include "tools/tool-id.hh"
 #include "util/enum-util.hh"
 #include "util/image.hh"

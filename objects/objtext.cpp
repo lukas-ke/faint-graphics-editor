@@ -24,7 +24,7 @@
 #include "geo/size.hh"
 #include "objects/objtext.hh"
 #include "rendering/faint-dc.hh"
-#include "text/slice-utf8.hh"
+#include "text/slice.hh"
 #include "text/split-string.hh"
 #include "text/text-expression.hh"
 #include "text/utf8-string.hh"

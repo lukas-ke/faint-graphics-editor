@@ -13,7 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "text/slice-utf8.hh"
+#include "text/slice.hh"
 #include "text/slice-generic.hh"
 
 namespace faint{

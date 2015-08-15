@@ -1,6 +1,6 @@
 // -*- coding: us-ascii-unix -*-
 #include "test-sys/test.hh"
-#include "text/slice-utf8.hh"
+#include "text/slice.hh"
 
 void test_slice(){
   using namespace faint;
