@@ -86,31 +86,31 @@ void test_split_string(){
     TextInfo_split_string ti(px_per_char(10));
     auto lines = split_string(ti, "Machiavellianism", max_width_t(80.0));
     ASSERT(lines.size() == 2);
-    EQUAL(lines[0].text, "Machiave ");
+    EQUAL(lines[0].text, "Machiave");
     NOT(lines[0].hardBreak);
     EQUAL(lines[1].text, "llianism ");
     NOT(lines[1].hardBreak);
   }
 
   {
-    TextInfo_split_string ti(px_per_char(10));
     // Split within word
+    TextInfo_split_string ti(px_per_char(10));
     auto lines = split_string(ti,
       "Machiavellianism the employment of cunning and duplicity\nin statecraft or in general conduct", max_width_t(80.0));
     ASSERT(lines.size() == 15);
-    EQUAL(lines[0].text, "Machiave ");
+    EQUAL(lines[0].text, "Machiave");
     NOT(lines[0].hardBreak);
     EQUAL(lines[1].text, "llianism ");
     NOT(lines[1].hardBreak);
     EQUAL(lines[2].text, "the ");
-    EQUAL(lines[3].text, "emplo ");
+    EQUAL(lines[3].text, "emplo");
     EQUAL(lines[4].text, "yment of ");
     EQUAL(lines[5].text, "cunning ");
     EQUAL(lines[6].text, "and ");
-    EQUAL(lines[7].text, "dupl ");
+    EQUAL(lines[7].text, "dupl");
     EQUAL(lines[8].text, "icity ");
     EQUAL(lines[9].text, "in ");
-    EQUAL(lines[10].text, "state ");
+    EQUAL(lines[10].text, "state");
     EQUAL(lines[11].text, "craft or ");
     EQUAL(lines[12].text, "in ");
     EQUAL(lines[13].text, "general ");

@@ -24,7 +24,7 @@ static utf8_string split_word(const TextInfo& info,
   text_lines_t& result)
 {
   // Just break the word in half.
-  const utf8_string half(string.substr(0, string.size() / 2) + chars::space);
+  const utf8_string half(string.substr(0, string.size() / 2));
   const coord width = info.GetWidth(half);
   result.push_back(TextLine::SoftBreak(width, half));
   return string.substr(string.size() / 2, string.size() - string.size() / 2);
