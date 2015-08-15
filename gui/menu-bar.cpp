@@ -250,7 +250,7 @@ public:
     size_t tabPos = label.find("\t");
     if (tabPos != wxString::npos){
       m_label = label.substr(0,tabPos);
-      m_shortcut = label.substr(tabPos);
+      m_shortcut = label.substr(tabPos); // Note: Includes the (\t)
     }
   }
 
@@ -263,7 +263,6 @@ public:
       mb->SetLabel(m_id, m_label);
     }
   }
-
 
 private:
   int m_id;

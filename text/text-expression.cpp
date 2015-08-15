@@ -128,7 +128,7 @@ public:
   }
 
   utf8_string ConsumeCount(size_t num){
-    size_t oldPos = storePos;
+    const size_t oldPos = storePos;
     pos = pos + num;
     storePos = pos;
     return str.substr(oldPos, num);

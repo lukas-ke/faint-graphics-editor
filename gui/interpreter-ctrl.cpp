@@ -24,6 +24,7 @@
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-auto-complete.hh"
 #include "util-wx/key-codes.hh"
+#include "util-wx/slice-wx.hh"
 
 namespace faint{
 
@@ -629,7 +630,7 @@ private:
     // Begin completing from the start of the identifier preceding the caret
     size_t pos = text.find_last_of(separators);
     if (pos != wxString::npos){
-      text = text.substr(pos + 1, text.size() - pos);
+      text = slice_from(text, pos + 1);
     }
     else {
       pos = 0;
@@ -716,7 +717,7 @@ private:
     wxString text = GetRange(m_inputStart, GetLastPosition());
     size_t pos = text.rfind("\"");
     if (pos != wxString::npos){
-      text = text.substr(pos + 1, text.size() - pos);
+      text = slice_from(text, pos + 1);
     }
     else {
       pos = 0;

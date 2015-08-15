@@ -19,6 +19,7 @@
 #include "text/utf8-string.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-path.hh"
+#include "util-wx/slice-wx.hh"
 #include "util/optional.hh"
 
 namespace faint{
@@ -353,7 +354,7 @@ std::pair<utf8_string, utf8_string> split_extension(const FileName& f){
     return {s, utf8_string()};
   }
   else{
-    return {s.substr(0, pos), s.substr(pos, s.size() - pos)};
+    return {slice_up_to(s, pos), slice_from(s, pos)};
   }
 }
 
