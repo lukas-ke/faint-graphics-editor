@@ -21,6 +21,7 @@
 #include "app/one-instance.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-path.hh"
+#include "util-wx/slice-wx.hh"
 
 #ifdef __WXMSW__
 static_assert(wxUSE_DDE_FOR_IPC == 1, "DDE should be used for IPC on windows");
@@ -37,10 +38,7 @@ static const wxString FILE_PREFIX = "file:";
 static const wxString MESSAGE_COMPLETE = "done";
 
 static bool is_file_message(const wxString& message){
-  if (message.size() < FILE_PREFIX.size()){
-    return false;
-  }
-  return message.substr(0, FILE_PREFIX.size()) == FILE_PREFIX;
+  return slice_up_to(message, FILE_PREFIX.size()) == FILE_PREFIX;
 }
 
 static bool is_completion_message(const wxString& message){
@@ -49,7 +47,7 @@ static bool is_completion_message(const wxString& message){
 
 static wxFileName extract_file_path(const wxString& message){
   assert(is_file_message(message));
-  wxString path(message.substr(FILE_PREFIX.size()));
+  wxString path(slice_from(message, FILE_PREFIX.size()));
   return wxFileName(path);
 }
 
