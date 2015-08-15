@@ -19,7 +19,7 @@
 #include "text/utf8-string.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-path.hh"
-#include "util-wx/slice-wx.hh"
+#include "text/slice.hh"
 #include "util/optional.hh"
 
 namespace faint{
