@@ -98,12 +98,15 @@ static size_t char_num_to_byte_num(size_t caret, const char* utf8,
     offset += delta;
     charNum++;
   }
-  assert(charNum == caret);
   return offset;
 }
 
-size_t char_num_to_byte_num(size_t caret, const std::string& str){
+size_t char_num_to_byte_num_checked(size_t caret, const std::string& str){
   assert(caret <= num_characters(str));
+  return char_num_to_byte_num(caret, str.c_str(), str.size());
+}
+
+size_t char_num_to_byte_num_clamped(size_t caret, const std::string& str){
   return char_num_to_byte_num(caret, str.c_str(), str.size());
 }
 

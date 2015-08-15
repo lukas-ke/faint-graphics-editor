@@ -17,6 +17,7 @@
 #include <cassert>
 #include "text/auto-complete.hh"
 #include "text/char-constants.hh"
+#include "text/slice.hh"
 
 namespace faint {
 
@@ -48,7 +49,7 @@ public:
   void extend(const utf8_string& word){
     if (!word.empty()){
       ACNode* node = add(word[0]);
-      node->extend(word.substr(1, word.size() - 1));
+      node->extend(slice_from(word, 1));
     }
     else {
       add(chars::full_stop);

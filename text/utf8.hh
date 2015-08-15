@@ -26,7 +26,8 @@ size_t num_characters(const std::string&);
 size_t byte_num_to_char_num(size_t, const std::string&);
 size_t byte_num_to_char_num(size_t, const char*) = delete;
 
-size_t char_num_to_byte_num(size_t, const std::string&);
+size_t char_num_to_byte_num_checked(size_t, const std::string&);
+size_t char_num_to_byte_num_clamped(size_t, const std::string&);
 size_t char_num_to_byte_num(size_t, const char*) = delete;
 
 unsigned int byte_string_to_codepoint(const std::string&);

@@ -161,4 +161,7 @@ void test_utf8_string(){
     VERIFY(std::any_of(begin(mix), end(mix), faint::isdigit));
     VERIFY(std::any_of(begin(mix), end(mix), faint::isalpha));
   }
+
+  // substr clamps out-of-bounds end
+  EQUAL(utf8_string("abcd").substr(0, 100), "abcd");
 }

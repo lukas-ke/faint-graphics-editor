@@ -44,9 +44,9 @@ void utf8_string::clear() {
 }
 
 utf8_string utf8_string::substr(size_t pos, size_t n) const{
-  size_t startByte = utf8::char_num_to_byte_num(pos, m_data);
+  size_t startByte = utf8::char_num_to_byte_num_checked(pos, m_data);
   size_t numBytes = (n == utf8_string::npos) ?
-    std::string::npos : utf8::char_num_to_byte_num(pos + n, m_data) - startByte;
+    std::string::npos : utf8::char_num_to_byte_num_clamped(pos + n, m_data) - startByte;
 
   return utf8_string(m_data.substr(startByte, numBytes));
 }
@@ -68,16 +68,16 @@ bool utf8_string::empty() const{
 }
 
 utf8_string& utf8_string::erase(size_t pos, size_t n){
-  size_t startByte = utf8::char_num_to_byte_num(pos, m_data);
+  size_t startByte = utf8::char_num_to_byte_num_checked(pos, m_data);
 
   size_t numBytes = (n == npos ? npos :
-    utf8::char_num_to_byte_num(pos + n, m_data) - startByte);
+    utf8::char_num_to_byte_num_checked(pos + n, m_data) - startByte);
   m_data.erase(startByte, numBytes);
   return *this;
 }
 
 utf8_string& utf8_string::insert(size_t pos, const utf8_string& inserted){
-  m_data.insert(utf8::char_num_to_byte_num(pos, m_data), inserted.str());
+  m_data.insert(utf8::char_num_to_byte_num_checked(pos, m_data), inserted.str());
   return *this;
 }
 
@@ -87,7 +87,7 @@ utf8_string& utf8_string::insert(size_t pos, size_t num, const utf8_char& c){
 }
 
 utf8_char utf8_string::operator[](size_t i) const{
-  size_t pos = utf8::char_num_to_byte_num(i, m_data);
+  size_t pos = utf8::char_num_to_byte_num_checked(i, m_data);
   size_t numBytes = faint::utf8::prefix_num_bytes(m_data[pos]);
   return utf8_char(m_data.substr(pos, numBytes));
 }
@@ -95,7 +95,7 @@ utf8_char utf8_string::operator[](size_t i) const{
 size_t utf8_string::find(const utf8_char& ch, size_t start) const{
   // Since the leading byte has a unique pattern, using regular
   // std::string find should be OK, I think.
-  size_t pos = m_data.find(ch.str(), utf8::char_num_to_byte_num(start, m_data));
+  size_t pos = m_data.find(ch.str(), utf8::char_num_to_byte_num_checked(start, m_data));
   if (pos == npos){
     return pos;
   }
@@ -110,7 +110,7 @@ size_t utf8_string::rfind(const utf8_char& ch, size_t start) const{
   }
 
   size_t startByte = (start == npos) ? m_data.size() - 1 :
-    utf8::char_num_to_byte_num(start, m_data);
+    utf8::char_num_to_byte_num_checked(start, m_data);
   size_t pos = m_data.rfind(ch.str(), startByte);
   if (pos == npos){
     return pos;
