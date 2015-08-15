@@ -16,10 +16,10 @@
 #include "wx/dir.h"
 #include "wx/filename.h"
 #include "text/char-constants.hh"
+#include "text/slice.hh"
 #include "text/utf8-string.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-path.hh"
-#include "text/slice.hh"
 #include "util/optional.hh"
 
 namespace faint{
