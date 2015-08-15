@@ -123,4 +123,16 @@ void test_split_string(){
     EQUAL(lines[0].text, utf8_string(5, chars::snowman) + " ");
     EQUAL(lines[1].text, utf8_string(5, chars::greek_capital_letter_delta));
   }
+
+  {
+    // String ending with end-line
+    TextInfo_split_string ti(px_per_char(10));
+    auto lines = split_string(ti, "asdf\n", no_option());
+
+    ABORT_IF(lines.size() != 2);
+    EQUAL(lines[0].text, "asdf ");
+    ASSERT(lines[0].hardBreak)
+    EQUAL(lines[1].text, "");
+    ASSERT(!lines[1].hardBreak)
+  }
 }

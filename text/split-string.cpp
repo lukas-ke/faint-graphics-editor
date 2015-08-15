@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include "text/char-constants.hh"
+#include "text/slice.hh"
 #include "text/split-string.hh"
 #include "util/optional.hh"
 
@@ -109,10 +110,8 @@ text_lines_t split_string(const TextInfo& info,
 
   if (!result.empty()){
     // Remove trailing space from last line
-    // Fixme: Nicen up
-    if (!result.back().hardBreak){ // Fixme: Can it even end on hard-break?
-      result.back().text = result.back().text.substr(0, result.back().text.size() - 1);
-    }
+    auto& last = result.back().text;
+    last = slice_up_to(last, -1);
   }
 
   return result;
