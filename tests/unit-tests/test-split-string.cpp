@@ -72,7 +72,7 @@ void test_split_string(){
     auto lines = split_string(ti, "Hello\nworld", max_width_t(60.0));
     ASSERT(lines.size() == 2);
 
-    EQUAL(lines[0].text, "Hello "); // Fixme: extra space?
+    EQUAL(lines[0].text, "Hello "); // Space stands in for \n
     VERIFY(lines[0].hardBreak);
 
     EQUAL(lines[1].text, "world");
