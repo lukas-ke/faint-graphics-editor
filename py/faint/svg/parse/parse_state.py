@@ -102,7 +102,6 @@ class ParseState:
 
 
     def set_grid(self, *args, **kwArgs):
-        print("Set grid")
         self.image_props.set_grid(*args, **kwArgs)
 
 
