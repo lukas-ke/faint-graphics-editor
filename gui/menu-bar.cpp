@@ -29,6 +29,7 @@
 #include "gui/menu-predicate.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
+#include "util-wx/slice-wx.hh"
 #include "util/command-util.hh"
 #include "util/frame-props.hh"
 #include "util/index-iter.hh"
@@ -249,8 +250,8 @@ public:
   {
     size_t tabPos = label.find("\t");
     if (tabPos != wxString::npos){
-      m_label = label.substr(0,tabPos);
-      m_shortcut = label.substr(tabPos); // Note: Includes the (\t)
+      m_label = slice_up_to(label,tabPos);
+      m_shortcut = slice_from(label, tabPos); // Note: Includes the (\t)
     }
   }
 
