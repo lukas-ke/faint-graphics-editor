@@ -15,9 +15,10 @@
 
 #ifndef FAINT_SLICE_HH
 #define FAINT_SLICE_HH
-#include "text/utf8-string.hh"
 
-namespace faint{
+namespace faint{ namespace generic{
+
+size_t resolve_index(const size_t, int);
 
 // Slice operations for getting substrings, similar to Pythons built
 // in slice-syntax [a:b].
@@ -30,14 +31,32 @@ namespace faint{
 // an empty string is returned.
 
 // Return the characters in the range [first, up_to)
-utf8_string slice(const utf8_string&, int first, int up_to);
+template<typename StringType>
+StringType slice(const StringType& s, int first, int up_to){
+  size_t a = resolve_index(s.size(), first);
+  size_t b = resolve_index(s.size(), up_to);
+
+  if (a < b){
+    return s.substr(a, b - a);
+  }
+  return "";
+}
 
 // Return the characters from first to the end of the string
-utf8_string slice_from(const utf8_string&, int first);
+template<typename StringType>
+StringType slice_from(const StringType& s, int first){
+  size_t a = resolve_index(s.size(), first);
+  return (a < s.size()) ?
+    s.substr(a) : "";
+}
 
 // Return the characters up to the given index.
-utf8_string slice_up_to(const utf8_string&, int up_to);
+template<typename StringType>
+StringType slice_up_to(const StringType& s, int up_to){
+  const size_t b = resolve_index(s.size(), up_to);
+  return s.substr(0, b);
+}
 
-} // namespace
+}} // namespace
 
 #endif

@@ -24,6 +24,7 @@
 #include "geo/size.hh"
 #include "objects/objtext.hh"
 #include "rendering/faint-dc.hh"
+#include "text/slice-utf8.hh"
 #include "text/split-string.hh"
 #include "text/text-expression.hh"
 #include "text/utf8-string.hh"
@@ -150,7 +151,7 @@ LineSegment ObjText::ComputeCaret(const TextInfo& info, const Tri& tri,
   TextPos pos = index_to_row_column(lines, m_textBuf.caret());
 
   const auto& line = lines[pos.row];
-  auto textSize = info.TextSize(line.text.substr(0, pos.col));
+  auto textSize = info.TextSize(slice_up_to(line.text, pos.col));
 
   textSize.h = info.ComputeRowHeight();
   Tri caretTri(tri.P0(), tri.P1(), textSize.h);

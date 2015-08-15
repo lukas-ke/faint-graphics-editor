@@ -14,7 +14,7 @@
 // permissions and limitations under the License.
 
 #include "text/char-constants.hh"
-#include "text/slice.hh"
+#include "text/slice-utf8.hh"
 #include "text/split-string.hh"
 #include "util/optional.hh"
 

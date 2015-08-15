@@ -606,6 +606,7 @@ IntSize CairoContext::pango_text_size(const utf8_string& text,
   pango_layout_set_font_description(layout, fd);
   utf8_string useText;
   if (text.size() > 1){
+    // Fixme: What's this?
     useText = text.substr(0, text.size() - 2);
   }
   else{
@@ -634,6 +635,7 @@ TextMeasures CairoContext::pango_text_extents(const utf8_string& text,
   pango_layout_set_font_description(layout, fd);
   utf8_string useText;
   if (text.size() > 1){
+    // Fixme: What's this?
     useText = text.substr(0, text.size() - 2);
   }
   else{

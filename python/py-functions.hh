@@ -51,6 +51,7 @@
 #include "python/py-settings.hh"
 #include "python/py-util.hh"
 #include "python/py-interface.hh"
+#include "text/slice-utf8.hh"
 #include "tools/tool-id.hh"
 #include "util/enum-util.hh"
 #include "util/image.hh"
@@ -483,8 +484,8 @@ static utf8_string points_to_svg_path_string(const std::vector<PathPt>& points){
       ss << "M " <<
         m.p.x << " " << m.p.y << " ";
     });
-  std::string pathStr = ss.str();
-  return utf8_string(pathStr.substr(0, pathStr.size() - 1));
+
+  return utf8_string(slice_up_to(ss.str(), -1));
 }
 
 /* function: "to_svg_path(object)->s\n
