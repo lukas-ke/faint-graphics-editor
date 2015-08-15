@@ -16,6 +16,7 @@
 #include <sstream>
 #include <stack>
 #include <vector>
+#include "text/slice.hh"
 #include "util/parse-math-string.hh"
 
 namespace faint{
@@ -56,16 +57,16 @@ static std::vector<string> tokenize(const string& s){
     if (pos == string::npos){
       // No operator left before the end of the string.
       // Push the remainder of the string as a single token
-      tokens.push_back(s.substr(prevPos, s.size() - prevPos));
+      tokens.push_back(slice_from(s, prevPos));
     }
     else {
       // Push the operand preceding the found operator, if any
       if (pos - prevPos > 0){
-        tokens.push_back(s.substr(prevPos, pos - prevPos));
+        tokens.push_back(slice(s, prevPos, pos));
       }
       if (s[pos] != ' '){
         // Push the operator
-        tokens.push_back(s.substr(pos, 1));
+        tokens.push_back(char_at(s, pos));
       }
     }
     prevPos = pos;

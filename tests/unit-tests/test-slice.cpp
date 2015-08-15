@@ -54,4 +54,16 @@ void test_slice(){
     EQUAL(slice_up_to("asdf", -4), "");
     EQUAL(slice_up_to("asdf", -5), "");
   }
+
+  {
+    // char_at
+    EQUAL(char_at("asdf", 0), "a");
+    EQUAL(char_at("asdf", 3), "f");
+    EQUAL(char_at("asdf", 4), "");
+    EQUAL(char_at("asdf", 5), "");
+    EQUAL(char_at("asdf", -1), "f");
+    EQUAL(char_at("asdf", -2), "d");
+    EQUAL(char_at("asdf", -4), "a");
+    EQUAL(char_at("asdf", -6), "");
+  }
 }

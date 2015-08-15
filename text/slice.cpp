@@ -18,6 +18,10 @@
 
 namespace faint{
 
+utf8_string char_at(const utf8_string& s, int pos){
+  return generic::char_at(s, pos);
+}
+
 utf8_string slice(const utf8_string& s, int from, int up_to){
   return generic::slice(s, from, up_to);
 }
@@ -30,6 +34,10 @@ utf8_string slice_up_to(const utf8_string& s, int up_to){
   return generic::slice_up_to(s, up_to);
 }
 
+std::string char_at(const char* s, int pos){
+  return generic::char_at(std::string(s), pos);
+}
+
 std::string slice(const char* s, int first, int up_to){
   return generic::slice(std::string(s), first, up_to);
 }
@@ -40,6 +48,10 @@ std::string slice_from(const char* s, int first){
 
 std::string slice_up_to(const char* s, int up_to){
   return generic::slice_up_to(std::string(s), up_to);
+}
+
+std::string char_at(const std::string& s, int pos){
+  return generic::char_at(s, pos);
 }
 
 std::string slice(const std::string& s, int from, int up_to){

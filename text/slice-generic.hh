@@ -57,6 +57,18 @@ StringType slice_up_to(const StringType& s, int up_to){
   return s.substr(0, b);
 }
 
+// Return the character at pos as a string
+template<typename StringType>
+StringType char_at(const StringType& s, int pos){
+  if (pos < 0 && size_t(-pos) > s.size()){
+    return "";
+  }
+
+  const size_t i = resolve_index(s.size(), pos);
+  return (i < s.size()) ?
+    s.substr(i, 1) : "";
+}
+
 }} // namespace
 
 #endif

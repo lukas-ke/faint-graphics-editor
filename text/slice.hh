@@ -21,14 +21,17 @@ namespace faint{
 
 // See slice-generic.hh for documentation
 
+utf8_string char_at(const utf8_string&, int pos);
 utf8_string slice(const utf8_string&, int, int);
 utf8_string slice_from(const utf8_string&, int);
 utf8_string slice_up_to(const utf8_string&, int);
 
+std::string char_at(const char*, int pos);
 std::string slice(const char*, int, int);
 std::string slice_from(const char*, int);
 std::string slice_up_to(const char*, int);
 
+std::string char_at(const std::string&, int);
 std::string slice(const std::string&, int, int);
 std::string slice_from(const std::string&, int);
 std::string slice_up_to(const std::string&, int);
