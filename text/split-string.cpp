@@ -19,22 +19,12 @@
 
 namespace faint{
 
-#ifdef DEBUG_SPLIT_STRING
-const utf8_char wordBrk('>');
-const utf8_char& hardBrk = chars::pilcrow_sign;
-const utf8_char& softBrk = chars::downwards_arrow_with_tip_leftwards;
-#else
-const utf8_char& wordBrk = chars::space;
-const utf8_char& hardBrk = chars::space;
-const utf8_char& softBrk = chars::space;
-#endif
-
 static utf8_string split_word(const TextInfo& info,
   const utf8_string& string,
   text_lines_t& result)
 {
   // Just break the word in half.
-  const utf8_string half(string.substr(0, string.size() / 2) + wordBrk);
+  const utf8_string half(string.substr(0, string.size() / 2) + chars::space);
   const coord width = info.GetWidth(half);
   result.push_back(TextLine::SoftBreak(width, half));
   return string.substr(string.size() / 2, string.size() - string.size() / 2);
@@ -58,7 +48,7 @@ static void split_line(const TextInfo& info,
     utf8_string word = string.substr(wordStart, wordEnd - wordStart);
     const coord width = info.GetWidth(line + chars::space + word);
     if (!line.empty() && width > maxWidth){
-      result.push_back(TextLine::SoftBreak(width, line + softBrk));
+      result.push_back(TextLine::SoftBreak(width, line + chars::space));
       line.clear();
     }
 
@@ -75,7 +65,7 @@ static void split_line(const TextInfo& info,
   } while (wordEnd != string.size());
 
   if (line.size() > 1){
-    const utf8_string last(line + softBrk);
+    const utf8_string last(line + chars::space);
     const coord width = info.GetWidth(last);
     result.push_back(TextLine::SoftBreak(width, last));
   }
@@ -101,11 +91,11 @@ text_lines_t split_string(const TextInfo& info,
     if (maxWidth.NotSet() || width < maxWidth.Get()){
       if (softBreak){
         result.push_back(TextLine::SoftBreak(width,
-          string.substr(lineStart, lineEnd - lineStart) + hardBrk));
+          string.substr(lineStart, lineEnd - lineStart) + chars::space));
       }
       else {
         result.push_back(TextLine::HardBreak(width,
-          string.substr(lineStart, lineEnd - lineStart) + hardBrk));
+          string.substr(lineStart, lineEnd - lineStart) + chars::space));
       }
     }
     else {
