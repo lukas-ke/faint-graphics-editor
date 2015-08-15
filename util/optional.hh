@@ -298,7 +298,7 @@ Optional<T>& operator|=(Optional<T>& lhs, const Optional<T>& rhs){
 }
 
 template<typename T>
-auto otherwise(T v){
+auto otherwise(T&& v){
   return [=](){return v;};
 }
 
