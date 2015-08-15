@@ -38,6 +38,13 @@ void test_utf8_string(){
     NOT(utf8_string("a").empty());
   }
 
+  // utf8_string::back
+  EQUAL(utf8_string("hello").back(), utf8_char("o"));
+
+  // utf8_string::front
+  EQUAL(utf8_string("hello").front(), utf8_char("h"));
+
+
   { // utf8_string::substr
 
     // substr out-of-bounds end is clamped

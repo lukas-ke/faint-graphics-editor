@@ -13,6 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include <cassert>
 #include "text/utf8.hh"
 #include "text/utf8-string.hh"
 
@@ -44,6 +45,16 @@ utf8_string::utf8_string(const std::string& str)
 utf8_char utf8_string::at(size_t pos) const{
   throw_if_outside(m_data, pos);
   return operator[](pos);
+}
+
+utf8_char utf8_string::back() const{
+  assert(!m_data.empty());
+  return operator[](size() - 1);
+}
+
+utf8_char utf8_string::front() const{
+  assert(!m_data.empty());
+  return operator[](0);
 }
 
 size_t utf8_string::bytes() const{

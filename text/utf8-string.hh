@@ -32,6 +32,8 @@ public:
   utf8_string(const char*);
 
   utf8_char at(size_t pos) const;
+  utf8_char back() const;
+  utf8_char front() const;
   size_t bytes() const;
   utf8_string substr(size_t pos, size_t n=std::string::npos) const;
   const std::string& str() const;
