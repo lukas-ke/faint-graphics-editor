@@ -13,6 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include <stdexcept>
 #include "wx/wx.h"
 #include "wx/filename.h"
 #include "wx/treebook.h"
@@ -35,7 +36,8 @@
 
 void add_gui_tests(wxBookCtrlBase*,
   faint::StatusInterface&,
-  faint::DialogContext&);
+  faint::DialogContext&,
+  const faint::Art&);
 
 namespace faint{const Art& get_art();} // Fixme: Should not need this function in a test.
 
@@ -165,7 +167,7 @@ public:
     faint::bind_menu(this, wxID_EXIT, [&](){Close(true);});
 
     auto pageList = new wxTreebook(this, wxID_ANY);
-    add_gui_tests(pageList, m_statusInterface, m_dialogContext);
+    add_gui_tests(pageList, m_statusInterface, m_dialogContext, art);
   }
 
 private:
@@ -203,8 +205,8 @@ wxIMPLEMENT_APP(GuiTestApp);
 namespace faint{
 
 const Art& get_art(){
-  // Fixme: Should not need this function in a test.
-  return wxGetApp().m_art;
+  assert(false);
+  throw std::logic_error("Stub get_art called");
 }
 
 } // namespace

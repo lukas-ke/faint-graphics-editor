@@ -22,7 +22,6 @@
 #include <sstream>
 #include <iostream> // for print_to_stdout
 #include "python/py-include.hh"
-#include "app/get-art.hh" // Fixme: \ref(rotate-bad-art)
 #include "app/canvas.hh"
 #include "app/frame.hh"
 #include "app/get-app-context.hh"
@@ -136,9 +135,16 @@ static void dialog_color_balance(){
   app.Modal(show_color_balance_dialog);
 }
 
+// Fixme: Remove, find a different way to get Art to Python functions
+// (get_art is implemented in app.cpp, and as a stub in unit tests)
+// \ref(rotate-bad-art)
+const Art& get_art();
+
 /* function: "dialog_resize()\n
 Show the image/selection resize dialog." */
 static void dialog_resize(){
+  // Fixme: same as rotate
+  // \ref(rotate-bad-art)
   show_resize_dialog(get_app_context(), get_art());
 }
 

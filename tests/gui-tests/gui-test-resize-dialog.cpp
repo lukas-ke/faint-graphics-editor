@@ -13,12 +13,12 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "app/get-art.hh"
 #include "bitmap/color.hh"
 #include "bitmap/paint.hh"
 #include "bitmap/scale-quality.hh"
 #include "geo/int-point.hh"
 #include "geo/int-rect.hh"
+#include "gui/art.hh"
 #include "gui/resize-dialog.hh"
 #include "text/formatting.hh"
 #include "util-wx/fwd-wx.hh"
@@ -140,8 +140,10 @@ static auto make_ctx(wxTextCtrl* log,
 
 } // namespace
 
-void gui_test_resize_dialog(wxWindow* p, faint::StatusInterface&,
-  faint::DialogContext& dialogContext)
+void gui_test_resize_dialog(wxWindow* p,
+  faint::StatusInterface&,
+  faint::DialogContext& dialogContext,
+  const faint::Art& art)
 {
   using namespace faint;
 
@@ -149,19 +151,19 @@ void gui_test_resize_dialog(wxWindow* p, faint::StatusInterface&,
 
   using namespace layout;
   auto dialog_button =
-    [=, &dialogContext](const utf8_string& title,
+    [=, &dialogContext, &art](const utf8_string& title,
       const Paint& bg,
       bool allowNearest,
       bool allowResize)
     {
       auto b = create_button(p, title.c_str(),
-        [=, &dialogContext](){
+        [=, &dialogContext, &art](){
           if (!is_empty(log)){
             append_text(log, "\n");
           }
           append_text(log, "Show: " + title + "\n");
           show_resize_dialog(dialogContext,
-            get_art(),
+            art,
             make_ctx(log, title, bg, allowNearest, allowResize));
         });
       return b;

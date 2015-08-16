@@ -13,7 +13,6 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "app/get-art.hh"
 #include "app/resource-id.hh"
 #include "geo/int-point.hh"
 #include "gui/art.hh"
@@ -25,10 +24,9 @@ namespace faint{ class StatusInterface; }
 namespace faint{ class DialogContext; }
 
 void gui_test_bitmap_list_ctrl(wxWindow* p, faint::StatusInterface& status,
-  faint::DialogContext&)
+  faint::DialogContext&, const faint::Art& art)
 {
   using namespace faint;
-  auto& art = get_art();
   const IntSize bitmapSize(to_faint(art.Get(Icon::BRUSH_RECT).GetSize()));
   {
     auto c = new BitmapListCtrl(p,

@@ -18,7 +18,6 @@
 #include "wx/filename.h"
 #include "wx/frame.h"
 #include "app/command-line.hh"
-#include "app/get-art.hh"
 #include "app/one-instance.hh"
 #include "app/resource-id.hh"
 #include "app/write-exception-log.hh"
@@ -364,6 +363,8 @@ PythonContext& get_python_context(){
 }
 
 const Art& get_art(){
+  // Fixme: Remove this global accessor, Art should be passed where
+  // needed. - Remember to remove stubs in tests too.
   return wxGetApp().GetArt();
 }
 

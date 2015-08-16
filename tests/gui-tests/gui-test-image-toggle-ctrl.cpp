@@ -13,7 +13,6 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "app/get-art.hh"
 #include "app/resource-id.hh"
 #include "geo/int-point.hh"
 #include "gui/art.hh"
@@ -26,10 +25,9 @@ namespace faint{ class StatusInterface; }
 namespace faint{ class DialogContext; }
 
 void gui_test_image_toggle_ctrl(wxWindow* p, faint::StatusInterface& status,
-  faint::DialogContext&)
+  faint::DialogContext&, const faint::Art& art)
 {
   using namespace faint;
-  auto& art = get_art();
 
   const IntSize bitmapSize(28, 23);
   {
