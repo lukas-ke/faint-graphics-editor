@@ -22,11 +22,13 @@
 #include <string>
 #include <vector>
 
+namespace test{
+
 extern std::stringstream TEST_OUT;
 extern bool TEST_FAILED;
 extern int NUM_KNOWN_ERRORS;
 
-inline bool test_write_error(const char* file, int line, const std::string& text){
+inline bool write_error(const char* file, int line, const std::string& text){
   // Error-syntax recognized by emacs Compilation mode
   TEST_OUT << file << "(" << line << "): error: " << text << std::endl;
 
@@ -49,8 +51,6 @@ public:
   double value;
 };
 
-namespace test{
-
 // Helper to make the static_assert dependent on T.
 template<typename T>
 struct TypeDependentFalse{
@@ -68,15 +68,9 @@ inline double to_double(double v){
   return v;
 }
 
-} // namespace
-
 template<typename T>
 bool test_near(const T& a, const T& b, const Epsilon& e){
   return std::fabs(test::to_double(a) - test::to_double(b)) < e;
-}
-
-constexpr Epsilon operator "" _eps(long double v){
-  return Epsilon(static_cast<double>(v));
 }
 
 inline void fail_test(){}
@@ -92,8 +86,8 @@ void fail_test(const char* message, const T&... args){
   fail_test(args...);
 }
 
-inline bool test_abort(const char* file, int line, const std::string& text){
-  test_write_error(file, line, text);
+inline bool abort_test(const char* file, int line, const std::string& text){
+  write_error(file, line, text);
   TEST_FAILED = true;
   throw AbortTestException();
 }
@@ -162,9 +156,6 @@ private:
   mutable bool m_called;
   int m_line;
 };
-
-#define FWD(CALL);{try{bool alreadyFailed = TEST_FAILED;CALL;if (TEST_FAILED && !alreadyFailed){TEST_OUT << " ... called via FWD on line " << __LINE__ << std::endl;}}catch(const AbortTestException&){TEST_OUT << " ... called via FWD on line " << __LINE__ << std::endl; throw;}}
-
 
 template<typename FUNC>
 class FailUnlessCalledFwd : public Checkable{
@@ -255,6 +246,12 @@ inline FailIfCalledFwd<FUNC>& create_fail_if_called_fwd(FUNC func,
   return *f;
 }
 
+} // namespace
+
+constexpr test::Epsilon operator "" _eps(long double v){
+  return test::Epsilon(static_cast<double>(v));
+}
+
 enum class TestPlatform{
   LINUX,
   WINDOWS
@@ -266,42 +263,44 @@ TestPlatform get_test_platform();
 // understanding initializer-lists.
 #define LIST(...){__VA_ARGS__}
 
-#define MESSAGE(MSG) TEST_OUT << "  Message(" << __LINE__ << ") " << MSG << std::endl;
+#define MESSAGE(MSG) test::TEST_OUT << "  Message(" << __LINE__ << ") " << MSG << std::endl;
 
-#define TIME_MESSAGE(MSG) TEST_OUT << "  " << MSG << std::endl;
+#define TIME_MESSAGE(MSG) test::TEST_OUT << "  " << MSG << std::endl;
 
-#define EQUAL_HEX(A,B) if ((A) != (B)){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " != " << #B << " (" << str_not_equal_hex(A, B) << ")" << std::endl; TEST_FAILED=true;}
+#define EQUAL_HEX(A,B) if ((A) != (B)){ test::TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " != " << #B << " (" << test::str_not_equal_hex(A, B) << ")" << std::endl; test::TEST_FAILED=true;}
 
-#define EQUAL(A,B) (((A) == (B)) ? true : test_write_error(__FILE__, __LINE__, #A " != " #B " (" + str_cmp_values(A, "!=", B) + ")"))
+#define EQUAL(A,B) (((A) == (B)) ? true : test::write_error(__FILE__, __LINE__, #A " != " #B " (" + test::str_cmp_values(A, "!=", B) + ")"))
 
-#define EQUALF(A,B, FMT) (((A) == (B)) ? true : test_write_error(__FILE__, __LINE__, #A " != " #B " (" + str_cmp_values(FMT(A), "!=", FMT(B)) + ")"))
+#define EQUALF(A,B, FMT) (((A) == (B)) ? true : test::write_error(__FILE__, __LINE__, #A " != " #B " (" + test::str_cmp_values(FMT(A), "!=", FMT(B)) + ")"))
 
-#define NOT_EQUAL(A,B) (((A) == (B)) ? test_write_error(__FILE__, __LINE__, #A " == " #B " (" + str_cmp_values(A, "==", B) + ")") : true)
+#define NOT_EQUAL(A,B) (((A) == (B)) ? test::write_error(__FILE__, __LINE__, #A " == " #B " (" + test::str_cmp_values(A, "==", B) + ")") : true)
 
-#define ASSERT_EQUAL(A,B) (((A) == (B)) ? true : test_abort(__FILE__, __LINE__, #A " != " #B " (" + str_cmp_values(A, "!=", B) + ")"))
+#define ASSERT_EQUAL(A,B) (((A) == (B)) ? true : test::abort_test(__FILE__, __LINE__, #A " != " #B " (" + test::str_cmp_values(A, "!=", B) + ")"))
 
-#define NEAR(A,B,EPS) if (!test_near(A, B, EPS)){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " != " << #B << " (" << A << " != " << B << ")" << std::endl; TEST_FAILED=true;}
+#define NEAR(A,B,EPS) if (!test_near(A, B, EPS)){ test::TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " != " << #B << " (" << A << " != " << B << ")" << std::endl; test::TEST_FAILED=true;}
 
-#define VERIFY(C) ((C) ? true : test_write_error(__FILE__, __LINE__, "VERIFY " #C))
+#define VERIFY(C) ((C) ? true : test::write_error(__FILE__, __LINE__, "VERIFY " #C))
 
-#define NOT(C) ((!C) ? true : test_write_error(__FILE__, __LINE__, "NOT " #C))
+#define NOT(C) ((!C) ? true : test::write_error(__FILE__, __LINE__, "NOT " #C))
 
-#define ASSERT(C) ((C) ? true : test_abort(__FILE__, __LINE__, "ASSERT "#C))
+#define ASSERT(C) ((C) ? true : test::abort_test(__FILE__, __LINE__, "ASSERT "#C))
 
-#define ABORT_IF(C) (!(C) ? true : test_abort(__FILE__, __LINE__, "ABORT_IF " #C))
+#define ABORT_IF(C) (!(C) ? true : test::abort_test(__FILE__, __LINE__, "ABORT_IF " #C))
 
 // TODO: Rename to e.g. ABORT_TEST
-#define FAIL(...) TEST_OUT << "  FAIL triggered on line " << __LINE__ << std::endl; TEST_FAILED=true; fail_test(__VA_ARGS__); throw AbortTestException();
+#define FAIL(...) test::TEST_OUT << "  FAIL triggered on line " << __LINE__ << std::endl; test::TEST_FAILED=true; test::fail_test(__VA_ARGS__); throw test::AbortTestException();
 
-#define SET_FAIL() TEST_OUT << "  SET_FAIL triggered on line " << __LINE__ << std::endl; TEST_FAILED=true
+#define SET_FAIL() test::TEST_OUT << "  SET_FAIL triggered on line " << __LINE__ << std::endl; test::TEST_FAILED=true
 
-#define KNOWN_ERROR(C) if ((C)){TEST_OUT << "  Error(" << __LINE__ << "): KNOWN_ERROR \"" << #C << "\"..\n" << "  ..evaluated OK. Test not updated?" << std::endl; TEST_FAILED=true;}else{ TEST_OUT << "  Known error(" << __LINE__ << "): " << #C << std::endl; NUM_KNOWN_ERRORS += 1;}
+#define KNOWN_ERROR(C) if ((C)){test::TEST_OUT << "  Error(" << __LINE__ << "): KNOWN_ERROR \"" << #C << "\"..\n" << "  ..evaluated OK. Test not updated?" << std::endl; test::TEST_FAILED=true;}else{ test::TEST_OUT << "  Known error(" << __LINE__ << "): " << #C << std::endl; test::NUM_KNOWN_ERRORS += 1;}
 
-#define KNOWN_INEQUAL(A,B) if ((A) == (B)){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " == " << #B << " (" << A << " != " << B << ")" << " ..evaluated OK. Test not updated?" << std::endl; TEST_FAILED=true;}else{ TEST_OUT << "  Known error(" << __LINE__ << "): " << A << "!=" << B << std::endl; NUM_KNOWN_ERRORS += 1;}
+#define KNOWN_INEQUAL(A,B) if ((A) == (B)){ test::TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " == " << #B << " (" << A << " != " << B << ")" << " ..evaluated OK. Test not updated?" << std::endl; test::TEST_FAILED=true;}else{ test::TEST_OUT << "  Known error(" << __LINE__ << "): " << A << "!=" << B << std::endl; test::NUM_KNOWN_ERRORS += 1;}
 
-#define FAIL_IF_CALLED()(FailIfCalled(__LINE__))
-#define FAIL_UNLESS_CALLED()(create_fail_unless_called(__LINE__))
-#define FAIL_UNLESS_CALLED_FWD(FUNC)(create_fail_unless_called_fwd(FUNC, __LINE__))
-#define FAIL_IF_CALLED_FWD(FUNC)(create_fail_if_called_fwd(FUNC, __LINE__))
+#define FWD(CALL);{try{bool alreadyFailed = test::TEST_FAILED;CALL;if (test::TEST_FAILED && !alreadyFailed){test::TEST_OUT << " ... called via FWD on line " << __LINE__ << std::endl;}}catch(const test::AbortTestException&){test::TEST_OUT << " ... called via FWD on line " << __LINE__ << std::endl; throw;}}
+
+#define FAIL_IF_CALLED()(test::FailIfCalled(__LINE__))
+#define FAIL_UNLESS_CALLED()(test::create_fail_unless_called(__LINE__))
+#define FAIL_UNLESS_CALLED_FWD(FUNC)(test::create_fail_unless_called_fwd(FUNC, __LINE__))
+#define FAIL_IF_CALLED_FWD(FUNC)(test::create_fail_if_called_fwd(FUNC, __LINE__))
 
 #endif

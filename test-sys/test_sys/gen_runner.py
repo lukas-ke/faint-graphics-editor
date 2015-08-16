@@ -12,7 +12,7 @@ class test_runner_info:
     args = ['  const bool silent = find_silent_flag(argc, argv);',]
 
     def write_function_call(self, out, func, file_name, max_width):
-        out.write('  run_test(%s, "%s", %d, numFailed, silent);\n'
+        out.write('  test::run_test(%s, "%s", %d, numFailed, silent);\n'
                   % (func, file_name, max_width))
 
 
@@ -93,10 +93,14 @@ def gen_runner(root_dir, out_file, info):
             out.write('#include "windows.h"\n')
         out.write('\n');
 
+        out.write('namespace test{\n')
         out.write('bool TEST_FAILED = false;\n')
         out.write('std::stringstream TEST_OUT;\n')
         out.write('std::vector<Checkable*> POST_CHECKS;\n')
         out.write('int NUM_KNOWN_ERRORS = 0;\n')
+
+        out.write('} // namespace\n')
+
         for v in info.extra_globals:
             out.write("%s;\n" % v)
 
@@ -163,7 +167,7 @@ def gen_runner(root_dir, out_file, info):
             func = util.file_name_to_function_pointer(f)
             info.write_function_call(out, func, f, max_width)
 
-        out.write('  return print_test_summary(numFailed);\n')
+        out.write('  return test::print_test_summary(numFailed);\n')
         out.write('}\n')
 
     # Create defines.hh

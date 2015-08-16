@@ -103,7 +103,7 @@ void check_impl(const T& item, const std::string& s,
       }
     }
   }
-  catch (const AbortTestException&){
+  catch (const test::AbortTestException&){
     // The test will have been flagged as failed.
     // No need to abort.
   }

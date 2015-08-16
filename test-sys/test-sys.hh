@@ -18,6 +18,7 @@
 #include "test-sys/test.hh"
 #include "test-sys/test-name.hh"
 
+namespace test{
 void verify_post_checks(){
   for (Checkable* check : POST_CHECKS){
     check->Check();
@@ -41,5 +42,7 @@ int print_test_summary(const int numFailed){
   }
   return 0;
 }
+
+} // namespace
 
 #endif

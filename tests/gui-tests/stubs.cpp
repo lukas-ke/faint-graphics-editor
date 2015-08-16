@@ -16,15 +16,17 @@ AppContext& get_app_context(){
 class PythonContext;
 PythonContext& get_python_context(){
   assert(false);
-  throw std::logic_error("Stup get_python_context called");
+  throw std::logic_error("Stub get_python_context called");
 }
 
 } // namespace
 
+namespace test{
 // Some things I need to be able to link the test utils.
 // FIXME: Try getting rid of at least TEST_FAILED and TEST_OUT
 bool TEST_FAILED = false;
 std::stringstream TEST_OUT;
+}
 std::string get_test_name(){
   return "GuiTest";
 }

@@ -23,7 +23,7 @@ const Art& get_art(){
 class PythonContext;
 PythonContext& get_python_context(){
   assert(false);
-  throw std::logic_error("Stup get_python_context called");
+  throw std::logic_error("Stub get_python_context called");
 }
 
 } // namespace

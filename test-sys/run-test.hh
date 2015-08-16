@@ -16,6 +16,8 @@
 #ifndef FAINT_RUN_TEST_HH
 #define FAINT_RUN_TEST_HH
 
+namespace test{
+
 void fail_on_exception(const std::string& type, const std::string& what){
   TEST_FAILED = true;
   TEST_OUT << "  Exception: \"" << what << "\" " << "(" << type << ")" <<
@@ -79,5 +81,7 @@ void run_test(void (*func)(),
   }
   TEST_OUT.str("");
 }
+
+} // namespace
 
 #endif

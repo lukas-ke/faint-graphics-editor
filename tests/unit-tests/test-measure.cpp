@@ -10,7 +10,7 @@
 
 void test_measure(){
   using namespace faint;
-  const auto eps = Epsilon(std::numeric_limits<double>::epsilon());
+  const auto eps = test::Epsilon(std::numeric_limits<double>::epsilon());
 
   // angle360_ccw
   // <../../doc/angle360_ccw.png>
