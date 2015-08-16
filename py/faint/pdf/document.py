@@ -200,7 +200,6 @@ class Document:
     def add_comment(self, text):
         id = pdf_id(len(self.identifiers))
         if not id in self.comments:
-            print("Appended.")
             self.comments[id] = []
         self.comments[id].append(text)
 
