@@ -2,7 +2,11 @@
 #include "test-sys/test.hh"
 #include "geo/tri.hh"
 
-void verify_tri(const faint::Tri& t, const faint::Point& p0, const faint::Point& p1, const faint::Point& p2){
+static void verify_tri(const faint::Tri& t,
+  const faint::Point& p0,
+  const faint::Point& p1,
+  const faint::Point& p2)
+{
   const auto eps = 0.001_eps;
   NEAR(t.P0().x, p0.x, eps);
   NEAR(t.P1().x, p1.x, eps);
@@ -10,8 +14,6 @@ void verify_tri(const faint::Tri& t, const faint::Point& p0, const faint::Point&
   NEAR(t.P2().y, p2.y, eps);
   NEAR(t.P2().y, p2.y, eps);
 }
-
-#define VERIFY_TRI FWY(verify_tri)
 
 void test_tri_offset_aligned(){
   using namespace faint;
