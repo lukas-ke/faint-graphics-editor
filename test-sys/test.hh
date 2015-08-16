@@ -120,7 +120,7 @@ inline bool test_abort(const char* file, int line, const char* text){
 
 #define ASSERT(C) ((C) ? true : test_abort(__FILE__, __LINE__, "ASSERT "#C))
 
-#define ABORT_IF(C) ((!C) ? true : test_abort(__FILE__, __LINE__, "ABORT_IF " #C))
+#define ABORT_IF(C) (!(C) ? true : test_abort(__FILE__, __LINE__, "ABORT_IF " #C))
 
 inline void fail_test(){}
 

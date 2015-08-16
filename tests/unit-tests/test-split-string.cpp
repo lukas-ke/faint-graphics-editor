@@ -132,8 +132,8 @@ void test_split_string(){
 
     ABORT_IF(lines.size() != 2);
     EQUAL(lines[0].text, "asdf ");
-    ASSERT(lines[0].hardBreak)
+    ASSERT(lines[0].hardBreak);
     EQUAL(lines[1].text, "");
-    ASSERT(!lines[1].hardBreak)
+    ASSERT(!lines[1].hardBreak);
   }
 }
