@@ -110,7 +110,7 @@ inline bool test_write_error(const char* file, int line, const char* text){
 
 #define VERIFY(C) ((C) ? true : test_write_error(__FILE__, __LINE__, #C " failed."))
 
-#define NOT(C) if ((!C)){}else{ TEST_OUT << "  Error(" << __LINE__ << "): NOT " << #C << " failed." << std::endl; TEST_FAILED=true;}
+#define NOT(C) ((!C) ? true : test_write_error(__FILE__, __LINE__, "NOT " #C " failed."))
 
 #define ASSERT(C) if ((C)){}else{ TEST_OUT << "  Error(" << __LINE__ << "): " << #C << " failed." << std::endl; TEST_FAILED=true; throw AbortTestException();}
 
