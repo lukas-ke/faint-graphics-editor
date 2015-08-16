@@ -18,6 +18,7 @@
 import os
 import sys
 import faint_info
+import shutil
 
 build_dir = os.path.split(os.path.realpath(__file__))[0]
 os.chdir(build_dir) # Fixme: Don't change dir, use absolute paths.
@@ -86,6 +87,12 @@ def clean_generated(faintDir):
        faint_info.GENERATED_HELP_PATH)
 
 
+def clean_test_output(faintDir):
+    test_out_dir = os.path.join(faintDir, 'tests', 'out' )
+    if os.path.exists(test_out_dir):
+        shutil.rmtree(test_out_dir)
+
+
 def clean_help(faintDir):
     helpDir = os.path.join(faintDir, "help")
     for file in os.listdir(helpDir):
@@ -144,7 +151,8 @@ known_args=(("all",
              (clean_help,
               clean_generated,
               clean_obj,
-              clean_exe)),
+              clean_exe,
+              clean_test_output)),
             ("exe", "Faint executables", (clean_exe,)),
             ("html", "the help", (clean_help,)),
             ("gen", "generated code", (clean_generated,)),
