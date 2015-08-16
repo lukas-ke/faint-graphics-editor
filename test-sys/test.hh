@@ -36,45 +36,6 @@ inline bool test_write_error(const char* file, int line, const std::string& text
 
 class AbortTestException{};
 
-inline bool test_abort(const char* file, int line, const std::string& text){
-  test_write_error(file, line, text);
-  TEST_FAILED = true;
-  throw AbortTestException();
-}
-
-// Add braces around the arguments, to get past preprocessor not
-// understanding initializer-lists.
-#define LIST(...){__VA_ARGS__}
-
-#define MESSAGE(MSG) TEST_OUT << "  Message(" << __LINE__ << ") " << MSG << std::endl;
-
-#define TIME_MESSAGE(MSG) TEST_OUT << "  " << MSG << std::endl;
-
-template<typename T1, typename T2>
-std::string str_not_equal_hex(T1 v1, T2 v2){
-  std::stringstream ss;
-  ss << std::hex;
-  ss << static_cast<unsigned int>(v1) << " != " << static_cast<unsigned int>(v2);
-  return ss.str();
-}
-
-template<typename T1, typename T2>
-std::string str_cmp_values(T1 v1, const char* cmp, T2 v2){
-  std::stringstream ss;
-  ss << v1 << " " << cmp << " " << v2;
-  return ss.str();
-}
-
-#define EQUAL_HEX(A,B) if ((A) != (B)){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " != " << #B << " (" << str_not_equal_hex(A, B) << ")" << std::endl; TEST_FAILED=true;}
-
-#define EQUAL(A,B) (((A) == (B)) ? true : test_write_error(__FILE__, __LINE__, #A " != " #B " (" + str_cmp_values(A, "!=", B) + ")"))
-
-#define EQUALF(A,B, FMT) (((A) == (B)) ? true : test_write_error(__FILE__, __LINE__, #A " != " #B " (" + str_cmp_values(FMT(A), "!=", FMT(B)) + ")"))
-
-#define NOT_EQUAL(A,B) (((A) == (B)) ? test_write_error(__FILE__, __LINE__, #A " == " #B " (" + str_cmp_values(A, "==", B) + ")") : true)
-
-#define ASSERT_EQUAL(A,B) (((A) == (B)) ? true : test_abort(__FILE__, __LINE__, #A " != " #B " (" + str_cmp_values(A, "!=", B) + ")"))
-
 class Epsilon{
 public:
   explicit constexpr Epsilon(double v)
@@ -118,16 +79,6 @@ constexpr Epsilon operator "" _eps(long double v){
   return Epsilon(static_cast<double>(v));
 }
 
-#define NEAR(A,B,EPS) if (!test_near(A, B, EPS)){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " != " << #B << " (" << A << " != " << B << ")" << std::endl; TEST_FAILED=true;}
-
-#define VERIFY(C) ((C) ? true : test_write_error(__FILE__, __LINE__, "VERIFY " #C))
-
-#define NOT(C) ((!C) ? true : test_write_error(__FILE__, __LINE__, "NOT " #C))
-
-#define ASSERT(C) ((C) ? true : test_abort(__FILE__, __LINE__, "ASSERT "#C))
-
-#define ABORT_IF(C) (!(C) ? true : test_abort(__FILE__, __LINE__, "ABORT_IF " #C))
-
 inline void fail_test(){}
 
 inline void fail_test(const char* message){
@@ -141,14 +92,26 @@ void fail_test(const char* message, const T&... args){
   fail_test(args...);
 }
 
-// TODO: Rename to e.g. ABORT_TEST
-#define FAIL(...) TEST_OUT << "  FAIL triggered on line " << __LINE__ << std::endl; TEST_FAILED=true; fail_test(__VA_ARGS__); throw AbortTestException();
+inline bool test_abort(const char* file, int line, const std::string& text){
+  test_write_error(file, line, text);
+  TEST_FAILED = true;
+  throw AbortTestException();
+}
 
-#define SET_FAIL() TEST_OUT << "  SET_FAIL triggered on line " << __LINE__ << std::endl; TEST_FAILED=true
+template<typename T1, typename T2>
+std::string str_not_equal_hex(T1 v1, T2 v2){
+  std::stringstream ss;
+  ss << std::hex;
+  ss << static_cast<unsigned int>(v1) << " != " << static_cast<unsigned int>(v2);
+  return ss.str();
+}
 
-#define KNOWN_ERROR(C) if ((C)){TEST_OUT << "  Error(" << __LINE__ << "): KNOWN_ERROR \"" << #C << "\"..\n" << "  ..evaluated OK. Test not updated?" << std::endl; TEST_FAILED=true;}else{ TEST_OUT << "  Known error(" << __LINE__ << "): " << #C << std::endl; NUM_KNOWN_ERRORS += 1;}
-
-#define KNOWN_INEQUAL(A,B) if ((A) == (B)){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " == " << #B << " (" << A << " != " << B << ")" << " ..evaluated OK. Test not updated?" << std::endl; TEST_FAILED=true;}else{ TEST_OUT << "  Known error(" << __LINE__ << "): " << A << "!=" << B << std::endl; NUM_KNOWN_ERRORS += 1;}
+template<typename T1, typename T2>
+std::string str_cmp_values(T1 v1, const char* cmp, T2 v2){
+  std::stringstream ss;
+  ss << v1 << " " << cmp << " " << v2;
+  return ss.str();
+}
 
 struct FailIfCalled{
   FailIfCalled(int line, bool abort=false)
@@ -175,7 +138,6 @@ public:
 };
 
 extern std::vector<Checkable*> POST_CHECKS;
-
 
 class FailUnlessCalled : public Checkable{
 public:
@@ -293,16 +255,53 @@ inline FailIfCalledFwd<FUNC>& create_fail_if_called_fwd(FUNC func,
   return *f;
 }
 
-#define FAIL_IF_CALLED()(FailIfCalled(__LINE__))
-#define FAIL_UNLESS_CALLED()(create_fail_unless_called(__LINE__))
-#define FAIL_UNLESS_CALLED_FWD(FUNC)(create_fail_unless_called_fwd(FUNC, __LINE__))
-#define FAIL_IF_CALLED_FWD(FUNC)(create_fail_if_called_fwd(FUNC, __LINE__))
-
 enum class TestPlatform{
   LINUX,
   WINDOWS
 };
 
 TestPlatform get_test_platform();
+
+// Add braces around the arguments, to get past preprocessor not
+// understanding initializer-lists.
+#define LIST(...){__VA_ARGS__}
+
+#define MESSAGE(MSG) TEST_OUT << "  Message(" << __LINE__ << ") " << MSG << std::endl;
+
+#define TIME_MESSAGE(MSG) TEST_OUT << "  " << MSG << std::endl;
+
+#define EQUAL_HEX(A,B) if ((A) != (B)){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " != " << #B << " (" << str_not_equal_hex(A, B) << ")" << std::endl; TEST_FAILED=true;}
+
+#define EQUAL(A,B) (((A) == (B)) ? true : test_write_error(__FILE__, __LINE__, #A " != " #B " (" + str_cmp_values(A, "!=", B) + ")"))
+
+#define EQUALF(A,B, FMT) (((A) == (B)) ? true : test_write_error(__FILE__, __LINE__, #A " != " #B " (" + str_cmp_values(FMT(A), "!=", FMT(B)) + ")"))
+
+#define NOT_EQUAL(A,B) (((A) == (B)) ? test_write_error(__FILE__, __LINE__, #A " == " #B " (" + str_cmp_values(A, "==", B) + ")") : true)
+
+#define ASSERT_EQUAL(A,B) (((A) == (B)) ? true : test_abort(__FILE__, __LINE__, #A " != " #B " (" + str_cmp_values(A, "!=", B) + ")"))
+
+#define NEAR(A,B,EPS) if (!test_near(A, B, EPS)){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " != " << #B << " (" << A << " != " << B << ")" << std::endl; TEST_FAILED=true;}
+
+#define VERIFY(C) ((C) ? true : test_write_error(__FILE__, __LINE__, "VERIFY " #C))
+
+#define NOT(C) ((!C) ? true : test_write_error(__FILE__, __LINE__, "NOT " #C))
+
+#define ASSERT(C) ((C) ? true : test_abort(__FILE__, __LINE__, "ASSERT "#C))
+
+#define ABORT_IF(C) (!(C) ? true : test_abort(__FILE__, __LINE__, "ABORT_IF " #C))
+
+// TODO: Rename to e.g. ABORT_TEST
+#define FAIL(...) TEST_OUT << "  FAIL triggered on line " << __LINE__ << std::endl; TEST_FAILED=true; fail_test(__VA_ARGS__); throw AbortTestException();
+
+#define SET_FAIL() TEST_OUT << "  SET_FAIL triggered on line " << __LINE__ << std::endl; TEST_FAILED=true
+
+#define KNOWN_ERROR(C) if ((C)){TEST_OUT << "  Error(" << __LINE__ << "): KNOWN_ERROR \"" << #C << "\"..\n" << "  ..evaluated OK. Test not updated?" << std::endl; TEST_FAILED=true;}else{ TEST_OUT << "  Known error(" << __LINE__ << "): " << #C << std::endl; NUM_KNOWN_ERRORS += 1;}
+
+#define KNOWN_INEQUAL(A,B) if ((A) == (B)){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " == " << #B << " (" << A << " != " << B << ")" << " ..evaluated OK. Test not updated?" << std::endl; TEST_FAILED=true;}else{ TEST_OUT << "  Known error(" << __LINE__ << "): " << A << "!=" << B << std::endl; NUM_KNOWN_ERRORS += 1;}
+
+#define FAIL_IF_CALLED()(FailIfCalled(__LINE__))
+#define FAIL_UNLESS_CALLED()(create_fail_unless_called(__LINE__))
+#define FAIL_UNLESS_CALLED_FWD(FUNC)(create_fail_unless_called_fwd(FUNC, __LINE__))
+#define FAIL_IF_CALLED_FWD(FUNC)(create_fail_if_called_fwd(FUNC, __LINE__))
 
 #endif
