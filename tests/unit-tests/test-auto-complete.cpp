@@ -26,7 +26,6 @@ void test_auto_complete(){
     // Test "AutoComplete"
     Words w = ac.match("a");
     ASSERT_EQUAL(w.size(), 7);
-    ASSERT_EQUAL(w.size(), 7);
     NOT(w.empty());
     EQUAL(w.get(0), "a");
     EQUAL(w.get(1), "aaa");

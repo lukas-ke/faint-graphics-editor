@@ -15,238 +15,7 @@
 
 #ifndef FAINT_TEST_HH
 #define FAINT_TEST_HH
-#include <cmath>
-#include <iostream>
-#include <map>
-#include <sstream>
-#include <string>
-#include <vector>
-
-namespace test{
-
-extern std::stringstream TEST_OUT;
-extern bool TEST_FAILED;
-extern int NUM_KNOWN_ERRORS;
-
-inline bool write_error(const char* file, int line, const std::string& text){
-  // Error-syntax recognized by emacs Compilation mode
-  TEST_OUT << file << "(" << line << "): error: " << text << std::endl;
-
-  TEST_FAILED = true;
-  return false;
-}
-
-class AbortTestException{};
-
-class Epsilon{
-public:
-  explicit constexpr Epsilon(double v)
-    : value(v)
-  {}
-
-  operator double() const{
-    return value;
-  }
-
-  double value;
-};
-
-// Helper to make the static_assert dependent on T.
-template<typename T>
-struct TypeDependentFalse{
-  static const bool value = false;
-};
-
-template<typename T>
-double to_double(const T&){
-  static_assert(TypeDependentFalse<T>::value,
-    "to_double not overloaded for type.");
-  return 0.0;
-}
-
-inline double to_double(double v){
-  return v;
-}
-
-template<typename T>
-bool test_near(const T& a, const T& b, const Epsilon& e){
-  return std::fabs(test::to_double(a) - test::to_double(b)) < e;
-}
-
-inline void fail_test(){}
-
-inline void fail_test(const char* message){
-  TEST_OUT << "  " << message << std::endl;
-  fail_test();
-}
-
-template<typename ...T>
-void fail_test(const char* message, const T&... args){
-  TEST_OUT << message << " ";
-  fail_test(args...);
-}
-
-inline bool abort_test(const char* file, int line, const std::string& text){
-  write_error(file, line, text);
-  TEST_FAILED = true;
-  throw AbortTestException();
-}
-
-template<typename T1, typename T2>
-std::string str_not_equal_hex(T1 v1, T2 v2){
-  std::stringstream ss;
-  ss << std::hex;
-  ss << static_cast<unsigned int>(v1) << " != " << static_cast<unsigned int>(v2);
-  return ss.str();
-}
-
-template<typename T1, typename T2>
-std::string str_cmp_values(T1 v1, const char* cmp, T2 v2){
-  std::stringstream ss;
-  ss << v1 << " " << cmp << " " << v2;
-  return ss.str();
-}
-
-struct FailIfCalled{
-  FailIfCalled(int line, bool abort=false)
-    : m_line(line),
-      m_abort(abort)
-  {}
-
-  template<typename... Args>
-  void operator()(Args...) const{
-    TEST_OUT << "  FailIfCalled was called on line " << m_line << std::endl;
-    TEST_FAILED = true;
-    if (m_abort){
-      throw AbortTestException();
-    }
-  }
-  int m_line;
-  bool m_abort;
-};
-
-class Checkable{
-public:
-  virtual ~Checkable() = default;
-  virtual bool Check() const = 0;
-};
-
-extern std::vector<Checkable*> POST_CHECKS;
-
-class FailUnlessCalled : public Checkable{
-public:
-  FailUnlessCalled(int line)
-    : m_called(false),
-      m_line(line)
-  {}
-
-  template<typename... Args>
-  void operator()(Args...) const {
-    m_called = true;
-  }
-
-  bool Check() const override{
-    if (!m_called){
-      TEST_OUT << "  FAIL_UNLESS_CALLED on line " << m_line << " was not called." << std::endl;
-      TEST_FAILED = true;
-    }
-    return m_called;
-  }
-private:
-  mutable bool m_called;
-  int m_line;
-};
-
-template<typename FUNC>
-class FailUnlessCalledFwd : public Checkable{
-public:
-  FailUnlessCalledFwd(FUNC fwd, int line)
-    : m_called(false),
-      m_line(line),
-      m_fwd(fwd)
-  {}
-
-  template<typename... Args>
-  void operator()(Args...args) const {
-    m_called = true;
-    bool alreadyFailed = TEST_FAILED;
-    m_fwd(args...);
-    if (TEST_FAILED && !alreadyFailed){
-      TEST_OUT << "  ... called via FAIL_UNLESS_CALLED_FWD on line " << m_line << std::endl;
-    }
-  }
-
-  bool Check() const override{
-    if (!m_called){
-      TEST_OUT << "  FAIL_UNLESS_CALLED on line " << m_line << " was not called." << std::endl;
-      TEST_FAILED = true;
-    }
-    return m_called;
-  }
-private:
-  mutable bool m_called;
-  int m_line;
-  FUNC m_fwd;
-};
-
-template<typename FUNC>
-class FailIfCalledFwd : public Checkable{
-public:
-  FailIfCalledFwd(FUNC fwd, int line)
-    : m_called(false),
-      m_line(line),
-      m_fwd(fwd)
-  {}
-
-  template<typename... Args>
-  void operator()(Args...args) const {
-    m_called = true;
-    bool alreadyFailed = TEST_FAILED;
-    m_fwd(args...);
-    if (TEST_FAILED && !alreadyFailed){
-      TEST_OUT << "  ... called via FAIL_IF_CALLED_FWD on line " << m_line << std::endl;
-    }
-  }
-
-  bool Check() const override{
-    if (m_called){
-      TEST_OUT << "  FAIL_IF_CALLED on line " << m_line << " was called." << std::endl;
-      TEST_FAILED = true;
-    }
-    return m_called;
-  }
-private:
-  mutable bool m_called;
-  int m_line;
-  FUNC m_fwd;
-};
-
-
-inline FailUnlessCalled& create_fail_unless_called(int line){
-  FailUnlessCalled* f = new FailUnlessCalled(line);
-  POST_CHECKS.push_back(f);
-  return *f;
-}
-
-template<typename FUNC>
-inline FailUnlessCalledFwd<FUNC>& create_fail_unless_called_fwd(FUNC func,
-  int line)
-{
-  FailUnlessCalledFwd<FUNC>* f = new FailUnlessCalledFwd<FUNC>(func, line);
-  POST_CHECKS.push_back(f);
-  return *f;
-}
-
-template<typename FUNC>
-inline FailIfCalledFwd<FUNC>& create_fail_if_called_fwd(FUNC func,
-  int line)
-{
-  FailIfCalledFwd<FUNC>* f = new FailIfCalledFwd<FUNC>(func, line);
-  POST_CHECKS.push_back(f);
-  return *f;
-}
-
-} // namespace
+#include "test-sys/test-internal.hh"
 
 constexpr test::Epsilon operator "" _eps(long double v){
   return test::Epsilon(static_cast<double>(v));
@@ -263,44 +32,90 @@ TestPlatform get_test_platform();
 // understanding initializer-lists.
 #define LIST(...){__VA_ARGS__}
 
+// Add a message to the text output (including the line number)
 #define MESSAGE(MSG) test::TEST_OUT << "  Message(" << __LINE__ << ") " << MSG << std::endl;
 
+// Add a message to the text output without line number of Message
+// prefix.
 #define TIME_MESSAGE(MSG) test::TEST_OUT << "  " << MSG << std::endl;
 
+// If the two values are inequal the test is marked as failed and the
+// values are output in hex-representation.
 #define EQUAL_HEX(A,B) if ((A) != (B)){ test::TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " != " << #B << " (" << test::str_not_equal_hex(A, B) << ")" << std::endl; test::TEST_FAILED=true;}
 
+// Marks the test as failed if the values are different.
 #define EQUAL(A,B) (((A) == (B)) ? true : test::write_error(__FILE__, __LINE__, #A " != " #B " (" + test::str_cmp_values(A, "!=", B) + ")"))
 
+// Same as EQUAL, but takes a formatter argument which is applied to
+// both values for the error output.
 #define EQUALF(A,B, FMT) (((A) == (B)) ? true : test::write_error(__FILE__, __LINE__, #A " != " #B " (" + test::str_cmp_values(FMT(A), "!=", FMT(B)) + ")"))
 
+// Mark the test as failed if the values are equal.
 #define NOT_EQUAL(A,B) (((A) == (B)) ? test::write_error(__FILE__, __LINE__, #A " == " #B " (" + test::str_cmp_values(A, "==", B) + ")") : true)
 
+// Aborts the test if if the values are different.
 #define ASSERT_EQUAL(A,B) (((A) == (B)) ? true : test::abort_test(__FILE__, __LINE__, #A " != " #B " (" + test::str_cmp_values(A, "!=", B) + ")"))
 
+// Equality check with epsilon. Marks the test as failed if the values
+// are not equal within the given EPS.
 #define NEAR(A,B,EPS) if (!test_near(A, B, EPS)){ test::TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " != " << #B << " (" << A << " != " << B << ")" << std::endl; test::TEST_FAILED=true;}
 
+// Mark the test as failed if the condition is false.
 #define VERIFY(C) ((C) ? true : test::write_error(__FILE__, __LINE__, "VERIFY " #C))
 
+// Mark the test as failed if the condition is true.
 #define NOT(C) ((!C) ? true : test::write_error(__FILE__, __LINE__, "NOT " #C))
 
+// Abort the test if the condition is false.
 #define ASSERT(C) ((C) ? true : test::abort_test(__FILE__, __LINE__, "ASSERT "#C))
 
+// Abort the test if the condition is true.
 #define ABORT_IF(C) (!(C) ? true : test::abort_test(__FILE__, __LINE__, "ABORT_IF " #C))
 
-// TODO: Rename to e.g. ABORT_TEST
+// Abort the test and output any string arguments.
+// Fixme: Rename to e.g. ABORT_TEST
 #define FAIL(...) test::TEST_OUT << "  FAIL triggered on line " << __LINE__ << std::endl; test::TEST_FAILED=true; test::fail_test(__VA_ARGS__); throw test::AbortTestException();
 
+// Mark the test as failed
 #define SET_FAIL() test::TEST_OUT << "  SET_FAIL triggered on line " << __LINE__ << std::endl; test::TEST_FAILED=true
 
+// Indicates a known error if C evaluates to false. This will not be
+// treated as a unit test failure, and allows highlighting "long-term"
+// problems in a less disruptive way than failed tests.
+//
+// The known errors are summarized after the test run, without
+// causing a non-zero exit status.
+//
+// Note: If C evaluates to true, this indicates that the known error
+// has been fixed, and the check should be changed to a VERIFY. The
+// test will in this case be marked as failed.
 #define KNOWN_ERROR(C) if ((C)){test::TEST_OUT << "  Error(" << __LINE__ << "): KNOWN_ERROR \"" << #C << "\"..\n" << "  ..evaluated OK. Test not updated?" << std::endl; test::TEST_FAILED=true;}else{ test::TEST_OUT << "  Known error(" << __LINE__ << "): " << #C << std::endl; test::NUM_KNOWN_ERRORS += 1;}
 
+// Similar to known error, but for a known value difference.
+// In this case, it is a known error that A is different from B.
 #define KNOWN_INEQUAL(A,B) if ((A) == (B)){ test::TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " == " << #B << " (" << A << " != " << B << ")" << " ..evaluated OK. Test not updated?" << std::endl; test::TEST_FAILED=true;}else{ test::TEST_OUT << "  Known error(" << __LINE__ << "): " << A << "!=" << B << std::endl; test::NUM_KNOWN_ERRORS += 1;}
 
+// Wrapper for function calls so that the call site can be printed in
+// addition to a failure within a function.
 #define FWD(CALL);{try{bool alreadyFailed = test::TEST_FAILED;CALL;if (test::TEST_FAILED && !alreadyFailed){test::TEST_OUT << " ... called via FWD on line " << __LINE__ << std::endl;}}catch(const test::AbortTestException&){test::TEST_OUT << " ... called via FWD on line " << __LINE__ << std::endl; throw;}}
 
+// Returns a function which, if called, will mark the test as failed.
 #define FAIL_IF_CALLED()(test::FailIfCalled(__LINE__))
+
+// Returns a functor which will mark the test as failed at the end of
+// the test if it was not called at least once during the test. This
+// is evaluated after the test code is completed
 #define FAIL_UNLESS_CALLED()(test::create_fail_unless_called(__LINE__))
+
+// Variant of FAIL_UNLESS_CALLED which when called, delegates to the
+// specified function. This allows adding additional checks on the
+// passed arguments, in addition to ensuring the additional function
+// gets called.
 #define FAIL_UNLESS_CALLED_FWD(FUNC)(test::create_fail_unless_called_fwd(FUNC, __LINE__))
+
+// Variant of FAIL_IF_CALLED, which in addition to marking the test as
+// failed, forwards to the specified function. Typically used for
+// printing the arguments to provide more error information.
 #define FAIL_IF_CALLED_FWD(FUNC)(test::create_fail_if_called_fwd(FUNC, __LINE__))
 
 #endif
