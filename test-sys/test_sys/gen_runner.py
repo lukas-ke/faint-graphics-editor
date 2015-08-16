@@ -40,7 +40,6 @@ class image_runner_info:
     args = ['  const std::string testName = find_test_name(argc, argv);']
 
     def write_function_call(self, out, func, file_name, max_width):
-        # Fixme
         out.write('  if (testName.empty() || testName == "%s"){\n' % file_name)
         out.write('    run_image(%s, "%s");\n'
                   % (func, file_name))
