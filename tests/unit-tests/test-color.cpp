@@ -38,6 +38,7 @@ void test_color(){
     VERIFY(larger != smaller);
     VERIFY(!(larger == smaller));
     VERIFY(!(smaller == larger));
+    EQUAL(smaller, larger);
   }
 
   // Miscellaneous functions

@@ -52,7 +52,7 @@ public:
     : m_str(str)
   {}
   void operator()(const utf8_string& str) const{
-    EQUAL(m_str, str)
+    EQUAL(m_str, str);
   }
 private:
   utf8_string m_str;

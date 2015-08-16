@@ -48,11 +48,11 @@ void test_text_buffer(){
 
     b.insert(utf8_char("a"));
     EQUAL(b.get(), "ab");
-    EQUAL(b.caret(), 1) // a|b
+    EQUAL(b.caret(), 1); // a|b
 
-      b.move_down();
-    EQUAL(b.caret(), 2) // ab|
-      b.insert(utf8_char("c"));
+    b.move_down();
+    EQUAL(b.caret(), 2); // ab|
+    b.insert(utf8_char("c"));
     EQUAL(b.get(), "abc");
 
     // Select entire line by moving up

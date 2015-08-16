@@ -26,7 +26,21 @@ extern std::stringstream TEST_OUT;
 extern bool TEST_FAILED;
 extern int NUM_KNOWN_ERRORS;
 
+inline bool test_write_error(const char* file, int line, const std::string& text){
+  // Error-syntax recognized by emacs Compilation mode
+  TEST_OUT << file << "(" << line << "): error: " << text << std::endl;
+
+  TEST_FAILED = true;
+  return false;
+}
+
 class AbortTestException{};
+
+inline bool test_abort(const char* file, int line, const char* text){
+  test_write_error(file, line, text);
+  TEST_FAILED = true;
+  throw AbortTestException();
+}
 
 // Add braces around the arguments, to get past preprocessor not
 // understanding initializer-lists.
@@ -44,9 +58,16 @@ std::string str_not_equal_hex(T1 v1, T2 v2){
   return ss.str();
 }
 
+template<typename T1, typename T2>
+std::string str_not_equal_values(T1 v1, T2 v2){
+  std::stringstream ss;
+  ss << v1 << " != " << v2;
+  return ss.str();
+}
+
 #define EQUAL_HEX(A,B) if ((A) != (B)){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " != " << #B << " (" << str_not_equal_hex(A, B) << ")" << std::endl; TEST_FAILED=true;}
 
-#define EQUAL(A,B) if (!((A) == (B))){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " != " << #B << " (" << A << " != " << B << ")" << std::endl; TEST_FAILED=true;}
+#define EQUAL(A,B) (((A) == (B)) ? true : test_write_error(__FILE__, __LINE__, #A " != " #B " (" + str_not_equal_values(A, B) + ")"))
 
 #define EQUALF(A,B,FMT)if (!((A) == (B))){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " != " << #B << " (" << FMT(A) << " != " << FMT(B) << ")" << std::endl; TEST_FAILED=true;}
 
@@ -99,20 +120,6 @@ constexpr Epsilon operator "" _eps(long double v){
 }
 
 #define NEAR(A,B,EPS) if (!test_near(A, B, EPS)){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " != " << #B << " (" << A << " != " << B << ")" << std::endl; TEST_FAILED=true;}
-
-inline bool test_write_error(const char* file, int line, const char* text){
-  // Error-syntax recognized by emacs Compilation mode
-  TEST_OUT << file << "(" << line << "): error: " << text << std::endl;
-
-  TEST_FAILED = true;
-  return false;
-}
-
-inline bool test_abort(const char* file, int line, const char* text){
-  test_write_error(file, line, text);
-  TEST_FAILED = true;
-  throw AbortTestException();
-}
 
 #define VERIFY(C) ((C) ? true : test_write_error(__FILE__, __LINE__, "VERIFY " #C))
 
