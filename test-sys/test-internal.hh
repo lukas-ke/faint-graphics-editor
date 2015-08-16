@@ -38,6 +38,8 @@ inline bool write_error(const char* file, int line, const std::string& text){
 class AbortTestException{};
 
 class Epsilon{
+  // Wrapper to clarify that a value is an epsilon for a comparison
+  // (Created with _eps-literal)
 public:
   explicit constexpr Epsilon(double v)
     : value(v)
@@ -50,7 +52,7 @@ public:
   double value;
 };
 
-// Helper to make the static_assert dependent on T.
+// Helper to make a static_assert dependent on T.
 template<typename T>
 struct TypeDependentFalse{
   static const bool value = false;
@@ -58,12 +60,17 @@ struct TypeDependentFalse{
 
 template<typename T>
 double to_double(const T&){
+  // Implementation of to_double which static-asserts when resolved to.
+  // This provides a nicer error message when test_near is used with
+  // types lacking a to_double-overload
+
   static_assert(TypeDependentFalse<T>::value,
     "to_double not overloaded for type.");
   return 0.0;
 }
 
 inline double to_double(double v){
+  // Identity to_double to allow test_near with doubles.
   return v;
 }
 
@@ -72,17 +79,19 @@ bool test_near(const T& a, const T& b, const Epsilon& e){
   return std::fabs(test::to_double(a) - test::to_double(b)) < e;
 }
 
-inline void fail_test(){}
+inline void output_all(){
+  // Ends recursion, allows calling test_out_all with no arguments.
+}
 
-inline void fail_test(const char* message){
+inline void output_all(const char* message){
   TEST_OUT << "  " << message << std::endl;
-  fail_test();
+  output_all();
 }
 
 template<typename ...T>
-void fail_test(const char* message, const T&... args){
+void output_all(const char* message, const T&... args){
   TEST_OUT << message << " ";
-  fail_test(args...);
+  output_all(args...);
 }
 
 inline bool abort_test(const char* file, int line, const std::string& text){
@@ -93,6 +102,7 @@ inline bool abort_test(const char* file, int line, const std::string& text){
 
 template<typename T1, typename T2>
 std::string str_not_equal_hex(T1 v1, T2 v2){
+  // Format the values in hex separated by a "!="
   std::stringstream ss;
   ss << std::hex;
   ss << static_cast<unsigned int>(v1) << " != " << static_cast<unsigned int>(v2);
@@ -101,12 +111,16 @@ std::string str_not_equal_hex(T1 v1, T2 v2){
 
 template<typename T1, typename T2>
 std::string str_cmp_values(T1 v1, const char* cmp, T2 v2){
+  // Convert the values to a string, separated by the given comparator
+  // e.g. "1 == 1"
   std::stringstream ss;
   ss << v1 << " " << cmp << " " << v2;
   return ss.str();
 }
 
 struct FailIfCalled{
+  // Functor which fails the test if its operator() is called.
+
   FailIfCalled(int line, bool abort=false)
     : m_line(line),
       m_abort(abort)
@@ -125,14 +139,21 @@ struct FailIfCalled{
 };
 
 class Checkable{
+  // Interface for checking a result which cannot be resolved until
+  // the test has completed
+
 public:
   virtual ~Checkable() = default;
   virtual bool Check() const = 0;
 };
 
+// Results checked after the test has completed.
 extern std::vector<Checkable*> POST_CHECKS;
 
 class FailUnlessCalled : public Checkable{
+  // Functor which causes the test to be marked as failed at the end
+  // of the test if its operator() was not called..
+
 public:
   FailUnlessCalled(int line)
     : m_called(false),
@@ -159,6 +180,12 @@ private:
 
 template<typename FUNC>
 class FailUnlessCalledFwd : public Checkable{
+  // Functor which causes the test to be marked as failed at the end
+  // of the test if its operator() was not called.
+  //
+  // If called, the argument are forwarded to the provided function,
+  // allowing further checks on the arguments.
+
 public:
   FailUnlessCalledFwd(FUNC fwd, int line)
     : m_called(false),
@@ -193,6 +220,13 @@ private:
 
 template<typename FUNC>
 class FailIfCalledFwd : public Checkable{
+  // Functor which causes the test to be marked as failed at the end
+  // of the test if its operator() was called during the test.
+  //
+  // When called, in addition to marking the test as failed, calls the
+  // provided function to allow e.g. printing the arguments for
+  // additional error information.
+
 public:
   FailIfCalledFwd(FUNC fwd, int line)
     : m_called(false),
@@ -224,7 +258,6 @@ private:
   int m_line;
   FUNC m_fwd;
 };
-
 
 inline FailUnlessCalled& create_fail_unless_called(int line){
   FailUnlessCalled* f = new FailUnlessCalled(line);

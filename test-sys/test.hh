@@ -37,6 +37,7 @@ TestPlatform get_test_platform();
 
 // Add a message to the text output without line number of Message
 // prefix.
+// Fixme: Check usage, rename
 #define TIME_MESSAGE(MSG) test::TEST_OUT << "  " << MSG << std::endl;
 
 // If the two values are inequal the test is marked as failed and the
@@ -74,7 +75,7 @@ TestPlatform get_test_platform();
 
 // Abort the test and output any string arguments.
 // Fixme: Rename to e.g. ABORT_TEST
-#define FAIL(...) test::TEST_OUT << "  FAIL triggered on line " << __LINE__ << std::endl; test::TEST_FAILED=true; test::fail_test(__VA_ARGS__); throw test::AbortTestException();
+#define FAIL(...) test::TEST_OUT << "  FAIL triggered on line " << __LINE__ << std::endl; test::TEST_FAILED=true; test::output_all(__VA_ARGS__); throw test::AbortTestException();
 
 // Mark the test as failed
 #define SET_FAIL() test::TEST_OUT << "  SET_FAIL triggered on line " << __LINE__ << std::endl; test::TEST_FAILED=true
@@ -99,12 +100,14 @@ TestPlatform get_test_platform();
 // addition to a failure within a function.
 #define FWD(CALL);{try{bool alreadyFailed = test::TEST_FAILED;CALL;if (test::TEST_FAILED && !alreadyFailed){test::TEST_OUT << " ... called via FWD on line " << __LINE__ << std::endl;}}catch(const test::AbortTestException&){test::TEST_OUT << " ... called via FWD on line " << __LINE__ << std::endl; throw;}}
 
-// Returns a function which, if called, will mark the test as failed.
+// Returns a functor which, if called, will mark the test as failed.
+// The line with FAIL_IF_CALLED will be indicated in the error.
 #define FAIL_IF_CALLED()(test::FailIfCalled(__LINE__))
 
 // Returns a functor which will mark the test as failed at the end of
 // the test if it was not called at least once during the test. This
-// is evaluated after the test code is completed
+// is evaluated after the test code is completed. The line with
+// FAIL_UNLESS_CALLED will be indicated in the error.
 #define FAIL_UNLESS_CALLED()(test::create_fail_unless_called(__LINE__))
 
 // Variant of FAIL_UNLESS_CALLED which when called, delegates to the
