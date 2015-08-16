@@ -17,7 +17,7 @@
 #include "wx/filename.h"
 #include "wx/ipc.h"
 #include "wx/snglinst.h"
-#include "app/get-app-context.hh"
+#include "app/app-context.hh"
 #include "app/one-instance.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-path.hh"
@@ -53,6 +53,10 @@ static wxFileName extract_file_path(const wxString& message){
 
 class FaintConnection : public wxConnection {
 public:
+  FaintConnection(AppContext& app)
+    : m_app(app)
+  {}
+
   bool OnExec(const wxString& /*topic*/, const wxString& message) override{
     if (is_file_message(message)){
       // A file message from a different instance
@@ -70,36 +74,44 @@ public:
       // message.  (The sender doesn't care if the files load or not -
       // the other Faint instance should deal with the error
       // reporting)
-      get_app_context().QueueLoad(m_files);
+      m_app.QueueLoad(m_files);
       m_files.clear();
     }
     return true;
   }
 private:
+  AppContext& m_app;
   FileList m_files;
 };
 
 class FaintClient : public wxClient {
 public:
   wxConnectionBase* OnMakeConnection() override{
-    return new FaintConnection;
+    return new wxConnection();
   }
+private:
 };
 
 class FaintServer : public wxServer {
 public:
+  FaintServer(AppContext& app)
+    : m_app(app)
+  {}
+
   wxConnectionBase* OnAcceptConnection(const wxString& topic) override{
     if (topic == FAINT_TOPIC_FILES){
-      return new FaintConnection;
+      return new FaintConnection(m_app);
     }
     else if (topic == FAINT_TOPIC_RAISE){
-      get_app_context().RaiseWindow();
-      return new FaintConnection;
+      m_app.RaiseWindow();
+      return new FaintConnection(m_app);
     }
     else {
       return nullptr;
     }
   }
+private:
+  AppContext& m_app;
 };
 
 static void show_start_server_error(const wxString& serviceName){
@@ -111,8 +123,10 @@ static void show_start_server_error(const wxString& serviceName){
     wxLogError(ss.str().c_str());
 }
 
-static std::unique_ptr<FaintServer> start_faint_server(const std::string& port){
-  auto server = std::make_unique<FaintServer>();
+static std::unique_ptr<FaintServer> start_faint_server(AppContext& app,
+  const std::string& port)
+{
+  auto server = std::make_unique<FaintServer>(app);
   bool ok = server->Create(port);
   if (!ok){
     show_start_server_error(port);
@@ -157,24 +171,51 @@ static bool raise_existing_window(const std::string& port){
 
 using allow_start = Distinct<bool, FaintInstance, 10>;
 
-class FaintInstanceImpl : public FaintInstance{
+class RemoteFaintImpl : public RemoteFaint{
 public:
-  FaintInstanceImpl(std::unique_ptr<wxServer> server,
-    std::unique_ptr<wxSingleInstanceChecker> singleInst,
-    const allow_start& allowStart)
-    : m_allowStart(allowStart.Get()),
-      m_server(std::move(server)),
-      m_singleInstance(std::move(singleInst))
+  RemoteFaintImpl(const std::string& serviceName)
+    : m_serviceName(serviceName)
   {}
 
-  bool AllowStart() const override{
-    return m_allowStart;
+  virtual bool Notify(const FileList& files){
+    if (files.empty()){
+      // No files specified, just raise the running window.
+      return raise_existing_window(m_serviceName);
+    }
+    else {
+      return send_paths_to_server(files, m_serviceName);
+    }
+  }
+
+  std::string m_serviceName;
+};
+
+class FaintInstanceImpl : public FaintInstance{
+public:
+  FaintInstanceImpl(std::unique_ptr<wxSingleInstanceChecker> singleInst)
+    : m_singleInstance(std::move(singleInst))
+  {}
+
+  bool IsAnotherRunning() override{
+    return m_singleInstance->IsAnotherRunning();
+  }
+
+  std::unique_ptr<RemoteFaint> OtherInstance(const std::string& serviceName)
+    override
+  {
+    return std::make_unique<RemoteFaintImpl>(serviceName);
+  }
+
+  void StartServer(AppContext& app,
+    const std::string& serviceName) override
+  {
+    assert(m_server == nullptr); // Should only be called once.
+    m_server = start_faint_server(app, serviceName);
   }
 
 private:
-  bool m_allowStart;
-  std::unique_ptr<wxServer> m_server;
   std::unique_ptr<wxSingleInstanceChecker> m_singleInstance;
+  std::unique_ptr<FaintServer> m_server;
 };
 
 static std::unique_ptr<wxSingleInstanceChecker> get_instance_checker(){
@@ -182,55 +223,9 @@ static std::unique_ptr<wxSingleInstanceChecker> get_instance_checker(){
   return std::make_unique<wxSingleInstanceChecker>(name);
 }
 
-std::unique_ptr<FaintInstance> create_faint_instance(const FileList& cmdLineFiles,
-  const allow_server& allowServer,
-  const force_start& forceStart,
-  const std::string& serviceName)
+std::unique_ptr<FaintInstance> create_faint_instance()
 {
-  // Create the first instance, if possible
-  std::unique_ptr<wxSingleInstanceChecker> singleInst(get_instance_checker());
-
-  if (!singleInst->IsAnotherRunning()){
-    std::unique_ptr<wxServer> server;
-    if (allowServer.Get()){
-      server = start_faint_server(serviceName);
-    }
-    else{
-      singleInst.reset(nullptr);
-    }
-    return std::make_unique<FaintInstanceImpl>(std::move(server),
-      std::move(singleInst), allow_start(true));
-  }
-
-  if (forceStart.Get()){
-    return std::make_unique<FaintInstanceImpl>(nullptr, nullptr,
-      allow_start(true));
-  }
-
-  if (cmdLineFiles.empty()){
-    // Faint is running since previously, so just raise the window.
-    if (raise_existing_window(serviceName)){
-      return std::make_unique<FaintInstanceImpl>(nullptr, nullptr,
-        allow_start(false));
-    }
-    // Failed raising old Faint - something is amiss, allow a new
-    // instance.
-    return std::make_unique<FaintInstanceImpl>(nullptr, nullptr,
-      allow_start(true));
-  }
-
-  // Faint is running since previously and should be passed the
-  // filenames from this instance.
-  if (send_paths_to_server(cmdLineFiles, serviceName)){
-    // The files were sent to the running instance. Prevent
-    // this instance from starting.
-    return std::make_unique<FaintInstanceImpl>(nullptr, nullptr,
-      allow_start(false));
-  }
-
-  // Failed sending paths to old instance - something is amiss,
-  // allow a new instance.
-  return std::make_unique<FaintInstanceImpl>(nullptr, nullptr, allow_start(true));
+  return std::make_unique<FaintInstanceImpl>(get_instance_checker());
 }
 
 } // namespace

@@ -205,16 +205,23 @@ public:
     // to write it on unhandled exception.
     m_crashFile = get_crash_file();
 
-    // Start Faint as the unique instance or send arguments to an
-    // already running instance (unless prevented by command line
-    // switches).
-    m_faintInstance = create_faint_instance(m_cmd.files,
-      allow_server(!m_cmd.preventServer),
-      force_start(m_cmd.forceNew),
-      m_cmd.port.c_str());
+    // Try to become the main Faint-instance
+    m_faintInstance = create_faint_instance();
 
-    if (!m_faintInstance->AllowStart()){
-      return false;
+    // Fixme: Move this block to a function
+    if (!m_cmd.forceNew && m_faintInstance->IsAnotherRunning()){
+      // Send any command line files to the previously running
+      // Faint-instance
+      auto remote = m_faintInstance->OtherInstance(m_cmd.port.c_str());
+      if (remote != nullptr && remote->Notify(m_cmd.files)){
+        // The old Faint instance was notified successfully. Close
+        // this instance.
+        return false;
+      }
+      else {
+        // Failed communicating with the old instance for some reason,
+        // Allow starting.
+     }
     }
 
     wxInitAllImageHandlers();
@@ -280,6 +287,18 @@ public:
     }
 
     SetTopWindow(&m_faintWindow->GetRawFrame());
+
+    if (m_cmd.preventServer || m_faintInstance->IsAnotherRunning()){
+      // Clear the FaintInstance so that this instance (which will
+      // not have a server) does not take part in instance
+      // checks.
+      m_faintInstance.reset(nullptr);
+    }
+    else{
+      // Become the main instance
+      m_faintInstance->StartServer(*m_appContext, m_cmd.port.c_str());
+    }
+
     return true;
   }
 

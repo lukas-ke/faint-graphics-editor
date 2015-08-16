@@ -21,21 +21,24 @@
 
 namespace faint{
 
+class AppContext;
 class FileList;
+
+class RemoteFaint{
+public:
+  virtual bool Notify(const FileList&) = 0;
+};
 
 class FaintInstance{
 public:
   virtual ~FaintInstance() = default;
-  virtual bool AllowStart() const = 0;
+  virtual bool IsAnotherRunning() = 0;
+  virtual std::unique_ptr<RemoteFaint> OtherInstance(const std::string&
+    serviceName) = 0;
+  virtual void StartServer(AppContext&, const std::string& serviceName) = 0;
 };
 
-using allow_server = Distinct<bool, FaintInstance, 0>;
-using force_start = Distinct<bool, FaintInstance, 1>;
-
-std::unique_ptr<FaintInstance> create_faint_instance(const FileList& cmdLineFiles,
-  const allow_server&,
-  const force_start&,
-  const std::string& serviceName);
+std::unique_ptr<FaintInstance> create_faint_instance();
 
 } // namespace
 
