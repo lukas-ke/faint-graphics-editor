@@ -36,7 +36,7 @@ inline bool test_write_error(const char* file, int line, const std::string& text
 
 class AbortTestException{};
 
-inline bool test_abort(const char* file, int line, const char* text){
+inline bool test_abort(const char* file, int line, const std::string& text){
   test_write_error(file, line, text);
   TEST_FAILED = true;
   throw AbortTestException();
@@ -71,9 +71,9 @@ std::string str_cmp_values(T1 v1, const char* cmp, T2 v2){
 
 #define EQUALF(A,B, FMT) (((A) == (B)) ? true : test_write_error(__FILE__, __LINE__, #A " != " #B " (" + str_cmp_values(FMT(A), "!=", FMT(B)) + ")"))
 
-#define NOT_EQUAL(A,B) if ((A) == (B)){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " == " << #B << " (" << A << " == " << B << ")" << std::endl; TEST_FAILED=true;}
+#define NOT_EQUAL(A,B) (((A) == (B)) ? test_write_error(__FILE__, __LINE__, #A " == " #B " (" + str_cmp_values(A, "==", B) + ")") : true)
 
-#define ASSERT_EQUAL(A,B) if ((A) != (B)){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " != " << #B << " (" << A << " != " << B << ")" << std::endl; TEST_FAILED=true; throw AbortTestException();}
+#define ASSERT_EQUAL(A,B) (((A) == (B)) ? true : test_abort(__FILE__, __LINE__, #A " != " #B " (" + str_cmp_values(A, "!=", B) + ")"))
 
 class Epsilon{
 public:
@@ -95,7 +95,6 @@ template<typename T>
 struct TypeDependentFalse{
   static const bool value = false;
 };
-
 
 template<typename T>
 double to_double(const T&){
