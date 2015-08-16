@@ -13,6 +13,16 @@ def file_name_to_declaration(f):
 def file_name_to_impl_line(f):
     return 'void ' + f.replace('.cpp', '()').replace('-','_')
 
+
+def need_generate_single(out_file, file_dependency):
+    assert(os.path.exists(file_dependency))
+
+    if not os.path.exists(out_file):
+        return true
+
+    return getmtime(out_file) < getmtime(file_dependency)
+
+
 def need_generate(root_dir, out_file, files):
     if not os.path.exists(out_file):
         return True

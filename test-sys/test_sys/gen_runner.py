@@ -53,9 +53,10 @@ def gen_runner(root_dir, out_file, info):
 
     files = [f for f in all_files if f != 'stubs.cpp' and f != 'main.cpp']
 
-    if not util.need_generate(root_dir, out_file, files):
-        print("* %s-runner up to date." % info.test_type)
-        return
+    if not util.need_generate_single(out_file, __file__):
+        if not util.need_generate(root_dir, out_file, files):
+            print("* %s-runner up to date." % info.test_type)
+            return
 
     print("* Generating %s-runner" % info.test_type)
 
@@ -82,7 +83,7 @@ def gen_runner(root_dir, out_file, info):
         out.write('#include <sstream>\n');
         out.write('#include <vector>\n');
         out.write('#include "test-sys/test-sys.hh"\n')
-        out.write('#include "test-sys/test.hh"\n') # Fixme: for TestPlatform, move to defines?
+        # out.write('#include "test-sys/test.hh"\n') # Fixme: for TestPlatform, move to defines?
 
         for include in info.extra_includes:
             out.write('#include "%s"\n' % include)
