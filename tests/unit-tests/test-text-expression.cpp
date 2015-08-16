@@ -160,11 +160,11 @@ static utf8_string get_valid(const utf8_string& expr, ExpressionContext& c){
         [](const utf8_string& result) -> utf8_string{
           return result;
         },
-        [](const ExpressionEvalError&) -> utf8_string{
-          FAIL();
+        [](const ExpressionEvalError& err) -> utf8_string{
+          ABORT_TEST("ExpressionEvalError", err.description.c_str());
         });},
-    [](const ExpressionParseError&) -> utf8_string{
-      FAIL();
+    [](const ExpressionParseError& err) -> utf8_string{
+      ABORT_TEST("ExpressionParseError", err.description.c_str());
   });
 }
 

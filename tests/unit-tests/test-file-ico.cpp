@@ -61,7 +61,7 @@ static std::vector<Bitmap> test_read_ico(const FilePath& filePath){
       return bitmaps;
     },
     [](const utf8_string& error) -> std::vector<Bitmap>{
-      FAIL(error.c_str());
+      ABORT_TEST(error.c_str());
     });
 }
 

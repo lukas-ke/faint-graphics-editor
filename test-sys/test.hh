@@ -74,8 +74,7 @@ TestPlatform get_test_platform();
 #define ABORT_IF(C) (!(C) ? true : test::abort_test(__FILE__, __LINE__, "ABORT_IF " #C))
 
 // Abort the test and output any string arguments.
-// Fixme: Rename to e.g. ABORT_TEST
-#define FAIL(...) test::TEST_OUT << "  FAIL triggered on line " << __LINE__ << std::endl; test::TEST_FAILED=true; test::output_all(__VA_ARGS__); throw test::AbortTestException();
+#define ABORT_TEST(...) test::TEST_OUT << "  FAIL triggered on line " << __LINE__ << std::endl; test::TEST_FAILED=true; test::output_all(__VA_ARGS__); throw test::AbortTestException();
 
 // Mark the test as failed
 #define SET_FAIL() test::TEST_OUT << "  SET_FAIL triggered on line " << __LINE__ << std::endl; test::TEST_FAILED=true

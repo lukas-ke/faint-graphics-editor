@@ -24,7 +24,7 @@ void check_frame(const faint::FrameProps& p,
       VERIFY(equal(bmp, key));
     },
     [](const ColorSpan&){
-      FAIL("Got color span instead of Bitmap");
+      ABORT_TEST("Got color span instead of Bitmap");
     });
 }
 
@@ -66,7 +66,7 @@ void test_file_gif(){
     auto savePath = get_test_save_path(filename);
     auto result = write_gif(savePath, images);
     if (!result.Successful()){
-      FAIL(result.ErrorDescription().c_str());
+      ABORT_TEST(result.ErrorDescription().c_str());
     }
 
     // Reload and check with against gauss-dithered.png. This doesn't
@@ -90,7 +90,7 @@ void test_file_gif(){
 
     auto result = write_gif(savePath, images);
     if (!result.Successful()){
-      FAIL(result.ErrorDescription().c_str());
+      ABORT_TEST(result.ErrorDescription().c_str());
     }
 
     // Reload and check
@@ -114,7 +114,7 @@ void test_file_gif(){
             return quantized(bmp, Dithering::ON);
           },
           [](const ColorSpan&) -> MappedColors{
-            FAIL("Got color span instead of Bitmap.");
+            ABORT_TEST("Got color span instead of Bitmap.");
           });
       };
 
@@ -135,7 +135,7 @@ void test_file_gif(){
     const auto outPath = get_test_save_path(FileName("libgif86-68.gif"));
     auto result = write_gif(outPath, images);
     if (!result.Successful()){
-      FAIL(result.ErrorDescription().c_str());
+      ABORT_TEST(result.ErrorDescription().c_str());
     }
 
     // Re-read and verify the saved gif

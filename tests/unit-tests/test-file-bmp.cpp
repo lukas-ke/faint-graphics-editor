@@ -29,13 +29,13 @@ static void test_bitmap_read_write(const faint::FileName& fileName,
               VERIFY(bmp == key);
             },
             [](const utf8_string& error){
-              FAIL(error.c_str());
+              ABORT_TEST(error.c_str());
             });
         }
       }
     },
     [](const utf8_string& error){
-      FAIL(error.c_str());
+      ABORT_TEST(error.c_str());
     });
 }
 

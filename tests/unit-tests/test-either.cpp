@@ -14,7 +14,7 @@ void test_either(){
   either_t either1(Color(255,0,255));
   Paint paint = either1.Visit(
     [](const Bitmap&) -> Paint{
-      FAIL();
+      ABORT_TEST("Expected Color, got Bitmap");
     },
     [](const Color& c){
       return Paint(c);
@@ -25,7 +25,7 @@ void test_either(){
   either_t either2(either1);
   paint = either2.Visit(
     [](const Bitmap&) -> Paint{
-      FAIL();
+      ABORT_TEST("Expected Color, got Bitmap");
     },
     [](const Color& c){
       return Paint(c);
@@ -41,7 +41,7 @@ void test_either(){
       return Paint(get_color(bmp, IntPoint(1,1)));
     },
     [](const Color&) -> Paint{
-      FAIL();
+      ABORT_TEST("Expected Bitmap, got Color");
     });
   ASSERT(paint.IsColor());
   EQUAL(paint.GetColor(), Color(255,0,0));
@@ -52,7 +52,7 @@ void test_either(){
       return Paint(get_color(bmp, IntPoint(1,1)));
     },
     [](const Color&) -> Paint{
-      FAIL();
+      ABORT_TEST("Expected Bitmap, got Color");
     });
   ASSERT(paint.IsColor());
   EQUAL(paint.GetColor(), Color(0,0,255));
@@ -60,7 +60,7 @@ void test_either(){
   either3.Set(Color(0,255,0));
   paint = either3.Visit(
     [](const Bitmap&) -> Paint{
-      FAIL();
+      ABORT_TEST("Expected Color, got Bitmap");
     },
     [](const Color& c){
       return Paint(c);

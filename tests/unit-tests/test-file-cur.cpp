@@ -23,7 +23,7 @@ static cur_vec test_read_cur(const FilePath& filePath){
       return cursors;
     },
     [&](const utf8_string& error) -> cur_vec{
-      FAIL(filePath.Str().c_str(), error.c_str());
+      ABORT_TEST(filePath.Str().c_str(), error.c_str());
     });
 }
 

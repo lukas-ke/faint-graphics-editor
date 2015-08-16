@@ -26,11 +26,11 @@ public:
   }
 
   int ComputeRowHeight() const override{
-    FAIL();
+    ABORT_TEST("Stub called");
   }
 
   IntSize TextSize(const faint::utf8_string&) const override{
-    FAIL();
+    ABORT_TEST("Stub called");
   }
 
 private:

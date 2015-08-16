@@ -30,11 +30,11 @@ void test_file_png(){
             VERIFY(withAlpha != bmp2);
           },
           [](const utf8_string& error){
-            FAIL(error.c_str());
+            ABORT_TEST(error.c_str());
           });
       },
       [](const utf8_string& error){
-        FAIL(error.c_str());
+        ABORT_TEST(error.c_str());
       });
   }
 
@@ -56,11 +56,11 @@ void test_file_png(){
             VERIFY(bmp == bmp2);
           },
           [](const utf8_string& error){
-            FAIL(error.c_str());
+            ABORT_TEST(error.c_str());
           });
       },
       [](const utf8_string& error){
-        FAIL(error.c_str());
+        ABORT_TEST(error.c_str());
       });
   }
 
@@ -80,11 +80,11 @@ void test_file_png(){
           VERIFY(desaturated_simple(bmp) == bmp2);
         },
         [](const utf8_string& error){
-          FAIL(error.c_str());
+          ABORT_TEST(error.c_str());
         });
       },
     [](const utf8_string& error){
-      FAIL(error.c_str());
+      ABORT_TEST(error.c_str());
     });
   }
 
@@ -96,7 +96,8 @@ void test_file_png(){
         ABORT_IF(bmp.GetSize() != IntSize(185, 185));
         set_alpha(bmp, 128);
 
-        auto out = get_test_save_path(suffix_u8_chars(FileName("out-gray-alpha.png")));
+        auto out =
+          get_test_save_path(suffix_u8_chars(FileName("out-gray-alpha.png")));
         auto result = write_png(out, bmp, PngColorType::GRAY_ALPHA);
         VERIFY(result.Successful());
 
@@ -106,11 +107,11 @@ void test_file_png(){
           VERIFY(desaturated_simple(bmp) == bmp2);
         },
         [](const utf8_string& error){
-          FAIL(error.c_str());
+          ABORT_TEST(error.c_str());
         });
       },
     [](const utf8_string& error){
-      FAIL(error.c_str());
+      ABORT_TEST(error.c_str());
     });
   }
 
@@ -135,7 +136,7 @@ void test_file_png(){
         VERIFY(bitmapAndText.text == textChunks);
       },
       [](const utf8_string& error){
-        FAIL(error.c_str());
+        ABORT_TEST(error.c_str());
       });
   }
 }
