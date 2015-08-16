@@ -83,7 +83,6 @@ def gen_runner(root_dir, out_file, info):
         out.write('#include <vector>\n');
         out.write('#include "test-sys/test-sys.hh"\n')
         out.write('#include "test-sys/test.hh"\n') # Fixme: for TestPlatform, move to defines?
-        out.write('#include "util/optional.hh"\n') # Fixme: Maybe reconsider
 
         for include in info.extra_includes:
             out.write('#include "%s"\n' % include)
