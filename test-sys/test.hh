@@ -59,17 +59,17 @@ std::string str_not_equal_hex(T1 v1, T2 v2){
 }
 
 template<typename T1, typename T2>
-std::string str_not_equal_values(T1 v1, T2 v2){
+std::string str_cmp_values(T1 v1, const char* cmp, T2 v2){
   std::stringstream ss;
-  ss << v1 << " != " << v2;
+  ss << v1 << " " << cmp << " " << v2;
   return ss.str();
 }
 
 #define EQUAL_HEX(A,B) if ((A) != (B)){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " != " << #B << " (" << str_not_equal_hex(A, B) << ")" << std::endl; TEST_FAILED=true;}
 
-#define EQUAL(A,B) (((A) == (B)) ? true : test_write_error(__FILE__, __LINE__, #A " != " #B " (" + str_not_equal_values(A, B) + ")"))
+#define EQUAL(A,B) (((A) == (B)) ? true : test_write_error(__FILE__, __LINE__, #A " != " #B " (" + str_cmp_values(A, "!=", B) + ")"))
 
-#define EQUALF(A,B,FMT)if (!((A) == (B))){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " != " << #B << " (" << FMT(A) << " != " << FMT(B) << ")" << std::endl; TEST_FAILED=true;}
+#define EQUALF(A,B, FMT) (((A) == (B)) ? true : test_write_error(__FILE__, __LINE__, #A " != " #B " (" + str_cmp_values(FMT(A), "!=", FMT(B)) + ")"))
 
 #define NOT_EQUAL(A,B) if ((A) == (B)){ TEST_OUT << "  Error(" << __LINE__ << "): " << #A << " == " << #B << " (" << A << " == " << B << ")" << std::endl; TEST_FAILED=true;}
 
