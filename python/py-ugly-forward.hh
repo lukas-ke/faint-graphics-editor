@@ -498,6 +498,13 @@ repr_t<PY_CLASS_T> repr_resolve(utf8_string(*func)(PY_CLASS_T));
 // For tp_repr
 #define REPR_FORWARDER(CppFunc)(reprfunc)decltype(repr_resolve(CppFunc))::PythonFunc<CppFunc>
 
+// Wraps the function so that it can be called with PyObject* args.
+// Note: Exceptions are not caught by the wrapper, this method should
+// be used only from within Faint Python-API methods added with one of
+// the other forwarders, to allow delegating on type error.
+//
+// It is presumably mostly to be used as a workaround when e.g. Either<>
+// arguments got too unwieldy.
 #define FORWARD_PY(CppFunc)decltype(free_resolve_no_except(CppFunc))::PythonFunc<CppFunc>
 
 } // namespace

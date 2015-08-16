@@ -17,6 +17,7 @@
 #define FAINT_TEST_HH
 #include "test-sys/test-internal.hh"
 
+// Literal-suffix for creating an epsilon (e.g. for NEAR).
 constexpr test::Epsilon operator "" _eps(long double v){
   return test::Epsilon(static_cast<double>(v));
 }
@@ -34,11 +35,6 @@ TestPlatform get_test_platform();
 
 // Add a message to the text output (including the line number)
 #define MESSAGE(MSG) test::TEST_OUT << "  Message(" << __LINE__ << ") " << MSG << std::endl;
-
-// Add a message to the text output without line number of Message
-// prefix.
-// Fixme: Check usage, rename
-#define TIME_MESSAGE(MSG) test::TEST_OUT << "  " << MSG << std::endl;
 
 // If the two values are inequal the test is marked as failed and the
 // values are output in hex-representation.
@@ -112,7 +108,7 @@ TestPlatform get_test_platform();
 // Variant of FAIL_UNLESS_CALLED which when called, delegates to the
 // specified function. This allows adding additional checks on the
 // passed arguments, in addition to ensuring the additional function
-// gets called.
+// gets called at all.
 #define FAIL_UNLESS_CALLED_FWD(FUNC)(test::create_fail_unless_called_fwd(FUNC, __LINE__))
 
 // Variant of FAIL_IF_CALLED, which in addition to marking the test as
