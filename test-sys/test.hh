@@ -108,13 +108,19 @@ inline bool test_write_error(const char* file, int line, const char* text){
   return false;
 }
 
-#define VERIFY(C) ((C) ? true : test_write_error(__FILE__, __LINE__, #C " failed."))
+inline bool test_abort(const char* file, int line, const char* text){
+  test_write_error(file, line, text);
+  TEST_FAILED = true;
+  throw AbortTestException();
+}
 
-#define NOT(C) ((!C) ? true : test_write_error(__FILE__, __LINE__, "NOT " #C " failed."))
+#define VERIFY(C) ((C) ? true : test_write_error(__FILE__, __LINE__, "VERIFY " #C))
 
-#define ASSERT(C) if ((C)){}else{ TEST_OUT << "  Error(" << __LINE__ << "): " << #C << " failed." << std::endl; TEST_FAILED=true; throw AbortTestException();}
+#define NOT(C) ((!C) ? true : test_write_error(__FILE__, __LINE__, "NOT " #C))
 
-#define ABORT_IF(C) if (!(C)){}else{ TEST_OUT << "  Error(" << __LINE__ << "): " << #C << " failed." << std::endl; TEST_FAILED=true; throw AbortTestException();}
+#define ASSERT(C) ((C) ? true : test_abort(__FILE__, __LINE__, "ASSERT "#C))
+
+#define ABORT_IF(C) ((!C) ? true : test_abort(__FILE__, __LINE__, "ABORT_IF " #C))
 
 inline void fail_test(){}
 
