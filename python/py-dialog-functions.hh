@@ -1,5 +1,5 @@
 // -*- coding: us-ascii-unix -*-
-// Copyright 2014 Lukas Kemmer
+// Copyright 2015 Lukas Kemmer
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you
 // may not use this file except in compliance with the License. You
@@ -13,27 +13,22 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_PY_INITIALIZE_IFAINT_HH
-#define FAINT_PY_INITIALIZE_IFAINT_HH
-#include "text/utf8-string.hh"
-#include "util/template-fwd.hh"
+#ifndef FAINT_PY_DIALOG_FUNCTIONS_HH
+#define FAINT_PY_DIALOG_FUNCTIONS_HH
+#include "python/mapped-type.hh"
+#include "python/py-include.hh"
 #include "python/py-func-context.hh"
 
 namespace faint{
 
-class FaintPyExc;
-class FilePath;
-class PythonContext;
+extern PyTypeObject DialogFunctionsType;
 
-// Initializes the ifaint module.
-// The string argument will be available as ifaint.cmd_arg.
-// Returns true on success.
-bool init_python(const utf8_string& arg, PyFuncContext&);
+struct dialogFunctionsObject{
+  PyObject_HEAD
+  PyFuncContext* ctx;
+};
 
-Optional<FaintPyExc> run_python_file(const FilePath&);
-
-// Runs the user configuration. Returns true if loaded without error
-bool run_python_user_config(PythonContext&);
+PyObject* create_dialog_functions(PyFuncContext&);
 
 } // namespace
 

@@ -39,8 +39,6 @@ void add_gui_tests(wxBookCtrlBase*,
   faint::DialogContext&,
   const faint::Art&);
 
-namespace faint{const Art& get_art();} // Fixme: Should not need this function in a test.
-
 class GuiTestStatusInterface : public faint::StatusInterface{
 public:
   void SetStatusBar(wxStatusBar* sb){
@@ -201,12 +199,3 @@ public:
 };
 
 wxIMPLEMENT_APP(GuiTestApp);
-
-namespace faint{
-
-const Art& get_art(){
-  assert(false);
-  throw std::logic_error("Stub get_art called");
-}
-
-} // namespace

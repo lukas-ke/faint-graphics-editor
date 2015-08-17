@@ -37,6 +37,7 @@ HEADERS_TO_GENERATE = [
     ('RadialGradient', '../python/py-radial-gradient.cpp'),
     ('bitmap', '../python/py-bitmap.cpp'),
     ('canvas', '../python/py-canvas.cpp'),
+    ('dialog_functions', '../python/py-dialog-functions.cpp'),
     ('faint_interface', ('../python/py-functions.hh',
                          '../python/py-object-geo.cpp')),
     ('faintapp', '../python/py-app.cpp'),

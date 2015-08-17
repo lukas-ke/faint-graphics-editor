@@ -8,16 +8,10 @@
 
 namespace faint{
 class AppContext;
-class Art;
 
 AppContext& get_app_context(){
   assert(false);
   throw std::logic_error("Stub get_app_context called");
-}
-
-const Art& get_art(){
-  assert(false);
-  throw std::logic_error("Stub get_art called");
 }
 
 class PythonContext;

@@ -32,8 +32,7 @@
 #include "geo/pathpt.hh"
 #include "geo/pathpt-iter.hh"
 #include "geo/offsat.hh"
-#include "gui/dialogs.hh"
-#include "app/faint-resize-dialog-context.hh" // Fixme
+#include "gui/dialogs.hh" // Fixme: Move to py-dialog-functions
 #include "objects/objellipse.hh"
 #include "objects/objpath.hh"
 #include "objects/objrectangle.hh"
@@ -133,30 +132,6 @@ Show the color balance dialog." */
 static void dialog_color_balance(){
   AppContext& app = get_app_context();
   app.Modal(show_color_balance_dialog);
-}
-
-// Fixme: Remove, find a different way to get Art to Python functions
-// (get_art is implemented in app.cpp, and as a stub in unit tests)
-// \ref(rotate-bad-art)
-const Art& get_art();
-
-/* function: "dialog_resize()\n
-Show the image/selection resize dialog." */
-static void dialog_resize(){
-  // Fixme: same as rotate
-  // \ref(rotate-bad-art)
-  show_resize_dialog(get_app_context(), get_art());
-}
-
-/* function: "dialog_rotate()\n
-Show the rotation dialog (for rotating the image or selection)." */
-static void dialog_rotate(){
-  AppContext& app = get_app_context();
-  // Fixme: \def(rotate-bad-art)Bad get_art;
-  // get_art here is problematic - should be accessed
-  // via some context
-  app.ModalFull(bind_show_rotate_dialog(get_art(),
-      app.GetDialogContext()));
 }
 
 /* function: "dialog_brightness_contrast()\n

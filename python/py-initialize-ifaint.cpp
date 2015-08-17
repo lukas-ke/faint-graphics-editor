@@ -38,6 +38,7 @@
 #include "python/py-ugly-forward.hh"
 #include "python/py-parse.hh"
 #include "python/py-clipboard.hh"
+#include "python/py-dialog-functions.hh"
 
 namespace faint{
 
@@ -66,6 +67,7 @@ void add_faint_types(PyObject* module){
   add_type_object(module, ImagePropsType, "ImageProps");
   add_type_object(module, FramePropsType, "FrameProps");
   add_type_object(module, GridType, "Grid");
+  add_type_object(module, DialogFunctionsType, "ContextFunctions");
 
   PyObject* binds = PyDict_New();
   PyModule_AddObject(module, "_binds", binds);
@@ -228,9 +230,15 @@ static void run_envsetup(const FilePath& path){
   assert(err.NotSet());
 }
 
-bool init_python(const utf8_string& arg){
+bool init_python(const utf8_string& arg, PyFuncContext& ctx){
   PyImport_AppendInittab("ifaint", PyInit_ifaint);
   Py_Initialize();
+
+  scoped_ref ifaint(PyImport_ImportModule("ifaint"));
+  PyModule_AddObject(ifaint.get(),
+    "dialogs",
+    create_dialog_functions(ctx));
+
   DirPath dataDir = get_data_dir();
   add_to_python_path(dataDir.SubDir("py"));
   run_envsetup(dataDir.SubDir("py").SubDir("core").File("envsetup.py"));

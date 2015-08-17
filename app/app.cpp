@@ -42,6 +42,7 @@
 #include "util/optional.hh"
 #include "util/paint-map.hh"
 #include "util/settings.hh"
+#include "python/py-func-context.hh"
 
 namespace faint{
 
@@ -256,7 +257,8 @@ public:
 
     m_pythonContext.reset(&(m_faintWindow->GetPythonContext()));
 
-    bool ok = init_python(m_cmd.arg);
+    m_pyFuncContext = std::make_unique<PyFuncContext>(m_art);
+    bool ok = init_python(m_cmd.arg, *m_pyFuncContext);
     if (!ok){
       return show_init_error(Title("Faint Internal Error"),
         "Faint crashed!\n\n...while running envsetup.py");
@@ -365,6 +367,8 @@ private:
   std::unique_ptr<InterpreterFrame> m_interpreterFrame;
   std::unique_ptr<PythonContext> m_pythonContext;
   Optional<FilePath> m_crashFile;
+
+  std::unique_ptr<PyFuncContext> m_pyFuncContext;
 };
 
 } // namespace
