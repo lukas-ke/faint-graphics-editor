@@ -19,7 +19,7 @@
 #include "python/py-dialog-functions.hh"
 #include "text/formatting.hh"
 #include "python/py-ugly-forward.hh"
-#include "python/py-util.hh" // Fixme: Remove
+#include "python/py-util.hh"
 
 namespace faint{
 
@@ -82,7 +82,7 @@ PyTypeObject DialogFunctionsType = {
   nullptr, // tp_getattr
   nullptr, // tp_setattr
   nullptr, // reserved (formerly tp_compare)
-  (reprfunc)dialog_repr, // tp_repr // Fixme: OK?
+  (reprfunc)dialog_repr, // tp_repr
   nullptr, // tp_as_number
   nullptr, // tp_as_sequence
   nullptr, // tp_as_mapping
