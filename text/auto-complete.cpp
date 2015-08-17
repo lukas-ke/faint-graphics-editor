@@ -142,6 +142,11 @@ void AutoComplete::add(const utf8_string& word){
 Words AutoComplete::match(const utf8_string& str){
   WordsImpl* w = new WordsImpl();
   w->m_node = nullptr;
+
+  if (str.empty()){
+    return Words(w);
+  }
+
   for (size_t i = 0; i != m_nodes.size(); i++){
     ACNode* node = m_nodes[i];
     if (node->m_char == str.front()){
