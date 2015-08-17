@@ -14,7 +14,7 @@
 // permissions and limitations under the License.
 
 #include "app/faint-resize-dialog-context.hh"
-#include "app/get-app-context.hh"
+#include "app/get-app-context.hh" // Fixme: Remove
 #include "gui/dialogs.hh"
 #include "python/py-dialog-functions.hh"
 #include "text/formatting.hh"
@@ -40,10 +40,37 @@ struct MappedType<PyFuncContext&>{
   static void ShowError(dialogFunctionsObject*){}
 };
 
+// Fixme: Remove all get_app_context, pass via PyFuncContext.
+
+/* method: "brightness_contrast()\n
+Show the brightness/contrast dialog." */
+static void dialog_brightness_contrast(PyFuncContext&){
+  get_app_context().Modal(show_brightness_contrast_dialog);
+}
+
+/* method: "color_balance()\n
+Show the color balance dialog." */
+static void dialog_color_balance(PyFuncContext&){
+  AppContext& app = get_app_context();
+  app.Modal(show_color_balance_dialog);
+}
+
+/* method: "help()\n
+Show the help window." */
+static void dialog_help(PyFuncContext&){
+  get_app_context().ToggleHelpFrame();
+}
+
+/* method: "open_file()\n
+Show the open file dialog." */
+static void dialog_open_file(PyFuncContext&){
+  get_app_context().DialogOpenFile();
+}
+
 /* method: "resize()\n
 Show the image/selection resize dialog." */
 static void dialog_resize(PyFuncContext& ctx){
-  show_resize_dialog(get_app_context(), ctx.art); // TODO: Remove get_app_context
+  show_resize_dialog(get_app_context(), ctx.art);
 }
 
 /* method: "rotate()\n
@@ -51,6 +78,34 @@ Show the rotation dialog (for rotating the image or selection)." */
 static void dialog_rotate(PyFuncContext& ctx){
   AppContext& app = get_app_context();
   app.ModalFull(bind_show_rotate_dialog(ctx.art, app.GetDialogContext()));
+}
+
+/* method: "save_copy()\n
+Show the save file dialog, without modifying the current file name
+when saved." */
+static void dialog_save_copy(PyFuncContext&, Canvas* c){
+  get_app_context().DialogSaveAs(*c, true);
+}
+
+/* method: "save_file()\n
+Show the save file dialog." */
+static void dialog_save_file(PyFuncContext&, Canvas* c){
+  get_app_context().DialogSaveAs(*c, false);
+}
+
+/* method: "threshold()\n
+Show the threshold dialog." */
+static void dialog_threshold(PyFuncContext&){
+  AppContext& app = get_app_context();
+  // const Settings& s = app.GetToolSettings();
+  // Fixme: Pass settings?
+  show_threshold_dialog(app.GetDialogContext(), app.GetToolSettings());
+}
+
+/* method: "python_console()\n
+Show the Python console." */
+static void dialog_python_console(PyFuncContext&){
+  get_app_context().TogglePythonConsole();
 }
 
 static PyObject* dialog_functions_new(PyTypeObject* type, PyObject*, PyObject*){

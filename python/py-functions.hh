@@ -32,7 +32,6 @@
 #include "geo/pathpt.hh"
 #include "geo/pathpt-iter.hh"
 #include "geo/offsat.hh"
-#include "gui/dialogs.hh" // Fixme: Move to py-dialog-functions
 #include "objects/objellipse.hh"
 #include "objects/objpath.hh"
 #include "objects/objrectangle.hh"
@@ -125,59 +124,6 @@ static void autosize_raster(BoundObject<ObjRaster>& bound){
 Resizes the object's text box to snugly fit the text." */
 static void autosize_text(BoundObject<ObjText>& bound){
   python_run_command(bound.Plain(), crop_text_region_command(bound.obj));
-}
-
-/* function: "dialog_color_balance()\n
-Show the color balance dialog." */
-static void dialog_color_balance(){
-  AppContext& app = get_app_context();
-  app.Modal(show_color_balance_dialog);
-}
-
-/* function: "dialog_brightness_contrast()\n
-Show the brightness/contrast dialog." */
-static void dialog_brightness_contrast(){
-  get_app_context().Modal(show_brightness_contrast_dialog);
-}
-
-/* function: "dialog_help()\n
-Show the help window." */
-static void dialog_help(){
-  get_app_context().ToggleHelpFrame();
-}
-
-/* function: "dialog_open_file()\n
-Show the open file dialog." */
-static void dialog_open_file(){
-  get_app_context().DialogOpenFile();
-}
-
-/* function: "dialog_save_file()\n
-Show the save file dialog." */
-static void dialog_save_file(Canvas* c){
-  get_app_context().DialogSaveAs(*c, false);
-}
-
-/* function: "dialog_save_copy()\n
-Show the save file dialog, without modifying the current file name
-when saved." */
-static void dialog_save_copy(Canvas* c){
-  get_app_context().DialogSaveAs(*c, true);
-}
-
-/* function: "dialog_threshold()\n
-Show the threshold dialog." */
-static void dialog_threshold(){
-  AppContext& app = get_app_context();
-  // const Settings& s = app.GetToolSettings();
-  // Fixme: Pass settings?
-  show_threshold_dialog(app.GetDialogContext(), app.GetToolSettings());
-}
-
-/* function: "dialog_python_console()\n
-Show the Python console." */
-static void dialog_python_console(){
-  get_app_context().TogglePythonConsole();
 }
 
 /* function: "faint_quit()\nExit faint" */

@@ -28,6 +28,8 @@ struct dialogFunctionsObject{
   PyFuncContext* ctx;
 };
 
+/** Create Python-object with methods for showing Faint dialogs.
+The object can only be created from the C++-code. */
 PyObject* create_dialog_functions(PyFuncContext&);
 
 } // namespace
