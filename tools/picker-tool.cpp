@@ -15,12 +15,12 @@
 
 #include <cassert>
 #include "app/canvas.hh"
-#include "app/get-app-context.hh"
 #include "bitmap/pattern.hh"
 #include "geo/geo-func.hh"
 #include "geo/int-rect.hh"
 #include "text/formatting.hh"
 #include "tools/standard-tool.hh"
+#include "tools/tool-actions.hh"
 #include "util/pos-info.hh"
 #include "util/tool-util.hh"
 
@@ -44,8 +44,9 @@ static Paint pattern_get_hovered_paint(const PosInside& info){
 
 class PickerTool : public StandardTool {
 public:
-  PickerTool()
-    : StandardTool(ToolId::PICKER, Settings())
+  PickerTool(ToolActions& actions)
+    : StandardTool(ToolId::PICKER, Settings()),
+      m_actions(actions)
   {}
 
   void Draw(FaintDC&, Overlays&, const PosInfo&) override{
@@ -74,7 +75,7 @@ public:
 
   ToolResult MouseDown(const PosInfo& info) override{
     return inside_canvas(info).Visit(
-      [](const PosInside& info){
+      [&](const PosInside& info){
         const auto paintSetting = fg_or_bg(info);
 
         const auto& bg = info->canvas.GetBitmap();
@@ -85,11 +86,11 @@ public:
             floored(info->pos);
           Pattern pattern(bg.Get(),
             anchor, object_aligned_t(!anchorTopLeft));
-          get_app_context().Set(paintSetting, Paint(pattern));
+          m_actions.Set(paintSetting, Paint(pattern));
           return ToolResult::NONE;
         }
 
-        get_app_context().Set(paintSetting, pattern_get_hovered_paint(info));
+        m_actions.Set(paintSetting, pattern_get_hovered_paint(info));
         return ToolResult::NONE;
       },
 
@@ -131,10 +132,12 @@ public:
   ToolResult Preempt(const PosInfo&) override{
     return ToolResult::NONE;
   }
+
+  ToolActions& m_actions;
 };
 
-Tool* picker_tool(){
-  return new PickerTool();
+Tool* picker_tool(ToolActions& actions){
+  return new PickerTool(actions);
 }
 
 } // namespace

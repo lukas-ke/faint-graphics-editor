@@ -22,6 +22,7 @@
 #include "wx/sizer.h"
 #include "app/active-canvas.hh"
 #include "app/faint-window-app-context.hh"
+#include "app/faint-tool-actions.hh"
 #include "app/faint-window-python-context.hh"
 #include "bitmap/bitmap-exception.hh"
 #include "gui/canvas-panel.hh"
@@ -364,6 +365,7 @@ public:
       panels(std::move(in_panels)),
       pythonContext(python),
       state(std::move(in_state)),
+      m_toolActions(app),
       windows(help, interpreter)
   {
     frame.reset(f);
@@ -378,12 +380,13 @@ public:
   std::unique_ptr<FaintPanels> panels;
   PythonContext& pythonContext;
   std::unique_ptr<FaintState> state;
+  FaintToolActions m_toolActions;
   FaintFloatingWindows windows;
   std::vector<std::unique_ptr<Cleaner>> cleanup;
 };
 
 static void select_tool(ToolId id, FaintState& state, FaintPanels& panels,
-  AppContext& app)
+  AppContext& app, ToolActions& actions)
 {
   if (state.activeTool != nullptr){
     auto& canvas = get_active_canvas_panel(panels);
@@ -395,7 +398,8 @@ static void select_tool(ToolId id, FaintState& state, FaintPanels& panels,
   state.activeTool = new_tool(id,
     state.layer,
     state.toolSettings,
-    ActiveCanvas(app));
+    ActiveCanvas(app),
+    actions);
 }
 
 FaintWindow::FaintWindow(Art& art,
@@ -443,7 +447,8 @@ FaintWindow::FaintWindow(Art& art,
   bind_fwd(frame, EVT_FAINT_ToolChange,
     [&](const ToolChangeEvent& event){
       select_tool(event.GetTool(), *m_impl->state,
-        *m_impl->panels, m_impl->appContext);
+        *m_impl->panels, m_impl->appContext,
+        m_impl->m_toolActions);
       UpdateShownSettings();
     });
 

@@ -20,6 +20,8 @@ namespace faint{
 
 class ActiveCanvas;
 class Settings;
+class ToolActions;
+
 enum class Layer;
 
 enum class ToolId{
@@ -56,7 +58,11 @@ bool valid_tool_id(int);
 Layer get_tool_layer(ToolId, Layer defaultLayer);
 
 class Tool;
-Tool* new_tool(ToolId, Layer, const Settings&, const ActiveCanvas&);
+Tool* new_tool(ToolId,
+  Layer,
+  const Settings&,
+  const ActiveCanvas&,
+  ToolActions&);
 
 } // namespace
 

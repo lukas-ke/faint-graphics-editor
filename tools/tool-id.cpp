@@ -53,7 +53,7 @@ Tool* level_tool(const Settings&);
 Tool* line_tool(const Settings&);
 Tool* path_tool(const Settings&);
 Tool* pen_tool(const Settings&);
-Tool* picker_tool();
+Tool* picker_tool(ToolActions&);
 Tool* polygon_tool(const Settings&);
 Tool* rectangle_tool(const Settings&);
 Tool* selection_tool(Layer, const Settings&, const ActiveCanvas&);
@@ -65,7 +65,8 @@ Tool* text_tool(const Settings&);
 Tool* new_tool(ToolId id,
   Layer layer,
   const Settings& settings,
-  const ActiveCanvas& canvas)
+  const ActiveCanvas& canvas,
+  ToolActions& actions)
 {
   switch (id) {
   case ToolId::BRUSH:
@@ -97,7 +98,7 @@ Tool* new_tool(ToolId id,
     return path_tool(settings);
 
   case ToolId::PICKER:
-    return picker_tool();
+    return picker_tool(actions);
 
   case ToolId::POLYGON:
     return polygon_tool(settings);
