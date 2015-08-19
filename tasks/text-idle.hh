@@ -18,10 +18,11 @@
 
 namespace faint{
 
-class Task;
 class Settings;
+class Task;
+class ToolActions;
 
-Task* text_idle_task(Settings&);
+Task* text_idle_task(Settings&, ToolActions&);
 
 } // namespace
 

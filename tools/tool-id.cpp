@@ -56,11 +56,10 @@ Tool* pen_tool(const Settings&);
 Tool* picker_tool(ToolActions&);
 Tool* polygon_tool(const Settings&);
 Tool* rectangle_tool(const Settings&);
-Tool* selection_tool(Layer, const Settings&, const ActiveCanvas&);
+Tool* selection_tool(Layer, const Settings&, const ActiveCanvas&, ToolActions&);
 Tool* spline_tool(const Settings&);
 Tool* tape_measure_tool(const Settings&);
-Tool* text_tool(const Settings&);
-
+Tool* text_tool(const Settings&, ToolActions&);
 
 Tool* new_tool(ToolId id,
   Layer layer,
@@ -85,7 +84,7 @@ Tool* new_tool(ToolId id,
     return line_tool(settings);
 
   case ToolId::SELECTION:
-    return selection_tool(layer, settings, canvas);
+    return selection_tool(layer, settings, canvas, actions);
 
   case ToolId::OTHER:
     assert(false); // Can not instantiate unspecific tool
@@ -110,7 +109,7 @@ Tool* new_tool(ToolId id,
     return spline_tool(settings);
 
   case ToolId::TEXT:
-    return text_tool(settings);
+    return text_tool(settings, actions);
 
   case ToolId::HOT_SPOT:
     return hot_spot_tool();

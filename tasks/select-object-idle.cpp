@@ -190,8 +190,11 @@ using was_selected = Distinct<bool, category_select_object_idle, 0>;
 
 struct IdleSelectionState{
 public:
-  IdleSelectionState(Settings& settings, const ActiveCanvas& canvas)
-    : canvas(canvas),
+  IdleSelectionState(Settings& settings,
+    const ActiveCanvas& canvas,
+    ToolActions& actions)
+    : actions(actions),
+      canvas(canvas),
       settings(settings)
   {
     Reset();
@@ -216,6 +219,7 @@ public:
     mouseDown = true;
   }
 
+  ToolActions& actions;
   ActiveCanvas canvas;
   Settings& settings;
   Point clickPos;
@@ -464,8 +468,10 @@ static TaskResult select_object_rectangle(IdleSelectionState& impl,
 
 class SelectObjectIdle : public StandardTask {
 public:
-  SelectObjectIdle(Settings& settings, const ActiveCanvas& c)
-    : m_impl(settings, c)
+  SelectObjectIdle(Settings& settings,
+    const ActiveCanvas& c,
+    ToolActions& actions)
+    : m_impl(settings, c, actions)
   {}
 
   void Activate() override{
@@ -581,7 +587,7 @@ public:
     ObjText* objText = hovered_selected_text(info, SearchMode::include_grouped);
     if (objText != nullptr){
       // Start editing the double-clicked text object
-      m_impl.newTask.Set(edit_text_task(objText, m_impl.settings));
+      m_impl.newTask.Set(edit_text_task(objText, m_impl.settings, m_impl.actions));
       return TaskResult::CHANGE;
     }
     return TaskResult::NONE;
@@ -653,8 +659,11 @@ private:
   PendingCommand m_command;
 };
 
-Task* select_object_idle(Settings& s, const ActiveCanvas& canvas){
-  return new SelectObjectIdle(s, canvas);
+Task* select_object_idle(Settings& s,
+  const ActiveCanvas& canvas,
+  ToolActions& actions)
+{
+  return new SelectObjectIdle(s, canvas, actions);
 }
 
 } // namespace

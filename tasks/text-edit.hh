@@ -21,15 +21,18 @@ namespace faint{
 
 class ObjText;
 class Rect;
-class Task;
 class Settings;
+class Task;
+class ToolActions;
 
 Task* edit_text_task(const Rect&,
   const utf8_string&,
-  Settings&);
+  Settings&,
+  ToolActions&);
 
 Task* edit_text_task(ObjText*,
-  Settings&);
+  Settings&,
+  ToolActions&);
 
 } // namespace
 

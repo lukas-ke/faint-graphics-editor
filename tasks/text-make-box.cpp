@@ -29,8 +29,9 @@ namespace faint{
 
 class MakeTextBox : public StandardTask {
 public:
-  MakeTextBox(const Point& startPos, Settings& s)
-    : m_maxDistance(0.0),
+  MakeTextBox(const Point& startPos, Settings& s, ToolActions& actions)
+    : m_actions(actions),
+      m_maxDistance(0.0),
       m_p0(startPos),
       m_p1(startPos),
       m_settings(s)
@@ -71,7 +72,7 @@ public:
     m_settings.Set(ts_BoundedText, m_maxDistance > 10.0);
 
     m_newTask.Set(edit_text_task(Rect(m_p0, m_p1), utf8_string(""),
-      m_settings));
+        m_settings, m_actions));
     return TaskResult::CHANGE;
   }
 
@@ -90,6 +91,7 @@ public:
   MakeTextBox& operator=(const MakeTextBox&) = delete;
 
 private:
+  ToolActions& m_actions;
   coord m_maxDistance;
   PendingTask m_newTask;
   Point m_p0;
@@ -97,9 +99,11 @@ private:
   Settings& m_settings;
 };
 
-Task* text_make_box_task(const Point& startPos, Settings& s)
+Task* text_make_box_task(const Point& startPos,
+  Settings& s,
+  ToolActions& actions)
 {
-  return new MakeTextBox(startPos, s);
+  return new MakeTextBox(startPos, s, actions);
 }
 
 } // namespace

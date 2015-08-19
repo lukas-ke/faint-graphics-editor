@@ -27,9 +27,9 @@ static Settings text_tool_settings(const Settings& allSettings){
 
 class TextTool : public MultiTool{
 public:
-  explicit TextTool(const Settings& allSettings)
+  explicit TextTool(const Settings& allSettings, ToolActions& actions)
     : MultiTool(ToolId::TEXT,
-      default_task(text_idle_task(m_settings))),
+      default_task(text_idle_task(m_settings, actions))),
       m_settings(text_tool_settings(allSettings))
   {}
 
@@ -61,8 +61,8 @@ private:
   Settings m_settings;
 };
 
-Tool* text_tool(const Settings& allSettings){
-  return new TextTool(allSettings);
+Tool* text_tool(const Settings& allSettings, ToolActions& actions){
+  return new TextTool(allSettings, actions);
 }
 
 } // namespace

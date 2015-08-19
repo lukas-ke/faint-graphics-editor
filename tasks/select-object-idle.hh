@@ -21,8 +21,9 @@ namespace faint{
 class ActiveCanvas;
 class Settings;
 class Task;
+class ToolActions;
 
-Task* select_object_idle(Settings&, const ActiveCanvas&);
+Task* select_object_idle(Settings&, const ActiveCanvas&, ToolActions&);
 
 } // namespace
 

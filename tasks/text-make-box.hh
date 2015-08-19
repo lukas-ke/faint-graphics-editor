@@ -21,8 +21,9 @@ namespace faint{
 class Point;
 class Settings;
 class Task;
+class ToolActions;
 
-Task* text_make_box_task(const Point& startPos, Settings&);
+Task* text_make_box_task(const Point& startPos, Settings&, ToolActions&);
 
 } // namespace
 

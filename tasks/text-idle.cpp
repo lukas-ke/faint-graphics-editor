@@ -25,8 +25,9 @@ namespace faint{
 
 class TextIdle : public StandardTask {
 public:
-  explicit TextIdle(Settings& s)
-    : m_settings(s)
+  explicit TextIdle(Settings& s, ToolActions& actions)
+    : m_actions(actions),
+      m_settings(s)
   {}
 
   void Draw(FaintDC&, Overlays&, const PosInfo&) override{
@@ -57,10 +58,10 @@ public:
   TaskResult MouseDown(const PosInfo& info) override{
     ObjText* objText = hovered_selected_text(info);
     if (objText == nullptr){
-      m_newTask.Set(text_make_box_task(info.pos, m_settings));
+      m_newTask.Set(text_make_box_task(info.pos, m_settings, m_actions));
     }
     else {
-      m_newTask.Set(edit_text_task(objText, m_settings));
+      m_newTask.Set(edit_text_task(objText, m_settings, m_actions));
     }
     return TaskResult::CHANGE;
   }
@@ -86,13 +87,13 @@ public:
 
   TextIdle& operator=(const TextIdle&) = delete;
 private:
+  ToolActions& m_actions;
   PendingTask m_newTask;
   Settings& m_settings;
-
 };
 
-Task* text_idle_task(Settings& s){
-  return new TextIdle(s);
+Task* text_idle_task(Settings& s, ToolActions& actions){
+  return new TextIdle(s, actions);
 }
 
 } // namespace

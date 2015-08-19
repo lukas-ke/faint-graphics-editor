@@ -70,9 +70,10 @@ static Command* change_settings_objects(const objects_t& objects,
 
 class ObjectSelectionTool : public MultiTool {
 public:
-  explicit ObjectSelectionTool(const ActiveCanvas& activeCanvas)
+  explicit ObjectSelectionTool(const ActiveCanvas& activeCanvas,
+    ToolActions& actions)
     : MultiTool(ToolId::OTHER,
-      default_task(select_object_idle(m_settings, activeCanvas))),
+      default_task(select_object_idle(m_settings, activeCanvas, actions))),
       m_activeCanvas(activeCanvas)
   {
     m_settings = get_object_settings(m_activeCanvas->GetObjectSelection());
@@ -118,8 +119,8 @@ private:
   Settings m_settings;
 };
 
-Tool* object_selection_tool(const ActiveCanvas& active){
-  return new ObjectSelectionTool(active);
+Tool* object_selection_tool(const ActiveCanvas& active, ToolActions& actions){
+  return new ObjectSelectionTool(active, actions);
 }
 
 } // namespace

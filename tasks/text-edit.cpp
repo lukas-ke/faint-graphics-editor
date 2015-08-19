@@ -14,7 +14,6 @@
 // permissions and limitations under the License.
 
 #include <cassert>
-#include "app/get-app-context.hh"
 #include "commands/text-entry-cmd.hh"
 #include "editors/text-entry-util.hh"
 #include "geo/rect.hh"
@@ -23,6 +22,7 @@
 #include "tasks/task.hh"
 #include "tasks/text-edit.hh"
 #include "tasks/text-select.hh"
+#include "tools/tool-actions.hh"
 #include "text/auto-complete.hh"
 #include "text/char-constants.hh"
 #include "text/formatting.hh"
@@ -72,16 +72,21 @@ static AutoComplete& text_auto_complete(){
 
 class EditText : public Task, public TextContext, public SelectionContext{
 public:
-  EditText(const Rect& r, const utf8_string& str, Settings& settings)
-    : m_active(false),
+  EditText(const Rect& r,
+    const utf8_string& str,
+    Settings& settings,
+    ToolActions& actions)
+    : m_actions(actions),
+      m_active(false),
       m_autoComplete(text_auto_complete()),
       m_newTextObject(true),
       m_settings(settings),
       m_textObject(new ObjText(tri_from_rect(r), str, settings))
   {}
 
-  EditText(ObjText* obj, Settings& s)
-    : m_active(false),
+  EditText(ObjText* obj, Settings& s, ToolActions& actions)
+    : m_actions(actions),
+      m_active(false),
       m_autoComplete(text_auto_complete()),
       m_newTextObject(false),
       m_oldText(obj->GetTextBuffer().get()),
@@ -103,7 +108,7 @@ public:
     m_textObject->SetEdited(true);
     TextBuffer& buf(m_textObject->GetTextBuffer());
     buf.caret(buf.size());
-    get_app_context().BeginTextEntry();
+    m_actions.BeginTextEntry();
     m_active = true;
   }
 
@@ -284,7 +289,7 @@ private:
   void EndEntry(){
     assert(m_active);
 
-    get_app_context().EndTextEntry();
+    m_actions.EndTextEntry();
     if (m_textObject != nullptr){
       m_textObject->SetActive(false);
       m_textObject->SetEdited(false);
@@ -310,6 +315,7 @@ private:
     return TaskResult::COMMIT_AND_CHANGE;
   }
 
+  ToolActions& m_actions;
   bool m_active;
   AutoCompleteState m_autoComplete;
   PendingCommand m_command;
@@ -320,12 +326,16 @@ private:
   ObjText* m_textObject;
 };
 
-Task* edit_text_task(const Rect& r, const utf8_string& str, Settings& settings){
-  return new EditText(r, str, settings);
+Task* edit_text_task(const Rect& r,
+  const utf8_string& str,
+  Settings& settings,
+  ToolActions& actions)
+{
+  return new EditText(r, str, settings, actions);
 }
 
-Task* edit_text_task(ObjText* obj, Settings& settings){
-  return new EditText(obj, settings);
+Task* edit_text_task(ObjText* obj, Settings& settings, ToolActions& actions){
+  return new EditText(obj, settings, actions);
 }
 
 } // namespace
