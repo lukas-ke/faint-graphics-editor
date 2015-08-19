@@ -98,6 +98,7 @@ ref-scripting.txt
 >py-app.txt
 >py-bitmap.txt
 >py-canvas.txt
+>py-dialogs.txt
 >py-frame.txt
 >py-frame-props.txt
 >py-grid.txt

@@ -1,0 +1,9 @@
+page:"Dialogs"
+summary:"Methods for showing Faint dialogs"
+
+= Dialogs =
+
+The dialogs object has methods for showing Faint dialogs.
+
+== Methods ==
+\include(generated/py-dialog-functions-methods.txt)
