@@ -22,6 +22,7 @@
 #include "app/context-commands.hh"
 #include "app/cut-and-paste.hh"
 #include "app/faint-resize-dialog-context.hh"
+#include "app/app-getter-util.hh"
 #include "gui/dialogs.hh"
 #include "gui/events.hh"
 #include "gui/interpreter-frame.hh"
@@ -531,7 +532,11 @@ public:
     wxMenu* imageMenu = new wxMenu();
     AddFull(imageMenu,
       Label("&Flip/Rotate...\tCtrl+R", "Flip or rotate the image or selection"),
-      bind_show_rotate_dialog(art, app.GetDialogContext()), app);
+      bind_show_rotate_dialog(art,
+        bg_getter(app),
+        tool_changer(app),
+        app.GetDialogContext()),
+      app);
 
     Add(imageMenu,
       Label("&Resize...\tCtrl+E", "Scale or resize the image or selection"),

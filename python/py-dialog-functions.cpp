@@ -14,10 +14,12 @@
 // permissions and limitations under the License.
 
 #include "app/app-context.hh"
+#include "app/app-getter-util.hh"
 #include "app/faint-resize-dialog-context.hh"
 #include "gui/dialogs.hh"
 #include "python/py-dialog-functions.hh"
 #include "text/formatting.hh"
+#include "util/setting-id.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-util.hh"
 
@@ -81,7 +83,10 @@ static void dialog_resize(PyFuncContext& ctx){
 Show the rotation dialog (for rotating the image or selection)." */
 static void dialog_rotate(PyFuncContext& ctx){
   auto& app = ctx.app;
-  app.ModalFull(bind_show_rotate_dialog(ctx.art, app.GetDialogContext()));
+  app.ModalFull(bind_show_rotate_dialog(ctx.art,
+      bg_getter(app),
+      tool_changer(app),
+      app.GetDialogContext()));
 }
 
 /* method: "save_copy()\n

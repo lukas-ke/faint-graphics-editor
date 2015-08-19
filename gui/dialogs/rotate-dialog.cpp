@@ -18,10 +18,10 @@
 #include "wx/panel.h"
 #include "app/canvas.hh"
 #include "app/context-commands.hh"
-#include "app/get-app-context.hh" // Fixme: Remove
 #include "app/resource-id.hh"
 #include "geo/measure.hh"
 #include "gui/art.hh"
+#include "gui/dialog-context.hh"
 #include "gui/ui-constants.hh"
 #include "text/formatting.hh"
 #include "tools/tool-id.hh"
@@ -210,11 +210,17 @@ private:
 
 class RotateDialog : public wxDialog{
 public:
-  RotateDialog(wxWindow& parent, wxString targetName, const Art& art)
+  RotateDialog(wxWindow& parent,
+    wxString targetName,
+    const Art& art,
+    const std::function<Paint()>& getBg,
+    const std::function<void(ToolId)>& selectTool)
     : wxDialog(&parent, wxID_ANY, "Flip/Rotate " + targetName),
       m_cmdFunc(dummy_function),
       m_firstPanel(nullptr),
+      m_getBg(getBg),
       m_secondPanel(nullptr),
+      m_selectTool(selectTool),
       m_targetName(targetName)
   {
     m_firstPanel = new RotateChoicePanel(this, art,
@@ -245,18 +251,19 @@ private:
 
   void RotateAndClose(){
     m_cmdFunc = [=](const Canvas& canvas){
-      return m_secondPanel->Modified() ?
-      context_rotate(canvas,
-        m_secondPanel->GetAngle(),
-        get_app_context().GetToolSettings().Get(ts_Bg)) :
-      context_rotate90cw(canvas);
+      return
+        m_secondPanel->Modified() ?
+          context_rotate(canvas,
+            m_secondPanel->GetAngle(),
+            m_getBg()) :
+          context_rotate90cw(canvas);
     };
     EndModal(wxID_OK);
   }
 
   void SelectLevelTool(){
     m_cmdFunc = nullptr;
-    get_app_context().SelectTool(ToolId::LEVEL);
+    m_selectTool(ToolId::LEVEL);
     EndModal(wxID_CANCEL);
   }
 
@@ -275,9 +282,10 @@ private:
 
   // The function that creates a Command. Depends on the user choice.
   cmd_func m_cmdFunc;
-
   RotateChoicePanel* m_firstPanel;
+  std::function<Paint()> m_getBg;
   AngleChoicePanel* m_secondPanel;
+  std::function<void(ToolId)> m_selectTool;
   wxString m_targetName;
 };
 
@@ -285,9 +293,15 @@ private:
 Optional<Command*> show_rotate_dialog(wxWindow& parent,
   const Canvas& canvas,
   const Art& art,
+  const std::function<Paint()>& bgColor,
+  const std::function<void(ToolId)>& selectTool,
   DialogContext& c)
 {
-  RotateDialog dlg(parent, get_rotate_target_name(canvas), art);
+  RotateDialog dlg(parent,
+    get_rotate_target_name(canvas),
+    art,
+    bgColor,
+    selectTool);
 
   return c.ShowModal(dlg) == DialogChoice::OK ?
     option(dlg.GetCommand(canvas)) :
@@ -295,10 +309,18 @@ Optional<Command*> show_rotate_dialog(wxWindow& parent,
 }
 
 dialog_func bind_show_rotate_dialog(const Art& art,
+  const std::function<Paint()>& getBgColor,
+  const std::function<void(ToolId)>& selectTool,
   DialogContext& dialogContext)
 {
-  return [&](wxWindow& window, DialogFeedback&, const Canvas& canvas){
-    return show_rotate_dialog(window, canvas, art, dialogContext);
+  return [&, getBgColor, selectTool]
+    (wxWindow& window, DialogFeedback&, const Canvas& canvas){
+    return show_rotate_dialog(window,
+      canvas,
+      art,
+      getBgColor,
+      selectTool,
+      dialogContext);
   };
 }
 

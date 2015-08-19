@@ -15,6 +15,7 @@
 
 #ifndef FAINT_DIALOGS_HH
 #define FAINT_DIALOGS_HH
+#include <functional>
 #include "gui/command-dialog.hh"
 
 namespace faint{
@@ -23,6 +24,7 @@ class Art;
 class DialogContext;
 class Canvas;
 class Settings;
+enum class ToolId;
 
 void show_alpha_dialog(DialogContext&);
 
@@ -43,9 +45,14 @@ Optional<BitmapCommand*> show_pinch_whirl_dialog(wxWindow&,
 Optional<Command*> show_rotate_dialog(wxWindow&,
   const Canvas&, // Fixme: Why?
   const Art&,
+  const std::function<Paint()>& bgColor,
+  const std::function<void()>& selectLevelTool,
   DialogContext&);
 
-dialog_func bind_show_rotate_dialog(const Art&, DialogContext&);
+dialog_func bind_show_rotate_dialog(const Art&,
+  const std::function<Paint()>& bgColor,
+  const std::function<void(ToolId)>& selectLevelTool,
+  DialogContext&);
 
 void show_threshold_dialog(DialogContext&, const Settings&);
 
