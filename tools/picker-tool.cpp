@@ -35,11 +35,34 @@ static bool should_anchor_topleft(const PosInfo& info){
 }
 
 static Paint pattern_get_hovered_paint(const PosInside& info){
-  // Do not pick invisible object insides. Include the floating
-  // selection if hovered
+  // Pick either the hovered object fill, the color at the pixel in
+  // the background or floating raster selection.
+  // Do not pick invisible object insides.
   return get_hovered_paint(info,
     include_hidden_fill(false),
     include_floating_selection(true));
+}
+
+static Paint pick_to_pattern(const PosInside& info, const Bitmap& bg){
+  // Pick the background bitmap as a pattern, anchored around either
+  // the click-point or the top-left corner
+  bool anchorTopLeft = should_anchor_topleft(info);
+  IntPoint anchor = anchorTopLeft ?
+    IntPoint(0,0) : // Image top left
+    floored(info->pos);
+  Pattern pattern(bg, anchor, object_aligned_t(!anchorTopLeft));
+  return Paint(pattern);
+}
+
+static ToolResult pick(const PosInside& info, ToolActions& actions){
+  const auto& bg = info->canvas.GetBitmap();
+
+  Paint paint = (should_pick_to_pattern(info) && bg.IsSet()) ?
+    pick_to_pattern(info, bg.Get()) :
+    pattern_get_hovered_paint(info);
+
+  actions.Set(fg_or_bg(info), paint);
+  return ToolResult::NONE;
 }
 
 class PickerTool : public StandardTool {
@@ -75,29 +98,10 @@ public:
 
   ToolResult MouseDown(const PosInfo& info) override{
     return inside_canvas(info).Visit(
-      [&](const PosInside& info){
-        const auto paintSetting = fg_or_bg(info);
-
-        const auto& bg = info->canvas.GetBitmap();
-        if (should_pick_to_pattern(info) && bg.IsSet()){
-          bool anchorTopLeft = should_anchor_topleft(info);
-          IntPoint anchor = anchorTopLeft ?
-            IntPoint(0,0) : // Image top left
-            floored(info->pos);
-          Pattern pattern(bg.Get(),
-            anchor, object_aligned_t(!anchorTopLeft));
-          m_actions.Set(paintSetting, Paint(pattern));
-          return ToolResult::NONE;
-        }
-
-        m_actions.Set(paintSetting, pattern_get_hovered_paint(info));
-        return ToolResult::NONE;
+      [&](const PosInside& insidePos){
+        return pick(insidePos, m_actions);
       },
-
-      [](){
-        // Outside
-        return ToolResult::NONE;
-      });
+      otherwise(ToolResult::NONE));
   }
 
   ToolResult MouseUp(const PosInfo&) override{
