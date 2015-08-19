@@ -48,6 +48,12 @@ static void dialog_brightness_contrast(PyFuncContext&){
   get_app_context().Modal(show_brightness_contrast_dialog);
 }
 
+/* method: "__copy__()"
+name: "__copy__" */
+static void dialog_copy(PyFuncContext&){
+  throw NotImplementedError("Dialogs object can not be copied.");
+}
+
 /* method: "color_balance()\n
 Show the color balance dialog." */
 static void dialog_color_balance(PyFuncContext&){

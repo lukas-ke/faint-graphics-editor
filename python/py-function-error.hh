@@ -49,6 +49,12 @@ void throw_if_outside(const Index& index, const Index& bound);
 void throw_if_outside(const IntPoint&, const Bitmap&);
 void throw_if_outside(const IntPoint&, const ColorSpan&);
 
+class NotImplementedError : public PythonError{
+public:
+  NotImplementedError(const utf8_string&);
+};
+
+
 class ValueError : public PythonError{
 public:
   ValueError(const utf8_string&);

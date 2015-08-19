@@ -33,6 +33,10 @@ void PythonError::SetError() const{
   PyErr_SetObject(m_errorType, obj.get());
 }
 
+NotImplementedError::NotImplementedError(const utf8_string& error)
+  : PythonError(PyExc_NotImplementedError, error)
+{}
+
 IndexError::IndexError(const utf8_string& error)
   : PythonError(PyExc_IndexError, error)
 {}
@@ -49,7 +53,6 @@ void throw_if_outside(const IntPoint& pt, const Bitmap& bmp){
     throw ValueError("Position outside image.");
   }
 }
-
 
 void throw_if_outside(const IntPoint& pt, const ColorSpan& span){
 if (invalid_pixel_pos(pt, span)){
