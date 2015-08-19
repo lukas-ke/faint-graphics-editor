@@ -684,7 +684,9 @@ static void canvas_redo(Canvas& canvas){
 
 // Helper for canvas_save
 static void do_save(Canvas& canvas, const FilePath& filePath){
-  SaveResult result = save(canvas, filePath);
+  SaveResult result = save(canvas,
+    get_app_context().GetFormats(),
+    filePath);
   if (!result.Successful()){
     throw ValueError(result.ErrorDescription());
   }
@@ -718,7 +720,7 @@ static void canvas_save(Canvas& canvas, Optional<FilePath>& maybeFilename){
 Save a copy of the image to the specified file, without changing the
 target filename for the image." */
 static void canvas_save_backup(Canvas& canvas, const FilePath& path){
-  SaveResult result = save(canvas, path);
+  SaveResult result = save(canvas, get_app_context().GetFormats(), path);
   if (!result.Successful()){
     throw ValueError(result.ErrorDescription());
   }

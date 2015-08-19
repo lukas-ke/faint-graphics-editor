@@ -15,15 +15,18 @@
 
 #ifndef FAINT_SAVE_HH
 #define FAINT_SAVE_HH
+#include <vector>
 #include "formats/save-result.hh"
 
 namespace faint{
 
+class Canvas;
 class FilePath;
 class FileExtension;
+class Format;
 class utf8_string;
 
-SaveResult save(Canvas&, const FilePath&);
+SaveResult save(Canvas&, const std::vector<Format*>&, const FilePath&);
 utf8_string str_no_matching_format(const FileExtension&);
 
 } // namespace

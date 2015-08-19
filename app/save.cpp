@@ -13,7 +13,6 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "app/get-app-context.hh"
 #include "app/save.hh"
 #include "formats/format.hh"
 #include "text/formatting.hh"
@@ -22,10 +21,11 @@
 
 namespace faint{
 
-SaveResult save(Canvas& canvas, const FilePath& path){
-  auto format = get_save_format(get_app_context().GetFormats(),
-    path.Extension());
-
+SaveResult save(Canvas& canvas,
+    const std::vector<Format*>& formats,
+    const FilePath& path)
+{
+  auto format = get_save_format(formats, path.Extension());
   return format.Visit(
     [&](Format& f){
       return f.Save(path, canvas);
