@@ -15,14 +15,21 @@
 
 #ifndef FAINT_PY_FUNC_CONTEXT_HH
 #define FAINT_PY_FUNC_CONTEXT_HH
-#include "gui/art.hh" // Fixme
 
 namespace faint{
+
+class AppContext;
+class Art;
 
 // Fixme: Better name and all, don't mix up with PythonContext.
 class PyFuncContext{
 public:
-  PyFuncContext(Art& art) : art(art){}
+  PyFuncContext(AppContext& app, Art& art)
+    : app(app),
+      art(art)
+  {}
+
+  AppContext& app;
   const Art& art;
 };
 
