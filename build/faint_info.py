@@ -31,6 +31,7 @@ HEADERS_TO_GENERATE = [
     # The second item is the cpp file to parse.
     # The methoddef-header will be named the same as the parsed cpp,
     # but with .cpp replaced by -methoddef.hh
+    ('active_settings', '../python/py-active-settings.cpp'),
     ('clipboard', '../python/py-clipboard.cpp'),
     ('LinearGradient', '../python/py-linear-gradient.cpp'),
     ('Pattern', '../python/py-pattern.cpp'),

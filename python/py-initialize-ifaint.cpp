@@ -16,6 +16,7 @@
 #include <fstream>
 #include "python/py-include.hh"
 #include "python/py-initialize-ifaint.hh"
+#include "python/py-active-settings.hh"
 #include "python/py-app.hh"
 #include "python/py-bitmap.hh"
 #include "python/py-canvas.hh"
@@ -71,6 +72,7 @@ void add_faint_types(PyObject* module){
   add_type_object(module, GridType, "Grid");
   add_type_object(module, DialogFunctionsType, "DialogFunctions");
   add_type_object(module, GlobalFunctionsType, "GlobalFunctions");
+  add_type_object(module, ActiveSettingsType, "ActiveSettings");
 
   PyObject* binds = PyDict_New();
   PyModule_AddObject(module, "_binds", binds);
@@ -229,6 +231,10 @@ bool init_python(const utf8_string& arg, PyFuncContext& ctx){
   PyModule_AddObject(ifaint.get(),
     "fgl",
     create_global_functions(ctx));
+
+  PyModule_AddObject(ifaint.get(),
+    "active_settings",
+    create_ActiveSettings(ctx));
 
   DirPath dataDir = get_data_dir();
   add_to_python_path(dataDir.SubDir("py"));
