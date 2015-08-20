@@ -14,7 +14,6 @@
 // permissions and limitations under the License.
 
 #include "app/active-canvas.hh"
-#include "app/get-app-context.hh"
 #include "commands/command.hh"
 #include "commands/command-bunch.hh"
 #include "commands/set-raster-selection-cmd.hh"
