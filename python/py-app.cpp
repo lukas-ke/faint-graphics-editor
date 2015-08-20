@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include "app/app-context.hh"
+#include "app/canvas.hh"
 #include "formats/format.hh"
 #include "gui/transparency-style.hh"
 #include "text/formatting.hh"
@@ -24,7 +25,6 @@
 #include "util/grid.hh"
 #include "util/make-vector.hh"
 #include "util/setting-id.hh"
-
 #include "python/py-include.hh"
 #include "python/mapped-type.hh"
 #include "python/py-format.hh"
@@ -104,6 +104,13 @@ static void faintapp_add_format(AppContext& app, PyObject* args){
     FileExtension(extension));
   app.AddFormat(f);
 }
+
+/* method: "close()\n
+Close the canvas." */
+static void faintapp_close(AppContext& app, Canvas* canvas){
+  app.Close(*canvas);
+}
+
 
 /* method: "list_fonts()->[fontname1, ...]\n
 Returns a list of the available font names." */

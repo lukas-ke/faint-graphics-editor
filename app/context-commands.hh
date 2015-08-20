@@ -41,7 +41,7 @@ Command* context_targetted(BitmapCommand*, Canvas&);
 //
 // If neither objects or raster cropping happened, auto-crop is
 // attempted.
-Command* context_crop(Canvas&);
+Command* context_crop(Canvas&, const Paint& bg);
 
 // Deletes the raster or object selection (if any). Fills a hole left
 // by a raster selection with the Paint

@@ -60,8 +60,7 @@ Command* get_apply_command(const Canvas& canvas, const Operation& op){
     });
 }
 
-static Command* context_crop_raster(const Image& active){
-  auto bg = get_app_context().GetToolSettings().Get(ts_Bg);
+static Command* context_crop_raster(const Image& active, const Paint& bg){
   return crop_to_raster_selection_command(active, bg);
 }
 
@@ -69,12 +68,12 @@ static Command* context_crop_object(const Image& active){
   return get_crop_command(active.GetObjectSelection());
 }
 
-Command* context_crop(Canvas& canvas){
+Command* context_crop(Canvas& canvas, const Paint& bg){
   const Image& active(canvas.GetImage());
   const Layer layer = canvas.GetTool().GetLayerType();
 
   Command* cmd = layer == Layer::RASTER ?
-    context_crop_raster(active) :
+    context_crop_raster(active, bg) :
     context_crop_object(active);
 
   return cmd != nullptr ?

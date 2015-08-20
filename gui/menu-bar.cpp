@@ -373,7 +373,8 @@ public:
     Add(editMenu, Label("Cr&op\tCtrl+Alt+C"),
       [&](){
         Canvas& active = app.GetActiveCanvas();
-        active.RunCommand(context_crop(active));
+        auto bg = app.GetToolSettings().Get(ts_Bg);
+        active.RunCommand(context_crop(active, bg));
       });
 
     Add(editMenu, wxID_DELETE, Label("&Delete\tDel"),

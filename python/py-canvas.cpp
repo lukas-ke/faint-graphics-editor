@@ -148,17 +148,13 @@ static void canvas_clear_point_overlay(Canvas& canvas){
   python_queue_refresh(canvas);
 }
 
-/* method: "close()\n
-Close the canvas." */
-static void canvas_close(Canvas& canvas){
-  get_app_context().Close(canvas);
-}
-
 /* method: "context_crop()\n
 Crops the image to the raster selection, crops a selected object or
 performs an autocrop." */
 static void canvas_context_crop(Canvas& canvas){
-  python_run_command(canvas, context_crop(canvas));
+  python_run_command(canvas,
+    context_crop(canvas,
+      get_app_context().GetToolSettings().Get(ts_Bg)));
 }
 
 /* method: "context_delete()\n
