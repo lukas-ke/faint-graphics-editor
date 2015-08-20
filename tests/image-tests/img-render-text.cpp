@@ -9,6 +9,7 @@
 #include "rendering/text-info-dc.hh"
 #include "util/default-settings.hh"
 #include "text/formatting.hh"
+#include "text/char-constants.hh"
 
 namespace faint{
 
@@ -103,5 +104,29 @@ void img_render_text(){
     for (size_t i = 0; i != text.size(); i++){
       render_selected(text, CaretRange(0, i));
     }
+  }
+
+  {
+    // Fixme: Previously crashed in compute_caret.
+    // Extract to compute_caret test instead.
+    Bitmap bmp({200, 200}, color_white);
+    {
+      FaintDC dc(bmp);
+
+      StubExpressionContext ctx;
+      TextBuffer text;
+      text.insert(utf8_char("a"));
+      text.insert(chars::eol);
+
+      render_text(dc,
+        text,
+        no_option(),
+        tri_from_rect(Rect(Point(0,0), Size(200, 100))),
+        beingEdited,
+        textInfo,
+        ctx,
+        s);
+    }
+    save_test_image(bmp, FileName("wee.png"));
   }
 }

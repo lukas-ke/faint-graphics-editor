@@ -92,27 +92,27 @@ text_lines_t split_string(const TextInfo& info,
       if (softBreak){
         result.push_back(TextLine::SoftBreak(width,
           slice(string, lineStart, lineEnd) + chars::space));
+        lineStart = lineEnd + 1;
       }
       else {
         result.push_back(TextLine::HardBreak(width,
           slice(string, lineStart, lineEnd) + chars::space));
+        lineStart = lineEnd + 1;
       }
     }
     else {
       split_line(info, slice(string, lineStart, lineEnd),
         maxWidth.Get(), result);
+      lineStart = lineEnd;
     }
-
-    lineStart = lineEnd + 1;
-
   } while (lineEnd != string.size());
 
   if (!result.empty()){
     // Remove trailing space from last line
+    // Fixme: Only if added space. (Yuck)
     auto& last = result.back().text;
     last = slice_up_to(last, -1);
   }
-
   return result;
 }
 

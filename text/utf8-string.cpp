@@ -19,10 +19,8 @@
 
 namespace faint{
 
-static void throw_if_outside(const std::string& data, size_t pos){
-  if (utf8::num_characters(data) <= pos){
-    throw std::out_of_range("invalid string position");
-  }
+inline bool outside(const std::string& data, size_t pos){
+  return utf8::num_characters(data) <= pos;
 }
 
 utf8_string::utf8_string(size_t n, const utf8_char& ch){
@@ -44,7 +42,9 @@ utf8_string::utf8_string(const std::string& str)
 {}
 
 utf8_char utf8_string::at(size_t pos) const{
-  throw_if_outside(m_data, pos);
+  if (outside(m_data, pos)){
+    throw std::out_of_range("utf8_string::at invalid string position");
+  }
   return operator[](pos);
 }
 
@@ -67,7 +67,10 @@ void utf8_string::clear() {
 }
 
 utf8_string utf8_string::substr(size_t pos, size_t n) const{
-  throw_if_outside(m_data, pos);
+  if (outside(m_data, pos)){
+    throw std::out_of_range("utf8_string::substr invalid string position");
+  }
+
   size_t startByte = utf8::char_num_to_byte_num_checked(pos, m_data);
   size_t numBytes = (n == utf8_string::npos) ?
     std::string::npos :
@@ -93,7 +96,9 @@ bool utf8_string::empty() const{
 }
 
 utf8_string& utf8_string::erase(size_t pos, size_t n){
-  throw_if_outside(m_data, pos);
+  if (outside(m_data, pos)){
+    throw std::out_of_range("utf8_string::erase invalid string position");
+  }
 
   size_t startByte = utf8::char_num_to_byte_num_clamped(pos, m_data);
   size_t numBytes = (n == npos ? npos :

@@ -664,6 +664,7 @@ std::vector<int> CairoContext::cumulative_text_width(const utf8_string& text,
   v.push_back(0);
   for (size_t i = 1; i <= text.size(); i++){
     utf8_string substr(text.substr(0, i));
+
     int w, h;
     pango_layout_set_text(layout.get(), substr.c_str(), -1);
     pango_layout_get_pixel_size(layout.get(), &w, &h);

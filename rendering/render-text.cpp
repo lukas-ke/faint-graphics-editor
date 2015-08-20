@@ -63,13 +63,14 @@ static utf8_string get_evaluated_string(const ExpressionContext& ctx,
     });
 }
 
+// Fixme: Extract and unit test.
 static LineSegment compute_caret(const TextInfo& info,
   const TextBuffer& textBuf,
   const Tri& tri,
   const text_lines_t& lines,
   const Settings& settings)
 {
-  TextPos pos = caret_index_to_row_column(lines, textBuf.caret()); // Fixme: use caret_index_to_row_column
+  TextPos pos = caret_index_to_row_column(lines, textBuf.caret());
 
   const auto& line = lines[pos.row];
   auto textSize = info.TextSize(slice_up_to(line.text, pos.col));

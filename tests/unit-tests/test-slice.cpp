@@ -25,6 +25,9 @@ void test_slice(){
     EQUAL(slice("asdf", -5, 2), "as");
     EQUAL(slice("asdf", -3, -2), "s");
     EQUAL(slice("asdf", -2, -1), "d");
+
+    EQUAL(slice("asdf", 10, 20), "");
+    EQUAL(slice("", 0, 1), "");
   }
 
   {
@@ -39,6 +42,9 @@ void test_slice(){
     EQUAL(slice_from("asdf", -2), "df");
     EQUAL(slice_from("asdf", -4), "asdf");
     EQUAL(slice_from("asdf", -5), "asdf");
+
+    EQUAL(slice_from("", 0), "");
+    EQUAL(slice_from("", 1), "");
   }
 
   {

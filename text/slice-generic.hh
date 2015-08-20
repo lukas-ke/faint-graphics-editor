@@ -15,6 +15,7 @@
 
 #ifndef FAINT_SLICE_HH
 #define FAINT_SLICE_HH
+#include <cassert>
 
 namespace faint{ namespace generic{
 
@@ -37,7 +38,8 @@ StringType slice(const StringType& s, int first, int up_to){
   size_t b = resolve_index(s.size(), up_to);
 
   if (a < b){
-    return s.substr(a, b - a);
+    auto s2 = s.substr(a, b - a);
+    return s2;
   }
   return "";
 }
@@ -45,6 +47,10 @@ StringType slice(const StringType& s, int first, int up_to){
 // Return the characters from first to the end of the string
 template<typename StringType>
 StringType slice_from(const StringType& s, int first){
+  if (s.empty()){
+    return "";
+  }
+
   size_t a = resolve_index(s.size(), first);
   return (a < s.size()) ?
     s.substr(a) : "";
@@ -53,6 +59,9 @@ StringType slice_from(const StringType& s, int first){
 // Return the characters up to the given index.
 template<typename StringType>
 StringType slice_up_to(const StringType& s, int up_to){
+  if (s.empty()){
+    return "";
+  }
   const size_t b = resolve_index(s.size(), up_to);
   return s.substr(0, b);
 }
@@ -60,6 +69,7 @@ StringType slice_up_to(const StringType& s, int up_to){
 // Return the character at pos as a string
 template<typename StringType>
 StringType char_at(const StringType& s, int pos){
+  assert(!s.empty());
   if (pos < 0 && size_t(-pos) > s.size()){
     return "";
   }
