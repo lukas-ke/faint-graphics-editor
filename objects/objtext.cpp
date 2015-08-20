@@ -70,6 +70,13 @@ static utf8_string get_evaluated_string(const ExpressionContext& ctx,
     });
 }
 
+static LineSegment empty_text_caret(const Tri& tri, coord rowHeight){
+  Tri caretTri(tri.P0(), tri.P1(), rowHeight);
+  caretTri = offset_aligned(caretTri, 1.0, 0.0);
+  return LineSegment(caretTri.P0(), caretTri.P2());
+
+}
+
 ObjText::ObjText(const Tri& tri, const utf8_string& text, const Settings& s)
   : Object(s),
     m_textBuf(text),
@@ -104,15 +111,15 @@ coord ObjText::BaselineOffset() const{
   return TextInfoDC(m_settings).Ascent();
 }
 
-size_t ObjText::CaretPos(const Point& posUnaligned) const{
+size_t ObjText::CaretPos(const Point& imagePos) const{
   TextInfoDC info(m_settings);
   const auto lines = split_string(info, m_textBuf.get(),
     max_width_t(m_tri.Width()));
 
   const auto maxCaret = m_textBuf.size();
-  auto rowHeight = RowHeight();
+  const auto rowHeight = RowHeight();
 
-  return caret_index_from_pos(posUnaligned,
+  return caret_index_from_pos(imagePos,
     m_tri,
     lines,
     rowHeight,
@@ -130,10 +137,7 @@ void ObjText::Draw(FaintDC& dc, ExpressionContext& ctx){
 
   if (m_textBuf.empty()){
     // Fixme: Tricky that this is done during rendering
-    // Compute the caret position
-    Tri caretTri(m_tri.P0(), m_tri.P1(), m_rowHeight);
-    caretTri = offset_aligned(caretTri, 1.0, 0.0);
-    m_caret = LineSegment(caretTri.P0(), caretTri.P2());
+    m_caret = empty_text_caret(m_tri, m_rowHeight);
   }
 
   auto lines = Split(textInfo, ctx);
