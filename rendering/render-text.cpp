@@ -15,7 +15,6 @@
 
 #include "bitmap/color.hh"
 #include "geo/tri.hh"
-#include "objects/object.hh" // mask_no_fill // Fixme
 #include "rendering/faint-dc.hh"
 #include "rendering/render-text.hh"
 #include "text/slice.hh"
@@ -49,6 +48,9 @@ LineSegment compute_caret(const TextInfo& info,
 
   return LineSegment(caretTri.P0(), caretTri.P2());
 }
+
+extern const Color mask_no_fill;
+extern const Color mask_fill;
 
 void render_text(FaintDC& dc,
   const text_lines_t& lines,
