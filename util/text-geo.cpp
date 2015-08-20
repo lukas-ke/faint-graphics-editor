@@ -75,7 +75,46 @@ Tri aligned(const Tri& tri, HorizontalAlign align, coord part, coord whole){
   }
 }
 
-TextPos index_to_row_column(const text_lines_t& lines, size_t caret){
+TextPos char_index_to_row_column(const text_lines_t& lines, size_t caret){
+  TextPos pos;
+  pos.row = pos.col = 0;
+  size_t chars = 0;
+
+  for (size_t row = 0; row != lines.size(); row++){
+    pos.row = row;
+    const utf8_string& line = lines[row].text;
+    size_t numChars = line.size();
+    chars += numChars;
+    if (chars > caret) {
+      // Fixme: Why clamp? Also is this really caret and not char index?
+      pos.col = numChars - (chars - caret);
+      break;
+    }
+    pos.col = numChars - 1;
+  }
+  return pos;
+}
+
+TextPos caret_index_to_row_column(const text_lines_t& lines, size_t caret){
+  TextPos pos;
+  pos.row = pos.col = 0;
+  size_t chars = 0;
+
+  for (size_t row = 0; row != lines.size(); row++){
+    pos.row = row;
+    const utf8_string& line = lines[row].text;
+    size_t numChars = line.size();
+    chars += numChars;
+    if (chars > caret) {
+      pos.col = numChars - (chars - caret) + 1;
+      break;
+    }
+    pos.col = numChars;
+  }
+  return pos;
+}
+
+TextPos caret_to_row_column(const text_lines_t& lines, size_t caret){
   TextPos pos;
   pos.row = pos.col = 0;
   size_t chars = 0;
@@ -123,8 +162,8 @@ std::vector<Tri> text_selection_region(const TextInfo& info,
   }
 
   // Find the start and end positions
-  TextPos s0 = index_to_row_column(lines, selection.from);
-  TextPos s1 = index_to_row_column(lines, selection.to);
+  TextPos s0 = char_index_to_row_column(lines, selection.from);
+  TextPos s1 = char_index_to_row_column(lines, selection.to);
 
   auto size0 = info.TextSize(slice_up_to(lines[s0.row].text, s0.col));
   auto size1 = info.TextSize(slice_up_to(lines[s1.row].text, s1.col));

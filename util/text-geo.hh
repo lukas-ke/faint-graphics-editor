@@ -63,8 +63,12 @@ public:
 };
 
 // Transforms an index into the text to the line and column of the
+// text split into lines. Clamps indexes beyond the end.
+TextPos char_index_to_row_column(const text_lines_t&, size_t index);
+
+// Transforms a caret-index in the text to the line and column of the
 // text split into lines.
-TextPos index_to_row_column(const text_lines_t&, size_t index);
+TextPos caret_index_to_row_column(const text_lines_t&, size_t index);
 
 class Align{
 public:

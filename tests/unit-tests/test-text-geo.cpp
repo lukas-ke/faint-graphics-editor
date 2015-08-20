@@ -156,20 +156,20 @@ void test_text_geo(){
     };
 
     using Tp = TextPos;
-    EQUALF(index_to_row_column(lines, 0), Tp(0,0), fmt);
-    EQUALF(index_to_row_column(lines, 1), Tp(0,1), fmt);
-    EQUALF(index_to_row_column(lines, 8), Tp(0,8), fmt);
-    EQUALF(index_to_row_column(lines, 9), Tp(1,0), fmt);
-    EQUALF(index_to_row_column(lines, 10), Tp(1,1), fmt);
-    EQUALF(index_to_row_column(lines, 25), Tp(1,16), fmt);
-    EQUALF(index_to_row_column(lines, 26), Tp(2,0), fmt);
-    EQUALF(index_to_row_column(lines, 49), Tp(2,23), fmt);
-    EQUALF(index_to_row_column(lines, 50), Tp(3,0), fmt);
-    EQUALF(index_to_row_column(lines, 62), Tp(3,12), fmt);
-    EQUALF(index_to_row_column(lines, 63), Tp(3,13), fmt);
+    EQUALF(char_index_to_row_column(lines, 0), Tp(0,0), fmt);
+    EQUALF(char_index_to_row_column(lines, 1), Tp(0,1), fmt);
+    EQUALF(char_index_to_row_column(lines, 8), Tp(0,8), fmt);
+    EQUALF(char_index_to_row_column(lines, 9), Tp(1,0), fmt);
+    EQUALF(char_index_to_row_column(lines, 10), Tp(1,1), fmt);
+    EQUALF(char_index_to_row_column(lines, 25), Tp(1,16), fmt);
+    EQUALF(char_index_to_row_column(lines, 26), Tp(2,0), fmt);
+    EQUALF(char_index_to_row_column(lines, 49), Tp(2,23), fmt);
+    EQUALF(char_index_to_row_column(lines, 50), Tp(3,0), fmt);
+    EQUALF(char_index_to_row_column(lines, 62), Tp(3,12), fmt);
+    EQUALF(char_index_to_row_column(lines, 63), Tp(3,13), fmt);
 
     // Out of bounds clamping
-    EQUALF(index_to_row_column(lines, 64), Tp(3,13), fmt);
+    EQUALF(char_index_to_row_column(lines, 64), Tp(3,13), fmt);
   }
 
   { // Test "text_extents", "text_line_regions", "text_selection_region"

@@ -96,7 +96,7 @@ void ObjText::Init(){
 LineSegment ObjText::ComputeCaret(const TextInfo& info, const Tri& tri,
   const text_lines_t& lines)
 {
-  TextPos pos = index_to_row_column(lines, m_textBuf.caret());
+  TextPos pos = char_index_to_row_column(lines, m_textBuf.caret()); // Fixme: use caret_index_to_row_column ... (also move to render_text)
 
   const auto& line = lines[pos.row];
   auto textSize = info.TextSize(slice_up_to(line.text, pos.col));
