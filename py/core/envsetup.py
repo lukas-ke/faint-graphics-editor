@@ -821,6 +821,11 @@ def _select_next_front():
 
 bindk(key.arrow_down, _select_next_front, mod.alt)
 
+# Add all Faint global functions to the ifaint module
+for item in dir(ifaint.fgl):
+    if not item.startswith("__"):
+        ifaint.__dict__[item] = ifaint.fgl.__getattribute__(item)
+
 from ifaint import *
 
 import faint.util

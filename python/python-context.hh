@@ -15,6 +15,7 @@
 
 #ifndef FAINT_PYTHON_CONTEXT_HH
 #define FAINT_PYTHON_CONTEXT_HH
+#include "python/bound-object.hh"
 #include "util/template-fwd.hh"
 #include "util/id-types.hh"
 
@@ -72,6 +73,8 @@ public:
 
   // Run a Faint-command from a Python interface function.
   virtual void RunCommand(Canvas*, Command*) = 0;
+
+  virtual void RunCommand(const BoundObject<Object>&, Command*) = 0;
 
   // Run a Faint-command from a Python interface function, targetting
   // a specific frame.

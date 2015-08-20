@@ -114,12 +114,6 @@ static void add_format(PyObject*, PyObject* args){
   get_app_context().AddFormat(f);
 }
 
-/* function: "autosize_raster(raster_object)\n
-Trims away same-colored borders around a raster object" */
-static void autosize_raster(BoundObject<ObjRaster>& bound){
-  python_run_command(bound.Plain(), crop_raster_object_command(bound.obj));
-}
-
 /* function: "autosize_text(text_object)\n
 Resizes the object's text box to snugly fit the text." */
 static void autosize_text(BoundObject<ObjText>& bound){
@@ -156,12 +150,6 @@ static int get_layer(){
 position in screen coordinates." */
 static IntPoint get_mouse_pos_screen(){
   return get_app_context().GetMousePos();
-}
-
-/* function: "get_settings()\n
-Returns a copy of the current tool settings." */
-static Settings get_settings(){
-  return get_app_context().GetToolSettings();
 }
 
 /* function: "set_active_image(image)\n

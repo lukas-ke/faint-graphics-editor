@@ -44,6 +44,7 @@ HEADERS_TO_GENERATE = [
     ('faintinterpreter', '../python/py-interpreter.cpp'),
     ('faintpalette', '../python/py-palette.cpp'),
     ('faintwindow', '../python/py-window.cpp'),
+    ('global_functions', '../python/py-global-functions.cpp'),
     ('frame', '../python/py-frame.cpp'),
     ('frame_props', '../python/py-frame-props.cpp'),
     ('grid', '../python/py-grid.cpp'),

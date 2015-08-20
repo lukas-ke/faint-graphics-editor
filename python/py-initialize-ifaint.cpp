@@ -39,6 +39,7 @@
 #include "python/py-parse.hh"
 #include "python/py-clipboard.hh"
 #include "python/py-dialog-functions.hh"
+#include "python/py-global-functions.hh"
 
 namespace faint{
 
@@ -68,6 +69,7 @@ void add_faint_types(PyObject* module){
   add_type_object(module, FramePropsType, "FrameProps");
   add_type_object(module, GridType, "Grid");
   add_type_object(module, DialogFunctionsType, "DialogFunctions");
+  add_type_object(module, GlobalFunctionsType, "GlobalFunctions");
 
   PyObject* binds = PyDict_New();
   PyModule_AddObject(module, "_binds", binds);
@@ -242,6 +244,10 @@ bool init_python(const utf8_string& arg, PyFuncContext& ctx){
   PyModule_AddObject(ifaint.get(),
     "app",
     create_faintAppObject(ctx.app));
+
+  PyModule_AddObject(ifaint.get(),
+    "fgl",
+    create_global_functions(ctx));
 
   DirPath dataDir = get_data_dir();
   add_to_python_path(dataDir.SubDir("py"));

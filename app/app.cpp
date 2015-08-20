@@ -258,7 +258,7 @@ public:
     m_pythonContext.reset(&(m_faintWindow->GetPythonContext()));
 
     m_pyFuncContext = std::make_unique<PyFuncContext>(*m_appContext,
-      m_art);
+      m_art, *m_pythonContext);
     bool ok = init_python(m_cmd.arg, *m_pyFuncContext);
     if (!ok){
       return show_init_error(Title("Faint Internal Error"),

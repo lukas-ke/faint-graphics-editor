@@ -94,7 +94,10 @@ public:
     m_canvasIds[canvas] = canvas->GetId();
   }
 
-  void RunCommand(Canvas* canvas, Command* command) override{
+  void RunCommand(Canvas* canvas, Command* cmd) override{
+    if (cmd == nullptr){
+      return;
+    }
     QueueRefresh(canvas);
     if (std::find(begin(m_commandBundles), end(m_commandBundles), canvas) ==
       m_commandBundles.end())
@@ -102,12 +105,14 @@ public:
       m_commandBundles.push_back(canvas);
       canvas->OpenUndoBundle();
     }
-    canvas->RunCommand(command);
+    canvas->RunCommand(cmd);
   }
 
-  void RunCommand(Canvas* canvas, Command* command,
-    const FrameId& frameId) override
-  {
+  void RunCommand(Canvas* canvas, Command* cmd, const FrameId& frameId) override{
+    if (cmd == nullptr){
+      return;
+    }
+
     QueueRefresh(canvas);
     if (std::find(begin(m_commandBundles), end(m_commandBundles), canvas) ==
       end(m_commandBundles))
@@ -115,7 +120,13 @@ public:
       m_commandBundles.push_back(canvas);
       canvas->OpenUndoBundle();
     }
-    canvas->RunCommand(command, frameId);
+    canvas->RunCommand(cmd, frameId);
+  }
+
+  void RunCommand(const BoundObject<Object>& obj, Command* cmd) override{
+    if (cmd != nullptr){
+      RunCommand(obj.canvas, cmd, obj.frameId);
+    }
   }
 
   void SetCommandName(const Canvas* canvas, const utf8_string& name) override{

@@ -13,28 +13,24 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_PY_FUNC_CONTEXT_HH
-#define FAINT_PY_FUNC_CONTEXT_HH
+#ifndef FAINT_PY_GLOBAL_FUNCTIONS_HH
+#define FAINT_PY_GLOBAL_FUNCTIONS_HH
+#include "python/mapped-type.hh"
+#include "python/py-include.hh"
+#include "python/py-func-context.hh"
 
 namespace faint{
 
-class AppContext;
-class Art;
-class PythonContext;
+extern PyTypeObject GlobalFunctionsType;
 
-// Fixme: Better name and all, don't mix up with PythonContext.
-class PyFuncContext{
-public:
-  PyFuncContext(AppContext& app, Art& art, PythonContext& py)
-    : app(app),
-      art(art),
-      py(py)
-  {}
-
-  AppContext& app;
-  const Art& art;
-  PythonContext& py;
+struct globalFunctionsObject{
+  PyObject_HEAD
+  PyFuncContext* ctx;
 };
+
+/** Create Python-object holding "global functions",
+in reality, methods. */
+PyObject* create_global_functions(PyFuncContext&);
 
 } // namespace
 
