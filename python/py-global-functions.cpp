@@ -23,6 +23,7 @@
 #include "text/formatting.hh"
 #include "util/setting-id.hh"
 #include "objects/objraster.hh"
+#include "objects/objtext.hh"
 #include "python/python-context.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-util.hh"
@@ -52,6 +53,18 @@ struct MappedType<PyFuncContext&>{
 Trims away same-colored borders around a raster object" */
 static void f_autosize_raster(PyFuncContext& ctx, BoundObject<ObjRaster>& bound){
   ctx.py.RunCommand(bound.Plain(), crop_raster_object_command(bound.obj));
+}
+
+/* method: "autosize_text(text_object)\n
+Resizes the object's text box to snugly fit the text." */
+static void f_autosize_text(PyFuncContext& ctx, BoundObject<ObjText>& bound){
+  ctx.py.RunCommand(bound.Plain(), crop_text_region_command(bound.obj));
+}
+
+/* method: "get_active_image()\n
+Returns the active (currently edited) image." */
+static Canvas& f_get_active_image(PyFuncContext& ctx){
+  return ctx.app.GetActiveCanvas();
 }
 
 /* method: "get_font()->font\nReturns the active font face name." */

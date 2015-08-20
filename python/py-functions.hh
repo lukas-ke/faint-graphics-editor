@@ -64,68 +64,6 @@
 
 namespace faint{
 
-/* function: "add_format(load_callback, save_callback, name, extension)\n
-Add a file format for loading and/or saving.\n\n
-Either load_callback or save_callback can be None.\n
-name is the name of the file format,
-extension is the file extension, used to identify the format.\n\n
-The load_callback receives a filename and an ImageProps object:\n
-my_load_callback(filename, imageProps)\n\nThe save_callback receives a
-target filename and a Canvas:\n
-my_save_callback(filename, canvas)" */
-static void add_format(PyObject*, PyObject* args){
-  PyObject* loader;
-  PyObject* saver;
-  char* name;
-  char* extension;
-  if (!PyArg_ParseTuple(args, "OOss", &loader, &saver, &name, &extension)){
-    throw PresetFunctionError();
-  }
-
-  if (loader == Py_None){
-    loader = nullptr;
-  }
-  else if (!PyCallable_Check(loader)){
-    throw TypeError("Loader must be a callback or None:\n"
-      "add_format(loader, saver, name, extension)");
-  }
-  else {
-    Py_INCREF(loader);
-  }
-
-  if (saver == Py_None){
-    saver = nullptr;
-  }
-  else if (!PyCallable_Check(saver)){
-    throw TypeError("Saver must be a callback or None:\n"
-      "add_format(loader, saver, name, extension)");
-  }
-  else{
-    Py_INCREF(saver);
-  }
-
-  if (loader == nullptr && saver == nullptr){
-    throw ValueError("saver and loader are both None");
-  }
-  PyFileFormat* f = new PyFileFormat(load_callback_t(loader),
-    save_callback_t(saver),
-    label_t(utf8_string(name)),
-    FileExtension(extension));
-  get_app_context().AddFormat(f);
-}
-
-/* function: "autosize_text(text_object)\n
-Resizes the object's text box to snugly fit the text." */
-static void autosize_text(BoundObject<ObjText>& bound){
-  python_run_command(bound.Plain(), crop_text_region_command(bound.obj));
-}
-
-/* function: "get_active_image()\nReturns the active (currently
-edited) image." */
-static Canvas& get_active_image(){
-  return get_app_context().GetActiveCanvas();
-}
-
 /* function: "Faint internal function."
 name: "int_incomplete_command" */
 static void incomplete_command(){
@@ -165,28 +103,6 @@ static void int_unbind_key(const KeyPress& keyPress){
   get_python_context().Unbind(keyPress);
 }
 
-/* function: "list_formats()->[file_format, ...]\n
-Returns a list of the available file formats as tuples with
-(format_name, default_extension)." */
-static auto list_formats(){
-  return make_vector(get_app_context().GetFormats(),
-    [](const Format* f){
-      return std::make_pair(f->GetLabel(), f->GetDefaultExtension().Str());
-    });
-}
-
-/* function: "list_fonts()->[fontname1, ...]\n
-Returns a list of the available font names." */
-static std::vector<utf8_string> list_fonts(){
-  return available_font_facenames();
-}
-
-/* function: "cout(s)\nUses std::cout"
-name: "cout" */
-static void print_to_stdout(const std::string& s){
-  std::cout << s << std::endl;
-}
-
 /* function: "Faint internal function." */
 static void int_ran_command(){
   PythonContext& python(get_python_context());
@@ -194,13 +110,10 @@ static void int_ran_command(){
   python.NewPrompt();
 }
 
-/* function: "swap_colors()\nSwaps the foreground and background colors." */
-static void swap_colors(){
-  AppContext& app(get_app_context());
-  Paint fg(app.Get(ts_Fg));
-  Paint bg(app.Get(ts_Bg));
-  app.Set(ts_Fg, bg);
-  app.Set(ts_Bg, fg);
+/* function: "cout(s)\nUses std::cout"
+name: "cout" */
+static void print_to_stdout(const std::string& s){
+  std::cout << s << std::endl;
 }
 
 /* function: "blit(src, (x,y), dst)\n
@@ -211,110 +124,6 @@ static void py_blit_bitmap(const Bitmap& src,
   bitmapObject*& dst)
 {
   blit(offsat(src, topLeft), onto(dst->bmp));
-}
-
-/* function: "tool([i])\n
-Selects the tool with the specified id, or returns the current id if
-none specified." */
-static Optional<int> tool(const Optional<int>& maybeId){
-  if (maybeId.NotSet()){
-    // Return the currently selected tool identifier
-    return option(to_int(get_app_context().GetToolId()));
-  }
-
-  int id = maybeId.Get();
-  if (!within_enum<ToolId>(id)){
-    throw ValueError(space_sep(
-      "Invalid tool identifier. Valid tool identifiers are",
-      str_int(enum_min_value<ToolId>()), "to", str_int(enum_max_value<ToolId>())));
-  }
-
-  get_app_context().SelectTool(to_tool_id(id));
-
-  // Returns nothing when selecting a tool.
-  return no_option();
-}
-
-/* function: "tool_selection()\nSelects the raster selection tool." */
-static void tool_selection(){
-  get_app_context().SelectTool(ToolId::SELECTION);
-}
-
-/* function: "tool_raster_selection()\nSelects the raster selection tool." */
-static void tool_raster_selection(){
-  get_app_context().SelectTool(ToolId::SELECTION);
-  get_app_context().SetLayer(Layer::RASTER);
-}
-
-/* function: "tool_object_selection()\nSelects the object selection tool." */
-static void tool_object_selection(){
-  get_app_context().SelectTool(ToolId::SELECTION);
-  get_app_context().SetLayer(Layer::OBJECT);
-}
-
-/* function: "tool_pen()\nSelects the pen tool." */
-static void tool_pen(){
-  get_app_context().SelectTool(ToolId::PEN);
-}
-
-/* function: "tool_brush()\nSelects the brush tool." */
-static void tool_brush(){
-  get_app_context().SelectTool(ToolId::BRUSH);
-}
-
-/* function: "tool_picker()\nSelects the picker tool." */
-static void tool_picker(){
-  get_app_context().SelectTool(ToolId::PICKER);
-}
-
-/* function: "tool_path()\nSelects the path tool." */
-static void tool_path(){
-  get_app_context().SelectTool(ToolId::PATH);
-}
-
-/* function: "tool_level()\nSelects the level tool." */
-static void tool_level(){
-  get_app_context().SelectTool(ToolId::LEVEL);
-}
-
-/* function: "tool_line()\nSelects the line tool." */
-static void tool_line(){
-  get_app_context().SelectTool(ToolId::LINE);
-}
-
-/* function: "tool_spline()\nSelects the spline tool." */
-static void tool_spline(){
-  get_app_context().SelectTool(ToolId::SPLINE);
-}
-
-/* function: "tool_rectangle()\nSelects the rectangle tool." */
-static void tool_rectangle(){
-  get_app_context().SelectTool(ToolId::RECTANGLE);
-}
-
-/* function: "tool_ellipse()\nSelects the ellipse tool." */
-static void tool_ellipse(){
-  get_app_context().SelectTool(ToolId::ELLIPSE);
-}
-
-/* function: "tool_polygon()\nSelects the polygon tool." */
-static void tool_polygon(){
-  get_app_context().SelectTool(ToolId::POLYGON);
-}
-
-/* function: "tool_text()\nSelects the text tool." */
-static void tool_text(){
-  get_app_context().SelectTool(ToolId::TEXT);
-}
-
-/* function: "tool_fill()\nSelects the fill tool." */
-static void tool_fill(){
-  get_app_context().SelectTool(ToolId::FLOOD_FILL);
-}
-
-/* function: "tool_hot_spot()\nSelects the hot-spot tool." */
-static void tool_hot_spot(){
-  get_app_context().SelectTool(ToolId::HOT_SPOT);
 }
 
 // Helper for to_svg_path
@@ -368,13 +177,6 @@ static std::vector<PathPt> get_path_points(const BoundObject<Object>& bound){
   const Image& frame(bound.canvas->GetFrame(bound.frameId));
   auto& ctx(frame.GetExpressionContext());
   return bound.obj->GetPath(ctx);
-}
-
-/* function: "update_settings(settings)\n
-Updates the active tool settings with the settings from the passed in
-Settings object." */
-static void update_settings(const Settings& settings){
-  get_app_context().UpdateToolSettings(settings);
 }
 
 /* function: "get_config_path()->file_path\n
