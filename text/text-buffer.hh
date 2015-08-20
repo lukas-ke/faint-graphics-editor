@@ -44,7 +44,7 @@ class TextBuffer{
   //   "Hello world|" = size() = 11
   //
   // The selection is similar to having two carets:
-  // "H|ell]o world" = 1->4
+  // "H[ell]o world" = 1->4
 public:
   TextBuffer();
   explicit TextBuffer(const utf8_string&);
