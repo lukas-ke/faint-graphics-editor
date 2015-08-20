@@ -38,7 +38,7 @@ HEADERS_TO_GENERATE = [
     ('bitmap', '../python/py-bitmap.cpp'),
     ('canvas', '../python/py-canvas.cpp'),
     ('dialog_functions', '../python/py-dialog-functions.cpp'),
-    ('faint_interface', ('../python/py-functions.hh',
+    ('faint_interface', ('../python/py-functions.cpp',
                          '../python/py-object-geo.cpp')),
     ('faintapp', '../python/py-app.cpp'),
     ('faintinterpreter', '../python/py-interpreter.cpp'),

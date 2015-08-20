@@ -21,9 +21,8 @@
 #include "python/py-canvas.hh"
 #include "python/py-frame-props.hh"
 #include "python/py-frame.hh"
-#include "python/py-functions.hh"
+#include "python/py-functions.hh" // Fixme: Remove somehow.
 #include "python/py-grid.hh"
-#include "python/py-image-props.hh"
 #include "python/py-interpreter.hh"
 #include "python/py-linear-gradient.hh"
 #include "python/py-palette.hh"
@@ -41,10 +40,12 @@
 #include "python/py-clipboard.hh"
 #include "python/py-dialog-functions.hh"
 #include "python/py-global-functions.hh"
+#include "util-wx/key-codes.hh"
+#include "util-wx/file-path.hh"
+#include "util-wx/file-path-util.hh"
+#include "python/py-interface.hh" // Fixme: For format_error_info
 
 namespace faint{
-
-#include "generated/python/method-def/py-functions-methoddef.hh"
 
 template<typename T>
 void add_type_object(PyObject* module, T& type, const char* name){
@@ -176,7 +177,6 @@ static struct PyModuleDef faintClipboardModule {
   nullptr, // m_free
 };
 
-
 static PyObject* create_clipboard_module(){
   PyObject* module_clipboard = PyModule_Create(&faintClipboardModule);
   assert(module_clipboard != nullptr);
@@ -188,7 +188,7 @@ static struct PyModuleDef faintInterfaceModule = {
   "ifaint",
   "ifaint\n\nThe built in functions and classes for faint-graphics-editor.\n",
   -1, // m_size
-  faint_interface_methods, // m_methods
+  get_py_functions(), // m_methods
   nullptr, // m_reload
   nullptr, // m_traverse
   nullptr, // m_clear
