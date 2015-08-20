@@ -58,4 +58,12 @@ void test_text_entry_util(){
     EQUAL(text.size(), 12);
     EQUAL(text.get(), "Hello world\n");
   }
+
+  {
+    // Select all, no text
+    TextBuffer text("");
+    EQUAL(text.all(), CaretRange(0,0));
+    text.select(text.all());
+    text.del();
+  }
 }

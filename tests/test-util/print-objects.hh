@@ -8,6 +8,7 @@
 namespace faint{
 
 PRINTER(Angle);
+PRINTER(CaretRange);
 PRINTER(IntLineSegment);
 PRINTER(IntPoint);
 PRINTER(IntRect);

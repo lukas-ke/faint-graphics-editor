@@ -120,7 +120,7 @@ void TextBuffer::del_back(){
 }
 
 void TextBuffer::del_selection(){
-  if (! m_sel.active){
+  if (!m_sel.active){
     return;
   }
   m_data.erase(m_sel.min(), m_sel.num());
@@ -204,6 +204,10 @@ void TextBuffer::select_none(){
 }
 
 void TextBuffer::select(const CaretRange& range){
+  if (range.from == range.to){
+    m_sel.active = false;
+    return;
+  }
   assert(range.from < m_data.size() + 1);
   assert(range.to < m_data.size() + 1);
   m_sel.origin = range.from;
@@ -211,7 +215,6 @@ void TextBuffer::select(const CaretRange& range){
   m_caret = range.to;
   m_sel.active = true;
 }
-
 
 void TextBuffer::set(const utf8_string& s){
   m_data = s;

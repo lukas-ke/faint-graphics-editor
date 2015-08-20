@@ -10,6 +10,7 @@
 #include "geo/line.hh"
 #include "geo/point.hh"
 #include "tests/test-util/print-objects.hh"
+#include "text/text-buffer.hh"
 #include "text/formatting.hh"
 #include "text/utf8-char.hh"
 
@@ -17,6 +18,10 @@ namespace faint {
 
 std::ostream& operator<<(std::ostream& o, const Angle& a){
   return o << a.Rad() << " radians";
+}
+
+std::ostream& operator<<(std::ostream& o, const CaretRange& r){
+  return o << r.from << ", " << r.to;
 }
 
 std::ostream& operator<<(std::ostream& o, const IntLineSegment& l){
