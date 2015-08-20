@@ -29,8 +29,6 @@ TextBuffer& selected_range(TextBuffer& text, const CaretRange& r){
 
 } // namespace
 
-
-
 void img_render_text(){
   using namespace faint;
   auto s = default_text_settings();
@@ -98,11 +96,12 @@ void img_render_text(){
       save_test_image(bmp, f);
     };
 
+    // ".a.b.c. ."
+    // "0 1 2 3 4"
+
     TextBuffer text("abc\ndef");
-    render_selected(text, CaretRange(0, 3));
-    render_selected(text, CaretRange(0, 4));
-    render_selected(text, CaretRange(0, 5));
-    render_selected(text, CaretRange(0, 6));
-    render_selected(text, CaretRange(0, 7)); // Error: renders identically to 0, 6.
+    for (size_t i = 0; i != text.size(); i++){
+      render_selected(text, CaretRange(0, i));
+    }
   }
 }

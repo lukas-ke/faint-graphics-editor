@@ -69,7 +69,7 @@ static LineSegment compute_caret(const TextInfo& info,
   const text_lines_t& lines,
   const Settings& settings)
 {
-  TextPos pos = char_index_to_row_column(lines, textBuf.caret()); // Fixme: use caret_index_to_row_column
+  TextPos pos = caret_index_to_row_column(lines, textBuf.caret()); // Fixme: use caret_index_to_row_column
 
   const auto& line = lines[pos.row];
   auto textSize = info.TextSize(slice_up_to(line.text, pos.col));

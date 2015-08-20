@@ -106,10 +106,11 @@ TextPos caret_index_to_row_column(const text_lines_t& lines, size_t caret){
     size_t numChars = line.size();
     chars += numChars;
     if (chars > caret) {
-      pos.col = numChars - (chars - caret) + 1;
+      // Fixme: Why clamp? Also is this really caret and not char index?
+      pos.col = numChars - (chars - caret);
       break;
     }
-    pos.col = numChars;
+    pos.col = numChars; // Fixme: Why
   }
   return pos;
 }
@@ -163,7 +164,7 @@ std::vector<Tri> text_selection_region(const TextInfo& info,
 
   // Find the start and end positions
   TextPos s0 = char_index_to_row_column(lines, selection.from);
-  TextPos s1 = char_index_to_row_column(lines, selection.to);
+  TextPos s1 = caret_index_to_row_column(lines, selection.to); // Fixme
 
   auto size0 = info.TextSize(slice_up_to(lines[s0.row].text, s0.col));
   auto size1 = info.TextSize(slice_up_to(lines[s1.row].text, s1.col));
