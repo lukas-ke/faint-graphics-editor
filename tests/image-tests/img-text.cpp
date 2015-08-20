@@ -20,6 +20,8 @@ static faint::Bitmap with_rect(const faint::Bitmap& src, const faint::Tri& r){
 }
 
 void img_text(){
+  // Test FaintDC::Text
+
   using namespace faint;
   ImageTable t(get_test_name(), {"", "Text", "Ink extents", "Given bounds"});
   const utf8_string text = "J" + chars::latin_small_letter_o_with_diaresis +

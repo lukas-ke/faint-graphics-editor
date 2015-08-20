@@ -35,62 +35,9 @@
 #include "util/settings.hh"
 #include "util/text-geo.hh"
 #include "rendering/render-text.hh"
+#include "rendering/text-info-dc.hh"
 
 namespace faint{
-
-class TextInfoDC : public TextInfo{
-public:
-  explicit TextInfoDC(const Settings& settings)
-    : m_bitmap(IntSize(10,10)),
-      m_dc(m_bitmap),
-      m_settings(settings)
-  {}
-
-  int GetWidth(const utf8_string& str) const override{
-    return m_dc.TextSize(str, m_settings).w;
-  }
-
-  IntSize TextSize(const utf8_string& str) const override{
-    return m_dc.TextSize(str, m_settings);
-  }
-
-  int ComputeRowHeight() const override{
-    // A full row is the ascent + descent
-    if (m_rowHeight.NotSet()){
-      auto metrics = m_dc.GetFontMetrics(m_settings);
-      m_rowHeight.Set(metrics.ascent + metrics.descent);
-    }
-    return m_rowHeight.Get();
-  }
-
-  coord Ascent() const{
-    return floated(m_dc.GetFontMetrics(m_settings).ascent);
-  }
-
-  std::vector<int> CumulativeTextWidth(const utf8_string& str){
-    return m_dc.CumulativeTextWidth(str, m_settings);
-  }
-
-  std::vector<PathPt> GetTextPath(const Tri& tri, const utf8_string& str){
-    return m_dc.GetTextPath(tri, str, m_settings);
-  }
-
-  TextMeasures TextExtents(const utf8_string& str){
-    return m_dc.TextExtents(str, m_settings);
-  }
-
-  FontMetrics GetFontMetrics(){
-    return m_dc.GetFontMetrics(m_settings);
-  }
-
-  TextInfoDC& operator=(const TextInfoDC&) = delete;
-  TextInfoDC(const TextInfoDC&) = delete;
-private:
-  Bitmap m_bitmap;
-  FaintDC m_dc;
-  const Settings& m_settings;
-  mutable Optional<int> m_rowHeight;
-};
 
 static utf8_string get_expression_string(const parse_result_t& result,
   const ExpressionContext& context)

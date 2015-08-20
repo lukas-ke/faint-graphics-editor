@@ -13,6 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#ifndef FAINT_RENDER_TEXT_HH
+#define FAINT_RENDER_TEXT_HH
 #include "rendering/faint-dc.hh"
 #include "text/text-line.hh" // TextInfo
 #include "text/text-buffer.hh"
@@ -22,8 +24,8 @@
 
 namespace faint{
 
-static utf8_string get_expression_string(const parse_result_t& result,
-  const ExpressionContext& context);
+static utf8_string get_expression_string(const parse_result_t&,
+  const ExpressionContext&);
 
 struct TextRenderInfo{
   int rowHeight;
@@ -47,3 +49,5 @@ void render_text_mask(
   const Settings&);
 
 } // namespace
+
+#endif
