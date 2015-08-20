@@ -158,6 +158,14 @@ Command* get_add_objects_command(const objects_t& objects,
     get_bunch_name(name, objects), commands);
 }
 
+Command* crop_to_raster_selection_command(const Image& image, const Paint& bg){
+  const RasterSelection& selection(image.GetRasterSelection());
+  if (!selection.Exists()){
+    return nullptr;
+  }
+  return get_crop_to_selection_command(selection, bg);
+}
+
 Command* get_auto_crop_command(const Image& image){
   const bool hasObjects = !(image.GetObjects().empty());
   auto rectangles(hasObjects ?
@@ -178,6 +186,8 @@ Command* get_auto_crop_command(const Image& image){
         "Auto Crop Image");
     });
 }
+
+
 
 BitmapCommand* get_blend_alpha_command(const ColRGB& bgColor){
   return get_function_command("Replace Alpha",

@@ -60,35 +60,28 @@ Command* get_apply_command(const Canvas& canvas, const Operation& op){
     });
 }
 
-static Command* crop_to_raster_selection_command(const Image& image){
-  const RasterSelection& selection(image.GetRasterSelection());
-  if (!selection.Exists()){
-    return nullptr;
-  }
-  return get_crop_to_selection_command(selection,
-    get_app_context().GetToolSettings().Get(ts_Bg));
+static Command* context_crop_raster(const Image& active){
+  auto bg = get_app_context().GetToolSettings().Get(ts_Bg);
+  return crop_to_raster_selection_command(active, bg);
+}
+
+static Command* context_crop_object(const Image& active){
+  return get_crop_command(active.GetObjectSelection());
 }
 
 Command* context_crop(Canvas& canvas){
   const Image& active(canvas.GetImage());
-  Layer layer = canvas.GetTool().GetLayerType();
-  if (layer == Layer::RASTER){
-    Command* cmd = crop_to_raster_selection_command(active);
-    if (cmd != nullptr){
-      return cmd;
-    }
-  }
-  else {
-    // Object layer
-    Command* cmd = get_crop_command(active.GetObjectSelection());
-    if (cmd != nullptr){
-      return cmd;
-    }
-  }
+  const Layer layer = canvas.GetTool().GetLayerType();
 
-  // No active raster selections and no croppable objects selected, do
-  // an auto-crop
-  return get_auto_crop_command(active);
+  Command* cmd = layer == Layer::RASTER ?
+    context_crop_raster(active) :
+    context_crop_object(active);
+
+  return cmd != nullptr ?
+    cmd :
+    // No active raster selections and no croppable objects selected,
+    // do an auto-crop
+    get_auto_crop_command(active);
 }
 
 void context_delete(Canvas& canvas, const Paint& bg){

@@ -34,6 +34,8 @@ class ObjRaster;
 // Gets an add object or a draw object command depending on the layer
 Command* add_or_draw(Object*, Layer);
 
+Command* crop_to_raster_selection_command(const Image&, const Paint& bg);
+
 // Experimental custom-anti-aliased line
 BitmapCommand* get_aa_line_command(const IntLineSegment&, const ColRGB&);
 
@@ -42,6 +44,7 @@ Command* get_add_objects_command(const objects_t&,
   const utf8_string& name="Add");
 
 Command* get_auto_crop_command(const Image&);
+
 
 BitmapCommand* get_blend_alpha_command(const ColRGB& bgColor);
 

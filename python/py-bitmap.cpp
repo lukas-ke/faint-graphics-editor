@@ -156,7 +156,7 @@ static PyObject* Bitmap_new(PyTypeObject* type, PyObject*, PyObject*){
 
 using common_type = Bitmap&;
 
-// Specializations since Bitmap doesn't have a python_run_command
+// Specializations since Bitmap doesn't support commands
 template<>
 void Common_aa_line<Bitmap&>(Bitmap& bmp, const IntLineSegment& line,
   const ColRGB& color)
