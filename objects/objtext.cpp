@@ -34,6 +34,7 @@
 #include "util/optional.hh"
 #include "util/settings.hh"
 #include "util/text-geo.hh"
+#include "rendering/render-text.hh"
 
 namespace faint{
 
@@ -206,79 +207,23 @@ Object* ObjText::Clone() const{
 }
 
 void ObjText::Draw(FaintDC& dc, ExpressionContext& ctx){
-  max_width_t maxWidth = (m_settings.Get(ts_BoundedText) ?
-    max_width_t(m_tri.Width()) : max_width_t());
-
   TextInfoDC textInfo(m_settings);
+  auto info = render_text(dc,
+    m_textBuf,
+    m_expression,
+    m_tri,
+    m_beingEdited,
+    textInfo,
+    ctx,
+    m_settings);
 
-  text_lines_t lines = m_beingEdited ?
-    split_string(textInfo, GetRawString(), maxWidth) :
-    split_string(textInfo, GetEvaluatedString(ctx), maxWidth);
-
-  m_rowHeight = textInfo.ComputeRowHeight();
-
-  if (m_textBuf.size() == 0){
-    // Fixme: Tricky that this is done in Draw
-    // Compute the caret position
-    Tri caretTri(m_tri.P0(), m_tri.P1(), textInfo.ComputeRowHeight());
-    caretTri = offset_aligned(caretTri, 1.0, 0.0);
-    m_caret = LineSegment(caretTri.P0(), caretTri.P2());
-    return;
-  }
-
-  Align align(m_settings.Get(ts_HorizontalAlign),
-    m_settings.Get(ts_VerticalAlign));
-
-  if (m_beingEdited){
-    // Draw the selection highlighting
-    for (const Tri& rowTri : text_selection_region(textInfo,
-        m_tri,
-        lines,
-        m_textBuf.get_sel_range(),
-        align))
-    {
-      dc.Rectangle(rowTri, m_highlightSettings);
-    }
-  }
-  auto tris(text_line_regions(textInfo, m_tri, lines, align));
-  Optional<Tri> clipTri(m_tri, m_settings.Get(ts_BoundedText));
-
-  for (const auto item : zip(tris, lines)){
-    // Fixme: Selected text should be drawn with wxSYS_COLOUR_HIGHLIGHTTEXT
-    dc.Text(item.first, item.second.text, m_settings, clipTri);
-  }
-
-  if (m_beingEdited && m_textBuf.get_sel_range().Empty()){
-    m_caret = ComputeCaret(textInfo, m_tri, lines);
-  }
+  m_caret = info.caret;
+  m_rowHeight = info.rowHeight;
 }
 
 void ObjText::DrawMask(FaintDC& dc){
-  // Fill the entire text region with "transparent inside" indicator.
-  Settings s(default_rectangle_settings());
-  s.Set(ts_FillStyle, FillStyle::BORDER_AND_FILL);
-  s.Set(ts_Fg, Paint(mask_no_fill));
-  s.Set(ts_Bg, Paint(mask_no_fill));
-  dc.Rectangle(m_tri, s);
-
-  // Fill the regions actually occupied by characters with "filled
-  // inside" indicator.
-  s.Set(ts_Fg, Paint(mask_fill));
-  s.Set(ts_Bg, Paint(mask_fill));
   TextInfoDC textInfo(m_settings);
-  text_lines_t lines = split_string(textInfo, m_textBuf.get(),
-    max_width_t(m_tri.Width()));
-
-  m_rowHeight = textInfo.ComputeRowHeight(); // Fixme
-  const Align align(m_settings.Get(ts_HorizontalAlign),
-    m_settings.Get(ts_VerticalAlign));
-
-  // Draw a rectangle from the left edge to the right for each line of text
-  for (const Tri& rowTri : text_selection_region(textInfo,
-      m_tri, lines, m_textBuf.all(), align))
-  {
-    dc.Rectangle(rowTri, s);
-  }
+  render_text_mask(dc, m_textBuf, m_tri, textInfo, m_settings);
 }
 
 Rect ObjText::GetAutoSizedRect() const {
