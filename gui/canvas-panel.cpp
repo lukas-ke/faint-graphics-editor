@@ -1064,6 +1064,7 @@ void CanvasPanel::CloseUndoBundle(const utf8_string& name){
 }
 
 PosInfo CanvasPanel::HitTest(const IntPoint& ptView, const ToolModifiers& mod){
+
   ObjectInfo objInfo = hit_test(ptView,
     m_images.Active(),
     m_state.geo, objectHandleWidth);

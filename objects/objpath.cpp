@@ -51,7 +51,7 @@ public:
     dc.Path(m_points.GetPoints(m_tri), m_settings);
   }
 
-  void DrawMask(FaintDC& dc) override{
+  void DrawMask(FaintDC& dc, ExpressionContext&) override{
     dc.Path(m_points.GetPoints(m_tri), mask_settings_fill(m_settings));
   }
 

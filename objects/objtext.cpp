@@ -105,38 +105,19 @@ coord ObjText::BaselineOffset() const{
 }
 
 size_t ObjText::CaretPos(const Point& posUnaligned) const{
-  Tri tri = m_tri;
-
-  // Realign the tri with the image to simplify calculations
-  Point pos(rotate_point(posUnaligned, -tri.GetAngle(), tri.P0()));
-  tri = rotated(tri, -tri.GetAngle(), tri.P0());
-
-  if (pos.y < tri.P0().y){
-    return 0;
-  }
-
   TextInfoDC info(m_settings);
+  const auto lines = split_string(info, m_textBuf.get(),
+    max_width_t(m_tri.Width()));
 
-  text_lines_t lines = split_string(info, m_textBuf.get(),
-    max_width_t(tri.Width()));
-  const coord rowHeight = RowHeight();
-  const size_t row = static_cast<size_t>((pos.y - tri.P0().y) / (rowHeight));
-  if (row >= lines.size()){
-    return m_textBuf.size();
-  }
+  const auto maxCaret = m_textBuf.size();
+  auto rowHeight = RowHeight();
 
-  // Find caret position of the first character in the clicked row
-  size_t charNum = 0;
-  for (size_t i = 0; i!= row; i++){
-    charNum += lines[i].text.size();
-  }
-
-  // Find the clicked character and set the caret to the left or right
-  // of it.
-  charNum += caret_from_extents(info.CumulativeTextWidth(lines[row].text),
-    pos, m_tri.P0().x);
-
-  return std::min(charNum, m_textBuf.size());
+  return caret_index_from_pos(posUnaligned,
+    m_tri,
+    lines,
+    rowHeight,
+    maxCaret,
+    [&](const utf8_string& s){return info.CumulativeTextWidth(s);});
 }
 
 Object* ObjText::Clone() const{
@@ -155,15 +136,7 @@ void ObjText::Draw(FaintDC& dc, ExpressionContext& ctx){
     m_caret = LineSegment(caretTri.P0(), caretTri.P2());
   }
 
-  max_width_t maxWidth = m_settings.Get(ts_BoundedText) ?
-    max_width_t(m_tri.Width()) :
-    max_width_t();
-
-  text_lines_t lines = (m_beingEdited || !m_settings.Get(ts_ParseExpressions)) ?
-    split_string(textInfo, m_textBuf.get(), maxWidth) :
-    split_string(textInfo, get_evaluated_string(ctx, m_expression, m_textBuf),
-      maxWidth);
-
+  auto lines = Split(textInfo, ctx);
   render_text(dc,
     lines,
     m_textBuf.get_sel_range(),
@@ -175,24 +148,18 @@ void ObjText::Draw(FaintDC& dc, ExpressionContext& ctx){
   m_caret = compute_caret(textInfo, m_textBuf, m_tri, lines, m_settings);
 }
 
-void ObjText::DrawMask(FaintDC& dc){
+void ObjText::DrawMask(FaintDC& dc, ExpressionContext& ctx){
   TextInfoDC textInfo(m_settings);
-  max_width_t maxWidth = m_settings.Get(ts_BoundedText) ?
-    max_width_t(m_tri.Width()) :
-    max_width_t();
-
-  // Fixme: Needs the expression context.
-  // text_lines_t lines = (m_beingEdited || !m_settings.Get(ts_ParseExpressions)) ?
-  //   split_string(textInfo, m_textBuf.get(), maxWidth) :
-  //   split_string(textInfo, get_evaluated_string(ctx, m_expression, m_textBuf),
-  //     maxWidth);
-
-  text_lines_t lines = split_string(textInfo, m_textBuf.get(), maxWidth);
-  render_text_mask(dc, lines, m_tri, textInfo, m_settings);
+  render_text_mask(dc,
+    Split(textInfo, ctx),
+    m_tri,
+    textInfo,
+    m_settings);
 }
 
 Rect ObjText::GetAutoSizedRect() const {
   TextInfoDC info(m_settings);
+  // Fixme: Doesn't take expressions in account.
   const auto textSize = text_extents(info,
     split_string(info, m_textBuf.get(), no_option()));
 
@@ -324,6 +291,19 @@ bool ObjText::ShowSizeBox() const{
   // Since the text object boundaries aren't clear (like say a
   // rectangle), show a box while resizing.
   return true;
+}
+
+text_lines_t ObjText::Split(const TextInfo& textInfo,
+  ExpressionContext& ctx) const
+{
+  const auto maxWidth = m_settings.Get(ts_BoundedText) ?
+    max_width_t(m_tri.Width()) :
+    max_width_t();
+
+  return (m_beingEdited || !m_settings.Get(ts_ParseExpressions)) ?
+    split_string(textInfo, m_textBuf.get(), maxWidth) :
+    split_string(textInfo, get_evaluated_string(ctx, m_expression, m_textBuf),
+      maxWidth);
 }
 
 text_lines_t split_evaluated(ExpressionContext& ctx,

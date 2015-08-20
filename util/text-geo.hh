@@ -15,6 +15,7 @@
 
 #ifndef FAINT_TEXT_GEO_HH
 #define FAINT_TEXT_GEO_HH
+#include <functional>
 #include <vector>
 #include "geo/int-size.hh"
 #include "geo/primitive.hh"
@@ -66,7 +67,7 @@ public:
 // text split into lines. Clamps indexes beyond the end.
 TextPos char_index_to_row_column(const text_lines_t&, size_t index);
 
-TextPos caret_index_to_row_column(const text_lines_t& lines, size_t caret);
+TextPos caret_index_to_row_column(const text_lines_t&, size_t caret);
 
 class Align{
 public:
@@ -87,6 +88,17 @@ std::vector<Tri> text_line_regions(const TextInfo&,
   const Align&);
 
 IntSize text_extents(const TextInfo&, const text_lines_t&);
+
+using cumulative_text_width_f =
+  std::function<std::vector<int>(const utf8_string&)>;
+
+// Returns the caret-position for a click-position
+size_t caret_index_from_pos(const Point&,
+  const Tri&,
+  const text_lines_t&,
+  coord rowHeight,
+  size_t maxCaret,
+  const cumulative_text_width_f&);
 
 } // namespace
 

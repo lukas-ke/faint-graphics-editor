@@ -110,7 +110,7 @@ void ObjRaster::Draw(FaintDC& dc){
   dc.Blit(m_scaled, r.TopLeft() + shift, m_settings);
 }
 
-void ObjRaster::DrawMask(FaintDC& dc){
+void ObjRaster::DrawMask(FaintDC& dc, ExpressionContext&){
   // Fixme: This draws a filled axis aligned rectangle.  Preferably,
   // the object's masked color (if any) should be excluded, and the area
   // aligned with the object (As for alignment, at the time only the

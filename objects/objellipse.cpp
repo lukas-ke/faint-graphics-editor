@@ -59,7 +59,7 @@ public:
     draw_ellipse_span(dc, m_tri, m_angleSpan, m_settings);
   }
 
-  void DrawMask(FaintDC& dc) override{
+  void DrawMask(FaintDC& dc, ExpressionContext&) override{
     draw_ellipse_span(dc, m_tri, m_angleSpan, mask_settings_fill(m_settings));
   }
 

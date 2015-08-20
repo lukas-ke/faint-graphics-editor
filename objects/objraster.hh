@@ -27,7 +27,7 @@ public:
   Object* Clone() const override;
   void Draw(FaintDC&, ExpressionContext&) override;
   void Draw(FaintDC&);
-  void DrawMask(FaintDC&) override;
+  void DrawMask(FaintDC&, ExpressionContext&) override;
   std::vector<Point> GetAttachPoints() const override;
   Bitmap& GetBitmap();
   std::vector<PathPt> GetPath(const ExpressionContext&) const override;

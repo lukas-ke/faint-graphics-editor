@@ -80,7 +80,7 @@ public:
   // should be considered adjacent
   virtual bool CyclicPoints() const;
   virtual void Draw(FaintDC&, ExpressionContext&) = 0;
-  virtual void DrawMask(FaintDC&) = 0;
+  virtual void DrawMask(FaintDC&, ExpressionContext&) = 0;
   virtual bool Extendable() const;
 
   // Gets the points in this objects that other objects and tools can

@@ -77,7 +77,7 @@ public:
       txtSettings);
   }
 
-  void DrawMask(FaintDC&) override{
+  void DrawMask(FaintDC&, ExpressionContext&) override{
   }
 
   std::vector<Point> GetAttachPoints() const override{

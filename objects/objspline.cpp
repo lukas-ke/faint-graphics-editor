@@ -40,7 +40,7 @@ public:
     dc.Spline(m_points.GetPointsDumb(m_tri), m_settings);
   }
 
-  void DrawMask(FaintDC& dc) override{
+  void DrawMask(FaintDC& dc, ExpressionContext&) override{
     dc.Spline(m_points.GetPointsDumb(m_tri), mask_settings_line(m_settings)) ;
   }
 

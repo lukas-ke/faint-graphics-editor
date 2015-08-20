@@ -92,9 +92,9 @@ public:
     }
   }
 
-  void DrawMask(FaintDC& dc) override{
+  void DrawMask(FaintDC& dc, ExpressionContext& ctx) override{
     for (Object* obj : m_objects){
-      obj->DrawMask(dc);
+      obj->DrawMask(dc, ctx);
     }
   }
 

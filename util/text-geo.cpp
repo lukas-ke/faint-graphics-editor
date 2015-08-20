@@ -19,6 +19,7 @@
 #include "text/slice.hh"
 #include "text/text-buffer.hh"
 #include "util/text-geo.hh"
+#include "geo/geo-func.hh" // rotate_point
 
 namespace faint{
 
@@ -229,6 +230,62 @@ IntSize text_extents(const TextInfo& info, const text_lines_t& lines){
   }
 
   return IntSize(width, info.ComputeRowHeight() * resigned(lines.size()));
+}
+
+size_t caret_row_start(const text_lines_t& lines, size_t row){
+  // Finds caret position before the first character in the clicked row
+  size_t charNum = 0;
+  for (size_t i = 0; i!= row; i++){
+    charNum += lines[i].text.size();
+  }
+  return charNum;
+}
+
+static size_t caret_index_from_pos_rect(const Point& pos,
+  const Tri& tri,
+  const text_lines_t& lines,
+  coord rowHeight,
+  size_t maxCaret,
+  const cumulative_text_width_f& cumulativeTextWidth)
+{
+  if (pos.y < tri.P0().y){
+    // Position is above the text-box, return minimum caret.
+    return 0;
+  }
+
+  const size_t row = static_cast<size_t>((pos.y - tri.P0().y) / (rowHeight));
+
+  if (row >= lines.size()){
+    // Position is below the text box.
+    return maxCaret;
+  }
+
+  // Find the clicked character and set the caret to the left or right
+  // of it.
+  const auto charWidths = cumulativeTextWidth(lines[row].text);
+  const size_t rowStart = caret_row_start(lines, row);
+  const size_t caretOffset = caret_from_extents(charWidths, pos, tri.P0().x);
+  const size_t caret = rowStart + caretOffset;
+  return std::min(caret, maxCaret);
+}
+
+size_t caret_index_from_pos(const Point& pos,
+  const Tri& tri,
+  const text_lines_t& lines,
+  coord rowHeight,
+  size_t maxCaret,
+  const cumulative_text_width_f& cumulativeTextWidth)
+{
+  // Fixme: Add support for centering.
+
+  // Align the point and tri with the image for simplicity
+  return caret_index_from_pos_rect(
+    rotate_point(pos, -tri.GetAngle(), tri.P0()),
+    rotated(tri, -tri.GetAngle(), tri.P0()),
+    lines,
+    rowHeight,
+    maxCaret,
+    cumulativeTextWidth);
 }
 
 } // namespace

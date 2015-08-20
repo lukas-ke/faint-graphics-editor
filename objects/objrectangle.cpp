@@ -46,7 +46,7 @@ public:
     dc.Rectangle(m_tri, m_settings);
   }
 
-  void DrawMask(FaintDC& dc) override{
+  void DrawMask(FaintDC& dc, ExpressionContext&) override{
     dc.Rectangle(m_tri, mask_settings_fill(m_settings));
   }
 

@@ -40,6 +40,7 @@ static std::pair<Object*, Hit> object_at(const Point& p,
   dc.SetOrigin(-p * zoom);
   dc.SetScale(zoom);
   dc.Clear(mask_outside);
+  auto& expressionContext = image.GetExpressionContext();
 
   // First consider the selected objects...
   Object* consider = 0;
@@ -47,7 +48,7 @@ static std::pair<Object*, Hit> object_at(const Point& p,
   const objects_t& objectSelection(image.GetObjectSelection());
   for (Object* object : top_to_bottom(objectSelection)){
     if (object->HitTest(p)){
-      object->DrawMask(dc);
+      object->DrawMask(dc, expressionContext);
       Color color = dc.GetPixel(p);
       if (color == mask_edge){ // Fixme: Consider fuzzy or disabling AA
         return std::make_pair(object, Hit::BOUNDARY);
@@ -68,7 +69,7 @@ static std::pair<Object*, Hit> object_at(const Point& p,
   const objects_t& objects(image.GetObjects());
   for (Object* object : top_to_bottom(objects)){
     if (object->HitTest(p)){
-      object->DrawMask(dc);
+      object->DrawMask(dc, expressionContext);
       Color color =  dc.GetPixel(p);
       if (color  == mask_edge){
         return std::make_pair(object, Hit::BOUNDARY);

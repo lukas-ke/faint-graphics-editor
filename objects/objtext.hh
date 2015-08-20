@@ -31,7 +31,7 @@ public:
   ObjText(const Tri&, const utf8_string&, const Settings&);
   Object* Clone() const override;
   void Draw(FaintDC&, ExpressionContext&) override;
-  void DrawMask(FaintDC&) override;
+  void DrawMask(FaintDC&, ExpressionContext&) override;
 
   std::vector<PathPt> GetPath(const ExpressionContext&) const override;
   IntRect GetRefreshRect() const override;
@@ -58,6 +58,7 @@ public:
 private:
   ObjText(const ObjText&); // For Clone
   void Init();
+  text_lines_t Split(const TextInfo&, ExpressionContext&) const;
   TextBuffer m_textBuf;
   bool m_beingEdited;
   LineSegment m_caret;
