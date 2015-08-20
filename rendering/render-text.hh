@@ -15,30 +15,27 @@
 
 #ifndef FAINT_RENDER_TEXT_HH
 #define FAINT_RENDER_TEXT_HH
+#include "geo/line.hh" // LineSegment
 #include "rendering/faint-dc.hh"
 #include "text/text-line.hh" // TextInfo
-#include "text/text-buffer.hh"
-#include "text/text-expression-context.hh"
-#include "text/text-expression.hh"
+#include "text/text-buffer.hh" // Fixme: Remove, pass CaretRange
 #include "util/settings.hh"
 
 namespace faint{
 
-static utf8_string get_expression_string(const parse_result_t&,
-  const ExpressionContext&);
-
-struct TextRenderInfo{
-  int rowHeight;
-  LineSegment caret;
-};
-
-TextRenderInfo render_text(FaintDC&,
+// Fixme: Move elsewhere, add unit test.
+LineSegment compute_caret(const TextInfo&,
   const TextBuffer&,
-  const Optional<parse_result_t>&,
+  const Tri&,
+  const text_lines_t&,
+  const Settings&);
+
+void render_text(FaintDC&,
+  const text_lines_t&,
+  const CaretRange&,
   const Tri&,
   bool currentlyEdited,
   TextInfo&,
-  ExpressionContext&,
   const Settings&);
 
 void render_text_mask(

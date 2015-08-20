@@ -57,6 +57,19 @@ static utf8_string get_expression_string(const parse_result_t& result,
     });
 }
 
+static utf8_string get_evaluated_string(const ExpressionContext& ctx,
+  const Optional<parse_result_t>& maybeExpression,
+  const TextBuffer& textBuf)
+{
+  return maybeExpression.Visit(
+    [&](const parse_result_t& expression){
+      return get_expression_string(expression, ctx);
+    },
+    [&](){
+      return textBuf.get();
+    });
+}
+
 ObjText::ObjText(const Tri& tri, const utf8_string& text, const Settings& s)
   : Object(s),
     m_textBuf(text),
@@ -155,17 +168,35 @@ Object* ObjText::Clone() const{
 
 void ObjText::Draw(FaintDC& dc, ExpressionContext& ctx){
   TextInfoDC textInfo(m_settings);
-  auto info = render_text(dc,
-    m_textBuf,
-    m_expression,
+  m_rowHeight = textInfo.ComputeRowHeight();
+
+  if (m_textBuf.empty()){
+    // Fixme: Tricky that this is done during rendering
+    // Compute the caret position
+    Tri caretTri(m_tri.P0(), m_tri.P1(), m_rowHeight);
+    caretTri = offset_aligned(caretTri, 1.0, 0.0);
+    m_caret = LineSegment(caretTri.P0(), caretTri.P2());
+  }
+
+  auto boundedText = m_settings.Get(ts_BoundedText);
+  max_width_t maxWidth = boundedText ?
+    max_width_t(m_tri.Width()) :
+    max_width_t();
+
+  text_lines_t lines = (m_beingEdited || !m_settings.Get(ts_ParseExpressions)) ?
+    split_string(textInfo, m_textBuf.get(), maxWidth) :
+    split_string(textInfo, get_evaluated_string(ctx, m_expression, m_textBuf),
+      maxWidth);
+
+  render_text(dc,
+    lines,
+    m_textBuf.get_sel_range(),
     m_tri,
     m_beingEdited,
     textInfo,
-    ctx,
     m_settings);
 
-  m_caret = info.caret;
-  m_rowHeight = info.rowHeight;
+  m_caret = compute_caret(textInfo, m_textBuf, m_tri, lines, m_settings);
 }
 
 void ObjText::DrawMask(FaintDC& dc){

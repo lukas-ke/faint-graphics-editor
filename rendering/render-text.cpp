@@ -21,8 +21,6 @@
 #include "text/slice.hh"
 #include "text/split-string.hh"
 #include "text/text-buffer.hh"
-#include "text/text-expression-context.hh"
-#include "text/text-expression.hh"
 #include "util-wx/font.hh"
 #include "util/default-settings.hh"
 #include "util/iter.hh" // zip
@@ -32,39 +30,7 @@
 
 namespace faint{
 
-utf8_string get_expression_string(const parse_result_t& result,
-  const ExpressionContext& context)
-{
-  return result.Visit(
-    [&](const ExpressionTree& tree){
-      return tree.Evaluate(context).Visit(
-        [](const utf8_string& result){
-          return result;
-        },
-        [](const ExpressionEvalError& error){
-          return error.description;
-        });
-    },
-    [](const ExpressionParseError& error){
-      return error.description;
-    });
-}
-
-static utf8_string get_evaluated_string(const ExpressionContext& ctx,
-  const Optional<parse_result_t>& maybeExpression,
-  const TextBuffer& textBuf)
-{
-  return maybeExpression.Visit(
-    [&](const parse_result_t& expression){
-      return get_expression_string(expression, ctx);
-    },
-    [&](){
-      return textBuf.get();
-    });
-}
-
-// Fixme: Extract and unit test.
-static LineSegment compute_caret(const TextInfo& info,
+LineSegment compute_caret(const TextInfo& info,
   const TextBuffer& textBuf,
   const Tri& tri,
   const text_lines_t& lines,
@@ -84,37 +50,14 @@ static LineSegment compute_caret(const TextInfo& info,
   return LineSegment(caretTri.P0(), caretTri.P2());
 }
 
-TextRenderInfo render_text(
-  FaintDC& dc,
-  const TextBuffer& textBuf,
-  const Optional<parse_result_t>& expression,
+void render_text(FaintDC& dc,
+  const text_lines_t& lines,
+  const CaretRange& selectionRange,
   const Tri& tri,
   bool currentlyEdited,
   TextInfo& textInfo,
-  ExpressionContext& ctx,
   const Settings& settings)
 {
-  auto boundedText = settings.Get(ts_BoundedText);
-  max_width_t maxWidth = boundedText ?
-    max_width_t(tri.Width()) :
-    max_width_t();
-
-  text_lines_t lines = (currentlyEdited || !settings.Get(ts_ParseExpressions)) ?
-    split_string(textInfo, textBuf.get(), maxWidth) :
-    split_string(textInfo, get_evaluated_string(ctx, expression, textBuf),
-      maxWidth);
-
-  auto rowHeight = textInfo.ComputeRowHeight();
-
-  if (textBuf.empty()){
-    // Fixme: Tricky that this is done during rendering
-    // Compute the caret position
-    Tri caretTri(tri.P0(), tri.P1(), rowHeight);
-    caretTri = offset_aligned(caretTri, 1.0, 0.0);
-
-    return {rowHeight, LineSegment(caretTri.P0(), caretTri.P2())};
-  }
-
   Align align(settings.Get(ts_HorizontalAlign),
     settings.Get(ts_VerticalAlign));
 
@@ -130,22 +73,19 @@ TextRenderInfo render_text(
     for (const Tri& rowTri : text_selection_region(textInfo,
         tri,
         lines,
-        textBuf.get_sel_range(),
+        selectionRange,
         align))
     {
       dc.Rectangle(rowTri, highlightSettings);
     }
   }
   auto tris(text_line_regions(textInfo, tri, lines, align));
-  Optional<Tri> clipTri(tri, boundedText);
+  Optional<Tri> clipTri(tri, settings.Get(ts_BoundedText));
 
   for (const auto item : zip(tris, lines)){
     // Fixme: Selected text should be drawn with wxSYS_COLOUR_HIGHLIGHTTEXT
     dc.Text(item.first, item.second.text, settings, clipTri);
   }
-
-  return {rowHeight,
-      compute_caret(textInfo, textBuf, tri, lines, settings)};
 }
 
 void render_text_mask(
