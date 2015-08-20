@@ -52,6 +52,51 @@ LineSegment compute_caret(const TextInfo& info,
 extern const Color mask_no_fill;
 extern const Color mask_fill;
 
+static auto get_text_highlight_settings(){
+  // Fixme: Not every time
+  Settings highlightSettings = default_rectangle_settings();
+  highlightSettings.Set(ts_FillStyle, FillStyle::FILL);
+  Color highlightColor = get_highlight_color();
+  highlightSettings.Set(ts_Fg, Paint(highlightColor));
+  highlightSettings.Set(ts_Bg, Paint(highlightColor));
+  return highlightSettings;
+}
+
+static void draw_selection_highlighting(FaintDC& dc,
+  TextInfo& textInfo,
+  const Tri& tri,
+  const text_lines_t& lines,
+  const CaretRange& selectionRange,
+  const Align& align)
+{
+  // Draw the selection highlighting
+  auto highlightSettings = get_text_highlight_settings();
+  auto regions = text_selection_region(textInfo,
+    tri,
+    lines,
+    selectionRange,
+    align);
+  for (const Tri& r : regions){
+    dc.Rectangle(r, highlightSettings);
+  }
+}
+
+static void draw_text(FaintDC& dc,
+  const text_lines_t& lines,
+  const TextInfo& textInfo,
+  const Tri& tri,
+  const Align& align,
+  const Settings& settings)
+{
+  auto tris(text_line_regions(textInfo, tri, lines, align));
+  Optional<Tri> clipTri(tri, settings.Get(ts_BoundedText));
+
+  for (const auto item : zip(tris, lines)){
+    // Fixme: Selected text should be drawn with wxSYS_COLOUR_HIGHLIGHTTEXT
+    dc.Text(item.first, item.second.text, settings, clipTri);
+  }
+}
+
 void render_text(FaintDC& dc,
   const text_lines_t& lines,
   const CaretRange& selectionRange,
@@ -60,34 +105,29 @@ void render_text(FaintDC& dc,
   TextInfo& textInfo,
   const Settings& settings)
 {
-  Align align(settings.Get(ts_HorizontalAlign),
-    settings.Get(ts_VerticalAlign));
-
-  // Fixme: Not every time
-  Settings highlightSettings = default_rectangle_settings();
-  highlightSettings.Set(ts_FillStyle, FillStyle::FILL);
-  Color highlightColor = get_highlight_color();
-  highlightSettings.Set(ts_Fg, Paint(highlightColor));
-  highlightSettings.Set(ts_Bg, Paint(highlightColor));
+  Align align(settings.Get(ts_HorizontalAlign), settings.Get(ts_VerticalAlign));
 
   if (currentlyEdited){
-    // Draw the selection highlighting
-    for (const Tri& rowTri : text_selection_region(textInfo,
-        tri,
-        lines,
-        selectionRange,
-        align))
-    {
-      dc.Rectangle(rowTri, highlightSettings);
-    }
+    draw_selection_highlighting(dc, textInfo, tri, lines, selectionRange, align);
   }
-  auto tris(text_line_regions(textInfo, tri, lines, align));
-  Optional<Tri> clipTri(tri, settings.Get(ts_BoundedText));
 
-  for (const auto item : zip(tris, lines)){
-    // Fixme: Selected text should be drawn with wxSYS_COLOUR_HIGHLIGHTTEXT
-    dc.Text(item.first, item.second.text, settings, clipTri);
-  }
+  draw_text(dc, lines, textInfo, tri, align, settings);
+}
+
+static auto rect_mask_no_fill_settings(){
+  Settings s(default_rectangle_settings());
+  s.Set(ts_FillStyle, FillStyle::BORDER_AND_FILL);
+  s.Set(ts_Fg, Paint(mask_no_fill));
+  s.Set(ts_Bg, Paint(mask_no_fill));
+  return s;
+}
+
+static auto rect_mask_fill_settings(){
+  Settings s(default_rectangle_settings());
+  s.Set(ts_FillStyle, FillStyle::BORDER_AND_FILL);
+  s.Set(ts_Fg, Paint(mask_fill));
+  s.Set(ts_Bg, Paint(mask_fill));
+  return s;
 }
 
 void render_text_mask(
@@ -98,16 +138,10 @@ void render_text_mask(
   const Settings& settings)
 {
   // Fill the entire text region with "transparent inside" indicator.
-  Settings s(default_rectangle_settings());
-  s.Set(ts_FillStyle, FillStyle::BORDER_AND_FILL);
-  s.Set(ts_Fg, Paint(mask_no_fill));
-  s.Set(ts_Bg, Paint(mask_no_fill));
-  dc.Rectangle(tri, s);
+  dc.Rectangle(tri, rect_mask_no_fill_settings());
 
   // Fill the regions actually occupied by characters with "filled
   // inside" indicator.
-  s.Set(ts_Fg, Paint(mask_fill));
-  s.Set(ts_Bg, Paint(mask_fill));
   text_lines_t lines = split_string(textInfo, textBuf.get(),
     max_width_t(tri.Width()));
 
@@ -115,10 +149,11 @@ void render_text_mask(
     settings.Get(ts_VerticalAlign));
 
   // Draw a rectangle from the left edge to the right for each line of text
-  for (const Tri& rowTri : text_selection_region(textInfo,
-      tri, lines, textBuf.all(), align))
-  {
-    dc.Rectangle(rowTri, s);
+  const auto filledMask = rect_mask_fill_settings();
+  const auto regions = text_selection_region(textInfo,
+    tri, lines, textBuf.all(), align);
+  for (const Tri& r : regions){
+    dc.Rectangle(r, filledMask);
   }
 }
 
