@@ -34,6 +34,10 @@ class CalibrateIdle : public StandardTask{
   // The idle state of the CalibrateTool, before clicking to draw a
   // line. Shows the current calibration (if any) as an overlay.
 public:
+  CalibrateIdle(ToolActions& actions)
+    : m_actions(actions)
+  {}
+
   void Draw(FaintDC&, Overlays& overlays, const PosInfo& info) override{
     const auto& c = get_calibration(info);
     c.Visit(
@@ -74,7 +78,7 @@ public:
   }
 
   TaskResult MouseDown(const PosInfo& info) override{
-    m_newTask.Set(calibrate_draw_line(info));
+    m_newTask.Set(calibrate_draw_line(info, m_actions));
     return TaskResult::CHANGE;
   }
 
@@ -91,11 +95,12 @@ public:
   }
 
 private:
+  ToolActions& m_actions;
   PendingTask m_newTask;
 };
 
-Task* calibrate_idle(){
-  return new CalibrateIdle();
+Task* calibrate_idle(ToolActions& actions){
+  return new CalibrateIdle(actions);
 }
 
 } // namespace

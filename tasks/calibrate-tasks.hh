@@ -21,10 +21,11 @@ namespace faint{
 class LineSegment;
 class PosInfo;
 class Task;
+class ToolActions;
 
-Task* calibrate_idle();
-Task* calibrate_draw_line(const PosInfo&);
-Task* calibrate_enter_measure(const LineSegment&, const PosInfo&);
+Task* calibrate_idle(ToolActions&);
+Task* calibrate_draw_line(const PosInfo&, ToolActions&);
+Task* calibrate_enter_measure(const LineSegment&, const PosInfo&, ToolActions&);
 
 } // namespace
 

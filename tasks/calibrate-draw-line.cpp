@@ -31,8 +31,9 @@ class CalibrateDrawLine : public StandardTask{
   // Task for drawing a line for calibrating the image coordinate
   // system.
 public:
-  explicit CalibrateDrawLine(const PosInfo& info)
-    : m_editor(info, AllowConstrain(true), AllowSnap(true))
+  explicit CalibrateDrawLine(const PosInfo& info, ToolActions& actions)
+    : m_actions(actions),
+      m_editor(info, AllowConstrain(true), AllowSnap(true))
   {
     info.status.SetMainText("Draw measuring line.");
   }
@@ -73,7 +74,7 @@ public:
 
     auto line(m_editor.GetLine());
     if (length(line) != 0){
-      m_newTask.Set(calibrate_enter_measure(line, info));
+      m_newTask.Set(calibrate_enter_measure(line, info, m_actions));
     }
     return TaskResult::CHANGE;
   }
@@ -89,12 +90,13 @@ public:
   }
 
 private:
+  ToolActions& m_actions;
   LineEditor m_editor;
   PendingTask m_newTask;
 };
 
-Task* calibrate_draw_line(const PosInfo& info){
-  return new CalibrateDrawLine(info);
+Task* calibrate_draw_line(const PosInfo& info, ToolActions& actions){
+  return new CalibrateDrawLine(info, actions);
 }
 
 } // namespace

@@ -21,8 +21,8 @@ namespace faint{
 
 class CalibrateTool : public MultiTool{
 public:
-  CalibrateTool()
-    : MultiTool(ToolId::CALIBRATE, default_task(calibrate_idle()))
+  CalibrateTool(ToolActions& actions)
+    : MultiTool(ToolId::CALIBRATE, default_task(calibrate_idle(actions)))
   {}
 
   bool EatsSettings() const override{
@@ -46,8 +46,8 @@ private:
   Settings m_settings;
 };
 
-Tool* calibrate_tool(){
-  return new CalibrateTool();
+Tool* calibrate_tool(ToolActions& actions){
+  return new CalibrateTool(actions);
 }
 
 } // namespace

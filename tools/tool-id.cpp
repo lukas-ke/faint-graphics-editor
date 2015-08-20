@@ -45,7 +45,7 @@ Layer get_tool_layer(ToolId tool, Layer defaultLayer){
 }
 
 Tool* brush_tool(const Settings&);
-Tool* calibrate_tool();
+Tool* calibrate_tool(ToolActions&);
 Tool* ellipse_tool(const Settings&);
 Tool* fill_tool(const Settings&);
 Tool* hot_spot_tool();
@@ -115,7 +115,7 @@ Tool* new_tool(ToolId id,
     return hot_spot_tool();
 
   case ToolId::CALIBRATE:
-    return calibrate_tool();
+    return calibrate_tool(actions);
 
   case ToolId::TAPE_MEASURE:
     return tape_measure_tool(settings);

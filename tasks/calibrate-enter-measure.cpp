@@ -15,7 +15,6 @@
 
 #include <sstream>
 #include "app/canvas.hh"
-#include "app/get-app-context.hh"
 #include "commands/calibrate-cmd.hh"
 #include "commands/command.hh" // PendingCommand
 #include "editors/text-entry-util.hh"
@@ -26,6 +25,7 @@
 #include "rendering/overlay.hh"
 #include "tasks/task.hh"
 #include "text/text-buffer.hh"
+#include "tools/tool-actions.hh"
 #include "tools/tool-contexts.hh"
 #include "util-wx/key-codes.hh"
 #include "util/generator-adapter.hh"
@@ -67,18 +67,21 @@ class CalibrateEnterMeasure : public Task,
   // Reads measure input for a line specified with CalibrateDrawLine,
   // and shows the entry in an edit-overlay.
 public:
-  CalibrateEnterMeasure(const LineSegment& line, const PosInfo& info)
-    : m_active(true),
+  CalibrateEnterMeasure(const LineSegment& line,
+    const PosInfo& info,
+    ToolActions& actions)
+    : m_actions(actions),
+      m_active(true),
       m_line(line)
   {
     assert(length(m_line) != 0);
     info.status.SetMainText("Enter line length");
-    get_app_context().BeginTextEntry();
+    m_actions.BeginTextEntry();
   }
 
   ~CalibrateEnterMeasure() override{
     if (m_active){
-      get_app_context().EndTextEntry();
+      m_actions.EndTextEntry();
       m_active = false;
     }
   }
@@ -228,7 +231,7 @@ private:
     assert(m_active);
     m_active = false;
     status.SetMainText("");
-    get_app_context().EndTextEntry();
+    m_actions.EndTextEntry();
 
     m_command.Set(calibrate_command(Calibration(m_line,
       entry.first, entry.second),
@@ -236,14 +239,17 @@ private:
     return TaskResult::COMMIT_AND_CHANGE;
   }
 
+  ToolActions& m_actions;
   bool m_active;
   PendingCommand m_command;
   LineSegment m_line;
   TextBuffer m_text;
 };
 
-Task* calibrate_enter_measure(const LineSegment& line, const PosInfo& info){
-  return new CalibrateEnterMeasure(line, info);
+Task* calibrate_enter_measure(const LineSegment& line,
+  const PosInfo& info,
+  ToolActions& actions){
+  return new CalibrateEnterMeasure(line, info, actions);
 }
 
 } // namespace
