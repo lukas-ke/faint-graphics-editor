@@ -90,7 +90,7 @@ utf8_string combined_file_dialog_filter(const utf8_string& description,
     return extensions_filter(f->GetExtensions());
   };
 
-  return join(utf8_string("|"), description,
+  return join(Sep(utf8_string("|")), description,
     join_fn(utf8_string(";"), formats, {format_to_extensions_filter}),
     file_dialog_filter(formats),
     utf8_string("All files"),

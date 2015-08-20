@@ -114,19 +114,11 @@ void render_text(FaintDC& dc,
   draw_text(dc, lines, textInfo, tri, align, settings);
 }
 
-static auto rect_mask_no_fill_settings(){
+static auto rect_mask(const Paint& p){
   Settings s(default_rectangle_settings());
   s.Set(ts_FillStyle, FillStyle::BORDER_AND_FILL);
-  s.Set(ts_Fg, Paint(mask_no_fill));
-  s.Set(ts_Bg, Paint(mask_no_fill));
-  return s;
-}
-
-static auto rect_mask_fill_settings(){
-  Settings s(default_rectangle_settings());
-  s.Set(ts_FillStyle, FillStyle::BORDER_AND_FILL);
-  s.Set(ts_Fg, Paint(mask_fill));
-  s.Set(ts_Bg, Paint(mask_fill));
+  s.Set(ts_Fg, p);
+  s.Set(ts_Bg, p);
   return s;
 }
 
@@ -134,18 +126,19 @@ void render_text_mask(FaintDC& dc,
   const text_lines_t& lines,
   const Tri& tri,
   TextInfo& textInfo,
-  const Settings& settings)
+  const Settings& settings,
+  const Paint& withinBounds,
+  const Paint& withinLine)
 {
   // Fill the entire text region with "transparent inside" indicator.
-  dc.Rectangle(tri, rect_mask_no_fill_settings());
+  dc.Rectangle(tri, rect_mask(withinBounds));
 
   const Align align(settings.Get(ts_HorizontalAlign),
     settings.Get(ts_VerticalAlign));
 
   // Draw a rectangle from the left edge to the right for each line of text
-  const auto filledMask = rect_mask_fill_settings();
-  const auto regions = text_line_regions(textInfo,
-    tri, lines, align);
+  const auto filledMask = rect_mask(withinLine);
+  const auto regions = text_line_regions(textInfo, tri, lines, align);
   for (const Tri& r : regions){
     dc.Rectangle(r, filledMask);
   }

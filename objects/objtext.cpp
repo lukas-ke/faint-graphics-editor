@@ -158,7 +158,9 @@ void ObjText::DrawMask(FaintDC& dc, ExpressionContext& ctx){
     Split(textInfo, ctx),
     m_tri,
     textInfo,
-    m_settings);
+    m_settings,
+    Paint(mask_no_fill),
+    Paint(mask_fill));
 }
 
 Rect ObjText::GetAutoSizedRect() const {

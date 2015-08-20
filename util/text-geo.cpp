@@ -196,7 +196,6 @@ std::vector<Tri> text_selection_region(const TextInfo& info,
   return rectangles;
 }
 
-
 std::vector<Tri> text_line_regions(const TextInfo& info,
   const Tri& tri,
   const text_lines_t& lines,
@@ -220,7 +219,6 @@ std::vector<Tri> text_line_regions(const TextInfo& info,
       align.horizontal, line.width, tri.Width()));
   }
   return tris;
-
 }
 
 IntSize text_extents(const TextInfo& info, const text_lines_t& lines){

@@ -82,6 +82,7 @@ std::vector<Tri> text_selection_region(const TextInfo&,
   const CaretRange&,
   const Align&);
 
+// Returns madly incorrect Tri:s for each line of text.
 std::vector<Tri> text_line_regions(const TextInfo&,
   const Tri&,
   const text_lines_t&,

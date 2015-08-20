@@ -109,9 +109,10 @@ void test_formatting(){
   EQUAL(StrBtn(MouseButton::RIGHT).Other(true), "Left");
 
   // Variadic template join
-  EQUAL(join("SEP"), ""); // Separator only
-  EQUAL(join("SEP", "hello"), "hello");
-  EQUAL(join("SEP", "hello","hello"), "helloSEPhello");
+  Sep sep(utf8_string("SEP"));
+  EQUAL(join(sep), ""); // Separator only
+  EQUAL(join(sep, "hello"), "hello");
+  EQUAL(join(sep, "hello","hello"), "helloSEPhello");
   EQUAL(comma_sep("hello"), "hello");
   EQUAL(comma_sep("hello", "world"), "hello, world");
   EQUAL(comma_sep("hello", "round", "world"), "hello, round, world");

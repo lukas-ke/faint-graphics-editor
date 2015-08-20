@@ -38,12 +38,13 @@ void render_text(FaintDC&,
   TextInfo&,
   const Settings&);
 
-void render_text_mask(
-  FaintDC&,
+void render_text_mask(FaintDC&,
   const text_lines_t&,
   const Tri&,
   TextInfo&,
-  const Settings&);
+  const Settings&,
+  const Paint& withinBounds,
+  const Paint& withinLine);
 
 } // namespace
 

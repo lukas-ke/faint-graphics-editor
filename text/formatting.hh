@@ -20,6 +20,7 @@
 #include "text/utf8-string.hh"
 #include "util/common-fwd.hh"
 #include "util/template-fwd.hh"
+#include "util/distinct.hh"
 
 namespace faint{
 
@@ -132,10 +133,6 @@ private:
   utf8_string m_btnThat;
 };
 
-inline utf8_string join(const utf8_string& /*sep*/){
-  return utf8_string("");
-}
-
 inline utf8_string concat(const utf8_string& lhs, const utf8_string& rhs){
   return lhs + rhs;
 }
@@ -160,43 +157,49 @@ inline utf8_string concat(const char* lhs, const char* rhs){
   return utf8_string(lhs) + utf8_string(rhs);
 }
 
+using Sep = Distinct<utf8_string, category_formatting, 1>;
+
 template<typename T>
-T join(const utf8_string& /*sep*/, const T terminal){
+T join(const Sep& /*sep*/, const T terminal){
   return terminal;
 }
 
-inline utf8_string join(const utf8_string& /*sep*/, const char* terminal){
+inline utf8_string join(const Sep& /*sep*/){
+  return utf8_string("");
+}
+
+inline utf8_string join(const Sep& /*sep*/, const char* terminal){
   return terminal;
 }
 
 // Join the strings, separated by the first argument.
 template<class A, class ...B>
-utf8_string join(const utf8_string& sep, const A& head, const B&... tail){
-  return concat(concat(head, sep), join(sep, tail...));
+utf8_string join(const Sep& sep, const A& head, const B&... tail){
+  return concat(concat(head, sep.Get()), join(sep, tail...));
 }
 
 // Join all strings, separated by ", "
 template<class A, class ...B>
 utf8_string comma_sep(const A& head, const B&... tail){
-  return join(utf8_string(", "), head, tail...);
+  return join(Sep(utf8_string(", ")), head, tail...);
 }
 
 // Join all strings, separated by endline (\n)
 template<class A, class ...B>
 utf8_string endline_sep(const A& head, const B&... tail){
-  return join(utf8_string("\n"), head, tail...);
+  return join(Sep(utf8_string("\n")), head, tail...);
 }
 
 // Join all strings, without separator.
 template<class A, class ...B>
 utf8_string no_sep(const A& head, const B&... tail){
-  return join(utf8_string(""), head, tail...);
+  return join(Sep(utf8_string("")), head, tail...);
 }
 
 // Join all strings, separated by space.
 template<class A, class ...B>
 utf8_string space_sep(const A& head, const B&... tail){
-  return join(utf8_string(" "), head, tail...);
+  return join(Sep(utf8_string(" ")), head, tail...);
 }
 
 // join-variants taking a vector.
@@ -232,7 +235,7 @@ public:
 
   template<class A, class ...B>
   explicit Sentence(const A& head, const B&... tail)
-    : m_text(join(utf8_string(" "), head, tail...) + ".")
+    : m_text(join(Sep(utf8_string(" ")), head, tail...) + ".")
   {}
 
   Sentence operator+(const utf8_string& text) const{
