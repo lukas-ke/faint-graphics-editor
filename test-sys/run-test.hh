@@ -15,6 +15,7 @@
 
 #ifndef FAINT_RUN_TEST_HH
 #define FAINT_RUN_TEST_HH
+#include <stdexcept>
 
 namespace test{
 

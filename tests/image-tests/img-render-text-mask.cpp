@@ -16,7 +16,7 @@ void img_render_text_mask(){
   using namespace faint;
   auto s = default_text_settings();
   TextInfoDC textInfo(s);
-  const bool beingEdited = true;
+
   // Fixme: Seems render_text_mask is rather broken.
   auto tri = tri_from_rect(Rect(Point(0,0), Size(200, 100)));
   max_width_t maxWidth(tri.Width());

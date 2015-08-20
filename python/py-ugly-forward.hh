@@ -18,6 +18,7 @@
 #include <functional>
 #include <tuple>
 #include "python/py-function-error.hh"
+#include "python/mapped-type.hh"
 #include "python/py-parse.hh"
 #include "bitmap/color.hh"
 #include "util/default-constructible.hh"
