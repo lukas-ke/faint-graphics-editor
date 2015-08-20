@@ -207,4 +207,11 @@ void test_text_buffer(){
     EQUAL(b.get_sel_range().from, 1);
     EQUAL(b.get_sel_range().to, 4);
   }
+
+  {
+    TextBuffer b("hello\ncruel\nworld");
+    b.caret(0);
+    b.move_down();
+    KNOWN_INEQUAL(b.caret(), 6);
+  }
 }
