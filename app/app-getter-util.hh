@@ -30,7 +30,9 @@ enum class ToolId;
 // such.
 
 std::function<Paint()> bg_getter(AppContext&);
-std::function<void(ToolId)> tool_changer(AppContext&);
 
+using change_tool_f = std::function<void(ToolId)>;
 
-}
+change_tool_f tool_changer(AppContext&);
+
+} // namespace

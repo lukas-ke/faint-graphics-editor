@@ -390,7 +390,7 @@ public:
     Add(editMenu, Label("Select &All\tCtrl+A"),
       [&](){
         Canvas& active = app.GetActiveCanvas();
-        active.RunCommand(context_select_all(active));
+        active.RunCommand(context_select_all(active, tool_changer(app)));
       });
 
     Add(editMenu, Label("Select &None\tCtrl+D"),

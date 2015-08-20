@@ -15,7 +15,6 @@
 
 #include "app/canvas.hh"
 #include "app/context-commands.hh"
-#include "app/get-app-context.hh"
 #include "bitmap/auto-crop.hh" // Fixme: Move most-common-yada to color-counting
 #include "commands/command-bunch.hh"
 #include "commands/flip-rotate-cmd.hh"
@@ -237,7 +236,7 @@ Command* context_rotate(const Canvas& canvas,
     });
 }
 
-Command* context_select_all(Canvas& canvas){
+Command* context_select_all(Canvas& canvas, const change_tool_f& selectTool){
   ToolInterface& tool(canvas.GetTool());
 
   if (tool.SelectAll()){
@@ -248,13 +247,13 @@ Command* context_select_all(Canvas& canvas){
   Layer layer = tool.GetLayerType();
   if (layer == Layer::RASTER){
     const Image& active(canvas.GetImage());
-    get_app_context().SelectTool(ToolId::SELECTION); // Fixme
+    selectTool(ToolId::SELECTION);
     return get_select_all_command(active,
       active.GetRasterSelection());
   }
   else {
     canvas.SelectObjects(canvas.GetObjects(), deselect_old(true));
-    get_app_context().SelectTool(ToolId::SELECTION);
+    selectTool(ToolId::SELECTION);
     // Object selection is not handled with commands
     return nullptr;
   }

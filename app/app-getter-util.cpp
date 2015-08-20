@@ -23,7 +23,7 @@ std::function<Paint()> bg_getter(AppContext& app){
   return [&app](){return app.GetToolSettings().Get(ts_Bg);};
 }
 
-std::function<void(ToolId)> tool_changer(AppContext& app){
+change_tool_f tool_changer(AppContext& app){
   return [&app](ToolId id){app.SelectTool(id);};
 }
 

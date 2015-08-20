@@ -15,6 +15,7 @@
 
 #ifndef FAINT_CONTEXT_COMMANDS_HH
 #define FAINT_CONTEXT_COMMANDS_HH
+#include "app/app-getter-util.hh"
 #include "geo/angle.hh"
 #include "geo/primitive.hh"
 
@@ -78,7 +79,7 @@ Command* context_rotate(const Canvas&, const Angle&, const Paint& bg);
 
 Command* context_scale_objects(const Canvas&, const Size&);
 
-Command* context_select_all(Canvas&);
+Command* context_select_all(Canvas&, const change_tool_f&);
 
 Command* context_set_alpha(Canvas&, uchar alpha);
 
