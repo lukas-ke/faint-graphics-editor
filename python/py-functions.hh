@@ -24,8 +24,6 @@
 #include "python/py-include.hh"
 #include "app/canvas.hh"
 #include "app/frame.hh"
-#include "app/get-app-context.hh"
-#include "app/get-python-context.hh"
 #include "bitmap/draw.hh"
 #include "bitmap/pattern.hh"
 #include "formats/png/file-png.hh"
@@ -63,52 +61,6 @@
 #include "generated/python/settings/setting-functions.hh"
 
 namespace faint{
-
-/* function: "Faint internal function."
-name: "int_incomplete_command" */
-static void incomplete_command(){
-  get_python_context().Continuation();
-}
-
-/* function: "Faint internal function." */
-static void int_bind_key(const KeyPress& keyPress){
-  // Inform the C++ side that the key is bound
-  get_python_context().Bind(keyPress, bind_global(false));
-}
-
-/* function: "Faint internal function." */
-static void int_bind_key_global(const KeyPress& keyPress){
-  // Inform the C++ side that the key is bound globally
-  get_python_context().Bind(keyPress, bind_global(true));
-}
-
-/* function: "Faint internal function." */
-static void int_faint_print(const utf8_string& s){
-  get_python_context().IntFaintPrint(s);
-}
-
-/* function: "Faint internal function." */
-static void int_get_key(){
-  get_python_context().GetKey();
-}
-
-/* function: "Faint internal function." */
-static utf8_string int_get_key_name(int keyCode){
-  return KeyPress(Key(keyCode)).Name();
-}
-
-/* function: "Faint internal function" */
-static void int_unbind_key(const KeyPress& keyPress){
-  // Inform the C++ side that the key is unbound
-  get_python_context().Unbind(keyPress);
-}
-
-/* function: "Faint internal function." */
-static void int_ran_command(){
-  PythonContext& python(get_python_context());
-  python.EvalDone();
-  python.NewPrompt();
-}
 
 /* function: "cout(s)\nUses std::cout"
 name: "cout" */

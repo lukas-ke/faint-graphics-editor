@@ -34,6 +34,7 @@
 #include "python/py-tri.hh"
 #include "python/py-util.hh"
 #include "python/py-window.hh"
+#include "python/python-context.hh"
 #include "util/paint-map.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-parse.hh"
@@ -293,10 +294,11 @@ Optional<FaintPyExc> run_python_file(const FilePath& path){
     return no_option();
 }
 
-static void write_python_user_config(const FilePath& dstPath){
+static void write_python_user_config(const FilePath& dstPath,
+  PythonContext& python)
+{
   // Rewriting the ini file instead of copying it should give
   // the os-correct eol markers
-  PythonContext& python(get_python_context());
 
   Optional<FilePath> srcPath = make_absolute_file_path(
     get_data_dir().Str() + "/py/core/default_ini.py");
@@ -320,7 +322,7 @@ bool run_python_user_config(PythonContext& python){
   FilePath configPath(get_user_config_file_path());
   if (!exists(configPath)){
     // Recreate the config file from the default
-    write_python_user_config(configPath);
+    write_python_user_config(configPath, python);
   }
 
   if (exists(configPath)){

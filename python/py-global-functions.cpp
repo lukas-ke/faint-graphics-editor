@@ -29,6 +29,7 @@
 #include "python/py-util.hh"
 #include "util/index-iter.hh" // up_to
 #include "util/make-vector.hh"
+#include "util/key-press.hh"
 
 namespace faint{
 
@@ -48,6 +49,53 @@ struct MappedType<PyFuncContext&>{
 
   static void ShowError(globalFunctionsObject*){}
 };
+
+/* method: "Faint internal function."
+name: "int_incomplete_command" */
+static void f_incomplete_command(PyFuncContext& ctx){
+  ctx.py.Continuation();
+}
+
+/* method: "Faint internal function." */
+static void f_int_bind_key(PyFuncContext& ctx, const KeyPress& keyPress){
+  // Inform the C++ side that the key is bound
+  ctx.py.Bind(keyPress, bind_global(false));
+}
+
+/* method: "Faint internal function." */
+static void f_int_bind_key_global(PyFuncContext& ctx,
+  const KeyPress& keyPress)
+{
+  // Inform the C++ side that the key is bound globally
+  ctx.py.Bind(keyPress, bind_global(true));
+}
+
+/* method: "Faint internal function." */
+static void f_int_faint_print(PyFuncContext& ctx, const utf8_string& s){
+  ctx.py.IntFaintPrint(s);
+}
+
+/* method: "Faint internal function." */
+static void f_int_get_key(PyFuncContext& ctx){
+  ctx.py.GetKey();
+}
+
+/* method: "Faint internal function." */
+static utf8_string f_int_get_key_name(PyFuncContext&, int keyCode){
+  return KeyPress(Key(keyCode)).Name();
+}
+
+/* method: "Faint internal function" */
+static void f_int_unbind_key(PyFuncContext& ctx, const KeyPress& keyPress){
+  // Inform the C++ side that the key is unbound
+  ctx.py.Unbind(keyPress);
+}
+
+/* method: "Faint internal function." */
+static void f_int_ran_command(PyFuncContext& ctx){
+  ctx.py.EvalDone();
+  ctx.py.NewPrompt();
+}
 
 /* method: "autosize_raster(raster_object)\n
 Trims away same-colored borders around a raster object" */

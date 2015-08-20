@@ -22,18 +22,23 @@ import ifaint
 import os
 import __main__
 
+def expose(module, methods, obj):
+    for item in methods:
+        module.__dict__[item] = obj.__getattribute__(item)
+
 # Add all Faint global functions to the ifaint module
-for item in dir(ifaint.fgl):
-    if not item.startswith("__"):
-        ifaint.__dict__[item] = ifaint.fgl.__getattribute__(item)
+expose(ifaint,
+       [m for m in dir(ifaint.fgl) if not m.startswith("__")],
+       ifaint.fgl)
 
 # For backwards-compatibility with Faint <= 0.23, add some methods from
 # "app" which were previously global.
-ifaint.add_format = ifaint.app.add_format
-ifaint.swap_colors = ifaint.app.swap_colors
-for item in dir(ifaint.app):
-    if item.startswith("tool"):
-        ifaint.__dict__[item] = ifaint.app.__getattribute__(item)
+APP_METHODS = ["add_format", "swap_colors"]
+APP_METHODS.extend([m for m in dir(ifaint.app) if m.startswith("tool")])
+expose(ifaint, APP_METHODS, ifaint.app)
+
+del expose
+del APP_METHODS
 
 class NamedFunc:
     def __init__(self, name, function):
