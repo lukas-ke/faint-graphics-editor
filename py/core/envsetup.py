@@ -22,6 +22,11 @@ import ifaint
 import os
 import __main__
 
+# Add all Faint global functions to the ifaint module
+for item in dir(ifaint.fgl):
+    if not item.startswith("__"):
+        ifaint.__dict__[item] = ifaint.fgl.__getattribute__(item)
+
 class NamedFunc:
     def __init__(self, name, function):
         self.function = function
@@ -29,6 +34,7 @@ class NamedFunc:
 
     def __call__(self, *args):
         self.function(*args)
+
     def __str__(self):
         return self.name
 
@@ -820,11 +826,6 @@ def _select_next_front():
         select(next_ahead(selected[0]))
 
 bindk(key.arrow_down, _select_next_front, mod.alt)
-
-# Add all Faint global functions to the ifaint module
-for item in dir(ifaint.fgl):
-    if not item.startswith("__"):
-        ifaint.__dict__[item] = ifaint.fgl.__getattribute__(item)
 
 from ifaint import *
 

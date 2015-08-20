@@ -126,51 +126,6 @@ static Canvas& get_active_image(){
   return get_app_context().GetActiveCanvas();
 }
 
-/* function: "list_images()->(c1,c2, ...),\nReturns a list of all
-opened images" */
-static std::vector<Canvas*> list_images(){
-  AppContext& app = get_app_context();
-  return make_vector(up_to(app.GetCanvasCount()),
-    [&app](const auto& index){
-      return &app.GetCanvas(index);
-    });
-}
-
-/* function: "get_font()->font\nReturns the active font face name." */
-static StringSetting::ValueType get_font(){
-  return get_app_context().Get(ts_FontFace);
-}
-
-/* function: "get_layer()->i\nReturns the layer index." */
-static int get_layer(){
-  return static_cast<int>(get_app_context().GetLayerType());
-}
-
-/* function: "get_mouse_pos_screen()->x,y\nReturns the mouse pointer
-position in screen coordinates." */
-static IntPoint get_mouse_pos_screen(){
-  return get_app_context().GetMousePos();
-}
-
-/* function: "set_active_image(image)\n
-Activates (selects in a tab) the specified image." */
-static void set_active_image(Canvas* canvas){
-  get_app_context().SetActiveCanvas(canvas->GetId());
-}
-
-/* function: "set_layer(layer)\n
-Select layer. 0=Raster, 1=Object" */
-static void set_layer(int layer){
-  if (!valid_layerstyle(layer)){
-    std::stringstream ss;
-    ss << "Invalid value for layer.\nAcceptable values are:\n" <<
-      to_int(Layer::RASTER) << " - Raster layer\n" <<
-      to_int(Layer::OBJECT) << " - Object layer\n";
-    throw ValueError(utf8_string(ss.str()));
-  }
-  get_app_context().SetLayer((to_layerstyle(layer)));
-}
-
 /* function: "Faint internal function."
 name: "int_incomplete_command" */
 static void incomplete_command(){
