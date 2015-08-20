@@ -35,8 +35,6 @@
 #include "python/py-window.hh"
 #include "python/python-context.hh"
 #include "util/paint-map.hh"
-#include "python/py-ugly-forward.hh"
-#include "python/py-parse.hh"
 #include "python/py-clipboard.hh"
 #include "python/py-dialog-functions.hh"
 #include "python/py-global-functions.hh"
@@ -44,6 +42,7 @@
 #include "util-wx/file-path.hh"
 #include "util-wx/file-path-util.hh"
 #include "python/py-interface.hh" // Fixme: For format_error_info
+#include "text/formatting.hh"
 
 namespace faint{
 
@@ -164,24 +163,6 @@ static PyObject* create_modifier_module(){
   return module;
 }
 
-static struct PyModuleDef faintClipboardModule {
-  PyModuleDef_HEAD_INIT,
-  "clipboard",
-  "clipboard\n\nFunctions for accessing the clipboard for copying "
-  "bitmaps and text.",
-  -1, // m_size
-  clipboard_methods, // m_methods
-  nullptr, // m_reload
-  nullptr, // m_traverse
-  nullptr, // m_clear
-  nullptr, // m_free
-};
-
-static PyObject* create_clipboard_module(){
-  PyObject* module_clipboard = PyModule_Create(&faintClipboardModule);
-  assert(module_clipboard != nullptr);
-  return module_clipboard;
-}
 
 static struct PyModuleDef faintInterfaceModule = {
   PyModuleDef_HEAD_INIT,
