@@ -24,6 +24,7 @@
 #include "tasks/select-raster-move.hh"
 #include "tasks/select-raster-rectangle.hh"
 #include "text/formatting.hh"
+#include "tools/tool-actions.hh"
 #include "util/image.hh"
 #include "util/pos-info.hh"
 #include "util/setting-util.hh"
@@ -265,7 +266,8 @@ static Color selection_or_image_color(const RasterSelection& selection,
 
 static TaskResult pick_mask_color(const PosInfo& info,
   PendingCommand& command,
-  Settings& settings)
+  Settings& settings,
+  ToolActions& actions)
 {
   assert(info.inSelection);
   const RasterSelection& selection(info.canvas.GetRasterSelection());
@@ -281,15 +283,17 @@ static TaskResult pick_mask_color(const PosInfo& info,
   command.Set(set_selection_options_command(New(newOptions),
       Old(selection.GetOptions())));
 
-  // This update is still required. Maybe add to ActiveCanvas.
-  get_app_context().UpdateShownSettings();
+  actions.UpdateShownSettings();
   return TaskResult::COMMIT;
 }
 
 class RasterSelectionIdle : public RasterSelectionTask {
 public:
-  RasterSelectionIdle(Settings& s, const ActiveCanvas& canvas)
-    : m_canvas(canvas),
+  RasterSelectionIdle(Settings& s,
+    const ActiveCanvas& canvas,
+    ToolActions& actions)
+    : m_actions(actions),
+      m_canvas(canvas),
       m_fullRefresh(false),
       m_settings(s)
   {}
@@ -333,7 +337,7 @@ public:
       }
       if (info.modifiers.Primary()){
         return info.inSelection ?
-          pick_mask_color(info, m_command, m_settings) :
+          pick_mask_color(info, m_command, m_settings, m_actions) :
           disable_masking(info.canvas.GetRasterSelection(), m_command);
       }
       else if (info.inSelection){
@@ -393,6 +397,7 @@ private:
     return m_settings;
   }
 
+  ToolActions& m_actions;
   ActiveCanvas m_canvas;
   PendingCommand m_command;
   bool m_fullRefresh;
@@ -400,8 +405,11 @@ private:
   Settings& m_settings;
 };
 
-Task* raster_selection_idle_task(Settings& settings, const ActiveCanvas& c){
-  return new RasterSelectionIdle(settings, c);
+Task* raster_selection_idle_task(Settings& settings,
+  const ActiveCanvas& c,
+  ToolActions& actions)
+{
+  return new RasterSelectionIdle(settings, c, actions);
 }
 
 } // namespace

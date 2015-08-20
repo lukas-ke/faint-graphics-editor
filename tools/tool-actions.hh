@@ -31,6 +31,7 @@ public:
   virtual void Set(const IntSetting&, IntSetting::ValueType) = 0;
   virtual void Set(const PaintSetting&, PaintSetting::ValueType) = 0;
   virtual void Set(const FloatSetting&, FloatSetting::ValueType) = 0;
+  virtual void UpdateShownSettings() = 0;
 };
 
 } // namespace

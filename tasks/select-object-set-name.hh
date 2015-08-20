@@ -20,8 +20,9 @@ namespace faint{
 
 class ActiveCanvas;
 class Task;
+class ToolActions;
 
-Task* select_object_set_name(const ActiveCanvas&);
+Task* select_object_set_name(const ActiveCanvas&, ToolActions&);
 
 } // namespace
 

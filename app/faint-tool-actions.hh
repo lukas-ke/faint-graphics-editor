@@ -31,7 +31,7 @@ public:
   void Set(const IntSetting&, IntSetting::ValueType) override;
   void Set(const PaintSetting&, PaintSetting::ValueType) override;
   void Set(const FloatSetting&, FloatSetting::ValueType) override;
-
+  void UpdateShownSettings() override;
 private:
   AppContext& m_app;
 };

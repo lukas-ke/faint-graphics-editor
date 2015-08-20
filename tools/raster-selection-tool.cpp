@@ -23,9 +23,11 @@ namespace faint{
 
 class RasterSelectionTool : public MultiTool {
 public:
-  RasterSelectionTool(const Settings& allSettings, const ActiveCanvas& canvas)
+  RasterSelectionTool(const Settings& allSettings,
+    const ActiveCanvas& canvas,
+    ToolActions& actions)
     : MultiTool(ToolId::OTHER,
-      default_task(raster_selection_idle_task(m_settings, canvas)))
+      default_task(raster_selection_idle_task(m_settings, canvas, actions)))
   {
     const RasterSelection& selection = canvas->GetRasterSelection();
     m_settings = get_selection_settings(selection);
@@ -59,8 +61,11 @@ private:
   Settings m_settings;
 };
 
-Tool* raster_selection_tool(const Settings& all, const ActiveCanvas& canvas){
-  return new RasterSelectionTool(all, canvas);
+Tool* raster_selection_tool(const Settings& all,
+  const ActiveCanvas& canvas,
+  ToolActions& actions)
+{
+  return new RasterSelectionTool(all, canvas, actions);
 }
 
 } // namespace

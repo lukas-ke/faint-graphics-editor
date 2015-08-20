@@ -21,8 +21,9 @@ namespace faint{
 class ActiveCanvas;
 class Settings;
 class Task;
+class ToolActions;
 
-Task* raster_selection_idle_task(Settings&, const ActiveCanvas&);
+Task* raster_selection_idle_task(Settings&, const ActiveCanvas&, ToolActions&);
 
 } // namespace
 

@@ -481,7 +481,7 @@ public:
   TaskResult Char(const KeyInfo& info) override{
     if (info.key.Is(key::enter)){
       // Enter object name on 'enter'
-      m_impl.newTask.Set(select_object_set_name(m_impl.canvas));
+      m_impl.newTask.Set(select_object_set_name(m_impl.canvas, m_impl.actions));
       return TaskResult::CHANGE;
     }
     return TaskResult::NONE;

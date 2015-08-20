@@ -52,4 +52,8 @@ void FaintToolActions::Set(const FloatSetting& s, FloatSetting::ValueType v){
   m_app.Set(s, v);
 }
 
+void FaintToolActions::UpdateShownSettings(){
+  m_app.UpdateShownSettings();
+}
+
 } // namespace

@@ -20,7 +20,7 @@
 
 namespace faint{
 
-Tool* raster_selection_tool(const Settings&, const ActiveCanvas&);
+Tool* raster_selection_tool(const Settings&, const ActiveCanvas&, ToolActions&);
 Tool* object_selection_tool(const ActiveCanvas&, ToolActions&);
 
 class SelectionTool : public Tool{
@@ -32,7 +32,8 @@ public:
     : Tool(ToolId::SELECTION),
       m_activeTool(nullptr),
       m_objectSelectionTool(object_selection_tool(activeCanvas, actions)),
-      m_rasterSelectionTool(raster_selection_tool(allSettings, activeCanvas))
+      m_rasterSelectionTool(raster_selection_tool(allSettings, activeCanvas,
+        actions))
   {
     m_activeTool = layer == Layer::RASTER ?
       m_rasterSelectionTool.get() :

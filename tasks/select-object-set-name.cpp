@@ -14,7 +14,6 @@
 // permissions and limitations under the License.
 
 #include "app/active-canvas.hh"
-#include "app/get-app-context.hh"
 #include "commands/command.hh"
 #include "commands/set-object-name-cmd.hh"
 #include "editors/text-entry-util.hh"
@@ -26,6 +25,7 @@
 #include "tasks/select-object-set-name.hh"
 #include "tasks/task.hh"
 #include "text/text-buffer.hh"
+#include "tools/tool-actions.hh"
 #include "tools/tool-contexts.hh"
 #include "util-wx/key-codes.hh"
 #include "util/pos-info.hh"
@@ -48,14 +48,15 @@ class SelectObjectSetName : public Task,
                             public TextContext,
                             public SelectionContext{
 public:
-  explicit SelectObjectSetName(const ActiveCanvas& canvas) :
-    m_active(false),
-    m_canvas(canvas)
+  explicit SelectObjectSetName(const ActiveCanvas& canvas, ToolActions& actions)
+    : m_actions(actions),
+      m_active(false),
+      m_canvas(canvas)
   {
     get_namee(m_canvas).Visit(
       [&](const Object* object){
         m_active = true;
-        get_app_context().BeginTextEntry();
+        m_actions.BeginTextEntry();
         object->GetName().Visit(
           [&](const utf8_string& s){
             m_text.set(s);
@@ -66,7 +67,7 @@ public:
 
   ~SelectObjectSetName() override{
     if (m_active){
-      get_app_context().EndTextEntry();
+      m_actions.EndTextEntry();
       m_active = false;
     }
   }
@@ -241,14 +242,15 @@ public:
   SelectObjectSetName& operator=(const SelectObjectSetName&) = delete;
 
 private:
+  ToolActions& m_actions;
   bool m_active;
   const ActiveCanvas& m_canvas;
   PendingCommand m_command;
   TextBuffer m_text;
 };
 
-Task* select_object_set_name(const ActiveCanvas& canvas){
-  return new SelectObjectSetName(canvas);
+Task* select_object_set_name(const ActiveCanvas& canvas, ToolActions& actions){
+  return new SelectObjectSetName(canvas, actions);
 }
 
 } // namespace
