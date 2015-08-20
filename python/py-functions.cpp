@@ -13,9 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "python/py-functions.hh"
 #include <sstream>
-#include <iostream> // for print_to_stdout
 #include "python/py-include.hh"
 #include "app/canvas.hh"
 #include "app/frame.hh"
@@ -55,14 +53,9 @@
 #include "generated/python/settings/setting-functions.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-parse.hh"
+#include "python/py-functions.hh"
 
 namespace faint{
-
-/* function: "cout(s)\nUses std::cout"
-name: "cout" */
-static void print_to_stdout(const std::string& s){
-  std::cout << s << std::endl;
-}
 
 /* function: "blit(src, (x,y), dst)\n
 Blits src onto dst with the top left corner of src at (x,y)."
