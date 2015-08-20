@@ -277,7 +277,6 @@ ifaint.t = True
 ifaint.window = ifaint.FaintWindow()
 ifaint.interpreter = ifaint.FaintInterpreter()
 ifaint.palette = ifaint.FaintPalette()
-ifaint.app = ifaint.FaintApp()
 
 def load_test(filename):
     print("Load: " + filename)

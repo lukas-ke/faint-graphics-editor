@@ -13,7 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "app/get-app-context.hh"
+#include "app/app-context.hh"
 #include "gui/transparency-style.hh"
 #include "python/py-include.hh"
 #include "python/mapped-type.hh"
@@ -29,8 +29,8 @@ template<>
 struct MappedType<AppContext&>{
   using PYTHON_TYPE = faintAppObject;
 
-  static AppContext& GetCppObject(faintAppObject*){
-    return get_app_context();
+  static AppContext& GetCppObject(faintAppObject* obj){
+    return *obj->ctx;
   }
 
   static bool Expired(faintAppObject*){
@@ -118,13 +118,24 @@ struct faintapp_griddashed{
   }
 };
 
+/* method: "__copy__()"
+name: "__copy__" */
+static void faintapp_copy(AppContext&){
+  throw NotImplementedError("FaintApp object can not be copied.");
+}
+
 #include "generated/python/method-def/py-app-methoddef.hh"
 
 static void faintapp_init(faintAppObject&) {
+  // Prevent instantiation from Python,, since the AppContext can't be
+  // provided from there.
+  throw TypeError(space_sep("FaintApp can not be instantiated.",
+    "Use the app-object instead."));
 }
 
 static PyObject* faintapp_new(PyTypeObject* type, PyObject*, PyObject*){
   faintAppObject* self = (faintAppObject*)type->tp_alloc(type, 0);
+  self->ctx = nullptr;
   return (PyObject*)self;
 }
 
@@ -182,5 +193,12 @@ PyTypeObject FaintAppType = {
     0, // tp_version_tag
     nullptr  // tp_finalize
 };
+
+PyObject* create_faintAppObject(AppContext& app){
+  auto* py_obj = (faintAppObject*)
+    FaintAppType.tp_alloc(&FaintAppType, 0);
+  py_obj->ctx = &app;
+  return (PyObject*)py_obj;
+}
 
 } // namespace

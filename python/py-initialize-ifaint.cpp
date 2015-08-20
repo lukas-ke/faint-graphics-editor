@@ -67,7 +67,7 @@ void add_faint_types(PyObject* module){
   add_type_object(module, ImagePropsType, "ImageProps");
   add_type_object(module, FramePropsType, "FrameProps");
   add_type_object(module, GridType, "Grid");
-  add_type_object(module, DialogFunctionsType, "ContextFunctions");
+  add_type_object(module, DialogFunctionsType, "DialogFunctions");
 
   PyObject* binds = PyDict_New();
   PyModule_AddObject(module, "_binds", binds);
@@ -238,6 +238,10 @@ bool init_python(const utf8_string& arg, PyFuncContext& ctx){
   PyModule_AddObject(ifaint.get(),
     "dialogs",
     create_dialog_functions(ctx));
+
+  PyModule_AddObject(ifaint.get(),
+    "app",
+    create_faintAppObject(ctx.app));
 
   DirPath dataDir = get_data_dir();
   add_to_python_path(dataDir.SubDir("py"));
