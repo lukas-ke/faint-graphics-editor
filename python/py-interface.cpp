@@ -52,10 +52,6 @@ utf8_string format_error_info(const FaintPyExc& info){
   return errStr;
 }
 
-void python_print(const utf8_string& text){
-  get_python_context().Print(text);
-}
-
 void python_queue_refresh(Canvas& canvas){
   get_python_context().QueueRefresh(&canvas);
 }

@@ -34,10 +34,6 @@ void display_error_info(const FaintPyExc&, PythonContext&);
 
 std::string get_python_version();
 
-// Used for printing debug nonsense to the Python console instead of
-// proper debugging
-void python_print(const utf8_string&);
-
 void python_run_command(Canvas&, Command*);
 void python_run_command(const BoundObject<Object>&, Command*);
 void python_run_command(const Frame&, Command*);
