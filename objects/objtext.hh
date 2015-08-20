@@ -58,14 +58,12 @@ public:
 private:
   ObjText(const ObjText&); // For Clone
   void Init();
-  LineSegment ComputeCaret(const TextInfo&, const Tri&, const text_lines_t&);
   TextBuffer m_textBuf;
   bool m_beingEdited;
   LineSegment m_caret;
   mutable int m_rowHeight;
   mutable int m_lastFontSize;
   mutable utf8_string m_lastFontFace;
-  Settings m_highlightSettings;
   Tri m_tri;
   Optional<parse_result_t> m_expression;
 };

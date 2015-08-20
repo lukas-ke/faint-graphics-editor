@@ -94,33 +94,10 @@ void ObjText::Init(){
   assert(m_settings.Has(ts_FontFace));
   m_beingEdited = false;
 
-  m_highlightSettings = default_rectangle_settings();
-  m_highlightSettings.Set(ts_FillStyle, FillStyle::FILL);
-  Color highlightColor = get_highlight_color();
-  m_highlightSettings.Set(ts_Fg, Paint(highlightColor));
-  m_highlightSettings.Set(ts_Bg, Paint(highlightColor));
-
   m_rowHeight = TextInfoDC(m_settings).ComputeRowHeight();
   m_lastFontSize = m_settings.Get(ts_FontSize);
   m_lastFontFace = m_settings.Get(ts_FontFace);
   m_expression.Set(parse_text_expression(m_textBuf.get()));
-}
-
-LineSegment ObjText::ComputeCaret(const TextInfo& info, const Tri& tri,
-  const text_lines_t& lines)
-{
-  TextPos pos = caret_index_to_row_column(lines, m_textBuf.caret()); // Fixme: use caret_index_to_row_column ... (also move to render_text)
-
-  const auto& line = lines[pos.row];
-  auto textSize = info.TextSize(slice_up_to(line.text, pos.col));
-
-  textSize.h = info.ComputeRowHeight();
-  Tri caretTri(tri.P0(), tri.P1(), textSize.h);
-  caretTri = aligned(offset_aligned(caretTri, textSize.w,
-    static_cast<coord>(pos.row * textSize.h)),
-    m_settings.Get(ts_HorizontalAlign), line.width, tri.Width());
-
-  return LineSegment(caretTri.P0(), caretTri.P2());
 }
 
 coord ObjText::BaselineOffset() const{
