@@ -126,11 +126,6 @@ static void autosize_text(BoundObject<ObjText>& bound){
   python_run_command(bound.Plain(), crop_text_region_command(bound.obj));
 }
 
-/* function: "faint_quit()\nExit faint" */
-static void faint_quit(){
-  get_app_context().Quit();
-}
-
 /* function: "get_active_image()\nReturns the active (currently
 edited) image." */
 static Canvas& get_active_image(){

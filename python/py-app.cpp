@@ -90,6 +90,11 @@ static void faintapp_open_files(AppContext& app,
   app.Load(paths);
 }
 
+/* method: "quit()\nExit faint" */
+static void faintapp_quit(AppContext& app){
+  app.Quit();
+}
+
 /* property: "gridcolor\n
 The default color of grids used for new documents." */
 struct faintapp_gridcolor{
