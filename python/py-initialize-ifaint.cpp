@@ -21,7 +21,7 @@
 #include "python/py-canvas.hh"
 #include "python/py-frame-props.hh"
 #include "python/py-frame.hh"
-#include "python/py-functions.hh" // Fixme: Remove somehow.
+#include "python/py-functions.hh"
 #include "python/py-grid.hh"
 #include "python/py-interpreter.hh"
 #include "python/py-linear-gradient.hh"
@@ -162,7 +162,6 @@ static PyObject* create_modifier_module(){
   PyModule_AddIntConstant(module, "ctrl", Ctrl.Raw());
   return module;
 }
-
 
 static struct PyModuleDef faintInterfaceModule = {
   PyModuleDef_HEAD_INIT,
