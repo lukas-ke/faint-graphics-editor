@@ -155,8 +155,7 @@ void ObjText::Draw(FaintDC& dc, ExpressionContext& ctx){
     m_caret = LineSegment(caretTri.P0(), caretTri.P2());
   }
 
-  auto boundedText = m_settings.Get(ts_BoundedText);
-  max_width_t maxWidth = boundedText ?
+  max_width_t maxWidth = m_settings.Get(ts_BoundedText) ?
     max_width_t(m_tri.Width()) :
     max_width_t();
 
@@ -178,7 +177,18 @@ void ObjText::Draw(FaintDC& dc, ExpressionContext& ctx){
 
 void ObjText::DrawMask(FaintDC& dc){
   TextInfoDC textInfo(m_settings);
-  render_text_mask(dc, m_textBuf, m_tri, textInfo, m_settings);
+  max_width_t maxWidth = m_settings.Get(ts_BoundedText) ?
+    max_width_t(m_tri.Width()) :
+    max_width_t();
+
+  // Fixme: Needs the expression context.
+  // text_lines_t lines = (m_beingEdited || !m_settings.Get(ts_ParseExpressions)) ?
+  //   split_string(textInfo, m_textBuf.get(), maxWidth) :
+  //   split_string(textInfo, get_evaluated_string(ctx, m_expression, m_textBuf),
+  //     maxWidth);
+
+  text_lines_t lines = split_string(textInfo, m_textBuf.get(), maxWidth);
+  render_text_mask(dc, lines, m_tri, textInfo, m_settings);
 }
 
 Rect ObjText::GetAutoSizedRect() const {

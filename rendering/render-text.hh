@@ -40,7 +40,7 @@ void render_text(FaintDC&,
 
 void render_text_mask(
   FaintDC&,
-  const TextBuffer&,
+  const text_lines_t&,
   const Tri&,
   TextInfo&,
   const Settings&);

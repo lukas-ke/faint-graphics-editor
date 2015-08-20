@@ -130,9 +130,8 @@ static auto rect_mask_fill_settings(){
   return s;
 }
 
-void render_text_mask(
-  FaintDC& dc,
-  const TextBuffer& textBuf,
+void render_text_mask(FaintDC& dc,
+  const text_lines_t& lines,
   const Tri& tri,
   TextInfo& textInfo,
   const Settings& settings)
@@ -140,18 +139,13 @@ void render_text_mask(
   // Fill the entire text region with "transparent inside" indicator.
   dc.Rectangle(tri, rect_mask_no_fill_settings());
 
-  // Fill the regions actually occupied by characters with "filled
-  // inside" indicator.
-  text_lines_t lines = split_string(textInfo, textBuf.get(),
-    max_width_t(tri.Width()));
-
   const Align align(settings.Get(ts_HorizontalAlign),
     settings.Get(ts_VerticalAlign));
 
   // Draw a rectangle from the left edge to the right for each line of text
   const auto filledMask = rect_mask_fill_settings();
-  const auto regions = text_selection_region(textInfo,
-    tri, lines, textBuf.all(), align);
+  const auto regions = text_line_regions(textInfo,
+    tri, lines, align);
   for (const Tri& r : regions){
     dc.Rectangle(r, filledMask);
   }
