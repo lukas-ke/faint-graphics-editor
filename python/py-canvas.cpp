@@ -18,7 +18,6 @@
 #include "app/cut-and-paste.hh"
 #include "app/frame.hh"
 #include "app/get-app-context.hh"
-#include "app/save.hh"
 #include "bitmap/auto-crop.hh"
 #include "commands/blit-bitmap-cmd.hh"
 #include "commands/draw-object-cmd.hh"
@@ -676,50 +675,6 @@ static void canvas_rect(Canvas& canvas, const Rect& r,
 Redo the last undone action." */
 static void canvas_redo(Canvas& canvas){
   canvas.Redo();
-}
-
-// Helper for canvas_save
-static void do_save(Canvas& canvas, const FilePath& filePath){
-  SaveResult result = save(canvas,
-    get_app_context().GetFormats(),
-    filePath);
-  if (!result.Successful()){
-    throw ValueError(result.ErrorDescription());
-  }
-  canvas.NotifySaved(filePath);
-}
-
-/* method: "save(filename)\n
-Save the image to the specified file." */
-static void canvas_save(Canvas& canvas, Optional<FilePath>& maybeFilename){
-  maybeFilename.Visit(
-    [&canvas](const FilePath& path){
-
-      // Use the passed in file-name
-      do_save(canvas, path);
-    },
-    [&canvas](){
-      // No file name passed in, use the previous canvas file-name, if
-      // available.
-      canvas.GetFilePath().Visit(
-        [&](const FilePath& path){
-          do_save(canvas, path);
-        },
-        [](){
-          throw ValueError("No filename specified, and no previously used "
-            "filename available.");
-        });
-    });
-}
-
-/* method: "save_backup(filename)\n
-Save a copy of the image to the specified file, without changing the
-target filename for the image." */
-static void canvas_save_backup(Canvas& canvas, const FilePath& path){
-  SaveResult result = save(canvas, get_app_context().GetFormats(), path);
-  if (!result.Successful()){
-    throw ValueError(result.ErrorDescription());
-  }
 }
 
 /* method: "scroll_page_left()\n

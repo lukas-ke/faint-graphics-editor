@@ -15,6 +15,7 @@
 
 #include "app/app-context.hh"
 #include "app/canvas.hh"
+#include "app/save.hh"
 #include "formats/format.hh"
 #include "gui/transparency-style.hh"
 #include "text/formatting.hh"
@@ -187,6 +188,11 @@ static Canvas* faintapp_open(AppContext& app, const utf8_string& pathStr){
   return app.Load(get_openable_path(pathStr), change_tab(true));
 }
 
+/* method: "quit()\nExit faint" */
+static void faintapp_quit(AppContext& app){
+  app.Quit(); // Fixme: Crashes. :)
+}
+
 /* method: "set_transparency_indicator(r,g,b)\n
 Sets a color for indicating alpha transparency (instead of a checkered
 pattern)" */
@@ -202,12 +208,57 @@ static void faintapp_set_checkered_transparency_indicator(AppContext& app){
   app.SetTransparencyStyle(TransparencyStyle());
 }
 
-/* method: "quit()\nExit faint" */
-static void faintapp_quit(AppContext& app){
-  app.Quit(); // Fixme: Crashes. :)
+// Helper for faintapp_save
+static void do_save(AppContext& app, Canvas& canvas, const FilePath& filePath){
+  SaveResult result = save(canvas,
+    app.GetFormats(),
+    filePath);
+  if (!result.Successful()){
+    throw ValueError(result.ErrorDescription());
+  }
+  canvas.NotifySaved(filePath);
 }
 
-/* method: "swap_colors()\nSwaps the foreground and background colors." */
+/* method: "save(filename)\n
+Save the image to the specified file." */
+static void faintapp_save(AppContext& app,
+  Canvas* canvas,
+  Optional<FilePath>& maybeFilename)
+{
+  maybeFilename.Visit(
+    [&](const FilePath& path){
+      // Use the passed in file-name
+      do_save(app, *canvas, path);
+    },
+    [&](){
+      // No file name passed in, use the previous canvas file-name, if
+      // available.
+      canvas->GetFilePath().Visit(
+        [&](const FilePath& path){
+          do_save(app, *canvas, path);
+        },
+        [](){
+          throw ValueError("No filename specified, and no previously used "
+            "filename available.");
+        });
+    });
+}
+
+/* method: "save_backup(canvas, filename)\n
+Save a copy of the Canvas to the specified file, without changing the
+target filename for the Canvas." */
+static void faintapp_save_backup(AppContext& app,
+  Canvas* canvas,
+  const FilePath& path)
+{
+  SaveResult result = save(*canvas, app.GetFormats(), path);
+  if (!result.Successful()){
+    throw ValueError(result.ErrorDescription()); // Fixme: Not ValueError
+  }
+}
+
+/* method: "swap_colors()\n
+Swaps the foreground and background colors." */
 static void faintapp_swap_colors(AppContext& app){
   Paint fg(app.Get(ts_Fg));
   Paint bg(app.Get(ts_Bg));
