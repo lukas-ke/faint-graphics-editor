@@ -17,7 +17,6 @@
 #include "app/context-commands.hh"
 #include "app/cut-and-paste.hh"
 #include "app/frame.hh"
-#include "app/get-app-context.hh"
 #include "bitmap/auto-crop.hh"
 #include "commands/blit-bitmap-cmd.hh"
 #include "commands/draw-object-cmd.hh"
