@@ -25,24 +25,13 @@
 #include "util/distinct.hh"
 #include "util/either.hh"
 #include "util/hot-spot.hh"
+#include "util/image-info.hh"
 #include "util/index.hh"
 #include "util/objects.hh"
 
 namespace faint{
 
 class Bitmap;
-
-class category_imageinfo;
-using create_bitmap = Distinct<bool, category_imageinfo, 0>;
-
-class ImageInfo {
-public:
-  explicit ImageInfo(const IntSize&, const create_bitmap&);
-  ImageInfo(const IntSize&, const Color& bg, const create_bitmap&);
-  IntSize size;
-  Color backgroundColor;
-  bool createBitmap;
-};
 
 class FrameInfo {
   // Properties for a single frame

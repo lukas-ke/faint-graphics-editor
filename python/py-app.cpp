@@ -23,6 +23,7 @@
 #include "util-wx/file-path.hh"
 #include "util/enum-util.hh"
 #include "util/grid.hh"
+#include "util/image-info.hh"
 #include "util/make-vector.hh"
 #include "util/setting-id.hh"
 #include "python/py-include.hh"
@@ -115,12 +116,21 @@ static void faintapp_add_format(AppContext& app, PyObject* args){
   app.AddFormat(f);
 }
 
+/* method: "new()\n
+Create a new Canvas." */
+static Canvas& faintapp_new(AppContext& app, const Optional<IntSize>& size){
+  return app.NewDocument(
+    ImageInfo(
+      size.Or({640, 480}),
+      color_white, // Fixme: Allow specifying
+      create_bitmap(false)));
+}
+
 /* method: "close()\n
 Close the canvas." */
 static void faintapp_close(AppContext& app, Canvas* canvas){
   app.Close(*canvas);
 }
-
 
 /* method: "list_fonts()->[fontname1, ...]\n
 Returns a list of the available font names." */

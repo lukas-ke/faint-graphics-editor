@@ -22,20 +22,6 @@
 
 namespace faint{
 
-ImageInfo::ImageInfo(const IntSize& size, const create_bitmap& createBitmap)
-  : size(size),
-    backgroundColor(color_white),
-    createBitmap(createBitmap.Get())
-{}
-
-ImageInfo::ImageInfo(const IntSize& size,
-  const Color& bgCol,
-  const create_bitmap& createBitmap)
-  : size(size),
-    backgroundColor(bgCol),
-    createBitmap(createBitmap.Get())
-{}
-
 FrameInfo::FrameInfo()
   : delay(0),
     hotSpot(0,0)
