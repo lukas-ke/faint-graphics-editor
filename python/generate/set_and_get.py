@@ -158,7 +158,7 @@ setters_and_getters = {
         py_to_cpp_map={"square" : "BrushShape::SQUARE",
                        "circle" : "BrushShape::CIRCLE",
                        "experimental" : "BrushShape::EXPERIMENTAL"},
-        doc_str="Brush shape setting (square or circle)",
+        doc_str="Brush shape setting ('square' or 'circle')",
         cpp_enum=CppEnum("BrushShape", entries=(
             "SQUARE",
             "CIRCLE",
