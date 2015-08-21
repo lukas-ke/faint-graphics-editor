@@ -13,7 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "app/get-app-context.hh"
+#include "app/app-context.hh"
 #include "python/mapped-type.hh"
 #include "python/py-include.hh"
 #include "python/py-interpreter.hh"
@@ -23,8 +23,8 @@ namespace faint{
 template<>
 struct MappedType<AppContext&>{
   using PYTHON_TYPE = faintInterpreterObject;
-  static AppContext& GetCppObject(faintInterpreterObject*){
-    return get_app_context();
+  static AppContext& GetCppObject(faintInterpreterObject* self){
+    return *self->ctx;
   }
 
   static bool Expired(faintInterpreterObject*){
@@ -70,17 +70,17 @@ static void faintinterpreter_set_text_color(AppContext& app, const ColRGB& c){
   app.SetInterpreterTextColor(c);
 }
 
-static PyMethodDef faintinterpreter_methods[] = {
-  FORWARDER(faintinterpreter_maximize, METH_NOARGS, "maximize",
-    "Maximize the Python interpreter window."),
-  FORWARDER(faintinterpreter_set_background_color, METH_VARARGS,
-    "set_background_color", "Set the Python interpreter background color."),
-  FORWARDER(faintinterpreter_set_text_color, METH_VARARGS, "set_text_color",
-    "Set the Python interpreter text color."),
-  {nullptr,nullptr,0,nullptr} // Sentinel
-};
+/* method: "__copy__()"
+name: "__copy__" */
+static void faintinterpreter_copy(AppContext&){
+  throw NotImplementedError("FaintInterpreter object can not be copied.");
+}
 
 static void faintinterpreter_init(faintInterpreterObject&){
+  // Prevent instantiation from Python, since the AppContext can't be
+  // provided from there.
+  throw TypeError(space_sep("FaintInterpreter can not be instantiated.",
+    "Use the 'interpreter'-object instead."));
 }
 
 static PyObject* faintinterpreter_new(PyTypeObject* type, PyObject*, PyObject*){
@@ -91,6 +91,8 @@ static PyObject* faintinterpreter_new(PyTypeObject* type, PyObject*, PyObject*){
 static utf8_string faintinterpreter_repr(AppContext&){
   return "FaintInterpreter";
 }
+
+#include "generated/python/method-def/py-interpreter-methoddef.hh"
 
 PyTypeObject FaintInterpreterType = {
   PyVarObject_HEAD_INIT(nullptr, 0)
@@ -142,5 +144,12 @@ PyTypeObject FaintInterpreterType = {
   0, // tp_version_tag
   nullptr  // tp_finalize
 };
+
+PyObject* create_Interpreter(AppContext& app){
+  auto* py_obj = (faintInterpreterObject*)
+    FaintInterpreterType.tp_alloc(&FaintInterpreterType, 0);
+  py_obj->ctx = &app;
+  return (PyObject*)py_obj;
+}
 
 } // namespace

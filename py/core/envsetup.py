@@ -293,8 +293,6 @@ ifaint.binds = binds
 ifaint.f = False
 ifaint.t = True
 
-ifaint.interpreter = ifaint.FaintInterpreter()
-
 def load_test(filename):
     print("Load: " + filename)
 

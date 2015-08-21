@@ -67,6 +67,7 @@ void add_faint_types(PyObject* module){
   add_type_object(module, SettingsType, "Settings");
   add_type_object(module, FaintAppType, "FaintApp");
   add_type_object(module, FaintWindowType, "FaintWindow");
+  add_type_object(module, FaintInterpreterType, "FaintInterpreter");
   add_type_object(module, FaintPaletteType, "Palette");
   add_type_object(module, TriType, "Tri");
   add_type_object(module, ImagePropsType, "ImageProps");
@@ -185,9 +186,6 @@ PyMODINIT_FUNC PyInit_ifaint(){
   PyObject* module_ifaint = PyModule_Create(&faintInterfaceModule);
   assert(module_ifaint != nullptr);
   add_faint_types(module_ifaint);
-
-  add_interpreter_to_module(module_ifaint);
-
   ifaintError = PyErr_NewException("ifaint.error", nullptr, nullptr);
   Py_INCREF(ifaintError);
   PyModule_AddObject(module_ifaint, "error", ifaintError);
@@ -243,6 +241,10 @@ bool init_python(const utf8_string& arg, PyFuncContext& ctx){
   PyModule_AddObject(ifaint.get(),
     "window",
     create_Window(ctx.app));
+
+  PyModule_AddObject(ifaint.get(),
+    "interpreter",
+    create_Interpreter(ctx.app));
 
   DirPath dataDir = get_data_dir();
   add_to_python_path(dataDir.SubDir("py"));
