@@ -47,14 +47,6 @@ struct MappedType<AppContext&>{
   }
 };
 
-void add_palette_to_module(PyObject* module){
-  FaintPaletteType.tp_new = PyType_GenericNew;
-  int result = PyType_Ready(&FaintPaletteType);
-  assert(result >= 0);
-  Py_INCREF(&FaintPaletteType);
-  PyModule_AddObject(module, "FaintPalette", (PyObject*)&FaintPaletteType);
-}
-
 /* method: "add(paint)\n
 Adds the specified color, gradient or pattern to the palette." */
 static void faintpalette_add(AppContext& app, const Paint& paint){

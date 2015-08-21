@@ -22,9 +22,10 @@ extern PyTypeObject FaintWindowType;
 
 struct faintWindowObject {
   PyObject_HEAD
+  AppContext* ctx;
 };
 
-void add_window_to_module(PyObject* module);
+PyObject* create_Window(AppContext&);
 
 } // namespace
 

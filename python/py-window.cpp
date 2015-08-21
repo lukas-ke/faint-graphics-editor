@@ -13,7 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "app/get-app-context.hh"
+#include "app/app-context.hh"
 #include "python/mapped-type.hh"
 #include "python/py-include.hh"
 #include "python/py-window.hh"
@@ -25,8 +25,8 @@ template<>
 struct MappedType<AppContext&>{
   using PYTHON_TYPE = faintWindowObject;
 
-  static AppContext& GetCppObject(faintWindowObject*){
-    return get_app_context();
+  static AppContext& GetCppObject(faintWindowObject* self){
+    return *self->ctx;
   }
 
   static bool Expired(faintWindowObject*){
@@ -43,18 +43,16 @@ struct MappedType<AppContext&>{
   }
 };
 
-void add_window_to_module(PyObject* module){
-  FaintWindowType.tp_new = PyType_GenericNew;
-  int result = PyType_Ready(&FaintWindowType);
-  assert(result >= 0);
-  Py_INCREF(&FaintWindowType);
-  PyModule_AddObject(module, "FaintWindow", (PyObject*)&FaintWindowType);
-}
-
 /* method: "maximize()\n
 Maximize or de-maximize the window." */
 static void faintwindow_maximize(AppContext& app){
   app.Maximize();
+}
+
+/* method: "__copy__()"
+name: "__copy__" */
+static void faintwindow_copy(AppContext&){
+  throw NotImplementedError("FaintWindow object can not be copied.");
 }
 
 static PyObject* faintwindow_new(PyTypeObject* type, PyObject*, PyObject*){
@@ -63,6 +61,10 @@ static PyObject* faintwindow_new(PyTypeObject* type, PyObject*, PyObject*){
 }
 
 static void faintwindow_init(faintWindowObject&){
+  // Prevent instantiation from Python, since the AppContext can't be
+  // provided from there.
+  throw TypeError(space_sep("FaintWindow can not be instantiated.",
+    "Use the 'window'-object instead."));
 }
 
 static utf8_string faintwindow_repr(AppContext&){
@@ -121,5 +123,12 @@ PyTypeObject FaintWindowType = {
     0, // tp_version_tag
     nullptr, // tp_finalize
 };
+
+PyObject* create_Window(AppContext& app){
+  auto* py_obj = (faintWindowObject*)
+    FaintWindowType.tp_alloc(&FaintWindowType, 0);
+  py_obj->ctx = &app;
+  return (PyObject*)py_obj;
+}
 
 } // namespace
