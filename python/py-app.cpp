@@ -332,10 +332,10 @@ static void faintapp_copy(AppContext&){
 #include "generated/python/method-def/py-app-methoddef.hh"
 
 static void faintapp_init(faintAppObject&) {
-  // Prevent instantiation from Python,, since the AppContext can't be
+  // Prevent instantiation from Python, since the AppContext can't be
   // provided from there.
   throw TypeError(space_sep("FaintApp can not be instantiated.",
-    "Use the app-object instead."));
+    "Use the 'app'-object instead."));
 }
 
 static PyObject* faintapp_new(PyTypeObject* type, PyObject*, PyObject*){

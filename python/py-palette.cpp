@@ -14,7 +14,7 @@
 // permissions and limitations under the License.
 
 #include <vector>
-#include "app/get-app-context.hh"
+#include "app/app-context.hh"
 #include "bitmap/paint.hh"
 #include "python/mapped-type.hh"
 #include "python/py-include.hh"
@@ -29,8 +29,8 @@ template<>
 struct MappedType<AppContext&>{
   using PYTHON_TYPE = faintPaletteObject;
 
-  static AppContext& GetCppObject(faintPaletteObject*){
-    return get_app_context();
+  static AppContext& GetCppObject(faintPaletteObject* obj){
+    return *obj->ctx;
   }
 
   static bool Expired(faintPaletteObject*){
@@ -75,6 +75,10 @@ static void faintpalette_set(AppContext& app, const std::vector<Paint>& paints){
 }
 
 static void faintpalette_init(faintPaletteObject&){
+  // Prevent instantiation from Python, since the AppContext can't be
+  // provided from there.
+  throw TypeError(space_sep("Palette can not be instantiated.",
+    "Use the 'palette'-object instead."));
 }
 
 static PyObject* faintpalette_new(PyTypeObject* type, PyObject*, PyObject*){
@@ -84,6 +88,12 @@ static PyObject* faintpalette_new(PyTypeObject* type, PyObject*, PyObject*){
 
 static utf8_string faintpalette_repr(AppContext&){
   return "Faint Palette";
+}
+
+/* method: "__copy__()"
+name: "__copy__" */
+static void faintpalette_copy(AppContext&){
+  throw NotImplementedError("Palette object can not be copied.");
 }
 
 #include "generated/python/method-def/py-palette-methoddef.hh"
@@ -138,5 +148,12 @@ PyTypeObject FaintPaletteType = {
     0, // tp_version_tag
     nullptr  // tp_finalize
 };
+
+PyObject* create_Palette(AppContext& app){
+  auto* py_obj = (faintPaletteObject*)
+    FaintPaletteType.tp_alloc(&FaintPaletteType, 0);
+  py_obj->ctx = &app;
+  return (PyObject*)py_obj;
+}
 
 } // namespace

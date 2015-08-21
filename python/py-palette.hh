@@ -22,9 +22,10 @@ extern PyTypeObject FaintPaletteType;
 
 struct faintPaletteObject{
   PyObject_HEAD
+  AppContext* ctx;
 };
 
-void add_palette_to_module(PyObject* module);
+PyObject* create_Palette(AppContext&);
 
 } // namespace
 
