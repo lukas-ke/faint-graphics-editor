@@ -214,7 +214,7 @@ static void do_save(AppContext& app, Canvas& canvas, const FilePath& filePath){
     app.GetFormats(),
     filePath);
   if (!result.Successful()){
-    throw ValueError(result.ErrorDescription());
+    throw ValueError(result.ErrorDescription()); // Fixme: Not value error
   }
   canvas.NotifySaved(filePath);
 }
