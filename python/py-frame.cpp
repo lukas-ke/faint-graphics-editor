@@ -36,10 +36,11 @@
 namespace faint{
 
 bool expired(frameObject* self){
-  if (canvas_ok(self->canvasId) && self->canvas->Has(self->frameId)){
+  if (canvas_ok(self->canvasId, get_app_context()) && self->canvas->Has(self->frameId)){
     return false;
   }
-  PyErr_SetString(PyExc_ValueError, "That frame is removed."); // Fixme: really do this?
+  PyErr_SetString(PyExc_ValueError,
+    "That frame is removed."); // Fixme: really do this?
   return true;
 }
 
@@ -70,7 +71,7 @@ static PyObject* frame_new(PyTypeObject* type, PyObject*, PyObject*){
 
 static PyObject* frame_repr(frameObject* self){
   std::stringstream ss;
-  if (canvas_ok(self->canvasId)){
+  if (canvas_ok(self->canvasId, get_app_context())){
     ss << "Frame of canvas #" << self->canvasId.Raw();
   }
   else {

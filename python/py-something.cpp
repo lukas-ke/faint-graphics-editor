@@ -63,7 +63,7 @@ struct MappedType<const BoundObject<T>&>{
   }
 
   static bool Expired(smthObject* self){
-    if (canvas_ok(self->canvasId) &&
+    if (canvas_ok(self->canvasId, get_app_context()) &&
       self->canvas->Has(self->frameId) &&
       self->canvas->GetFrame(self->frameId).Has(self->objectId)){
       return false;

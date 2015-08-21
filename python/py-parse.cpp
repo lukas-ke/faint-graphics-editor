@@ -15,6 +15,7 @@
 
 #include "app/canvas.hh"
 #include "app/frame.hh"
+#include "app/get-app-context.hh" // Fixme
 #include "bitmap/bitmap.hh"
 #include "bitmap/bitmap-exception.hh"
 #include "bitmap/color-span.hh"
@@ -276,7 +277,7 @@ bool parse_flat(Canvas*& canvas, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   }
 
   canvasObject* pyCanvas = (canvasObject*)(ref.get());
-  if (!canvas_ok(pyCanvas->id)){
+  if (!canvas_ok(pyCanvas->id, get_app_context())){ // Fixme: Remove get_app_context
     throw ValueError("Operation on closed canvas.");
   }
   n += 1;
@@ -948,7 +949,10 @@ PyObject* build_result(const BoundObject<Object>& obj){
 }
 
 PyObject* build_result(Canvas& canvas){
-  return pythoned(canvas);
+  // Fixme: Instead of get_app_context, return something other than Canvas,
+  // including the AppContext.
+  return pythoned(canvas,
+    get_app_context()); // Fixme
 }
 
 PyObject* build_result(const Calibration& c){
@@ -960,7 +964,7 @@ PyObject* build_result(const Calibration& c){
 }
 
 PyObject* build_result(Canvas* canvas){
-  return pythoned(*canvas);
+  return build_result(*canvas);
 }
 
 PyObject* build_result(const CanvasGrid& grid){

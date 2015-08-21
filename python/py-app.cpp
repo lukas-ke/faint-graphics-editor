@@ -110,7 +110,8 @@ static void faintapp_add_format(AppContext& app, PyObject* args){
   PyFileFormat* f = new PyFileFormat(load_callback_t(loader),
     save_callback_t(saver),
     label_t(utf8_string(name)),
-    FileExtension(extension));
+    FileExtension(extension),
+    app);
   app.AddFormat(f);
 }
 

@@ -80,7 +80,7 @@ struct MappedType<Canvas&>{
   }
 
   static bool Expired(canvasObject* self){
-    return !canvas_ok(self->id);
+    return !canvas_ok(self->id, *self->ctx);
   }
 
   static void ShowError(canvasObject*){
@@ -101,8 +101,8 @@ objects_t check_ownership(const T& image, const BoundObjects& boundObjects){
   return make_vector(boundObjects, get_obj);
 }
 
-bool canvas_ok(const CanvasId& c){
-  return get_app_context().Exists(c);
+bool canvas_ok(const CanvasId& c, AppContext& app){
+  return app.Exists(c);
 }
 
 // Helper for py-common.hh
@@ -1141,7 +1141,7 @@ static PyObject* canvas_new(PyTypeObject* type, PyObject*, PyObject*){
 
 static PyObject* canvas_repr(canvasObject* self){
   std::stringstream ss;
-  if (canvas_ok(self->id)){
+  if (canvas_ok(self->id, *self->ctx)){
     ss << "Canvas #" << self->id.Raw();
     Optional<FilePath> filePath(self->canvas->GetFilePath());
     if (filePath.IsSet()){
@@ -1173,6 +1173,8 @@ static void canvas_init(canvasObject& self,
   const Either<FilePath, Optional<IntSize>>& param)
 {
   // Fixme: Accept vector of FilePath
+  // Fixme: Remove this constructor, and throw instead.
+  // Use e.g. app.new to create Canvases.
 
   Canvas* canvas = param.Visit(
     [](const FilePath& path){
@@ -1255,10 +1257,12 @@ PyTypeObject CanvasType = {
   nullptr  // tp_finalize
 };
 
-PyObject* pythoned(Canvas& canvas){
+PyObject* pythoned(Canvas& canvas, AppContext& app){
   canvasObject* py_canvas = (canvasObject*)CanvasType.tp_alloc(&CanvasType, 0);
+  py_canvas->ctx = &app;
   py_canvas->canvas = &canvas;
   py_canvas->id = py_canvas->canvas->GetId();
+
   return (PyObject*) py_canvas;
 }
 

@@ -20,6 +20,7 @@
 
 namespace faint{
 
+class AppContext;
 class PyFileFormat;
 using load_callback_t = Distinct<PyObject*, PyFileFormat, 0>;
 using save_callback_t = Distinct<PyObject*, PyFileFormat, 1>;
@@ -29,11 +30,13 @@ public:
   PyFileFormat(const load_callback_t&,
     const save_callback_t&,
     const label_t&,
-    const FileExtension&);
+    const FileExtension&,
+    AppContext&);
 
   void Load(const FilePath&, ImageProps&) override;
   SaveResult Save(const FilePath&, Canvas&) override;
 private:
+  AppContext& m_app;
   scoped_ref m_callLoad;
   scoped_ref m_callSave;
 };
