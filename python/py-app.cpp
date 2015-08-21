@@ -168,37 +168,37 @@ True if a checkered pattern is used to indicate transparency." */
 static bool faintapp_get_checkered_transparency_indicator(AppContext& app){
 return app.GetTransparencyStyle().IsCheckered(); }
 
-/* method: "open_files((filepath1, filepath2,...))\n
+FilePath get_openable_path(const utf8_string& s){
+  if (!is_file_path(s)){
+    throw ValueError(space_sep(quoted(s), "is not a file path"));
+  }
+  if (!is_absolute_path(s)){
+    throw ValueError(space_sep("Path", quoted(s), "not absolute."));
+  }
+  return FilePath::FromAbsolute(s);
+}
+
+/* method: "open_files((file_path1, file_path2,...))\n
 Open the specified image files in new tabs." */
 static void faintapp_open_files(AppContext& app,
   const std::vector<utf8_string>& pathStrings)
 {
   FileList paths;
   for (const utf8_string& pathStr : pathStrings){
-    if (!is_file_path(pathStr)){
-      throw ValueError(space_sep(quoted(pathStr), "is not a file path"));
-    }
-    if (!is_absolute_path(pathStr)){
-      throw ValueError(space_sep("Path", quoted(pathStr), "not absolute."));
-    }
-
-    paths.push_back(FilePath::FromAbsolute(pathStr));
+    paths.push_back(get_openable_path(pathStr));
   }
   if (paths.empty()){
     return;
   }
 
   app.Load(paths);
+  // Fixme: Return list of Canvas&
 }
 
-/* method: "open(filepath)\n
+/* method: "open(file_path)->Image\n
 Open the specified image file in a new tab." */
-static void faintapp_open(AppContext& app, const utf8_string& path){
-  // Fixme: I would like to use the same function for one and many
-  // (faintapp_open_files), but that function with a single file says
-  // "Expected sequence of str, got str".
-  // Should probably add some type that allows flat lists.
-  faintapp_open_files(app, std::vector<utf8_string>{path});
+static Canvas* faintapp_open(AppContext& app, const utf8_string& pathStr){
+  return app.Load(get_openable_path(pathStr), change_tab(true));
 }
 
 /* method: "quit()\nExit faint" */

@@ -1169,32 +1169,17 @@ static PyObject* canvas_richcompare(canvasObject* self, PyObject* otherRaw,
   return py_rich_compare(self->canvas->GetId(), other->canvas->GetId(), op);
 }
 
-static void canvas_init(canvasObject& self,
-  const Either<FilePath, Optional<IntSize>>& param)
-{
-  // Fixme: Accept vector of FilePath
-  // Fixme: Remove this constructor, and throw instead.
-  // Use e.g. app.new to create Canvases.
-
-  Canvas* canvas = param.Visit(
-    [](const FilePath& path){
-      Canvas* canvas = get_app_context().Load(path, change_tab(true));
-      if (canvas == nullptr){
-        throw ValueError(space_sep("Failed loading: " + path.Str()));
-      }
-      return canvas;
-    },
-    [](const Optional<IntSize>& sz){
-      Canvas& canvas = get_app_context().NewDocument(ImageInfo(sz.Or({640,480}),
-          color_white, // Fixme: Allow specifying
-          create_bitmap(false)));
-      return &canvas;
-    });
-
-  assert(canvas != nullptr);
-  self.canvas = canvas;
-  self.id = canvas->GetId();
+static void canvas_init(canvasObject&){
+  throw TypeError("Canvas can not be instantiated."
+    "Use app.new or app.open instead.");
 }
+
+/* method: "__copy__()"
+name: "__copy__" */
+static void canvas_copy(Canvas&){
+  throw NotImplementedError("Canvas can not be copied.");
+}
+
 using common_type = Canvas&;
 /* extra_include: "generated/python/method-def/py-common-methoddef.hh" */
 /* extra_include: "generated/python/method-def/py-less-common-methoddef.hh" */
