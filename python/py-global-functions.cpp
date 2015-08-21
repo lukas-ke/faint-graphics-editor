@@ -13,24 +13,24 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "app/canvas.hh"
 #include "app/app-context.hh"
 #include "app/app-getter-util.hh"
+#include "app/canvas.hh"
 #include "app/faint-resize-dialog-context.hh"
 #include "geo/int-point.hh"
 #include "gui/dialogs.hh"
-#include "python/py-global-functions.hh"
-#include "text/formatting.hh"
-#include "util/setting-id.hh"
 #include "objects/objraster.hh"
 #include "objects/objtext.hh"
+#include "text/formatting.hh"
+#include "util/index-iter.hh" // up_to
+#include "util/make-vector.hh"
+#include "util/key-press.hh"
+#include "util/setting-id.hh"
+#include "python/py-func-context.hh"
 #include "python/python-context.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-util.hh"
 #include "python/py-add-type-object.hh"
-#include "util/index-iter.hh" // up_to
-#include "util/make-vector.hh"
-#include "util/key-press.hh"
 
 namespace faint{
 

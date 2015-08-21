@@ -14,11 +14,12 @@
 // permissions and limitations under the License.
 
 #include "app/app-context.hh"
-#include "python/py-active-settings.hh"
 #include "text/formatting.hh"
 #include "util/setting-id.hh"
+#include "python/py-include.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-util.hh"
+#include "python/py-func-context.hh"
 #include "python/py-add-type-object.hh"
 
 namespace faint{

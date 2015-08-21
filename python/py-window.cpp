@@ -16,7 +16,6 @@
 #include "app/app-context.hh"
 #include "python/mapped-type.hh"
 #include "python/py-include.hh"
-#include "python/py-window.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-add-type-object.hh"
 

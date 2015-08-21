@@ -28,7 +28,6 @@
 #include "python/py-include.hh"
 #include "python/mapped-type.hh"
 #include "python/py-add-type-object.hh"
-#include "python/py-app.hh"
 #include "python/py-format.hh"
 #include "python/py-ugly-forward.hh"
 

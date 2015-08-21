@@ -19,9 +19,7 @@
 #include "util/paint-map.hh"
 #include "python/mapped-type.hh"
 #include "python/py-include.hh"
-#include "python/py-window.hh"
 #include "python/py-ugly-forward.hh"
-#include "python/py-palette.hh"
 #include "python/py-add-type-object.hh"
 
 namespace faint{
