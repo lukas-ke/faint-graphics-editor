@@ -168,7 +168,7 @@ True if a checkered pattern is used to indicate transparency." */
 static bool faintapp_get_checkered_transparency_indicator(AppContext& app){
 return app.GetTransparencyStyle().IsCheckered(); }
 
-/* method: "open([filepath1, filepath2,...])\n
+/* method: "open_files((filepath1, filepath2,...))\n
 Open the specified image files in new tabs." */
 static void faintapp_open_files(AppContext& app,
   const std::vector<utf8_string>& pathStrings)
@@ -189,6 +189,16 @@ static void faintapp_open_files(AppContext& app,
   }
 
   app.Load(paths);
+}
+
+/* method: "open(filepath)\n
+Open the specified image file in a new tab." */
+static void faintapp_open(AppContext& app, const utf8_string& path){
+  // Fixme: I would like to use the same function for one and many
+  // (faintapp_open_files), but that function with a single file says
+  // "Expected sequence of str, got str".
+  // Should probably add some type that allows flat lists.
+  faintapp_open_files(app, std::vector<utf8_string>{path});
 }
 
 /* method: "quit()\nExit faint" */
