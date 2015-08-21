@@ -18,14 +18,7 @@
 
 namespace faint{
 
-extern PyTypeObject FaintPaletteType;
-
-struct faintPaletteObject{
-  PyObject_HEAD
-  AppContext* ctx;
-};
-
-PyObject* create_Palette(AppContext&);
+void add_Palette(AppContext&, PyObject* module);
 
 } // namespace
 

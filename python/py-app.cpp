@@ -27,11 +27,21 @@
 #include "util/setting-id.hh"
 #include "python/py-include.hh"
 #include "python/mapped-type.hh"
-#include "python/py-format.hh"
+#include "python/py-add-type-object.hh"
 #include "python/py-app.hh"
+#include "python/py-format.hh"
 #include "python/py-ugly-forward.hh"
 
 namespace faint{
+
+class AppContext;
+
+extern PyTypeObject FaintAppType;
+
+struct faintAppObject {
+  PyObject_HEAD
+  AppContext* ctx;
+};
 
 template<>
 struct MappedType<AppContext&>{
@@ -399,11 +409,10 @@ PyTypeObject FaintAppType = {
     nullptr  // tp_finalize
 };
 
-PyObject* create_faintAppObject(AppContext& app){
-  auto* py_obj = (faintAppObject*)
-    FaintAppType.tp_alloc(&FaintAppType, 0);
-  py_obj->ctx = &app;
-  return (PyObject*)py_obj;
+void add_App(AppContext& app, PyObject* module){
+  add_type_object(module, FaintAppType, "FaintApp");
+  PyModule_AddObject(module, "app",
+    create_python_object<faintAppObject>(FaintAppType, app));
 }
 
 } // namespace

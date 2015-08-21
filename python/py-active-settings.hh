@@ -21,16 +21,9 @@
 
 namespace faint{
 
-extern PyTypeObject ActiveSettingsType;
-
-struct activeSettingsObject{
-  PyObject_HEAD
-  PyFuncContext* ctx;
-};
-
-/** Create Python-object with methods for modifying the active tool
+/** Add Python-object with methods for modifying the active tool
 settings. The object can only be created from the C++-code. */
-PyObject* create_ActiveSettings(PyFuncContext&);
+void add_ActiveSettings(PyFuncContext&, PyObject* module);
 
 } // namespace
 

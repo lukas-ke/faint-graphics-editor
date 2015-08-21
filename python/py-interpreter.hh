@@ -18,14 +18,8 @@
 
 namespace faint{
 class AppContext;
-extern PyTypeObject FaintInterpreterType;
 
-struct faintInterpreterObject{
-  PyObject_HEAD
-  AppContext* ctx;
-};
-
-PyObject* create_Interpreter(AppContext&);
+void add_Interpreter(AppContext&, PyObject* module);
 
 } // namespace
 

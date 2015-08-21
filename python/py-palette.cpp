@@ -16,14 +16,22 @@
 #include <vector>
 #include "app/app-context.hh"
 #include "bitmap/paint.hh"
+#include "util/paint-map.hh"
 #include "python/mapped-type.hh"
 #include "python/py-include.hh"
 #include "python/py-window.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-palette.hh"
-#include "util/paint-map.hh"
+#include "python/py-add-type-object.hh"
 
 namespace faint{
+
+extern PyTypeObject FaintPaletteType;
+
+struct faintPaletteObject{
+  PyObject_HEAD
+  AppContext* ctx;
+};
 
 template<>
 struct MappedType<AppContext&>{
@@ -141,11 +149,10 @@ PyTypeObject FaintPaletteType = {
     nullptr  // tp_finalize
 };
 
-PyObject* create_Palette(AppContext& app){
-  auto* py_obj = (faintPaletteObject*)
-    FaintPaletteType.tp_alloc(&FaintPaletteType, 0);
-  py_obj->ctx = &app;
-  return (PyObject*)py_obj;
+void add_Palette(AppContext& app, PyObject* module){
+  add_type_object(module, FaintPaletteType, "FaintPalette");
+  PyModule_AddObject(module, "palette",
+    create_python_object<faintPaletteObject>(FaintPaletteType, app));
 }
 
 } // namespace

@@ -18,8 +18,17 @@
 #include "python/py-include.hh"
 #include "python/py-interpreter.hh"
 #include "python/py-ugly-forward.hh"
+#include "python/py-add-type-object.hh"
 
 namespace faint{
+
+extern PyTypeObject FaintInterpreterType;
+
+struct faintInterpreterObject{
+  PyObject_HEAD
+  AppContext* ctx;
+};
+
 template<>
 struct MappedType<AppContext&>{
   using PYTHON_TYPE = faintInterpreterObject;
@@ -145,11 +154,10 @@ PyTypeObject FaintInterpreterType = {
   nullptr  // tp_finalize
 };
 
-PyObject* create_Interpreter(AppContext& app){
-  auto* py_obj = (faintInterpreterObject*)
-    FaintInterpreterType.tp_alloc(&FaintInterpreterType, 0);
-  py_obj->ctx = &app;
-  return (PyObject*)py_obj;
+void add_Interpreter(AppContext& app, PyObject* module){
+  add_type_object(module, FaintInterpreterType, "FaintInterpreter");
+  PyModule_AddObject(module, "interpreter",
+    create_python_object<faintInterpreterObject>(FaintInterpreterType, app));
 }
 
 } // namespace

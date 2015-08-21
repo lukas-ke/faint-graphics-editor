@@ -19,8 +19,16 @@
 #include "util/setting-id.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-util.hh"
+#include "python/py-add-type-object.hh"
 
 namespace faint{
+
+extern PyTypeObject ActiveSettingsType;
+
+struct activeSettingsObject{
+  PyObject_HEAD
+  PyFuncContext* ctx;
+};
 
 const char* ACTIVE_SETTINGS_NAME = "ActiveSettings";
 
@@ -121,11 +129,10 @@ PyTypeObject ActiveSettingsType = {
   nullptr  // tp_finalize
 };
 
-PyObject* create_ActiveSettings(PyFuncContext& ctx){
-  auto* py_obj = (activeSettingsObject*)
-    ActiveSettingsType.tp_alloc(&ActiveSettingsType, 0);
-  py_obj->ctx = &ctx;
-  return (PyObject*)py_obj;
+void add_ActiveSettings(PyFuncContext& ctx, PyObject* module){
+  add_type_object(module, ActiveSettingsType, "ActiveSettings");
+  PyModule_AddObject(module, "active_settings",
+    create_python_object<activeSettingsObject>(ActiveSettingsType, ctx));
 }
 
 } // namespace

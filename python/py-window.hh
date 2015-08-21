@@ -18,13 +18,6 @@
 
 namespace faint{
 
-extern PyTypeObject FaintWindowType;
-
-struct faintWindowObject {
-  PyObject_HEAD
-  AppContext* ctx;
-};
-
 void add_Window(AppContext&, PyObject* module);
 
 } // namespace

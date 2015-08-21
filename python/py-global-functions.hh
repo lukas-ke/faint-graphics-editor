@@ -15,22 +15,14 @@
 
 #ifndef FAINT_PY_GLOBAL_FUNCTIONS_HH
 #define FAINT_PY_GLOBAL_FUNCTIONS_HH
-#include "python/mapped-type.hh"
-#include "python/py-include.hh"
 #include "python/py-func-context.hh"
+#include "python/py-include.hh"
 
 namespace faint{
 
-extern PyTypeObject GlobalFunctionsType;
-
-struct globalFunctionsObject{
-  PyObject_HEAD
-  PyFuncContext* ctx;
-};
-
-/** Create Python-object holding "global functions",
-in reality, methods. */
-PyObject* create_global_functions(PyFuncContext&);
+/** Add Python-object holding "global functions", (in reality,
+methods) to the module. */
+void add_global_functions(PyFuncContext&, PyObject* module);
 
 } // namespace
 

@@ -20,10 +20,19 @@
 #include "python/py-dialog-functions.hh"
 #include "text/formatting.hh"
 #include "util/setting-id.hh"
+#include "python/mapped-type.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-util.hh"
+#include "python/py-add-type-object.hh"
 
 namespace faint{
+
+extern PyTypeObject DialogFunctionsType;
+
+struct dialogFunctionsObject{
+  PyObject_HEAD
+  PyFuncContext* ctx;
+};
 
 const char* DIALOG_FUNCTIONS_NAME = "DialogFunctions";
 
@@ -186,11 +195,10 @@ PyTypeObject DialogFunctionsType = {
   nullptr  // tp_finalize
 };
 
-PyObject* create_dialog_functions(PyFuncContext& ctx){
-  auto* py_obj = (dialogFunctionsObject*)
-    DialogFunctionsType.tp_alloc(&DialogFunctionsType, 0);
-  py_obj->ctx = &ctx;
-  return (PyObject*)py_obj;
+void add_dialog_functions(PyFuncContext& ctx, PyObject* module){
+  add_type_object(module, DialogFunctionsType, "DialogFunctions");
+  PyModule_AddObject(module, "dialogs",
+    create_python_object<dialogFunctionsObject>(DialogFunctionsType, ctx));
 }
 
 } // namespace

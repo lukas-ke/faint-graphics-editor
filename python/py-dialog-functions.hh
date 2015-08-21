@@ -15,22 +15,14 @@
 
 #ifndef FAINT_PY_DIALOG_FUNCTIONS_HH
 #define FAINT_PY_DIALOG_FUNCTIONS_HH
-#include "python/mapped-type.hh"
 #include "python/py-include.hh"
 #include "python/py-func-context.hh"
 
 namespace faint{
 
-extern PyTypeObject DialogFunctionsType;
-
-struct dialogFunctionsObject{
-  PyObject_HEAD
-  PyFuncContext* ctx;
-};
-
-/** Create Python-object with methods for showing Faint dialogs.
+/** Add Python-object with methods for showing Faint dialogs.
 The object can only be created from the C++-code. */
-PyObject* create_dialog_functions(PyFuncContext&);
+void add_dialog_functions(PyFuncContext&, PyObject* module);
 
 } // namespace
 

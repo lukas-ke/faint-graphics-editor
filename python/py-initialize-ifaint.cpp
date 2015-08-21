@@ -57,16 +57,10 @@ void add_faint_types(PyObject* module){
   add_type_object(module, LinearGradientType, "LinearGradient");
   add_type_object(module, RadialGradientType, "RadialGradient");
   add_type_object(module, SettingsType, "Settings");
-  add_type_object(module, FaintAppType, "FaintApp");
-  add_type_object(module, FaintInterpreterType, "FaintInterpreter");
-  add_type_object(module, FaintPaletteType, "Palette");
   add_type_object(module, TriType, "Tri");
   add_type_object(module, ImagePropsType, "ImageProps");
   add_type_object(module, FramePropsType, "FrameProps");
   add_type_object(module, GridType, "Grid");
-  add_type_object(module, DialogFunctionsType, "DialogFunctions");
-  add_type_object(module, GlobalFunctionsType, "GlobalFunctions");
-  add_type_object(module, ActiveSettingsType, "ActiveSettings");
 
   PyObject* binds = PyDict_New();
   PyModule_AddObject(module, "_binds", binds);
@@ -204,43 +198,30 @@ static void run_envsetup(const FilePath& path){
   assert(err.NotSet());
 }
 
+static void add_python_singletons(PyObject* ifaint, PyFuncContext& ctx){
+  // These objects require "context", are rather tightly coupled
+  // to Faint and can not be created from the Python side.
+  add_App(ctx.app, ifaint);
+  add_global_functions(ctx, ifaint);
+  add_dialog_functions(ctx, ifaint);
+  add_ActiveSettings(ctx, ifaint);
+  add_Palette(ctx.app, ifaint);
+  add_Window(ctx.app, ifaint);
+  add_Interpreter(ctx.app, ifaint);
+}
+
 bool init_python(const utf8_string& arg, PyFuncContext& ctx){
   PyImport_AppendInittab("ifaint", PyInit_ifaint);
   Py_Initialize();
 
   scoped_ref ifaint(PyImport_ImportModule("ifaint"));
-  PyModule_AddObject(ifaint.get(),
-    "dialogs",
-    create_dialog_functions(ctx));
-
-  PyModule_AddObject(ifaint.get(),
-    "app",
-    create_faintAppObject(ctx.app));
-
-  PyModule_AddObject(ifaint.get(),
-    "fgl",
-    create_global_functions(ctx));
-
-  PyModule_AddObject(ifaint.get(),
-    "active_settings",
-    create_ActiveSettings(ctx));
-
-  PyModule_AddObject(ifaint.get(),
-    "palette",
-    create_Palette(ctx.app));
-
-  PyModule_AddObject(ifaint.get(),
-    "interpreter",
-    create_Interpreter(ctx.app));
-
-  add_Window(ctx.app, ifaint.get());
+  add_python_singletons(ifaint.get(), ctx);
 
   DirPath dataDir = get_data_dir();
   add_to_python_path(dataDir.SubDir("py"));
   run_envsetup(dataDir.SubDir("py").SubDir("core").File("envsetup.py"));
 
   if (!arg.empty()){
-    scoped_ref ifaint(PyImport_ImportModule("ifaint"));
     auto dict = borrowed(PyModule_GetDict(ifaint.get()));
     PyDict_SetItemString(dict.get(), "cmd_arg", build_unicode(arg));
   }

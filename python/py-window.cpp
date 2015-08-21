@@ -22,6 +22,13 @@
 
 namespace faint{
 
+extern PyTypeObject FaintWindowType;
+
+struct faintWindowObject {
+  PyObject_HEAD
+  AppContext* ctx;
+};
+
 template<>
 struct MappedType<AppContext&>{
   using PYTHON_TYPE = faintWindowObject;

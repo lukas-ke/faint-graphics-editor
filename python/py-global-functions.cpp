@@ -27,11 +27,19 @@
 #include "python/python-context.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-util.hh"
+#include "python/py-add-type-object.hh"
 #include "util/index-iter.hh" // up_to
 #include "util/make-vector.hh"
 #include "util/key-press.hh"
 
 namespace faint{
+
+extern PyTypeObject GlobalFunctionsType;
+
+struct globalFunctionsObject{
+  PyObject_HEAD
+  PyFuncContext* ctx;
+};
 
 const char* GLOBAL_FUNCTIONS_NAME = "GlobalFunctions";
 
@@ -236,11 +244,11 @@ PyTypeObject GlobalFunctionsType = {
   nullptr  // tp_finalize
 };
 
-PyObject* create_global_functions(PyFuncContext& ctx){
-  auto* py_obj = (globalFunctionsObject*)
-    GlobalFunctionsType.tp_alloc(&GlobalFunctionsType, 0);
-  py_obj->ctx = &ctx;
-  return (PyObject*)py_obj;
+void add_global_functions(PyFuncContext& ctx, PyObject* module){
+  add_type_object(module, GlobalFunctionsType, "GlobalFunctions");
+  PyModule_AddObject(module, "fgl",
+    create_python_object<globalFunctionsObject>(GlobalFunctionsType, ctx));
 }
+
 
 } // namespace

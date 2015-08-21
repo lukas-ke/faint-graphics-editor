@@ -18,16 +18,7 @@
 
 namespace faint{
 
-class AppContext;
-
-extern PyTypeObject FaintAppType;
-
-struct faintAppObject {
-  PyObject_HEAD
-  AppContext* ctx;
-};
-
-PyObject* create_faintAppObject(AppContext&);
+void add_App(AppContext&, PyObject* module);
 
 } // namespace
 
