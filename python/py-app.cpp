@@ -116,20 +116,16 @@ static void faintapp_add_format(AppContext& app, PyObject* args){
   app.AddFormat(f);
 }
 
-/* method: "new()\n
-Create a new Canvas." */
-static Canvas& faintapp_new(AppContext& app, const Optional<IntSize>& size){
-  return app.NewDocument(
-    ImageInfo(
-      size.Or({640, 480}),
-      color_white, // Fixme: Allow specifying
-      create_bitmap(false)));
-}
-
 /* method: "close()\n
 Close the canvas." */
 static void faintapp_close(AppContext& app, Canvas* canvas){
   app.Close(*canvas);
+}
+
+/* method: "get_checkered_transparency_indicator()->b\n
+True if a checkered pattern is used to indicate transparency." */
+static bool faintapp_get_checkered_transparency_indicator(AppContext& app){
+  return app.GetTransparencyStyle().IsCheckered();
 }
 
 /* method: "list_fonts()->[fontname1, ...]\n
@@ -148,27 +144,17 @@ static auto faintapp_list_formats(AppContext& app){
     });
 }
 
-/* method: "set_transparency_indicator(r,g,b)\n
-Sets a color for indicating alpha transparency (instead of a checkered
-pattern)" */
-static void faintapp_set_transparency_indicator(AppContext& app,
-  const ColRGB& color)
-{
-  app.SetTransparencyStyle(TransparencyStyle(color));
+/* method: "new()\n
+Create a new Canvas." */
+static Canvas& faintapp_new(AppContext& app, const Optional<IntSize>& size){
+  return app.NewDocument(
+    ImageInfo(
+      size.Or({640, 480}),
+      color_white, // Fixme: Allow specifying
+      create_bitmap(false)));
 }
 
-/* method: "set_checkered_transparency_indicator()\n
-Use a checkered pattern to indicate transparency " */
-static void faintapp_set_checkered_transparency_indicator(AppContext& app){
-  app.SetTransparencyStyle(TransparencyStyle());
-}
-
-/* method: "get_checkered_transparency_indicator()->b\n
-True if a checkered pattern is used to indicate transparency." */
-static bool faintapp_get_checkered_transparency_indicator(AppContext& app){
-return app.GetTransparencyStyle().IsCheckered(); }
-
-FilePath get_openable_path(const utf8_string& s){
+static FilePath get_openable_path(const utf8_string& s){
   if (!is_file_path(s)){
     throw ValueError(space_sep(quoted(s), "is not a file path"));
   }
@@ -199,6 +185,21 @@ static void faintapp_open_files(AppContext& app,
 Open the specified image file in a new tab." */
 static Canvas* faintapp_open(AppContext& app, const utf8_string& pathStr){
   return app.Load(get_openable_path(pathStr), change_tab(true));
+}
+
+/* method: "set_transparency_indicator(r,g,b)\n
+Sets a color for indicating alpha transparency (instead of a checkered
+pattern)" */
+static void faintapp_set_transparency_indicator(AppContext& app,
+  const ColRGB& color)
+{
+  app.SetTransparencyStyle(TransparencyStyle(color));
+}
+
+/* method: "set_checkered_transparency_indicator()\n
+Use a checkered pattern to indicate transparency " */
+static void faintapp_set_checkered_transparency_indicator(AppContext& app){
+  app.SetTransparencyStyle(TransparencyStyle());
 }
 
 /* method: "quit()\nExit faint" */
@@ -241,79 +242,94 @@ static void faintapp_tool_selection(AppContext& app){
   app.SelectTool(ToolId::SELECTION);
 }
 
-/* method: "tool_raster_selection(AppContext& app)\nSelects the raster selection tool." */
+/* method: "tool_raster_selection(AppContext& app)\n
+Selects the raster selection tool." */
 static void faintapp_tool_raster_selection(AppContext& app){
   app.SelectTool(ToolId::SELECTION);
   app.SetLayer(Layer::RASTER);
 }
 
-/* method: "tool_object_selection(AppContext& app)\nSelects the object selection tool." */
+/* method: "tool_object_selection(AppContext& app)\n
+Selects the object selection tool." */
 static void faintapp_tool_object_selection(AppContext& app){
   app.SelectTool(ToolId::SELECTION);
   app.SetLayer(Layer::OBJECT);
 }
 
-/* method: "tool_pen(AppContext& app)\nSelects the pen tool." */
+/* method: "tool_pen(AppContext& app)\n
+Selects the pen tool." */
 static void faintapp_tool_pen(AppContext& app){
   app.SelectTool(ToolId::PEN);
 }
 
-/* method: "tool_brush(AppContext& app)\nSelects the brush tool." */
+/* method: "tool_brush(AppContext& app)\n
+Selects the brush tool." */
 static void faintapp_tool_brush(AppContext& app){
   app.SelectTool(ToolId::BRUSH);
 }
 
-/* method: "tool_picker(AppContext& app)\nSelects the picker tool." */
+/* method: "tool_picker(AppContext& app)\n
+Selects the picker tool." */
 static void faintapp_tool_picker(AppContext& app){
   app.SelectTool(ToolId::PICKER);
 }
 
-/* method: "tool_path(AppContext& app)\nSelects the path tool." */
+/* method: "tool_path(AppContext& app)\n
+Selects the path tool." */
 static void faintapp_tool_path(AppContext& app){
   app.SelectTool(ToolId::PATH);
 }
 
-/* method: "tool_level(AppContext& app)\nSelects the level tool." */
+/* method: "tool_level(AppContext& app)\n
+Selects the level tool." */
 static void faintapp_tool_level(AppContext& app){
   app.SelectTool(ToolId::LEVEL);
 }
 
-/* method: "tool_line(AppContext& app)\nSelects the line tool." */
+/* method: "tool_line(AppContext& app)\n
+Selects the line tool." */
 static void faintapp_tool_line(AppContext& app){
   app.SelectTool(ToolId::LINE);
 }
 
-/* method: "tool_spline(AppContext& app)\nSelects the spline tool." */
+/* method: "tool_spline(AppContext& app)\n
+Selects the spline tool." */
 static void faintapp_tool_spline(AppContext& app){
   app.SelectTool(ToolId::SPLINE);
 }
 
-/* method: "tool_rectangle(AppContext& app)\nSelects the rectangle tool." */
+/* method: "tool_rectangle(AppContext& app)\n
+Selects the rectangle tool." */
 static void faintapp_tool_rectangle(AppContext& app){
   app.SelectTool(ToolId::RECTANGLE);
 }
 
-/* method: "tool_ellipse(AppContext& app)\nSelects the ellipse tool." */
+/* method: "tool_ellipse(AppContext& app)\n
+Selects the ellipse tool." */
 static void faintapp_tool_ellipse(AppContext& app){
   app.SelectTool(ToolId::ELLIPSE);
 }
 
-/* method: "tool_polygon(AppContext& app)\nSelects the polygon tool." */
+/* method: "tool_polygon(AppContext& app)\n
+Selects the polygon tool." */
 static void faintapp_tool_polygon(AppContext& app){
   app.SelectTool(ToolId::POLYGON);
 }
 
-/* method: "tool_text(AppContext& app)\nSelects the text tool." */
+/* method: "tool_text(AppContext& app)\n
+Selects the text tool." */
 static void faintapp_tool_text(AppContext& app){
   app.SelectTool(ToolId::TEXT);
 }
 
-/* method: "tool_fill(AppContext& app)\nSelects the fill tool." */
+/* method: "tool_fill(AppContext& app)\n
+Selects the fill tool." */
 static void faintapp_tool_fill(AppContext& app){
   app.SelectTool(ToolId::FLOOD_FILL);
 }
 
-/* method: "tool_hot_spot(AppContext& app)\nSelects the hot-spot tool." */
+/* method: "tool_hot_spot(AppContext& app)\n
+Selects the hot-spot tool." */
 static void faintapp_tool_hot_spot(AppContext& app){
   app.SelectTool(ToolId::HOT_SPOT);
 }
@@ -353,28 +369,28 @@ struct faintapp_griddashed{
   }
 };
 
-/* method: "__copy__()"
+/* method: "__copy__() Not implemented."
 name: "__copy__" */
-static void faintapp_copy(AppContext&){
+static void faintapp_special_copy(AppContext&){
   throw NotImplementedError("FaintApp object can not be copied.");
 }
 
 #include "generated/python/method-def/py-app-methoddef.hh"
 
-static void faintapp_init(faintAppObject&) {
+static void faintapp_special_init(faintAppObject&) {
   // Prevent instantiation from Python, since the AppContext can't be
   // provided from there.
   throw TypeError(space_sep("FaintApp can not be instantiated.",
     "Use the 'app'-object instead."));
 }
 
-static PyObject* faintapp_new(PyTypeObject* type, PyObject*, PyObject*){
+static PyObject* faintapp_special_new(PyTypeObject* type, PyObject*, PyObject*){
   faintAppObject* self = (faintAppObject*)type->tp_alloc(type, 0);
   self->ctx = nullptr;
   return (PyObject*)self;
 }
 
-static utf8_string faintapp_repr(AppContext&){
+static utf8_string faintapp_special_repr(AppContext&){
   return "FaintApp";
 }
 
@@ -388,7 +404,7 @@ PyTypeObject FaintAppType = {
     nullptr, // tp_getattr
     nullptr, // tp_setattr
     nullptr, // tp_compare
-    REPR_FORWARDER(faintapp_repr), // tp_repr
+    REPR_FORWARDER(faintapp_special_repr), // tp_repr
     nullptr, // tp_as_number
     nullptr, // tp_as_sequence
     nullptr, // tp_as_mapping
@@ -414,9 +430,9 @@ PyTypeObject FaintAppType = {
     nullptr, // tp_descr_get
     nullptr, // tp_descr_set
     0, // tp_dictoffset
-    INIT_FORWARDER(faintapp_init), // tp_init
+    INIT_FORWARDER(faintapp_special_init), // tp_init
     nullptr, // tp_alloc
-    faintapp_new, // tp_new
+    faintapp_special_new, // tp_new
     nullptr, // tp_free
     nullptr, // tp_is_gc
     nullptr, // tp_bases
