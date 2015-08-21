@@ -94,18 +94,18 @@ public:
     m_canvasIds[canvas] = canvas->GetId();
   }
 
-  void RunCommand(Canvas* canvas, Command* cmd) override{
+  void RunCommand(Canvas& canvas, Command* cmd) override{
     if (cmd == nullptr){
       return;
     }
-    QueueRefresh(canvas);
-    if (std::find(begin(m_commandBundles), end(m_commandBundles), canvas) ==
+    QueueRefresh(&canvas);
+    if (std::find(begin(m_commandBundles), end(m_commandBundles), &canvas) ==
       m_commandBundles.end())
     {
-      m_commandBundles.push_back(canvas);
-      canvas->OpenUndoBundle();
+      m_commandBundles.push_back(&canvas);
+      canvas.OpenUndoBundle();
     }
-    canvas->RunCommand(cmd);
+    canvas.RunCommand(cmd);
   }
 
   void RunCommand(Canvas* canvas, Command* cmd, const FrameId& frameId) override{

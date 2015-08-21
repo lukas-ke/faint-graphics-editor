@@ -147,15 +147,6 @@ static void canvas_clear_point_overlay(Canvas& canvas){
   python_queue_refresh(canvas);
 }
 
-/* method: "context_crop()\n
-Crops the image to the raster selection, crops a selected object or
-performs an autocrop." */
-static void canvas_context_crop(Canvas& canvas){
-  python_run_command(canvas,
-    context_crop(canvas,
-      get_app_context().GetToolSettings().Get(ts_Bg)));
-}
-
 /* method: "context_delete()\n
 Delete the selected object or raster region." */
 static void canvas_context_delete(Canvas& canvas){

@@ -72,7 +72,12 @@ public:
   virtual void QueueRefresh(Canvas*) = 0;
 
   // Run a Faint-command from a Python interface function.
-  virtual void RunCommand(Canvas*, Command*) = 0;
+  void RunCommand(Canvas* canvas, Command* cmd){
+    RunCommand(*canvas, cmd);
+  };
+
+  // Run a Faint-command from a Python interface function.
+  virtual void RunCommand(Canvas&, Command*) = 0;
 
   virtual void RunCommand(const BoundObject<Object>&, Command*) = 0;
 

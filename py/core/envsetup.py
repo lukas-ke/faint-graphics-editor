@@ -492,7 +492,6 @@ _c = ifaint.Canvas
 # func() - apply to active image
 # func(i1, i2) and func(imagelist) - apply to specified images
 ifaint.auto_crop = _forwarder(_c.auto_crop)
-ifaint.context_crop = _forwarder(_c.context_crop)
 ifaint.desaturate = _forwarder(_c.desaturate)
 ifaint.desaturate_weighted = _forwarder(_c.desaturate_weighted)
 ifaint.invert = _forwarder(_c.invert)

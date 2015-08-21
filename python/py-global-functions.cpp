@@ -15,6 +15,7 @@
 
 #include "app/app-context.hh"
 #include "app/app-getter-util.hh"
+#include "app/context-commands.hh"
 #include "app/canvas.hh"
 #include "app/faint-resize-dialog-context.hh"
 #include "geo/int-point.hh"
@@ -115,6 +116,26 @@ static void f_autosize_raster(PyFuncContext& ctx, BoundObject<ObjRaster>& bound)
 Resizes the object's text box to snugly fit the text." */
 static void f_autosize_text(PyFuncContext& ctx, BoundObject<ObjText>& bound){
   ctx.py.RunCommand(bound.Plain(), crop_text_region_command(bound.obj));
+}
+
+Canvas& or_active(AppContext& app, const Optional<Canvas*>& canvas){
+  Canvas* pc = canvas.Visit(
+    [](Canvas* c) -> Canvas*{
+      return c;
+    },
+    [&app]() -> Canvas*{
+      return &(app.GetActiveCanvas());
+    });
+  return *pc;
+}
+
+/* method: "context_crop(canvas=active)\n
+Crops the Canvas to the raster selection, crops selected objects or
+performs an autocrop." */
+static void f_context_crop(PyFuncContext& ctx, Optional<Canvas*>& maybeCanvas){
+  Canvas& canvas = or_active(ctx.app, maybeCanvas);
+  const auto bg = ctx.app.GetToolSettings().Get(ts_Bg);
+  ctx.py.RunCommand(&canvas, context_crop(canvas, bg));
 }
 
 /* method: "get_active_image()\n
