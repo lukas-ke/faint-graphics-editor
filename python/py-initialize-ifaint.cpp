@@ -35,10 +35,11 @@
 #include "python/py-util.hh"
 #include "python/py-window.hh"
 #include "python/python-context.hh"
-#include "util/paint-map.hh"
+#include "python/py-add-type-object.hh"
 #include "python/py-clipboard.hh"
 #include "python/py-dialog-functions.hh"
 #include "python/py-global-functions.hh"
+#include "util/paint-map.hh"
 #include "util-wx/key-codes.hh"
 #include "util-wx/file-path.hh"
 #include "util-wx/file-path-util.hh"
@@ -46,15 +47,6 @@
 #include "text/formatting.hh"
 
 namespace faint{
-
-template<typename T>
-void add_type_object(PyObject* module, T& type, const char* name){
-  type.tp_new = PyType_GenericNew;
-  int result = PyType_Ready(&type);
-  assert(result >= 0);
-  Py_INCREF(&type);
-  PyModule_AddObject(module, name, (PyObject*)&type);
-}
 
 void add_faint_types(PyObject* module){
   add_type_object(module, BitmapType, "Bitmap");
@@ -66,7 +58,6 @@ void add_faint_types(PyObject* module){
   add_type_object(module, RadialGradientType, "RadialGradient");
   add_type_object(module, SettingsType, "Settings");
   add_type_object(module, FaintAppType, "FaintApp");
-  add_type_object(module, FaintWindowType, "FaintWindow");
   add_type_object(module, FaintInterpreterType, "FaintInterpreter");
   add_type_object(module, FaintPaletteType, "Palette");
   add_type_object(module, TriType, "Tri");
@@ -239,12 +230,10 @@ bool init_python(const utf8_string& arg, PyFuncContext& ctx){
     create_Palette(ctx.app));
 
   PyModule_AddObject(ifaint.get(),
-    "window",
-    create_Window(ctx.app));
-
-  PyModule_AddObject(ifaint.get(),
     "interpreter",
     create_Interpreter(ctx.app));
+
+  add_Window(ctx.app, ifaint.get());
 
   DirPath dataDir = get_data_dir();
   add_to_python_path(dataDir.SubDir("py"));

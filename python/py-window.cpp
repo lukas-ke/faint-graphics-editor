@@ -18,6 +18,7 @@
 #include "python/py-include.hh"
 #include "python/py-window.hh"
 #include "python/py-ugly-forward.hh"
+#include "python/py-add-type-object.hh"
 
 namespace faint{
 
@@ -124,11 +125,10 @@ PyTypeObject FaintWindowType = {
     nullptr, // tp_finalize
 };
 
-PyObject* create_Window(AppContext& app){
-  auto* py_obj = (faintWindowObject*)
-    FaintWindowType.tp_alloc(&FaintWindowType, 0);
-  py_obj->ctx = &app;
-  return (PyObject*)py_obj;
+void add_Window(AppContext& app, PyObject* module){
+  add_type_object(module, FaintWindowType, "FaintWindow");
+  PyModule_AddObject(module, "window",
+    create_python_object<faintWindowObject>(FaintWindowType, app));
 }
 
 } // namespace
