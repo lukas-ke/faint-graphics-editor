@@ -13,16 +13,27 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_PY_DIALOG_FUNCTIONS_HH
-#define FAINT_PY_DIALOG_FUNCTIONS_HH
-#include "python/py-include.hh"
-#include "python/py-func-context.hh"
+#ifndef FAINT_PY_FAINT_SINGLETONS_HH
+#define FAINT_PY_FAINT_SINGLETONS_HH
 
 namespace faint{
 
-/** Add Python-object with methods for showing Faint dialogs.
-The object can only be created from the C++-code. */
+/** Methods for modifying the active tool settings.*/
+void add_ActiveSettings(PyFuncContext&, PyObject* module);
+
+/** Application level methods, whatever that means... :) */
+void add_App(AppContext&, PyObject* module);
+
+/** Methods for showing Faint dialogs. */
 void add_dialog_functions(PyFuncContext&, PyObject* module);
+
+void add_global_functions(PyFuncContext&, PyObject* module);
+
+void add_Interpreter(AppContext&, PyObject* module);
+
+void add_Palette(AppContext&, PyObject* module);
+
+void add_Window(AppContext&, PyObject* module);
 
 } // namespace
 
