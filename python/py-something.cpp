@@ -42,7 +42,6 @@
 #include "python/py-tri.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-util.hh" // For methods used by py-smth-properties.
-#include "python/py-interface.hh"
 #include "util/command-util.hh"
 #include "util/image.hh"
 #include "util/object-util.hh"
@@ -76,6 +75,12 @@ struct MappedType<const BoundObject<T>&>{
   }
 };
 
+static void run_command(const BoundObject<Object>& obj, Command* cmd){
+  if (cmd != nullptr){
+    obj.ctx->RunCommand(*obj.canvas, cmd, obj.frameId);
+  }
+}
+
 // Helper for Smth_get_points
 static std::vector<coord> flat_point_list(const std::vector<Point>& points){
   std::vector<coord> coords;
@@ -100,7 +105,7 @@ Replaces this object with a corresponding Path object." */
 static BoundObject<Object> Smth_become_path(const BoundObject<Object>& self){
   Object* path = clone_as_path(self.obj,
     self.canvas->GetFrame(self.frameId).GetExpressionContext());
-  python_run_command(self, get_replace_object_command(Old(self.obj), path,
+  run_command(self, get_replace_object_command(Old(self.obj), path,
       self.canvas->GetFrame(self.frameId), select_added(false)));
 
   return BoundObject<Object>(self.ctx, self.canvas, path, self.frameId);
@@ -111,14 +116,14 @@ Auto-crops a Raster or Text object." */
 static bool Smth_crop(const BoundObject<Object>& self){
   if (ObjRaster* rasterObj = dynamic_cast<ObjRaster*>(self.obj)){
     if (Command* cmd = crop_raster_object_command(rasterObj)){
-      python_run_command(self, cmd);
+      run_command(self, cmd);
       return true;
     }
     return false;
   }
   else if (ObjText* textObj = dynamic_cast<ObjText*>(self.obj)){
     if (Command* cmd = crop_text_region_command(textObj)){
-      python_run_command(self, cmd);
+      run_command(self, cmd);
       return true;
     }
     return false;
@@ -252,7 +257,7 @@ static int Smth_num_objs(const BoundObject<Object>& self){
 /* method: "pixel_snap()\n
  Aligns the object with the pixel grid to avoid smearing." */
 static void Smth_pixel_snap(const BoundObject<Object>& self){
-  python_run_command(self, get_pixel_snap_command(self.obj));
+  run_command(self, get_pixel_snap_command(self.obj));
 }
 
 /* method: "rect()->(x,y,w,h)\nReturns the bounding rectangle." */
@@ -268,7 +273,7 @@ static void Smth_rotate(const BoundObject<Object>& self,
   const Optional<Point>& origin)
 {
   Tri oldTri(self.obj->GetTri());
-  python_run_command(self,
+  run_command(self,
     get_rotate_command(self.obj, angle,
       origin.Or(center_point(oldTri))));
 }
@@ -283,7 +288,7 @@ static void Smth_set_angles(const BoundObject<Object>& self,
   }
 
   using SetSpanCmd = ObjFunctionCommand<Object, AngleSpan, set_angle_span>;
-  python_run_command(self,
+  run_command(self,
     new SetSpanCmd(self.obj, "Change Arc Span",
       New(span), Old(get_angle_span(self.obj).Get())));
 }
@@ -297,7 +302,7 @@ static void Smth_set_text(const BoundObject<Object>& self,
     throw ValueError(space_sep(self.obj->GetType(), "does not support text."));
   }
 
-  python_run_command(self,
+  run_command(self,
     text_entry_command(text, New(str), Old(text->GetRawString())));
 }
 
@@ -316,7 +321,7 @@ static void Smth_skew(const BoundObject<Object>& self, coord& skew){
   Tri oldTri(obj->GetTri());
   Tri newTri(skewed(oldTri, skew));
 
-  python_run_command(self,
+  run_command(self,
     new TriCommand(obj, New(newTri), Old(oldTri)));
 }
 
@@ -326,7 +331,7 @@ for this object will be ignored." */
 static void Smth_update_settings(const BoundObject<Object>& self,
   const Settings& s)
 {
-  python_run_command(self, change_settings_command(self.obj, New(s),
+  run_command(self, change_settings_command(self.obj, New(s),
       Old(self.obj->GetSettings())));
 }
 

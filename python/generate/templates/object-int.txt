@@ -16,7 +16,7 @@ struct Smth_property_$name{
       throw ValueError("That object does not support $prettyname.");
     }
 
-    python_run_command(self,
-      change_setting_command(self.obj, $setting, value.GetValue()));
+    auto* cmd = change_setting_command(self.obj, $setting, value.GetValue());
+    self.ctx->RunCommand(*self.canvas, cmd, self.frameId);
   }
 };

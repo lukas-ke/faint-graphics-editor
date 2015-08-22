@@ -35,7 +35,6 @@ void display_error_info(const FaintPyExc&, PythonContext&);
 std::string get_python_version();
 
 void python_run_command(Canvas&, Command*);
-void python_run_command(const BoundObject<Object>&, Command*);
 void python_run_command(const Frame&, Command*);
 utf8_string python_get_command_name(const Canvas&);
 void python_set_command_name(const Canvas&, const utf8_string&);
