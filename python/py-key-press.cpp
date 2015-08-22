@@ -30,6 +30,7 @@ struct BindInfo_less{
 };
 
 void python_key_press(const KeyPress& key){
+  // Fixme: Move into PythonContext or smth
   std::stringstream ss;
   ss << "keypress(" << key.GetKeyCode() << "," << key.Modifiers().Raw() << ")";
   run_python_str(utf8_string(ss.str().c_str()));

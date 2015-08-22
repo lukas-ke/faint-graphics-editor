@@ -29,7 +29,6 @@
 #include "util/optional.hh"
 #include "python/mapped-type.hh"
 #include "python/py-include.hh"
-#include "python/py-interface.hh"
 #include "python/py-bitmap.hh"
 #include "python/py-common.hh"
 #include "python/py-tri.hh"

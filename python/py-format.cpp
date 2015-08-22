@@ -22,7 +22,6 @@
 #include "python/py-func-context.hh"
 #include "python/py-image-props.hh"
 #include "python/py-util.hh"
-#include "python/py-interface.hh"
 
 namespace faint{
 
