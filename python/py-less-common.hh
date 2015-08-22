@@ -27,7 +27,7 @@ namespace faint{
 Inserts bmp floating at x,y" */
 template<typename T>
 void Common_insert_bitmap(T target, const IntPoint& pos, const Bitmap& bmp){
-  python_run_command(target,
+  py_common_run_command(target,
     get_insert_raster_bitmap_command(bmp, pos,
       bare(target).GetRasterSelection(),
       get_app_context().GetToolSettings(),
@@ -38,7 +38,7 @@ void Common_insert_bitmap(T target, const IntPoint& pos, const Bitmap& bmp){
 Pinch (-1.0 to 1.0) and whirl (-2pi to 2pi) the image." */
 template<typename T>
 void Common_pinch_whirl(T target, coord pinch, const Angle& whirl){
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_pinch_whirl_command(pinch, whirl)));
 }
 
@@ -46,14 +46,14 @@ void Common_pinch_whirl(T target, coord pinch, const Angle& whirl){
 Scale the image to the specified size with bilinear interpolation" */
 template<typename T>
 void Common_scale_bilinear(T target, const IntSize& size){
-  python_run_command(target, rescale_command(size, ScaleQuality::BILINEAR));
+  py_common_run_command(target, rescale_command(size, ScaleQuality::BILINEAR));
 }
 
 /* method: "scale_bicubic(w,h)\n
 Scale the image to the specified size with bicubic interpolation" */
 template<typename T>
 void Common_scale_bicubic(T target, const IntSize& size){
-  python_run_command(target, rescale_command(size, ScaleQuality::BICUBIC));
+  py_common_run_command(target, rescale_command(size, ScaleQuality::BICUBIC));
 }
 
 /* method: "scale_nearest(w,h)\n
@@ -61,7 +61,7 @@ Scale the image to the specified size with nearest neighbour
 interpolation" */
 template<typename T>
 void Common_scale_nearest(T target, const IntSize& size){
-  python_run_command(target, rescale_command(size, ScaleQuality::NEAREST));
+  py_common_run_command(target, rescale_command(size, ScaleQuality::NEAREST));
 }
 
 /* method: "set_rect((x,y,w,h)[,bg])\n
@@ -71,14 +71,14 @@ void Common_set_rect(T target, const IntRect& rect, const Optional<Paint>& bg){
   if (empty(rect)){
     throw ValueError("Empty rectangle specified.");
   }
-  python_run_command(target,
+  py_common_run_command(target,
     resize_command(rect,
       bg.Or(get_app_context().GetToolSettings().Get(ts_Bg))));
 }
 
 template<typename T>
 void Common_draw_object(T& target, its_yours_t<Object> object){
-  python_run_command(target, draw_object_command(object));
+  py_common_run_command(target, draw_object_command(object));
 }
 
 /* method: "line(x0,y0,x1,y1)\n

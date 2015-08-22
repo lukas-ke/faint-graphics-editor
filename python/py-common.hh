@@ -50,7 +50,7 @@ Experimental!\n
 Draw an anti-aliased line from x0,y0 to x1,y1 with the specified color" */
 template<typename T>
 void Common_aa_line(T target, const IntLineSegment& line, const ColRGB& color){
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_aa_line_command(line, color)));
 }
 
@@ -60,7 +60,7 @@ template<typename T>
 bool Common_auto_crop(T target){
   Command* cmd = get_auto_crop_command(bare(target).GetImage());
   if (cmd != nullptr){
-    python_run_command(target, cmd);
+    py_common_run_command(target, cmd);
     return true;
   }
   return false;
@@ -70,7 +70,7 @@ bool Common_auto_crop(T target){
 Blits the src_bmp Bitmap onto self at x,y." */
 template<typename T>
 void Common_blit(T target, const IntPoint& pos, const Bitmap& bmp){
-  python_run_command(target, get_blit_bitmap_command(pos, bmp));
+  py_common_run_command(target, get_blit_bitmap_command(pos, bmp));
 }
 
 /* method: "boundary_fill(x,y, fill, boundary_color)\n
@@ -85,7 +85,7 @@ void Common_boundary_fill(T target, const IntPoint& pos, const Paint& fill,
   if (!contains_pos(target, pos)){
     throw ValueError("Fill origin position outside image");
   }
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_boundary_fill_command(pos, fill, boundary)));
 }
 
@@ -93,7 +93,7 @@ void Common_boundary_fill(T target, const IntPoint& pos, const Paint& fill,
 Clear the image with the specified color, pattern or gradient" */
 template<typename T>
 void Common_clear(T target, const Paint& paint){
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_clear_command(paint)));
 }
 
@@ -127,7 +127,7 @@ void Common_copy_rect(T target, const IntRect& rect){
 Desaturate the image." */
 template<typename T>
 void Common_desaturate(T target){
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_desaturate_simple_command()));
 }
 
@@ -135,7 +135,7 @@ void Common_desaturate(T target){
 Desaturate the image with weighted intensity." */
 template<typename T>
 void Common_desaturate_weighted(T target){
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_desaturate_weighted_command()));
 }
 
@@ -143,7 +143,7 @@ void Common_desaturate_weighted(T target){
 Flip the image horizontally (across the vertical axis)." */
 template<typename T>
 void Common_flip_horizontally(T target){
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_function_command("Flip horizontally",
       [=](Bitmap& bmp){bmp = flip(bmp, along(Axis::HORIZONTAL));})));
 }
@@ -152,7 +152,7 @@ void Common_flip_horizontally(T target){
 Flip the image vertically (across the horizontal axis)." */
 template<typename T>
 void Common_flip_vertically(T target){
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_function_command("Flip vertically",
       [=](Bitmap& bmp){bmp = flip(bmp, along(Axis::VERTICAL));})));
 }
@@ -167,7 +167,7 @@ void Common_fill(T target, const IntPoint& pos, const Paint& fill){
   if (!contains_pos(target, pos)){
     throw ValueError("Fill origin position outside image");
   }
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_flood_fill_command(pos, fill)));
 }
 
@@ -179,7 +179,7 @@ void Common_gaussian_blur(T target, coord sigma){
     throw ValueError("Sigma must be > 0");
   }
 
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_function_command("Gaussian blur",
       [=](Bitmap& bmp){
           bmp = gaussian_blur_exact(bmp, sigma);
@@ -190,7 +190,7 @@ void Common_gaussian_blur(T target, coord sigma){
 Invert the colors of the image" */
 template<typename T>
 void Common_invert(T target){
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_invert_command()));
 }
 
@@ -201,7 +201,7 @@ template<typename T>
 void Common_replace_color(T target, const Color& oldColor,
   const Paint& replacement)
 {
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_replace_color_command(Old(oldColor),
       replacement)));
 }
@@ -210,7 +210,7 @@ void Common_replace_color(T target, const Color& oldColor,
 Rotate the image a-radians, using the specified background color." */
 template<typename T>
 void Common_rotate(T target, const Angle& angle, const Optional<Paint>& bg){
-  python_run_command(target,
+  py_common_run_command(target,
     rotate_image_command(angle,
       bg.Or(get_app_context().GetToolSettings().Get(ts_Bg))));
 }
@@ -219,7 +219,7 @@ void Common_rotate(T target, const Angle& angle, const Optional<Paint>& bg){
 Applies a horrendous sepia filter on the image." */
 template<typename T>
 void Common_sepia(T target, int intensity){
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_sepia_command(intensity)));
 }
 
@@ -233,7 +233,7 @@ template<typename T>
 void Common_set_threshold(T target, const threshold_range_t& range,
   const Optional<Paint>& paintIn, const Optional<Paint>& paintOut)
 {
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_threshold_command(range,
       paintIn.Or(get_app_context().GetToolSettings().Get(ts_Fg)),
       paintOut.Or(get_app_context().GetToolSettings().Get(ts_Bg)))));
@@ -241,7 +241,7 @@ void Common_set_threshold(T target, const threshold_range_t& range,
 
 template<typename T>
 void Common_apply_paste(T target, const IntPoint& pos, const Bitmap& bmp){
-  python_run_command(target,
+  py_common_run_command(target,
     get_insert_raster_bitmap_command(bmp, pos,
       bare(target).GetRasterSelection(),
       get_app_context().GetToolSettings(),
@@ -269,7 +269,7 @@ void Common_paste(T target, const IntPoint& pos){
 Reduce the colors in the image to at most 256." */
 template<typename T>
 void Common_quantize(T target){
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_quantize_command()));
 }
 
@@ -277,7 +277,7 @@ void Common_quantize(T target){
 Pixelize the image with the given width" */
 template<typename T>
 void Common_pixelize(T target, const pixelize_range_t& width){
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_pixelize_command(width)));
 }
 
@@ -294,7 +294,7 @@ void Common_erase_but_color(T target, const Color& keep,
       // Return without error when retrieved bg is same
       return;
     }
-    python_run_command(target,
+    py_common_run_command(target,
       target_full_image(get_erase_but_color_command(keep, bg)));
   }
   else{
@@ -303,7 +303,7 @@ void Common_erase_but_color(T target, const Color& keep,
       // an error
       throw ValueError("Same erase color as the kept color");
     }
-    python_run_command(target,
+    py_common_run_command(target,
       target_full_image(get_erase_but_color_command(keep, eraser.Get())));
   }
 }
@@ -312,7 +312,7 @@ void Common_erase_but_color(T target, const Color& keep,
 Blends alpha towards the specified color" */
 template<typename T>
 void Common_replace_alpha(T target, const ColRGB& color){
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_blend_alpha_command(color)));
 }
 
@@ -322,7 +322,7 @@ using color_value_t = StaticBoundedInt<0,255>;
 Sets the alpha component of all pixels to a" */
 template<typename T>
 void Common_set_alpha(T target, const color_value_t& alpha){
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_set_alpha_command(static_cast<uchar>(
       alpha.GetValue()))));
 }
@@ -334,7 +334,7 @@ void Common_color_balance(T target, const color_range_t& r,
   const color_range_t& g,
   const color_range_t& b)
 {
-  python_run_command(target,
+  py_common_run_command(target,
     target_full_image(get_function_command("Color balance",
       [=](Bitmap& bmp){color_balance(bmp, r, g, b);})));
 }

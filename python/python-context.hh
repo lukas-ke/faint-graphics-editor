@@ -23,6 +23,7 @@ namespace faint{
 
 class Canvas;
 class Command;
+class Frame;
 class KeyPress;
 class utf8_string;
 
@@ -66,15 +67,10 @@ public:
   // Flag the canvas as requiring a refresh, queuing the refresh until
   // EvalDone().
   //
-  // The flagging is done automatically by RunCommand, so this
-  // should be used for actions that do not involve commands, like
-  // object selection.
+  // The flagging is done automatically by RunCommand, so this method
+  // need only be called for actions that do not involve commands.
+  // (for example object selection).
   virtual void QueueRefresh(Canvas&) = 0;
-
-  // Run a Faint-command from a Python interface function.
-  void RunCommand(Canvas* canvas, Command* cmd){
-    RunCommand(*canvas, cmd);
-  };
 
   // Run a Faint-command from a Python interface function.
   virtual void RunCommand(Canvas&, Command*) = 0;
@@ -83,7 +79,7 @@ public:
 
   // Run a Faint-command from a Python interface function, targetting
   // a specific frame.
-  virtual void RunCommand(Canvas&, Command*, const FrameId&) = 0; // Fixme: Remove in favor of Frame&
+  virtual void RunCommand(Canvas&, Command*, const FrameId&) = 0;
 
   virtual void RunCommand(const Frame&, Command*) = 0;
 

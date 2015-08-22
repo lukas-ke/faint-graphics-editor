@@ -135,7 +135,7 @@ performs an autocrop." */
 static void f_context_crop(PyFuncContext& ctx, Optional<Canvas*>& maybeCanvas){
   Canvas& canvas = or_active(ctx.app, maybeCanvas);
   const auto bg = ctx.app.GetToolSettings().Get(ts_Bg);
-  ctx.py.RunCommand(&canvas, context_crop(canvas, bg));
+  ctx.py.RunCommand(canvas, context_crop(canvas, bg));
 }
 
 /* method: "get_active_image()\n

@@ -1162,7 +1162,7 @@ bool contains_pos(CanvasT canvas, const IntPoint& pos){
   return pos.x < size.w && pos.y < size.h;
 }
 
-void python_run_command(CanvasT target, Command* cmd){
+void py_common_run_command(CanvasT target, Command* cmd){
   target.ctx.RunCommand(target.item, cmd);
 }
 

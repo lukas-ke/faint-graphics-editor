@@ -31,7 +31,7 @@ struct Smth_name{
   {
     auto newName(empty_to_unset(name));
     if (self.obj->GetName() != newName){
-      python_run_command(self, set_object_name_command(self.obj, newName));
+      self.ctx->RunCommand(self, set_object_name_command(self.obj, newName));
     }
   }
 };
@@ -48,7 +48,7 @@ struct Smth_angle_rad{
     Tri newTri = rotated(oldTri, Angle::Rad(angle) - oldTri.GetAngle(),
       center_point(oldTri));
 
-    python_run_command(self, new TriCommand(obj, New(newTri), Old(oldTri)));
+    self.ctx->RunCommand(self, new TriCommand(obj, New(newTri), Old(oldTri)));
   }
 };
 
@@ -64,7 +64,7 @@ struct Smth_angle_deg{
     Tri newTri = rotated(oldTri, Angle::Deg(angle) - oldTri.GetAngle(),
       center_point(oldTri));
 
-    python_run_command(self, new TriCommand(obj, New(newTri), Old(oldTri)));
+    self.ctx->RunCommand(self, new TriCommand(obj, New(newTri), Old(oldTri)));
   }
 };
 
@@ -75,7 +75,7 @@ struct Smth_tri{
   }
 
   static void Set(const BoundObject<Object>& self, const Tri& tri){
-    python_run_command(self,
+    self.ctx->RunCommand(self,
       new TriCommand(self.obj, New(tri), Old(self.obj->GetTri())));
   }
 };
@@ -91,7 +91,7 @@ struct Smth_pos{
     Point diff = pos - oldTri.P0();
     Tri newTri = translated(oldTri, diff.x, diff.y);
 
-    python_run_command(self, new TriCommand(self.obj,
+    self.ctx->RunCommand(self, new TriCommand(self.obj,
       New(newTri), Old(oldTri)));
   }
 };

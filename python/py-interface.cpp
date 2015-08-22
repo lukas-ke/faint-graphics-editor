@@ -58,7 +58,7 @@ void python_queue_refresh(Canvas& canvas){
 
 void python_run_command(Canvas& canvas, Command* cmd){
   if (cmd != nullptr){
-    get_python_context().RunCommand(&canvas, cmd);
+    get_python_context().RunCommand(canvas, cmd);
   }
 }
 

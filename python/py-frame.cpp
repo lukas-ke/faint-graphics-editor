@@ -24,7 +24,6 @@
 #include "util/object-util.hh"
 #include "util/setting-util.hh"
 #include "python/py-include.hh"
-#include "python/py-interface.hh"
 #include "python/py-canvas.hh"
 #include "python/py-common.hh"
 #include "python/py-frame.hh"
@@ -32,6 +31,7 @@
 #include "python/py-tri.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-util.hh"
+#include "python/python-context.hh"
 
 namespace faint{
 
@@ -157,7 +157,7 @@ static void frame_set_delay(const Frame& frame, const Delay& delay){
   auto oldDelay(Old(frame.GetImage().GetDelay()));
   auto newDelay(New(delay));
 
-  python_run_command(frame,
+  frame.ctx.RunCommand(frame,
     set_frame_delay_command(frame.GetFrameIndex(),
       newDelay, oldDelay));
 }
@@ -167,7 +167,8 @@ Sets the hotspot to x,y. This is the anchor point for cursors
 (.cur)." */
 static void frame_set_hotspot(const Frame& frame, const HotSpot& pos){
   auto oldHotSpot(frame.GetImage().GetHotSpot());
-  python_run_command(frame,
+
+  frame.ctx.RunCommand(frame,
     set_frame_hotspot_command(frame.GetFrameIndex(),
       New(pos), Old(oldHotSpot)));
 }
@@ -183,17 +184,22 @@ static void frame_set_pixel(const Frame& frame,
       if (invalid_pixel_pos(pos, bmp)){
         throw ValueError("Invalid pixel position");
       }
-      python_run_command(frame, put_pixel_command(pos, color));
+      frame.ctx.RunCommand(frame, put_pixel_command(pos, color));
     },
     [&](const ColorSpan& span){
       if (invalid_pixel_pos(pos, span)){
         throw ValueError("Invalid pixel position");
       }
-      python_run_command(frame, put_pixel_command(pos, color));
+      frame.ctx.RunCommand(frame, put_pixel_command(pos, color));
     });
 }
 
 using common_type = const Frame&;
+
+void py_common_run_command(const Frame& frame, Command* cmd){
+  frame.ctx.RunCommand(frame, cmd);
+}
+
 /* extra_include: "generated/python/method-def/py-common-methoddef.hh" */
 /* extra_include: "generated/python/method-def/py-less-common-methoddef.hh" */
 

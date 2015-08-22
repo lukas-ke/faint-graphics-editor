@@ -15,12 +15,12 @@
 
 #ifndef FAINT_PY_FUNC_CONTEXT_HH
 #define FAINT_PY_FUNC_CONTEXT_HH
+#include "python/python-context.hh"
 
 namespace faint{
 
 class AppContext;
 class Art;
-class PythonContext;
 
 // Fixme: Better name and all, don't mix up with PythonContext.
 class PyFuncContext{
