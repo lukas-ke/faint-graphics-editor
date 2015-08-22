@@ -15,6 +15,7 @@
 
 #ifndef FAINT_PY_GRID_HH
 #define FAINT_PY_GRID_HH
+#include "python/py-include.hh"
 #include "util/id-types.hh"
 #include "util/template-fwd.hh"
 

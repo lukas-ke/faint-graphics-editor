@@ -27,8 +27,9 @@
 #include "util/make-vector.hh"
 #include "util/key-press.hh"
 #include "util/setting-id.hh"
-#include "python/py-func-context.hh"
 #include "python/python-context.hh"
+#include "python/py-func-context.hh"
+#include "python/py-grid.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-util.hh"
 #include "python/py-add-type-object.hh"
@@ -136,6 +137,12 @@ static void f_context_crop(PyFuncContext& ctx, Optional<Canvas*>& maybeCanvas){
   Canvas& canvas = or_active(ctx.app, maybeCanvas);
   const auto bg = ctx.app.GetToolSettings().Get(ts_Bg);
   ctx.py.RunCommand(canvas, context_crop(canvas, bg));
+}
+
+/* method: "get_active_grid()\n
+Returns a reference which always targets the grid for the active image." */
+static PyObject* f_get_active_grid(PyFuncContext& ctx){
+  return py_active_grid(ctx);
 }
 
 /* method: "get_active_image()\n
