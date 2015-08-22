@@ -83,7 +83,9 @@ public:
 
   // Run a Faint-command from a Python interface function, targetting
   // a specific frame.
-  virtual void RunCommand(Canvas*, Command*, const FrameId&) = 0;
+  virtual void RunCommand(Canvas*, Command*, const FrameId&) = 0; // Fixme: Remove in favor of Frame&
+
+  virtual void RunCommand(const Frame&, Command*) = 0;
 
   virtual void Unbind(const KeyPress&) = 0;
 };

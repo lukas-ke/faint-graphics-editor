@@ -19,7 +19,7 @@
 #include "gui/faint-window.hh"
 #include "gui/interpreter-frame.hh"
 #include "python/python-context.hh"
-
+#include "app/frame.hh" // Fixme: Move code to cpp.
 namespace faint{
 
 class FaintWindowPythonContext : public PythonContext {
@@ -109,6 +109,8 @@ public:
   }
 
   void RunCommand(Canvas* canvas, Command* cmd, const FrameId& frameId) override{
+    // Fixme: Remove in favor of const Frame&&-variant
+
     if (cmd == nullptr){
       return;
     }
@@ -121,6 +123,10 @@ public:
       canvas->OpenUndoBundle();
     }
     canvas->RunCommand(cmd, frameId);
+  }
+
+  void RunCommand(const Frame& frame, Command* cmd) override{
+    RunCommand(frame.canvas, cmd, frame.frameId);
   }
 
   void RunCommand(const BoundObject<Object>& obj, Command* cmd) override{
