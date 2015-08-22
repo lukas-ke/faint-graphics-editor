@@ -153,10 +153,6 @@ public:
     return Event_Processed;
   }
 
-  AppContext& GetAppContext() const{
-    return *m_appContext;
-  }
-
   PythonContext& GetPythonContext() const{
     return *m_pythonContext;
   }
@@ -378,10 +374,6 @@ private:
 IMPLEMENT_APP(faint::Application)
 
 namespace faint{
-
-AppContext& get_app_context(){
-  return wxGetApp().GetAppContext();
-}
 
 const Art& get_art(){
   // Fixme: Remove this global accessor, Art should be passed where

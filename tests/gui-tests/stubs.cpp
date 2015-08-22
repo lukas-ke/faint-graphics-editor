@@ -5,13 +5,6 @@
 // Stubs required for linking the GUI test
 
 namespace faint{
-class AppContext;
-class Art;
-
-AppContext& get_app_context(){
-  assert(false);
-  throw std::logic_error("Stub get_app_context called");
-}
 
 } // namespace
 
