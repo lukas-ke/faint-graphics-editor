@@ -38,8 +38,7 @@ def _should_generate(sources, out_dir):
     """
     # Fixme: Rework. Use smarter file-name discovery
     outfiles = [os.path.join(out_dir, f) for f in
-                ["setting-function-defs.hh",
-                 "setting-functions.hh",
+                ["setting-functions.hh",
                  "py-settings-properties.hh"]]
     newest = max([os.path.getmtime(f) for f in sources])
 
@@ -588,14 +587,15 @@ def run(root_dir, force=False):
                                     os.path.basename(__file__))
 
     interface_cc = (comment +
-                    cpp.Include('"app/canvas.hh"') +
                     cpp.Include('"python/py-function-error.hh"') +
                     cpp.Include('"python/py-include.hh"') +
-                    cpp.Include('"python/py-util.hh"') +
                     cpp.Include('"text/formatting.hh"') +
                     cpp.Include('"util/setting-id.hh"') +
-                    cpp.Include('"util/settings.hh"') +
-                    cpp.Namespace('faint', functions_cc))
+                    cpp.Namespace('faint',
+                        functions_cc +
+                        "static PyMethodDef active_settings_methods[] = {\n" +
+                        function_method_def +
+                        cpp.Code(2, "};\n\n")) + "")
 
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
@@ -650,18 +650,6 @@ def run(root_dir, force=False):
     gen_method_def.write_property_doc(
         os.path.join(property_doc_dir, 'py-something-properties.txt'),
         cpp_properties)
-
-    with open(os.path.join(out_dir, 'setting-function-defs.hh'), 'w') as f:
-        content = (
-            comment +
-            cpp.IncludeGuard('FAINT_SETTING_FUNCTION_DEFS_HH',
-                cpp.Namespace('faint',
-                    cpp.Code(2,
-                       "static PyMethodDef active_settings_methods[] = {") +
-                       function_method_def +
-                       cpp.Code(2, "};\n\n")) + ""))
-
-        f.write(content.get_text())
 
     os.chdir(oldDir)
 

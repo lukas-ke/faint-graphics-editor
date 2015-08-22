@@ -22,7 +22,6 @@
 #include "python/py-func-context.hh"
 #include "python/py-add-type-object.hh"
 #include "generated/python/settings/setting-functions.hh"
-#include "generated/python/settings/setting-function-defs.hh"
 
 namespace faint{
 
