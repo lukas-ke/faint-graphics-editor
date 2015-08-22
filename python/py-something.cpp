@@ -15,8 +15,8 @@
 
 #include <vector>
 #include <string>
+#include "app/app-context.hh"
 #include "app/canvas.hh"
-#include "app/get-app-context.hh"
 #include "bitmap/bitmap.hh"
 #include "commands/change-setting-cmd.hh"
 #include "commands/obj-function-cmd.hh"
@@ -348,7 +348,7 @@ static PyObject* Smth_new(PyTypeObject* type, PyObject* , PyObject*){
 }
 
 static PyObject* Smth_repr(smthObject* self){
-  if (!get_app_context().Exists(self->canvasId)){
+  if (!self->ctx->app.Exists(self->canvasId)){
     return Py_BuildValue("s", "Orphaned object");
   }
   else if (!self->canvas->Has(self->frameId)){
