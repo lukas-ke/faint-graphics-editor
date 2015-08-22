@@ -29,10 +29,6 @@ std::string get_python_version(){
   return Py_GetVersion();
 }
 
-void python_queue_refresh(Canvas& canvas){
-  get_python_context().QueueRefresh(canvas);
-}
-
 void python_run_command(Canvas& canvas, Command* cmd){
   if (cmd != nullptr){
     get_python_context().RunCommand(canvas, cmd);

@@ -38,11 +38,6 @@ void python_run_command(const Frame&, Command*);
 utf8_string python_get_command_name(const Canvas&);
 void python_set_command_name(const Canvas&, const utf8_string&);
 
-// Queues refreshing for the specified canvas, which will be refreshed
-// at the end of the read-eval-print. Only required for visual changes
-// that don't use commands.
-void python_queue_refresh(Canvas&);
-
 void run_python_str(const utf8_string&);
 
 // Returns the names in the ifaint Python module __dict__.
