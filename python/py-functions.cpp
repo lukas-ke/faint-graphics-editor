@@ -231,12 +231,6 @@ static std::string encode_bitmap_png(const Bitmap& bmp){
   return to_png_string(bmp);
 }
 
-/* function: "get_active_grid()\nReturns a reference which always
-targets the grid for the active image." */
-static CanvasGrid get_active_grid(){
-  return CanvasGrid(nullptr);
-}
-
 /* function: "get_object_frame()\n
 Returns the frame containing the passed in object." */
 static Frame get_object_frame(const BoundObject<Object>& obj){

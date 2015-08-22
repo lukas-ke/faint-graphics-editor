@@ -494,6 +494,10 @@ Canvas& FaintWindowContext::GetCanvas(const Index& i){
   return m_faintWindow.GetCanvas(i);
 }
 
+Canvas& FaintWindowContext::GetCanvas(const CanvasId& id){
+  return m_faintWindow.GetCanvas(id);
+}
+
 Index FaintWindowContext::GetCanvasCount() const{
   return m_faintWindow.GetCanvasCount();
 }

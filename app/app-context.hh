@@ -75,6 +75,7 @@ public:
   virtual Canvas& GetActiveCanvas() = 0;
   virtual Tool* GetActiveTool() = 0;
   virtual Canvas& GetCanvas(const Index&) = 0;
+  virtual Canvas& GetCanvas(const CanvasId&) = 0;
   virtual int TabletGetCursor() = 0;
   virtual Index GetCanvasCount() const = 0;
   virtual Grid GetDefaultGrid() const = 0;

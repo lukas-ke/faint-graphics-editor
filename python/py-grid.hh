@@ -22,27 +22,48 @@ namespace faint{
 
 class Canvas;
 class Grid;
+class PyFuncContext;
 
 class CanvasGrid{
 public:
-  explicit CanvasGrid(Canvas* canvas)
-    : canvas(canvas)
+  explicit CanvasGrid(PyFuncContext& ctx, CanvasId canvasId)
+    : ctx(ctx),
+      canvasId(canvasId),
+      targetActive(false)
   {}
-  Canvas* canvas;
+
+  explicit CanvasGrid(PyFuncContext& ctx)
+    : ctx(ctx),
+      targetActive(true)
+  {}
+
+  Canvas& GetCanvas() const;
+
+  Grid GetGrid() const;
+  void SetGrid(const Grid&) const;
+
+  PyFuncContext& ctx;
+  CanvasId canvasId;
+  bool targetActive;
 };
 
 extern PyTypeObject GridType;
 
 struct gridObject {
+  // Fixme: Move into impl..
   PyObject_HEAD
-  Canvas* canvas;
+  PyFuncContext* ctx;
+  bool targetActive;
   CanvasId canvasId;
 };
 
 // Returns a grid object targetting the specified canvas.
-// If the specified canvas is 0, the grid object will
-// always target the active canvas.
-PyObject* py_grid_canvas(Canvas*);
+PyObject* py_grid_canvas(PyFuncContext&, CanvasId id);
+
+// Returns a grid always targetting the active canvas.
+PyObject* py_active_grid(PyFuncContext&);
+
+PyObject* py_grid(const CanvasGrid&);
 
 // Returns the Grid object from this gridObject
 // Sets a Python-error unless the grid is OK.

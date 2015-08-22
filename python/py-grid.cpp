@@ -14,39 +14,52 @@
 // permissions and limitations under the License.
 
 #include <sstream>
+#include "app/app-context.hh"
 #include "app/canvas.hh"
-#include "app/get-app-context.hh"
 #include "python/mapped-type.hh"
 #include "python/py-include.hh"
 #include "python/py-grid.hh"
 #include "python/py-ugly-forward.hh"
-#include "python/py-interface.hh"
 #include "util/grid.hh"
 #include "util/optional.hh"
 
 namespace faint{
 
+Canvas& CanvasGrid::GetCanvas() const{
+  return targetActive ?
+    ctx.app.GetActiveCanvas() : ctx.app.GetCanvas(canvasId);
+}
+
+Grid CanvasGrid::GetGrid() const{
+  return GetCanvas().GetGrid();
+}
+
+void CanvasGrid::SetGrid(const Grid& g) const{
+  Canvas& c = GetCanvas();
+  c.SetGrid(g);
+  ctx.py.QueueRefresh(c);
+}
+
 static bool grid_ok_no_error(gridObject* self){
-  if (self->canvas == nullptr){
-    // A null-canvas means the active canvas is the target, There
-    // should always be atleast one canvas.
+  if (self->targetActive){
+    // The grid for the active canvas is the target, there should always be
+    // at least one canvas.
     return true;
   }
-  else if (get_app_context().Exists(self->canvasId)){
-    return true;
+  else{
+    return self->ctx->app.Exists(self->canvasId);
   }
-  return false;
 }
 
 template<>
 struct MappedType<const CanvasGrid&>{
   using PYTHON_TYPE = gridObject;
 
-  static CanvasGrid GetCppObject(gridObject* grid){
-    if (grid->canvas == nullptr){
-      return CanvasGrid(&get_app_context().GetActiveCanvas());
+  static CanvasGrid GetCppObject(gridObject* self){
+    if (self->targetActive){
+      return CanvasGrid(*self->ctx);
     }
-    return CanvasGrid(grid->canvas);
+    return CanvasGrid(*self->ctx, self->canvasId);
   }
 
   static bool Expired(gridObject* grid){
@@ -69,9 +82,9 @@ bool grid_ok(gridObject* self){
 }
 
 static Canvas& get_canvas(gridObject* self){
-  return self->canvas == nullptr ?
-    get_app_context().GetActiveCanvas() :
-    *self->canvas;
+  return self->targetActive ?
+    self->ctx->app.GetActiveCanvas() :
+    self->ctx->app.GetCanvas(self->canvasId);
 }
 
 Optional<Grid> get_grid(gridObject* self){
@@ -86,22 +99,14 @@ static PyObject* grid_new(PyTypeObject* type, PyObject*, PyObject*){
   return (PyObject*)self;
 }
 
-static void grid_init(gridObject& self){
-  self.canvas = nullptr;
-  self.canvasId = CanvasId::DefaultID();
-}
-
-PyObject* py_grid_canvas(Canvas* canvas){
-  gridObject* py_grid = (gridObject*) GridType.tp_alloc(&GridType,0);
-  py_grid->canvas = canvas;
-  if (canvas != nullptr){
-    py_grid->canvasId = canvas->GetId();
-  }
-  return (PyObject*) py_grid;
+static void grid_init(gridObject&){
+  // TODO: Create active_grid in py-init.
+  throw TypeError("Grid can not be instantiated. "
+    "Use canvas.grid or app.grid instead.");
 }
 
 static PyObject* grid_repr(gridObject* self){
-  if (self->canvas == nullptr){
+  if (self->targetActive){
     return Py_BuildValue("s", "Grid (active canvas)");
   }
 
@@ -119,14 +124,13 @@ static PyObject* grid_repr(gridObject* self){
 Specifies a point that will be intersected by the grid." */
 struct grid_anchor{
   static Point Get(const CanvasGrid& self){
-    return self.canvas->GetGrid().Anchor();
+    return self.GetGrid().Anchor();
   }
 
   static void Set(const CanvasGrid& self, const Point& anchor){
-    Grid g = self.canvas->GetGrid();
+    Grid g = self.GetGrid();
     g.SetAnchor(anchor);
-    self.canvas->SetGrid(g);
-    python_queue_refresh(*self.canvas);
+    self.SetGrid(g);
   }
 };
 
@@ -134,14 +138,13 @@ struct grid_anchor{
 The color of the Grid lines." */
 struct grid_color{
   static Color Get(const CanvasGrid& self){
-    return self.canvas->GetGrid().GetColor();
+    return self.GetGrid().GetColor();
   }
 
   static void Set(const CanvasGrid& self, const Color& c){
-    Grid g = self.canvas->GetGrid();
+    Grid g = self.GetGrid();
     g.SetColor(c);
-    self.canvas->SetGrid(g);
-    python_queue_refresh(*self.canvas);
+    self.SetGrid(g);
   }
 };
 
@@ -149,14 +152,13 @@ struct grid_color{
 Whether the grid lines are dashed or solid." */
 struct grid_dashed{
   static bool Get(const CanvasGrid& self){
-    return self.canvas->GetGrid().Dashed();
+    return self.GetGrid().Dashed();
   }
 
   static void Set(const CanvasGrid& self, bool dashed){
-    Grid g = self.canvas->GetGrid();
+    Grid g = self.GetGrid();
     g.SetDashed(dashed);
-    self.canvas->SetGrid(g);
-    python_queue_refresh(*self.canvas);
+    self.SetGrid(g);
   }
 };
 
@@ -164,14 +166,13 @@ struct grid_dashed{
 The spacing between the grid lines in pixels." */
 struct grid_spacing{
   static int Get(const CanvasGrid& self){
-    return self.canvas->GetGrid().Spacing();
+    return self.GetGrid().Spacing();
   }
 
   static void Set(const CanvasGrid& self, int spacing){
-    Grid g = self.canvas->GetGrid();
+    Grid g = self.GetGrid();
     g.SetSpacing(spacing);
-    self.canvas->SetGrid(g);
-    python_queue_refresh(*self.canvas);
+    self.SetGrid(g);
   }
 };
 
@@ -179,16 +180,22 @@ struct grid_spacing{
 Specifies if this grid is visible and enabled." */
 struct grid_enabled{
   static bool Get(const CanvasGrid& self){
-    return self.canvas->GetGrid().Enabled();
+    return self.GetGrid().Enabled();
   }
 
   static void Set(const CanvasGrid& self, bool enabled){
-    Grid g = self.canvas->GetGrid();
+    Grid g = self.GetGrid();
     g.SetEnabled(enabled);
-    self.canvas->SetGrid(g);
-    python_queue_refresh(*self.canvas);
+    self.SetGrid(g);
+
   }
 };
+
+/* method: "__copy__() Not implemented."
+name: "__copy__" */
+static void grid_copy(const CanvasGrid&){
+  throw NotImplementedError("Grid can not be copied.");
+}
 
 #include "generated/python/method-def/py-grid-methoddef.hh"
 
@@ -242,5 +249,31 @@ PyTypeObject GridType = {
   0, // tp_version_tag
   nullptr  // tp_finalize
 };
+
+// Returns a grid always targetting the active canvas.
+PyObject* py_grid(const CanvasGrid& grid){
+  gridObject* py_grid = (gridObject*) GridType.tp_alloc(&GridType,0);
+  py_grid->ctx = &grid.ctx;
+  py_grid->targetActive = grid.targetActive;
+  py_grid->canvasId = grid.canvasId;
+  return (PyObject*) py_grid;
+}
+
+// Returns a grid object targetting the specified canvas.
+PyObject* py_grid_canvas(PyFuncContext& ctx, CanvasId id){
+  gridObject* py_grid = (gridObject*) GridType.tp_alloc(&GridType,0);
+  py_grid->ctx = &ctx;
+  py_grid->targetActive = false;
+  py_grid->canvasId = id;
+  return (PyObject*) py_grid;
+}
+
+// Returns a grid always targetting the active canvas.
+PyObject* py_active_grid(PyFuncContext& ctx){
+  gridObject* py_grid = (gridObject*) GridType.tp_alloc(&GridType,0);
+  py_grid->ctx = &ctx;
+  py_grid->targetActive = true;
+  return (PyObject*) py_grid;
+}
 
 } // namespace

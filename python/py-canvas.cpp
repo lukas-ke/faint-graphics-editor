@@ -1076,7 +1076,8 @@ static void canvas_brightness_contrast(CanvasT canvas, double brightness,
 /* property: "A Grid bound to this canvas." */
 struct canvas_grid{
   static CanvasGrid Get(CanvasT self){
-    return CanvasGrid(&self.item);}
+    return CanvasGrid(self.ctx, self.item.GetId());
+  }
 
   static void Set(CanvasT self, const Grid& grid){
     self.item.SetGrid(grid);

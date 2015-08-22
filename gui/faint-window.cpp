@@ -720,6 +720,12 @@ Canvas& FaintWindow::GetCanvas(const Index& i){
   return m_impl->panels->tabControl->GetCanvas(i)->GetInterface();
 }
 
+Canvas& FaintWindow::GetCanvas(const CanvasId& id){
+  CanvasPanel* c = m_impl->panels->tabControl->GetCanvas(id);
+  assert(c != nullptr);
+  return c->GetInterface();
+}
+
 Index FaintWindow::GetCanvasCount() const{
   return get_canvas_count(*m_impl->panels);
 }

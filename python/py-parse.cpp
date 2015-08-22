@@ -965,7 +965,7 @@ PyObject* build_result(const Calibration& c){
 }
 
 PyObject* build_result(const CanvasGrid& grid){
-  return py_grid_canvas(grid.canvas);
+  return py_grid(grid);
 }
 
 PyObject* build_result(const Color& color){

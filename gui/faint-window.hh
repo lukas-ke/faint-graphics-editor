@@ -53,6 +53,7 @@ public:
   Tool* GetActiveTool();
   AppContext& GetAppContext();
   Canvas& GetCanvas(const Index&);
+  Canvas& GetCanvas(const CanvasId&);
   Index GetCanvasCount() const;
   std::vector<Format*>& GetFileFormats();
   Layer GetLayerType() const;

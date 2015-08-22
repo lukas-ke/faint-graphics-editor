@@ -40,6 +40,7 @@ public:
   void CloseActive();
   CanvasPanel* GetActiveCanvas();
   CanvasPanel* GetCanvas(const Index&);
+  CanvasPanel* GetCanvas(const CanvasId&);
   Index GetCanvasCount() const;
   bool Has(const CanvasId&);
   void HideTabs();

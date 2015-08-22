@@ -274,6 +274,16 @@ CanvasPanel* TabCtrl::GetCanvas(const Index& page){
   return cb;
 }
 
+CanvasPanel* TabCtrl::GetCanvas(const CanvasId& id){
+  return m_impl->GetIndexForId(id).Visit(
+    [&](const Index& index){
+      return GetCanvas(index);
+    },
+    [](){
+      return nullptr;
+    });
+}
+
 Index TabCtrl::GetCanvasCount() const{
   return m_impl->GetCanvasCount();
 }

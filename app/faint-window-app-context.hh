@@ -125,6 +125,7 @@ public:
   Canvas& GetActiveCanvas() override;
   Tool* GetActiveTool() override;
   Canvas& GetCanvas(const Index&) override;
+  Canvas& GetCanvas(const CanvasId&) override;
   Index GetCanvasCount() const override;
   Grid GetDefaultGrid() const override;
   ImageInfo GetDefaultImageInfo() override;
