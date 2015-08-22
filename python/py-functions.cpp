@@ -50,7 +50,6 @@
 #include "util-wx/file-path-util.hh"
 #include "util-wx/font.hh"
 #include "python/py-ugly-forward.hh"
-#include "python/py-parse.hh"
 #include "python/py-functions.hh"
 
 namespace faint{

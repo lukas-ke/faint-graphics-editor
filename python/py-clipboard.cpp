@@ -20,7 +20,6 @@
 #include "python/py-function-error.hh"
 #include "python/py-bitmap.hh"
 #include "python/py-ugly-forward.hh"
-#include "python/py-parse.hh"
 
 namespace faint{
 
