@@ -30,7 +30,7 @@ void Common_insert_bitmap(T target, const IntPoint& pos, const Bitmap& bmp){
   py_common_run_command(target,
     get_insert_raster_bitmap_command(bmp, pos,
       bare(target).GetRasterSelection(),
-      get_app_context().GetToolSettings(),
+      common_get_tool_settings(target),
       "Insert Bitmap"));
 }
 
@@ -72,8 +72,7 @@ void Common_set_rect(T target, const IntRect& rect, const Optional<Paint>& bg){
     throw ValueError("Empty rectangle specified.");
   }
   py_common_run_command(target,
-    resize_command(rect,
-      bg.Or(get_app_context().GetToolSettings().Get(ts_Bg))));
+    resize_command(rect, bg.Or(common_get_bg(target))));
 }
 
 template<typename T>
@@ -86,7 +85,7 @@ Draw a line from x0,y0 to x1,y1" */
 template<typename T>
 void Common_line(T target, const LineSegment& line){
   Settings s(default_line_settings());
-  s.Update(get_app_context().GetToolSettings());
+  s.Update(common_get_tool_settings(target));
   s.Set(ts_AntiAlias, false);
   Common_draw_object(target, its_yours(
    create_line_object(Points({PathPt::MoveTo(line.p0),

@@ -15,9 +15,7 @@
 
 #ifndef FAINT_PY_COMMON_HH
 #define FAINT_PY_COMMON_HH
-#include "app/get-app-context.hh" // Fixme: Would be nicer if atleast
-                                  // the bitmap-functions didn't
-                                  // depend on the application.
+
 #include "bitmap/color-counting.hh"
 #include "bitmap/filter.hh"
 #include "bitmap/gaussian-blur.hh"
@@ -44,6 +42,26 @@ namespace faint{
 // py-bitmap.
 
 using arg_type_t = decltype(METH_VARARGS);
+
+template<typename T>
+AppContext& common_get_app(const T& target){
+  return target.ctx.app;
+}
+
+template<typename T>
+auto common_get_tool_settings(const T& target){
+  return common_get_app(target).GetToolSettings();
+}
+
+template<typename T>
+auto common_get_bg(const T& target){
+  return common_get_tool_settings(target).Get(ts_Bg);
+}
+
+template<typename T>
+auto common_get_fg(const T& target){
+  return common_get_tool_settings(target).Get(ts_Fg);
+}
 
 /* method: "aa_line((x0,y0,x1,y1),(r,g,b[,a]))\n
 Experimental!\n
@@ -212,7 +230,7 @@ template<typename T>
 void Common_rotate(T target, const Angle& angle, const Optional<Paint>& bg){
   py_common_run_command(target,
     rotate_image_command(angle,
-      bg.Or(get_app_context().GetToolSettings().Get(ts_Bg))));
+      bg.Or(common_get_bg(target))));
 }
 
 /* method: "sepia(intensity)\n
@@ -235,8 +253,8 @@ void Common_set_threshold(T target, const threshold_range_t& range,
 {
   py_common_run_command(target,
     target_full_image(get_threshold_command(range,
-      paintIn.Or(get_app_context().GetToolSettings().Get(ts_Fg)),
-      paintOut.Or(get_app_context().GetToolSettings().Get(ts_Bg)))));
+      paintIn.Or(common_get_fg(target)),
+      paintOut.Or(common_get_bg(target)))));
 }
 
 template<typename T>
@@ -244,7 +262,7 @@ void Common_apply_paste(T target, const IntPoint& pos, const Bitmap& bmp){
   py_common_run_command(target,
     get_insert_raster_bitmap_command(bmp, pos,
       bare(target).GetRasterSelection(),
-      get_app_context().GetToolSettings(),
+      common_get_tool_settings(target),
       "Paste Bitmap"));
 }
 
@@ -289,7 +307,7 @@ void Common_erase_but_color(T target, const Color& keep,
   const Optional<Paint>& eraser)
 {
   if (!eraser.IsSet()){
-    Paint bg = get_app_context().GetToolSettings().Get(ts_Bg);
+    Paint bg = common_get_bg(target);
     if (bg == keep){
       // Return without error when retrieved bg is same
       return;

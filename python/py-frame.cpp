@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include <sstream>
+#include "app/app-context.hh"
 #include "app/canvas.hh"
 #include "app/frame.hh"
 #include "commands/frame-cmd.hh"
