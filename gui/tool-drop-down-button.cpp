@@ -24,7 +24,6 @@
 #include "geo/line.hh"
 #include "gui/events.hh"
 #include "gui/tool-drop-down-button.hh"
-#include "python/py-interface.hh"
 #include "text/formatting.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
