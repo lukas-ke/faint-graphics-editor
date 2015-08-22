@@ -94,7 +94,7 @@ NUM_COLS = len(col_funcs) * len(col_outer)
 IMAGE_WIDTH = CELL_WIDTH * NUM_COLS + START_COL
 IMAGE_HEIGHT = CELL_HEIGHT * NUM_ROWS + START_ROW
 
-img = Canvas(IMAGE_WIDTH,IMAGE_HEIGHT)
+img = app.new(IMAGE_WIDTH,IMAGE_HEIGHT)
 
 def apply_funcs(obj, row, col):
     cf = col_funcs[col % len(col_funcs)][0]
@@ -203,5 +203,5 @@ for_each_cell(img, create_ellipse)
 
 # Save and load again
 file_name = os.path.join(os.getcwd(), 'out', 'test-save-pdf.pdf')
-img.save_backup(file_name)
-img2 = Canvas(file_name)
+app.save_backup(img, file_name)
+img2 = app.open(file_name)

@@ -130,6 +130,15 @@ Canvas& or_active(AppContext& app, const Optional<Canvas*>& canvas){
   return *pc;
 }
 
+/* method: "context_crop(canvas=active)\n
+Crops the Canvas to the raster selection, crops selected objects or
+performs an autocrop." */
+static void f_context_crop(PyFuncContext& ctx, Optional<Canvas*>& maybeCanvas){
+  Canvas& canvas = or_active(ctx.app, maybeCanvas);
+  const auto bg = ctx.app.GetToolSettings().Get(ts_Bg);
+  ctx.py.RunCommand(canvas, context_crop(canvas, bg));
+}
+
 /* method: "get_active_grid()\n
 Returns a reference which always targets the grid for the active image." */
 static PyObject* f_get_active_grid(PyFuncContext& ctx){

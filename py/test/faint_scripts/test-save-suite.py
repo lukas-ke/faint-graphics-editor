@@ -16,4 +16,4 @@ if filename is not None:
     fn = os.path.basename(active.get_filename())
     fn = fn.replace('.svgz', ext)
     fn = fn.replace('.svg', ext)
-    get_active_image().save_backup(os.path.join(outdir,fn))
+    app.save_backup(get_active_image(), os.path.join(outdir,fn))

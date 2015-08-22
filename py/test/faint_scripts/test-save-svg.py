@@ -91,7 +91,7 @@ NUM_COLS = len(col_funcs) * len(col_outer)
 IMAGE_WIDTH = CELL_WIDTH * NUM_COLS + START_COL
 IMAGE_HEIGHT = CELL_HEIGHT * NUM_ROWS + START_ROW
 
-img = Canvas(IMAGE_WIDTH,IMAGE_HEIGHT)
+img = app.new(IMAGE_WIDTH,IMAGE_HEIGHT)
 
 def apply_funcs(obj, row, col):
     cf = col_funcs[col % len(col_funcs)][0]
@@ -204,9 +204,9 @@ def in_out_dir(file_name):
     return os.path.join(os.getcwd(), 'out', file_name)
 
 # Save as a png for comparison
-img.save_backup(in_out_dir('test-save-svg.png'))
+app.save_backup(img, in_out_dir('test-save-svg.png'))
 
 # Save as SVG and load again
 file_name = in_out_dir('test-save-svg.svg')
-img.save_backup(file_name)
-img2 = Canvas(file_name)
+app.save_backup(img, file_name)
+img2 = app.open(file_name)
