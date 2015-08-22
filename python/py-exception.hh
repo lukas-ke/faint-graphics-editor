@@ -40,6 +40,8 @@ public:
   Optional<FaintPySyntaxError> syntaxErrorInfo;
 };
 
+utf8_string format_error_info(const FaintPyExc&);
+
 } // namespace
 
 #endif

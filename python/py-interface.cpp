@@ -29,30 +29,6 @@ std::string get_python_version(){
   return Py_GetVersion();
 }
 
-utf8_string format_error_info(const FaintPyExc& info){
-  utf8_string errStr = no_sep(info.stackTrace);
-  if (info.syntaxErrorInfo.IsSet()){
-    FaintPySyntaxError syntaxError = info.syntaxErrorInfo.Get();
-    errStr += "\n";
-    errStr += ("  File " + quoted(syntaxError.file) + ", line " +
-      str_int(syntaxError.line) + "\n");
-    errStr += ("    " + syntaxError.code);
-    if (syntaxError.col > 0){
-      if (syntaxError.code.str().back() != '\n'){
-        errStr += "\n";
-      }
-
-      // Put a '^'-under the start of the syntax error
-      errStr += ("    " +
-        utf8_string(to_size_t(syntaxError.col - 1), chars::space) +
-        "^\n");
-    }
-  }
-  errStr += info.type + ": " + info.message + "\n";
-  errStr += "\n";
-  return errStr;
-}
-
 void python_queue_refresh(Canvas& canvas){
   get_python_context().QueueRefresh(canvas);
 }

@@ -37,7 +37,6 @@
 #include "util-wx/key-codes.hh"
 #include "util-wx/file-path.hh"
 #include "util-wx/file-path-util.hh"
-#include "python/py-interface.hh" // Fixme: For format_error_info
 #include "text/formatting.hh"
 
 namespace faint{

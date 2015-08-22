@@ -29,7 +29,6 @@ class FaintPyExc;
 class Object;
 class PythonContext;
 
-utf8_string format_error_info(const FaintPyExc&);
 void display_error_info(const FaintPyExc&, PythonContext&);
 
 std::string get_python_version();
