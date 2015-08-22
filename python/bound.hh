@@ -13,27 +13,34 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_PY_FAINT_SINGLETONS_HH
-#define FAINT_PY_FAINT_SINGLETONS_HH
+#ifndef FAINT_BOUND_HH
+#define FAINT_BOUND_HH
+#include "python/py-func-context.hh"
 
 namespace faint{
 
-/** Methods for modifying the active tool settings.*/
-void add_ActiveSettings(PyFuncContext&, PyObject* module);
+template<typename T>
+class Bound{
+  // Ties an item to a PyFuncContext, so that Faint functions can get
+  // ahold of both as the "self" argument.
+  //
+  // - For some types (T), this is required to verify that the C++-side
+  //   of the object is still valid.
+  //
+  // - Certain functions use the context to run Commands.
+public:
+  Bound(T& item, PyFuncContext&)
+    : item(item), ctx(ctx)
+  {}
 
-/** Application level methods, whatever that means... :) */
-void add_App(PyFuncContext&, PyObject* module);
+  T& item;
+  PyFuncContext& ctx;
+};
 
-/** Methods for showing Faint dialogs. */
-void add_dialog_functions(PyFuncContext&, PyObject* module);
-
-void add_global_functions(PyFuncContext&, PyObject* module);
-
-void add_Interpreter(AppContext&, PyObject* module);
-
-void add_Palette(AppContext&, PyObject* module);
-
-void add_Window(AppContext&, PyObject* module);
+template<typename T>
+Bound<T> bind(T& item, PyFuncContext& ctx){
+  return Bound<T>(item, ctx);
+}
 
 } // namespace
 

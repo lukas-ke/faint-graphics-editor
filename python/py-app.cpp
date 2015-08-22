@@ -31,6 +31,7 @@
 #include "python/mapped-type.hh"
 #include "python/py-add-type-object.hh"
 #include "python/py-format.hh"
+#include "python/py-func-context.hh"
 #include "python/py-ugly-forward.hh"
 
 namespace faint{
@@ -41,14 +42,14 @@ extern PyTypeObject FaintAppType;
 
 struct faintAppObject {
   PyObject_HEAD
-  AppContext* ctx;
+  PyFuncContext* ctx;
 };
 
 template<>
-struct MappedType<AppContext&>{
+struct MappedType<PyFuncContext&>{
   using PYTHON_TYPE = faintAppObject;
 
-  static AppContext& GetCppObject(faintAppObject* obj){
+  static PyFuncContext& GetCppObject(faintAppObject* obj){
     return *obj->ctx;
   }
 
@@ -75,7 +76,7 @@ The load_callback receives a filename and an ImageProps object:\n
 my_load_callback(filename, imageProps)\n\nThe save_callback receives a
 target filename and a Canvas:\n
 my_save_callback(filename, canvas)" */
-static void faintapp_add_format(AppContext& app, PyObject* args){
+static void faintapp_add_format(PyFuncContext& ctx, PyObject* args){
   PyObject* loader;
   PyObject* saver;
   char* name;
@@ -113,33 +114,33 @@ static void faintapp_add_format(AppContext& app, PyObject* args){
     save_callback_t(saver),
     label_t(utf8_string(name)),
     FileExtension(extension),
-    app);
-  app.AddFormat(f);
+    ctx.app);
+  ctx.app.AddFormat(f);
 }
 
 /* method: "close()\n
 Close the canvas." */
-static void faintapp_close(AppContext& app, Canvas* canvas){
-  app.Close(*canvas);
+static void faintapp_close(PyFuncContext& ctx, Canvas* canvas){
+  ctx.app.Close(*canvas);
 }
 
 /* method: "get_checkered_transparency_indicator()->b\n
 True if a checkered pattern is used to indicate transparency." */
-static bool faintapp_get_checkered_transparency_indicator(AppContext& app){
-  return app.GetTransparencyStyle().IsCheckered();
+static bool faintapp_get_checkered_transparency_indicator(PyFuncContext& ctx){
+  return ctx.app.GetTransparencyStyle().IsCheckered();
 }
 
 /* method: "list_fonts()->[fontname1, ...]\n
 Returns a list of the available font names." */
-static std::vector<utf8_string> faintapp_list_fonts(AppContext&){
+static std::vector<utf8_string> faintapp_list_fonts(PyFuncContext&){
   return available_font_facenames();
 }
 
 /* method: "list_formats()->[file_format, ...]\n
 Returns a list of the available file formats as tuples with
 (format_name, default_extension)." */
-static auto faintapp_list_formats(AppContext& app){
-  return make_vector(app.GetFormats(),
+static auto faintapp_list_formats(PyFuncContext& ctx){
+  return make_vector(ctx.app.GetFormats(),
     [](const Format* f){
       return std::make_pair(f->GetLabel(), f->GetDefaultExtension().Str());
     });
@@ -147,8 +148,8 @@ static auto faintapp_list_formats(AppContext& app){
 
 /* method: "new()\n
 Create a new Canvas." */
-static Canvas& faintapp_new(AppContext& app, const Optional<IntSize>& size){
-  return app.NewDocument(
+static Canvas& faintapp_new(PyFuncContext& ctx, const Optional<IntSize>& size){
+  return ctx.app.NewDocument(
     ImageInfo(
       size.Or({640, 480}),
       color_white, // Fixme: Allow specifying
@@ -167,7 +168,7 @@ static FilePath get_openable_path(const utf8_string& s){
 
 /* method: "open_files((file_path1, file_path2,...))\n
 Open the specified image files in new tabs." */
-static void faintapp_open_files(AppContext& app,
+static void faintapp_open_files(PyFuncContext& ctx,
   const std::vector<utf8_string>& pathStrings)
 {
   FileList paths;
@@ -178,40 +179,40 @@ static void faintapp_open_files(AppContext& app,
     return;
   }
 
-  app.Load(paths);
+  ctx.app.Load(paths);
   // Fixme: Return list of Canvas&
 }
 
 /* method: "open(file_path)->Image\n
 Open the specified image file in a new tab." */
-static Canvas* faintapp_open(AppContext& app, const utf8_string& pathStr){
-  return app.Load(get_openable_path(pathStr), change_tab(true));
+static Canvas* faintapp_open(PyFuncContext& ctx, const utf8_string& pathStr){
+  return ctx.app.Load(get_openable_path(pathStr), change_tab(true));
 }
 
 /* method: "quit()\nExit faint" */
-static void faintapp_quit(AppContext& app){
-  app.Quit(); // Fixme: Crashes. :)
+static void faintapp_quit(PyFuncContext& ctx){
+  ctx.app.Quit(); // Fixme: Crashes. :)
 }
 
 /* method: "set_transparency_indicator(r,g,b)\n
 Sets a color for indicating alpha transparency (instead of a checkered
 pattern)" */
-static void faintapp_set_transparency_indicator(AppContext& app,
+static void faintapp_set_transparency_indicator(PyFuncContext& ctx,
   const ColRGB& color)
 {
-  app.SetTransparencyStyle(TransparencyStyle(color));
+  ctx.app.SetTransparencyStyle(TransparencyStyle(color));
 }
 
 /* method: "set_checkered_transparency_indicator()\n
 Use a checkered pattern to indicate transparency " */
-static void faintapp_set_checkered_transparency_indicator(AppContext& app){
-  app.SetTransparencyStyle(TransparencyStyle());
+static void faintapp_set_checkered_transparency_indicator(PyFuncContext& ctx){
+  ctx.app.SetTransparencyStyle(TransparencyStyle());
 }
 
 // Helper for faintapp_save
-static void do_save(AppContext& app, Canvas& canvas, const FilePath& filePath){
+static void do_save(PyFuncContext& ctx, Canvas& canvas, const FilePath& filePath){
   SaveResult result = save(canvas,
-    app.GetFormats(),
+    ctx.app.GetFormats(),
     filePath);
   if (!result.Successful()){
     throw ValueError(result.ErrorDescription()); // Fixme: Not value error
@@ -221,21 +222,21 @@ static void do_save(AppContext& app, Canvas& canvas, const FilePath& filePath){
 
 /* method: "save(filename)\n
 Save the image to the specified file." */
-static void faintapp_save(AppContext& app,
+static void faintapp_save(PyFuncContext& ctx,
   Canvas* canvas,
   Optional<FilePath>& maybeFilename)
 {
   maybeFilename.Visit(
     [&](const FilePath& path){
       // Use the passed in file-name
-      do_save(app, *canvas, path);
+      do_save(ctx, *canvas, path);
     },
     [&](){
       // No file name passed in, use the previous canvas file-name, if
       // available.
       canvas->GetFilePath().Visit(
         [&](const FilePath& path){
-          do_save(app, *canvas, path);
+          do_save(ctx, *canvas, path);
         },
         [](){
           throw ValueError("No filename specified, and no previously used "
@@ -247,11 +248,11 @@ static void faintapp_save(AppContext& app,
 /* method: "save_backup(canvas, filename)\n
 Save a copy of the Canvas to the specified file, without changing the
 target filename for the Canvas." */
-static void faintapp_save_backup(AppContext& app,
+static void faintapp_save_backup(PyFuncContext& ctx,
   Canvas* canvas,
   const FilePath& path)
 {
-  SaveResult result = save(*canvas, app.GetFormats(), path);
+  SaveResult result = save(*canvas, ctx.app.GetFormats(), path);
   if (!result.Successful()){
     throw ValueError(result.ErrorDescription()); // Fixme: Not ValueError
   }
@@ -259,20 +260,20 @@ static void faintapp_save_backup(AppContext& app,
 
 /* method: "swap_colors()\n
 Swaps the foreground and background colors." */
-static void faintapp_swap_colors(AppContext& app){
-  Paint fg(app.Get(ts_Fg));
-  Paint bg(app.Get(ts_Bg));
-  app.Set(ts_Fg, bg);
-  app.Set(ts_Bg, fg);
+static void faintapp_swap_colors(PyFuncContext& ctx){
+  Paint fg(ctx.app.Get(ts_Fg));
+  Paint bg(ctx.app.Get(ts_Bg));
+  ctx.app.Set(ts_Fg, bg);
+  ctx.app.Set(ts_Bg, fg);
 }
 
 /* method: "tool([i])\n
 Selects the tool with the specified id, or returns the current id if
 none specified." */
-static Optional<int> faintapp_tool(AppContext& app, const Optional<int>& maybeId){
+static Optional<int> faintapp_tool(PyFuncContext& ctx, const Optional<int>& maybeId){
   if (maybeId.NotSet()){
     // Return the currently selected tool identifier
-    return option(to_int(app.GetToolId()));
+    return option(to_int(ctx.app.GetToolId()));
   }
 
   int id = maybeId.Get();
@@ -282,147 +283,147 @@ static Optional<int> faintapp_tool(AppContext& app, const Optional<int>& maybeId
       str_int(enum_min_value<ToolId>()), "to", str_int(enum_max_value<ToolId>())));
   }
 
-  app.SelectTool(to_tool_id(id));
+  ctx.app.SelectTool(to_tool_id(id));
 
   // Returns nothing when selecting a tool.
   return no_option();
 }
 
-/* method: "tool_selection(AppContext& app)\nSelects the raster selection tool." */
-static void faintapp_tool_selection(AppContext& app){
-  app.SelectTool(ToolId::SELECTION);
+/* method: "tool_selection(PyFuncContext& ctx)\nSelects the raster selection tool." */
+static void faintapp_tool_selection(PyFuncContext& ctx){
+  ctx.app.SelectTool(ToolId::SELECTION);
 }
 
-/* method: "tool_raster_selection(AppContext& app)\n
+/* method: "tool_raster_selection(PyFuncContext& ctx)\n
 Selects the raster selection tool." */
-static void faintapp_tool_raster_selection(AppContext& app){
-  app.SelectTool(ToolId::SELECTION);
-  app.SetLayer(Layer::RASTER);
+static void faintapp_tool_raster_selection(PyFuncContext& ctx){
+  ctx.app.SelectTool(ToolId::SELECTION);
+  ctx.app.SetLayer(Layer::RASTER);
 }
 
-/* method: "tool_object_selection(AppContext& app)\n
+/* method: "tool_object_selection(PyFuncContext& ctx)\n
 Selects the object selection tool." */
-static void faintapp_tool_object_selection(AppContext& app){
-  app.SelectTool(ToolId::SELECTION);
-  app.SetLayer(Layer::OBJECT);
+static void faintapp_tool_object_selection(PyFuncContext& ctx){
+  ctx.app.SelectTool(ToolId::SELECTION);
+  ctx.app.SetLayer(Layer::OBJECT);
 }
 
-/* method: "tool_pen(AppContext& app)\n
+/* method: "tool_pen(PyFuncContext& ctx)\n
 Selects the pen tool." */
-static void faintapp_tool_pen(AppContext& app){
-  app.SelectTool(ToolId::PEN);
+static void faintapp_tool_pen(PyFuncContext& ctx){
+  ctx.app.SelectTool(ToolId::PEN);
 }
 
-/* method: "tool_brush(AppContext& app)\n
+/* method: "tool_brush(PyFuncContext& ctx)\n
 Selects the brush tool." */
-static void faintapp_tool_brush(AppContext& app){
-  app.SelectTool(ToolId::BRUSH);
+static void faintapp_tool_brush(PyFuncContext& ctx){
+  ctx.app.SelectTool(ToolId::BRUSH);
 }
 
-/* method: "tool_picker(AppContext& app)\n
+/* method: "tool_picker(PyFuncContext& ctx)\n
 Selects the picker tool." */
-static void faintapp_tool_picker(AppContext& app){
-  app.SelectTool(ToolId::PICKER);
+static void faintapp_tool_picker(PyFuncContext& ctx){
+  ctx.app.SelectTool(ToolId::PICKER);
 }
 
-/* method: "tool_path(AppContext& app)\n
+/* method: "tool_path(PyFuncContext& ctx)\n
 Selects the path tool." */
-static void faintapp_tool_path(AppContext& app){
-  app.SelectTool(ToolId::PATH);
+static void faintapp_tool_path(PyFuncContext& ctx){
+  ctx.app.SelectTool(ToolId::PATH);
 }
 
-/* method: "tool_level(AppContext& app)\n
+/* method: "tool_level(PyFuncContext& ctx)\n
 Selects the level tool." */
-static void faintapp_tool_level(AppContext& app){
-  app.SelectTool(ToolId::LEVEL);
+static void faintapp_tool_level(PyFuncContext& ctx){
+  ctx.app.SelectTool(ToolId::LEVEL);
 }
 
-/* method: "tool_line(AppContext& app)\n
+/* method: "tool_line(PyFuncContext& ctx)\n
 Selects the line tool." */
-static void faintapp_tool_line(AppContext& app){
-  app.SelectTool(ToolId::LINE);
+static void faintapp_tool_line(PyFuncContext& ctx){
+  ctx.app.SelectTool(ToolId::LINE);
 }
 
-/* method: "tool_spline(AppContext& app)\n
+/* method: "tool_spline(PyFuncContext& ctx)\n
 Selects the spline tool." */
-static void faintapp_tool_spline(AppContext& app){
-  app.SelectTool(ToolId::SPLINE);
+static void faintapp_tool_spline(PyFuncContext& ctx){
+  ctx.app.SelectTool(ToolId::SPLINE);
 }
 
-/* method: "tool_rectangle(AppContext& app)\n
+/* method: "tool_rectangle(PyFuncContext& ctx)\n
 Selects the rectangle tool." */
-static void faintapp_tool_rectangle(AppContext& app){
-  app.SelectTool(ToolId::RECTANGLE);
+static void faintapp_tool_rectangle(PyFuncContext& ctx){
+  ctx.app.SelectTool(ToolId::RECTANGLE);
 }
 
-/* method: "tool_ellipse(AppContext& app)\n
+/* method: "tool_ellipse(PyFuncContext& ctx)\n
 Selects the ellipse tool." */
-static void faintapp_tool_ellipse(AppContext& app){
-  app.SelectTool(ToolId::ELLIPSE);
+static void faintapp_tool_ellipse(PyFuncContext& ctx){
+  ctx.app.SelectTool(ToolId::ELLIPSE);
 }
 
-/* method: "tool_polygon(AppContext& app)\n
+/* method: "tool_polygon(PyFuncContext& ctx)\n
 Selects the polygon tool." */
-static void faintapp_tool_polygon(AppContext& app){
-  app.SelectTool(ToolId::POLYGON);
+static void faintapp_tool_polygon(PyFuncContext& ctx){
+  ctx.app.SelectTool(ToolId::POLYGON);
 }
 
-/* method: "tool_text(AppContext& app)\n
+/* method: "tool_text(PyFuncContext& ctx)\n
 Selects the text tool." */
-static void faintapp_tool_text(AppContext& app){
-  app.SelectTool(ToolId::TEXT);
+static void faintapp_tool_text(PyFuncContext& ctx){
+  ctx.app.SelectTool(ToolId::TEXT);
 }
 
-/* method: "tool_fill(AppContext& app)\n
+/* method: "tool_fill(PyFuncContext& ctx)\n
 Selects the fill tool." */
-static void faintapp_tool_fill(AppContext& app){
-  app.SelectTool(ToolId::FLOOD_FILL);
+static void faintapp_tool_fill(PyFuncContext& ctx){
+  ctx.app.SelectTool(ToolId::FLOOD_FILL);
 }
 
-/* method: "tool_hot_spot(AppContext& app)\n
+/* method: "tool_hot_spot(PyFuncContext& ctx)\n
 Selects the hot-spot tool." */
-static void faintapp_tool_hot_spot(AppContext& app){
-  app.SelectTool(ToolId::HOT_SPOT);
+static void faintapp_tool_hot_spot(PyFuncContext& ctx){
+  ctx.app.SelectTool(ToolId::HOT_SPOT);
 }
 
 /* method: "update_settings(settings)\n
 Updates the active tool settings with the settings from the passed in
 Settings object." */
-static void faintapp_update_settings(AppContext& app, const Settings& settings){
-  app.UpdateToolSettings(settings);
+static void faintapp_update_settings(PyFuncContext& ctx, const Settings& settings){
+  ctx.app.UpdateToolSettings(settings);
 }
 
 /* property: "gridcolor\n
 The default color of grids used for new documents." */
 struct faintapp_gridcolor{
-  static Color Get(AppContext& app){
-    return app.GetDefaultGrid().GetColor();
+  static Color Get(PyFuncContext& ctx){
+    return ctx.app.GetDefaultGrid().GetColor();
   }
 
-  static void Set(AppContext& app, const Color& color){
-    Grid grid(app.GetDefaultGrid());
+  static void Set(PyFuncContext& ctx, const Color& color){
+    Grid grid(ctx.app.GetDefaultGrid());
     grid.SetColor(color);
-    app.SetDefaultGrid(grid);
+    ctx.app.SetDefaultGrid(grid);
   }
 };
 
 /* property: "griddashed\n
 Whether grids used for new documents are dashed or solid." */
 struct faintapp_griddashed{
-  static bool Get(AppContext& app){
-    return app.GetDefaultGrid().Dashed();
+  static bool Get(PyFuncContext& ctx){
+    return ctx.app.GetDefaultGrid().Dashed();
   }
 
-  static void Set(AppContext& app, bool dashed){
-    Grid grid(app.GetDefaultGrid());
+  static void Set(PyFuncContext& ctx, bool dashed){
+    Grid grid(ctx.app.GetDefaultGrid());
     grid.SetDashed(dashed);
-    app.SetDefaultGrid(grid);
+    ctx.app.SetDefaultGrid(grid);
   }
 };
 
 /* method: "__copy__() Not implemented."
 name: "__copy__" */
-static void faintapp_special_copy(AppContext&){
+static void faintapp_special_copy(PyFuncContext&){
   throw NotImplementedError("FaintApp object can not be copied.");
 }
 
@@ -441,7 +442,7 @@ static PyObject* faintapp_special_new(PyTypeObject* type, PyObject*, PyObject*){
   return (PyObject*)self;
 }
 
-static utf8_string faintapp_special_repr(AppContext&){
+static utf8_string faintapp_special_repr(PyFuncContext&){
   return "FaintApp";
 }
 
@@ -496,10 +497,10 @@ PyTypeObject FaintAppType = {
     nullptr  // tp_finalize
 };
 
-void add_App(AppContext& app, PyObject* module){
+void add_App(PyFuncContext& ctx, PyObject* module){
   add_type_object(module, FaintAppType, "FaintApp");
   PyModule_AddObject(module, "app",
-    create_python_object<faintAppObject>(FaintAppType, app));
+    create_python_object<faintAppObject>(FaintAppType, ctx));
 }
 
 } // namespace

@@ -195,7 +195,7 @@ static void run_envsetup(const FilePath& path){
 static void add_python_singletons(PyObject* ifaint, PyFuncContext& ctx){
   // These objects require "context", are rather tightly coupled
   // to Faint and can not be created from the Python side.
-  add_App(ctx.app, ifaint);
+  add_App(ctx, ifaint);
   add_global_functions(ctx, ifaint);
   add_dialog_functions(ctx, ifaint);
   add_ActiveSettings(ctx, ifaint);
