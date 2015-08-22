@@ -114,7 +114,7 @@ static void faintapp_add_format(PyFuncContext& ctx, PyObject* args){
     save_callback_t(saver),
     label_t(utf8_string(name)),
     FileExtension(extension),
-    ctx.app);
+    ctx);
   ctx.app.AddFormat(f);
 }
 

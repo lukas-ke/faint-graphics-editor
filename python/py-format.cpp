@@ -19,6 +19,7 @@
 #include "python/py-include.hh"
 #include "python/py-canvas.hh"
 #include "python/py-format.hh"
+#include "python/py-func-context.hh"
 #include "python/py-image-props.hh"
 #include "python/py-util.hh"
 #include "python/py-interface.hh"
@@ -29,12 +30,12 @@ PyFileFormat::PyFileFormat(const load_callback_t& loader,
   const save_callback_t& saver,
   const label_t& label,
   const FileExtension& ext,
-  AppContext& app)
+  PyFuncContext& ctx)
   : Format(ext,
       label,
       can_save(saver.Get() != nullptr),
       can_load(loader.Get() != nullptr)),
-    m_app(app)
+    m_ctx(ctx)
 {
   if (loader.Get() != nullptr){
     m_callLoad = new_ref(loader.Get());
@@ -79,7 +80,7 @@ SaveResult save_error_from_exception(const Format& format){
 SaveResult PyFileFormat::Save(const FilePath& filePath, Canvas& canvas){
   assert(m_callSave != nullptr);
 
-  scoped_ref py_canvas(pythoned(canvas, m_app));
+  scoped_ref py_canvas(pythoned(canvas, m_ctx.app));
   scoped_ref filePathUnicode(build_unicode(filePath.Str()));
   scoped_ref argList(Py_BuildValue("OO", filePathUnicode.get(), py_canvas.get()));
 

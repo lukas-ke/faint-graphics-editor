@@ -17,13 +17,15 @@
 #define FAINT_PY_FORMAT_HH
 #include "formats/format.hh"
 #include "python/py-include.hh"
+#include "util/distinct.hh"
 
 namespace faint{
 
-class AppContext;
-class PyFileFormat;
-using load_callback_t = Distinct<PyObject*, PyFileFormat, 0>;
-using save_callback_t = Distinct<PyObject*, PyFileFormat, 1>;
+class PyFuncContext;
+
+class category_PyFileFormat;
+using load_callback_t = Distinct<PyObject*, category_PyFileFormat, 0>;
+using save_callback_t = Distinct<PyObject*, category_PyFileFormat, 1>;
 
 class PyFileFormat : public Format{
 public:
@@ -31,12 +33,12 @@ public:
     const save_callback_t&,
     const label_t&,
     const FileExtension&,
-    AppContext&);
+    PyFuncContext&);
 
   void Load(const FilePath&, ImageProps&) override;
   SaveResult Save(const FilePath&, Canvas&) override;
 private:
-  AppContext& m_app;
+  PyFuncContext& m_ctx;
   scoped_ref m_callLoad;
   scoped_ref m_callSave;
 };
