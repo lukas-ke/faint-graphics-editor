@@ -81,6 +81,12 @@ static void run_command(const BoundObject<Object>& obj, Command* cmd){
   }
 }
 
+static BoundObject<Object> bind_same(Object* obj,
+  const BoundObject<Object>& src)
+{
+  return BoundObject<Object>(src.ctx, src.canvas, obj, src.frameId);
+}
+
 // Helper for Smth_get_points
 static std::vector<coord> flat_point_list(const std::vector<Point>& points){
   std::vector<coord> coords;
@@ -108,7 +114,7 @@ static BoundObject<Object> Smth_become_path(const BoundObject<Object>& self){
   run_command(self, get_replace_object_command(Old(self.obj), path,
       self.canvas->GetFrame(self.frameId), select_added(false)));
 
-  return BoundObject<Object>(self.ctx, self.canvas, path, self.frameId);
+  return bind_same(path, self);
 }
 
 /* method: "crop()->p\n
@@ -145,10 +151,8 @@ static auto Smth_get_obj(const BoundObject<Object>& self, int index)
   if (index < 0 || self.obj->GetObjectCount() <= index){
     throw ValueError("Invalid object index");
   }
-  return BoundObject<Object>(self.ctx,
-    self.canvas,
-    self.obj->GetObject(index),
-    self.frameId);
+
+  return bind_same(self.obj->GetObject(index), self);
 }
 
 /* method: "get_type()->s\nReturns the type of the object, as a string." */
