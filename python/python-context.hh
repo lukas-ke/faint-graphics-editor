@@ -48,11 +48,11 @@ public:
 
   // Gets the name to be used for the next Python command bundle if
   // set, empty string otherwise.
-  virtual utf8_string GetCommandName(const Canvas*) = 0;
+  virtual utf8_string GetCommandName(const Canvas&) = 0;
 
   // Sets the name to be used for the next Python command bundle. This
   // will be cleared on EvalDone().
-  virtual void SetCommandName(const Canvas*, const utf8_string&) = 0;
+  virtual void SetCommandName(const Canvas&, const utf8_string&) = 0;
 
   // Interface printing.
   virtual void IntFaintPrint(const utf8_string&) = 0;
@@ -69,7 +69,7 @@ public:
   // The flagging is done automatically by RunCommand, so this
   // should be used for actions that do not involve commands, like
   // object selection.
-  virtual void QueueRefresh(Canvas*) = 0;
+  virtual void QueueRefresh(Canvas&) = 0;
 
   // Run a Faint-command from a Python interface function.
   void RunCommand(Canvas* canvas, Command* cmd){

@@ -63,7 +63,6 @@
 #include "python/py-common.hh"
 #include "python/py-func-context.hh"
 #include "python/py-grid.hh"
-#include "python/py-interface.hh"
 #include "python/py-less-common.hh"
 #include "python/py-something.hh"
 #include "python/py-tri.hh"
@@ -116,6 +115,10 @@ bool canvas_ok(const CanvasId& c, PyFuncContext& ctx){
   return ctx.app.Exists(c);
 }
 
+static void queue_refresh(CanvasT canvas){
+  canvas.ctx.py.QueueRefresh(canvas.item);
+}
+
 // Helper for py-common.hh
 bool contains_pos(CanvasT canvas, const IntPoint& pos){
   if (!fully_positive(pos)){
@@ -161,7 +164,7 @@ static void canvas_center(CanvasT canvas, const Point& pos){
 Clear the point set with set_point_overlay" */
 static void canvas_clear_point_overlay(CanvasT canvas){
   canvas.item.ClearPointOverlay();
-  python_queue_refresh(canvas.item);
+  queue_refresh(canvas);
 }
 
 /* method: "context_delete()\n
@@ -240,11 +243,11 @@ static void canvas_deselect(CanvasT canvas,
   objects.Visit(
     [&canvas](const std::vector<BoundObject<Object>>& objects){
       canvas.item.DeselectObjects(check_ownership(canvas, objects));
-      python_queue_refresh(canvas);
+      queue_refresh(canvas);
     },
     [&canvas](){
       canvas.item.DeselectObjects();
-      python_queue_refresh(canvas);
+      queue_refresh(canvas);
     });
 }
 
@@ -762,11 +765,11 @@ static void canvas_select(CanvasT canvas,
     [&canvas](const BoundObjects& objects){
       canvas.item.SelectObjects(check_ownership(canvas, objects),
         deselect_old(true));
-      python_queue_refresh(canvas);
+      queue_refresh(canvas);
     },
     [&canvas](){
       canvas.item.DeselectObjects();
-      python_queue_refresh(canvas);
+      queue_refresh(canvas);
     });
 }
 
@@ -795,7 +798,7 @@ Adds a hash-mark overlay around pixel the pixel at x,y. This does not
 modify the image, it's merely for visualization." */
 static void canvas_set_point_overlay(CanvasT canvas, const IntPoint& pt){
   canvas.item.SetPointOverlay(pt);
-  python_queue_refresh(canvas);
+  queue_refresh(canvas);
 }
 
 /* method: "set_scroll_pos(x,y)\n
@@ -1086,7 +1089,7 @@ struct canvas_grid{
 
   static void Set(CanvasT self, const Grid& grid){
     self.item.SetGrid(grid);
-    python_queue_refresh(self);
+    queue_refresh(self);
   }
 };
 
@@ -1101,11 +1104,11 @@ will be used instead, so that a function can be given a descriptive
 name." */
 struct canvas_command_name{
   static utf8_string Get(CanvasT self){
-    return python_get_command_name(self);
+    return self.ctx.py.GetCommandName(self.item);
   }
 
   static void Set(CanvasT self, const utf8_string& name){
-    python_set_command_name(self, name);
+    self.ctx.py.SetCommandName(self.item, name);
   }
 };
 

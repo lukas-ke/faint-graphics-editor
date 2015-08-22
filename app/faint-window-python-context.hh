@@ -61,14 +61,14 @@ public:
     m_unrefreshed.clear();
 
     for (Canvas* canvas : m_commandBundles){
-      canvas->CloseUndoBundle(GetCommandName(canvas));
+      canvas->CloseUndoBundle(GetCommandName(*canvas));
     }
     m_commandBundles.clear();
     m_commandNames.clear();
   }
 
-  utf8_string GetCommandName(const Canvas* canvas) override{
-    auto it = m_commandNames.find(canvas);
+  utf8_string GetCommandName(const Canvas& canvas) override{
+    auto it = m_commandNames.find(&canvas);
     return it == m_commandNames.end() ?
       "" : it->second;
   }
@@ -89,16 +89,16 @@ public:
     m_interpreterFrame.Print(s);
   }
 
-  void QueueRefresh(Canvas* canvas) override{
-    m_unrefreshed.insert(canvas);
-    m_canvasIds[canvas] = canvas->GetId();
+  void QueueRefresh(Canvas& canvas) override{
+    m_unrefreshed.insert(&canvas);
+    m_canvasIds[&canvas] = canvas.GetId();
   }
 
   void RunCommand(Canvas& canvas, Command* cmd) override{
     if (cmd == nullptr){
       return;
     }
-    QueueRefresh(&canvas);
+    QueueRefresh(canvas);
     if (std::find(begin(m_commandBundles), end(m_commandBundles), &canvas) ==
       m_commandBundles.end())
     {
@@ -109,13 +109,13 @@ public:
   }
 
   void RunCommand(Canvas& canvas, Command* cmd, const FrameId& frameId) override{
-    // Fixme: Remove in favor of const Frame&&-variant
+    // Fixme: Remove in favor of const Frame&-variant
 
     if (cmd == nullptr){
       return;
     }
 
-    QueueRefresh(&canvas);
+    QueueRefresh(canvas);
     if (std::find(begin(m_commandBundles), end(m_commandBundles), &canvas) ==
       end(m_commandBundles))
     {
@@ -135,8 +135,8 @@ public:
     }
   }
 
-  void SetCommandName(const Canvas* canvas, const utf8_string& name) override{
-    m_commandNames[canvas] = name;
+  void SetCommandName(const Canvas& canvas, const utf8_string& name) override{
+    m_commandNames[&canvas] = name;
   }
 
   void Unbind(const KeyPress& key) override{

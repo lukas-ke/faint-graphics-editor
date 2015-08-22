@@ -53,7 +53,7 @@ utf8_string format_error_info(const FaintPyExc& info){
 }
 
 void python_queue_refresh(Canvas& canvas){
-  get_python_context().QueueRefresh(&canvas);
+  get_python_context().QueueRefresh(canvas);
 }
 
 void python_run_command(Canvas& canvas, Command* cmd){
@@ -75,11 +75,11 @@ void python_run_command(const Frame& frame, Command* cmd){
 }
 
 utf8_string python_get_command_name(const Canvas& canvas){
-  return get_python_context().GetCommandName(&canvas);
+  return get_python_context().GetCommandName(canvas);
 }
 
 void python_set_command_name(const Canvas& canvas, const utf8_string& name){
-  get_python_context().SetCommandName(&canvas, name);
+  get_python_context().SetCommandName(canvas, name);
 }
 
 void run_python_str(const utf8_string& cmd){
