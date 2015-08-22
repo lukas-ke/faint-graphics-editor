@@ -29,14 +29,6 @@ std::string get_python_version(){
   return Py_GetVersion();
 }
 
-utf8_string python_get_command_name(const Canvas& canvas){
-  return get_python_context().GetCommandName(canvas);
-}
-
-void python_set_command_name(const Canvas& canvas, const utf8_string& name){
-  get_python_context().SetCommandName(canvas, name);
-}
-
 void run_python_str(const utf8_string& cmd){
   utf8_string cmd_silent("push_silent(\"" + cmd + "\")");
   PyRun_SimpleString(cmd_silent.c_str());

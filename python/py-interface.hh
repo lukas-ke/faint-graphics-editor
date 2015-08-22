@@ -33,9 +33,6 @@ void display_error_info(const FaintPyExc&, PythonContext&);
 
 std::string get_python_version();
 
-utf8_string python_get_command_name(const Canvas&);
-void python_set_command_name(const Canvas&, const utf8_string&);
-
 void run_python_str(const utf8_string&);
 
 // Returns the names in the ifaint Python module __dict__.
