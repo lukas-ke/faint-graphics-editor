@@ -652,11 +652,14 @@ def run(root_dir, force=False):
         cpp_properties)
 
     with open(os.path.join(out_dir, 'setting-function-defs.hh'), 'w') as f:
-        content = comment + cpp.IncludeGuard(
-            'FAINT_SETTING_FUNCTION_DEFS_HH',
-            cpp.Code(2, "static PyMethodDef active_settings_methods[] = {") +
-            function_method_def +
-            cpp.Code(2, "};"))
+        content = (
+            comment +
+            cpp.IncludeGuard('FAINT_SETTING_FUNCTION_DEFS_HH',
+                cpp.Namespace('faint',
+                    cpp.Code(2,
+                       "static PyMethodDef active_settings_methods[] = {") +
+                       function_method_def +
+                       cpp.Code(2, "};\n\n")) + ""))
 
         f.write(content.get_text())
 

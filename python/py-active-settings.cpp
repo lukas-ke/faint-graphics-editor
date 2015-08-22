@@ -22,6 +22,7 @@
 #include "python/py-func-context.hh"
 #include "python/py-add-type-object.hh"
 #include "generated/python/settings/setting-functions.hh"
+#include "generated/python/settings/setting-function-defs.hh"
 
 namespace faint{
 
@@ -65,8 +66,6 @@ static void as_init(AppContext&){
 static PyObject* as_repr(activeSettingsObject*){
   return build_unicode(utf8_string(ACTIVE_SETTINGS_NAME));
 }
-
-#include "generated/python/settings/setting-function-defs.hh"
 
 PyTypeObject ActiveSettingsType = {
   PyVarObject_HEAD_INIT(nullptr, 0)
