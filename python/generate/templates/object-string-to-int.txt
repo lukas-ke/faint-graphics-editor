@@ -19,7 +19,7 @@ struct Smth_property_$name{
 
     $string_to_int
 
-    python_run_command(self,
-      change_setting_command(self.obj, $setting, value));
+    auto* cmd = change_setting_command(self.obj, $setting, value);
+    self.ctx->RunCommand(*self.canvas, cmd, self.frameId);
   }
 };
