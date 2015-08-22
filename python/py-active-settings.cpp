@@ -26,6 +26,17 @@
 
 namespace faint{
 
+// ActiveSettings: Python class with functions changing the
+// current tool settings in Faint.
+//
+// This class can only be instantiated from C++, as it needs
+// access to the AppContext.
+//
+// A single object should be added to a Python-module using
+// add_ActiveSettings during initialization.
+//
+// The functions are generated.
+
 extern PyTypeObject ActiveSettingsType;
 
 struct activeSettingsObject{
