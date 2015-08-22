@@ -1,10 +1,10 @@
-void as_set_$name(AppContext& app, const Paint& paint){
+static void as_set_$name(AppContext& app, const Paint& paint){
   // From $$file
 
   app.Set($setting, paint);
 }
 
-Paint as_get_$name(AppContext& app){
+static Paint as_get_$name(AppContext& app){
   // From $$file
 
   return app.Get($setting);

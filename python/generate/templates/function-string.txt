@@ -1,10 +1,10 @@
-void as_set_$name(AppContext& app, const utf8_string& value){
+static void as_set_$name(AppContext& app, const utf8_string& value){
   // From $$file
 
   app.Set($setting, value);
 }
 
-utf8_string as_get_$name(AppContext& app){
+static utf8_string as_get_$name(AppContext& app){
   // From $$file
 
   return app.Get($setting);

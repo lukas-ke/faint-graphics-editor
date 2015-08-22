@@ -1,4 +1,4 @@
-void as_set_$name(AppContext& app, faint::coord value){
+static void as_set_$name(AppContext& app, faint::coord value){
    // From $$file
 
   if (value < $min_value  || $max_value < value){
@@ -10,7 +10,7 @@ void as_set_$name(AppContext& app, faint::coord value){
   app.Set($setting, value);
 }
 
-coord as_get_$name(AppContext& app){
+static coord as_get_$name(AppContext& app){
    // From $$file
 
   return app.Get($setting);

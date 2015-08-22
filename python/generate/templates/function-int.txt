@@ -1,4 +1,4 @@
-void as_set_$name(AppContext& app, int value){
+static void as_set_$name(AppContext& app, int value){
   // From $$file
 
   if (value < $min_value  || $max_value < value){
@@ -9,7 +9,7 @@ void as_set_$name(AppContext& app, int value){
   app.Set($setting, value);
 }
 
-int as_get_$name(AppContext& app){
+static int as_get_$name(AppContext& app){
   // From $$file
 
   return app.Get($setting);
