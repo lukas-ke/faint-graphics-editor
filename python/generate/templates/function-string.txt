@@ -1,13 +1,11 @@
-void set_$name(const utf8_string& value){
+void as_set_$name(AppContext& app, const utf8_string& value){
   // From $$file
 
-  auto& app = get_app_context();
   app.Set($setting, value);
 }
 
-utf8_string get_$name(){
+utf8_string as_get_$name(AppContext& app){
   // From $$file
 
-  auto& app = get_app_context();
   return app.Get($setting);
 }

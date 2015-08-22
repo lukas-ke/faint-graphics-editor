@@ -19,7 +19,7 @@
 namespace faint{
 
 /** Methods for modifying the active tool settings.*/
-void add_ActiveSettings(PyFuncContext&, PyObject* module);
+void add_ActiveSettings(AppContext&, PyObject* module);
 
 /** Application level methods, whatever that means... :) */
 void add_App(PyFuncContext&, PyObject* module);

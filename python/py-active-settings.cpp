@@ -21,6 +21,7 @@
 #include "python/py-util.hh"
 #include "python/py-func-context.hh"
 #include "python/py-add-type-object.hh"
+#include "generated/python/settings/setting-functions.hh"
 
 namespace faint{
 
@@ -28,16 +29,16 @@ extern PyTypeObject ActiveSettingsType;
 
 struct activeSettingsObject{
   PyObject_HEAD
-  PyFuncContext* ctx;
+  AppContext* ctx;
 };
 
 const char* ACTIVE_SETTINGS_NAME = "ActiveSettings";
 
 template<>
-struct MappedType<PyFuncContext&>{
+struct MappedType<AppContext&>{
   using PYTHON_TYPE = activeSettingsObject;
 
-  static PyFuncContext& GetCppObject(activeSettingsObject* self){
+  static AppContext& GetCppObject(activeSettingsObject* self){
     return *self->ctx;
   }
 
@@ -48,18 +49,6 @@ struct MappedType<PyFuncContext&>{
   static void ShowError(activeSettingsObject*){}
 };
 
-// Fixme: This method should be generated (replace the free functions)
-/* method: "set_brushsize(i)\n
-Set the brush size to i" */
-static void as_set_brushsize(PyFuncContext& ctx, int value){
-  if (value < 1 || 255 < value){
-    throw ValueError(space_sep("Argument for set_brushsize", str_int(value),
-        "outside range [1, 255]."));
-  }
-
-  ctx.app.Set(ts_BrushSize, value);
-}
-
 static PyObject* as_new(PyTypeObject* type, PyObject*, PyObject*){
   activeSettingsObject *self;
   self = (activeSettingsObject*)type->tp_alloc(type, 0);
@@ -67,7 +56,7 @@ static PyObject* as_new(PyTypeObject* type, PyObject*, PyObject*){
   return (PyObject *)self;
 }
 
-static void as_init(PyFuncContext&){
+static void as_init(AppContext&){
   // Prevent instantiation from Python, since the expected context
   // can't be provided from there.
   throw TypeError(space_sep(ACTIVE_SETTINGS_NAME, "can not be instantiated."));
@@ -77,7 +66,7 @@ static PyObject* as_repr(activeSettingsObject*){
   return build_unicode(utf8_string(ACTIVE_SETTINGS_NAME));
 }
 
-#include "generated/python/method-def/py-active-settings-methoddef.hh"
+#include "generated/python/settings/setting-function-defs.hh"
 
 PyTypeObject ActiveSettingsType = {
   PyVarObject_HEAD_INIT(nullptr, 0)
@@ -130,10 +119,10 @@ PyTypeObject ActiveSettingsType = {
   nullptr  // tp_finalize
 };
 
-void add_ActiveSettings(PyFuncContext& ctx, PyObject* module){
+void add_ActiveSettings(AppContext& app, PyObject* module){
   add_type_object(module, ActiveSettingsType, "ActiveSettings");
   PyModule_AddObject(module, "active_settings",
-    create_python_object<activeSettingsObject>(ActiveSettingsType, ctx));
+    create_python_object<activeSettingsObject>(ActiveSettingsType, app));
 }
 
 } // namespace

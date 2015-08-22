@@ -197,7 +197,7 @@ static void add_python_singletons(PyObject* ifaint, PyFuncContext& ctx){
   add_App(ctx, ifaint);
   add_global_functions(ctx, ifaint);
   add_dialog_functions(ctx, ifaint);
-  add_ActiveSettings(ctx, ifaint);
+  add_ActiveSettings(ctx.app, ifaint);
   add_Palette(ctx.app, ifaint);
   add_Window(ctx.app, ifaint);
   add_Interpreter(ctx.app, ifaint);

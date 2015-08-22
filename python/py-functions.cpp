@@ -49,7 +49,6 @@
 #include "util-wx/encode-bitmap.hh"
 #include "util-wx/file-path-util.hh"
 #include "util-wx/font.hh"
-#include "generated/python/settings/setting-functions.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-parse.hh"
 #include "python/py-functions.hh"
@@ -301,8 +300,6 @@ static png_pair read_png_py(const FilePath& path){
       throw OSError(error);
     });
 }
-
-/* extra_include: "generated/python/settings/setting-function-defs.hh" */
 
 #include "generated/python/method-def/py-functions-methoddef.hh"
 

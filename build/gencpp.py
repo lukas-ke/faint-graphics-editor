@@ -401,8 +401,8 @@ def generate_setting_id_impl(settings):
 
 
 def run(root_dir, force=False):
-    """Generate C++-Python code using the templates under the root-dir,
-    and the Faint settings defined in set_and_get.py
+    """Generate C++-Python code using the templates under root_dir, and
+    the Faint settings defined in set_and_get.py
 
     """
 
@@ -589,7 +589,6 @@ def run(root_dir, force=False):
 
     interface_cc = (comment +
                     cpp.Include('"app/canvas.hh"') +
-                    cpp.Include('"app/get-app-context.hh"') +
                     cpp.Include('"python/py-function-error.hh"') +
                     cpp.Include('"python/py-include.hh"') +
                     cpp.Include('"python/py-util.hh"') +
@@ -653,8 +652,12 @@ def run(root_dir, force=False):
         cpp_properties)
 
     with open(os.path.join(out_dir, 'setting-function-defs.hh'), 'w') as f:
-        content = comment + cpp.IncludeGuard('FAINT_SETTING_FUNCTION_DEFS_HH',
-            function_method_def)
+        content = comment + cpp.IncludeGuard(
+            'FAINT_SETTING_FUNCTION_DEFS_HH',
+            cpp.Code(2, "static PyMethodDef active_settings_methods[] = {") +
+            function_method_def +
+            cpp.Code(2, "};"))
+
         f.write(content.get_text())
 
     os.chdir(oldDir)

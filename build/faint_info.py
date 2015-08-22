@@ -24,14 +24,13 @@ FAINT_ROOT = (os.path.abspath("../") + "/").replace("\\","/")
 HEADERS_TO_GENERATE = [
 
     # List of cpp-files to parse with gen_method_def.py for generating methoddef
-    # include files
+    # include files.
     #
     # The first item is the prefix for the methoddef name
     #   PyMethodDef <prefix>_methods[],
     # The second item is the cpp file to parse.
     # The methoddef-header will be named the same as the parsed cpp,
     # but with .cpp replaced by -methoddef.hh
-    ('active_settings', '../python/py-active-settings.cpp'),
     ('clipboard', '../python/py-clipboard.cpp'),
     ('LinearGradient', '../python/py-linear-gradient.cpp'),
     ('Pattern', '../python/py-pattern.cpp'),

@@ -31,6 +31,10 @@ expose(ifaint,
        [m for m in dir(ifaint.fgl) if not m.startswith("__")],
        ifaint.fgl)
 
+expose(ifaint,
+       [m for m in dir(ifaint.active_settings) if not m.startswith("__")],
+       ifaint.active_settings)
+
 # For backwards-compatibility with Faint <= 0.23, add some methods from
 # "app" which were previously global.
 APP_METHODS = ["add_format", "swap_colors"]
