@@ -128,19 +128,6 @@ int Common_color_count(T target){
     });
 }
 
-// Copies the specified rectangle from the Bitmap or Color-span to the clipboard
-// Throws exceptions derived from PythonError.
-void copy_rect_to_clipboard(const Either<Bitmap, ColorSpan>& , const IntRect&);
-
-void copy_rect_to_clipboard(const Bitmap&, const IntRect&);
-
-/* method: "copy_rect(x,y,w,h)\n
-Copies the specified rectangle to the clipboard" */
-template<typename T>
-void Common_copy_rect(T target, const IntRect& rect){
-  copy_rect_to_clipboard(bare(target).GetBackground(), rect);
-}
-
 /* method: "desaturate()\n
 Desaturate the image." */
 template<typename T>

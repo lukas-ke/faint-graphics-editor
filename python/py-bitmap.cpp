@@ -206,11 +206,6 @@ void Common_color_balance(Bitmap& bmp, const color_range_t& r,
 }
 
 template<>
-void Common_copy_rect(Bitmap& bmp, const IntRect& rect){
-  copy_rect_to_clipboard(bmp, rect);
-}
-
-template<>
 int Common_color_count(Bitmap& bmp){
   return count_colors(bmp);
 }
