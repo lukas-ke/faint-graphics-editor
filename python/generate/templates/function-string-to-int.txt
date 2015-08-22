@@ -2,7 +2,6 @@ void as_set_$name(AppContext& app, const utf8_string& s_value){
   // From $$file
 
   $string_to_int
-
   app.Set($setting, to_int(value));
 }
 
@@ -12,6 +11,5 @@ utf8_string as_get_$name(AppContext& app){
   int i_value = app.Get($setting);
   const char* s_value = nullptr;
   $int_to_string
-
   return utf8_string(s_value);
 }
