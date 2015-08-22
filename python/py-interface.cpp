@@ -29,18 +29,6 @@ std::string get_python_version(){
   return Py_GetVersion();
 }
 
-void python_run_command(Canvas& canvas, Command* cmd){
-  if (cmd != nullptr){
-    get_python_context().RunCommand(canvas, cmd);
-  }
-}
-
-void python_run_command(const Frame& frame, Command* cmd){
-  if (cmd != nullptr){
-    get_python_context().RunCommand(frame.canvas, cmd, frame.frameId);
-  }
-}
-
 utf8_string python_get_command_name(const Canvas& canvas){
   return get_python_context().GetCommandName(canvas);
 }
