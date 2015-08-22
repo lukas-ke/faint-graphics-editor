@@ -15,10 +15,4 @@ AppContext& get_app_context(){
   throw std::logic_error("Stub get_app_context called");
 }
 
-class PythonContext;
-PythonContext& get_python_context(){
-  assert(false);
-  throw std::logic_error("Stup get_python_context called");
-}
-
 } // namespace

@@ -14,7 +14,6 @@
 // permissions and limitations under the License.
 
 #include "app/frame.hh"
-#include "app/get-python-context.hh"
 #include "python/bound-object.hh"
 #include "python/py-exception.hh"
 #include "python/py-interface.hh"

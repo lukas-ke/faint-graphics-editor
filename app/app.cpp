@@ -382,10 +382,6 @@ AppContext& get_app_context(){
   return wxGetApp().GetAppContext();
 }
 
-PythonContext& get_python_context(){
-  return wxGetApp().GetPythonContext();
-}
-
 const Art& get_art(){
   // Fixme: Remove this global accessor, Art should be passed where
   // needed. - Remember to remove stubs in tests too.
