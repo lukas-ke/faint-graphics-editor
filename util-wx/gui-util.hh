@@ -44,6 +44,7 @@ class wxWindow;
 namespace faint{
 
 class Art;
+class AppContext;
 enum class Icon;
 
 void console_message(const utf8_string&);
@@ -84,15 +85,28 @@ enum class SaveChoice{
   CANCEL = wxID_CANCEL
 };
 
-SaveChoice ask_close_unsaved_tab(wxWindow* parent, const Optional<FilePath>&);
+SaveChoice ask_close_unsaved_tab(wxWindow* parent,
+  AppContext&,
+  const Optional<FilePath>&);
 
-bool ask_exit_unsaved_changes(wxWindow* parent);
+bool ask_exit_unsaved_changes(wxWindow* parent,
+  AppContext&);
 
-void show_copy_color_error(wxWindow* parent);
+void show_copy_color_error(wxWindow* parent,
+  AppContext&);
 
-void show_error(wxWindow* parent, const Title&, const utf8_string& message);
-void show_error(wxWindow& parent, const Title&, const utf8_string& message);
-void show_error_from_dialog(wxWindow& parent, const Title&,
+void show_error(wxWindow* parent,
+  AppContext&,
+  const Title&,
+  const utf8_string& message);
+
+void show_error(wxWindow& parent,
+  AppContext&,
+  const Title&,
+  const utf8_string& message);
+
+void show_error_from_dialog(wxWindow& parent,
+  const Title&,
   const utf8_string& message);
 
 // For showing an error message before Faint is fully initialized.
@@ -101,19 +115,21 @@ void show_error_from_dialog(wxWindow& parent, const Title&,
 bool show_init_error(const Title&, const utf8_string&);
 
 FileList show_open_file_dialog(wxWindow& parent,
+  AppContext&,
   const Title&,
   const Optional<DirPath>&,
   const utf8_string& filter);
 
-void show_file_not_found_error(wxWindow* parent, const FilePath&);
+void show_file_not_found_error(wxWindow* parent, AppContext&, const FilePath&);
 
-void show_file_not_supported_error(wxWindow* parent, const FilePath&);
+void show_file_not_supported_error(wxWindow* parent, AppContext&, const FilePath&);
 
 void show_load_failed_error(wxWindow* parent,
+  AppContext&,
   const FilePath&,
   const utf8_string& message);
 
-void show_load_warnings(wxWindow* parents, const ImageProps&);
+void show_load_warnings(wxWindow* parents, AppContext& app, const ImageProps&);
 
 void show_out_of_memory_cancelled_error(wxWindow* parent);
 

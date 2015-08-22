@@ -424,6 +424,7 @@ void FaintWindowContext::Close(Canvas& canvas){
 
 void FaintWindowContext::DialogOpenFile(){
   FileList paths = show_open_file_dialog(m_faintWindow.GetRawFrame(),
+    *this,
     Title("Open Image(s)"),
     get_canvas_dir(GetActiveCanvas()),
     combined_file_dialog_filter(utf8_string("Image files"),

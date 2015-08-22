@@ -336,6 +336,7 @@ public:
 // Fixme: Also move notifysaved out.
 // ... leaves nothing though. :)
 static bool save(wxWindow* parent,
+  AppContext& app,
   Format& format,
   const FilePath& filePath,
   Canvas& canvas,
@@ -343,7 +344,7 @@ static bool save(wxWindow* parent,
 {
   SaveResult result = format.Save(filePath, canvas);
   if (result.Failed()){
-    show_error(parent, Title("Failed Saving"), result.ErrorDescription());
+    show_error(parent, app, Title("Failed Saving"), result.ErrorDescription());
     return false;
   }
   if (!backup){
@@ -456,7 +457,7 @@ FaintWindow::FaintWindow(Art& art,
     [this](const ColorEvent& event){
       Clipboard clipboard;
       if (!clipboard.Good()){
-        show_copy_color_error(m_impl->frame.get());
+        show_copy_color_error(m_impl->frame.get(), m_impl->appContext);
         return;
       }
       clipboard.SetText(str_hex(event.GetColor()));
@@ -466,7 +467,7 @@ FaintWindow::FaintWindow(Art& art,
     [this](const ColorEvent& event){
       Clipboard clipboard;
       if (!clipboard.Good()){
-        show_copy_color_error(m_impl->frame.get());
+        show_copy_color_error(m_impl->frame.get(), m_impl->appContext);
         return;
       }
       clipboard.SetText(str_smart_rgba(event.GetColor()));
@@ -554,7 +555,8 @@ FaintWindow::FaintWindow(Art& art,
       auto& panels(*m_impl->panels);
 
       if (panels.tabControl->UnsavedDocuments() && event.CanVeto()){
-        bool quit = ask_exit_unsaved_changes(m_impl->frame.get());
+        bool quit = ask_exit_unsaved_changes(m_impl->frame.get(),
+          m_impl->appContext);
         if (!quit){
           event.Veto();
           return;
@@ -795,7 +797,9 @@ void FaintWindow::Initialize(){
           }));
     }
     else{
-      tablet::show_tablet_error_message(m_impl->frame.get(), tabletResult);
+      tablet::show_tablet_error_message(m_impl->frame.get(),
+        m_impl->appContext,
+        tabletResult);
     }
   }
   #endif
@@ -873,7 +877,9 @@ void FaintWindow::Open(const FileList& paths){
     }
   }
   catch (const BitmapOutOfMemory&){
-    show_error(m_impl->frame.get(), Title("Out of memory"),
+    show_error(m_impl->frame.get(),
+      m_impl->appContext,
+      Title("Out of memory"),
       "Insufficient memory to load all images.");
   }
 
@@ -882,14 +888,18 @@ void FaintWindow::Open(const FileList& paths){
   }
 
   if (notFound.size() == 1){
-    show_file_not_found_error(m_impl->frame.get(), notFound.back());
+    show_file_not_found_error(m_impl->frame.get(),
+      m_impl->appContext,
+      notFound.back());
   }
   else if (notFound.size() > 1){
     utf8_string error = "Files not found: \n";
     for (const FilePath& path : notFound){
       error += path.Str() + "\n";
     }
-    show_error(m_impl->frame.get(), Title("Files not found"), error);
+    show_error(m_impl->frame.get(), m_impl->appContext,
+      Title("Files not found"),
+      error);
   }
 }
 
@@ -907,7 +917,9 @@ Canvas* FaintWindow::Open(const FilePath& filePath,
       if (!props.IsOk()){
         if (!m_impl->state->silentMode){
           show_load_failed_error(m_impl->frame.get(),
-            filePath, props.GetError());
+            m_impl->appContext,
+            filePath,
+            props.GetError());
         }
         return nullptr;
       }
@@ -918,14 +930,18 @@ Canvas* FaintWindow::Open(const FilePath& filePath,
       panels.menubar->AddRecentFile(filePath);
       if (props.GetNumWarnings() != 0){
         if (!state.silentMode){
-          show_load_warnings(m_impl->frame.get(), props);
+          show_load_warnings(m_impl->frame.get(),
+            m_impl->appContext,
+            props);
         }
       }
       return &(newCanvas->GetInterface());
     }
   }
   if (!state.silentMode){
-    show_file_not_supported_error(m_impl->frame.get(), filePath);
+    show_file_not_supported_error(m_impl->frame.get(),
+      m_impl->appContext,
+      filePath);
   }
   return nullptr;
 }
@@ -963,7 +979,8 @@ bool FaintWindow::Save(Canvas& canvas){
     [&](const FilePath& p){
       return get_save_format(state.formats, p.Extension()).Visit(
         [&](Format& f){
-          bool savedOk = save(m_impl->frame.get(), f, p, canvas);
+          bool savedOk = save(m_impl->frame.get(), m_impl->appContext,
+            f, p, canvas);
           if (savedOk){
             update_recent(f, p);
           }
@@ -980,6 +997,7 @@ bool FaintWindow::Save(Canvas& canvas){
         state.formats).Visit(
           [&](const SaveDialogInfo& info){
             const bool savedOk = save(m_impl->frame.get(),
+              m_impl->appContext,
               info.format,
               info.path,
               canvas,
@@ -1005,6 +1023,7 @@ bool FaintWindow::ShowSaveAsDialog(Canvas& canvas, bool backup){
     [&](const SaveDialogInfo& info){
       const bool savedOk =
         save(m_impl->frame.get(),
+          m_impl->appContext,
           info.format,
           info.path,
           canvas,

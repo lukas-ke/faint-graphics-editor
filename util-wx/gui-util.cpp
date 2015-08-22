@@ -23,7 +23,7 @@
 #include "wx/persist.h"
 #include "wx/textctrl.h"
 #include "wx/persist/toplevel.h"
-#include "app/get-app-context.hh"
+#include "app/app-context.hh"
 #include "gui/accelerator-entry.hh"
 #include "gui/art.hh"
 #include "util-wx/convert-wx.hh"
@@ -60,13 +60,13 @@ wxButton* noiseless_button(wxWindow* parent, const utf8_string& label,
   return button;
 }
 
-static int show_modal(wxDialog& dlg){
+static int show_modal(wxDialog& dlg, AppContext& app){
   // Application::FilterEvent catches keypresses even when
   // dialogs are shown. Using this function for all dialogs
   // shown by the frame allows handling it.
-  get_app_context().BeginModalDialog();
+  app.BeginModalDialog();
   int result = dlg.ShowModal();
-  get_app_context().EndModalDialog();
+  app.EndModalDialog();
   return result;
 }
 
@@ -117,11 +117,11 @@ coord parse_coord_value(wxTextCtrl* textCtrl, coord defaultValue){
   return v;
 }
 
-bool ask_exit_unsaved_changes(wxWindow* parent){
+bool ask_exit_unsaved_changes(wxWindow* parent, AppContext& app){
   wxMessageDialog dlg(parent,
     "One or more files have unsaved changes.\nExit anyway?",
     "Unsaved Changes", wxYES_NO | wxNO_DEFAULT | wxICON_WARNING);
-  const int choice = show_modal(dlg);
+  const int choice = show_modal(dlg, app);
   return choice == wxID_YES;
 }
 
@@ -129,7 +129,7 @@ static wxString get_save_target_string(const FilePath& path){
   return wxString("'") + to_wx(path.Str()) + "'";
 }
 
-SaveChoice ask_close_unsaved_tab(wxWindow* parent,
+SaveChoice ask_close_unsaved_tab(wxWindow* parent, AppContext& app,
   const Optional<FilePath>& filePath)
 {
   const wxString title = "Unsaved Changes";
@@ -139,7 +139,7 @@ SaveChoice ask_close_unsaved_tab(wxWindow* parent,
 
   const long flags = static_cast<long>(wxYES_NO|wxCANCEL|wxCANCEL_DEFAULT);
   wxMessageDialog dlg(parent, message, "Unsaved Changes", flags);
-  int choice = show_modal(dlg);
+  int choice = show_modal(dlg, app);
   assert(choice == wxID_YES || choice == wxID_NO || choice == wxID_CANCEL);
   return static_cast<SaveChoice>(choice);
 }
@@ -148,24 +148,32 @@ wxString get_new_canvas_title(){
   return "Untitled";
 }
 
-void show_copy_color_error(wxWindow* parent){
+void show_copy_color_error(wxWindow* parent, AppContext& app){
   wxMessageDialog dlg(parent,
     "Failed Copying the color.\n\nThe clipboard could not be opened.",
     "Copy Color Failed",
     wxOK|wxICON_ERROR);
-  show_modal(dlg);
+  show_modal(dlg, app);
 }
 
-void show_error(wxWindow* parent, const Title& title, const utf8_string& message){
+void show_error(wxWindow* parent,
+  AppContext& app,
+  const Title& title,
+  const utf8_string& message)
+{
   wxMessageDialog dlg(parent,
     to_wx(message),
     to_wx(title.Get()),
     wxOK|wxICON_ERROR);
-  show_modal(dlg);
+  show_modal(dlg, app);
 }
 
-void show_error(wxWindow& parent, const Title& title, const utf8_string& message){
-  show_error(&parent, title, message);
+void show_error(wxWindow& parent,
+  AppContext& app,
+  const Title& title,
+  const utf8_string& message)
+{
+  show_error(&parent, app, title, message);
 }
 
 void show_error_from_dialog(wxWindow& parent,
@@ -188,31 +196,41 @@ bool show_init_error(const Title& title, const utf8_string& message){
   return false;
 }
 
-static void show_warning(wxWindow* parent, const Title& title,
+static void show_warning(wxWindow* parent,
+  AppContext& app,
+  const Title& title,
   const utf8_string& message)
 {
   wxMessageDialog dlg(parent,
     to_wx(message),
     to_wx(title.Get()),
     wxOK|wxICON_WARNING);
-  show_modal(dlg);
+  show_modal(dlg, app);
 }
 
-void show_file_not_found_error(wxWindow* parent, const FilePath& file){
+void show_file_not_found_error(wxWindow* parent,
+  AppContext& app,
+  const FilePath& file)
+{
   wxString errStr("File not found:\n");
   errStr += to_wx(file.Str());
   wxMessageDialog dlg(parent, errStr, "File not found", wxOK|wxICON_ERROR);
-  show_modal(dlg);
+  show_modal(dlg, app);
 }
 
-void show_file_not_supported_error(wxWindow* parent, const FilePath& file){
+void show_file_not_supported_error(wxWindow* parent,
+  AppContext& app,
+  const FilePath& file)
+{
   wxString errStr("File type not supported:\n");
   errStr += to_wx(file.Str());
   wxMessageDialog dlg(parent, errStr, "Unsupported File", wxOK|wxICON_ERROR);
-  show_modal(dlg);
+  show_modal(dlg, app);
 }
 
-void show_load_failed_error(wxWindow* parent, const FilePath& file,
+void show_load_failed_error(wxWindow* parent,
+  AppContext& app,
+  const FilePath& file,
   const utf8_string& message)
 {
   wxString errStr("Failed loading:\n");
@@ -220,19 +238,25 @@ void show_load_failed_error(wxWindow* parent, const FilePath& file,
   errStr += "\n\n";
   errStr += to_wx(message);
   wxMessageDialog dlg(parent, errStr, "Failed Loading Image", wxOK|wxICON_ERROR);
-  show_modal(dlg);
+  show_modal(dlg, app);
 }
 
-void show_load_warnings(wxWindow* parent, const ImageProps& props){
+void show_load_warnings(wxWindow* parent,
+  AppContext& app,
+  const ImageProps& props)
+{
   utf8_string warnings;
   for (int i = 0; i != props.GetNumWarnings() && i < 10; i++){
     warnings += (props.GetWarning(i) + "\n");
   }
-  show_warning(parent, Title("Warning"), warnings);
+  show_warning(parent, app, Title("Warning"), warnings);
 }
 
-FileList show_open_file_dialog(wxWindow& parent, const Title& title,
-  const Optional<DirPath>& initialPath, const utf8_string& filter)
+FileList show_open_file_dialog(wxWindow& parent,
+  AppContext& app,
+  const Title& title,
+  const Optional<DirPath>& initialPath,
+  const utf8_string& filter)
 {
   wxFileDialog fd(&parent,
     to_wx(title.Get()),
@@ -240,7 +264,7 @@ FileList show_open_file_dialog(wxWindow& parent, const Title& title,
     wxString(""), // Default file
     to_wx(filter),
     wxFD_OPEN | wxFD_MULTIPLE | wxFD_CHANGE_DIR | wxFD_FILE_MUST_EXIST);
-  if (show_modal(fd) == wxID_OK){
+  if (show_modal(fd, app) == wxID_OK){
     wxArrayString paths;
     fd.GetPaths(paths);
     return to_FileList(paths);
@@ -248,8 +272,8 @@ FileList show_open_file_dialog(wxWindow& parent, const Title& title,
   return FileList();
 }
 
-void show_out_of_memory_cancelled_error(wxWindow* parent){
-  show_error(parent, Title("Out of memory"),
+void show_out_of_memory_cancelled_error(wxWindow* parent, AppContext& app){
+  show_error(parent, app, Title("Out of memory"),
     "An action required too much memory and was cancelled.");
 }
 

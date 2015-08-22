@@ -17,10 +17,15 @@
 #define FAINT_TABLET_ERROR_MESSAGE_HH
 
 class wxWindow;
+namespace faint{ class AppContext; }
+
 namespace faint{namespace tablet{
 
 enum class InitResult;
-void show_tablet_error_message(wxWindow* parent, InitResult error);
+
+void show_tablet_error_message(wxWindow* parent,
+  AppContext&,
+  InitResult error);
 
 }}
 

@@ -19,7 +19,10 @@
 
 namespace faint{namespace tablet{
 
-void show_tablet_error_message(wxWindow* parent, InitResult error){
+void show_tablet_error_message(wxWindow* parent,
+  AppContext& app,
+  InitResult error)
+{
   switch(error){
     case tablet::InitResult::OK:
       assert(false);
@@ -28,17 +31,17 @@ void show_tablet_error_message(wxWindow* parent, InitResult error){
       // No tablet DLL available. This is not an error.
       break;
     case tablet::InitResult::ERROR_LOGCONTEXT_SIZE:
-      show_error(parent, Title("Tablet error"),
+      show_error(parent, app, Title("Tablet error"),
         "Wintab could not be initialized (ERROR_LOGCONTEXT_SIZE).\n\n"
         "Pen tablet-functionality will not be available.");
       break;
     case tablet::InitResult::OTHER_ERROR:
-      show_error(parent, Title("Tablet error"),
+      show_error(parent, app, Title("Tablet error"),
         "Wintab could not be initialized (OTHER_ERROR).\n\n"
         "Pen tablet-functionality will not be available.");
       break;
     case tablet::InitResult::WTOPENA_FAILED:
-      show_error(parent, Title("Tablet error"),
+      show_error(parent, app, Title("Tablet error"),
         "Wintab could not be initialized (Call to WTOpenA failed).\n\n"
         "Pen tablet-functionality will not be available.");
       break;

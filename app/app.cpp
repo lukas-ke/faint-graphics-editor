@@ -318,6 +318,7 @@ public:
       }
       else {
         show_error(m_faintWindow->GetRawFrame(),
+          *m_appContext,
           Title("Script not found"),
           endline_sep("Python file specified with --run not found:",
             scriptPath.Str()));

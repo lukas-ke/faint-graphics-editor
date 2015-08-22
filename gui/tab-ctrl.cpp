@@ -74,13 +74,15 @@ public:
     SetAcceleratorTable(wxNullAcceleratorTable);
 
     bind_fwd(this, wxEVT_AUINOTEBOOK_PAGE_CLOSE,
-      [this](wxAuiNotebookEvent& event){
+      [this, &app](wxAuiNotebookEvent& event){
         event.Veto();
         int page = event.GetSelection();
         CanvasPanel* canvas = GetCanvasPage(Index(page));
         canvas->Preempt(PreemptOption::ALLOW_COMMAND);
         if (canvas->IsDirty()){
-          SaveChoice choice = ask_close_unsaved_tab(this, canvas->GetFilePath());
+          SaveChoice choice = ask_close_unsaved_tab(this,
+            app,
+            canvas->GetFilePath());
           if (choice == SaveChoice::CANCEL){
             return;
           }
