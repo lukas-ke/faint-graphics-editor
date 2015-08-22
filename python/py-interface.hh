@@ -33,7 +33,7 @@ void display_error_info(const FaintPyExc&, PythonContext&);
 
 std::string get_python_version();
 
-void run_python_str(const utf8_string&);
+void run_python_str(const utf8_string&, PythonContext&);
 
 // Returns the names in the ifaint Python module __dict__.
 std::vector<utf8_string> list_ifaint_names();

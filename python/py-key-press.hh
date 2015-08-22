@@ -16,6 +16,7 @@
 #ifndef FAINT_PY_KEY_PRESS_HH
 #define FAINT_PY_KEY_PRESS_HH
 #include <vector>
+#include "python/python-context.hh"
 #include "text/utf8-string.hh"
 #include "util/key-press.hh"
 
@@ -36,7 +37,7 @@ struct BindInfo{
 
 std::vector<BindInfo> list_binds();
 
-void python_key_press(const KeyPress&);
+void python_key_press(const KeyPress&, PythonContext&);
 
 } // namespace
 

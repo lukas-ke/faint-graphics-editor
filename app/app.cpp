@@ -149,7 +149,7 @@ public:
     }
 
     // Run the key bind, and swallow the key-press.
-    python_key_press(key);
+    python_key_press(key, *m_pythonContext);
     return Event_Processed;
   }
 

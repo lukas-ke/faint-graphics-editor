@@ -29,12 +29,12 @@ std::string get_python_version(){
   return Py_GetVersion();
 }
 
-void run_python_str(const utf8_string& cmd){
+void run_python_str(const utf8_string& cmd, PythonContext& ctx){
   utf8_string cmd_silent("push_silent(\"" + cmd + "\")");
   PyRun_SimpleString(cmd_silent.c_str());
   // run_python_str is for invoking Python from the C++-code, not the
   // interpreter - this case also requires calling EvalDone.
-  get_python_context().EvalDone();
+  ctx.EvalDone();
 }
 
 static std::vector<utf8_string> names_in_sequence(PyObject* seq){
