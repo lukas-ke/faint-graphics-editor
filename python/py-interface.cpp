@@ -19,6 +19,7 @@
 #include "python/py-exception.hh"
 #include "python/py-interface.hh"
 #include "python/py-include.hh"
+#include "python/py-func-context.hh"
 #include "text/char-constants.hh"
 #include "text/formatting.hh"
 
@@ -64,7 +65,7 @@ void python_run_command(Canvas& canvas, Command* cmd){
 
 void python_run_command(const BoundObject<Object>& obj, Command* cmd){
   if (cmd != nullptr){
-    get_python_context().RunCommand(*obj.canvas, cmd, obj.frameId);
+    obj.ctx->RunCommand(*obj.canvas, cmd, obj.frameId);
   }
 }
 
