@@ -37,7 +37,7 @@
 #include "text/formatting.hh"
 #include "util-wx/clipboard.hh"
 #include "util/default-settings.hh"
-#include "python/py-interface.hh" // Fixme: for python_run_command
+
 namespace faint{
 
 // Python methods (as C++-templates) common to py-canvas, py-frame and

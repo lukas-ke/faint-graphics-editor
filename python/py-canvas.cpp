@@ -119,15 +119,6 @@ static void queue_refresh(CanvasT canvas){
   canvas.ctx.py.QueueRefresh(canvas.item);
 }
 
-// Helper for py-common.hh
-bool contains_pos(CanvasT canvas, const IntPoint& pos){
-  if (!fully_positive(pos)){
-    return false;
-  }
-  IntSize size = canvas.item.GetSize();
-  return pos.x < size.w && pos.y < size.h;
-}
-
 // Helper
 static BoundObject<Object> canvas_add_object(CanvasT bc,
   Object* obj)
@@ -1161,6 +1152,20 @@ static void canvas_copy(CanvasT){
 }
 
 using common_type = CanvasT;
+
+// Helper for py-common.hh
+bool contains_pos(CanvasT canvas, const IntPoint& pos){
+  if (!fully_positive(pos)){
+    return false;
+  }
+  IntSize size = canvas.item.GetSize();
+  return pos.x < size.w && pos.y < size.h;
+}
+
+void python_run_command(CanvasT target, Command* cmd){
+  target.ctx.RunCommand(target.item, cmd);
+}
+
 /* extra_include: "generated/python/method-def/py-common-methoddef.hh" */
 /* extra_include: "generated/python/method-def/py-less-common-methoddef.hh" */
 
