@@ -20,8 +20,9 @@
 
 namespace faint{
 
-Frame::Frame(Canvas* canvas, const Image& image)
+Frame::Frame(PyFuncContext& ctx, Canvas* canvas, const Image& image)
   : canvas(canvas),
+    ctx(&ctx),
     image(image),
     frameId(image.GetId())
 {}

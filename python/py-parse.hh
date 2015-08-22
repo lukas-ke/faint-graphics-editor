@@ -17,6 +17,7 @@
 #define FAINT_PY_PARSE_HH
 #include <map>
 #include "geo/range.hh"
+#include "python/bound.hh"
 #include "python/bound-object.hh"
 #include "python/py-fwd.hh"
 #include "python/py-bitmap.hh"
@@ -103,7 +104,7 @@ bool parse_flat(BoundObject<T>& obj, PyObject* args, Py_ssize_t& n,
   if (typedObj == nullptr){
     throw TypeError(arg_traits<BoundObject<T>>::name, n);
   }
-  obj = BoundObject<T>(rawObj.canvas, typedObj, rawObj.frameId);
+  obj = BoundObject<T>(rawObj.ctx, rawObj.canvas, typedObj, rawObj.frameId);
   return true;
 }
 
@@ -457,8 +458,7 @@ PyObject* build_result(bool);
 PyObject* build_result(const Bitmap&);
 PyObject* build_result(const BoundObject<Object>&);
 PyObject* build_result(const Calibration&);
-PyObject* build_result(Canvas&);
-PyObject* build_result(Canvas*);
+PyObject* build_result(const Bound<Canvas>&);
 PyObject* build_result(const CanvasGrid&);
 PyObject* build_result(const Color&);
 PyObject* build_result(const ColorStop&);
@@ -556,7 +556,7 @@ bool parse_flat(Optional<T>& opt, PyObject* args, Py_ssize_t& n, Py_ssize_t len)
 
 // Default-build_result which merely static_asserts
 template<typename T>
-PyObject* build_result(T){
+PyObject* build_result(const T&){
   static_assert(TypeDependentFalse<T>::value,
     "build_result not overloaded for type.");
   return nullptr;

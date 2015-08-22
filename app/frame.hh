@@ -20,11 +20,12 @@
 
 namespace faint{
 
+class PyFuncContext;
 class Image;
 
 class Frame{
 public:
-  Frame(Canvas*, const Image&);
+  Frame(PyFuncContext&, Canvas*, const Image&);
   const Either<Bitmap, ColorSpan>& GetBackground() const;
   Index GetFrameIndex() const;
   const Image& GetImage() const;
@@ -32,6 +33,7 @@ public:
   Frame& operator=(const Frame&) = delete;
 
   Canvas* canvas;
+  PyFuncContext* ctx;
   const Image& image;
   FrameId frameId;
 };

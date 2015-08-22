@@ -36,7 +36,7 @@
 namespace faint{
 
 bool expired(frameObject* self){
-  if (canvas_ok(self->canvasId, get_app_context()) && self->canvas->Has(self->frameId)){
+  if (canvas_ok(self->canvasId, *self->ctx) && self->canvas->Has(self->frameId)){
     return false;
   }
   PyErr_SetString(PyExc_ValueError,
@@ -49,7 +49,7 @@ struct MappedType<const Frame&>{
   using PYTHON_TYPE = frameObject;
 
   static Frame GetCppObject(frameObject* self){
-    return Frame(self->canvas,
+    return Frame(*self->ctx, self->canvas,
       self->canvas->GetFrame(self->frameId));
   }
 
@@ -71,7 +71,7 @@ static PyObject* frame_new(PyTypeObject* type, PyObject*, PyObject*){
 
 static PyObject* frame_repr(frameObject* self){
   std::stringstream ss;
-  if (canvas_ok(self->canvasId, get_app_context())){
+  if (canvas_ok(self->canvasId, *self->ctx)){
     ss << "Frame of canvas #" << self->canvasId.Raw();
   }
   else {
@@ -80,12 +80,15 @@ static PyObject* frame_repr(frameObject* self){
   return Py_BuildValue("s", ss.str().c_str());
 }
 
-static void frame_init(frameObject& self, Canvas* canvas, const Index& frameNum){
-  throw_if_outside(frameNum, canvas->GetNumFrames());
+static void frame_init(frameObject&){
+  throw TypeError("Frame can not be instantiated. "
+    "Use image.get_frame or frames[index]");
+}
 
-  self.canvas = canvas;
-  self.canvasId = canvas->GetId();
-  self.frameId = canvas->GetFrame(frameNum).GetId();
+/* method: "__copy__() Not implemented."
+name: "__copy__" */
+static void frame_copy(const Frame&){
+  throw NotImplementedError("Frame can not be copied.");
 }
 
 // Fixme: Consider return bitmap even if ColorSpan?
@@ -119,7 +122,8 @@ static IntSize frame_get_size(const Frame& frame){
 Returns a list of the objects in the frame, sorted from rear-most to
 front-most." */
 static BoundObjects frame_get_objects(const Frame& frame){
-  return bind_objects(*frame.canvas,
+  return bind_objects(*frame.ctx,
+    *frame.canvas,
     frame.image.GetObjects(),
     frame.frameId);
 }
@@ -135,7 +139,8 @@ static Optional<Calibration> frame_get_calibration(const Frame& frame){
 Returns a list of the selected objects in the frame, sorted from rear-most to
 front-most." */
 static BoundObjects frame_get_selected(const Frame& frame){
-  return bind_objects(*frame.canvas,
+  return bind_objects(*frame.ctx,
+    *frame.canvas,
     frame.image.GetObjectSelection(),
     frame.frameId);
 }

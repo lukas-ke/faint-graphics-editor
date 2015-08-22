@@ -27,6 +27,7 @@ extern PyTypeObject FrameType;
 struct frameObject {
   PyObject_HEAD
   Canvas* canvas;
+  PyFuncContext* ctx;
   CanvasId canvasId;
   FrameId frameId;
 };

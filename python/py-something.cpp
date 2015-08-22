@@ -59,11 +59,11 @@ struct MappedType<const BoundObject<T>&>{
   using PYTHON_TYPE = smthObject;
 
   static BoundObject<Object> GetCppObject(smthObject* self){
-    return BoundObject<Object>(self->canvas, self->obj, self->frameId);
+    return BoundObject<Object>(self->ctx, self->canvas, self->obj, self->frameId);
   }
 
   static bool Expired(smthObject* self){
-    if (canvas_ok(self->canvasId, get_app_context()) &&
+    if (canvas_ok(self->canvasId, *self->ctx) &&
       self->canvas->Has(self->frameId) &&
       self->canvas->GetFrame(self->frameId).Has(self->objectId)){
       return false;
@@ -75,16 +75,6 @@ struct MappedType<const BoundObject<T>&>{
     PyErr_SetString(PyExc_ValueError, "That object is removed.");
   }
 };
-
-PyObject* pythoned(Object* faintObj, Canvas* canvas, const FrameId& frameId){
-  smthObject* smth = (smthObject*)SmthType.tp_alloc(&SmthType, 0);
-  smth->obj = faintObj;
-  smth->objectId = faintObj->GetId();
-  smth->canvas = canvas;
-  smth->canvasId = canvas->GetId();
-  smth->frameId = frameId;
-  return (PyObject*)smth;
-}
 
 // Helper for Smth_get_points
 static std::vector<coord> flat_point_list(const std::vector<Point>& points){
@@ -112,7 +102,8 @@ static BoundObject<Object> Smth_become_path(const BoundObject<Object>& self){
     self.canvas->GetFrame(self.frameId).GetExpressionContext());
   python_run_command(self, get_replace_object_command(Old(self.obj), path,
       self.canvas->GetFrame(self.frameId), select_added(false)));
-  return BoundObject<Object>(self.canvas, path, self.frameId);
+
+  return BoundObject<Object>(self.ctx, self.canvas, path, self.frameId);
 }
 
 /* method: "crop()->p\n
@@ -149,8 +140,10 @@ static auto Smth_get_obj(const BoundObject<Object>& self, int index)
   if (index < 0 || self.obj->GetObjectCount() <= index){
     throw ValueError("Invalid object index");
   }
-  return BoundObject<Object>(self.canvas,
-    self.obj->GetObject(index), self.frameId);
+  return BoundObject<Object>(self.ctx,
+    self.canvas,
+    self.obj->GetObject(index),
+    self.frameId);
 }
 
 /* method: "get_type()->s\nReturns the type of the object, as a string." */
@@ -419,5 +412,20 @@ PyTypeObject SmthType = {
   0, // tp_version_tag
   nullptr  // tp_finalize
 };
+
+PyObject* pythoned(Object* faintObj,
+  PyFuncContext& ctx,
+  Canvas* canvas,
+  const FrameId& frameId)
+{
+  smthObject* smth = (smthObject*)SmthType.tp_alloc(&SmthType, 0);
+  smth->ctx = &ctx;
+  smth->obj = faintObj;
+  smth->objectId = faintObj->GetId();
+  smth->canvas = canvas;
+  smth->canvasId = canvas->GetId();
+  smth->frameId = frameId;
+  return (PyObject*)smth;
+}
 
 } // namespace

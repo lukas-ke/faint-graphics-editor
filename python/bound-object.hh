@@ -20,6 +20,7 @@
 
 namespace faint{
 
+class PyFuncContext;
 class Canvas;
 class Object;
 
@@ -29,34 +30,43 @@ class BoundObject{
   // to the canvas containing that frame. Used as the target for
   // MappedType<smthObject*>::GetCppObject.
 public:
-  BoundObject(Canvas* canvas, T* obj, FrameId frameId)
+  BoundObject(PyFuncContext* ctx, Canvas* canvas, T* obj, FrameId frameId)
     : canvas(canvas),
+      ctx(ctx),
       obj(obj),
       frameId(frameId)
   {}
   BoundObject()
     : canvas(nullptr),
+      ctx(nullptr),
       obj(nullptr),
       frameId(FrameId::Invalid())
   {}
 
   BoundObject<Object> Plain(){
-    return BoundObject<Object>(canvas, obj, frameId);
+    return BoundObject<Object>(ctx, canvas, obj, frameId);
   }
 
   Canvas* canvas;
+  PyFuncContext* ctx;
   T* obj;
   FrameId frameId;
 };
 
 template<typename T>
-BoundObject<T> bind_object(Canvas& canvas, T* object, FrameId frameId){
-  return BoundObject<T>(&canvas, object, frameId);
+BoundObject<T> bind_object(PyFuncContext& ctx,
+  Canvas& canvas,
+  T* object,
+  FrameId frameId)
+{
+  return BoundObject<T>(&ctx, &canvas, object, frameId);
 }
 
 using BoundObjects = std::vector<BoundObject<Object>>;
 
-BoundObjects bind_objects(Canvas&, const std::vector<Object*>&, FrameId);
+BoundObjects bind_objects(PyFuncContext&,
+  Canvas&,
+  const std::vector<Object*>&, FrameId);
 
 } // namespace
 

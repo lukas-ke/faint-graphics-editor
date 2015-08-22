@@ -29,9 +29,13 @@ class Bound{
   //
   // - Certain functions use the context to run Commands.
 public:
-  Bound(T& item, PyFuncContext&)
+  Bound(T& item, PyFuncContext& ctx)
     : item(item), ctx(ctx)
   {}
+
+  operator T&() const {
+    return item;
+  }
 
   T& item;
   PyFuncContext& ctx;
@@ -40,6 +44,16 @@ public:
 template<typename T>
 Bound<T> bind(T& item, PyFuncContext& ctx){
   return Bound<T>(item, ctx);
+}
+
+template<typename T>
+T&& bare(T&& obj){
+  return obj;
+}
+
+template<typename T>
+const auto& bare(const Bound<T>& obj){
+  return obj.item;
 }
 
 } // namespace

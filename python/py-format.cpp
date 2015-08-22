@@ -80,7 +80,7 @@ SaveResult save_error_from_exception(const Format& format){
 SaveResult PyFileFormat::Save(const FilePath& filePath, Canvas& canvas){
   assert(m_callSave != nullptr);
 
-  scoped_ref py_canvas(pythoned(canvas, m_ctx.app));
+  scoped_ref py_canvas(pythoned(canvas, m_ctx));
   scoped_ref filePathUnicode(build_unicode(filePath.Str()));
   scoped_ref argList(Py_BuildValue("OO", filePathUnicode.get(), py_canvas.get()));
 

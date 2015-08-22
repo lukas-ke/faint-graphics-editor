@@ -21,7 +21,7 @@
 
 namespace faint{
 
-class AppContext;
+class PyFuncContext;
 class Canvas;
 class IntPoint;
 
@@ -29,13 +29,13 @@ extern PyTypeObject CanvasType;
 
 struct canvasObject{
   PyObject_HEAD
-  AppContext* ctx;
+  PyFuncContext* ctx;
   Canvas* canvas;
   CanvasId id;
 };
 
-bool canvas_ok(const CanvasId&, AppContext&);
-PyObject* pythoned(Canvas&, AppContext&);
+bool canvas_ok(const CanvasId&, PyFuncContext&);
+PyObject* pythoned(Canvas&, PyFuncContext&);
 bool contains_pos(const Canvas&, const IntPoint&);
 
 } // namespace

@@ -140,8 +140,8 @@ static void f_context_crop(PyFuncContext& ctx, Optional<Canvas*>& maybeCanvas){
 
 /* method: "get_active_image()\n
 Returns the active (currently edited) image." */
-static Canvas& f_get_active_image(PyFuncContext& ctx){
-  return ctx.app.GetActiveCanvas();
+static Bound<Canvas> f_get_active_image(PyFuncContext& ctx){
+  return bind(ctx.app.GetActiveCanvas(), ctx);
 }
 
 /* method: "get_font()->font\nReturns the active font face name." */
@@ -168,11 +168,11 @@ static Settings f_get_settings(PyFuncContext& ctx){
 
 /* method: "list_images()->(c1,c2, ...),\nReturns a list of all
 opened images" */
-static std::vector<Canvas*> f_list_images(PyFuncContext& ctx){
+static std::vector<Bound<Canvas>> f_list_images(PyFuncContext& ctx){
   AppContext& app = ctx.app;
   return make_vector(up_to(app.GetCanvasCount()),
-    [&app](const auto& index){
-      return &app.GetCanvas(index);
+    [&](const auto& index){
+      return bind(app.GetCanvas(index), ctx);
     });
 }
 

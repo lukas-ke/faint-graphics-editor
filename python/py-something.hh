@@ -26,13 +26,14 @@ extern PyTypeObject SmthType;
 struct smthObject{
   PyObject_HEAD
   Object* obj;
+  PyFuncContext* ctx;
   Canvas* canvas;
   CanvasId canvasId;
   FrameId frameId;
   ObjectId objectId;
 };
 
-PyObject* pythoned(Object*, Canvas*, const FrameId&);
+PyObject* pythoned(Object*, PyFuncContext& ctx, Canvas*, const FrameId&);
 
 } // namespace
 

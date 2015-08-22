@@ -148,12 +148,17 @@ static auto faintapp_list_formats(PyFuncContext& ctx){
 
 /* method: "new()\n
 Create a new Canvas." */
-static Canvas& faintapp_new(PyFuncContext& ctx, const Optional<IntSize>& size){
-  return ctx.app.NewDocument(
+static Bound<Canvas> faintapp_new(PyFuncContext& ctx,
+  const Optional<IntSize>& size)
+{
+  Canvas& c =
+    ctx.app.NewDocument(
     ImageInfo(
       size.Or({640, 480}),
       color_white, // Fixme: Allow specifying
       create_bitmap(false)));
+
+  return bind(c, ctx);
 }
 
 static FilePath get_openable_path(const utf8_string& s){
@@ -185,8 +190,12 @@ static void faintapp_open_files(PyFuncContext& ctx,
 
 /* method: "open(file_path)->Image\n
 Open the specified image file in a new tab." */
-static Canvas* faintapp_open(PyFuncContext& ctx, const utf8_string& pathStr){
-  return ctx.app.Load(get_openable_path(pathStr), change_tab(true));
+static Bound<Canvas> faintapp_open(PyFuncContext& ctx,
+  const utf8_string& pathStr)
+{
+  Canvas* c = ctx.app.Load(get_openable_path(pathStr), change_tab(true));
+  // Fixme: Check c != nullptr
+  return bind(*c, ctx);
 }
 
 /* method: "quit()\nExit faint" */

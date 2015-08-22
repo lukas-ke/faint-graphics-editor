@@ -33,6 +33,7 @@
 #include "geo/line.hh"
 #include "objects/objline.hh"
 #include "python/py-function-error.hh"
+#include "python/bound.hh" // for bare(T)
 #include "text/formatting.hh"
 #include "util-wx/clipboard.hh"
 #include "util/default-settings.hh"
@@ -57,7 +58,7 @@ void Common_aa_line(T target, const IntLineSegment& line, const ColRGB& color){
 Auto-crops the image. Returns true if the image was modified" */
 template<typename T>
 bool Common_auto_crop(T target){
-  Command* cmd = get_auto_crop_command(target.GetImage());
+  Command* cmd = get_auto_crop_command(bare(target).GetImage());
   if (cmd != nullptr){
     python_run_command(target, cmd);
     return true;
@@ -100,7 +101,7 @@ void Common_clear(T target, const Paint& paint){
 Returns the number of distinct colors in the image" */
 template<typename T>
 int Common_color_count(T target){
-  return target.GetBackground().Visit(
+  return bare(target).GetBackground().Visit(
     [](const Bitmap& bmp){
       return count_colors(bmp);
     },
@@ -119,7 +120,7 @@ void copy_rect_to_clipboard(const Bitmap&, const IntRect&);
 Copies the specified rectangle to the clipboard" */
 template<typename T>
 void Common_copy_rect(T target, const IntRect& rect){
-  copy_rect_to_clipboard(target.GetBackground(), rect);
+  copy_rect_to_clipboard(bare(target).GetBackground(), rect);
 }
 
 /* method: "desaturate()\n
@@ -242,7 +243,7 @@ template<typename T>
 void Common_apply_paste(T target, const IntPoint& pos, const Bitmap& bmp){
   python_run_command(target,
     get_insert_raster_bitmap_command(bmp, pos,
-      target.GetRasterSelection(),
+      bare(target).GetRasterSelection(),
       get_app_context().GetToolSettings(),
       "Paste Bitmap"));
 }

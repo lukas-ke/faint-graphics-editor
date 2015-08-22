@@ -17,6 +17,7 @@
 #define FAINT_PY_LESS_COMMON_HH
 #include "geo/points.hh"
 #include "bitmap/scale-quality.hh"
+#include "python/bound.hh"
 
 namespace faint{
 
@@ -28,7 +29,7 @@ template<typename T>
 void Common_insert_bitmap(T target, const IntPoint& pos, const Bitmap& bmp){
   python_run_command(target,
     get_insert_raster_bitmap_command(bmp, pos,
-      target.GetRasterSelection(),
+      bare(target).GetRasterSelection(),
       get_app_context().GetToolSettings(),
       "Insert Bitmap"));
 }

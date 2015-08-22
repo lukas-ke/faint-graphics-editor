@@ -83,8 +83,12 @@ TypeName type_name(T*&){
   return arg_traits<T>::name;
 }
 
-static PyObject* build_frame(Canvas* canvas, const FrameId& frameId){
+static PyObject* build_frame(PyFuncContext& ctx,
+  Canvas* canvas,
+  const FrameId& frameId)
+{
   frameObject* py_frame = (frameObject*)(FrameType.tp_alloc(&FrameType, 0));
+  py_frame->ctx = &ctx;
   py_frame->canvas = canvas;
   py_frame->canvasId = canvas->GetId();
   py_frame->frameId = frameId;
@@ -231,7 +235,7 @@ bool parse_flat(BoundObject<Object>& obj, PyObject* args, Py_ssize_t& n, Py_ssiz
       throw TypeError(type_name(obj), n);
     }
     smthObject* smth = (smthObject*)(args);
-    obj = BoundObject<Object>(smth->canvas, smth->obj, smth->frameId);
+    obj = BoundObject<Object>(smth->ctx, smth->canvas, smth->obj, smth->frameId);
     return true;
   }
 
@@ -241,7 +245,7 @@ bool parse_flat(BoundObject<Object>& obj, PyObject* args, Py_ssize_t& n, Py_ssiz
   }
 
   smthObject* smth = (smthObject*)(ref.get());
-  obj = BoundObject<Object>(smth->canvas, smth->obj, smth->frameId);
+  obj = BoundObject<Object>(smth->ctx, smth->canvas, smth->obj, smth->frameId);
   return true;
 }
 
@@ -277,7 +281,7 @@ bool parse_flat(Canvas*& canvas, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   }
 
   canvasObject* pyCanvas = (canvasObject*)(ref.get());
-  if (!canvas_ok(pyCanvas->id, get_app_context())){ // Fixme: Remove get_app_context
+  if (!canvas_ok(pyCanvas->id, *pyCanvas->ctx)){
     throw ValueError("Operation on closed canvas.");
   }
   n += 1;
@@ -945,14 +949,11 @@ PyObject* build_result(const Bitmap& bmp){
 }
 
 PyObject* build_result(const BoundObject<Object>& obj){
-  return pythoned(obj.obj, obj.canvas, obj.frameId);
+  return pythoned(obj.obj, *obj.ctx, obj.canvas, obj.frameId);
 }
 
-PyObject* build_result(Canvas& canvas){
-  // Fixme: Instead of get_app_context, return something other than Canvas,
-  // including the AppContext.
-  return pythoned(canvas,
-    get_app_context()); // Fixme
+PyObject* build_result(const Bound<Canvas>& canvas){
+  return pythoned(canvas.item, canvas.ctx);
 }
 
 PyObject* build_result(const Calibration& c){
@@ -961,10 +962,6 @@ PyObject* build_result(const Calibration& c){
   PyList_SetItem(list, 1, build_result(c.length));
   PyList_SetItem(list, 2, build_result(c.unit));
   return list;
-}
-
-PyObject* build_result(Canvas* canvas){
-  return build_result(*canvas);
 }
 
 PyObject* build_result(const CanvasGrid& grid){
@@ -994,7 +991,7 @@ PyObject* build_result(const FilePath& filePath){
 }
 
 PyObject* build_result(const Frame& frame){
-  return build_frame(frame.canvas, frame.frameId);
+  return build_frame(*frame.ctx, frame.canvas, frame.frameId);
 }
 
 PyObject* build_result(const Index& index){
