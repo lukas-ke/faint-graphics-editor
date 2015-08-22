@@ -17,7 +17,6 @@
 #include "bitmap/bitmap.hh"
 #include "bitmap/color-span.hh"
 #include "python/py-function-error.hh"
-#include "python/py-interface.hh"
 #include "python/py-util.hh"
 #include "text/formatting.hh"
 

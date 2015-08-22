@@ -18,7 +18,7 @@
 #include "geo/limits.hh"
 #include "python/py-key-press.hh"
 #include "python/py-include.hh"
-#include "python/py-interface.hh" // run_python_str
+#include "python/py-interface.hh" // run_python_str // Fixme: Remove
 #include "python/py-util.hh"
 
 namespace faint{
