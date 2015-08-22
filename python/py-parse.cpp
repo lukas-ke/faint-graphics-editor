@@ -84,13 +84,13 @@ TypeName type_name(T*&){
 }
 
 static PyObject* build_frame(PyFuncContext& ctx,
-  Canvas* canvas,
+  Canvas& canvas,
   const FrameId& frameId)
 {
   frameObject* py_frame = (frameObject*)(FrameType.tp_alloc(&FrameType, 0));
   py_frame->ctx = &ctx;
-  py_frame->canvas = canvas;
-  py_frame->canvasId = canvas->GetId();
+  py_frame->canvas = &canvas;
+  py_frame->canvasId = canvas.GetId();
   py_frame->frameId = frameId;
   return (PyObject*)py_frame;
 }
@@ -991,7 +991,7 @@ PyObject* build_result(const FilePath& filePath){
 }
 
 PyObject* build_result(const Frame& frame){
-  return build_frame(*frame.ctx, frame.canvas, frame.frameId);
+  return build_frame(frame.ctx, frame.canvas, frame.frameId);
 }
 
 PyObject* build_result(const Index& index){

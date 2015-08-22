@@ -20,9 +20,9 @@
 
 namespace faint{
 
-Frame::Frame(PyFuncContext& ctx, Canvas* canvas, const Image& image)
+Frame::Frame(PyFuncContext& ctx, Canvas& canvas, const Image& image)
   : canvas(canvas),
-    ctx(&ctx),
+    ctx(ctx),
     image(image),
     frameId(image.GetId())
 {}
@@ -32,7 +32,7 @@ const Either<Bitmap, ColorSpan>& Frame::GetBackground() const{
 }
 
 Index Frame::GetFrameIndex() const{
-  return canvas->GetFrameIndex(image);
+  return canvas.GetFrameIndex(image);
 }
 
 const Image& Frame::GetImage() const{

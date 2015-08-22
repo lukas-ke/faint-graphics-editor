@@ -19,7 +19,7 @@
 #include "gui/faint-window.hh"
 #include "gui/interpreter-frame.hh"
 #include "python/python-context.hh"
-#include "app/frame.hh" // Fixme: Move code to cpp.
+#include "app/frame.hh" // Fixme: Move to impl.
 namespace faint{
 
 class FaintWindowPythonContext : public PythonContext {
@@ -108,21 +108,21 @@ public:
     canvas.RunCommand(cmd);
   }
 
-  void RunCommand(Canvas* canvas, Command* cmd, const FrameId& frameId) override{
+  void RunCommand(Canvas& canvas, Command* cmd, const FrameId& frameId) override{
     // Fixme: Remove in favor of const Frame&&-variant
 
     if (cmd == nullptr){
       return;
     }
 
-    QueueRefresh(canvas);
-    if (std::find(begin(m_commandBundles), end(m_commandBundles), canvas) ==
+    QueueRefresh(&canvas);
+    if (std::find(begin(m_commandBundles), end(m_commandBundles), &canvas) ==
       end(m_commandBundles))
     {
-      m_commandBundles.push_back(canvas);
-      canvas->OpenUndoBundle();
+      m_commandBundles.push_back(&canvas);
+      canvas.OpenUndoBundle();
     }
-    canvas->RunCommand(cmd, frameId);
+    canvas.RunCommand(cmd, frameId);
   }
 
   void RunCommand(const Frame& frame, Command* cmd) override{
@@ -131,7 +131,7 @@ public:
 
   void RunCommand(const BoundObject<Object>& obj, Command* cmd) override{
     if (cmd != nullptr){
-      RunCommand(obj.canvas, cmd, obj.frameId);
+      RunCommand(*obj.canvas, cmd, obj.frameId);
     }
   }
 

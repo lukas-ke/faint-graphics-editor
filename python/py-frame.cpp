@@ -49,7 +49,8 @@ struct MappedType<const Frame&>{
   using PYTHON_TYPE = frameObject;
 
   static Frame GetCppObject(frameObject* self){
-    return Frame(*self->ctx, self->canvas,
+    return Frame(*self->ctx,
+      *self->canvas,
       self->canvas->GetFrame(self->frameId));
   }
 
@@ -122,8 +123,8 @@ static IntSize frame_get_size(const Frame& frame){
 Returns a list of the objects in the frame, sorted from rear-most to
 front-most." */
 static BoundObjects frame_get_objects(const Frame& frame){
-  return bind_objects(*frame.ctx,
-    *frame.canvas,
+  return bind_objects(frame.ctx,
+    frame.canvas,
     frame.image.GetObjects(),
     frame.frameId);
 }
@@ -139,8 +140,8 @@ static Optional<Calibration> frame_get_calibration(const Frame& frame){
 Returns a list of the selected objects in the frame, sorted from rear-most to
 front-most." */
 static BoundObjects frame_get_selected(const Frame& frame){
-  return bind_objects(*frame.ctx,
-    *frame.canvas,
+  return bind_objects(frame.ctx,
+    frame.canvas,
     frame.image.GetObjectSelection(),
     frame.frameId);
 }

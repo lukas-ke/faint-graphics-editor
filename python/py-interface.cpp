@@ -64,7 +64,7 @@ void python_run_command(Canvas& canvas, Command* cmd){
 
 void python_run_command(const BoundObject<Object>& obj, Command* cmd){
   if (cmd != nullptr){
-    get_python_context().RunCommand(obj.canvas, cmd, obj.frameId);
+    get_python_context().RunCommand(*obj.canvas, cmd, obj.frameId);
   }
 }
 

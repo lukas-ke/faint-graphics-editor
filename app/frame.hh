@@ -25,15 +25,15 @@ class Image;
 
 class Frame{
 public:
-  Frame(PyFuncContext&, Canvas*, const Image&);
+  Frame(PyFuncContext&, Canvas&, const Image&);
   const Either<Bitmap, ColorSpan>& GetBackground() const;
   Index GetFrameIndex() const;
   const Image& GetImage() const;
   const RasterSelection& GetRasterSelection() const;
   Frame& operator=(const Frame&) = delete;
 
-  Canvas* canvas;
-  PyFuncContext* ctx;
+  Canvas& canvas;
+  PyFuncContext& ctx;
   const Image& image;
   FrameId frameId;
 };

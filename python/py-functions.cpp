@@ -241,7 +241,7 @@ static CanvasGrid get_active_grid(){
 /* function: "get_object_frame()\n
 Returns the frame containing the passed in object." */
 static Frame get_object_frame(const BoundObject<Object>& obj){
-  return Frame(*obj.ctx, obj.canvas, obj.canvas->GetFrame(obj.frameId));
+  return Frame(*obj.ctx, *obj.canvas, obj.canvas->GetFrame(obj.frameId));
 }
 
 /* function: "Faint internal." */

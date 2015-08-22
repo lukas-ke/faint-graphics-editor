@@ -350,11 +350,11 @@ static Frame canvas_get_frame(CanvasT bc, const Optional<Index>& num){
   return num.Visit(
     [&](const Index& index){
       throw_if_outside(index, canvas.GetNumFrames());
-      return Frame(bc.ctx, &canvas, canvas.GetFrame(index));
+      return Frame(bc.ctx, canvas, canvas.GetFrame(index));
     },
     [&](){
       // Return the current frame
-      return Frame(bc.ctx, &canvas, canvas.GetFrame(canvas.GetSelectedFrame()));
+      return Frame(bc.ctx, canvas, canvas.GetFrame(canvas.GetSelectedFrame()));
     });
 }
 
@@ -364,7 +364,7 @@ static std::vector<Frame> canvas_get_frames(CanvasT bc){
   Canvas& canvas = bc.item;
   return make_vector(up_to(canvas.GetNumFrames()),
     [&](const Index& i){
-      return Frame(bc.ctx, &canvas, canvas.GetFrame(Index(i)));
+      return Frame(bc.ctx, canvas, canvas.GetFrame(Index(i)));
     });
 }
 
@@ -528,7 +528,7 @@ static PyObject* canvas_Group(CanvasT bc, PyObject* args){
   cmd_and_group_t p = group_objects_command(faintObjects, select_added(false));
   Command* cmd = p.first;
   Object* group = p.second;
-  bc.ctx.RunCommand(Frame(bc.ctx, &canvas, canvas.GetImage()), cmd);
+  bc.ctx.RunCommand(Frame(bc.ctx, canvas, canvas.GetImage()), cmd);
   return pythoned(group, bc.ctx, &canvas, canvas.GetImage().GetId());
 }
 
