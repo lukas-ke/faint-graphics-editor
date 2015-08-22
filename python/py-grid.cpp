@@ -227,7 +227,7 @@ PyTypeObject GridType = {
   0, // tp_weaklistoffset */
   nullptr, // tp_iter */
   nullptr, // tp_iternext */
-  nullptr, // tp_methods */
+  grid_methods, // tp_methods */
   nullptr, // tp_members
   grid_getseters, // tp_getset */
   nullptr, // tp_base */
