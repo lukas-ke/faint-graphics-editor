@@ -37,7 +37,7 @@ expose(ifaint,
 
 # For backwards-compatibility with Faint <= 0.23, add some methods from
 # "app" which were previously global.
-APP_METHODS = ["add_format", "swap_colors"]
+APP_METHODS = ["add_format", "swap_colors", "update_settings"]
 APP_METHODS.extend([m for m in dir(ifaint.app) if m.startswith("tool")])
 expose(ifaint, APP_METHODS, ifaint.app)
 

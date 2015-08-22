@@ -64,7 +64,7 @@ def test(fail_if):
     canvas.clear_point_overlay()
     fail_if(canvas.get_point_overlay() is not None)
     canvas.rect((15,20,30,40))
-    canvas.context_crop()
+    context_crop(canvas)
     fail_if(canvas.get_size() != (30,40))
     fail_if(canvas.get_paint((0,0)) != (0,0,0,255))
     fail_if(canvas.get_paint((29,39)) != (0,0,0,255))
