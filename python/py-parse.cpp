@@ -15,7 +15,6 @@
 
 #include "app/canvas.hh"
 #include "app/frame.hh"
-#include "app/get-app-context.hh" // Fixme
 #include "bitmap/bitmap.hh"
 #include "bitmap/bitmap-exception.hh"
 #include "bitmap/color-span.hh"
