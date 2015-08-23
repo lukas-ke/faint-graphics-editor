@@ -174,14 +174,14 @@ PyMODINIT_FUNC PyInit_ifaint(){
   return module_ifaint;
 }
 
-static void add_to_python_path(const DirPath& dirPath){
+static void prepend_to_python_path(const DirPath& dirPath){
   scoped_ref sys(PyImport_ImportModule("sys"));
   assert(sys != nullptr);
   auto dict = borrowed(PyModule_GetDict(sys.get()));
   assert(dict != nullptr);
   auto path = borrowed(PyDict_GetItemString(dict.get(), "path"));
   assert(path != nullptr);
-  int result = PyList_Append(path.get(), build_unicode(dirPath.Str()));
+  int result = PyList_Insert(path.get(), 0, build_unicode(dirPath.Str()));
   assert(result == 0);
 }
 
@@ -211,7 +211,13 @@ bool init_python(const utf8_string& arg, PyFuncContext& ctx){
   add_python_singletons(ifaint.get(), ctx);
 
   DirPath dataDir = get_data_dir();
-  add_to_python_path(dataDir.SubDir("py"));
+
+  // Add the py-dir to path, so that Faint:s .py-files (in py/faint/)
+  // are found from envsetup and the user ini. The path is prepended
+  // so that the "faint" py module takes precedence over any
+  // namesakes.
+  prepend_to_python_path(dataDir.SubDir("py"));
+
   run_envsetup(dataDir.SubDir("py").SubDir("core").File("envsetup.py"));
 
   if (!arg.empty()){
