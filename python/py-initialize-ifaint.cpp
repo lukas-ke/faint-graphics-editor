@@ -19,10 +19,10 @@
 #include "python/py-bitmap.hh"
 #include "python/py-canvas.hh"
 #include "python/py-faint-singletons.hh"
-#include "python/py-frame-props.hh"
 #include "python/py-frame.hh"
 #include "python/py-functions.hh"
 #include "python/py-grid.hh"
+#include "python/py-image-props.hh"
 #include "python/py-linear-gradient.hh"
 #include "python/py-pattern.hh"
 #include "python/py-png.hh"
@@ -52,7 +52,6 @@ void add_faint_types(PyObject* module){
   add_type_object(module, RadialGradientType, "RadialGradient");
   add_type_object(module, SettingsType, "Settings");
   add_type_object(module, TriType, "Tri");
-  add_type_object(module, ImagePropsType, "ImageProps");
 
   add_type_ImageProps(module);
   add_type_FrameProps(module);

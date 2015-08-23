@@ -19,6 +19,7 @@
 
 namespace faint{
 
+class Index;
 class ImageProps;
 extern PyTypeObject ImagePropsType;
 
@@ -28,9 +29,11 @@ struct imagePropsObject{
   ImageProps* props;
 };
 
+void add_type_ImageProps(PyObject* module);
 typed_scoped_ref<imagePropsObject> pythoned(ImageProps&);
 
-void add_type_ImageProps(PyObject* module);
+void add_type_FrameProps(PyObject* module);
+PyObject* create_FrameProps(imagePropsObject& owner, const Index&);
 
 } // namespace
 

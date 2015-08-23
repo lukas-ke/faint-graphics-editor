@@ -15,7 +15,6 @@
 
 #include "python/py-include.hh"
 #include "python/py-add-type-object.hh"
-#include "python/py-frame-props.hh"
 #include "python/py-image-props.hh"
 #include "python/mapped-type.hh"
 #include "python/py-ugly-forward.hh"

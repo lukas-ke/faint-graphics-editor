@@ -14,13 +14,13 @@
 // permissions and limitations under the License.
 
 #include "python/py-include.hh"
+
 #include "python/py-add-type-object.hh"
 #include "python/py-bitmap.hh"
+#include "python/py-functions.hh"
+#include "python/py-image-props.hh"
 #include "python/py-png.hh"
 #include "python/py-settings.hh"
-#include "python/py-functions.hh"
-#include "python/py-frame-props.hh"
-#include "python/py-image-props.hh"
 
 // Module definition for the Faint Python module. This is built to a
 // shared library for use with a Python executable; it is not used
