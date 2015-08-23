@@ -16,6 +16,7 @@
 #include "python/py-include.hh"
 #include "python/py-add-type-object.hh"
 #include "python/py-bitmap.hh"
+#include "python/py-png.hh"
 #include "python/py-settings.hh"
 #include "python/py-functions.hh"
 
@@ -40,5 +41,6 @@ PyMODINIT_FUNC PyInit_faint(){
   PyObject* module = PyModule_Create(&faint::faintModule);
   faint::add_type_object(module, faint::BitmapType, "Bitmap");
   faint::add_type_object(module, faint::SettingsType, "Settings");
+  faint::add_png_module(module);
   return module;
 }

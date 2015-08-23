@@ -25,6 +25,7 @@
 #include "python/py-grid.hh"
 #include "python/py-linear-gradient.hh"
 #include "python/py-pattern.hh"
+#include "python/py-png.hh"
 #include "python/py-radial-gradient.hh"
 #include "python/py-settings.hh"
 #include "python/py-something.hh"
@@ -105,27 +106,6 @@ static PyObject* create_key_module(){
   return module;
 }
 
-static struct PyModuleDef pngModule = {
-  PyModuleDef_HEAD_INIT,
-  "ifaint_png",
-  "PNG constants, for use with the write_png function.",
-  -1, // m_size
-  nullptr, // m_methods
-  nullptr, // m_reload
-  nullptr, // m_traverse
-  nullptr, // m_clear
-  nullptr, // m_free
-};
-
-static PyObject* create_png_module(){
-  PyObject* module = PyModule_Create(&pngModule);
-  PyModule_AddIntConstant(module, "RGB", 0);
-  PyModule_AddIntConstant(module, "RGB_ALPHA", 1);
-  PyModule_AddIntConstant(module, "GRAY", 2);
-  PyModule_AddIntConstant(module, "GRAY_ALPHA", 3);
-  return module;
-}
-
 static struct PyModuleDef modifierModule = {
   PyModuleDef_HEAD_INIT,
   "ifaint_mod",
@@ -169,7 +149,8 @@ PyMODINIT_FUNC PyInit_ifaint(){
   PyModule_AddObject(module_ifaint, "error", ifaintError);
   PyModule_AddObject(module_ifaint, "key", create_key_module());
   PyModule_AddObject(module_ifaint, "mod", create_modifier_module());
-  PyModule_AddObject(module_ifaint, "png", create_png_module());
+  add_png_module(module_ifaint);
+
   PyModule_AddObject(module_ifaint, "clipboard", create_clipboard_module());
   return module_ifaint;
 }
