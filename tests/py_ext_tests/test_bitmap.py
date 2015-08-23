@@ -1,8 +1,10 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import unittest
 from faint import Bitmap
 
 class TestBitmap(unittest.TestCase):
-
 
     def test_size_init(self):
         bmp = Bitmap((123, 456))

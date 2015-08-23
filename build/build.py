@@ -294,8 +294,10 @@ def run_py_tests(platform, cmdline):
         ok = run_py_ext_tests.run_tests()
     if ok:
         print('* Python Unit tests OK')
+        return 0
     else:
         print("* Error: Python Unit tests failed!");
+        return 1
 
 def build_faint(platform, cmdline):
     target = faint_info.target_faint

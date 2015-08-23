@@ -13,6 +13,6 @@ if not os.path.exists(DST_DIR):
     exit(1)
 
 if os.path.exists(DST_FILE):
-    shutil.remove(DST_FILE)
+    os.remove(DST_FILE)
 else:
     print("File not found: %s" % DST_FILE)

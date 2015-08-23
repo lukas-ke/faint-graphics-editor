@@ -181,21 +181,11 @@ static void add_to_python_path(const DirPath& dirPath){
   assert(dict != nullptr);
   auto path = borrowed(PyDict_GetItemString(dict.get(), "path"));
   assert(path != nullptr);
-  if (PySequence_Length(path.get()) > 0){
-    // Add the path near the front of sys.path so that the "faint"
-    // py module takes precedence over any namesakes.
-    //
-    // Does not put the path at sys.path[0], as the sys.path
-    // documentation states: "As initialized upon program startup, the
-    // first item of this list, path[0], is the directory containing
-    // the script that was used to invoke the Python interpreter."
-    int result = PyList_Insert(path.get(), 1, build_unicode(dirPath.Str()));
-    assert(result == 0);
-  }
-  else {
-    int result = PyList_Append(path.get(), build_unicode(dirPath.Str()));
-    assert(result == 0);
-  }
+
+  // Prepend the path so that the "faint" py module takes precedence
+  // over any namesakes.
+  int result = PyList_Insert(path.get(), 0, build_unicode(dirPath.Str()));
+  assert(result == 0);
 }
 
 static void run_envsetup(const FilePath& path){

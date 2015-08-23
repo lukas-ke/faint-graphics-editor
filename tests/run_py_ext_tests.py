@@ -9,7 +9,7 @@ def run_tests(test_args=None):
     # Use the .pyd in ext/out
     FAINT_ROOT = os.path.join(os.getcwd(), "..")
     EXT_OUT = os.path.join(FAINT_ROOT, "ext", "out")
-    sys.path.append(os.path.abspath(EXT_OUT))
+    sys.path.insert(1, os.path.abspath(EXT_OUT))
 
     # Run the tests
     import py_ext_tests
