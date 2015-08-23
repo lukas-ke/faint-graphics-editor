@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include "python/py-include.hh"
+#include "python/py-add-type-object.hh"
 #include "python/py-frame-props.hh"
 #include "python/py-image-props.hh"
 #include "python/mapped-type.hh"
@@ -180,6 +181,10 @@ typed_scoped_ref<imagePropsObject> pythoned(ImageProps& props){
   py_props->props = &props;
   py_props->alive = true;
   return typed_scoped_ref<imagePropsObject>(py_props);
+}
+
+void add_type_ImageProps(PyObject* module){
+  add_type_object(module, ImagePropsType, "ImageProps");
 }
 
 } // namespace

@@ -30,6 +30,8 @@ struct imagePropsObject{
 
 typed_scoped_ref<imagePropsObject> pythoned(ImageProps&);
 
+void add_type_ImageProps(PyObject* module);
+
 } // namespace
 
 #endif
