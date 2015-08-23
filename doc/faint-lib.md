@@ -24,7 +24,7 @@ tests! It's looking good but will take some work, since `Image` and the
 objects (e.g. `Path`, `Ellipse`) will need some touch-up.`Bitmap` works
 though!
 
-(See [the ext folder](ext/README.md))
+(See [the ext folder](../ext/) and [the tests](../tests/py_ext_tests))
 
 Thoughts
 --------
