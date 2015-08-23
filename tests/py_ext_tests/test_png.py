@@ -3,6 +3,7 @@
 
 import unittest
 import faint
+from faint import png
 import os
 import py_ext_tests
 
@@ -15,7 +16,7 @@ class TestPng(unittest.TestCase):
         b1.set_pixel((0,0),(255,0,255))
 
         fn = os.path.join(out_dir, "b1.png")
-        faint.write_png(b1, fn, 0)
+        faint.write_png(b1, fn, png.RGB)
 
         b2, tEXt = faint.read_png(fn)
         self.assertEqual(b2.get_size(), (5,7))
