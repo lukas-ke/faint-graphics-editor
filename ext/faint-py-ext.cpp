@@ -24,14 +24,11 @@
 
 namespace faint{
 
-static PyMethodDef faintMethods[] = {
-  {NULL, NULL, 0, NULL} // Sentinel
-};
 
 static struct PyModuleDef faintModule = {
    PyModuleDef_HEAD_INIT,
    "faint",   // Module name
-   nullptr,  // Module docs
+   "Faint graphics module",  // Module docs
    -1, // Module "per-binterpreter state size"
    get_py_functions()
 };
