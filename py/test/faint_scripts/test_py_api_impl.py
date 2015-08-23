@@ -13,45 +13,8 @@ def test(fail_if):
     fail_if(app.get_checkered_transparency_indicator())
     # Fixme:  app.open_files
 
-    # Bitmap
-    bmp = Bitmap((10,10))
-    fail_if(bmp.get_size() != (10,10))
-    bmp.fill((9,9),(255,0,255))
-    bmp2 = bmp.subbitmap((1,1,3,3))
-    fail_if(bmp2.get_size() != (3,3))
-    bmp2.set_pixel((0,0),(255,0,255))
-    bmp2.aa_line((0,0,10,20),(255,0,255))
-    blit(bmp2, (10,10), bmp)
-    # Fixme: Boundary fill
-    bmp2.clear((255,0,255))
-    fail_if(bmp2.color_count() != 1)
-    bmp2.set_pixel((1,1),(255,0,0))
-    fail_if(bmp2.color_count() != 2)
-    # Fixme: copy_rect? (modifies clipboard)
-    bmp2.desaturate()
-    bmp.desaturate_weighted()
-    bmp.clear((255,255,255))
-    bmp.set_pixel((0,5),(0,0,255,200))
-    bmp.set_pixel((5,0),(0,255,0,210))
-    # Fixme:  get_pixel
-    bmp.flip_horizontally()
-    # Fixme:  get_pixel
-    bmp.flip_vertically()
-    bmp.gaussian_blur(2.5)
-    bmp.invert()
-    # bmp.line(0,0,10,10) # Fixme: Removed
-    bmp.replace_color((0,0,255,200),(255,0,0,255))
-    # Fixme:  get_pixel
-    bmp.rotate(3.14, (255,0,255))
-    bmp.sepia(1.0)
-    bmp.set_threshold(0, 255, (255,0,255),(0,255,255))
-    # Fixme: Paste
-    bmp.quantize()
-    bmp.pixelize(2)
-    bmp.erase_but_color((255,255,255), (255,0,255))
-    bmp.replace_alpha((100,100,100))
-    bmp.set_alpha(10)
-    bmp.color_balance((0,100),(0,100),(0,100))
+    # Note: Bitmap tests removed in favor of test_bitmap.py using
+    # extension module
 
     # Canvas
     canvas = get_active_image()
