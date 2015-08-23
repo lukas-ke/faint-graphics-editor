@@ -67,6 +67,12 @@ static void settings_update_all(Settings& self, const Settings& other){
   self.UpdateAll(other);
 }
 
+/* method: "__copy__(self) -> s Used by copy.copy"
+name: "__copy__" */
+static Settings settings_copy(Settings& self){
+  return self;
+}
+
 #include "generated/python/method-def/py-settings-methoddef.hh"
 
 // Python standard methods for Settings
