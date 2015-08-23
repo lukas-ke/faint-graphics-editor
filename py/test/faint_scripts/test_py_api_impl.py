@@ -4,6 +4,8 @@
 from ifaint import *
 import os
 
+# Fixme: Migrate as much as possible to tests/py_ext_tests
+
 def test(fail_if):
     # FaintApp
     fail_if(app.gridcolor != (100,100,255,150))
@@ -60,12 +62,12 @@ def test(fail_if):
     fail_if(list(selected) != [e])
 
     s = get_settings()
+
+    # Defaults
     fail_if(s.fg != (0,0,0,255))
     fail_if(s.bg != (255,255,255,255))
     s.fg = 255,0,0
     s.bg = 0,0,255
-    fail_if(s.fg != (255,0,0,255))
-    fail_if(s.bg != (0,0,255,255))
     update_settings(s)
     fail_if(get_fg() != s.fg)
     fail_if(get_bg() != s.bg)
@@ -85,23 +87,3 @@ def test(fail_if):
     fail_if(r.name is not None)
     redo()
     fail_if(r.name != "MyRect")
-
-    try:
-        # Invalid foreground
-        r.fg = 1
-        fail_if(True)
-    except TypeError as e:
-        # Should yield type error
-        pass
-        # Fixme: How check exact exception?
-
-    # Save and reload png
-    png_path = os.path.abspath("out/test_py_api_impl.png")
-    write_png(get_active_image().get_background(), png_path,
-        png.RGB_ALPHA,
-        {"first key": "first value",
-        "second key": "second value"})
-    b, text = read_png(os.path.abspath("out/meh.png"))
-    fail_if(b.get_size() != (640,480))
-    fail_if(text["first key"] != "first value")
-    fail_if(text["second key"] != "second value")
