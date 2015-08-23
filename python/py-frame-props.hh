@@ -20,25 +20,11 @@
 
 namespace faint{
 
-class FrameProps;
-class ImageProps;
+void add_type_FrameProps(PyObject* module);
 
-extern PyTypeObject FramePropsType;
-
-class BoundFrameProps{
-public:
-  BoundFrameProps(ImageProps&, FrameProps&);
-  ImageProps& image;
-  FrameProps& frame;
-
-  BoundFrameProps& operator=(const BoundFrameProps&) = delete;
-};
-
-struct framePropsObject{
-  PyObject_HEAD
-  imagePropsObject* imageProps;
-  Index frame_index;
-};
+struct imagePropsObject;
+PyObject* create_FrameProps(imagePropsObject& owner,
+  const Index&);
 
 } // namespace
 

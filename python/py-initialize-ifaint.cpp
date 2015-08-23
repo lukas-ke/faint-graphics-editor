@@ -53,7 +53,7 @@ void add_faint_types(PyObject* module){
   add_type_object(module, SettingsType, "Settings");
   add_type_object(module, TriType, "Tri");
   add_type_object(module, ImagePropsType, "ImageProps");
-  add_type_object(module, FramePropsType, "FrameProps");
+  add_type_FrameProps(module);
   add_type_object(module, GridType, "Grid");
 
   PyObject* binds = PyDict_New();

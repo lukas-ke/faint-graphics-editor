@@ -27,6 +27,7 @@
 #include "objects/objspline.hh"
 #include "objects/objtext.hh"
 #include "python/py-include.hh"
+#include "python/py-add-type-object.hh"
 #include "python/py-frame-props.hh"
 #include "python/mapped-type.hh"
 #include "python/py-ugly-forward.hh"
@@ -38,16 +39,33 @@
 
 namespace faint{
 
+class BoundFrameProps{
+public:
+  BoundFrameProps(ImageProps&, FrameProps&);
+  ImageProps& image;
+  FrameProps& frame;
+
+  BoundFrameProps& operator=(const BoundFrameProps&) = delete;
+};
+
+BoundFrameProps::BoundFrameProps(ImageProps& image, FrameProps& frame)
+  : image(image),
+    frame(frame)
+{}
+
 void throw_if_missing(const BoundFrameProps& self, const Index& objectId){
   if (!self.frame.HasObject(objectId)){
     throw IndexError("Invalid object identifier");
   }
 }
 
-BoundFrameProps::BoundFrameProps(ImageProps& image, FrameProps& frame)
-  : image(image),
-    frame(frame)
-{}
+extern PyTypeObject FramePropsType;
+
+struct framePropsObject{
+  PyObject_HEAD
+  imagePropsObject* imageProps;
+  Index frame_index;
+};
 
 template<>
 struct MappedType<const BoundFrameProps&>{
@@ -403,5 +421,18 @@ PyTypeObject FramePropsType = {
   0, // tp_version_tag
   nullptr // tp_finalize
 };
+
+void add_type_FrameProps(PyObject* module){
+  add_type_object(module, FramePropsType, "FrameProps");
+}
+
+PyObject* create_FrameProps(imagePropsObject& owner, const Index& index){
+  framePropsObject* py_frameProps = (framePropsObject*)
+    (FramePropsType.tp_alloc(&FramePropsType,0));
+  Py_INCREF((PyObject*)&owner); // decref in frameprops_dealloc
+  py_frameProps->imageProps = &owner;
+  py_frameProps->frame_index = index;
+  return (PyObject*)py_frameProps;
+}
 
 } // namespace

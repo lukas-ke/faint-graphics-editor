@@ -63,20 +63,10 @@ struct MappedType<imagePropsObject&>{
   }
 };
 
-// Helper
-static PyObject* get_frameprops(imagePropsObject& self, const Index& index){
-  framePropsObject* py_frameProps = (framePropsObject*)
-    (FramePropsType.tp_alloc(&FramePropsType,0));
-  Py_INCREF((PyObject*)&self);
-  py_frameProps->imageProps = &self;
-  py_frameProps->frame_index = index;
-  return (PyObject*)py_frameProps;
-}
-
 /* method: "get_frame(i)->frame\nReturns the i:th frame" */
 static PyObject* imageprops_get_frame(imagePropsObject& self, const Index& index){
   throw_if_outside(index, self.props->GetNumFrames());
-  return get_frameprops(self, index);
+  return create_FrameProps(self, index);
 }
 
 /* method: "set_error(s)\n
@@ -112,7 +102,7 @@ static PyObject* imageprops_add_frame(imagePropsObject& self,
 {
   self.props->AddFrame(ImageInfo(size.Or(IntSize(640,480)),
     create_bitmap(false)));
-  return get_frameprops(self, self.props->GetNumFrames() - 1);
+  return create_FrameProps(self, self.props->GetNumFrames() - 1);
 }
 
 #include "generated/python/method-def/py-image-props-methoddef.hh"
