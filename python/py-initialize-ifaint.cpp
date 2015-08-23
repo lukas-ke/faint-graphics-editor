@@ -144,23 +144,29 @@ static PyObject* ifaintError;
 PyMODINIT_FUNC PyInit_ifaint(){
   PyObject* module_ifaint = PyModule_Create(&faintInterfaceModule);
   assert(module_ifaint != nullptr);
+
   add_faint_types(module_ifaint);
+
   ifaintError = PyErr_NewException("ifaint.error", nullptr, nullptr);
   Py_INCREF(ifaintError);
+
   PyModule_AddObject(module_ifaint, "error", ifaintError);
   PyModule_AddObject(module_ifaint, "key", create_key_module());
   PyModule_AddObject(module_ifaint, "mod", create_modifier_module());
+
+  add_clipboard_module(module_ifaint);
   add_png_module(module_ifaint);
 
-  PyModule_AddObject(module_ifaint, "clipboard", create_clipboard_module());
   return module_ifaint;
 }
 
 static void add_to_python_path(const DirPath& dirPath){
   scoped_ref sys(PyImport_ImportModule("sys"));
   assert(sys != nullptr);
+
   auto dict = borrowed(PyModule_GetDict(sys.get()));
   assert(dict != nullptr);
+
   auto path = borrowed(PyDict_GetItemString(dict.get(), "path"));
   assert(path != nullptr);
 

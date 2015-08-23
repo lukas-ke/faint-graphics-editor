@@ -111,10 +111,16 @@ static struct PyModuleDef faintClipboardModule {
   nullptr, // m_free
 };
 
-PyObject* create_clipboard_module(){
+static PyObject* create_clipboard_module(){
   PyObject* module_clipboard = PyModule_Create(&faintClipboardModule);
   assert(module_clipboard != nullptr);
   return module_clipboard;
+}
+
+void add_clipboard_module(PyObject* parentModule){
+  PyModule_AddObject(parentModule,
+    "clipboard",
+    create_clipboard_module());
 }
 
 } // namespace

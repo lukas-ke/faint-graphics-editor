@@ -19,7 +19,7 @@
 
 namespace faint{
 
-PyObject* create_clipboard_module();
+void add_clipboard_module(PyObject* parentModule);
 
 } // namespace
 

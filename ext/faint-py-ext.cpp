@@ -19,6 +19,7 @@
 #include "python/py-bitmap.hh"
 #include "python/py-functions.hh"
 #include "python/py-image-props.hh"
+#include "python/py-clipboard.hh"
 #include "python/py-png.hh"
 #include "python/py-settings.hh"
 
@@ -41,11 +42,18 @@ static struct PyModuleDef faintModule = {
 // Dynamic library entry point
 PyMODINIT_FUNC PyInit_faint(){
   PyObject* module = PyModule_Create(&faint::faintModule);
+
+  faint::add_png_module(module);
+  faint::add_clipboard_module(module);
+
   faint::add_type_object(module, faint::BitmapType, "Bitmap");
   faint::add_type_object(module, faint::SettingsType, "Settings");
-  faint::add_png_module(module);
   faint::add_type_ImageProps(module);
   faint::add_type_FrameProps(module);
+
+
+
+
 
   return module;
 }
