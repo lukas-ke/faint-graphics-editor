@@ -18,12 +18,12 @@
 #include "python/py-bitmap.hh"
 #include "python/py-settings.hh"
 #include "python/py-functions.hh"
-// Module definition for the Faint Python module.
-// This is built to a shared library for use with a Python executable,
-// it is not used within Faint.
+
+// Module definition for the Faint Python module. This is built to a
+// shared library for use with a Python executable; it is not used
+// within Faint.
 
 namespace faint{
-
 
 static struct PyModuleDef faintModule = {
    PyModuleDef_HEAD_INIT,
