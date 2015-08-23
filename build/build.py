@@ -290,9 +290,8 @@ def run_py_tests(platform, cmdline):
     sys.path.append(faint_info.FAINT_TESTS_ROOT)
     import run_py_ext_tests
 
-    with no_output():
-        with working_dir(faint_info.FAINT_TESTS_ROOT):
-            ok = run_py_ext_tests.run_tests()
+    with no_output(), working_dir(faint_info.FAINT_TESTS_ROOT):
+        ok = run_py_ext_tests.run_tests()
     if ok:
         print('* Python Unit tests OK')
     else:

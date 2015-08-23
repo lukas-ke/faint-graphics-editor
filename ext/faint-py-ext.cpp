@@ -16,6 +16,7 @@
 #include "python/py-include.hh"
 #include "python/py-add-type-object.hh"
 #include "python/py-bitmap.hh"
+#include "python/py-settings.hh"
 
 // Module definition for the Faint Python module.
 // This is built to a shared library for use with a Python executable,
@@ -41,5 +42,6 @@ static struct PyModuleDef faintModule = {
 PyMODINIT_FUNC PyInit_faint(){
   PyObject* module = PyModule_Create(&faint::faintModule);
   faint::add_type_object(module, faint::BitmapType, "Bitmap");
+  faint::add_type_object(module, faint::SettingsType, "Settings");
   return module;
 }
