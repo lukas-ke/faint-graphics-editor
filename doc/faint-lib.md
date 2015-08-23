@@ -17,6 +17,15 @@ the Faint gui application for non-interactive scripts is a limitation.
 Having the useful C++-parts (without the Python-api) available
 separately for other C++-applications would also be nice.
 
+Update (2015-08-23)
+-------------------
+I've finally started working a Python extension module with .py unit
+tests! It's looking good but will take some work, since `Image` and the
+objects (e.g. `Path`, `Ellipse`) will need some touch-up.`Bitmap` works
+though!
+
+(See [the ext folder](ext/README.md))
+
 Thoughts
 --------
 The "contextual" application code needs to be separated from the
@@ -62,4 +71,5 @@ behind the scenes in `FilePath`.
 - Select parts of `Util/`
 ...?
 
-In general, `get_app_context` and `get_art` are large hindrances.
+~~In general, `get_app_context` and `get_art` are large hindrances.~~
+No longer, I finally got rid of them! :)
