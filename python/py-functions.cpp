@@ -18,7 +18,6 @@
 #include "app/canvas.hh"
 #include "app/frame.hh"
 #include "bitmap/draw.hh"
-#include "bitmap/pattern.hh"
 #include "formats/png/file-png.hh"
 #include "geo/pathpt.hh"
 #include "geo/pathpt-iter.hh"
@@ -116,16 +115,6 @@ static std::vector<PathPt> get_path_points(const BoundObject<Object>& bound){
   auto& ctx(frame.GetExpressionContext());
   return bound.obj->GetPath(ctx);
 }
-
-/* function: "get_config_path()->file_path\n
-Returns the path to the user's Python configuration file."
-name: "get_config_path" */
-extern FilePath get_user_config_file_path();
-
-/* function: "get_config_dir()->folder_path>\n
-Returns the path to the directory with the user's Python configuration file."
-name: "get_config_dir" */
-extern DirPath get_home_dir();
 
 /* function: "one_color_bg(frame)->b\n
 True if the frame background consists of a single color." */
@@ -233,16 +222,6 @@ static std::string encode_bitmap_png(const Bitmap& bmp){
 Returns the frame containing the passed in object." */
 static Frame get_object_frame(const BoundObject<Object>& obj){
   return Frame(*obj.ctx, *obj.canvas, obj.canvas->GetFrame(obj.frameId));
-}
-
-/* function: "Faint internal." */
-static std::string get_pattern_status(){
-  std::map<int,int> status = pattern_status();
-  std::stringstream ss;
-  for (const auto& idToCount : status){
-    ss << idToCount.first << "=" << idToCount.second << ",";
-  }
-  return ss.str();
 }
 
 /* function: "write_png(bmp, path[, color_type, text_dict])\n

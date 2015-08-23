@@ -18,15 +18,19 @@
 #include "app/context-commands.hh"
 #include "app/canvas.hh"
 #include "app/faint-resize-dialog-context.hh"
+#include "bitmap/pattern.hh" // For pattern_status
 #include "geo/int-point.hh"
 #include "gui/dialogs.hh"
 #include "objects/objraster.hh"
 #include "objects/objtext.hh"
 #include "text/formatting.hh"
+#include "text/utf8-string.hh"
 #include "util/index-iter.hh" // up_to
 #include "util/make-vector.hh"
 #include "util/key-press.hh"
 #include "util/setting-id.hh"
+#include "util-wx/file-path.hh"
+#include "util-wx/file-path-util.hh"
 #include "python/python-context.hh"
 #include "python/py-func-context.hh"
 #include "python/py-grid.hh"
@@ -107,6 +111,18 @@ static void f_int_ran_command(PyFuncContext& ctx){
   ctx.py.NewPrompt();
 }
 
+/* method: "_get_pattern_status()\n
+Faint internal: Checks the status of pattern reference counts."
+name: "_get_pattern_status" */
+static utf8_string f_get_pattern_status(PyFuncContext&){
+  std::map<int,int> status = pattern_status();
+  utf8_string s;
+  for (const auto& idToCount : status){
+    s += str_int(idToCount.first) + "=" + str_int(idToCount.second) + ",";
+  }
+  return s;
+}
+
 /* method: "autosize_raster(raster_object)\n
 Trims away same-colored borders around a raster object" */
 static void f_autosize_raster(PyFuncContext& ctx, BoundObject<ObjRaster>& bound){
@@ -154,6 +170,20 @@ static Bound<Canvas> f_get_active_image(PyFuncContext& ctx){
 /* method: "get_font()->font\nReturns the active font face name." */
 static StringSetting::ValueType f_get_font(PyFuncContext& ctx){
   return ctx.app.Get(ts_FontFace);
+}
+
+/* method: "get_config_dir()->folder_path\n
+Returns the path to the directory with the user's Python configuration file."
+name: "get_config_dir" */
+static DirPath f_get_home_dir(PyFuncContext&){
+  return get_home_dir();
+}
+
+/* method: "get_config_path()->file_path\n
+Returns the path to the user's Python configuration file."
+name: "get_config_path" */
+static FilePath f_get_user_config_file_path(PyFuncContext&){
+  return get_user_config_file_path();
 }
 
 /* method: "get_layer()->i\nReturns the layer index." */
