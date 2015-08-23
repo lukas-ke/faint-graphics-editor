@@ -35,6 +35,21 @@ class working_dir:
         os.chdir(self.old_dir)
 
 
+class no_output:
+    def __init__(self):
+        self.stdout = sys.stdout
+        self.stderr = sys.stderr
+        self.devnull = open(os.devnull, 'w')
+    def __enter__(self):
+        sys.stdout = self.devnull
+        sys.stderr = self.devnull
+
+    def __exit__(self, type, value, traceback):
+        sys.stdout = self.stdout
+        sys.stderr = self.stderr
+        self.devnull.close()
+
+
 build_dir = os.path.split(os.path.realpath(__file__))[0]
 os.chdir(build_dir) # Fixme: Don't change dir, use absolute paths.
 root_dir = os.path.split(build_dir)[0]
@@ -265,9 +280,9 @@ def run_unit_tests(platform, cmdline):
                              shell=True,
                              cwd=test_root)
     if result == 0:
-        print("* Tests OK")
+        print("* C++ Unit tests OK")
     else:
-        print("* Unit tests failed!")
+        print("* C++ Unit tests failed!")
     return result
 
 
@@ -275,11 +290,13 @@ def run_py_tests(platform, cmdline):
     sys.path.append(faint_info.FAINT_TESTS_ROOT)
     import run_py_ext_tests
 
-    with working_dir(faint_info.FAINT_TESTS_ROOT):
-        ok = run_py_ext_tests.run_tests()
-        if not ok:
-            print("Error: Python tests failed.");
-
+    with no_output():
+        with working_dir(faint_info.FAINT_TESTS_ROOT):
+            ok = run_py_ext_tests.run_tests()
+    if ok:
+        print('* Python Unit tests OK')
+    else:
+        print("* Error: Python Unit tests failed!");
 
 def build_faint(platform, cmdline):
     target = faint_info.target_faint
