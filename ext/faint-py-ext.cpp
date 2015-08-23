@@ -13,7 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include <Python.h>
+#include "python/py-include.hh"
 #include "python/py-add-type-object.hh"
 #include "python/py-bitmap.hh"
 

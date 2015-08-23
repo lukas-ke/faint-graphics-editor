@@ -19,10 +19,12 @@ import os
 
 class BuildOptions:
     """Options for the build."""
-    def __init__(self):
-        # Libs to link
-        #self.libs = None
 
+    class Target:
+        exe = "exe"
+        shared_library = "shared_library"
+
+    def __init__(self):
         # Folders to add to lib search
         self.lib_paths = None
 
@@ -87,6 +89,8 @@ class BuildOptions:
         # Time various build steps?
         self.timed = False
 
+        self.target_type = self.Target.exe
+
     def get_obj_root(self):
         assert(self.debug_compile is not None)
         root = (self.obj_root_debug if self.debug_compile
@@ -100,9 +104,9 @@ class BuildOptions:
                 else self.out_name_release)
 
     def get_out_path(self):
+        # Gets the linker out path
         out_path = os.path.join(self.project_root, self.get_out_name())
-        if self.platform == 'msw':
-            out_path += '.exe'
+        out_path += self.link_extension()
         return out_path
 
     def set_debug_compile(self, debug_compile):
@@ -126,3 +130,17 @@ class BuildOptions:
         if self.wx_root is None and self.platform == "linux":
             print("wx_root not initialized.")
             exit(1)
+
+    def link_extension(self):
+        """File extension for the linked target"""
+        if self.target_type == self.Target.exe:
+            if self.platform == 'msw':
+                return ".exe"
+            else:
+                return ""
+        elif self.target_type == self.Target.shared_library:
+            if self.platform == 'msw':
+                return ".dll"
+            else:
+                raise NotImplementedError("Shared library not implemented for %s"
+                                          % self.platform)

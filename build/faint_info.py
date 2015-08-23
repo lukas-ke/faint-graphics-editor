@@ -137,3 +137,8 @@ class target_gui_test:
     objs_folder_prefix = "objs-gui-test"
     source_folder = "tests/gui-tests"
     executable = "tests/run-gui-tests"
+
+class target_python_extension:
+    objs_folder_prefix = "objs-python-ext"
+    source_folder = "ext"
+    out_lib = "ext/out/faint"

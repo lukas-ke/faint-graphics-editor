@@ -219,16 +219,23 @@ def link(files, opts, out, err, debug):
     flags = "/NOLOGO"
     wxlibs = get_wxlibs(debug)
     out_name = opts.get_out_name()
+
+
+    # Fixme: Use opts.get_out_path
+    target = "/OUT:" + opts.get_out_path()
     if debug:
-        flags += " /OUT:%s.exe /DEBUG /PDB:%s.pdb" % (out_name,
-                                                      out_name)
+        flags += " %s /DEBUG /PDB:%s.pdb" % (target, out_name)
     else:
-        flags += " /OUT:%s.exe" % (out_name)
+        flags += " %s" % (target)
+
+    if opts.target_type == opts.Target.shared_library:
+        flags += " /DLL"
 
     lib_paths_string = create_lib_paths_string(opts.lib_paths)
 
     cmd = "Link.exe " + flags + " " + to_subsystem_flag(opts.msw_subsystem) + " " + "/OPT:REF " + lib_paths_string + " " + " ".join(files) + " " + " ".join(wxlibs) + " comctl32.lib rpcrt4.lib shell32.lib gdi32.lib kernel32.lib gdiplus.lib cairo.lib comdlg32.lib user32.lib Advapi32.lib Ole32.lib Oleaut32.lib Winspool.lib pango-1.0.lib pangocairo-1.0.lib pangoft2-1.0.lib pangowin32-1.0.lib gio-2.0.lib glib-2.0.lib gmodule-2.0.lib gobject-2.0.lib gthread-2.0.lib " + resFile
     linker = subprocess.Popen(cmd, stdout=out, stderr=err)
+
     if linker.wait() != 0:
         print("Linking failed.")
         exit(1)

@@ -102,6 +102,7 @@ def clean_help(faintDir):
 def clean_obj(faintDir):
     jp = os.path.join
     dirs = [
+        # Fixme: Simplify over release/debug
         jp(faintDir, "build", "objs-bench-release"),
         jp(faintDir, "build", "objs-debug"),
         jp(faintDir, "build", "objs-image-test-debug"),
@@ -112,11 +113,14 @@ def clean_obj(faintDir):
         jp(faintDir, "build", "objs-test-debug"),
         jp(faintDir, "build", "objs-gui-test-release"),
         jp(faintDir, "build", "objs-gui-test-debug"),
+        jp(faintDir, "build", "objs-python-ext-release"),
+        jp(faintDir, "build", "objs-python-ext-debug"),
     ]
 
     for objDir in dirs:
         if os.path.exists(objDir):
             for file in os.listdir(objDir):
+                # Fixme: Tidy up
                 if file.endswith('.o') or file.endswith('.obj') or file.endswith(".res") or file.endswith(".pdb"):
                     os.remove(os.path.join(objDir, file))
 
@@ -140,6 +144,7 @@ def clean_exe(faintDir):
         jp(faintDir, "tests", "run-image-tests.exe"),
         jp(faintDir, "tests", "run-unit-tests.exe"),
         jp(faintDir, "tests", "run-gui-tests.exe"),
+        jp(faintDir, "ext", "out", "faint.pyd")
     ) if os.path.exists(f)]
 
     for f in executables:

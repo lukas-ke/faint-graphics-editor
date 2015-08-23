@@ -19,7 +19,7 @@ from optparse import OptionParser
 import configparser
 import os
 join_path = os.path.join
-
+import shutil
 import subprocess
 import sys
 
@@ -68,10 +68,10 @@ def read_config(platform):
         some expected file.
 
         """
-        
+
         full_path = os.path.expanduser(os.path.join(folder, expected_content))
 
-        if not os.path.exists(full_path):            
+        if not os.path.exists(full_path):
             print("Error in build.cfg:\n %s: %s not found in \n %s"
                   %(name, expected_content, folder))
             print(full_path)
@@ -208,7 +208,17 @@ def test_source_files(platform, bo, folder):
     return test_files
 
 
-def build(caption, platform, cmdline, obj_folder_prefix, out_name, precompile_steps, source_files, source_folders, extra_objs, msw_subsystem, forced_include_func):
+def build(caption,
+          platform,
+          cmdline,
+          obj_folder_prefix,
+          out_name,
+          precompile_steps,
+          source_files,
+          source_folders,
+          extra_objs,
+          msw_subsystem,
+          forced_include_func):
     print(caption)
     print("--------------------")
     bo = read_build_options(platform)
@@ -398,6 +408,36 @@ def build_gui_tests(platform, cmdline):
         lambda bo: join_path(bo.project_root, "util", "msw_warn.hh"))
 
 
+def build_python_extension(platform, cmdline):
+    def precompile_steps(bo):
+        bo.create_build_info = False
+        bo.target_type = bo.Target.shared_library
+
+    target = faint_info.target_python_extension
+
+    def extension_source_files(platform, bo):
+        src_folder = join_path(bo.project_root, target.source_folder)
+        return [join_path(src_folder, f) for f in list_cpp(src_folder)]
+
+    result = build("Python extension",
+                 platform,
+                 cmdline,
+                 target.objs_folder_prefix,
+                 target.out_lib,
+                 precompile_steps,
+                 extension_source_files,
+                 lambda platform, test: [],
+                 test_extra_objs,
+                 "console",
+                 lambda bo: join_path(bo.project_root, "util", "msw_warn.hh"))
+
+    if result == 0:
+        # Rename .dll to .pyd (used for Python dll-modules on windows)
+        out_abs = join_path(root_dir, target.out_lib)
+        shutil.move(out_abs + ".dll",
+                    out_abs + ".pyd")
+    return result
+
 if __name__ == '__main__':
     platform = ("linux" if sys.platform.startswith('linux') else "msw")
     cmdline = bs.parse_command_line()
@@ -413,6 +453,9 @@ if __name__ == '__main__':
         exit_on_error(build_benchmarks, (platform, cmdline))
         exit_on_error(build_gui_tests, (platform, cmdline))
         exit_on_error(run_unit_tests, (platform, cmdline))
+
+    if platform == 'msw': # Not implemented for Linux yet.
+        exit_on_error(build_python_extension, (platform, cmdline))
 
     if opts.version != bs.unknown_version_str and platform == 'msw':
         bo = read_build_options(platform)
