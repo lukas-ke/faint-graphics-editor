@@ -174,15 +174,28 @@ PyMODINIT_FUNC PyInit_ifaint(){
   return module_ifaint;
 }
 
-static void prepend_to_python_path(const DirPath& dirPath){
+static void add_to_python_path(const DirPath& dirPath){
   scoped_ref sys(PyImport_ImportModule("sys"));
   assert(sys != nullptr);
   auto dict = borrowed(PyModule_GetDict(sys.get()));
   assert(dict != nullptr);
   auto path = borrowed(PyDict_GetItemString(dict.get(), "path"));
   assert(path != nullptr);
-  int result = PyList_Insert(path.get(), 0, build_unicode(dirPath.Str()));
-  assert(result == 0);
+  if (PySequence_Length(path.get()) > 0){
+    // Add the path near the front of sys.path so that the "faint"
+    // py module takes precedence over any namesakes.
+    //
+    // Does not put the path at sys.path[0], as the sys.path
+    // documentation states: "As initialized upon program startup, the
+    // first item of this list, path[0], is the directory containing
+    // the script that was used to invoke the Python interpreter."
+    int result = PyList_Insert(path.get(), 1, build_unicode(dirPath.Str()));
+    assert(result == 0);
+  }
+  else {
+    int result = PyList_Append(path.get(), build_unicode(dirPath.Str()));
+    assert(result == 0);
+  }
 }
 
 static void run_envsetup(const FilePath& path){
@@ -213,10 +226,8 @@ bool init_python(const utf8_string& arg, PyFuncContext& ctx){
   DirPath dataDir = get_data_dir();
 
   // Add the py-dir to path, so that Faint:s .py-files (in py/faint/)
-  // are found from envsetup and the user ini. The path is prepended
-  // so that the "faint" py module takes precedence over any
-  // namesakes.
-  prepend_to_python_path(dataDir.SubDir("py"));
+  // are found from envsetup and the user ini.
+  add_to_python_path(dataDir.SubDir("py"));
 
   run_envsetup(dataDir.SubDir("py").SubDir("core").File("envsetup.py"));
 
