@@ -125,8 +125,8 @@ def _find_extra_include(file_name):
 
 def check_file(file_name):
     """Uses a more permissive variant of the comment-regex used to
-    recognize C++ methods to catch malformed comments. Throws
-    value error if anything problematic is discovered.
+    recognize C++ methods to catch malformed comments. Raises
+    ValueError if anything problematic is discovered.
 
     """
     result = []

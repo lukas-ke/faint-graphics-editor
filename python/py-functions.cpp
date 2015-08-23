@@ -226,7 +226,7 @@ static Frame get_object_frame(const BoundObject<Object>& obj){
 
 /* function: "write_png(bmp, path[, color_type, text_dict])\n
 Writes the bitmap as a png at the given path.\n
-Throws OSError on failure.\n
+Raises OSError on failure.\n
 \n
 Optional parameters:\n
  - color_type: A constant from the png-module (e.g. png.RGB_ALPHA)\n
@@ -267,7 +267,7 @@ using png_pair = std::pair<Bitmap, png_tEXt_map>;
 /* function: "read_png(path)->(bmp, text_dict)\n
 Reads the png-file at path, returning a Bitmap and a
 dictionary of tEXt-entries.\n
-Throws OSError on failure."
+Raises OSError on failure."
 name: "read_png" */
 static png_pair read_png_py(const FilePath& path){
   return read_png_meta(path).Visit(
