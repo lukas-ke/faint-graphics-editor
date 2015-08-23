@@ -16,10 +16,9 @@
 # permissions and limitations under the License.
 
 import os
-import time
-from os.path import join
 
 FAINT_ROOT = (os.path.abspath("../") + "/").replace("\\","/")
+FAINT_TESTS_ROOT = os.path.join(FAINT_ROOT, "tests")
 
 HEADERS_TO_GENERATE = [
 

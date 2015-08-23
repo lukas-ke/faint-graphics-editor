@@ -10,11 +10,12 @@ class TestBitmap(unittest.TestCase):
         self.assertEqual(bmp.get_pixel(1,1), (255, 255, 255, 255))
 
 
-    def test_size_color3_init(self):
+    def test_size_color_rgb_init(self):
         bmp = Bitmap((3, 5), (255, 0, 255))
         self.assertEqual(bmp.get_pixel(0, 0), (255, 0, 255, 255))
 
-    def test_size_color4_init(self):
+
+    def test_size_color_rgba_init(self):
         bmp = Bitmap((3, 5), (255,0,255, 50))
         self.assertEqual(bmp.get_pixel(1,1), (255,0,255,50))
 

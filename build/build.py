@@ -23,6 +23,18 @@ import shutil
 import subprocess
 import sys
 
+class working_dir:
+    def __init__(self, new_dir):
+        self.new_dir = new_dir
+        self.old_dir = os.getcwd()
+
+    def __enter__(self):
+        os.chdir(self.new_dir)
+
+    def __exit__(self, type, value, traceback):
+        os.chdir(self.old_dir)
+
+
 build_dir = os.path.split(os.path.realpath(__file__))[0]
 os.chdir(build_dir) # Fixme: Don't change dir, use absolute paths.
 root_dir = os.path.split(build_dir)[0]
@@ -259,6 +271,16 @@ def run_unit_tests(platform, cmdline):
     return result
 
 
+def run_py_tests(platform, cmdline):
+    sys.path.append(faint_info.FAINT_TESTS_ROOT)
+    import run_py_ext_tests
+
+    with working_dir(faint_info.FAINT_TESTS_ROOT):
+        ok = run_py_ext_tests.run_tests()
+        if not ok:
+            print("Error: Python tests failed.");
+
+
 def build_faint(platform, cmdline):
     target = faint_info.target_faint
     def faint_source_files(platform, project_root):
@@ -445,6 +467,9 @@ if __name__ == '__main__':
 
     exit_on_error(build_faint, (platform, cmdline), blank_line=False)
 
+    if platform == 'msw': # Not implemented for Linux yet.
+        exit_on_error(build_python_extension, (platform, cmdline))
+
     if opts.debug:
         print("Fixme: Not building tests in debug.")
     else:
@@ -452,10 +477,11 @@ if __name__ == '__main__':
         exit_on_error(build_image_tests, (platform, cmdline))
         exit_on_error(build_benchmarks, (platform, cmdline))
         exit_on_error(build_gui_tests, (platform, cmdline))
+
         exit_on_error(run_unit_tests, (platform, cmdline))
 
-    if platform == 'msw': # Not implemented for Linux yet.
-        exit_on_error(build_python_extension, (platform, cmdline))
+    if platform == 'msw':
+        exit_on_error(run_py_tests, (platform, cmdline))
 
     if opts.version != bs.unknown_version_str and platform == 'msw':
         bo = read_build_options(platform)
