@@ -3,6 +3,9 @@ import subprocess
 import shutil
 join_path = os.path.join
 
+# Fixme: This should be done by the regular build.py
+# Fixme: Replace hard coded paths.
+
 PY_EXT_DIR = os.getcwd()
 assert(PY_EXT_DIR.endswith("ext"))
 
