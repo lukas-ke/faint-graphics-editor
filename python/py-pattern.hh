@@ -27,6 +27,8 @@ struct patternObject{
   Pattern* pattern;
 };
 
+void add_type_Pattern(PyObject* module);
+
 } // namespace
 
 #endif

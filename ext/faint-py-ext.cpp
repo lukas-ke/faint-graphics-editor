@@ -17,10 +17,11 @@
 
 #include "python/py-add-type-object.hh"
 #include "python/py-bitmap.hh"
+#include "python/py-clipboard.hh"
 #include "python/py-functions.hh"
 #include "python/py-gradient.hh"
 #include "python/py-image-props.hh"
-#include "python/py-clipboard.hh"
+#include "python/py-pattern.hh"
 #include "python/py-png.hh"
 #include "python/py-settings.hh"
 
@@ -49,9 +50,11 @@ PyMODINIT_FUNC PyInit_faint(){
 
   faint::add_type_object(module, faint::BitmapType, "Bitmap");
   faint::add_type_object(module, faint::SettingsType, "Settings");
-  faint::add_type_ImageProps(module);
-  faint::add_type_FrameProps(module);
-  faint::add_gradient_types(module);
 
+  faint::add_type_FrameProps(module);
+  faint::add_type_ImageProps(module);
+
+  faint::add_type_Pattern(module);
+  faint::add_gradient_types(module);
   return module;
 }

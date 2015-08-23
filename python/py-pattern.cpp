@@ -17,6 +17,7 @@
 #include "bitmap/pattern.hh"
 #include "python/mapped-type.hh"
 #include "python/py-include.hh"
+#include "python/py-add-type-object.hh"
 #include "python/py-bitmap.hh"
 #include "python/py-pattern.hh"
 #include "python/py-ugly-forward.hh"
@@ -157,5 +158,9 @@ PyTypeObject PatternType = {
   0, // tp_version_tag
   nullptr  // tp_finalize
 };
+
+void add_type_Pattern(PyObject* module){
+  add_type_object(module, PatternType, "Pattern");
+}
 
 } // namespace
