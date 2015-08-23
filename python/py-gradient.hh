@@ -1,5 +1,5 @@
 // -*- coding: us-ascii-unix -*-
-// Copyright 2012 Lukas Kemmer
+// Copyright 2015 Lukas Kemmer
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you
 // may not use this file except in compliance with the License. You
@@ -13,8 +13,9 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_PY_LINEAR_GRADIENT_HH
-#define FAINT_PY_LINEAR_GRADIENT_HH
+#ifndef FAINT_PY_GRADIENT_HH
+#define FAINT_PY_GRADIENT_HH
+#include "python/py-include.hh"
 
 namespace faint{
 
@@ -26,6 +27,17 @@ struct linearGradientObject{
   PyObject_HEAD
   LinearGradient* gradient;
 };
+
+class RadialGradient;
+
+extern PyTypeObject RadialGradientType;
+
+struct radialGradientObject{
+  PyObject_HEAD
+  RadialGradient* gradient;
+};
+
+void add_gradient_types(PyObject* module);
 
 } // namespace
 

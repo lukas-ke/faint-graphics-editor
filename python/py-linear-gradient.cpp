@@ -16,7 +16,8 @@
 #include "bitmap/gradient.hh"
 #include "python/mapped-type.hh"
 #include "python/py-include.hh"
-#include "python/py-linear-gradient.hh"
+#include "python/py-add-type-object.hh"
+#include "python/py-gradient.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-util.hh"
 
@@ -225,5 +226,10 @@ PyTypeObject LinearGradientType = {
   0, // tp_version_tag
   nullptr  // tp_finalize
 };
+
+void add_gradient_types(PyObject* module){
+  add_type_object(module, LinearGradientType, "LinearGradient");
+  add_type_object(module, RadialGradientType, "RadialGradient");
+}
 
 } // namespace

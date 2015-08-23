@@ -16,7 +16,7 @@
 #include "bitmap/gradient.hh"
 #include "python/mapped-type.hh"
 #include "python/py-include.hh"
-#include "python/py-radial-gradient.hh"
+#include "python/py-gradient.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-util.hh"
 
