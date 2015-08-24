@@ -26,6 +26,7 @@ extern PyTypeObject ImagePropsType;
 struct imagePropsObject{
   PyObject_HEAD
   bool alive;
+  bool owner;
   ImageProps* props;
 };
 

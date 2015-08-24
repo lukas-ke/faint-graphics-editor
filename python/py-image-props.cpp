@@ -119,8 +119,22 @@ static utf8_string imageprops_repr(ImageProps&){
 }
 
 static void imageprops_init(imagePropsObject& self){
-  self.props = nullptr;
-  throw TypeError("ImageProps objects can not be created manually.");
+  self.props = new ImageProps();
+
+  // The image-props must manage its own memory when initialized
+  // from Python (compare with pythoned(ImageProps&)
+  self.owner = true;
+  self.alive = true;
+}
+
+static void imageprops_dealloc(imagePropsObject* self){
+  // Fixme: Verify that dealloc is where I should do this
+  // (and not e.g. tp_free or tp_del)
+  if (self->owner){
+    self->alive = false;
+    delete self->props;
+  }
+  self->ob_base.ob_type->tp_free((PyObject*)self);
 }
 
 PyTypeObject ImagePropsType = {
@@ -128,7 +142,7 @@ PyTypeObject ImagePropsType = {
   "ImageProps", //tp_name
   sizeof(imagePropsObject), // tp_basicsize
   0, // tp_itemsize
-  nullptr, // tp_dealloc
+  (destructor)imageprops_dealloc, // tp_dealloc
   nullptr, // tp_print
   nullptr, // tp_getattr
   nullptr, // tp_setattr
@@ -174,16 +188,19 @@ PyTypeObject ImagePropsType = {
   nullptr  // tp_finalize
 };
 
+void add_type_ImageProps(PyObject* module){
+  add_type_object(module, ImagePropsType, "ImageProps");
+}
+
 typed_scoped_ref<imagePropsObject> pythoned(ImageProps& props){
   imagePropsObject* py_props = (imagePropsObject*)
     ImagePropsType.tp_alloc(&ImagePropsType,0);
   py_props->props = &props;
   py_props->alive = true;
-  return typed_scoped_ref<imagePropsObject>(py_props);
-}
 
-void add_type_ImageProps(PyObject* module){
-  add_type_object(module, ImagePropsType, "ImageProps");
+  // The ImageProps memory is owned by the caller.
+  py_props->owner = false;
+  return typed_scoped_ref<imagePropsObject>(py_props);
 }
 
 } // namespace
