@@ -33,7 +33,7 @@ namespace faint{
 
 static struct PyModuleDef faintModule = {
    PyModuleDef_HEAD_INIT,
-   "faint",   // Module name
+   "ifaint",   // Module name
    "Faint graphics module",  // Module docs
    -1, // Module "per-binterpreter state size"
    get_py_functions()
@@ -42,7 +42,7 @@ static struct PyModuleDef faintModule = {
 } // namespace
 
 // Dynamic library entry point
-PyMODINIT_FUNC PyInit_faint(){
+PyMODINIT_FUNC PyInit_ifaint(){
   PyObject* module = PyModule_Create(&faint::faintModule);
 
   faint::add_png_module(module);

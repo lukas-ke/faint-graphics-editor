@@ -15,7 +15,7 @@
 # implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-import ifaint
+import faint
 from . import util
 from . parse.parse_util import mul_matrix_pt
 
@@ -25,7 +25,7 @@ def fill_style(stroke_str, fill_str, state):
     object.
 
     """
-    settings = ifaint.Settings()
+    settings = faint.Settings()
     if stroke_str == "none" and fill_str != "none":
         settings.fillstyle = 'f'
         settings.fg = parse_color(fill_str, "1.0", state)
@@ -41,7 +41,7 @@ def fill_style(stroke_str, fill_str, state):
 
 def mul_matrix_tri(m, tri): # pylint:disable=invalid-name
     """Multiples the matrix with the tri. Returns a new tri."""
-    return ifaint.Tri(mul_matrix_pt(m, tri.p0()),
+    return faint.Tri(mul_matrix_pt(m, tri.p0()),
                       mul_matrix_pt(m, tri.p1()),
                       mul_matrix_pt(m, tri.p2()))
 

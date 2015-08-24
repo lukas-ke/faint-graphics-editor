@@ -212,6 +212,9 @@ def read_build_options(platform):
 
 
 def test_extra_objs(bo):
+    def excluded(obj):
+        return obj.startswith('app.') or obj.startswith('py-initialize-ifaint.')
+
     if bo.debug_compile:
         obj_root = join_path(os.getcwd(), "objs-debug")
     else:
@@ -220,7 +223,7 @@ def test_extra_objs(bo):
     return [join_path(obj_root, strip_ext(item)) for item in
             os.listdir(join_path(os.getcwd(), obj_root))
             if (item.endswith('.obj') or item.endswith('.o')) and
-            not item.startswith('app.')]
+            not excluded(item)]
 
 
 def test_source_files(platform, bo, folder):

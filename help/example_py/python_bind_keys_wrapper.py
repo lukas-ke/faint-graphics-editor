@@ -1,4 +1,4 @@
-from ifaint import *
+from faint import *
 
 #start
 def set_red_pixel():

@@ -23,11 +23,11 @@ conversion.
 
 from xml.etree.ElementTree import *
 import faint.svg.expat_util as _expat
-import ifaint as _ifaint
+import faint as _faint
 
 def _wrap_expat_exception(func):
     """Return the passed in function wrapped with a try-catch turning
-    document-related expat exceptions into ifaint.LoadErrors, so that
+    document-related expat exceptions into faint.LoadErrors, so that
     no parse stack trace is shown for errors in the SVG.
 
     """
@@ -37,7 +37,7 @@ def _wrap_expat_exception(func):
             return func(*args, **kwArgs)
         except ParseError as e:
             if _expat.is_document_related(e):
-                raise _ifaint.LoadError("Error in file:\n" + str(e))
+                raise _faint.LoadError("Error in file:\n" + str(e))
             else:
                 # Re-raise as internal error
                 raise

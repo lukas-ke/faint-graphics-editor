@@ -1,4 +1,4 @@
-from ifaint import line
+from faint import line
 #start
 for i in range(100):
     line( (0, i * 10), (640, i * 10) ) # Horizontal lines

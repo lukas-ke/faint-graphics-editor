@@ -1,4 +1,4 @@
-from ifaint import *
+from faint import *
 #start
 # A custom function that changes tool settings
 def example_function():

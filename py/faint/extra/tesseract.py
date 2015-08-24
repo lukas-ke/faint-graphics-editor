@@ -25,7 +25,7 @@ See http://code.google.com/p/tesseract-ocr/
 import os
 import subprocess as sp
 
-import ifaint
+import faint
 from faint.extra.util import hide_console
 
 __all__ = ["to_text"]
@@ -38,7 +38,7 @@ def to_text(temp_folder, image=None, language="eng"):
     """
 
     if image is None:
-        image = ifaint.get_active_image()
+        image = faint.get_active_image()
 
     temp_png = os.path.join(temp_folder, "tesseract-in.png")
     temp_txt = os.path.join(temp_folder, "tesseract-out")

@@ -1,4 +1,4 @@
-from ifaint import add_format, Settings
+from faint import add_format, Settings
 
 #start
 def load_silly(file_path, image_props):

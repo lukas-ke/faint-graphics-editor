@@ -15,7 +15,7 @@
 # implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-import ifaint
+import faint
 from . parse_util import Matrix
 import faint.svg.svg_re as svg_re
 import re
@@ -145,7 +145,7 @@ class ParseState:
         # Fixme: Move all stuff from parse_style_dict here.
         # Fixme: Traverse the keys instead
         # Fixme: Handle 'inherit'
-        settings = ifaint.Settings()
+        settings = faint.Settings()
         settings.update_all(self.settings)
         settings.fg = self.settings.fg
         settings.bg = self.settings.bg
@@ -345,7 +345,7 @@ def get_style_dict(style):
 def node_default_settings():
     """Returns the initial default Settings."""
     # Fixme: Review, from old
-    settings = ifaint.Settings()
+    settings = faint.Settings()
     settings.linewidth = 1.0
     settings.cap = 'flat'
     settings.fg = (0, 0, 0)

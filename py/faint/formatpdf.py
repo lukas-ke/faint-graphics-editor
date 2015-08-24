@@ -15,7 +15,7 @@
 # implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-"""PDF load and save functions for ifaint.add_format."""
+"""PDF load and save functions for faint.add_format."""
 
 import faint.pdf.parse_pdf as parse_pdf
 import faint.pdf.write_pdf as write_pdf

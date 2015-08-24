@@ -15,7 +15,7 @@
 # implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-import ifaint
+import faint
 from faint.pdf.util import escape_string
 
 from math import cos, sin, atan2, pi
@@ -107,10 +107,10 @@ def _to_pdf_color(faint_color):
 
     cls = faint_color.__class__
 
-    if cls in (ifaint.LinearGradient, ifaint.RadialGradient):
+    if cls in (faint.LinearGradient, faint.RadialGradient):
         # Fixme: Add support for gradients
         faint_color = faint_color.get_stop(0)[1]
-    elif cls is ifaint.Pattern:
+    elif cls is faint.Pattern:
         # Fixme: Add support for patterns
         return 0.0,0.0,0.0
 
@@ -200,7 +200,7 @@ def object_to_stream(s, object, doc_h, scale_x, scale_y):
     elif object.get_type() == 'Path':
         _set_dash(s, object)
         s.linewidth(object.linewidth)
-        _add_path(s, ifaint.get_path_points(object), doc_h, scale_x, scale_y)
+        _add_path(s, faint.get_path_points(object), doc_h, scale_x, scale_y)
         _stroke_and_or_fill(s, object)
 
     elif object.get_type() == 'Group':

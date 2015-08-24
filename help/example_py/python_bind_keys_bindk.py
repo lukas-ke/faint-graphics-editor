@@ -1,4 +1,4 @@
-from ifaint import *
+from faint import *
 
 #start
 bindk(key.arrow_up, zoom_in, mod.ctrl) # Binds zoom_in to the Ctrl+Up

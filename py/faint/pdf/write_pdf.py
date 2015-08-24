@@ -20,7 +20,7 @@ from faint.pdf.stream import Stream
 from faint.pdf.convert_to_pdf import object_to_stream
 from faint.pdf.xobject import XObject
 from faint.formatutil import open_for_writing_binary
-import ifaint
+import faint
 
 __all__ = ("write",)
 
@@ -35,7 +35,7 @@ def _add_page(doc, frame):
     stream = Stream()
     meta = []
 
-    if not ifaint.one_color_bg(frame):
+    if not faint.one_color_bg(frame):
         bmp = frame.get_bitmap()
         w, h = bmp.get_size()
         bg_name = doc.add_xobject(XObject(bmp.get_raw_rgb_string(), w, h))

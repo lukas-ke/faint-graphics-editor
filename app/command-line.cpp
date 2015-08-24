@@ -118,7 +118,7 @@ static const wxCmdLineEntryDesc g_cmdLineDesc[] = {
    wxCMD_LINE_PARAM_OPTIONAL},
 
   {wxCMD_LINE_OPTION, "", CMD_SCRIPT_ARG,
-   "Custom argument stored in ifaint.cmd_arg.", // Fixme: Duplication
+   "Custom argument stored in faint.cmd_arg.", // Fixme: Duplication
    wxCMD_LINE_VAL_STRING,
    wxCMD_LINE_PARAM_OPTIONAL},
 

@@ -15,7 +15,7 @@
 # implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-"""SVG load and save functions for ifaint.add_format."""
+"""SVG load and save functions for faint.add_format."""
 
 import faint.svg.write_svg as write_svg
 import faint.svg.parse_svg as parse_svg

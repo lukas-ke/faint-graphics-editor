@@ -15,7 +15,7 @@
 # implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-import ifaint
+import faint
 
 def erase_columns(x0, x1):
     """Reduces the image width by removing all pixel columns from x0
@@ -27,7 +27,7 @@ def erase_columns(x0, x1):
     if x0 < 0:
         raise ValueError("Negative column specified.")
 
-    image = ifaint.get_active_image()
+    image = faint.get_active_image()
 
     full = image.get_bitmap()
     w, h = full.get_size()
@@ -49,7 +49,7 @@ def erase_rows(y0, y1):
     if y0 < 0:
         raise ValueError("Negative row specified.")
 
-    image = ifaint.get_active_image()
+    image = faint.get_active_image()
 
     full = image.get_bitmap()
     w, h = full.get_size()
@@ -71,7 +71,7 @@ def erase_selection():
 
     """
 
-    image = ifaint.get_active_image()
+    image = faint.get_active_image()
     x, y, w, h = image.get_selection()
     img_w, img_h = image.get_size()
 
@@ -91,10 +91,10 @@ def snowman():
     support.
 
     """
-    s = ifaint.get_settings()
+    s = faint.get_settings()
     s.fontsize = 48
     preferred_font = "DejaVu Sans"
-    if preferred_font in ifaint.list_fonts():
+    if preferred_font in faint.list_fonts():
         s.font = preferred_font
 
-    return ifaint.Text((20,20,100,100), '\u2603', s)
+    return faint.Text((20,20,100,100), '\u2603', s)

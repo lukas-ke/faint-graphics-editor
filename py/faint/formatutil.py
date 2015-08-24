@@ -17,7 +17,7 @@
 
 """Helper utilities for Faint file formats."""
 
-import ifaint
+import faint
 
 def _io_save_error(io_error, file_name):
     """Turns an IOException (which would be reported as an

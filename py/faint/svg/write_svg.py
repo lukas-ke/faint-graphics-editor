@@ -28,7 +28,7 @@ from math import atan2, cos, sin, tan
 import xml.etree.ElementTree as ET
 
 from faint.formatutil import open_for_writing_binary
-import ifaint
+import faint
 
 _PREAMBLE = """<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
@@ -67,11 +67,11 @@ def to_opacity_str(color):
     """Returns the alpha component, if available, converted to an SVG
     opacity. Defaults to '1.0'."""
 
-    if color.__class__ == ifaint.LinearGradient:
+    if color.__class__ == faint.LinearGradient:
         return "1.0" # Fixme: Hard coded opacity for gradient
-    elif color.__class__ == ifaint.RadialGradient:
+    elif color.__class__ == faint.RadialGradient:
         return "1.0"
-    elif color.__class__ == ifaint.Pattern:
+    elif color.__class__ == faint.Pattern:
         return "1.0" # Fixme: Hard coded opacity for pattern
     elif len(color) == 3:
         return "1.0"
@@ -216,7 +216,7 @@ def get_transform_and_offset(obj):
 
 
 def encode_bitmap_base64_png(bmp):
-    binary_png = ifaint.encode_bitmap_png(bmp)
+    binary_png = faint.encode_bitmap_png(bmp)
     return ("data:image/png;base64," +
             base64.b64encode(binary_png).decode('ascii'))
 
@@ -224,7 +224,7 @@ def encode_bitmap_base64_png(bmp):
 def create_background(image):
     """Creates a background color or image."""
     return (create_background_color(image)
-            if ifaint.one_color_bg(image.get_frame())
+            if faint.one_color_bg(image.get_frame())
             else create_background_image(image))
 
 
@@ -309,7 +309,7 @@ def create_ellipse_path(obj, state):
 
     # Fixme: Save regular ellipses as ellipses
     element = ET.Element('path')
-    element.set('d', ifaint.to_svg_path(obj))
+    element.set('d', faint.to_svg_path(obj))
 
     style = svg_fill_style(obj, state) + svg_line_dash_style(obj)
     element.set('style', style)
@@ -416,7 +416,7 @@ def create_linear_gradient(gradient, id_attribute):
 def create_path(obj, state):
     """Creates an SVG <path> element from a Faint Path."""
 
-    path_str = ifaint.to_svg_path(obj)
+    path_str = faint.to_svg_path(obj)
 
     if len(path_str) == 0:
         # Fixme: Need a way to warn from save?
@@ -610,7 +610,7 @@ def create_spline_path(obj, state):
     """
 
     element = ET.Element('path')
-    element.set('d', ifaint.to_svg_path(obj))
+    element.set('d', faint.to_svg_path(obj))
     element.set('faint:type', 'spline')
 
     style = (svg_line_style(obj, state) +
@@ -737,9 +737,9 @@ CREATORS = {
 
 
 DEFS_CREATORS = {
-    ifaint.LinearGradient: create_linear_gradient,
-    ifaint.Pattern: create_pattern,
-    ifaint.RadialGradient: create_radial_gradient,
+    faint.LinearGradient: create_linear_gradient,
+    faint.Pattern: create_pattern,
+    faint.RadialGradient: create_radial_gradient,
 }
 
 

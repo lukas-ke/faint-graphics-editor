@@ -10,8 +10,11 @@ def run_tests(test_args=None):
     # Use the .pyd in ext/out
     FAINT_ROOT = os.path.abspath(os.path.join(os.getcwd(), ".."))
     EXT_OUT = os.path.join(FAINT_ROOT, "ext/out")
+    PY = os.path.join(FAINT_ROOT, "py")
+    sys.path.insert(1, EXT_OUT)
+    sys.path.insert(1, PY)
+
     py_ext_tests.TEST_OUT_PATH = os.path.join(FAINT_ROOT, "tests/out")
-    sys.path.insert(1, os.path.abspath(EXT_OUT))
 
     # Run the tests
 

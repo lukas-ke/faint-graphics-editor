@@ -1,4 +1,4 @@
-from ifaint import *
+from faint import *
 
 #start
 # Create a 320 by 200 bitmap

@@ -15,7 +15,7 @@
 # implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-import ifaint
+import faint
 from . create import create_arrowhead
 
 class SvgBuildState:
@@ -29,9 +29,9 @@ class SvgBuildState:
 
         # Maps Faint fill types to their list and id-prefix
         self.class_map = {
-            ifaint.LinearGradient: ('lgradient', self.linear_gradients),
-            ifaint.Pattern: ('pattern', self.patterns),
-            ifaint.RadialGradient: ('rgradient', self.radial_gradients)}
+            faint.LinearGradient: ('lgradient', self.linear_gradients),
+            faint.Pattern: ('pattern', self.patterns),
+            faint.RadialGradient: ('rgradient', self.radial_gradients)}
 
         # Keep track of whether an arrowhead has been added
         # Fixme: Rework

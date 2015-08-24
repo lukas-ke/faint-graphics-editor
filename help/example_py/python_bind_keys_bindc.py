@@ -1,4 +1,4 @@
-from ifaint import *
+from faint import *
 
 #start
 bindc('h',invert) # Binds the invert function to the H-key

@@ -52,6 +52,7 @@ from . parse import (
     svg_length_attr_dumb,
 )
 
+import faint
 import faint.svg.tag as tag
 ns_svg = tag.ns_svg
 ns_faint = tag.ns_faint
@@ -59,8 +60,6 @@ ns_faint = tag.ns_faint
 from . ifaint_util import (mul_matrix_tri,
                            to_faint_cap_str,
                            fill_style)
-import ifaint
-
 
 _DEBUG_SVG = False
 
@@ -126,7 +125,7 @@ def parse_defs(node, state, id_to_etree_node=None):
             state.add_ref_item(ref_id, obj)
 
 
-class SvgLiteralError(ifaint.LoadError):
+class SvgLiteralError(faint.LoadError):
     """Exception raised for invalidly expressed SVG literals."""
     def __init__(self, literal_type, literal):
         super().__init__("Invalid %s: %s" % (literal_type, literal))
@@ -170,7 +169,7 @@ def parse_pattern_node(node, state, id_to_etree_node):
         if child.tag == tag.image:
             encoding, data = parse_embedded_image_data(child.get(tag.xlink.href))
             if encoding == "png":
-                return node_id, ifaint.Pattern(ifaint.bitmap_from_png_string(data))
+                return node_id, faint.Pattern(faint.bitmap_from_png_string(data))
     state.add_warning('Failed parsing pattern with id=%s' % node_id)
     return None
 
@@ -264,7 +263,7 @@ def parse_linear_gradient_node(node, state, id_to_etree_node=None):
 
         return None
 
-    return node_id, ifaint.LinearGradient(angle, *stops)
+    return node_id, faint.LinearGradient(angle, *stops)
 
 
 def parse_radial_gradient_node(node, state, id_to_etree_node=None):
@@ -294,7 +293,7 @@ def parse_radial_gradient_node(node, state, id_to_etree_node=None):
         state.add_warning("radialGradient with id=%s has no color-stops" % node_id)
         return None
 
-    return node_id, ifaint.RadialGradient(stops)
+    return node_id, faint.RadialGradient(stops)
 
 
 def parse_color_stop_style(style):
@@ -313,7 +312,7 @@ def parse_faint_tri_attr(node):
     """Parses a faint:tri attribute from the node"""
     tri_str = node.get(ns_faint("tri"))
     p0, p1, p2 = pairs(parse_points(tri_str))
-    return ifaint.Tri(p0, p1, p2)
+    return faint.Tri(p0, p1, p2)
 
 
 def parse_ellipse(node, state):
@@ -373,7 +372,7 @@ def parse_path(node, state):
     try:
         path_id = state.props.Path(path_def, state.settings)
     except ValueError:
-        ifaint.copy_text(node.get('d')) # Fixme: Remove
+        faint.copy_text(node.get('d')) # Fixme: Remove
         state.add_warning("Failed parsing a path definition%s." %
                           maybe_id_ref(node))
         return
@@ -478,7 +477,7 @@ def parse_text(node, state):
     boxed, w, h = parse_faint_text_size_attrs(node, state)
     # Fixme: Parse dx, dy lists etc.
 
-    settings = ifaint.Settings()
+    settings = faint.Settings()
     settings.update_all(state.settings)
 
     # Fixme: These assignments will overwrite inherited settings
@@ -579,7 +578,7 @@ def parse_polygon_as_rect(node, state):
 
     p0, p1, p3, p2 = pairs(parse_points(node.get('points')))
     del p3
-    state.props.set_obj_tri(rect_id, ifaint.Tri(p0, p1, p2))
+    state.props.set_obj_tri(rect_id, faint.Tri(p0, p1, p2))
     return rect_id
 
 
@@ -591,7 +590,7 @@ def parse_image_as_background(node, state):
     image_str = node.get(tag.xlink.href)
     image_type, data = parse_embedded_image_data(image_str)
     assert image_type == 'png'
-    state.props.set_background(ifaint.bitmap_from_png_string(data))
+    state.props.set_background(faint.bitmap_from_png_string(data))
 
 
 def parse_image(node, state):
@@ -740,8 +739,8 @@ def _not_implemented_marker(node, state, *args): #pylint:disable=unused-argument
 # Dictionary of functions for converting embedded image-element data
 # to a Bitmap. The data must be decoded from e.g. base64 first.
 IMAGE_TYPE_TO_BITMAP = {
-    "jpeg": ifaint.bitmap_from_jpg_string,
-    "png": ifaint.bitmap_from_png_string,
+    "jpeg": faint.bitmap_from_jpg_string,
+    "png": faint.bitmap_from_png_string,
 }
 
 # pylint:disable=invalid-name
@@ -1139,9 +1138,9 @@ def svg_coord_attr(coord_str, state):
 def check_svg_size(size):
     """Raises exception if invalid size for SVG node."""
     if size[0] <= 0:
-        raise ifaint.LoadError("SVG element has negative width")
+        raise faint.LoadError("SVG element has negative width")
     elif size[1] <= 0:
-        raise ifaint.LoadError("SVG element has negative height")
+        raise faint.LoadError("SVG element has negative height")
     return size
 
 
@@ -1229,9 +1228,9 @@ def parse_doc(path, image_props, system_language="en"):
         if root.tag == ns_svg('svg'):
             parse_svg_root_node(root, image_props, system_language)
         else:
-            raise ifaint.LoadError("Root element was not <svg>.")
+            raise faint.LoadError("Root element was not <svg>.")
     except svg_error as e:
-        raise ifaint.LoadError(str(e))
+        raise faint.LoadError(str(e))
 
 def parse_svg_string(xml_string, image_props, system_language="en"):
     """Parses the SVG document in the given string, using the image_props
@@ -1245,6 +1244,6 @@ def parse_svg_string(xml_string, image_props, system_language="en"):
         if root.tag == ns_svg("svg"):
             parse_svg_root_node(root, image_props, system_language)
         else:
-            raise ifaint.LoadError("Root element was not <svg>.")
+            raise faint.LoadError("Root element was not <svg>.")
     except svg_error as e:
-        raise ifaint.LoadError(str(e))
+        raise faint.LoadError(str(e))

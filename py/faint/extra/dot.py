@@ -24,7 +24,7 @@ Call init_dot_format() to add support for loading .dot-files.
 import platform
 import subprocess as sp
 
-import ifaint
+import faint
 from faint.svg.parse_svg import parse_svg_string
 from faint.extra.util import hide_console
 
@@ -55,4 +55,4 @@ def init_dot_format():
     dot-application is available on the path.
 
     """
-    ifaint.add_format(_load_dot, None, "GraphViz dot", "dot")
+    faint.add_format(_load_dot, None, "GraphViz dot", "dot")

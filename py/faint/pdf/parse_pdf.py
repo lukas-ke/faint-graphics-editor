@@ -17,8 +17,8 @@
 
 import codecs
 import re
-import ifaint
-from ifaint import Settings
+import faint
+from faint import Settings
 from faint.pdf.util import unescape_string
 
 __all__ = ("parse",)
@@ -191,17 +191,17 @@ def parse(file_path, image_props):
 
     page_sizes = _find_page_sizes(text)
     if page_sizes == 0:
-        raise ifaint.LoadError("No pages found.")
+        raise faint.LoadError("No pages found.")
 
     stream_list = _find_streams(text)
     if len(stream_list) == 0:
-        raise ifaint.LoadError("No data streams found.")
+        raise faint.LoadError("No data streams found.")
     if len(stream_list) != len(page_sizes):
-        raise ifaint.LoadError("Data stream count does not match page count.")
+        raise faint.LoadError("Data stream count does not match page count.")
 
     meta_data_list = _find_faint_meta(text)
     if len(meta_data_list) != 0 and len(meta_data_list) != len(page_sizes):
-        raise ifaint.LoadError("Faint meta data count does not match page count.")
+        raise faint.LoadError("Faint meta data count does not match page count.")
     if len(meta_data_list) == 0:
         meta_data_list = [{} for num in page_sizes]
 

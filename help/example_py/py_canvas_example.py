@@ -1,4 +1,4 @@
-from ifaint import *
+from faint import *
 
 #start
 # Draw a line on the active frame in the active image

@@ -16,3 +16,11 @@
 
 A package of functions and classes for faint-graphics-editor.
 """
+
+# Make all built-ins available under faint.
+try:
+    from ifaint import *
+except ImportError as e:
+    # When running in test mode, ifaint
+    # will not be available.
+    pass

@@ -1,4 +1,4 @@
-from ifaint import *
+from faint import *
 
 #start
 # Retrieving a frame from an image
