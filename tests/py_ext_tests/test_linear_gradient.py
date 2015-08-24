@@ -5,6 +5,7 @@ import unittest
 from faint import LinearGradient
 
 class TestLinearGradient(unittest.TestCase):
+
     def test_init(self):
-        # lg = LinearGradient((0, (255,0,255))) # int color stop offset fails!
+        lg = LinearGradient((0, (255,0,255)))
         lg = LinearGradient((0.0, (255,0,255)))

@@ -139,7 +139,7 @@ bool parse_color_stop(PyObject* obj, ColorStop& stop){
   }
 
   scoped_ref pyOffset(PySequence_GetItem(obj, 0));
-  if (!PyFloat_Check(pyOffset.get())){
+  if (!PyNumber_Check(pyOffset.get())){
     PyErr_SetString(PyExc_ValueError,
       "Color stop must start with a floating point offset");
     return false;
