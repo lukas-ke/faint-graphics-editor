@@ -61,8 +61,8 @@ class TestBitmap(unittest.TestCase):
     def test_api(self):
         """Some haphazard API calls with too few assertions.
 
-        These should be distributed two functions and tested more thoroughly,
-        but they may at least catch API changes for now...
+        These should be distributed to functions and tested more
+        thoroughly, but they may at least catch API changes for now...
 
         """
 
