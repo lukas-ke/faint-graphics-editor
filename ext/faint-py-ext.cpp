@@ -24,6 +24,8 @@
 #include "python/py-pattern.hh"
 #include "python/py-png.hh"
 #include "python/py-settings.hh"
+#include "python/py-tri.hh"
+#include "python/py-util.hh" // get_load/save_exception_type
 
 // Module definition for the Faint Python module. This is built to a
 // shared library for use with a Python executable; it is not used
@@ -48,13 +50,20 @@ PyMODINIT_FUNC PyInit_ifaint(){
   faint::add_png_module(module);
   faint::add_clipboard_module(module);
 
-  faint::add_type_object(module, faint::BitmapType, "Bitmap");
-  faint::add_type_object(module, faint::SettingsType, "Settings");
-
   faint::add_type_FrameProps(module);
   faint::add_type_ImageProps(module);
 
   faint::add_type_Pattern(module);
   faint::add_gradient_types(module);
+
+  // Fixme: Duplicates py-initialize-ifaint.cpp
+  PyModule_AddObject(module, "LoadError", faint::get_load_exception_type());
+  PyModule_AddObject(module, "SaveError", faint::get_save_exception_type());
+
+  // Fixme: Duplicates py-initialize-ifaint.cpp
+  faint::add_type_object(module, faint::BitmapType, "Bitmap");
+  faint::add_type_object(module, faint::SettingsType, "Settings");
+  faint::add_type_object(module, faint::TriType, "Tri");
+
   return module;
 }

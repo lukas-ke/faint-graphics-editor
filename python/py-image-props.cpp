@@ -132,6 +132,7 @@ static void imageprops_dealloc(imagePropsObject* self){
   // (and not e.g. tp_free or tp_del)
   if (self->owner){
     self->alive = false;
+    self->owner = false;
     delete self->props;
   }
   self->ob_base.ob_type->tp_free((PyObject*)self);
