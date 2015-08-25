@@ -160,19 +160,31 @@ Bitmap brightness_and_contrast(const Bitmap& src, const brightness_contrast_t& v
   return dst;
 }
 
+static uchar desaturated_simple(uchar r, uchar g, uchar b){
+  return static_cast<uchar>((r + g + b) / 3);
+}
+
+Color desaturated_simple(const Color& c){
+  const uchar gray = desaturated_simple(c.r, c.g, c.b);
+  return grayscale_rgba(gray, c.a);
+}
+
 void desaturate_simple(Bitmap& bmp){
   uchar* data = bmp.m_data;
   for (int y = 0; y != bmp.m_h; y++){
     for (int x = 0; x != bmp.m_w; x++){
       int dst = y * bmp.m_row_stride + x * ByPP;
-      uchar gray = static_cast<uchar>((data[dst + iR] +
-          data[dst + iG] +
-          data[dst + iB]) / 3);
-      data[dst + iR] = gray;
-      data[dst + iG] = gray;
-      data[dst + iB] = gray;
+      uchar* p = data + dst;
+      uchar gray = desaturated_simple(p[iR], p[iG], p[iB]);
+      p[iR] = gray;
+      p[iG] = gray;
+      p[iB] = gray;
     }
   }
+}
+
+static uchar desaturated_weighted(uchar r, uchar g, uchar b){
+  return static_cast<uchar>(0.3 * r + 0.59 * g + 0.11 * b);
 }
 
 void desaturate_weighted(Bitmap& bmp){
@@ -180,14 +192,18 @@ void desaturate_weighted(Bitmap& bmp){
   for (int y = 0; y != bmp.m_h; y++){
     for (int x = 0; x != bmp.m_w; x++){
       int dst = y * bmp.m_row_stride + x * ByPP;
-      uchar gray = static_cast<uchar>(0.3 * data[dst + iR] +
-          0.59 * data[dst + iG] +
-          0.11 * data[dst + iB]);
-      data[dst + iR] = gray;
-      data[dst + iG] = gray;
-      data[dst + iB] = gray;
+      uchar* p = data + dst;
+      const uchar gray = desaturated_weighted(p[iR], p[iG], p[iB]);
+      p[iR] = gray;
+      p[iG] = gray;
+      p[iB] = gray;
     }
   }
+}
+
+Color desaturated_weighted(const Color& c){
+  const uchar gray = desaturated_weighted(c.r, c.g, c.b);
+  return grayscale_rgba(gray, c.a);
 }
 
 Bitmap desaturated_simple(Bitmap copy){

@@ -13,8 +13,10 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include "bitmap/filter.hh"
 #include "util/command-util.hh" // Fixme: Remove
 #include "util/image.hh"
+#include "util/image-util.hh"
 #include "python/py-add-type-object.hh"
 #include "python/py-image-props.hh"
 #include "python/py-image.hh"
@@ -25,6 +27,7 @@
 #include "bitmap/bitmap.hh"
 #include "bitmap/bitmap-exception.hh"
 #include "bitmap/color.hh"
+#include "bitmap/draw.hh"
 #include "bitmap/filter.hh"
 #include "bitmap/gaussian-blur.hh"
 #include "bitmap/quantize.hh"
@@ -56,15 +59,48 @@ struct MappedType<Image&>{
   }
 };
 
-/* method: "num_objects()" */
-static int Image_num_objects(Image& self){
-  return self.GetNumObjects();
+/* method: "get_pixel((x,y))->(r,g,b,a)
+Returns the background color at x, y. Note: Ignores objects." */
+static Color Image_get_pixel(Image& image, const IntPoint& pos){
+  return image.GetBackground().Visit(
+    [&pos](const Bitmap& bmp){
+      throw_if_outside(pos, bmp);
+      return get_color(bmp, pos);
+    },
+    [&pos](const ColorSpan& span){
+      throw_if_outside(pos, span);
+      return span.color;
+    });
 }
 
 /* method: "get_size()" */
 static IntSize Image_get_size(Image& self){
   return self.GetSize();
 }
+
+/* method: "num_objects()" */
+static int Image_num_objects(Image& self){
+  return self.GetNumObjects();
+}
+
+/* method: "set_pixel((x,y),(r,g,b,a))\n
+Set the pixel at x,y to the specified color." */
+static void Image_set_pixel(Image& self, const IntPoint& pt, const Color& c)
+{
+  if (!point_in_image(self, pt)){
+    throw ValueError("Point outside image.");
+  }
+
+  self.GetBackground().Visit(
+    [&](Bitmap& bmp){
+      put_pixel(bmp, pt, c);
+    },
+    [&](ColorSpan){
+      Bitmap& bmp = self.ConvertColorSpanToBitmap(); // Fixme: Might throw
+      put_pixel(bmp, pt, c);
+    });
+}
+
 
 static void Image_init(imageObject& self, PyObject* args){
   if (PySequence_Length(args) != 1){
@@ -122,12 +158,25 @@ void Common_color_balance(Image&,
 {}
 
 template<>
-int Common_color_count(Image&){
-  return 42; // Fixme
+int Common_color_count(const Image& image){
+  return image.GetBackground().Visit(
+    [](const Bitmap& bmp){
+      return count_colors(bmp);
+    },
+    [](const ColorSpan&){
+      return 1;
+    });
 }
 
 template<>
-void Common_desaturate(Image&){
+void Common_desaturate(Image& image){
+  image.GetBackground().Visit(
+    [](Bitmap& bmp){
+      desaturate_simple(bmp);
+    },
+    [](ColorSpan& span){
+      span.color = desaturated_simple(span.color);
+    });
 }
 
 template<>
