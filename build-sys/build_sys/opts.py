@@ -22,7 +22,7 @@ class BuildOptions:
 
     class Target:
         exe = "exe"
-        shared_library = "shared_library"
+        shared_python_library = "shared_python_library"
 
     def __init__(self):
         # Folders to add to lib search
@@ -133,14 +133,16 @@ class BuildOptions:
 
     def link_extension(self):
         """File extension for the linked target"""
-        if self.target_type == self.Target.exe:
+        T = self.Target
+        if self.target_type == T.exe:
             if self.platform == 'msw':
                 return ".exe"
             else:
                 return ""
-        elif self.target_type == self.Target.shared_library:
+
+        elif self.target_type == T.shared_python_library:
             if self.platform == 'msw':
-                return ".dll"
+                return ".pyd"
             else:
                 raise NotImplementedError("Shared library not implemented for %s"
                                           % self.platform)

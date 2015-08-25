@@ -454,7 +454,7 @@ def build_gui_tests(platform, cmdline):
 def build_python_extension(platform, cmdline):
     def precompile_steps(bo):
         bo.create_build_info = False
-        bo.target_type = bo.Target.shared_library
+        bo.target_type = bo.Target.shared_python_library
 
     target = faint_info.target_python_extension
 
@@ -474,11 +474,11 @@ def build_python_extension(platform, cmdline):
                  "console",
                  lambda bo: join_path(bo.project_root, "util", "msw_warn.hh"))
 
-    if result == 0:
-        # Rename .dll to .pyd (used for Python dll-modules on windows)
-        out_abs = join_path(root_dir, target.out_lib)
-        shutil.move(out_abs + ".dll",
-                    out_abs + ".pyd")
+    # if result == 0:
+    #     # Rename .dll to .pyd (used for Python dll-modules on windows)
+    #     out_abs = join_path(root_dir, target.out_lib)
+    #     shutil.move(out_abs + ".dll",
+    #                 out_abs + ".pyd")
     return result
 
 if __name__ == '__main__':

@@ -228,7 +228,7 @@ def link(files, opts, out, err, debug):
     else:
         flags += " %s" % (target)
 
-    if opts.target_type == opts.Target.shared_library:
+    if opts.target_type == opts.Target.shared_python_library:
         flags += " /DLL"
 
     lib_paths_string = create_lib_paths_string(opts.lib_paths)
