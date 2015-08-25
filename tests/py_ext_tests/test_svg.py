@@ -25,3 +25,4 @@ class TestSVG(unittest.TestCase):
 
         self.assertEqual(image.num_objects(), 1)
         self.assertEqual(image.get_size(), (111, 222))
+        self.assertEqual(image.color_count(), 42) # Fixme

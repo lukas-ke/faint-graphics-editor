@@ -13,11 +13,21 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include "util/command-util.hh" // Fixme: Remove
 #include "util/image.hh"
-#include "python/py-image.hh"
-#include "python/py-image-props.hh"
-#include "python/py-ugly-forward.hh"
 #include "python/py-add-type-object.hh"
+#include "python/py-image-props.hh"
+#include "python/py-image.hh"
+#include "python/py-common.hh"
+#include "python/py-ugly-forward.hh"
+#include "bitmap/aa-line.hh"
+#include "bitmap/auto-crop.hh"
+#include "bitmap/bitmap.hh"
+#include "bitmap/bitmap-exception.hh"
+#include "bitmap/color.hh"
+#include "bitmap/filter.hh"
+#include "bitmap/gaussian-blur.hh"
+#include "bitmap/quantize.hh"
 
 namespace faint{
 
@@ -80,6 +90,107 @@ static PyObject* Image_new(PyTypeObject* type, PyObject*, PyObject*){
   return (PyObject*)self;
 }
 
+using common_type = Image&;
+
+// Specializations since Image doesn't support commands
+template<>
+void Common_aa_line<Image&>(Image&, const IntLineSegment&,
+  const ColRGB&)
+{}
+
+template<>
+bool Common_auto_crop(Image&){
+  return false;
+}
+
+template<>
+void Common_blit(Image&, const IntPoint&, const Bitmap&){
+}
+
+template<>
+void Common_boundary_fill(Image&, const IntPoint&, const Paint&, const Color&)
+{}
+
+template<>
+void Common_clear(Image&, const Paint&){}
+
+template<>
+void Common_color_balance(Image&,
+  const color_range_t&,
+  const color_range_t&,
+  const color_range_t&)
+{}
+
+template<>
+int Common_color_count(Image&){
+  return 42; // Fixme
+}
+
+template<>
+void Common_desaturate(Image&){
+}
+
+template<>
+void Common_desaturate_weighted(Image&){
+}
+
+template<>
+void Common_erase_but_color(Image&, const Color&, const Optional<Paint>&)
+{}
+
+template<>
+void Common_flip_horizontally(Image&){
+}
+
+template<>
+void Common_flip_vertically(Image&){
+}
+
+template<>
+void Common_fill(Image&, const IntPoint&, const Paint&){
+}
+
+template<>
+void Common_gaussian_blur(Image&, coord){}
+
+template<>
+void Common_invert(Image&){}
+
+template<>
+void Common_apply_paste(Image&, const IntPoint&, const Bitmap&){}
+
+template<>
+void Common_pixelize(Image&, const pixelize_range_t&){
+}
+
+template<>
+void Common_quantize(Image&){
+}
+
+template<>
+void Common_replace_alpha(Image&, const ColRGB&){
+}
+
+template<>
+void Common_replace_color(Image&, const Color&, const Paint&){}
+
+template<>
+void Common_rotate(Image&, const Angle&, const Optional<Paint>&){}
+
+template<>
+void Common_sepia(Image&, int){}
+
+template<>
+void Common_set_alpha(Image&, const color_value_t&){}
+
+template<>
+void Common_set_threshold(Image&, const threshold_range_t&,
+  const Optional<Paint>&, const Optional<Paint>&)
+{}
+
+#define COMMONFWD(bundle)FORWARDER(bundle::Func<Image&>, bundle::ArgType(), bundle::Name(), bundle::Doc())
+
+/* extra_include: "generated/python/method-def/py-common-methoddef.hh" */
 #include "generated/python/method-def/py-image-methoddef.hh"
 
 PyTypeObject ImageType = {

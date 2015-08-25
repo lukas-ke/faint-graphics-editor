@@ -15,6 +15,7 @@
 
 #ifndef FAINT_ADD_TYPE_OBJECT
 #define FAINT_ADD_TYPE_OBJECT
+#include "python/py-include.hh"
 
 namespace faint {
 
