@@ -37,16 +37,23 @@ struct MappedType<Image&>{
   }
 
   static bool Expired(imageObject*){
+    // Can't expire
     return false;
   }
 
   static void ShowError(imageObject*){
+    // Can't expire
   }
 };
 
 /* method: "num_objects()" */
 static int Image_num_objects(Image& self){
   return self.GetNumObjects();
+}
+
+/* method: "get_size()" */
+static IntSize Image_get_size(Image& self){
+  return self.GetSize();
 }
 
 static void Image_init(imageObject& self, PyObject* args){
