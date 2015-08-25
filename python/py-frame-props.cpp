@@ -67,6 +67,13 @@ struct framePropsObject{
   Index frame_index;
 };
 
+static bool expired(framePropsObject* self){
+  if (!self->imageProps->alive){
+    return true;
+  }
+  return !(self->frame_index < self->imageProps->props->GetNumFrames());
+}
+
 template<>
 struct MappedType<const BoundFrameProps&>{
   using PYTHON_TYPE = framePropsObject;
@@ -77,10 +84,7 @@ struct MappedType<const BoundFrameProps&>{
   }
 
   static bool Expired(framePropsObject* self){
-    if (!self->imageProps->alive){
-      return true;
-    }
-    return !(self->frame_index < self->imageProps->props->GetNumFrames());
+    return expired(self);
   }
 
   static void ShowError(framePropsObject*){
@@ -433,6 +437,18 @@ PyObject* create_FrameProps(imagePropsObject& owner, const Index& index){
   py_frameProps->imageProps = &owner;
   py_frameProps->frame_index = index;
   return (PyObject*)py_frameProps;
+}
+
+FrameProps* get_cpp_FrameProps(PyObject* obj){
+  if (!PyObject_IsInstance(obj, (PyObject*)&FramePropsType)){
+    throw ValueError("Not FrameProps");
+  }
+
+  auto* self = (framePropsObject*)obj;
+  if (expired(self)){
+    return nullptr;
+  }
+  return &(self->imageProps->props->GetFrame(self->frame_index));
 }
 
 } // namespace

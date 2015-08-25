@@ -20,8 +20,7 @@ class TestSVG(unittest.TestCase):
 
     def test_parse_svg_string(self):
         props = faint.ImageProps()
-        # parse_svg_string(SVG, props)
         parse_svg_string(SVG, props)
-
-        # Fixme: Can't create an Image from the ImageProps
-        # in Python yet, or even inspect the ImageProps.
+        frame = props.get_frame(0)
+        image = faint.Image(frame)
+        self.assertEqual(image.num_objects(), 1)

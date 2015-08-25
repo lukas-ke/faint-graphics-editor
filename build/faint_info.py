@@ -51,6 +51,7 @@ HEADERS_TO_GENERATE = [
     ('settings', '../python/py-settings.cpp'),
     ('smth', '../python/py-something.cpp'),
     ('tri', '../python/py-tri.cpp'),
+    ('Image', '../python/py-image.cpp'),
     (None, '../python/py-common.hh'),
     (None, '../python/py-less-common.hh'),
 ]

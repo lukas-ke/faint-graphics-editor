@@ -20,6 +20,7 @@
 #include "python/py-clipboard.hh"
 #include "python/py-functions.hh"
 #include "python/py-gradient.hh"
+#include "python/py-image.hh"
 #include "python/py-image-props.hh"
 #include "python/py-pattern.hh"
 #include "python/py-png.hh"
@@ -52,6 +53,8 @@ PyMODINIT_FUNC PyInit_ifaint(){
 
   faint::add_type_FrameProps(module);
   faint::add_type_ImageProps(module);
+
+  faint::add_type_Image(module);
 
   faint::add_type_Pattern(module);
   faint::add_gradient_types(module);

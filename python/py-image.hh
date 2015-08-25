@@ -1,5 +1,5 @@
 // -*- coding: us-ascii-unix -*-
-// Copyright 2012 Lukas Kemmer
+// Copyright 2015 Lukas Kemmer
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you
 // may not use this file except in compliance with the License. You
@@ -13,31 +13,15 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_PY_IMAGE_PROPS_HH
-#define FAINT_PY_IMAGE_PROPS_HH
+#ifndef FAINT_PY_IMAGE_HH
+#define FAINT_PY_IMAGE_HH
 #include "python/py-include.hh"
 
 namespace faint{
 
-class Index;
-class ImageProps;
-class FrameProps;
-extern PyTypeObject ImagePropsType;
-
-struct imagePropsObject{
-  PyObject_HEAD
-  bool alive;
-  bool owner;
-  ImageProps* props;
-};
-
-void add_type_ImageProps(PyObject* module);
-typed_scoped_ref<imagePropsObject> pythoned(ImageProps&);
-
-void add_type_FrameProps(PyObject* module);
-PyObject* create_FrameProps(imagePropsObject& owner, const Index&);
-
-FrameProps* get_cpp_FrameProps(PyObject* pyFrameProps);
+// Image type, with objects and such. Detached from Faint, for use in
+// the Python-extension (and maybe eventually in Faint as well)
+void add_type_Image(PyObject* module);
 
 } // namespace
 
