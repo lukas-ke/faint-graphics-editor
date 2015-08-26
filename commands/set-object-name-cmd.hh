@@ -23,10 +23,6 @@ namespace faint{
 class Command;
 class Object;
 
-// Returns {} if the passed in optional is not set or set to an empty
-// string.
-Optional<utf8_string> empty_to_unset(const Optional<utf8_string>&);
-
 Command* set_object_name_command(Object*, const Optional<utf8_string>&);
 
 } // namespace

@@ -87,17 +87,6 @@ static BoundObject<Object> bind_same(Object* obj,
   return BoundObject<Object>(src.ctx, src.canvas, obj, src.frameId);
 }
 
-// Helper for Smth_get_points
-static std::vector<coord> flat_point_list(const std::vector<Point>& points){
-  std::vector<coord> coords;
-  coords.reserve(points.size() * 2);
-  for (const Point& pt : points){
-    coords.push_back(pt.x);
-    coords.push_back(pt.y);
-  }
-  return coords;
-}
-
 static PyObject* Smth_richcompare(smthObject* self, PyObject* otherRaw, int op){
   if (!PyObject_IsInstance(otherRaw, (PyObject*)&SmthType)){
     Py_RETURN_NOTIMPLEMENTED;
@@ -164,19 +153,7 @@ static utf8_string Smth_get_type(const BoundObject<Object>& self){
 vertices for Polygons, Splines and Paths. Returns the points in the
 Tri for other objects." */
 static std::vector<coord> Smth_get_points(const BoundObject<Object>& self){
-  if (is_polygon(self.obj)){
-    return flat_point_list(get_polygon_vertices(self.obj));
-  }
-  else if (is_spline(self.obj)) {
-    return flat_point_list(get_spline_points(self.obj));
-  }
-  else if (is_line(self.obj)){
-    return flat_point_list(self.obj->GetMovablePoints());
-  }
-  else {
-    Tri t = self.obj->GetTri();
-    return flat_point_list({t.P0(), t.P1(), t.P3(), t.P2()});
-  }
+  return get_flat_coordinate_list(*self.obj);
 }
 
 /* method: "get_skew()->f\nReturns the skewness of the object." */

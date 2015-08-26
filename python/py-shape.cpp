@@ -18,11 +18,15 @@
 #include "objects/object.hh"
 #include "objects/objrectangle.hh"
 #include "util/default-settings.hh"
+#include "util/object-util.hh"
 #include "python/mapped-type.hh"
 #include "python/py-shape.hh"
 #include "python/py-ugly-forward.hh"
 #include "python/py-util.hh"
 #include "python/py-add-type-object.hh"
+#include "util/setting-id.hh"
+#include "python/py-shape-properties.hh"
+#include "generated/python/settings/shape-properties.hh"
 
 namespace faint{
 
@@ -41,6 +45,24 @@ struct MappedType<Object&>{
   using PYTHON_TYPE = shapeObject;
 
   static Object& GetCppObject(shapeObject* self){
+    return *self->obj;
+  }
+
+  static bool Expired(shapeObject*){
+    // Does not expire (unless reference count reaches 0)
+    return false;
+  }
+
+  static void ShowError(shapeObject*){
+    // Does not expire (unless reference count reaches 0)
+  }
+};
+
+template<>
+struct MappedType<const Object&>{
+  using PYTHON_TYPE = shapeObject;
+
+  static const Object& GetCppObject(shapeObject* self){
     return *self->obj;
   }
 
@@ -79,6 +101,19 @@ static void Shape_dealloc(shapeObject* self){
   delete self->obj;
   self->obj = nullptr;
   // Fixme: Call some base-dealloc? (cw py-bitmap.cpp)
+}
+
+/* method: "get_points()->(x0,y0,x1,y1,...)\nReturns a list of
+vertices for Polygons, Splines and Paths. Returns the points in the
+Tri for other objects." */
+static std::vector<coord> Shape_get_points(const Object& self){
+  return get_flat_coordinate_list(self);
+}
+
+/* method: "get_settings()->Settings\n
+Returns a copy of this object's settings." */
+static Settings Shape_get_settings(const Object& self){
+  return self.GetSettings();
 }
 
 /* method: "get_tri()" */
@@ -149,7 +184,7 @@ PyTypeObject ShapeType = {
   nullptr, // tp_iternext
   Shape_methods, // tp_methods
   nullptr, // tp_members
-  nullptr, // tp_getset // Fixme: Add
+  Shape_properties, // tp_getset
   nullptr, // tp_base
   nullptr, // tp_dict
   nullptr, // tp_descr_get

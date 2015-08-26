@@ -92,14 +92,18 @@ Object* create_spline_object(const Points& points, const Settings& s){
   return new ObjSpline(points, s);
 }
 
-bool is_spline(Object* obj){
-  return dynamic_cast<ObjSpline*>(obj) != nullptr;
+bool is_spline(const Object& obj){
+  return dynamic_cast<const ObjSpline*>(&obj) != nullptr;
 }
 
-std::vector<Point> get_spline_points(Object* obj){
-  ObjSpline* spline = dynamic_cast<ObjSpline*>(obj);
+static std::vector<Point> get_spline_points(const Object* obj){
+  auto spline = dynamic_cast<const ObjSpline*>(obj);
   assert(spline != nullptr);
   return spline->GetSplinePoints();
+}
+
+std::vector<Point> get_spline_points(const Object& obj){
+  return get_spline_points(&obj);
 }
 
 std::vector<PathPt> spline_to_svg_path(const std::vector<Point>& points){

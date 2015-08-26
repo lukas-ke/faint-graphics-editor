@@ -25,8 +25,10 @@ class Settings;
 
 Object* create_polygon_object(const Points&, const Settings&);
 
-bool is_polygon(Object*);
-std::vector<Point> get_polygon_vertices(Object*);
+bool is_polygon(const Object*);
+bool is_polygon(const Object&);
+std::vector<Point> get_polygon_vertices(const Object*);
+std::vector<Point> get_polygon_vertices(const Object&);
 
 } // namespace
 

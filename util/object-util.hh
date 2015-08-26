@@ -55,9 +55,20 @@ bool contains_group(const objects_t&);
 
 bool contains(const objects_t&, const Object*);
 
+// Returns {} if the passed in optional is not set or set to an empty
+// string.
+Optional<utf8_string> empty_to_unset(const Optional<utf8_string>&);
+
 // Returns the object index, or the vector size if not found.
 size_t find_object_index(Object*, const objects_t&);
 std::vector<Point> get_attach_points(const Tri&);
+
+// Returns a flat coordinate list: [x0, y0, x1, y1, ...].
+//
+// The list contains the coordinates of the vertices for Polygons,
+// Splines and Paths. For other objects, the list contains the points
+// from the Object's Tri.
+std::vector<coord> get_flat_coordinate_list(const Object&);
 
 // Returns obj if the name matches or the first sub-object
 // for which name matches or nullptr if nothing matched.

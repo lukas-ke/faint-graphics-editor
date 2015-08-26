@@ -23,7 +23,7 @@ class Points;
 class Settings;
 
 Object* create_line_object(const Points&, const Settings&);
-bool is_line(const Object*);
+bool is_line(const Object&);
 
 } // namespace
 

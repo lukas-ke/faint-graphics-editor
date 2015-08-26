@@ -172,14 +172,22 @@ Object* create_polygon_object(const Points& points, const Settings& s){
   return new ObjPolygon(points,s);
 }
 
-bool is_polygon(Object* obj){
-  return dynamic_cast<ObjPolygon*>(obj) != nullptr;
+bool is_polygon(const Object* obj){
+  return dynamic_cast<const ObjPolygon*>(obj) != nullptr;
 }
 
-std::vector<Point> get_polygon_vertices(Object* obj){
-  ObjPolygon* polygon = dynamic_cast<ObjPolygon*>(obj);
+bool is_polygon(const Object& obj){
+  return is_polygon(&obj);
+}
+
+std::vector<Point> get_polygon_vertices(const Object* obj){
+  auto polygon = dynamic_cast<const ObjPolygon*>(obj);
   assert(polygon != nullptr);
   return polygon->Vertices();
+}
+
+std::vector<Point> get_polygon_vertices(const Object& obj){
+  return get_polygon_vertices(&obj);
 }
 
 } // namespace

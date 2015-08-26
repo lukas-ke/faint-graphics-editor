@@ -24,8 +24,8 @@ class Points;
 class Settings;
 
 Object* create_spline_object(const Points&, const Settings&);
-bool is_spline(Object*);
-std::vector<Point> get_spline_points(Object*);
+bool is_spline(const Object&);
+std::vector<Point> get_spline_points(const Object&);
 std::vector<PathPt> spline_to_svg_path(const std::vector<Point>&);
 
 } // namespace

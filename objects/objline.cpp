@@ -196,8 +196,8 @@ Object* create_line_object(const Points& points, const Settings& s){
   return new ObjLine(points, s);
 }
 
-bool is_line(const Object* obj){
-  return dynamic_cast<const ObjLine*>(obj) != nullptr;
+bool is_line(const Object& obj){
+  return dynamic_cast<const ObjLine*>(&obj) != nullptr;
 }
 
 } // namespace

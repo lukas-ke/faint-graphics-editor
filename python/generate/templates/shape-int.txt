@@ -1,0 +1,21 @@
+struct Shape_property_$name{
+  // From $$file
+
+  static int Get(Object& self){
+    const Settings& settings = self.GetSettings();
+    if (!settings.Has($setting)){
+      throw ValueError("That object does not support $prettyname.");
+    }
+    return settings.Get($setting);
+  }
+
+  static void Set(Object& self,
+    const StaticBoundedInt<$min_value, $max_value>& value)
+  {
+    if (!self.GetSettings().Has($setting)){
+      throw ValueError("That object does not support $prettyname.");
+    }
+
+    self.Set($setting, value.GetValue());
+  }
+};

@@ -1,0 +1,23 @@
+struct Shape_property_$name{
+  // From $$file
+
+  static coord Get(Object& self){
+    const Settings& settings = self.GetSettings();
+    if (!settings.Has($setting)){
+      throw ValueError("That object does not support $prettyname.");
+    }
+    return settings.Get($setting);
+  }
+
+  static void Set(Object& self, coord value){
+    if (!self.GetSettings().Has($setting)){
+      throw ValueError("That object does not support $prettyname.");
+    }
+
+    if (value < $min_value  || $max_value < value){
+      throw ValueError("Argument outside range [$min_value, $max_value].");
+    }
+
+    self.Set($setting, value);
+  }
+};

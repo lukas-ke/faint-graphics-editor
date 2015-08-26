@@ -20,16 +20,6 @@
 
 namespace faint{
 
-Optional<utf8_string> empty_to_unset(const Optional<utf8_string>& name){
-  return name.Visit(
-    [](const utf8_string& s) -> Optional<utf8_string>{
-      return {s, !s.empty()};
-    },
-    []() -> Optional<utf8_string>{
-      return {};
-    });
-}
-
 void set_name(Object* obj, const Optional<utf8_string>& name){
   obj->SetName(name);
 }

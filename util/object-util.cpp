@@ -23,7 +23,9 @@
 #include "objects/objellipse.hh"
 #include "objects/objline.hh"
 #include "objects/objpath.hh"
+#include "objects/objpolygon.hh"
 #include "objects/objraster.hh"
+#include "objects/objspline.hh"
 #include "objects/objtext.hh"
 #include "rendering/faint-dc.hh"
 #include "text/utf8-string.hh"
@@ -127,6 +129,16 @@ bool contains_group(const objects_t& objects){
   return false;
 }
 
+Optional<utf8_string> empty_to_unset(const Optional<utf8_string>& name){
+  return name.Visit(
+    [](const utf8_string& s) -> Optional<utf8_string>{
+      return {s, !s.empty()};
+    },
+    []() -> Optional<utf8_string>{
+      return {};
+    });
+}
+
 size_t find_object_index(Object* obj, const objects_t& objects){
   assert(obj != nullptr);
   for (size_t i = 0; i != objects.size(); i++){
@@ -147,6 +159,36 @@ std::vector<Point> get_attach_points(const Tri& tri){
       mid_P1_P3(tri),
       mid_P2_P3(tri),
       center_point(tri)};
+}
+
+// Helper for get_flat_coordinate_list
+static std::vector<coord> flat_point_list(const std::vector<Point>& points){
+  std::vector<coord> coords;
+  coords.reserve(points.size() * 2);
+  for (const Point& pt : points){
+    coords.push_back(pt.x);
+    coords.push_back(pt.y);
+  }
+  return coords;
+}
+
+/* method: "get_points()->(x0,y0,x1,y1,...)\nReturns a list of
+vertices for Polygons, Splines and Paths. Returns the points in the
+Tri for other objects." */
+std::vector<coord> get_flat_coordinate_list(const Object& obj){
+  if (is_polygon(obj)){
+    return flat_point_list(get_polygon_vertices(obj));
+  }
+  else if (is_spline(obj)) {
+    return flat_point_list(get_spline_points(obj));
+  }
+  else if (is_line(obj)){
+    return flat_point_list(obj.GetMovablePoints());
+  }
+  else {
+    Tri t = obj.GetTri();
+    return flat_point_list({t.P0(), t.P1(), t.P3(), t.P2()});
+  }
 }
 
 Object* get_by_name(Object* obj, const utf8_string& name){
@@ -299,7 +341,7 @@ coord object_area(const Object* obj){
     Tri t = obj->GetTri();
     return math::pi * (t.Width() / 2) * (t.Height() / 2);
   }
-  if (is_line(obj)){
+  if (is_line(*obj)){
     // No area for you.
     return 0.0;
   }
