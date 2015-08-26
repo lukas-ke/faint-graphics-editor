@@ -49,6 +49,7 @@ HEADERS_TO_GENERATE = [
     ('grid', '../python/py-grid.cpp'),
     ('imageprops', '../python/py-image-props.cpp'),
     ('settings', '../python/py-settings.cpp'),
+    ('Shape', '../python/py-shape.cpp'),
     ('smth', '../python/py-something.cpp'),
     ('tri', '../python/py-tri.cpp'),
     ('Image', '../python/py-image.cpp'),

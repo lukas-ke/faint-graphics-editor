@@ -18,6 +18,7 @@
 #include "util/id-types.hh"
 
 namespace faint{
+
 class Object;
 class Canvas;
 

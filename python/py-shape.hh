@@ -1,5 +1,5 @@
 // -*- coding: us-ascii-unix -*-
-// Copyright 2012 Lukas Kemmer
+// Copyright 2015 Lukas Kemmer
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you
 // may not use this file except in compliance with the License. You
@@ -13,27 +13,21 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_PY_FRAME_HH
-#define FAINT_PY_FRAME_HH
-#include "util/id-types.hh"
+#ifndef FAINT_PY_SHAPE_HH
+#define FAINT_PY_SHAPE_HH
+#include "python/py-include.hh"
+#include "geo/rect.hh"
+#include "util/settings.hh"
+#include "util/optional.hh"
 
 namespace faint{
 
-class Canvas;
-class PyFuncContext;
+// Object type with reference counting, with the object owned by
+// Python, as opposed to py-something where the contained object
+// is managed by the commands that added them and such.
+void add_type_Shape(PyObject* module);
 
-// Python-interface to one frame in a Canvas
-extern PyTypeObject FrameType;
-
-struct frameObject {
-  PyObject_HEAD
-  Canvas* canvas;
-  PyFuncContext* ctx;
-  CanvasId canvasId;
-  FrameId frameId;
-};
-
-bool expired(frameObject*);
+PyObject* create_Rect(const Rect&, const Optional<Settings>&);
 
 } // namespace
 

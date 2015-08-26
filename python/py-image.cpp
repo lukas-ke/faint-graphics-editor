@@ -101,7 +101,6 @@ static void Image_set_pixel(Image& self, const IntPoint& pt, const Color& c)
     });
 }
 
-
 static void Image_init(imageObject& self, PyObject* args){
   if (PySequence_Length(args) != 1){
     throw TypeError("Image requires one argument (FrameProps)");

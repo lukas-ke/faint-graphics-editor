@@ -12,10 +12,10 @@ SVG = """\
 <svg xmlns:svg="http://www.w3.org/2000/svg"
 xmlns="http://www.w3.org/2000/svg" version="1.0"
 width="111" height="222">
-  <rect x="0" y="0" width="100" height="100"/>
+  <rect x="10" y="20" width="101" height="102"/>
 </svg>"""
 
-class TestSVG(unittest.TestCase):
+class TestParseSVG(unittest.TestCase):
 
     def test_parse_svg_string(self):
         props = faint.ImageProps()
@@ -26,3 +26,15 @@ class TestSVG(unittest.TestCase):
         self.assertEqual(image.num_objects(), 1)
         self.assertEqual(image.get_size(), (111, 222))
         self.assertEqual(image.color_count(), 1)
+
+    def test_parse_pimage(self):
+        l = faint.PimageList()
+        parse_svg_string(SVG, l)
+        self.assertEqual(len(l.frames), 1)
+
+        f = l.frames[0]
+        self.assertEqual(len(f.objects), 1)
+
+        o = f.objects[0]
+        self.assertAlmostEqual(o.rect(),
+            (10.0, 20.0, 101.0, 102.0))

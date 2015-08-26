@@ -20,6 +20,7 @@ A package of functions and classes for faint-graphics-editor.
 # Make all built-ins available under faint.
 try:
     from ifaint import *
+    from faint.image import Pimage, PimageList, one_color_bg
 except ImportError as e:
     # When running in test mode, ifaint
     # will not be available.

@@ -20,6 +20,7 @@
 #include "bitmap/draw.hh"
 #include "formats/png/file-png.hh"
 #include "geo/pathpt.hh"
+#include "geo/rect.hh"
 #include "geo/pathpt-iter.hh"
 #include "geo/offsat.hh"
 #include "objects/objellipse.hh"
@@ -117,7 +118,8 @@ static std::vector<PathPt> get_path_points(const BoundObject<Object>& bound){
 }
 
 /* function: "one_color_bg(frame)->b\n
-True if the frame background consists of a single color." */
+True if the frame background consists of a single color."
+name: "_one_color_bg" */
 static bool one_color_bg(const Image* image){
   return image->GetBackground().Visit(
     [](const Bitmap& bmp){
@@ -278,6 +280,10 @@ static png_pair read_png_py(const FilePath& path){
       throw OSError(error);
     });
 }
+
+/* function: "create_Rect(...)\n
+Temporary helper for Shape/Pimage." */
+extern PyObject* create_Rect(const Rect&, const Optional<Settings>&);
 
 #include "generated/python/method-def/py-functions-methoddef.hh"
 

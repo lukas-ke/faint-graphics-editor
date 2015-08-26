@@ -20,11 +20,13 @@
 #include "python/py-clipboard.hh"
 #include "python/py-functions.hh"
 #include "python/py-gradient.hh"
+#include "python/py-frame.hh"
 #include "python/py-image.hh"
 #include "python/py-image-props.hh"
 #include "python/py-pattern.hh"
 #include "python/py-png.hh"
 #include "python/py-settings.hh"
+#include "python/py-shape.hh"
 #include "python/py-tri.hh"
 #include "python/py-util.hh" // get_load/save_exception_type
 
@@ -55,6 +57,7 @@ PyMODINIT_FUNC PyInit_ifaint(){
   faint::add_type_ImageProps(module);
 
   faint::add_type_Image(module);
+  faint::add_type_Shape(module);
 
   faint::add_type_Pattern(module);
   faint::add_gradient_types(module);
@@ -67,6 +70,6 @@ PyMODINIT_FUNC PyInit_ifaint(){
   faint::add_type_object(module, faint::BitmapType, "Bitmap");
   faint::add_type_object(module, faint::SettingsType, "Settings");
   faint::add_type_object(module, faint::TriType, "Tri");
-
+  faint::add_type_object(module, faint::FrameType, "Frame"); // Fixme: For py-parse
   return module;
 }
