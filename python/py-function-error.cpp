@@ -22,6 +22,15 @@
 
 namespace faint{
 
+static utf8_string indefinite_article(const utf8_string& word){
+  if (word.empty()){
+    return "a";
+  }
+  const utf8_string vowels = "aAoOuUeEiIyY";
+  return vowels.find(word.front()) == utf8_string::npos ?
+    "a" : "an";
+}
+
 PythonError::PythonError(PyObject* errorType, const utf8_string& error)
   : m_errorType(errorType),
     m_error(error)
@@ -73,16 +82,18 @@ TypeError::TypeError(const utf8_string& error)
 
 TypeError::TypeError(const TypeName& expectedType, Py_ssize_t n)
   : PythonError(PyExc_TypeError,
-    "Argument " + str_ssize_t(n + 1) + " must be a " + // Fixme: Prevent overflow
-    expectedType.Get())
+      space_sep("Argument", str_ssize_t(n + 1),
+        "must be", indefinite_article(expectedType.Get()),
+        expectedType.Get()))
 {}
 
 TypeError::TypeError(const TypeName& expectedType,
   const utf8_string& extraInfo,
   Py_ssize_t n)
   : PythonError(PyExc_TypeError,
-      space_sep("Argument", str_ssize_t(n + 1), "must be a", // Fixme: Prevent overflow
-      expectedType.Get(), no_sep(bracketed(extraInfo), ".")))
+      space_sep("Argument", str_ssize_t(n + 1), "must be",
+        indefinite_article(expectedType.Get()),
+        expectedType.Get(), no_sep(bracketed(extraInfo), ".")))
 {}
 
 OSError::OSError(const utf8_string& error)

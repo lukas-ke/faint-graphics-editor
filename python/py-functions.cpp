@@ -117,7 +117,7 @@ static std::vector<PathPt> get_path_points(const BoundObject<Object>& bound){
   return bound.obj->GetPath(ctx);
 }
 
-/* function: "one_color_bg(frame)->b\n
+/* function: "_one_color_bg(frame)->b\n
 True if the frame background consists of a single color."
 name: "_one_color_bg" */
 static bool one_color_bg(const Image* image){
@@ -284,6 +284,44 @@ static png_pair read_png_py(const FilePath& path){
 /* function: "create_Rect(...)\n
 Temporary helper for Shape/Pimage." */
 extern PyObject* create_Rect(const Rect&, const Optional<Settings>&);
+
+/* function: "create_Ellipse(...)\n
+Temporary helper for Shape/Pimage." */
+extern PyObject* create_Ellipse(const Rect&, const Optional<Settings>&);
+
+/* function: "create_Group(...)\n
+Temporary helper for Shape/Pimage." */
+extern PyObject* create_Group(PyObject*);
+
+/* function: "create_Line(...)\n
+Temporary helper for Shape/Pimage." */
+extern PyObject* create_Line(const std::vector<coord>&,
+  const Optional<Settings>&);
+
+/* function: "create_Polygon()\n
+Temporary helper for Shape/Pimage." */
+extern PyObject* create_Polygon(const std::vector<coord>&,
+  const Optional<Settings>&);
+
+/* function: "create_Raster((x,y[,w,h]), Bitmap[, settings])\n
+Adds a Raster object, scaled to the specified rectangle." */
+extern PyObject* create_Raster(const Either<Point, Rect>& region,
+  const Bitmap&,
+  const Optional<Settings>&);
+
+/* function: "create_Spline((x0,y0,x1,y1,...), settings)->Spline\n
+Adds a Spline object. The points are a list of coordinates sort-of
+followed by the spline.\n\nFor more precise control-point handling use
+Path instead." */
+extern PyObject* create_Spline(const std::vector<coord>&,
+  const Optional<Settings>&);
+
+/* functioon: "create_Text(pos|rect, str[, settings])->Text\n
+Creates a Text object. If a rectangle is given as the first argument,
+the text is bounded. " */
+extern PyObject* create_Text(const Either<Rect, Point>& region,
+  const utf8_string&,
+  const Optional<Settings>&);
 
 #include "generated/python/method-def/py-functions-methoddef.hh"
 

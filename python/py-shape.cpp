@@ -13,10 +13,19 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include "geo/geo-func.hh"
+#include "geo/points.hh"
 #include "geo/rect.hh"
+#include "geo/size.hh"
 #include "geo/tri.hh"
 #include "objects/object.hh"
+#include "objects/objellipse.hh"
+#include "objects/objline.hh"
+#include "objects/objpolygon.hh"
+#include "objects/objraster.hh"
 #include "objects/objrectangle.hh"
+#include "objects/objspline.hh"
+#include "objects/objtext.hh"
 #include "util/default-settings.hh"
 #include "util/object-util.hh"
 #include "python/mapped-type.hh"
@@ -209,16 +218,110 @@ void add_type_Shape(PyObject* module){
   add_type_object(module, ShapeType, "Shape");
 }
 
-shapeObject* create_Shape(){
-  return (shapeObject*)ShapeType.tp_alloc(&ShapeType, 0);
+PyObject* create_Shape(Object* obj){
+  shapeObject* shape = (shapeObject*)ShapeType.tp_alloc(&ShapeType, 0);
+  shape->obj = obj;
+  return (PyObject*)shape;
 }
 
 PyObject* create_Rect(const Rect& r, const Optional<Settings>& maybeSettings){
-  auto shape = create_Shape();
-  const auto s = maybeSettings.Visit([](const Settings& s){return s;},
-    default_rectangle_settings);
-  shape->obj = create_rectangle_object(tri_from_rect(r), s);
-  return (PyObject*)shape;
+  const auto tri = tri_from_rect(r);
+  const auto s = maybeSettings.Or(default_rectangle_settings());
+  return create_Shape(create_rectangle_object(tri, s));
+}
+
+PyObject* create_Ellipse(const Rect& r, const Optional<Settings>& maybeSettings){
+  const auto tri = tri_from_rect(r);
+  const auto s = maybeSettings.Or(default_ellipse_settings());
+  return create_Shape(create_ellipse_object(tri, s));
+}
+
+PyObject* create_Group(PyObject*){
+  return nullptr; // FIXME
+}
+
+  // Fixme: Path
+
+PyObject* create_Line(const std::vector<coord>& coords,
+  const Optional<Settings>& maybeSettings)
+{
+  if (coords.size() < 4){
+    throw ValueError("At least four coordintes required for line"
+      " (x0, y0, x1, y1).");
+  }
+  else if (coords.size() % 2 != 0){
+    throw ValueError("Number of coordinates must be an even number.");
+  }
+
+  const auto s = maybeSettings.Or(default_line_settings());
+  return create_Shape(create_line_object(points_from_coords(coords), s));
+}
+
+PyObject* create_Polygon(const std::vector<coord>& coords,
+  const Optional<Settings>& maybeSettings)
+{
+  const size_t n = coords.size();
+  if (n == 0){
+    throw ValueError("No points specified.");
+  }
+  else if (n % 2 != 0){
+    throw ValueError("Uneven number of coordinates.");
+  }
+
+  const auto s = maybeSettings.Or(default_polygon_settings());
+  return create_Shape(create_polygon_object(points_from_coords(coords), s));
+}
+
+PyObject* create_Raster(const Either<Point, Rect>& region,
+  const Bitmap& bmp,
+  const Optional<Settings>& maybeSettings)
+{
+  Rect r = region.Visit(
+    [&bmp](const Point& pt){
+      return Rect(pt, floated(bmp.GetSize()));
+    },
+    [](const Rect& r){
+      return r;
+    });
+
+
+  const auto tri = tri_from_rect(r);
+  const auto s = maybeSettings.Or(default_raster_settings());
+  return create_Shape(new ObjRaster(tri_from_rect(r), bmp, s));
+}
+
+PyObject* create_Spline(const std::vector<coord>& coords,
+  const Optional<Settings>& maybeSettings)
+{
+  if (coords.empty()){
+    throw ValueError("No coordinates specified.");
+  }
+  if (coords.size() % 2 != 0){
+    throw ValueError("Uneven number of coordinates.");
+  }
+
+  const auto s = maybeSettings.Or(default_spline_settings());
+  const auto pts = points_from_coords(coords);
+  return create_Shape(create_spline_object(pts, s));
+}
+
+PyObject* create_Text(const Either<Rect, Point>& region,
+  const utf8_string& text,
+  const Optional<Settings>& maybeSettings)
+{
+  Settings s = maybeSettings.Or(default_text_settings());
+  Rect r = region.Visit(
+    [](const Rect& r){
+      return r;
+    },
+    [&s](const Point& pt){
+      s.Set(ts_BoundedText, false);
+      return Rect(pt,
+        Size(100,100)); // Fixme: Just a dummy size. Should auto-size instead.
+    });
+
+  const auto tri = tri_from_rect(r);
+  return create_Shape(new ObjText(tri, text, s));
 }
 
 } // namespace

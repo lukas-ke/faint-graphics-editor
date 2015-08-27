@@ -26,6 +26,36 @@ class Pimage:
         self.objects.append(sh)
         return sh
 
+    def Ellipse(self, *args):
+        sh = ifaint.create_Ellipse(*args)
+        self.objects.append(sh)
+        return sh
+
+    def Polygon(self, *args):
+        sh = ifaint.create_Polygon(*args)
+        self.objects.append(sh)
+        return sh
+
+    def Raster(self, *args):
+        sh = ifaint.create_Raster(*args)
+        self.objects.append(sh)
+        return sh
+
+    def Spline(self, *args):
+        sh = ifaint.create_Spline(*args)
+        self.objects.append(sh)
+        return sh
+
+    def Group(self, *args):
+        sh = ifaint.create_Group(*args)
+        self.objects.append(sh)
+        return sh
+
+    def Path(self, *args):
+        sh = ifaint.create_Path(*args)
+        self.objects.append(sh)
+        return sh
+
     def get_obj_tri(self, obj):
         """For compatibility with FrameProps"""
         return obj.get_tri()
