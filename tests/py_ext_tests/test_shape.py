@@ -43,3 +43,4 @@ class TestShape(unittest.TestCase):
         check(faint.create_Rect(r), "Rectangle")
         check(faint.create_Spline(points), "Spline")
         check(faint.create_Text(pos, "Hello world"), "Text Region")
+        # Fixme: Add Group
