@@ -100,7 +100,7 @@ static utf8_string faintinterpreter_repr(AppContext&){
   return "FaintInterpreter";
 }
 
-#include "generated/python/method-def/py-interpreter-methoddef.hh"
+#include "generated/python/method-def/py-interpreter-method-def.hh"
 
 PyTypeObject FaintInterpreterType = {
   PyVarObject_HEAD_INIT(nullptr, 0)

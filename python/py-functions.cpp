@@ -323,7 +323,7 @@ extern PyObject* create_Text(const Either<Rect, Point>& region,
   const utf8_string&,
   const Optional<Settings>&);
 
-#include "generated/python/method-def/py-functions-methoddef.hh"
+#include "generated/python/method-def/py-functions-method-def.hh"
 
 PyMethodDef* get_py_functions(){
   return faint_interface_methods;

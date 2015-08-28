@@ -161,7 +161,7 @@ struct tri_skew{
   }
 };
 
-#include "generated/python/method-def/py-tri-methoddef.hh"
+#include "generated/python/method-def/py-tri-method-def.hh"
 
 PyTypeObject TriType = {
   PyVarObject_HEAD_INIT(nullptr, 0)

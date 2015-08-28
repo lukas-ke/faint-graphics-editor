@@ -384,8 +384,8 @@ def clean(src_files, doc_root):
     for (name, files) in src_files:
         src = files if files.__class__  == str else files[0]
 
-        dst = src.replace(".hh", "-methoddef.hh")
-        dst = dst.replace(".cpp", "-methoddef.hh")
+        dst = src.replace(".hh", "-method-def.hh")
+        dst = dst.replace(".cpp", "-method-def.hh")
         dst_doc = src.replace(".cpp", '-methods.txt')
         dst_doc = dst_doc.replace(".hh", '-methods.txt')
         dst_doc_filename = os.path.split(dst_doc)[1]
@@ -410,7 +410,7 @@ def generate_headers(src_files, out_root, doc_root):
     html-documentation should be stored.
 
     The generated header will be named the same as the source file,
-    but with .cpp stripped and -methoddef.hh appended.
+    but with .cpp stripped and -method-def.hh appended.
 
     The html file will be named the same as the source-file but
     with .cpp stripped and -methods.txt appended."
@@ -428,8 +428,8 @@ def generate_headers(src_files, out_root, doc_root):
         else:
             src = files[0]
 
-        dst = src.replace(".hh", "-methoddef.hh")
-        dst = dst.replace(".cpp", "-methoddef.hh")
+        dst = src.replace(".hh", "-method-def.hh")
+        dst = dst.replace(".cpp", "-method-def.hh")
         dst = os.path.join(out_root, os.path.split(dst)[1])
 
         dst_doc = src.replace(".hh", '-methods.txt')

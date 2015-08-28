@@ -78,7 +78,7 @@ static utf8_string faintwindow_repr(AppContext&){
   return "FaintWindow";
 }
 
-#include "generated/python/method-def/py-window-methoddef.hh"
+#include "generated/python/method-def/py-window-method-def.hh"
 
 PyTypeObject FaintWindowType = {
     PyVarObject_HEAD_INIT(nullptr, 0)

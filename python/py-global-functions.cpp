@@ -232,7 +232,7 @@ static void f_set_layer(PyFuncContext& ctx, int layer){
   ctx.app.SetLayer(to_layerstyle(layer));
 }
 
-#include "generated/python/method-def/py-global-functions-methoddef.hh"
+#include "generated/python/method-def/py-global-functions-method-def.hh"
 
 static PyObject* global_functions_new(PyTypeObject* type, PyObject*, PyObject*){
   globalFunctionsObject *self;

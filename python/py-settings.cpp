@@ -73,7 +73,7 @@ static Settings settings_copy(Settings& self){
   return self;
 }
 
-#include "generated/python/method-def/py-settings-methoddef.hh"
+#include "generated/python/method-def/py-settings-method-def.hh"
 
 // Python standard methods for Settings
 static PyObject* settings_new(PyTypeObject* type, PyObject* , PyObject*){

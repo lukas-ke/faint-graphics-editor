@@ -201,10 +201,10 @@ void py_common_run_command(const Frame& frame, Command* cmd){
   frame.ctx.RunCommand(frame, cmd);
 }
 
-/* extra_include: "generated/python/method-def/py-common-methoddef.hh" */
-/* extra_include: "generated/python/method-def/py-less-common-methoddef.hh" */
+/* extra_include: "generated/python/method-def/py-common-method-def.hh" */
+/* extra_include: "generated/python/method-def/py-less-common-method-def.hh" */
 
-#include "generated/python/method-def/py-frame-methoddef.hh"
+#include "generated/python/method-def/py-frame-method-def.hh"
 
 PyTypeObject FrameType = {
   PyVarObject_HEAD_INIT(nullptr, 0)

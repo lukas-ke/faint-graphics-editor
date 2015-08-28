@@ -346,7 +346,7 @@ static PyObject* Smth_repr(smthObject* self){
   }
 }
 
-#include "generated/python/method-def/py-something-methoddef.hh"
+#include "generated/python/method-def/py-something-method-def.hh"
 
 PyTypeObject SmthType = {
   PyVarObject_HEAD_INIT(nullptr,0)

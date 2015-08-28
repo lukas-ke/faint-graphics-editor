@@ -1168,10 +1168,10 @@ void py_common_run_command(CanvasT target, Command* cmd){
   target.ctx.RunCommand(target.item, cmd);
 }
 
-/* extra_include: "generated/python/method-def/py-common-methoddef.hh" */
-/* extra_include: "generated/python/method-def/py-less-common-methoddef.hh" */
+/* extra_include: "generated/python/method-def/py-common-method-def.hh" */
+/* extra_include: "generated/python/method-def/py-less-common-method-def.hh" */
 
-#include "generated/python/method-def/py-canvas-methoddef.hh"
+#include "generated/python/method-def/py-canvas-method-def.hh"
 
 PyTypeObject CanvasType = {
   PyVarObject_HEAD_INIT(nullptr, 0)

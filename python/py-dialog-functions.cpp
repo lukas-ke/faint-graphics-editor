@@ -142,7 +142,7 @@ static PyObject* dialog_repr(dialogFunctionsObject*){
   return build_unicode(utf8_string(DIALOG_FUNCTIONS_NAME));
 }
 
-#include "generated/python/method-def/py-dialog-functions-methoddef.hh"
+#include "generated/python/method-def/py-dialog-functions-method-def.hh"
 
 PyTypeObject DialogFunctionsType = {
   PyVarObject_HEAD_INIT(nullptr, 0)

@@ -238,8 +238,8 @@ void Common_set_threshold(Image&, const threshold_range_t&,
 
 #define COMMONFWD(bundle)FORWARDER(bundle::Func<Image&>, bundle::ArgType(), bundle::Name(), bundle::Doc())
 
-/* extra_include: "generated/python/method-def/py-common-methoddef.hh" */
-#include "generated/python/method-def/py-image-methoddef.hh"
+/* extra_include: "generated/python/method-def/py-common-method-def.hh" */
+#include "generated/python/method-def/py-image-method-def.hh"
 
 PyTypeObject ImageType = {
   PyVarObject_HEAD_INIT(nullptr, 0)

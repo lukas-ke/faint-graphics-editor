@@ -94,7 +94,7 @@ static void faintpalette_copy(AppContext&){
   throw NotImplementedError("Palette object can not be copied.");
 }
 
-#include "generated/python/method-def/py-palette-methoddef.hh"
+#include "generated/python/method-def/py-palette-method-def.hh"
 
 PyTypeObject FaintPaletteType = {
     PyVarObject_HEAD_INIT(nullptr, 0)

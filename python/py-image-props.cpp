@@ -105,7 +105,7 @@ static PyObject* imageprops_add_frame(imagePropsObject& self,
   return create_FrameProps(self, self.props->GetNumFrames() - 1);
 }
 
-#include "generated/python/method-def/py-image-props-methoddef.hh"
+#include "generated/python/method-def/py-image-props-method-def.hh"
 
 // Python standard methods follow...
 static PyObject* imageprops_new(PyTypeObject* type, PyObject*, PyObject*){

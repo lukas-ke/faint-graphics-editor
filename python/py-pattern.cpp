@@ -104,7 +104,7 @@ static void Pattern_set_object_aligned(Pattern& self, bool aligned){
   self.SetObjectAligned(aligned);
 }
 
-#include "generated/python/method-def/py-pattern-methoddef.hh"
+#include "generated/python/method-def/py-pattern-method-def.hh"
 
 PyTypeObject PatternType = {
   PyVarObject_HEAD_INIT(nullptr, 0)

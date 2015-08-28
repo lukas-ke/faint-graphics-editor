@@ -234,7 +234,7 @@ static void RadialGradient_set_radii(RadialGradient& self, const Radii& radii){
 }
 
 // LinearGradient_methods is generated.
-#include "generated/python/method-def/py-radial-gradient-methoddef.hh"
+#include "generated/python/method-def/py-radial-gradient-method-def.hh"
 
 PyTypeObject RadialGradientType = {
   PyVarObject_HEAD_INIT(nullptr, 0)

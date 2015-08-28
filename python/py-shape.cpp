@@ -159,7 +159,7 @@ static PyObject* Shape_new(PyTypeObject* type, PyObject*, PyObject*){
   return (PyObject*)self;
 }
 
-#include "generated/python/method-def/py-shape-methoddef.hh"
+#include "generated/python/method-def/py-shape-method-def.hh"
 
 PyTypeObject ShapeType = {
   PyVarObject_HEAD_INIT(nullptr,0)

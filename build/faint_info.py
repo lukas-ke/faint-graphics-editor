@@ -29,7 +29,7 @@ HEADERS_TO_GENERATE = [
     #   PyMethodDef <prefix>_methods[],
     # The second item is the cpp file to parse.
     # The methoddef-header will be named the same as the parsed cpp,
-    # but with .cpp replaced by -methoddef.hh
+    # but with .cpp replaced by -method-def.hh
     ('clipboard', '../python/py-clipboard.cpp'),
     ('LinearGradient', '../python/py-linear-gradient.cpp'),
     ('Pattern', '../python/py-pattern.cpp'),

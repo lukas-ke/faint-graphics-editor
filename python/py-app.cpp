@@ -436,7 +436,7 @@ static void faintapp_special_copy(PyFuncContext&){
   throw NotImplementedError("FaintApp object can not be copied.");
 }
 
-#include "generated/python/method-def/py-app-methoddef.hh"
+#include "generated/python/method-def/py-app-method-def.hh"
 
 static void faintapp_special_init(faintAppObject&) {
   // Prevent instantiation from Python, since the AppContext can't be

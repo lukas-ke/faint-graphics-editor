@@ -197,7 +197,7 @@ static void grid_copy(const CanvasGrid&){
   throw NotImplementedError("Grid can not be copied.");
 }
 
-#include "generated/python/method-def/py-grid-methoddef.hh"
+#include "generated/python/method-def/py-grid-method-def.hh"
 
 PyTypeObject GridType = {
   PyVarObject_HEAD_INIT(nullptr, 0)

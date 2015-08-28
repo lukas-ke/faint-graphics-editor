@@ -321,9 +321,9 @@ void Common_set_threshold(Bitmap& bmp, const threshold_range_t& range,
 
 #define COMMONFWD(bundle)FORWARDER(bundle::Func<Bitmap&>, bundle::ArgType(), bundle::Name(), bundle::Doc())
 
-/* extra_include: "generated/python/method-def/py-common-methoddef.hh" */
+/* extra_include: "generated/python/method-def/py-common-method-def.hh" */
 
-#include "generated/python/method-def/py-bitmap-methoddef.hh"
+#include "generated/python/method-def/py-bitmap-method-def.hh"
 
 PyTypeObject BitmapType = {
   PyVarObject_HEAD_INIT(nullptr, 0)

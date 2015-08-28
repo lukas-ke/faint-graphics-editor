@@ -174,7 +174,7 @@ static void LinearGradient_set_angle(LinearGradient& self, const Angle& angle){
 }
 
 // LinearGradient_methods is generated.
-#include "generated/python/method-def/py-linear-gradient-methoddef.hh"
+#include "generated/python/method-def/py-linear-gradient-method-def.hh"
 
 PyTypeObject LinearGradientType = {
   PyVarObject_HEAD_INIT(nullptr, 0)

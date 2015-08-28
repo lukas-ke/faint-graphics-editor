@@ -96,7 +96,7 @@ static Optional<Bitmap> get_bitmap(){
   return c.GetBitmap();
 }
 
-#include "generated/python/method-def/py-clipboard-methoddef.hh"
+#include "generated/python/method-def/py-clipboard-method-def.hh"
 
 static struct PyModuleDef faintClipboardModule {
   PyModuleDef_HEAD_INIT,
