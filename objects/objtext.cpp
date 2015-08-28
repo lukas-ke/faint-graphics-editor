@@ -78,7 +78,7 @@ static LineSegment empty_text_caret(const Tri& tri, coord rowHeight){
 }
 
 ObjText::ObjText(const Tri& tri, const utf8_string& text, const Settings& s)
-  : Object(s),
+  : StandardObject(s),
     m_textBuf(text),
     m_caret(LineSegment(Point(0,0),Point(0,0))),
     m_tri(tri)
@@ -87,7 +87,7 @@ ObjText::ObjText(const Tri& tri, const utf8_string& text, const Settings& s)
 }
 
 ObjText::ObjText(const ObjText& other)
-  : Object(other.GetSettings()),
+  : StandardObject(other.GetSettings()),
     m_textBuf(other.m_textBuf),
     m_caret(LineSegment(Point(0,0),Point(0,0))),
     m_tri(other.GetTri()),

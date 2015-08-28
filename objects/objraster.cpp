@@ -81,7 +81,7 @@ static void apply_transform(const Bitmap& src,
 }
 
 ObjRaster::ObjRaster(const Tri& tri, const Bitmap& bitmap, const Settings& s)
-  : Object(s),
+  : StandardObject(s),
     m_bitmap(bitmap),
     m_scaled(bitmap),
     m_tri(tri)
@@ -92,7 +92,7 @@ ObjRaster::ObjRaster(const Tri& tri, const Bitmap& bitmap, const Settings& s)
 }
 
 ObjRaster::ObjRaster(const ObjRaster& other)
-  : Object(other.GetSettings()),
+  : StandardObject(other.GetSettings()),
     m_bitmap(other.m_bitmap),
     m_scaled(other.m_scaled),
     m_tri(other.GetTri())

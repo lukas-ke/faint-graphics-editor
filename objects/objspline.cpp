@@ -16,18 +16,18 @@
 #include "geo/geo-func.hh"
 #include "geo/int-rect.hh"
 #include "geo/points.hh"
-#include "objects/object.hh"
 #include "objects/objspline.hh"
+#include "objects/standard-object.hh"
 #include "rendering/faint-dc.hh"
 #include "text/utf8-string.hh"
 #include "util/setting-util.hh"
 
 namespace faint{
 
-class ObjSpline : public Object{
+class ObjSpline : public StandardObject{
 public:
   ObjSpline(const Points& pts, const Settings& settings)
-    : Object(settings),
+    : StandardObject(settings),
       m_points(pts),
       m_tri(pts.GetTri())
   {}
@@ -79,7 +79,7 @@ public:
 
 private:
   ObjSpline(const ObjSpline& other)
-    : Object(other.m_settings),
+    : StandardObject(other.m_settings),
       m_points(other.m_points),
       m_tri(other.GetTri())
   {}

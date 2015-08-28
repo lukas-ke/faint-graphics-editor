@@ -20,7 +20,7 @@
 #include "geo/pathpt-iter.hh"
 #include "geo/pixel-snap.hh"
 #include "geo/points.hh"
-#include "objects/object.hh"
+#include "objects/standard-object.hh"
 #include "objects/objpath.hh"
 #include "rendering/faint-dc.hh"
 #include "text/utf8-string.hh"
@@ -31,10 +31,10 @@
 
 namespace faint{
 
-class ObjPath : public Object{
+class ObjPath : public StandardObject{
 public:
   ObjPath(const Points& points, const Settings& settings)
-    : Object(with_point_editing(settings, start_enabled(false))),
+    : StandardObject(with_point_editing(settings, start_enabled(false))),
       m_points(points),
       m_tri(points.GetTri())
   {}
@@ -242,7 +242,7 @@ public:
     return resigned(GetMovablePoints().size());
   }
 
-  Optional<CmdFuncs> PixelSnapFunc(){
+  Optional<CmdFuncs> PixelSnapFunc() override{
     return {CmdFuncs(
       [this](){
         m_points = pixel_snap(m_points, m_settings.Get(ts_LineWidth));
@@ -327,7 +327,7 @@ public:
 private:
   // For clone
   ObjPath(const ObjPath& other) :
-    Object(other.m_settings),
+    StandardObject(other.m_settings),
     m_points(other.m_points),
     m_tri(other.GetTri())
   {}

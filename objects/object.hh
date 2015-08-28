@@ -69,76 +69,70 @@ public:
 
 class Object {
 public:
-  Object(const Settings& settings=NullObjectSettings);
+  Object() = default;
   virtual ~Object() = default;
-  bool Active() const;
-  virtual bool CanRemovePoint() const;
+  virtual bool Active() const = 0;
+  virtual bool CanRemovePoint() const = 0;
   void ClearActive();
   virtual Object* Clone() const = 0;
 
   // True if the object is closed, so that points at the opposite ends
   // should be considered adjacent
-  virtual bool CyclicPoints() const;
+  virtual bool CyclicPoints() const = 0;
   virtual void Draw(FaintDC&, ExpressionContext&) = 0;
   virtual void DrawMask(FaintDC&, ExpressionContext&) = 0;
-  virtual bool Extendable() const;
+  virtual bool Extendable() const = 0;
 
   // Gets the points in this objects that other objects and tools can
   // snap to
-  virtual std::vector<Point> GetAttachPoints() const;
+  virtual std::vector<Point> GetAttachPoints() const = 0;
 
-  ObjectId GetId() const;
+  virtual ObjectId GetId() const = 0;
 
   // Gets points at which additional points can be inserted
-  virtual std::vector<ExtensionPoint> GetExtensionPoints() const;
+  virtual std::vector<ExtensionPoint> GetExtensionPoints() const = 0;
 
   // Gets the points that can be moved individually
-  virtual std::vector<Point> GetMovablePoints() const;
-  const Optional<utf8_string>& GetName() const;
-  virtual int GetObjectCount() const;
-  virtual Object* GetObject(int);
-  virtual const Object* GetObject(int) const;
+  virtual std::vector<Point> GetMovablePoints() const = 0;
+  virtual const Optional<utf8_string>& GetName() const = 0;
+  virtual int GetObjectCount() const = 0;
+  virtual Object* GetObject(int) = 0;
+  virtual const Object* GetObject(int) const = 0;
   virtual std::vector<PathPt> GetPath(const ExpressionContext&) const = 0;
-  virtual Point GetPoint(int index) const;
+  virtual Point GetPoint(int index) const = 0;
   virtual IntRect GetRefreshRect() const = 0;
-  const Settings& GetSettings() const;
+  virtual const Settings& GetSettings() const = 0;
+  virtual Settings& GetSettings() = 0;
 
   // Gets the points in this object that wish to snap to other points
   // when resizing/moving
-  virtual std::vector<Point> GetSnappingPoints() const;
+  virtual std::vector<Point> GetSnappingPoints() const = 0;
   virtual Tri GetTri() const = 0;
   virtual utf8_string GetType() const = 0;
-  virtual bool HitTest(const Point&);
+  virtual bool HitTest(const Point&) = 0;
   bool Inactive() const;
 
   // Insert a point at the given index. Returns a closure for undo,
   // since undo may be more involved than "RemovePoint" (e.g. when
   // splitting a bezier path)
-  virtual UndoAddFunc InsertPoint(const Point&, int index);
-  virtual bool IsControlPoint(int index) const;
-  virtual int NumPoints() const;
-  virtual Optional<CmdFuncs> PixelSnapFunc();
-  virtual void RemovePoint(int index);
-  template<typename T> void Set(const T& s, typename T::ValueType);
-  void SetActive(bool active=true);
-  void SetName(const Optional<utf8_string>&);
-  virtual void SetPoint(const Point&, int index);
+  virtual UndoAddFunc InsertPoint(const Point&, int index) = 0;
+  virtual bool IsControlPoint(int index) const = 0;
+  virtual int NumPoints() const = 0;
+  virtual Optional<CmdFuncs> PixelSnapFunc() = 0;
+  virtual void RemovePoint(int index) = 0;
+  virtual void SetActive(bool active=true) = 0;
+  virtual void SetName(const Optional<utf8_string>&) = 0;
+  virtual void SetPoint(const Point&, int index) = 0;
   virtual void SetTri(const Tri&) = 0;
-  virtual bool ShowSizeBox() const;
-  virtual utf8_string StatusString() const;
-  bool UpdateSettings(const Settings&);
-protected:
-  Settings m_settings;
-private:
-  Object(const Object&);
-  bool m_active;
-  ObjectId m_id;
-  Optional<utf8_string> m_name;
+  virtual bool ShowSizeBox() const = 0;
+  virtual utf8_string StatusString() const = 0;
+  virtual bool UpdateSettings(const Settings&) = 0;
+  template<typename T> void Set(const T& s, typename T::ValueType);
 };
 
 template<typename T>
 void Object::Set(const T& s, typename T::ValueType v){
-  m_settings.Set(s, v);
+  GetSettings().Set(s, v);
 }
 
 using objects_t = std::vector<Object*>;

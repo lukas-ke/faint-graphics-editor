@@ -38,6 +38,10 @@ public:
     faint::py_xdecref(m_pyObj);
   }
 
+  bool Active() const override{
+    return m_obj->Active();
+  }
+
   bool CanRemovePoint() const override{
     return m_obj->CanRemovePoint();
   }
@@ -71,6 +75,14 @@ public:
     return m_obj->GetExtensionPoints();
   }
 
+  ObjectId GetId() const override{
+    return m_obj->GetId();
+  }
+
+  const Optional<utf8_string>& GetName() const override{
+    return m_obj->GetName();
+  }
+
   std::vector<Point> GetMovablePoints() const override{
     return m_obj->GetMovablePoints();
   }
@@ -97,6 +109,14 @@ public:
 
   IntRect GetRefreshRect() const override{
     return m_obj->GetRefreshRect();
+  }
+
+  const Settings& GetSettings() const override{
+    return m_obj->GetSettings();
+  }
+
+  Settings& GetSettings() override{
+    return m_obj->GetSettings();
   }
 
   // Gets the points in this object that wish to snap to other points
@@ -140,6 +160,14 @@ public:
     m_obj->RemovePoint(index);
   }
 
+  void SetActive(bool active) override{
+    m_obj->SetActive(active);
+  }
+
+  void SetName(const Optional<utf8_string>& name) override{
+    m_obj->SetName(name);
+  }
+
   void SetPoint(const Point& pt, int index) override{
     m_obj->SetPoint(pt, index);
   }
@@ -148,12 +176,18 @@ public:
     m_obj->SetTri(t);
   }
 
+
+
   bool ShowSizeBox() const override{
     return m_obj->ShowSizeBox();
   }
 
   utf8_string StatusString() const override{
     return m_obj->StatusString();
+  }
+
+  bool UpdateSettings(const Settings& s) override{
+    return m_obj->UpdateSettings(s);
   }
 
   PyObject* GetHolder(){

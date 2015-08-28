@@ -21,7 +21,7 @@
 #include "geo/pathpt.hh"
 #include "geo/pixel-snap.hh"
 #include "geo/tri.hh"
-#include "objects/object.hh"
+#include "objects/standard-object.hh"
 #include "objects/objrectangle.hh"
 #include "rendering/faint-dc.hh"
 #include "text/utf8-string.hh"
@@ -31,10 +31,10 @@
 
 namespace faint{
 
-class ObjRectangle : public Object{
+class ObjRectangle : public StandardObject{
 public:
   ObjRectangle(const Tri& tri, const Settings& s)
-    : Object(with_point_editing(s, start_enabled(false))),
+    : StandardObject(with_point_editing(s, start_enabled(false))),
       m_tri(tri)
   {}
 

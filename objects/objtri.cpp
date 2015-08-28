@@ -18,7 +18,7 @@
 #include "geo/pathpt.hh"
 #include "geo/size.hh"
 #include "geo/tri.hh"
-#include "objects/object.hh"
+#include "objects/standard-object.hh"
 #include "objects/objtri.hh"
 #include "rendering/faint-dc.hh"
 #include "util-wx/font.hh"
@@ -39,10 +39,10 @@ static Settings tri_text_settings(){
   return s;
 }
 
-class ObjTri : public Object{
+class ObjTri : public StandardObject{
 public:
   ObjTri(const Tri& tri, const Settings& s)
-    : Object(s),
+    : StandardObject(s),
       m_tri(tri)
   {}
 

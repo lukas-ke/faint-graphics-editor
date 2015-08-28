@@ -23,7 +23,7 @@
 #include "geo/pathpt.hh"
 #include "geo/pixel-snap.hh"
 #include "geo/points.hh"
-#include "objects/object.hh"
+#include "objects/standard-object.hh"
 #include "objects/objline.hh"
 #include "rendering/faint-dc.hh"
 #include "text/formatting.hh"
@@ -35,10 +35,11 @@
 
 namespace faint{
 
-class ObjLine : public Object{
+class ObjLine : public StandardObject{
 public:
   ObjLine(const Points& points, const Settings& settings)
-    : Object(with_point_editing(settings, start_enabled(points.Size() == 2))),
+    : StandardObject(with_point_editing(settings,
+        start_enabled(points.Size() == 2))),
       m_lastIndex(0),
       m_points(points),
       m_tri(points.GetTri())
@@ -171,7 +172,7 @@ public:
 
 private:
   ObjLine(const ObjLine& other)
-    : Object(other.m_settings),
+    : StandardObject(other.m_settings),
       m_lastIndex(0),
       m_points(other.m_points),
       m_tri(other.GetTri())

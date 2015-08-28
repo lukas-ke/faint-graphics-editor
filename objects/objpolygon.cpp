@@ -19,7 +19,7 @@
 #include "geo/measure.hh" // with_mid_points_cyclic
 #include "geo/pixel-snap.hh"
 #include "geo/points.hh"
-#include "objects/object.hh"
+#include "objects/standard-object.hh"
 #include "objects/objpolygon.hh"
 #include "rendering/faint-dc.hh"
 #include "text/utf8-string.hh"
@@ -28,10 +28,10 @@
 
 namespace faint{
 
-class ObjPolygon : public Object{
+class ObjPolygon : public StandardObject{
 public:
   ObjPolygon(const Points& points, const Settings& settings)
-    : Object(with_point_editing(settings, start_enabled(false))),
+    : StandardObject(with_point_editing(settings, start_enabled(false))),
       m_points(points),
       m_tri(points.GetTri())
   {
@@ -159,7 +159,7 @@ public:
 
 private:
   ObjPolygon(const ObjPolygon& other)
-    : Object(other.m_settings),
+    : StandardObject(other.m_settings),
       m_points(other.m_points),
       m_tri(other.GetTri())
   {}

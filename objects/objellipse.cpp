@@ -21,7 +21,7 @@
 #include "geo/measure.hh"
 #include "geo/pathpt.hh"
 #include "geo/tri.hh"
-#include "objects/object.hh"
+#include "objects/standard-object.hh"
 #include "objects/objellipse.hh"
 #include "rendering/faint-dc.hh"
 #include "text/utf8-string.hh"
@@ -41,10 +41,10 @@ static void draw_ellipse_span(FaintDC& dc, const Tri& tri, const AngleSpan& angl
   }
 }
 
-class ObjEllipse : public Object{
+class ObjEllipse : public StandardObject{
 public:
   ObjEllipse(const Tri& tri, const Settings& settings)
-    : Object(with_point_editing(settings, start_enabled(false))),
+    : StandardObject(with_point_editing(settings, start_enabled(false))),
       m_angleSpan(Angle::Zero(), Angle::Zero()),
       m_tri(tri)
   {}

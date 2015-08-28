@@ -17,7 +17,7 @@
 #define FAINT_OBJTEXT_HH
 #include "geo/line.hh"
 #include "geo/tri.hh"
-#include "objects/object.hh"
+#include "objects/standard-object.hh"
 #include "text/text-buffer.hh"
 #include "text/text-expression.hh"
 #include "text/text-line.hh"
@@ -26,7 +26,7 @@ namespace faint{
 
 class Command;
 
-class ObjText : public Object{
+class ObjText : public StandardObject{
 public:
   ObjText(const Tri&, const utf8_string&, const Settings&);
   Object* Clone() const override;

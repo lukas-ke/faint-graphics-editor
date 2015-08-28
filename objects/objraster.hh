@@ -17,11 +17,11 @@
 #define FAINT_OBJRASTER_HH
 #include "bitmap/bitmap.hh"
 #include "geo/tri.hh"
-#include "objects/object.hh"
+#include "objects/standard-object.hh"
 
 namespace faint{
 
-class ObjRaster : public Object {
+class ObjRaster : public StandardObject {
 public:
   ObjRaster(const Tri&, const Bitmap&, const Settings&);
   Object* Clone() const override;

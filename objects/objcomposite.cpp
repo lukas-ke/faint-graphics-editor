@@ -22,7 +22,7 @@
 #include "geo/scale.hh"
 #include "geo/tri.hh"
 #include "objects/objcomposite.hh"
-#include "objects/object.hh"
+#include "objects/standard-object.hh"
 #include "text/utf8-string.hh"
 #include "util/object-util.hh"
 #include "util/setting-id.hh"
@@ -56,7 +56,7 @@ static void update_objects(const Tri& tri,
   }
 }
 
-class ObjComposite : public Object{
+class ObjComposite : public StandardObject{
 public:
   ObjComposite(const objects_t& objects, Ownership ownership)
     : m_objects(objects),
@@ -197,7 +197,7 @@ public:
 
 private:
   ObjComposite(const ObjComposite& other)
-    : Object(other.GetSettings()),
+    : StandardObject(other.GetSettings()),
       m_tri(other.m_tri),
       m_origTri(other.m_origTri),
       m_objTris(other.m_objTris),
