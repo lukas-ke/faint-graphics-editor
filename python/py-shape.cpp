@@ -87,7 +87,7 @@ struct MappedType<const Object&>{
 
 /* method: "__copy__(self) Used by copy.copy"
 name: "__copy__" */
-static PyObject* Shape_copy(Object& self){
+static PyObject* Shape_copy(const Object& self){
   shapeObject* cp =
     (shapeObject*)ShapeType.tp_alloc(&ShapeType, 0);
   cp->obj = self.Clone();
@@ -132,7 +132,7 @@ static utf8_string Smth_get_type(const Object& self){
 }
 
 /* method: "get_tri()" */
-static Tri Shape_get_tri(Object& self){
+static Tri Shape_get_tri(const Object& self){
   return self.GetTri();
 }
 
@@ -143,7 +143,7 @@ static void Shape_set_tri(Object& self, const Tri& tri){
 
 /* method: "get_rect() -> (x,y,w,h)\n
 Returns the bounding rectangle. " */
-static Rect Shape_rect(Object& self){
+static Rect Shape_rect(const Object& self){
   return bounding_rect(self.GetTri());
 }
 
