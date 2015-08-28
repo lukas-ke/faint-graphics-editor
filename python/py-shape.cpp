@@ -135,12 +135,6 @@ static void Shape_set_tri(Object& self, const Tri& tri){
   return self.SetTri(tri);
 }
 
-// TODO: Remove, early test method
-/* method: "get_type()" */
-static utf8_string Shape_get_type(Object& self){
-  return self.GetType();
-}
-
 /* method: "get_rect() -> (x,y,w,h)\n
 Returns the bounding rectangle. " */
 static Rect Shape_rect(Object& self){
@@ -148,11 +142,9 @@ static Rect Shape_rect(Object& self){
 }
 
 static void Shape_init(shapeObject& self){
-  const Tri t(Point(0.0, 0.0),
-    Point(10.0, 0.0),
-    Point(0.0, 10.0));
-  const auto s = default_rectangle_settings();
-  self.obj = create_rectangle_object(t, s);
+  self.obj = nullptr;
+  throw TypeError("Shape can not be created manually. "
+    "Use the object creation functions (e.g. create_Rect) instead.");
 }
 
 static PyObject* Shape_new(PyTypeObject* type, PyObject*, PyObject*){
