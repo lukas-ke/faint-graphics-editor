@@ -17,6 +17,7 @@
 
 #include "python/py-add-type-object.hh"
 #include "python/py-bitmap.hh"
+#include "python/py-canvas.hh"
 #include "python/py-clipboard.hh"
 #include "python/py-functions.hh"
 #include "python/py-gradient.hh"
@@ -70,6 +71,9 @@ PyMODINIT_FUNC PyInit_ifaint(){
   faint::add_type_object(module, faint::BitmapType, "Bitmap");
   faint::add_type_object(module, faint::SettingsType, "Settings");
   faint::add_type_object(module, faint::TriType, "Tri");
-  faint::add_type_object(module, faint::FrameType, "Frame"); // Fixme: For py-parse
+
+  // Fixme: For parsing (these can't be instantiated)
+  faint::add_type_object(module, faint::FrameType, "_Frame");
+  faint::add_type_object(module, faint::CanvasType, "_Canvas");
   return module;
 }
