@@ -134,11 +134,11 @@ supported by groups." */
 static auto Smth_get_obj(const BoundObject<Object>& self, int index)
 {
   if (!is_composite(self.obj)){
-    throw ValueError("This object does not support sub-objects");
+    throw TypeError("This object does not support sub-objects");
   }
 
   if (index < 0 || self.obj->GetObjectCount() <= index){
-    throw ValueError("Invalid object index");
+    throw IndexError("Invalid object index");
   }
 
   return bind_same(self.obj->GetObject(index), self);

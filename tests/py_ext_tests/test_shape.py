@@ -53,8 +53,5 @@ class TestShape(unittest.TestCase):
         self.assertEqual(g.get_obj(0).type, "Ellipse")
         self.assertEqual(g.get_obj(1).type, "Rectangle")
 
-        with self.assertRaises(ValueError): # FIXME: IndexError
-            g.get_obj(2)
-
-        with self.assertRaises(ValueError): # FIXME: IndexError
-            g.get_obj(-1)
+        self.assertRaises(IndexError, g.get_obj, 2)
+        self.assertRaises(IndexError, g.get_obj, -1)

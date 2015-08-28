@@ -119,7 +119,7 @@ Returns the sub-object specified by the passed in integer. Only
 supported by groups." */
 static PyObject* Smth_get_obj(Object& self, int index){
   if (index < 0 || self.GetObjectCount() <= index){
-    throw ValueError("Invalid object index");
+    throw IndexError("Invalid object index");
   }
 
   return get_holder(self.GetObject(index));
