@@ -18,6 +18,7 @@
 #include "util/image-props.hh"
 #include "python/py-include.hh"
 #include "python/py-canvas.hh"
+#include "python/py-exception-types.hh"
 #include "python/py-format.hh"
 #include "python/py-func-context.hh"
 #include "python/py-image-props.hh"

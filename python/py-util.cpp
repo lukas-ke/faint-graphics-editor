@@ -466,26 +466,6 @@ bool py_error_occurred(){
   return PyErr_Occurred() != nullptr;
 }
 
-bool py_load_error_occurred(){
-  PyObject* errType = PyErr_Occurred();
-  if (errType == nullptr){
-    return false;
-  }
-  PyObject* loadError = get_load_exception_type();
-  int result = PyErr_GivenExceptionMatches(errType, loadError);
-  return result != 0;
-}
-
-bool py_save_error_occurred(){
-  PyObject* errType = PyErr_Occurred();
-  if (errType == nullptr){
-    return false;
-  }
-  PyObject* saveError = get_save_exception_type();
-  int result = PyErr_GivenExceptionMatches(errType, saveError);
-  return result != 0;
-}
-
 utf8_string py_error_string(){
   PyObject* type = nullptr;
   PyObject* value = nullptr;
@@ -666,18 +646,6 @@ FaintPyExc py_error_info(){
     info.stackTrace = parse_traceback(traceback);
   }
   return info;
-}
-
-PyObject* get_load_exception_type(){
-  static PyObject* faintPyLoadError = PyErr_NewException("ifaint.LoadError",
-    nullptr, nullptr);
-  return faintPyLoadError;
-}
-
-PyObject* get_save_exception_type(){
-  static PyObject* faintPySaveError = PyErr_NewException("ifaint.SaveError",
-    nullptr, nullptr);
-  return faintPySaveError;
 }
 
 Optional<int> as_int(PyObject* obj){

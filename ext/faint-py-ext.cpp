@@ -14,13 +14,13 @@
 // permissions and limitations under the License.
 
 #include "python/py-include.hh"
-
 #include "python/py-add-type-object.hh"
 #include "python/py-bitmap.hh"
 #include "python/py-canvas.hh"
 #include "python/py-clipboard.hh"
 #include "python/py-functions.hh"
 #include "python/py-gradient.hh"
+#include "python/py-exception-types.hh"
 #include "python/py-frame.hh"
 #include "python/py-image.hh"
 #include "python/py-image-props.hh"
@@ -29,7 +29,6 @@
 #include "python/py-settings.hh"
 #include "python/py-shape.hh"
 #include "python/py-tri.hh"
-#include "python/py-util.hh" // get_load/save_exception_type
 
 // Module definition for the Faint Python module. This is built to a
 // shared library for use with a Python executable; it is not used
@@ -63,16 +62,14 @@ PyMODINIT_FUNC PyInit_ifaint(){
   faint::add_type_Pattern(module);
   faint::add_gradient_types(module);
 
-  // Fixme: Duplicates py-initialize-ifaint.cpp
-  PyModule_AddObject(module, "LoadError", faint::get_load_exception_type());
-  PyModule_AddObject(module, "SaveError", faint::get_save_exception_type());
+  faint::add_exception_types(module);
 
   // Fixme: Duplicates py-initialize-ifaint.cpp
   faint::add_type_object(module, faint::BitmapType, "Bitmap");
   faint::add_type_object(module, faint::SettingsType, "Settings");
   faint::add_type_object(module, faint::TriType, "Tri");
 
-  // Fixme: For parsing (these can't be instantiated)
+  // Fixme: For py-parse.hh (these can't be instantiated)
   faint::add_type_object(module, faint::FrameType, "_Frame");
   faint::add_type_object(module, faint::CanvasType, "_Canvas");
   return module;

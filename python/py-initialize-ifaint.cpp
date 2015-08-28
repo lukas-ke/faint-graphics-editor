@@ -28,8 +28,9 @@
 #include "python/py-png.hh"
 #include "python/py-settings.hh"
 #include "python/py-something.hh"
+#include "python/py-util.hh" // build_unicode
 #include "python/py-tri.hh"
-#include "python/py-util.hh"
+#include "python/py-exception-types.hh"
 #include "python/python-context.hh"
 #include "python/py-add-type-object.hh"
 #include "python/py-clipboard.hh"
@@ -58,8 +59,7 @@ void add_faint_types(PyObject* module){
 
   PyObject* binds = PyDict_New();
   PyModule_AddObject(module, "_binds", binds);
-  PyModule_AddObject(module, "LoadError", get_load_exception_type());
-  PyModule_AddObject(module, "SaveError", get_save_exception_type());
+  add_exception_types(module);
 }
 
 static struct PyModuleDef keyModule = {

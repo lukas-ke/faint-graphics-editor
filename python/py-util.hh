@@ -37,12 +37,7 @@ std::vector<PathPt> parse_svg_path(const std::string& asciiStr);
 utf8_string get_repr(const LinearGradient&);
 utf8_string get_repr(const RadialGradient&);
 
-PyObject* get_save_exception_type();
-PyObject* get_load_exception_type();
-
 bool py_error_occurred();
-bool py_load_error_occurred();
-bool py_save_error_occurred();
 utf8_string py_error_string();
 
 utf8_string stack_trace_str(PyObject* traceback);
