@@ -19,6 +19,7 @@
 #include "geo/size.hh"
 #include "geo/tri.hh"
 #include "objects/object.hh"
+#include "objects/objcomposite.hh"
 #include "objects/objellipse.hh"
 #include "objects/objline.hh"
 #include "objects/objpolygon.hh"
@@ -36,6 +37,7 @@
 #include "util/setting-id.hh"
 #include "python/py-shape-properties.hh"
 #include "generated/python/settings/shape-properties.hh"
+#include "python/py-object-proxy.hh"
 
 namespace faint{
 
@@ -110,6 +112,23 @@ static void Shape_dealloc(shapeObject* self){
   delete self->obj;
   self->obj = nullptr;
   // Fixme: Call some base-dealloc? (cw py-bitmap.cpp)
+}
+
+/* method: "get_obj(i)->Object\n
+Returns the sub-object specified by the passed in integer. Only
+supported by groups." */
+static PyObject* Smth_get_obj(Object& self, int index){
+  if (index < 0 || self.GetObjectCount() <= index){
+    throw ValueError("Invalid object index");
+  }
+
+  return get_holder(self.GetObject(index));
+}
+
+/* method: "num_objs()->i\n
+Returns the number of sub-objects. Only useful for Group objects." */
+static int Shape_num_objs(const Object& self){
+  return self.GetObjectCount();
 }
 
 /* method: "get_points()->(x0,y0,x1,y1,...)\nReturns a list of
@@ -234,11 +253,38 @@ PyObject* create_Ellipse(const Rect& r, const Optional<Settings>& maybeSettings)
   return create_Shape(create_ellipse_object(tri, s));
 }
 
-PyObject* create_Group(PyObject*){
-  return nullptr; // FIXME
-}
+PyObject* create_Group(PyObject* args){
+  if (PySequence_Length(args) == 0){
+    throw TypeError("A group must contain at least one object");
+  }
 
-  // Fixme: Path
+  // Use either the function arguments as the sequence of objects, or
+  // a single sequence-argument as the sequence. i.e. allow both
+  // Group(a, b, c, d) and Group([a,b,c,d])
+  PyObject* sequence = (PySequence_Length(args) == 1 &&
+    PySequence_Check(PySequence_GetItem(args, 0))) ?
+    PySequence_GetItem(args, 0) :
+    args;
+
+  const auto n = PySequence_Length(sequence);
+  // Prevent empty seguence arguments groups, i.e. Group([])
+  if (n == 0){
+    throw TypeError("A group must contain at least one object.");
+  }
+
+  objects_t faintObjects;
+  for (int i = 0; i != n; i++){
+    PyObject* object = PySequence_GetItem(sequence, i);
+    if (!PyObject_IsInstance(object, (PyObject*)&ShapeType)){
+      throw TypeError("Unsupported item in list");
+    }
+
+    faintObjects.push_back(proxy_shape(object));
+  }
+
+  Object* group = create_composite_object(faintObjects, Ownership::OWNER);
+  return create_Shape(group);
+}
 
 PyObject* create_Line(const std::vector<coord>& coords,
   const Optional<Settings>& maybeSettings)
@@ -320,6 +366,14 @@ PyObject* create_Text(const Either<Rect, Point>& region,
 
   const auto tri = tri_from_rect(r);
   return create_Shape(new ObjText(tri, text, s));
+}
+
+Object* shape_get_object(PyObject* raw){
+  if (!PyObject_IsInstance(raw, (PyObject*)&ShapeType)){
+    return nullptr;
+  }
+  auto obj = (shapeObject*)raw;
+  return obj->obj;
 }
 
 } // namespace

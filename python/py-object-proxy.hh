@@ -13,25 +13,16 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_PY_SHAPE_HH
-#define FAINT_PY_SHAPE_HH
+#ifndef FAINT_PY_OBJECT_PROXY_HH
+#define FAINT_PY_OBJECT_PROXY_HH
 #include "python/py-include.hh"
-#include "geo/rect.hh"
-#include "util/settings.hh"
-#include "util/optional.hh"
 
 namespace faint{
 
 class Object;
 
-// Object type with reference counting, with the object owned by
-// Python, as opposed to py-something where the contained object
-// is managed by the commands that added them and such.
-void add_type_Shape(PyObject* module);
-
-PyObject* create_Shape(Object*);
-
-Object* shape_get_object(PyObject*);
+Object* proxy_shape(PyObject*);
+PyObject* get_holder(Object*);
 
 } // namespace
 

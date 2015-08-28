@@ -44,3 +44,17 @@ class TestShape(unittest.TestCase):
         check(faint.create_Spline(points), "Spline")
         check(faint.create_Text(pos, "Hello world"), "Text Region")
         # Fixme: Add Group
+
+    def test_group(self):
+        r = faint.create_Ellipse((0,0,100,100))
+        e = faint.create_Rect((0,20,20,30))
+        g = faint.create_Group(r, e)
+        self.assertEqual(g.num_objs(), 2)
+        self.assertEqual(g.get_obj(0).type, "Ellipse")
+        self.assertEqual(g.get_obj(1).type, "Rectangle")
+
+        with self.assertRaises(ValueError): # FIXME: IndexError
+            g.get_obj(2)
+
+        with self.assertRaises(ValueError): # FIXME: IndexError
+            g.get_obj(-1)
