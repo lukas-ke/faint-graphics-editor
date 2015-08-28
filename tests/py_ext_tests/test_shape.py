@@ -55,3 +55,9 @@ class TestShape(unittest.TestCase):
 
         self.assertRaises(IndexError, g.get_obj, 2)
         self.assertRaises(IndexError, g.get_obj, -1)
+
+        r2 = faint.create_Rect(100, 120, 220, 200)
+        r3 = faint.create_Rect(100, 120, 220, 200)
+        g2 = faint.create_Group(r2, r3, g)
+        self.assertEqual(g2.num_objs(), 3)
+        self.assertEqual(g2.get_obj(2).num_objs(), 2)
