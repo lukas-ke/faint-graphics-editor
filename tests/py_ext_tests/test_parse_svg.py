@@ -15,7 +15,7 @@ width="111" height="222">
 
 class TestParseSVG(unittest.TestCase):
 
-    def test_parse_svg_string(self):
+    def test_parse_ImageProps(self):
         props = faint.ImageProps()
         svg.from_string(SVG, props)
         frame = props.get_frame(0)
@@ -25,7 +25,7 @@ class TestParseSVG(unittest.TestCase):
         self.assertEqual(image.get_size(), (111, 222))
         self.assertEqual(image.color_count(), 1)
 
-    def test_parse_pimage(self):
+    def test_parse_PimageList(self):
         l = faint.PimageList()
         svg.from_string(SVG, l)
         self.assertEqual(len(l.frames), 1)
