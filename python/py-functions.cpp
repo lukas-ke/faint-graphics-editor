@@ -316,7 +316,7 @@ Path instead." */
 extern PyObject* create_Spline(const std::vector<coord>&,
   const Optional<Settings>&);
 
-/* functioon: "create_Text(pos|rect, str[, settings])->Text\n
+/* function: "create_Text(pos|rect, str[, settings])->Text\n
 Creates a Text object. If a rectangle is given as the first argument,
 the text is bounded. " */
 extern PyObject* create_Text(const Either<Rect, Point>& region,
