@@ -347,12 +347,7 @@ PyTypeObject BitmapType = {
   nullptr, // tp_as_buffer
   Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, // tp_flags
   // tp_doc
-
-  "Allows in-memory bitmap editing.\n"
-  "To show a Bitmap, blit it onto an opened image (see Canvas.blit).\n\n"
-  "A Bitmap can be used for the loading step of custom raster file formats (see\n"
-  "add_format and ImageProps).",
-
+  "Bitmap for RGBA pixel data.",
   nullptr, // tp_traverse
   nullptr, // tp_clear
   nullptr, // tp_richcompare
