@@ -1232,7 +1232,7 @@ def parse_doc(path, image_props, system_language="en"):
     except svg_error as e:
         raise faint.LoadError(str(e))
 
-def parse_svg_string(xml_string, image_props, system_language="en"):
+def from_string(xml_string, image_props, system_language="en"):
     """Parses the SVG document in the given string, using the image_props
     to build an image.
 

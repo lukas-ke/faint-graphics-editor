@@ -25,7 +25,7 @@ import platform
 import subprocess as sp
 
 import faint
-from faint.svg.parse_svg import parse_svg_string
+import faint.svg.parse_svg as parse_svg
 from faint.extra.util import hide_console
 
 __all__ = ["init_dot_format"]
@@ -45,7 +45,7 @@ def _load_dot(file_path, image_props):
         image_props.set_error("Nothing written to standard output by dot."
          "\n\n%s" % err.decode("ascii"))
     else:
-        parse_svg_string(out, image_props)
+        parse_svg.from_string(out, image_props)
         if len(err) > 0:
             image_props.add_warning("dot error output:\n\n" +
                                     err.decode("ascii"))

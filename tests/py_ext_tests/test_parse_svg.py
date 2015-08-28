@@ -3,10 +3,8 @@
 
 import unittest
 import faint
-# Fixme: inconsistent: parse_[svg]_string vs parse_doc
-# Should probably remove "_svg"
-# Also: Would be nicer to lift these into faint.svg via __init__.py
-from faint.svg.parse_svg import parse_svg_string, parse_doc
+# Fixme: Would be nicer to lift the parse functions faint.svg via __init__.py
+import faint.svg.parse_svg as svg
 
 SVG = """\
 <svg xmlns:svg="http://www.w3.org/2000/svg"
@@ -19,7 +17,7 @@ class TestParseSVG(unittest.TestCase):
 
     def test_parse_svg_string(self):
         props = faint.ImageProps()
-        parse_svg_string(SVG, props)
+        svg.from_string(SVG, props)
         frame = props.get_frame(0)
         image = faint.Image(frame)
 
@@ -29,7 +27,7 @@ class TestParseSVG(unittest.TestCase):
 
     def test_parse_pimage(self):
         l = faint.PimageList()
-        parse_svg_string(SVG, l)
+        svg.from_string(SVG, l)
         self.assertEqual(len(l.frames), 1)
 
         f = l.frames[0]

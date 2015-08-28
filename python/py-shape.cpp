@@ -127,8 +127,8 @@ static Settings Shape_get_settings(const Object& self){
 
 /* method: "get_type()->s\n
 Returns the type of the object, as a string." */
-static utf8_string Smth_get_type(const BoundObject<Object>& self){
-  return self.obj->GetType();
+static utf8_string Smth_get_type(const Object& self){
+  return self.GetType();
 }
 
 /* method: "get_tri()" */
