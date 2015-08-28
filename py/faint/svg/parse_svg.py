@@ -21,9 +21,9 @@ __all__ = ["parse_doc", "parse_svg_string"]
 
 from math import atan2
 import re
-import faint.svg.wrapped_etree as ET
-import faint.svg.svg_re as svg_re
-from faint.svg.parse.parse_util import (
+from . import wrapped_etree as ET
+from . import svg_re
+from . parse.parse_util import (
     svg_error,
     Matrix,
     clean_path_definition,
@@ -39,7 +39,7 @@ from faint.svg.parse.parse_util import (
     ABSOLUTE_UNIT_FACTORS
 )
 
-from faint.svg.util import (
+from . util import (
     arrow_line_end,
     deg2rad,
     rad_angle,
