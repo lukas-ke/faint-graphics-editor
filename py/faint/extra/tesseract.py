@@ -18,7 +18,7 @@
 """Function for converting raster text in the image to a string.
 Requires that the tesseract-ocr application is available in the path.
 
-See http://code.google.com/p/tesseract-ocr/
+See https://github.com/tesseract-ocr
 
 """
 
