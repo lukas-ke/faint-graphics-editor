@@ -379,7 +379,7 @@ PyTypeObject BitmapType = {
 };
 
 void add_type_Bitmap(PyObject* module){
-  faint::add_type_object(module, faint::BitmapType, "Bitmap");
+  add_type_object(module, BitmapType, "Bitmap");
 }
 
 } // namespace

@@ -48,16 +48,6 @@ public:
   bool targetActive;
 };
 
-extern PyTypeObject GridType;
-
-struct gridObject {
-  // Fixme: Move into impl..
-  PyObject_HEAD
-  PyFuncContext* ctx;
-  bool targetActive;
-  CanvasId canvasId;
-};
-
 // Returns a grid object targetting the specified canvas.
 PyObject* py_grid_canvas(PyFuncContext&, CanvasId id);
 
@@ -66,9 +56,12 @@ PyObject* py_active_grid(PyFuncContext&);
 
 PyObject* py_grid(const CanvasGrid&);
 
-// Returns the Grid object from this gridObject
-// Sets a Python-error unless the grid is OK.
-Optional<Grid> get_grid(gridObject*);
+// Returns the faint::Grid-object from the Python wrapper.
+Optional<Grid> get_grid(PyObject*);
+
+bool is_Grid(PyObject*);
+
+void add_type_Grid(PyObject* module);
 
 } // namespace
 

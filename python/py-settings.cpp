@@ -195,6 +195,6 @@ PyObject* pythoned(const Settings& s){
 }
 
 void add_type_Settings(PyObject* module){
-  faint::add_type_object(module, faint::SettingsType, "Settings");
+  add_type_object(module, SettingsType, "Settings");
 }
 } // namespace

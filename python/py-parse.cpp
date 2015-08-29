@@ -290,10 +290,10 @@ bool parse_flat(Canvas*& canvas, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
 bool parse_flat(Grid& grid, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 1, "grid");
 
-  if (!PyObject_IsInstance(args, (PyObject*)&GridType)){
+  if (!is_Grid(args)){
     throw TypeError(type_name(grid), n);
   }
-  Optional<Grid> maybeGrid = get_grid((gridObject*)args);
+  Optional<Grid> maybeGrid = get_grid(args);
   if (!maybeGrid.IsSet()){
     return false;
   }

@@ -17,6 +17,7 @@
 #include "app/app-context.hh"
 #include "app/canvas.hh"
 #include "python/mapped-type.hh"
+#include "python/py-add-type-object.hh"
 #include "python/py-include.hh"
 #include "python/py-grid.hh"
 #include "python/py-ugly-forward.hh"
@@ -39,6 +40,16 @@ void CanvasGrid::SetGrid(const Grid& g) const{
   c.SetGrid(g);
   ctx.py.QueueRefresh(c);
 }
+
+extern PyTypeObject GridType;
+
+struct gridObject {
+  // Fixme: Move into impl..
+  PyObject_HEAD
+  PyFuncContext* ctx;
+  bool targetActive;
+  CanvasId canvasId;
+};
 
 static bool grid_ok_no_error(gridObject* self){
   if (self->targetActive){
@@ -87,11 +98,18 @@ static Canvas& get_canvas(gridObject* self){
     self->ctx->app.GetCanvas(self->canvasId);
 }
 
-Optional<Grid> get_grid(gridObject* self){
-  if (!grid_ok(self)){
-    return no_option();
+Optional<Grid> get_grid(PyObject* obj){
+  if (!PyObject_IsInstance(obj, (PyObject*)&GridType)){
+    return {};
   }
-  return option(get_canvas(self).GetGrid());
+
+  auto grid = (gridObject*)obj;
+  if (grid_ok(grid)){
+    return option(get_canvas(grid).GetGrid());
+  }
+  else{
+    return {};
+  }
 }
 
 static PyObject* grid_new(PyTypeObject* type, PyObject*, PyObject*){
@@ -274,6 +292,14 @@ PyObject* py_active_grid(PyFuncContext& ctx){
   py_grid->ctx = &ctx;
   py_grid->targetActive = true;
   return (PyObject*) py_grid;
+}
+
+void add_type_Grid(PyObject* module){
+  add_type_object(module, GridType, "Grid");
+}
+
+bool is_Grid(PyObject* obj){
+  return PyObject_IsInstance(obj, (PyObject*)&GridType) != 0;
 }
 
 } // namespace

@@ -222,7 +222,7 @@ PyObject* pythoned(const Tri& tri){
 }
 
 void add_type_Tri(PyObject* module){
-  faint::add_type_object(module, faint::TriType, "Tri");
+  add_type_object(module, TriType, "Tri");
 
 }
 

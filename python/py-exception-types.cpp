@@ -50,10 +50,8 @@ bool py_save_error_occurred(){
 }
 
 void add_exception_types(PyObject* module){
-  // Fixme: Duplicates py-initialize-ifaint.cpp
-  PyModule_AddObject(module, "LoadError", faint::get_load_exception_type());
-  PyModule_AddObject(module, "SaveError", faint::get_save_exception_type());
-
+  PyModule_AddObject(module, "LoadError", get_load_exception_type());
+  PyModule_AddObject(module, "SaveError", get_save_exception_type());
 }
 
-}
+} // namespace

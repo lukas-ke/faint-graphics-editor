@@ -45,15 +45,15 @@ namespace faint{
 static void add_faint_types(PyObject* module){
   add_type_Bitmap(module);
   add_type_FrameProps(module);
+  add_type_Grid(module);
   add_type_ImageProps(module);
   add_type_Pattern(module);
   add_type_Settings(module);
   add_type_Tri(module);
-
   add_gradient_types(module);
   add_type_object(module, CanvasType, "Canvas");
   add_type_object(module, FrameType, "Frame");
-  add_type_object(module, GridType, "Grid");
+
   add_type_object(module, SmthType, "Something");
 
   PyObject* binds = PyDict_New();
