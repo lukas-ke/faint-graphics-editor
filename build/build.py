@@ -23,33 +23,6 @@ import shutil
 import subprocess
 import sys
 
-class working_dir:
-    def __init__(self, new_dir):
-        self.new_dir = new_dir
-        self.old_dir = os.getcwd()
-
-    def __enter__(self):
-        os.chdir(self.new_dir)
-
-    def __exit__(self, type, value, traceback):
-        os.chdir(self.old_dir)
-
-
-class no_output:
-    def __init__(self):
-        self.stdout = sys.stdout
-        self.stderr = sys.stderr
-        self.devnull = open(os.devnull, 'w')
-    def __enter__(self):
-        sys.stdout = self.devnull
-        sys.stderr = self.devnull
-
-    def __exit__(self, type, value, traceback):
-        sys.stdout = self.stdout
-        sys.stderr = self.stderr
-        self.devnull.close()
-
-
 build_dir = os.path.split(os.path.realpath(__file__))[0]
 os.chdir(build_dir) # Fixme: Don't change dir, use absolute paths.
 root_dir = os.path.split(build_dir)[0]
@@ -59,6 +32,7 @@ sys.path.append(join_path(root_dir, "build-sys/"))
 sys.path.append(join_path(root_dir, "test-sys/"))
 import build_sys as bs
 from build_sys.util import list_cpp, strip_ext
+from build_sys.util.scoped import working_dir, no_output
 from test_sys import gen_runner
 import gencpp
 import faint_info
