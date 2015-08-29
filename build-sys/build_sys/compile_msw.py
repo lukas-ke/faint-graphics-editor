@@ -20,6 +20,7 @@ import subprocess
 import time
 import sys
 from build_sys.util.util import changed, print_timing
+from build_sys.util.scoped import working_dir
 
 obj_ext = '.obj'
 
@@ -65,6 +66,7 @@ cl_debug_switches = [
     "Zi", # Full debugging information (pdb?)
 ]
 
+
 def get_cl_switches(debug):
     switches = cl_common_switches[:]
     if debug:
@@ -72,6 +74,7 @@ def get_cl_switches(debug):
     else:
         switches.extend(cl_release_switches)
     return switches
+
 
 def compile(in_list,opts, out, err, debug):
     assert(len(set(in_list)) == len(in_list))
@@ -118,18 +121,23 @@ def compile(in_list,opts, out, err, debug):
         cmd = cmd + " /MP%d" % opts.parallell_compiles
     cmd += " /c " + " ".join(fileList)
     sys.stdout.flush()
-    old = os.getcwd()
-    os.chdir(opts.get_obj_root() )
+
     try:
-        cl = subprocess.Popen(cmd, 0, None, None, out, err)
+        cl = subprocess.Popen(cmd,
+                              0,
+                              None,
+                              None,
+                              out,
+                              err,
+                              cwd=opts.get_obj_root())
     except FileNotFoundError as e:
         print("Compilation failed: cl.exe not in PATH?")
         exit(1)
 
-    os.chdir( old )
     if cl.wait() != 0:
         print("Compilation failed")
         exit(1)
+
 
 def compile_resources(faintRoot, target_folder, wxRoot, out, err):
     # Fixme: Pass .rc path instead
@@ -148,6 +156,7 @@ def compile_resources(faintRoot, target_folder, wxRoot, out, err):
         exit(1)
 
     return targetFile
+
 
 wxlibs_debug = [
     "wxbase31ud.lib",
@@ -171,6 +180,7 @@ wxlibs_debug = [
     "wxtiffd.lib",
     "wxzlibd.lib" ]
 
+
 wxlibs_release = [
     "wxbase31u.lib",
     "wxbase31u_net.lib",
@@ -193,25 +203,8 @@ wxlibs_release = [
     "wxtiff.lib",
     "wxzlib.lib" ]
 
-def get_wxlibs(debug):
-    return wxlibs_debug if debug else wxlibs_release
-
-def create_lib_paths_string(libs):
-    return "/LIBPATH:" + " /LIBPATH:".join(libs)
-
-def to_subsystem_flag(subsystem):
-    return ("/SUBSYSTEM:WINDOWS" if subsystem == "windows"
-            else "/SUBSYSTEM:CONSOLE")
-
-def clean_vc_nonsense(bo):
-    root_name = os.path.join(bo.project_root, bo.get_out_name())
-    for ext in (".exp", ".lib", ".exe.manifest"):
-        fn = root_name + ext
-        if os.path.exists(fn):
-            os.remove(fn)
 
 def other_libs():
-
     return " ".join(["comctl32.lib",
                      "rpcrt4.lib",
                      "shell32.lib",
@@ -236,14 +229,28 @@ def other_libs():
                      "gthread-2.0.lib"])
 
 
-def link(files, opts, out, err, debug):
-    resFile = compile_resources(opts.project_root,
-                                opts.get_obj_root(),
-                                opts.extra_resource_root,
-                                out,
-                                err)
-    old = os.getcwd()
-    os.chdir(opts.project_root)
+def get_wxlibs(debug):
+    return wxlibs_debug if debug else wxlibs_release
+
+
+def create_lib_paths_string(libs):
+    return "/LIBPATH:" + " /LIBPATH:".join(libs)
+
+
+def to_subsystem_flag(subsystem):
+    return ("/SUBSYSTEM:WINDOWS" if subsystem == "windows"
+            else "/SUBSYSTEM:CONSOLE")
+
+
+def clean_vc_nonsense(bo):
+    root_name = os.path.join(bo.project_root, bo.get_out_name())
+    for ext in (".exp", ".lib", ".exe.manifest"):
+        fn = root_name + ext
+        if os.path.exists(fn):
+            os.remove(fn)
+
+
+def _link(files, resource_file, opts, out, err, debug):
     flags = "/NOLOGO"
     wxlibs = get_wxlibs(debug)
     out_name = opts.get_out_name()
@@ -267,7 +274,7 @@ def link(files, opts, out, err, debug):
                     " ".join(files),
                     " ".join(wxlibs),
                     other_libs(),
-                    resFile])
+                    resource_file])
 
     linker = subprocess.Popen(cmd, stdout=out, stderr=err)
 
@@ -298,7 +305,17 @@ def link(files, opts, out, err, debug):
     else:
         clean_vc_nonsense(opts)
 
-    os.chdir( old )
+
+def link(files, opts, out, err, debug):
+    resource_file = compile_resources(opts.project_root,
+                                opts.get_obj_root(),
+                                opts.extra_resource_root,
+                                out,
+                                err)
+
+    with working_dir(opts.project_root):
+        _link(files, resource_file, opts, out, err, debug)
+
 
 def create_installer(makensis, nsifile):
     nsis = subprocess.Popen(makensis + " " + nsifile)
