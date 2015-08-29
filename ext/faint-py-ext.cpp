@@ -44,30 +44,47 @@ static struct PyModuleDef faintModule = {
    get_py_functions()
 };
 
+static void add_compatibility_types(PyObject* module){
+  // These types are only useful in the Faint application, but are
+  // added to the extension to avoid crashes on type-comparison in
+  // py-parse.hh.
+  //
+  // Since they raise exceptions in their tp_init, it won't be
+  // possible to instantiate them in the extension.
+  add_type_object(module, CanvasType, "_Canvas");
+  add_type_object(module, FrameType, "_Frame");
+}
+
+static PyObject* init_extension_module(){
+  PyObject* ifaint = PyModule_Create(&faintModule);
+
+  // Sub-modules
+  add_clipboard_module(ifaint);
+  add_png_module(ifaint);
+
+  // Types
+  add_type_Bitmap(ifaint);
+  add_type_FrameProps(ifaint);
+  add_type_Image(ifaint);
+  add_type_ImageProps(ifaint);
+  add_type_Pattern(ifaint);
+  add_type_Settings(ifaint);
+  add_type_Shape(ifaint);
+  add_type_Tri(ifaint);
+
+  // Some more types
+  add_exception_types(ifaint);
+  add_gradient_types(ifaint);
+
+  // And some I'd rather not have
+  add_compatibility_types(ifaint);
+
+  return ifaint;
+}
+
 } // namespace
 
-// Dynamic library entry point
 PyMODINIT_FUNC PyInit_ifaint(){
-  PyObject* module = PyModule_Create(&faint::faintModule);
-
-  faint::add_png_module(module);
-  faint::add_clipboard_module(module);
-
-  faint::add_type_FrameProps(module);
-  faint::add_type_ImageProps(module);
-  faint::add_type_Image(module);
-  faint::add_type_Shape(module);
-  faint::add_type_Bitmap(module);
-  faint::add_type_Pattern(module);
-  faint::add_type_Settings(module);
-  faint::add_type_Tri(module);
-
-  faint::add_gradient_types(module);
-  faint::add_exception_types(module);
-
-
-  // Fixme: For py-parse.hh (these can't be instantiated)
-  faint::add_type_object(module, faint::FrameType, "_Frame");
-  faint::add_type_object(module, faint::CanvasType, "_Canvas");
-  return module;
+  // Dynamic library entry point
+  return faint::init_extension_module();
 }
