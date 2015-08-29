@@ -44,4 +44,4 @@ class TestWritePDF(unittest.TestCase):
         self.assertEqual([o.type for o in f2.objects],
                          object_types)
 
-        # Fixme: Text content is empty.
+        self.assertEqual(f2.objects[-1].get_text_raw(), "Hello")

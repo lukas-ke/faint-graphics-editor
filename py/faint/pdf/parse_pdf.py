@@ -58,8 +58,12 @@ def _parse_metadata(metadata):
         d[int(lineNum)] = data.split(" ")
     return d
 
+def get_text_content(parenthesized_text):
+    return parenthesized_text[1:-1]
+
 def _parse_text(items):
-    return unescape_string(" ".join(items[0:-2])[1:])
+    text_item, operator = items
+    return unescape_string(get_text_content(text_item))
 
 def _parse_stream(text, frame_props, page_size, metadata):
     """Parses a pdf-stream object into Faint objects which are added
@@ -176,7 +180,10 @@ def _points_pdf_to_faint(pdf_points, doc_h, scale_x, scale_y):
 
 
 def _find_faint_meta(text):
-    re_metadata = re.compile("% faint meta-data\n(.*?)% end of faint meta-data", re.DOTALL)
+    re_metadata = re.compile(
+        "% faint meta-data\n(.*?)% end of faint meta-data",
+        re.DOTALL)
+
     meta_data = [] # List of meta-data dictionaries
     for match in re_metadata.finditer(text):
         if len(match.group(1)) > 0:
