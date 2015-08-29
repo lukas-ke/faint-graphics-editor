@@ -293,7 +293,7 @@ static utf8_string Smth_get_text_raw(const BoundObject<Object>& self){
   if (!text){
     throw ValueError(space_sep(self.obj->GetType(), "does not support text."));
   }
-  return text->GetTextBuffer().get();
+  return text->GetRawString();
 }
 
 /* method: "skew(f)\nSkew the object f-steps. See Tri for the skew definition." */
