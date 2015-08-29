@@ -107,6 +107,9 @@ class PimageList:
     def get_size(self):
         return self.frames[0].get_size()
 
+    def get_frames(self):
+        return self.frames
+
     def get_frame(self, num=0):
         return self.frames[num]
 

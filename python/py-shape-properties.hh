@@ -46,7 +46,7 @@ struct Shape_angle_rad{
 };
 
 /* property: "The object's angle in degrees" */
-struct Smth_angle_deg{
+struct Shape_angle_deg{
   static coord Get(Object& self){
     return self.GetTri().GetAngle().Deg();
   }
@@ -60,12 +60,20 @@ struct Smth_angle_deg{
   }
 };
 
-// Fixme: Add a Tri-property, similar to py-something-properties,
-// but with increased ref-count for the shape.
-// Or maybe not? Maybe tri should be immutable.
+/* property: "The bounds of this object, specified by three points" */
+struct Shape_tri{
+  static Tri Get(const Object& self){
+    return self.GetTri();
+  }
+
+  static void Set(Object& self, const Tri& tri){
+    self.SetTri(tri);
+  }
+};
+
 
 /* property: "The position of the object, defined as P0 of its Tri." */
-struct Smth_pos{
+struct Shape_pos{
   static Point Get(Object& self){
     return self.GetTri().P0();
   }
@@ -79,7 +87,7 @@ struct Smth_pos{
 };
 
 /* property: "A string indicating the type of the object." */
-struct Smth_type{
+struct Shape_type{
   static utf8_string Get(Object& self){
     return self.GetType();
   }

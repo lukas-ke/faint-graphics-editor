@@ -5,7 +5,7 @@ import unittest
 import faint
 import faint.svg.write_svg as write_svg
 
-# Kind of brittle, but OK for now.
+# A previous result used as key kind of brittle, but OK for now.
 SVG_KEY = """<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
