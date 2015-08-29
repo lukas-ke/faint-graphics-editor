@@ -20,27 +20,6 @@
 
 namespace faint{
 
-CaretRange::CaretRange(Caret from, Caret to)
-  : from(from),
-    to(to)
-{}
-
-CaretRange CaretRange::Both(Caret v){
-  return CaretRange(v,v);
-}
-
-bool CaretRange::Empty() const{
-  return from == to;
-}
-
-bool CaretRange::operator==(const CaretRange& other) const{
-  return from == other.from && to == other.to;
-}
-
-bool CaretRange::operator!=(const CaretRange& other) const{
-  return !operator==(other);
-}
-
 TextBuffer::TextBuffer()
   : m_caret(0)
 {

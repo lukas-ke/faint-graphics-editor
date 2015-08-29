@@ -852,7 +852,8 @@ bool parse_flat(Settings& s, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
 
 static Bitmap* as_Bitmap(PyObject* obj, Py_ssize_t n){
   if (!PyObject_IsInstance(obj, (PyObject*)&BitmapType)){
-    PyErr_SetString(PyExc_ValueError, space_sep("Argument", str_ssize_t(n + 1), "must be a Bitmap").c_str()); // Fixme: Prevent overflow
+    PyErr_SetString(PyExc_TypeError, space_sep("Argument", str_argnum_user(n),
+      "must be a Bitmap").c_str());
     return nullptr;
   }
   bitmapObject* py_bitmap = (bitmapObject*)obj;

@@ -18,16 +18,16 @@
 #include "geo/line.hh" // LineSegment
 #include "rendering/faint-dc.hh"
 #include "text/text-line.hh" // TextInfo
-#include "text/text-buffer.hh" // Fixme: Remove, pass CaretRange
+#include "text/caret.hh"
 #include "util/settings.hh"
 
 namespace faint{
 
-// Fixme: Move elsewhere, add unit test.
+// Returns a line for the graphical caret position
 LineSegment compute_caret(const TextInfo&,
-  const TextBuffer&,
+  Caret, // caret in the un-split text
   const Tri&,
-  const text_lines_t&,
+  const text_lines_t&, // the text broken into lines
   const Settings&);
 
 void render_text(FaintDC&,

@@ -30,12 +30,12 @@
 namespace faint{
 
 LineSegment compute_caret(const TextInfo& info,
-  const TextBuffer& textBuf,
+  Caret caret,
   const Tri& tri,
   const text_lines_t& lines,
   const Settings& settings)
 {
-  TextPos pos = caret_index_to_row_column(lines, textBuf.caret());
+  TextPos pos = caret_index_to_row_column(lines, caret);
 
   const auto& line = lines[pos.row];
   auto textSize = info.TextSize(slice_up_to(line.text, pos.col));

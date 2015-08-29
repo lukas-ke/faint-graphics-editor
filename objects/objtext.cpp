@@ -149,7 +149,11 @@ void ObjText::Draw(FaintDC& dc, ExpressionContext& ctx){
     textInfo,
     m_settings);
 
-  m_caret = compute_caret(textInfo, m_textBuf, m_tri, lines, m_settings);
+  m_caret = compute_caret(textInfo,
+    m_textBuf.caret(),
+    m_tri,
+    lines,
+    m_settings);
 }
 
 void ObjText::DrawMask(FaintDC& dc, ExpressionContext& ctx){

@@ -16,23 +16,10 @@
 #ifndef FAINT_TEXT_BUFFER_HH
 #define FAINT_TEXT_BUFFER_HH
 #include <algorithm>
+#include "text/caret.hh"
 #include "text/utf8-string.hh"
 
 namespace faint{
-
-using Caret = size_t;
-
-// Selection range
-class CaretRange{
-public:
-  CaretRange(Caret from, Caret to);
-  static CaretRange Both(Caret);
-  bool Empty() const;
-  bool operator==(const CaretRange&) const;
-  bool operator!=(const CaretRange&) const;
-  Caret from;
-  Caret to;
-};
 
 class TextBuffer{
   // A buffer for text entry with caret and selection
