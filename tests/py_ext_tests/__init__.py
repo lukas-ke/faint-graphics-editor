@@ -10,6 +10,7 @@ def extra():
 
 
 TEST_OUT_PATH = None
+TEST_DATA_PATH = None
 
 def make_test_dir(test):
     if TEST_OUT_PATH is None:
@@ -23,3 +24,8 @@ def make_test_dir(test):
         os.mkdir(path)
 
     return path
+
+def test_data_dir():
+    if TEST_DATA_PATH is None:
+        raise ValueError("TEST_DATA_PATH not set")
+    return TEST_DATA_PATH

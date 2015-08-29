@@ -45,7 +45,10 @@ def to_text(temp_folder, image=None, language="eng"):
     image.save_backup(temp_png)
 
     cmd = ["tesseract", temp_png, temp_txt, "-l %s" % language]
-    tsr = sp.Popen(cmd, startupinfo=hide_console())
+    tsr = sp.Popen(cmd,
+                   startupinfo=hide_console(),
+                   stdout=sp.DEVNULL,
+                   stderr=sp.DEVNULL)
 
     if tsr.wait() == 0:
         with open("%s.txt" % temp_txt, 'rb') as f:

@@ -88,6 +88,11 @@ class Pimage:
         """For compatibility with FrameProps"""
         pass
 
+    def save_backup(self, path):
+        ifaint.write_png(self.background, path)
+
+    background = None
+
 class PimageList:
     """List of frames in Python."""
 
