@@ -164,6 +164,16 @@ static coord Shape_get_text_height(const Object& self){
   return txt->RowHeight();
 }
 
+class NullExpressionContext : public ExpressionContext{
+public:
+  Optional<Calibration> GetCalibration() const override{
+    return {};
+  }
+  virtual const Object* GetObject(const utf8_string&) const override{
+    return nullptr;
+  }
+};
+
 /* method: "get_text_lines()->(s,...)\n
 Returns the evaluated text from a Text-object split into lines. Takes
 the bounding rectangle in consideration, so that the lines are split in
@@ -174,8 +184,8 @@ static text_lines_t Shape_get_text_lines(const Object& self){
     throw TypeError(space_sep(self.GetType(), "does not support text."));
   }
 
-  // Fixme: Split and such
-  return {TextLine::SoftBreak(400.0, text->GetRawString())};
+  NullExpressionContext ctx;
+  return split_evaluated(ctx, text);
 }
 
 /* method: "get_type()->s\n

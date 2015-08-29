@@ -2,12 +2,14 @@ import unittest
 import os
 import faint
 import faint.pdf.write_pdf as write_pdf
+import faint.pdf.parse_pdf as parse_pdf
 import py_ext_tests
 from faint import settings
 
 class TestWritePDF(unittest.TestCase):
 
-    def test_write_pdf(self):
+    def test_pdf(self):
+        # Write a PDF
         l = faint.PimageList()
         f = l.add_frame((120, 120))
 
@@ -22,4 +24,24 @@ class TestWritePDF(unittest.TestCase):
         f.Text((10, 10, 100, 100), "Hello")
 
         out_dir = py_ext_tests.make_test_dir(self)
-        s = write_pdf.write(os.path.join(out_dir, "test.pdf"), l)
+        filename = os.path.join(out_dir, "test.pdf")
+        write_pdf.write(filename, l)
+
+
+        # Read it back
+        l2 = faint.PimageList()
+        parse_pdf.parse(filename, l2)
+        self.assertEqual(len(l2.frames), 1)
+
+        f2 = l2.frames[0]
+        self.assertEqual(len(f2.objects), 5)
+
+        object_types = ['Polygon', # Fixme: Was Rect
+                        "Ellipse",
+                        "Line",
+                        "Line",
+                        "Text Region"]
+        self.assertEqual([o.type for o in f2.objects],
+                         object_types)
+
+        # Fixme: Text content is empty.

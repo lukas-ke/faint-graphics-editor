@@ -186,8 +186,8 @@ def _find_faint_meta(text):
 
 def parse(file_path, image_props):
     """Build an image from the pdf file at file_path"""
-    f = codecs.open(file_path, "rb", "ascii") # Fixme: ascii will fail for values > 127
-    text = f.read()
+    with codecs.open(file_path, "rb", "ascii") as f:
+        text = f.read()
 
     page_sizes = _find_page_sizes(text)
     if page_sizes == 0:
