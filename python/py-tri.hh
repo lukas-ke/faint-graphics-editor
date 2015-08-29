@@ -26,6 +26,8 @@ struct triObject{
   Tri tri;
 };
 
+void add_type_Tri(PyObject* module);
+
 PyObject* pythoned(const Tri&);
 
 } // namespace

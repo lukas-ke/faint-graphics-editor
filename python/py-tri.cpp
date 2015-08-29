@@ -15,6 +15,7 @@
 
 #include "geo/tri.hh"
 #include "python/mapped-type.hh"
+#include "python/py-add-type-object.hh"
 #include "python/py-include.hh"
 #include "python/py-tri.hh"
 #include "python/py-ugly-forward.hh"
@@ -218,6 +219,11 @@ PyObject* pythoned(const Tri& tri){
   triObject* py_tri = (triObject*) TriType.tp_alloc(&TriType, 0);
   py_tri->tri = tri;
   return (PyObject*)py_tri;
+}
+
+void add_type_Tri(PyObject* module){
+  faint::add_type_object(module, faint::TriType, "Tri");
+
 }
 
 } // namespace

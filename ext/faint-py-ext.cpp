@@ -60,13 +60,14 @@ PyMODINIT_FUNC PyInit_ifaint(){
   faint::add_type_Shape(module);
   faint::add_type_Bitmap(module);
   faint::add_type_Pattern(module);
-  faint::add_gradient_types(module);
+  faint::add_type_Tri(module);
 
+  faint::add_gradient_types(module);
   faint::add_exception_types(module);
 
   // Fixme: Duplicates py-initialize-ifaint.cpp
   faint::add_type_object(module, faint::SettingsType, "Settings");
-  faint::add_type_object(module, faint::TriType, "Tri");
+
 
   // Fixme: For py-parse.hh (these can't be instantiated)
   faint::add_type_object(module, faint::FrameType, "_Frame");
