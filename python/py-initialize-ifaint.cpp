@@ -45,10 +45,10 @@ namespace faint{
 void add_faint_types(PyObject* module){
   add_type_Bitmap(module);
   add_type_Tri(module);
+  add_type_Settings(module);
   add_type_object(module, SmthType, "Something");
   add_type_object(module, CanvasType, "Canvas");
   add_type_object(module, FrameType, "Frame");
-  add_type_object(module, SettingsType, "Settings");
 
   add_gradient_types(module);
   add_type_ImageProps(module);

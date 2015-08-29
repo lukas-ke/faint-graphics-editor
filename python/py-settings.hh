@@ -15,6 +15,7 @@
 
 #ifndef FAINT_PY_SETTINGS_HH
 #define FAINT_PY_SETTINGS_HH
+#include "python/py-include.hh"
 
 namespace faint{
 
@@ -26,6 +27,8 @@ struct settingsObject{
   PyObject_HEAD
   Settings* settings;
 };
+
+void add_type_Settings(PyObject* module);
 
 PyObject* pythoned(const Settings&);
 

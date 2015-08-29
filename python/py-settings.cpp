@@ -18,8 +18,8 @@
 #include "text/formatting.hh"
 #include "util/setting-id.hh"
 #include "util/settings.hh"
+#include "python/py-add-type-object.hh"
 #include "python/mapped-type.hh"
-#include "python/py-include.hh"
 #include "python/py-settings.hh"
 #include "python/py-util.hh"
 #include "python/py-ugly-forward.hh"
@@ -194,4 +194,7 @@ PyObject* pythoned(const Settings& s){
   return (PyObject*)py_settings;
 }
 
+void add_type_Settings(PyObject* module){
+  faint::add_type_object(module, faint::SettingsType, "Settings");
+}
 } // namespace
