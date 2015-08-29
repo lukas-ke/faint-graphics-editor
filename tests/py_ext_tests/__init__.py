@@ -1,7 +1,13 @@
 import os
+import unittest
+from . import test_extra
 
 def load_tests(loader, standard_tests, pattern):
-    return loader.discover(".")
+    return loader.discover("py_ext_tests/test_faint")
+
+def extra():
+    return unittest.defaultTestLoader.discover("py_ext_tests/test_extra")
+
 
 TEST_OUT_PATH = None
 

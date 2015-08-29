@@ -22,6 +22,7 @@
 #include "objects/objcomposite.hh"
 #include "objects/objellipse.hh"
 #include "objects/objline.hh"
+#include "objects/objpath.hh"
 #include "objects/objpolygon.hh"
 #include "objects/objraster.hh"
 #include "objects/objrectangle.hh"
@@ -142,6 +143,15 @@ static std::vector<coord> Shape_get_points(const Object& self){
 Returns a copy of this object's settings." */
 static Settings Shape_get_settings(const Object& self){
   return self.GetSettings();
+}
+
+/* method: "get_text_raw(s)\nGet the unevaluated Text from Text objects." */
+static utf8_string Smth_get_text_raw(const Object& self){
+  auto text = dynamic_cast<const ObjText*>(&self);
+  if (!text){
+    throw ValueError(space_sep(self.GetType(), "does not support text."));
+  }
+  return text->GetRawString();
 }
 
 /* method: "get_type()->s\n
@@ -299,6 +309,27 @@ PyObject* create_Line(const std::vector<coord>& coords,
 
   const auto s = maybeSettings.Or(default_line_settings());
   return create_Shape(create_line_object(points_from_coords(coords), s));
+}
+
+PyObject* create_Path(const utf8_string& path,
+  const Optional<Settings>& maybeSettings)
+{
+  // Fixme: Duplicates py-canvas.cpp
+
+  if (!is_ascii(path)){
+    // Fixme: Consider adding ascii_string type
+    throw ValueError("Non-ascii-characters in path definition.");
+  }
+  std::vector<PathPt> points(parse_svg_path(path.str()));
+  if (points.empty()){
+    throw ValueError("Failed parsing path definition.");
+  }
+  if (points.front().IsNotMove()){
+    throw ValueError("Paths must begin with a Move-entry.");
+  }
+
+  const auto s = maybeSettings.Or(default_path_settings());
+  return create_Shape(create_path_object(Points(points), s));
 }
 
 PyObject* create_Polygon(const std::vector<coord>& coords,

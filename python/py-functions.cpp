@@ -285,6 +285,10 @@ static png_pair read_png_py(const FilePath& path){
 Temporary helper for Shape/Pimage." */
 extern PyObject* create_Rect(const Rect&, const Optional<Settings>&);
 
+/* function: "create_Path(...)\n
+Temporary helper for Shape/Pimage." */
+extern PyObject* create_Path(const utf8_string&, const Optional<Settings>&);
+
 /* function: "create_Ellipse(...)\n
 Temporary helper for Shape/Pimage." */
 extern PyObject* create_Ellipse(const Rect&, const Optional<Settings>&);

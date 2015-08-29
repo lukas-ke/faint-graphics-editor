@@ -28,19 +28,26 @@ import faint
 import faint.svg.parse_svg as parse_svg
 from faint.extra.util import hide_console
 
-__all__ = ["init_dot_format"]
+__all__ = ["init_dot_format",
+           "load_dot",
+           "load_dot_string"]
 
-def _load_dot(file_path, image_props):
-    """Use dot to generate an svg, then load that SVG."""
-    cmd = ["dot", "-Tsvg", file_path]
+
+def _run_dot(cmd, image_props, graph_input):
+    stdin = Nonr if graph_input is None else sp.PIPE
+
     try:
-        dot = sp.Popen(cmd, stdout=sp.PIPE, stderr=sp.PIPE,
-          startupinfo=hide_console())
+        dot = sp.Popen(cmd,
+                       stdout=sp.PIPE,
+                       stderr=sp.PIPE,
+                       stdin=stdin,
+                       startupinfo=hide_console())
     except FileNotFoundError:
         image_props.set_error("GraphViz dot not available.")
         return
 
-    out, err = dot.communicate()
+    out, err = dot.communicate(input=graph_input)
+
     if len(out) == 0:
         image_props.set_error("Nothing written to standard output by dot."
          "\n\n%s" % err.decode("ascii"))
@@ -50,9 +57,28 @@ def _load_dot(file_path, image_props):
             image_props.add_warning("dot error output:\n\n" +
                                     err.decode("ascii"))
 
+
+def load_dot(file_path, image_props):
+    """Use dot to convert the file to SVG, and parse the SVG with the
+    given ImageProps.
+
+    """
+    cmd = ["dot", "-Tsvg", file_path]
+    _run_dot(cmd, image_props, graph_input=None)
+
+
+def load_dot_string(txt, image_props):
+    """Use dot to convert the graph description to SVG, and parse the SVG
+    with the given ImageProps.
+
+    """
+    cmd = ["dot", "-Tsvg"]
+    _run_dot(cmd, image_props, graph_input=txt)
+
+
 def init_dot_format():
     """Adds a format for opening GraphViz dot-files. Requires that the
     dot-application is available on the path.
 
     """
-    faint.add_format(_load_dot, None, "GraphViz dot", "dot")
+    faint.add_format(load_dot, None, "GraphViz dot", "dot")

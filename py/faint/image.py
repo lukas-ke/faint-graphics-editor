@@ -46,6 +46,14 @@ class Pimage:
         self.objects.append(sh)
         return sh
 
+    def Text(self, *args):
+        sh = ifaint.create_Text(*args)
+        self.objects.append(sh)
+        return sh
+
+    def get_obj_text_height(self, *args):
+        return 10.0 # Fixme
+
     def Group(self, *args):
         sh = ifaint.create_Group(*args)
         self.objects.append(sh)
@@ -75,6 +83,10 @@ class Pimage:
 
     def _one_color_bg(self):
         return True # Fixme
+
+    def add_warning(self, w):
+        """For compatibility with FrameProps"""
+        pass
 
 class PimageList:
     """List of frames in Python."""
