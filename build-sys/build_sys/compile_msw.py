@@ -250,6 +250,27 @@ def clean_vc_nonsense(bo):
             os.remove(fn)
 
 
+def embed_manifest(opts, out, err):
+    # Embed the manifest to get the correct common controls version etc.
+    # See: http://msdn.microsoft.com/en-us/library/ms235591(v=vs.80).aspx
+
+    out_name = opts.get_out_name()
+    manifest = out_name + ".exe.manifest"
+    exe = out_name + ".exe"
+
+    manifestCmd = 'mt.exe -manifest %s -outputresource:%s;1' % (manifest, exe)
+
+    for attempt in range(3):
+        embedManifest = subprocess.Popen(manifestCmd, stdout=out, stderr=err)
+        if embedManifest.wait() != 0:
+            print("Embedding Manifest failed.")
+            time.sleep(1)
+        else:
+            clean_vc_nonsense(opts)
+            break
+    else:
+        print("Totally failed embedding Manifest.")
+
 def _link(files, resource_file, opts, out, err, debug):
     flags = "/NOLOGO"
     wxlibs = get_wxlibs(debug)
@@ -284,24 +305,9 @@ def _link(files, resource_file, opts, out, err, debug):
 
     if opts.msw_subsystem == "windows":
         # The manifest compiler can sometimes not write to the exe after
-        # the linking, maybe waiting a tiny bit helps
+        # the linking, maybe waiting a tiny bit helps.
         time.sleep(1)
-
-        # Embed the manifest to get the correct common controls version etc.
-        # See: http://msdn.microsoft.com/en-us/library/ms235591(v=vs.80).aspx
-        manifestCmd = ('mt.exe -manifest %s.exe.manifest '
-                       '-outputresource:%s.exe;1') % (out_name, out_name)
-        for attempt in range(3):
-            embedManifest = subprocess.Popen(manifestCmd, stdout=out, stderr=err)
-            if embedManifest.wait() != 0:
-                print("Embedding Manifest failed.")
-                time.sleep(1)
-            else:
-                clean_vc_nonsense(opts)
-                break
-
-        else:
-            print("Totally failed embedding Manifest.")
+        embed_manifest(opts, out, err)
     else:
         clean_vc_nonsense(opts)
 
