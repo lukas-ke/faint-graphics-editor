@@ -663,6 +663,11 @@ utf8_string str_ssize_t(Py_ssize_t v){
   return utf8_string(ss.str());
 }
 
+utf8_string str_argnum_user(Py_ssize_t n){
+  assert(n >= 0);
+  return str_uint(static_cast<size_t>(n) + 1);
+}
+
 PyObject* make_py_list(const std::vector<PyObject*>& v){
   PyObject* l = PyList_New(v.size());
   for (size_t i = 0; i != v.size(); i++){

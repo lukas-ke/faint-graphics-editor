@@ -73,7 +73,9 @@ ValueError::ValueError(const utf8_string& error)
 {}
 
 ValueError::ValueError(const utf8_string& error, Py_ssize_t n)
-  : PythonError(PyExc_ValueError, space_sep("Argument:", str_ssize_t(n + 1), error)) // Fixme: Prevent overflow
+  : PythonError(PyExc_ValueError, space_sep("Argument:",
+      str_argnum_user(n),
+      error))
 {}
 
 TypeError::TypeError(const utf8_string& error)
@@ -82,16 +84,16 @@ TypeError::TypeError(const utf8_string& error)
 
 TypeError::TypeError(const TypeName& expectedType, Py_ssize_t n)
   : PythonError(PyExc_TypeError,
-      space_sep("Argument", str_ssize_t(n + 1),
-        "must be", indefinite_article(expectedType.Get()),
-        expectedType.Get()))
+    space_sep("Argument", str_argnum_user(n),
+      "must be", indefinite_article(expectedType.Get()),
+      expectedType.Get()))
 {}
 
 TypeError::TypeError(const TypeName& expectedType,
   const utf8_string& extraInfo,
   Py_ssize_t n)
   : PythonError(PyExc_TypeError,
-      space_sep("Argument", str_ssize_t(n + 1), "must be",
+      space_sep("Argument", str_argnum_user(n), "must be",
         indefinite_article(expectedType.Get()),
         expectedType.Get(), no_sep(bracketed(extraInfo), ".")))
 {}

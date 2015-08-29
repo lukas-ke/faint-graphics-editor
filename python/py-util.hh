@@ -47,6 +47,10 @@ Optional<int> as_int(PyObject*);
 
 utf8_string str_ssize_t(Py_ssize_t);
 
+// Converts the 0-based argument index to 1-based and returns it as a
+// string for exception text.
+utf8_string str_argnum_user(Py_ssize_t);
+
 PyObject* make_py_list(const std::vector<PyObject*>&);
 
 } // namespace
