@@ -58,6 +58,24 @@ class TestBitmap(unittest.TestCase):
         bmp2 = bmp1.subbitmap((1, 1, 3, 3))
         self.assertEqual(bmp2.get_size(), (3,3))
 
+    def test_blit(self):
+        red = (255, 0, 0, 255)
+        yellow = (255, 255, 0, 128)
+        bmp1 = Bitmap((20, 10), red)
+        bmp2 = Bitmap((10, 5), yellow)
+        blit(bmp2, (1, 1), bmp1)
+        self.assertEqual(bmp1.get_pixel(6,0), red)
+        self.assertEqual(bmp1.get_pixel(6,1), yellow)
+        self.assertEqual(bmp1.get_pixel(1,3), yellow)
+        self.assertEqual(bmp1.get_pixel(10,3), yellow)
+        self.assertEqual(bmp1.get_pixel(6,5), yellow)
+        self.assertEqual(bmp1.get_pixel(6,6), red)
+
+        # Self-blit, offset 1,1-pixels
+        blit(bmp1, (1, 1), bmp1)
+        self.assertEqual(bmp1.get_pixel(1, 3), red)
+        self.assertEqual(bmp1.get_pixel(2, 3), yellow)
+
     def test_api(self):
         """Some haphazard API calls with too few assertions.
 
