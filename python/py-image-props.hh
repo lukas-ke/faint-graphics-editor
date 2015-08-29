@@ -31,10 +31,9 @@ struct imagePropsObject{
   ImageProps* props;
 };
 
-void add_type_ImageProps(PyObject* module);
+void add_image_props_types(PyObject* module);
 typed_scoped_ref<imagePropsObject> pythoned(ImageProps&);
 
-void add_type_FrameProps(PyObject* module);
 PyObject* create_FrameProps(imagePropsObject& owner, const Index&);
 
 FrameProps* get_cpp_FrameProps(PyObject* pyFrameProps);

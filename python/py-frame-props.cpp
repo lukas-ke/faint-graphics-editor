@@ -426,8 +426,9 @@ PyTypeObject FramePropsType = {
   nullptr // tp_finalize
 };
 
-void add_type_FrameProps(PyObject* module){
+void add_image_props_types(PyObject* module){
   add_type_object(module, FramePropsType, "FrameProps");
+  add_type_object(module, ImagePropsType, "ImageProps");
 }
 
 PyObject* create_FrameProps(imagePropsObject& owner, const Index& index){

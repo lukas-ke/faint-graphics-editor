@@ -64,9 +64,7 @@ static PyObject* init_extension_module(){
 
   // Types
   add_type_Bitmap(ifaint);
-  add_type_FrameProps(ifaint);
   add_type_Image(ifaint);
-  add_type_ImageProps(ifaint);
   add_type_Pattern(ifaint);
   add_type_Settings(ifaint);
   add_type_Shape(ifaint);
@@ -75,6 +73,7 @@ static PyObject* init_extension_module(){
   // Some more types
   add_exception_types(ifaint);
   add_gradient_types(ifaint);
+  add_image_props_types(ifaint);
 
   // And some I'd rather not have
   add_compatibility_types(ifaint);

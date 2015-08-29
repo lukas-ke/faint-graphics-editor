@@ -14,7 +14,6 @@
 // permissions and limitations under the License.
 
 #include "python/py-include.hh"
-#include "python/py-add-type-object.hh"
 #include "python/py-image-props.hh"
 #include "python/mapped-type.hh"
 #include "python/py-ugly-forward.hh"
@@ -188,10 +187,6 @@ PyTypeObject ImagePropsType = {
   0, // tp_version_tag
   nullptr  // tp_finalize
 };
-
-void add_type_ImageProps(PyObject* module){
-  add_type_object(module, ImagePropsType, "ImageProps");
-}
 
 typed_scoped_ref<imagePropsObject> pythoned(ImageProps& props){
   imagePropsObject* py_props = (imagePropsObject*)

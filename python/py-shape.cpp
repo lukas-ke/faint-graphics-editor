@@ -407,7 +407,7 @@ PyObject* create_Raster(const Either<Point, Rect>& region,
 
   const auto tri = tri_from_rect(r);
   const auto s = merge_settings(maybeSettings, default_raster_settings());
-  return create_Shape(new ObjRaster(tri_from_rect(r), bmp, s));
+  return create_Shape(new ObjRaster(tri, bmp, s));
 }
 
 PyObject* create_Spline(const std::vector<coord>& coords,
