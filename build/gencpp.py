@@ -22,6 +22,7 @@ import os
 if __name__ == '__main__':
     sys.path.append("../build-sys/");
 
+from build_sys.util.scoped import working_dir
 import build_sys.gen_method_def as gen_method_def
 import build_sys.cpp_writer as cpp
 
@@ -404,17 +405,7 @@ def generate_setting_id_impl(settings):
             cpp.Include('"generated/python/settings/cpp-setting-id.hh"') +
             ns)
 
-
-def run(root_dir, force=False):
-    """Generate C++-Python code using the templates under root_dir, and
-    the Faint settings defined in set_and_get.py
-
-    """
-
-    oldDir = os.getcwd()
-    os.chdir(root_dir)
-    sys.path.append(os.getcwd())
-
+def _generate(root_dir, force):
     template_files = [os.path.join("templates", f)
                       for f in os.listdir("templates")]
 
@@ -427,8 +418,8 @@ def run(root_dir, force=False):
 
     if not force and up_to_date:
         print("* Python-C++ interface up to date.")
-        os.chdir(oldDir)
         return
+
     print("* Generating Python-C++ interface.")
 
     import set_and_get
@@ -456,7 +447,6 @@ def run(root_dir, force=False):
         properties.append((None, item.py_name, item.doc_str))
         if setting_type == 'bool':
             replacements = common_replacements(setting, item)
-
 
             generate_function(functions_cc,
                               function_method_def,
@@ -691,8 +681,16 @@ def run(root_dir, force=False):
 
     write_Shape_properties(root_dir, out_dir, shape_declarations, shape_cc)
 
-    os.chdir(oldDir)
 
+def run(root_dir, force=False):
+    """Generate C++-Python code using the templates under root_dir, and
+    the Faint settings defined in set_and_get.py
+
+    """
+
+    sys.path.append(os.path.abspath(root_dir))
+    with working_dir(root_dir):
+        _generate(root_dir, force)
 
 def write_Shape_properties(root_dir, out_dir, shape_declarations, shape_cc):
     getset = cpp.Code()
