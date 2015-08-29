@@ -286,11 +286,10 @@ def build_installer(version, makensis_exe):
     import build_sys.compile_msw as compile_impl
 
     print("* Generating %s installer." % version)
-    oldDir = os.getcwd()
-    os.chdir("../installer")
-    nsiFile = gen_nsis.run(version)
-    compile_impl.create_installer(makensis_exe, nsiFile)
-    os.chdir(oldDir)
+    with working_dir("../installer"):
+        nsiFile = gen_nsis.run(version)
+        compile_impl.create_installer(makensis_exe, nsiFile)
+
 
 
 if __name__ == '__main__':
