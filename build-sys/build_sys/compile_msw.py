@@ -210,6 +210,32 @@ def clean_vc_nonsense(bo):
         if os.path.exists(fn):
             os.remove(fn)
 
+def other_libs():
+
+    return " ".join(["comctl32.lib",
+                     "rpcrt4.lib",
+                     "shell32.lib",
+                     "gdi32.lib",
+                     "kernel32.lib",
+                     "gdiplus.lib",
+                     "cairo.lib",
+                     "comdlg32.lib",
+                     "user32.lib",
+                     "Advapi32.lib",
+                     "Ole32.lib",
+                     "Oleaut32.lib",
+                     "Winspool.lib",
+                     "pango-1.0.lib",
+                     "pangocairo-1.0.lib",
+                     "pangoft2-1.0.lib",
+                     "pangowin32-1.0.lib",
+                     "gio-2.0.lib",
+                     "glib-2.0.lib",
+                     "gmodule-2.0.lib",
+                     "gobject-2.0.lib",
+                     "gthread-2.0.lib"])
+
+
 def link(files, opts, out, err, debug):
     resFile = compile_resources(opts.project_root, opts.get_obj_root(),
                                 opts.extra_resource_root,
@@ -233,7 +259,16 @@ def link(files, opts, out, err, debug):
 
     lib_paths_string = create_lib_paths_string(opts.lib_paths)
 
-    cmd = "Link.exe " + flags + " " + to_subsystem_flag(opts.msw_subsystem) + " " + "/OPT:REF " + lib_paths_string + " " + " ".join(files) + " " + " ".join(wxlibs) + " comctl32.lib rpcrt4.lib shell32.lib gdi32.lib kernel32.lib gdiplus.lib cairo.lib comdlg32.lib user32.lib Advapi32.lib Ole32.lib Oleaut32.lib Winspool.lib pango-1.0.lib pangocairo-1.0.lib pangoft2-1.0.lib pangowin32-1.0.lib gio-2.0.lib glib-2.0.lib gmodule-2.0.lib gobject-2.0.lib gthread-2.0.lib " + resFile
+    cmd = " ".join(["Link.exe",
+                    flags,
+                    to_subsystem_flag(opts.msw_subsystem),
+                    "/OPT:REF",
+                    lib_paths_string,
+                    " ".join(files),
+                    " ".join(wxlibs),
+                    other_libs(),
+                    resFile])
+
     linker = subprocess.Popen(cmd, stdout=out, stderr=err)
 
     if linker.wait() != 0:
