@@ -246,8 +246,6 @@ def link(files, opts, out, err, debug):
     wxlibs = get_wxlibs(debug)
     out_name = opts.get_out_name()
 
-
-    # Fixme: Use opts.get_out_path
     target = "/OUT:" + opts.get_out_path()
     if debug:
         flags += " %s /DEBUG /PDB:%s.pdb" % (target, out_name)
