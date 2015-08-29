@@ -34,10 +34,12 @@ class working_dir:
 
 class no_output:
     """Used with with-statement to suppress all output."""
+
     def __init__(self):
         self.stdout = sys.stdout
         self.stderr = sys.stderr
         self.devnull = open(os.devnull, 'w')
+
     def __enter__(self):
         sys.stdout = self.devnull
         sys.stderr = self.devnull
