@@ -59,6 +59,11 @@ class Pimage:
         self.objects.append(sh)
         return sh
 
+    def Line(self, *args):
+        sh = ifaint.create_Line(*args)
+        self.objects.append(sh)
+        return sh
+
     def Path(self, *args):
         sh = ifaint.create_Path(*args)
         self.objects.append(sh)

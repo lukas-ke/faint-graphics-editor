@@ -19,7 +19,8 @@ def make_test_dir(test):
     if not os.path.exists(TEST_OUT_PATH):
         os.mkdir(TEST_OUT_PATH)
 
-    path = os.path.join(TEST_OUT_PATH, "py-" + test._testMethodName)
+    path = os.path.join(TEST_OUT_PATH, test.__class__.__name__ + "." +
+                        test._testMethodName)
     if not os.path.exists(path):
         os.mkdir(path)
 

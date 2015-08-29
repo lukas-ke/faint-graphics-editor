@@ -118,7 +118,7 @@ static void Shape_dealloc(shapeObject* self){
 /* method: "get_obj(i)->Object\n
 Returns the sub-object specified by the passed in integer. Only
 supported by groups." */
-static PyObject* Smth_get_obj(Object& self, int index){
+static PyObject* Shape_get_obj(Object& self, int index){
   if (index < 0 || self.GetObjectCount() <= index){
     throw IndexError("Invalid object index");
   }
@@ -146,7 +146,7 @@ static Settings Shape_get_settings(const Object& self){
 }
 
 /* method: "get_text_raw(s)\nGet the unevaluated Text from Text objects." */
-static utf8_string Smth_get_text_raw(const Object& self){
+static utf8_string Shape_get_text_raw(const Object& self){
   auto text = dynamic_cast<const ObjText*>(&self);
   if (!text){
     throw ValueError(space_sep(self.GetType(), "does not support text."));
@@ -154,9 +154,33 @@ static utf8_string Smth_get_text_raw(const Object& self){
   return text->GetRawString();
 }
 
+/* method: "get_text_height(s)\n
+Fixme!" */
+static coord Shape_get_text_height(const Object& self){
+  auto txt = dynamic_cast<const ObjText*>(&self);
+  if (txt == nullptr){
+    throw TypeError("This object does not have text attributes.");
+  }
+  return txt->RowHeight();
+}
+
+/* method: "get_text_lines()->(s,...)\n
+Returns the evaluated text from a Text-object split into lines. Takes
+the bounding rectangle in consideration, so that the lines are split in
+the same way as they appear in Faint." */
+static text_lines_t Shape_get_text_lines(const Object& self){
+  auto text = dynamic_cast<const ObjText*>(&self);
+  if (!text){
+    throw TypeError(space_sep(self.GetType(), "does not support text."));
+  }
+
+  // Fixme: Split and such
+  return {TextLine::SoftBreak(400.0, text->GetRawString())};
+}
+
 /* method: "get_type()->s\n
 Returns the type of the object, as a string." */
-static utf8_string Smth_get_type(const Object& self){
+static utf8_string Shape_get_type(const Object& self){
   return self.GetType();
 }
 
@@ -251,15 +275,26 @@ PyObject* create_Shape(Object* obj){
   return (PyObject*)shape;
 }
 
+Settings merge_settings(const Optional<Settings>& maybeSettings, Settings s){
+  return maybeSettings.Visit(
+    [&](const Settings& given){
+      s.Update(given);
+      return s;
+    },
+    [&](){
+      return s;
+    });
+}
+
 PyObject* create_Rect(const Rect& r, const Optional<Settings>& maybeSettings){
   const auto tri = tri_from_rect(r);
-  const auto s = maybeSettings.Or(default_rectangle_settings());
+  const auto s = merge_settings(maybeSettings, default_rectangle_settings());
   return create_Shape(create_rectangle_object(tri, s));
 }
 
 PyObject* create_Ellipse(const Rect& r, const Optional<Settings>& maybeSettings){
   const auto tri = tri_from_rect(r);
-  const auto s = maybeSettings.Or(default_ellipse_settings());
+  const auto s = merge_settings(maybeSettings, default_ellipse_settings());
   return create_Shape(create_ellipse_object(tri, s));
 }
 
@@ -307,7 +342,7 @@ PyObject* create_Line(const std::vector<coord>& coords,
     throw ValueError("Number of coordinates must be an even number.");
   }
 
-  const auto s = maybeSettings.Or(default_line_settings());
+  const auto s = merge_settings(maybeSettings, default_line_settings());
   return create_Shape(create_line_object(points_from_coords(coords), s));
 }
 
@@ -328,7 +363,7 @@ PyObject* create_Path(const utf8_string& path,
     throw ValueError("Paths must begin with a Move-entry.");
   }
 
-  const auto s = maybeSettings.Or(default_path_settings());
+  const auto s = merge_settings(maybeSettings, default_path_settings());
   return create_Shape(create_path_object(Points(points), s));
 }
 
@@ -343,7 +378,7 @@ PyObject* create_Polygon(const std::vector<coord>& coords,
     throw ValueError("Uneven number of coordinates.");
   }
 
-  const auto s = maybeSettings.Or(default_polygon_settings());
+  const auto s = merge_settings(maybeSettings, default_polygon_settings());
   return create_Shape(create_polygon_object(points_from_coords(coords), s));
 }
 
@@ -361,7 +396,7 @@ PyObject* create_Raster(const Either<Point, Rect>& region,
 
 
   const auto tri = tri_from_rect(r);
-  const auto s = maybeSettings.Or(default_raster_settings());
+  const auto s = merge_settings(maybeSettings, default_raster_settings());
   return create_Shape(new ObjRaster(tri_from_rect(r), bmp, s));
 }
 
@@ -375,7 +410,7 @@ PyObject* create_Spline(const std::vector<coord>& coords,
     throw ValueError("Uneven number of coordinates.");
   }
 
-  const auto s = maybeSettings.Or(default_spline_settings());
+  const auto s = merge_settings(maybeSettings, default_spline_settings());
   const auto pts = points_from_coords(coords);
   return create_Shape(create_spline_object(pts, s));
 }
@@ -384,7 +419,7 @@ PyObject* create_Text(const Either<Rect, Point>& region,
   const utf8_string& text,
   const Optional<Settings>& maybeSettings)
 {
-  Settings s = maybeSettings.Or(default_text_settings());
+  Settings s = merge_settings(maybeSettings, default_text_settings());
   Rect r = region.Visit(
     [](const Rect& r){
       return r;

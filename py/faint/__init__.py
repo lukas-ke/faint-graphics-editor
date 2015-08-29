@@ -21,7 +21,14 @@ A package of functions and classes for faint-graphics-editor.
 try:
     from ifaint import *
     from faint.image import Pimage, PimageList, one_color_bg
+
 except ImportError as e:
     # When running in test mode, ifaint
     # will not be available.
     pass
+
+def settings(**kwArgs):
+    s = Settings()
+    for key in kwArgs:
+        s.__setattr__(key, kwArgs[key])
+    return s
