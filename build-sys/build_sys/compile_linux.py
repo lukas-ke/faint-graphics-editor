@@ -15,6 +15,8 @@
 import os
 import subprocess
 from . linux.gen_makefile import gen_makefile
+from build_sys.util.scoped import working_dir
+
 obj_ext = '.o'
 
 def _compile(fileList, opts, out, err, debug, cc):
@@ -32,29 +34,29 @@ def _compile(fileList, opts, out, err, debug, cc):
         exit(1)
 
 def _get_wxlibs( wxRoot ):
-    wxcfg = subprocess.Popen( "%s/wx-config --libs" % wxRoot, 0, shell=True, stdout=subprocess.PIPE )
+    wxcfg = subprocess.Popen("%s/wx-config --libs" % wxRoot,
+                              0,
+                              shell=True,
+                              stdout=subprocess.PIPE)
     return wxcfg.communicate()[0].strip().decode("ascii") # Fixme
 
 def _link(files, opts, out, err, debug, cc):
-    old = os.getcwd()
-    os.chdir(opts.project_root)
-    wxlibs = _get_wxlibs(opts.wx_root)
-    out_name = opts.get_out_name()
-    lib_paths = " ".join(["-L%s" % p for p in opts.lib_paths])
+    with working_dir(opts.project_root):
+        wxlibs = _get_wxlibs(opts.wx_root)
+        out_name = opts.get_out_name()
+        lib_paths = " ".join(["-L%s" % p for p in opts.lib_paths])
 
-    cmd = (cc + " -std=c++11 -g -o %s " % out_name +
-           " ".join(files) + " -lpng " + wxlibs + " " + lib_paths +
-           " -l python3.4 -O2")
+        cmd = (cc + " -std=c++11 -g -o %s " % out_name +
+               " ".join(files) + " -lpng " + wxlibs + " " + lib_paths +
+               " -l python3.4 -O2")
 
-    linker = subprocess.Popen(cmd, stdout=out, stderr=err, shell=True)
-    if linker.wait() != 0:
-        print("Linking failed")
-        exit(1)
-    os.chdir( old )
+        linker = subprocess.Popen(cmd, stdout=out, stderr=err, shell=True)
+        if linker.wait() != 0:
+            print("Linking failed")
+            exit(1)
 
 def create_installer(*arg, **kwarg):
     assert(False)
-
 
 def compile_gcc(fileList, opts, out, err, debug):
     _compile(fileList, opts, out, err, debug, cc='g++')
