@@ -15,6 +15,7 @@
 
 #ifndef FAINT_PY_BITMAP_HH
 #define FAINT_PY_BITMAP_HH
+#include "python/py-include.hh"
 #include "bitmap/bitmap.hh"
 
 namespace faint{
@@ -25,6 +26,8 @@ struct bitmapObject{
   PyObject_HEAD
   Bitmap bmp;
 };
+
+void add_type_Bitmap(PyObject* module);
 
 } // namespace
 

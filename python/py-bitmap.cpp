@@ -27,10 +27,11 @@
 #include "rendering/faint-dc.hh"
 #include "util/command-util.hh" // Fixme: Remove
 #include "util/optional.hh"
+#include "python/py-common.hh"
 #include "python/mapped-type.hh"
 #include "python/py-include.hh"
+#include "python/py-add-type-object.hh"
 #include "python/py-bitmap.hh"
-#include "python/py-common.hh"
 #include "python/py-tri.hh"
 #include "python/py-util.hh"
 #include "python/py-ugly-forward.hh"
@@ -376,5 +377,9 @@ PyTypeObject BitmapType = {
   0, // tp_version_tag
   nullptr // tp_finalize
 };
+
+void add_type_Bitmap(PyObject* module){
+  faint::add_type_object(module, faint::BitmapType, "Bitmap");
+}
 
 } // namespace

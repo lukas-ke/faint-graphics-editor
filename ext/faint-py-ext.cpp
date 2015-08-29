@@ -58,14 +58,13 @@ PyMODINIT_FUNC PyInit_ifaint(){
 
   faint::add_type_Image(module);
   faint::add_type_Shape(module);
-
+  faint::add_type_Bitmap(module);
   faint::add_type_Pattern(module);
   faint::add_gradient_types(module);
 
   faint::add_exception_types(module);
 
   // Fixme: Duplicates py-initialize-ifaint.cpp
-  faint::add_type_object(module, faint::BitmapType, "Bitmap");
   faint::add_type_object(module, faint::SettingsType, "Settings");
   faint::add_type_object(module, faint::TriType, "Tri");
 
