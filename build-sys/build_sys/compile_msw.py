@@ -237,9 +237,11 @@ def other_libs():
 
 
 def link(files, opts, out, err, debug):
-    resFile = compile_resources(opts.project_root, opts.get_obj_root(),
+    resFile = compile_resources(opts.project_root,
+                                opts.get_obj_root(),
                                 opts.extra_resource_root,
-                                out, err)
+                                out,
+                                err)
     old = os.getcwd()
     os.chdir(opts.project_root)
     flags = "/NOLOGO"
