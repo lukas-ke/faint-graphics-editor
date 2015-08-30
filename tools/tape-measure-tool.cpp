@@ -42,7 +42,7 @@ static Tri get_tape_text_tri(const LineSegment& l){
   return {mid_point(l), Angle::Zero(), Size(100,100)};
 }
 
-coord get_distance_scaling(const utf8_string& unit, const Calibration& c){
+static coord get_distance_scaling(const utf8_string& unit, const Calibration& c){
   if (unit == unit_px){
     return 1.0;
   }
@@ -60,6 +60,59 @@ coord get_distance_scaling(const utf8_string& unit, const Calibration& c){
         [](){
           return 1.0;
         });
+    }
+  }
+}
+
+static void draw_triangle_sides(const LineSegment& diagonal,
+  coord sc,
+  const utf8_string& unit,
+  Overlays& overlays)
+{
+  // Fixme: Simplify
+  Rect r(bounding_rect(diagonal));
+  if (diagonal.p0.x < diagonal.p1.x){
+    if (diagonal.p0.y < diagonal.p1.y){
+      auto left = left_side(r);
+      auto bottom = bottom_side(r);
+      overlays.Line(left);
+      overlays.Line(bottom);
+      overlays.Text(mid_point(bottom),
+        space_sep(str(length(bottom) * sc, 2_dec), unit));
+      overlays.Text(mid_point(left),
+        space_sep(str(length(left) * sc, 2_dec), unit));
+    }
+    else{
+      auto left = left_side(r);
+      auto top = top_side(r);
+      overlays.Line(left);
+      overlays.Line(top);
+      overlays.Text(mid_point(left),
+        space_sep(str(length(left) * sc, 2_dec), unit));
+      overlays.Text(mid_point(top),
+        space_sep(str(length(top) * sc, 2_dec), unit));
+    }
+  }
+  else{
+    if (diagonal.p0.y < diagonal.p1.y){
+      auto left = left_side(r);
+      auto top = top_side(r);
+      overlays.Line(left);
+      overlays.Line(top);
+      overlays.Text(mid_point(left),
+        space_sep(str(length(left) * sc, 2_dec), unit));
+      overlays.Text(mid_point(top),
+        space_sep(str(length(top) * sc, 2_dec), unit));
+    }
+    else{
+      auto right = right_side(r);
+      auto top = top_side(r);
+      overlays.Line(right);
+      overlays.Line(top);
+      overlays.Text(mid_point(right),
+        space_sep(str(length(right) * sc, 2_dec), unit));
+      overlays.Text(mid_point(top),
+        space_sep(str(length(top) * sc, 2_dec), unit));
     }
   }
 }
@@ -88,56 +141,8 @@ public:
     overlays.Text(mid_point(line),
       space_sep(str(length(line) * sc, 2_dec), unit));
 
-    if (settings.Get(ts_TapeStyle) == TapeMeasureStyle::LINE){
-      return;
-    }
-
-    // Draw the side-lines
-    // Fixme: Simplify
-    Rect r(bounding_rect(line));
-    if (line.p0.x < line.p1.x){
-      if (line.p0.y < line.p1.y){
-        auto left = left_side(r);
-        auto bottom = bottom_side(r);
-        overlays.Line(left);
-        overlays.Line(bottom);
-        overlays.Text(mid_point(bottom),
-          space_sep(str(length(bottom) * sc, 2_dec), unit));
-        overlays.Text(mid_point(left),
-          space_sep(str(length(left) * sc, 2_dec), unit));
-      }
-      else{
-        auto left = left_side(r);
-        auto top = top_side(r);
-        overlays.Line(left);
-        overlays.Line(top);
-        overlays.Text(mid_point(left),
-          space_sep(str(length(left) * sc, 2_dec), unit));
-        overlays.Text(mid_point(top),
-          space_sep(str(length(top) * sc, 2_dec), unit));
-      }
-    }
-    else{
-      if (line.p0.y < line.p1.y){
-        auto left = left_side(r);
-        auto top = top_side(r);
-        overlays.Line(left);
-        overlays.Line(top);
-        overlays.Text(mid_point(left),
-          space_sep(str(length(left) * sc, 2_dec), unit));
-        overlays.Text(mid_point(top),
-          space_sep(str(length(top) * sc, 2_dec), unit));
-      }
-      else{
-        auto right = right_side(r);
-        auto top = top_side(r);
-        overlays.Line(right);
-        overlays.Line(top);
-        overlays.Text(mid_point(right),
-          space_sep(str(length(right) * sc, 2_dec), unit));
-        overlays.Text(mid_point(top),
-          space_sep(str(length(top) * sc, 2_dec), unit));
-      }
+    if (settings.Get(ts_TapeStyle) == TapeMeasureStyle::TRIANGLE){
+      draw_triangle_sides(line, sc, unit, overlays);
     }
   }
 
