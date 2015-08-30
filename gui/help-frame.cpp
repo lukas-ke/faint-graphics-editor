@@ -64,13 +64,10 @@ bool common_help_key(wxWindow* window, const wxKeyEvent& event){
   // window parameter is the window that received the event, and is used
   // for propagating new events to the frame
   if (event.GetKeyCode() == WXK_ESCAPE){
-    return send_event(window, FAINT_BACK_HELP);
+    return send_event(window, FAINT_CLOSE_HELP);
   }
   else if (event.GetKeyCode() == WXK_RETURN && event.AltDown()){
     return send_event(window, FAINT_MAXIMIZE_HELP);
-  }
-  else if (event.GetKeyCode() == WXK_F3){
-    return send_event(window, FAINT_BACK_HELP);
   }
   else if (event.GetKeyCode() == WXK_BACK){
     return send_event(window, FAINT_BACK_HELP);
@@ -102,7 +99,7 @@ wxSplitterWindow* create_help_splitter(wxWindow* parent){
   // Prevent unsplitting
   splitter->SetMinimumPaneSize(20);
 
-  // Only grow the right window when rescaling
+  // When rescaling, grow only the right window (help contents)
   splitter->SetSashGravity(0.0);
   return splitter;
 }
