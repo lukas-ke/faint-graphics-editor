@@ -42,14 +42,14 @@ Optional<BitmapCommand*> show_pinch_whirl_dialog(wxWindow&,
   DialogContext&,
   DialogFeedback&);
 
-Optional<Command*> show_rotate_dialog_old(wxWindow&,
-  const Canvas&, // Fixme: Why?
+Optional<Command*> show_rotate_dialog(wxWindow&,
+  const Canvas&, // Fixme: Replace with specific context, compare resize-dialog
   const Art&,
   const std::function<Paint()>& bgColor,
   const std::function<void()>& selectLevelTool,
   DialogContext&);
 
-dialog_func bind_show_rotate_dialog_old(const Art&,
+dialog_func bind_show_rotate_dialog(const Art&,
   const std::function<Paint()>& bgColor,
   const std::function<void(ToolId)>& selectLevelTool,
   DialogContext&);
