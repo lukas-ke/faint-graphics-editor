@@ -70,41 +70,41 @@ static void draw_triangle_sides(const LineSegment& diagonal,
   Overlays& overlays)
 {
   // Fixme: Simplify
+  const bool east = diagonal.p0.x < diagonal.p1.x;
+  const bool south = diagonal.p0.y < diagonal.p1.y;
   Rect r(bounding_rect(diagonal));
-  if (diagonal.p0.x < diagonal.p1.x){
-    if (diagonal.p0.y < diagonal.p1.y){
-      auto left = left_side(r);
+
+  if (east){
+    auto left = left_side(r);
+    overlays.Line(left);
+    overlays.Text(mid_point(left),
+      space_sep(str(length(left) * sc, 2_dec), unit));
+
+    if (south){ // SE
       auto bottom = bottom_side(r);
-      overlays.Line(left);
       overlays.Line(bottom);
       overlays.Text(mid_point(bottom),
         space_sep(str(length(bottom) * sc, 2_dec), unit));
-      overlays.Text(mid_point(left),
-        space_sep(str(length(left) * sc, 2_dec), unit));
     }
-    else{
-      auto left = left_side(r);
+    else{ // NE
       auto top = top_side(r);
-      overlays.Line(left);
       overlays.Line(top);
-      overlays.Text(mid_point(left),
-        space_sep(str(length(left) * sc, 2_dec), unit));
       overlays.Text(mid_point(top),
         space_sep(str(length(top) * sc, 2_dec), unit));
     }
   }
   else{
-    if (diagonal.p0.y < diagonal.p1.y){
-      auto left = left_side(r);
-      auto top = top_side(r);
-      overlays.Line(left);
-      overlays.Line(top);
-      overlays.Text(mid_point(left),
-        space_sep(str(length(left) * sc, 2_dec), unit));
-      overlays.Text(mid_point(top),
-        space_sep(str(length(top) * sc, 2_dec), unit));
+    if (south){ // SW
+      auto right = right_side(r);
+      auto bottom = bottom_side(r);
+      overlays.Line(right);
+      overlays.Line(bottom);
+      overlays.Text(mid_point(right),
+        space_sep(str(length(right) * sc, 2_dec), unit));
+      overlays.Text(mid_point(bottom),
+        space_sep(str(length(bottom) * sc, 2_dec), unit));
     }
-    else{
+    else{ // NW
       auto right = right_side(r);
       auto top = top_side(r);
       overlays.Line(right);
