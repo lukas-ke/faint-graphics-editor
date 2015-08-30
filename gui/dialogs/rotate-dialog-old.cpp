@@ -40,7 +40,7 @@ namespace faint{
 using Accelerators = std::vector<AcceleratorEntry>;
 
 static Command* dummy_function(const Canvas&){
-  // Avoids leaving RotateDialog::m_cmdFunc uninitialized
+  // Avoids leaving RotateDialogOld::m_cmdFunc uninitialized
   return nullptr;
 }
 
@@ -208,9 +208,9 @@ private:
   wxButton* m_rotateBtn;
 };
 
-class RotateDialog : public wxDialog{
+class RotateDialogOld : public wxDialog{
 public:
-  RotateDialog(wxWindow& parent,
+  RotateDialogOld(wxWindow& parent,
     wxString targetName,
     const Art& art,
     const std::function<Paint()>& getBg,
@@ -290,14 +290,14 @@ private:
 };
 
 
-Optional<Command*> show_rotate_dialog(wxWindow& parent,
+Optional<Command*> show_rotate_dialog_old(wxWindow& parent,
   const Canvas& canvas,
   const Art& art,
   const std::function<Paint()>& bgColor,
   const std::function<void(ToolId)>& selectTool,
   DialogContext& c)
 {
-  RotateDialog dlg(parent,
+  RotateDialogOld dlg(parent,
     get_rotate_target_name(canvas),
     art,
     bgColor,
@@ -308,14 +308,14 @@ Optional<Command*> show_rotate_dialog(wxWindow& parent,
     no_option();
 }
 
-dialog_func bind_show_rotate_dialog(const Art& art,
+dialog_func bind_show_rotate_dialog_old(const Art& art,
   const std::function<Paint()>& getBgColor,
   const std::function<void(ToolId)>& selectTool,
   DialogContext& dialogContext)
 {
   return [&, getBgColor, selectTool]
     (wxWindow& window, DialogFeedback&, const Canvas& canvas){
-    return show_rotate_dialog(window,
+    return show_rotate_dialog_old(window,
       canvas,
       art,
       getBgColor,

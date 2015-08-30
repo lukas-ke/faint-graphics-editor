@@ -92,7 +92,7 @@ static void dialog_resize(PyFuncContext& ctx){
 Show the rotation dialog (for rotating the image or selection)." */
 static void dialog_rotate(PyFuncContext& ctx){
   auto& app = ctx.app;
-  app.ModalFull(bind_show_rotate_dialog(ctx.art,
+  app.ModalFull(bind_show_rotate_dialog_old(ctx.art,
       bg_getter(app),
       tool_changer(app),
       app.GetDialogContext()));

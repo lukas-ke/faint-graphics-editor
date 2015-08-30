@@ -533,7 +533,7 @@ public:
     wxMenu* imageMenu = new wxMenu();
     AddFull(imageMenu,
       Label("&Flip/Rotate...\tCtrl+R", "Flip or rotate the image or selection"),
-      bind_show_rotate_dialog(art,
+      bind_show_rotate_dialog_old(art,
         bg_getter(app),
         tool_changer(app),
         app.GetDialogContext()),
