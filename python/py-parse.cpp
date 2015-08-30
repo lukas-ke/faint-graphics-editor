@@ -852,9 +852,7 @@ bool parse_flat(Settings& s, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
 
 static Bitmap* as_Bitmap(PyObject* obj, Py_ssize_t n){
   if (!PyObject_IsInstance(obj, (PyObject*)&BitmapType)){
-    PyErr_SetString(PyExc_TypeError, space_sep("Argument", str_argnum_user(n),
-      "must be a Bitmap").c_str());
-    return nullptr;
+    throw TypeError(TypeName("Bitmap"), n);
   }
   bitmapObject* py_bitmap = (bitmapObject*)obj;
   return &(py_bitmap->bmp);
@@ -865,10 +863,7 @@ bool parse_flat(Bitmap& bmp, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
 
   scoped_ref ref(PySequence_GetItem(args, n));
   Bitmap* tempBmp = as_Bitmap(ref.get(), n);
-  if (tempBmp == nullptr){
-    PyErr_Clear();
-    throw TypeError(TypeName("Bitmap"), n);
-  }
+  assert(tempBmp != nullptr);
   n += 1;
 
   bmp = *tempBmp; // Fixme: Unnecessary copy
