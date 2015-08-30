@@ -64,59 +64,6 @@ static coord get_distance_scaling(const utf8_string& unit, const Calibration& c)
   }
 }
 
-static void draw_triangle_sides(const LineSegment& diagonal,
-  coord sc,
-  const utf8_string& unit,
-  Overlays& overlays)
-{
-  // Fixme: Simplify
-  const bool east = diagonal.p0.x < diagonal.p1.x;
-  const bool south = diagonal.p0.y < diagonal.p1.y;
-  Rect r(bounding_rect(diagonal));
-
-  if (east){
-    auto left = left_side(r);
-    overlays.Line(left);
-    overlays.Text(mid_point(left),
-      space_sep(str(length(left) * sc, 2_dec), unit));
-
-    if (south){ // SE
-      auto bottom = bottom_side(r);
-      overlays.Line(bottom);
-      overlays.Text(mid_point(bottom),
-        space_sep(str(length(bottom) * sc, 2_dec), unit));
-    }
-    else{ // NE
-      auto top = top_side(r);
-      overlays.Line(top);
-      overlays.Text(mid_point(top),
-        space_sep(str(length(top) * sc, 2_dec), unit));
-    }
-  }
-  else{
-    if (south){ // SW
-      auto right = right_side(r);
-      auto bottom = bottom_side(r);
-      overlays.Line(right);
-      overlays.Line(bottom);
-      overlays.Text(mid_point(right),
-        space_sep(str(length(right) * sc, 2_dec), unit));
-      overlays.Text(mid_point(bottom),
-        space_sep(str(length(bottom) * sc, 2_dec), unit));
-    }
-    else{ // NW
-      auto right = right_side(r);
-      auto top = top_side(r);
-      overlays.Line(right);
-      overlays.Line(top);
-      overlays.Text(mid_point(right),
-        space_sep(str(length(right) * sc, 2_dec), unit));
-      overlays.Text(mid_point(top),
-        space_sep(str(length(top) * sc, 2_dec), unit));
-    }
-  }
-}
-
 class TapeMeasureTool : public StandardTool {
 public:
   explicit TapeMeasureTool(const Settings& allSettings)
@@ -137,12 +84,21 @@ public:
       settings.Get(ts_Unit);
     const coord sc = get_distance_scaling(unit, c);
 
-    overlays.Line(line);
-    overlays.Text(mid_point(line),
-      space_sep(str(length(line) * sc, 2_dec), unit));
+    auto measured_line = [&](const LineSegment& line){
+      // Draws a line and its measurement as overlay
+      overlays.Line(line);
+      overlays.Text(mid_point(line),
+        space_sep(str(length(line) * sc, 2_dec), unit));
+    };
+
+    measured_line(line);
 
     if (settings.Get(ts_TapeStyle) == TapeMeasureStyle::TRIANGLE){
-      draw_triangle_sides(line, sc, unit, overlays);
+      const bool east = line.p0.x < line.p1.x;
+      const bool south = line.p0.y < line.p1.y;
+      const Rect r(bounding_rect(line));
+      measured_line(east ? left_side(r) : right_side(r));
+      measured_line(south ? bottom_side(r) : top_side(r));
     }
   }
 
