@@ -228,12 +228,18 @@ void Common_sepia(T target, int intensity){
     target_full_image(get_sepia_command(intensity)));
 }
 
-// FIXME: Lost fancy thing when using comment instead of Doc-function:
-// The range for min and max is " + str_range(as_closed_range<threshold_range_t>()).str() + "."
-/* method: "set_threshold(low,high[,c1,c2])\n
-Assigns pixels with summed RGB components between low and high to c1,
-pixels outside to c2 (or the active foreground and background if
-omitted)." */
+static std::string& Common_set_threshold_doc(){
+  static std::string doc(std::string("set_threshold(low,high[,c1,c2])\n\n"
+    "Assigns pixels with summed RGB components:\n"
+    "  - between low<->high to c1,\n"
+    "  - outside low<->high to c2.\n\n"
+    "The active foreground and background are used if c1, c2 omitted.\n"
+    "The range for min and max is ") +
+    str_range(as_closed_range<threshold_range_t>()).str() + ".");
+  return doc;
+}
+
+/* method: Common_set_threshold_doc() */
 template<typename T>
 void Common_set_threshold(T target, const threshold_range_t& range,
   const Optional<Paint>& paintIn, const Optional<Paint>& paintOut)

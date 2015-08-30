@@ -45,8 +45,16 @@ class regex:
     # discover errors.
     function_strict = r'/\*[ ](method|function):[ ]\"(.*?)\"( |\nname: \"(.*?)\" )\*/'
 
+    # Similar to function_strict but allows specifying a function which produces
+    # the documentation instead of a literal string
+    # Example: /* method: some_func() [...]
+    function_strict_docfunc = r'/\*[ ](method|function):[ ][A-Za-z_]+\(\)( |\nname: \"(.*?)\" )\*/'
+
     # The actual regex used to match markup of methods and functions.
     function = r'/\* (method|function): \"(.*?)\"(?: |(?:\nname: \"(.*?)\" ))\*/\n^(?:static[ ]|extern[ ]|template[<]typename[ ]T[>]\n^)(?:const[ ])?.*?[ ](.*?)\((.*?)\)'
+
+    # Same as function, but matching a function (like function_strict_docfunc)
+    function_docfunc = r'/\* (method|function): ([A-Za-z_]+\(\))(?: |(?:\nname: \"(.*?)\" ))\*/\n^(?:static[ ]|extern[ ]|template[<]typename[ ]T[>]\n^)(?:const[ ])?.*?[ ](.*?)\((.*?)\)'
 
     # Syntax for a property-comment (struct with setter and getter).
     property = r'/\* property: \"(.*?)\" \*/\n^struct (.*?)\{'
@@ -93,7 +101,14 @@ def _clean_doc(doc):
     # The removal can cause a "hard enter" (literal \n) to get an unintended
     # trailing space - trim those.
     doc = doc.replace("\\n ", "\\n")
-    return doc
+    return '"%s"' % doc
+
+def _doc_func(doc_func):
+    """Call the specified C++ function within the method_def to produce the
+    doc-string.
+
+    """
+    return doc_func + ".c_str()"
 
 
 def _get_type(args_str, entry_type):
@@ -137,14 +152,18 @@ def check_file(file_name):
         m2 = re.match(regex.function_strict,
             m.group(0), re.DOTALL|re.MULTILINE)
 
-        if not m2:
-            raise ValueError("Invalid method markup: %s" % m.group(0))
-
-        if m2.group(2).find('"') != -1:
-            raise ValueError('Extra quote (") in method markup: %s' %
-            m.group(0))
+        if m2:
+            if m2.group(2).find('"') != -1:
+                raise ValueError('Extra quote (") in method markup: %s' %
+                                 m.group(0))
+        else:
+            m3 = re.match(regex.function_strict_docfunc,
+                          m.group(0), re.DOTALL|re.MULTILINE)
+            if not m3:
+                raise ValueError("Invalid method markup: %s" % m.group(0))
 
         result.append(m.group(0))
+
         end = m.end(0)
         if not text[end] == '\n':
             raise ValueError("Missing endline after method markup.")
@@ -197,8 +216,7 @@ def parse_file(file_name):
         text = f.read()
 
     # Methods
-    for m in re.finditer(regex.function, text, re.DOTALL|re.MULTILINE):
-
+    def handle_entry(str_doc, entry_type, doc, py_name, cpp_name, args):
         entry_type, doc, py_name, cpp_name, args = m.groups()
         if m.group(0).find("template") != -1:
             assert entry_type == 'method'
@@ -206,8 +224,20 @@ def parse_file(file_name):
 
         if py_name is None:
             py_name = _to_py_name(cpp_name, entry_type)
-        result[0].append((entry_type, cpp_name, _get_type(args, entry_type),
-          py_name, _clean_doc(doc)))
+        if str_doc:
+            # The documentation is a literal string
+            result[0].append((entry_type, cpp_name, _get_type(args, entry_type),
+                py_name, _clean_doc(doc)))
+        else:
+            # The documentation is produced by a c++-function
+            result[0].append((entry_type, cpp_name, _get_type(args, entry_type),
+                py_name, _doc_func(doc)))
+
+    for m in re.finditer(regex.function, text, re.DOTALL|re.MULTILINE):
+        handle_entry(True, *m.groups())
+
+    for m in re.finditer(regex.function_docfunc, text, re.DOTALL|re.MULTILINE):
+        handle_entry(False, *m.groups())
 
     # Properties
     for m in re.finditer(regex.property, text, re.DOTALL|re.MULTILINE):
@@ -226,11 +256,11 @@ def _to_PyMethodDef_entry(items):
     entry_type = items[0]
     items = items[1:]
     if entry_type == 'method':
-        return 'FORWARDER(%s, %s, "%s", "%s")' % items
+        return 'FORWARDER(%s, %s, "%s", %s)' % items
     elif entry_type == 'function':
-        return 'FREE_FORWARDER(%s, %s, "%s", "%s")' % items
+        return 'FREE_FORWARDER(%s, %s, "%s", %s)' % items
     elif entry_type == 'method_template':
-        return 'FORWARDER(%s<common_type>, %s, "%s", "%s")' % items
+        return 'FORWARDER(%s<common_type>, %s, "%s", %s)' % items
     else:
         assert False
 
