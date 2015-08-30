@@ -137,8 +137,8 @@ static void LinearGradient_dealloc(linearGradientObject* self){
   self->ob_base.ob_type->tp_free((PyObject*)self);
 }
 
-/* method: "add_stop(offset, (r,g,b[,a]))\nAdds the specified color stop to
-the gradient" */
+/* method: "add_stop(offset, (r,g,b[,a]))\n
+Adds the specified color stop to the gradient" */
 static void LinearGradient_add_stop(LinearGradient& self, const ColorStop& stop){
   self.Add(stop);
 }

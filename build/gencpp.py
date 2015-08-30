@@ -38,6 +38,9 @@ def generated_by_comment():
 def getsetdef_sentinel():
     return '{nullptr,nullptr,nullptr,nullptr,nullptr}'
 
+def method_def_sentinel():
+    return '{nullptr,nullptr,0,nullptr}'
+
 def _should_generate(sources, out_dir):
     """True if the source-files are modified more recently than the output
     files
@@ -623,6 +626,7 @@ def _generate(root_dir, force):
                         functions_cc +
                         "static PyMethodDef active_settings_methods[] = {\n" +
                         function_method_def +
+                        method_def_sentinel() +
                         cpp.Code(2, "};\n\n")) + "")
 
     if not os.path.exists(out_dir):
