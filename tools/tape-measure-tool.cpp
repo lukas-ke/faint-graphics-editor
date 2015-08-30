@@ -74,11 +74,28 @@ static std::vector<LineSegment> triangle_from_diagonal(const LineSegment& l){
       south ? bottom_side(r) : top_side(r)};
 }
 
-static std::vector<LineSegment> get_lines(const LineEditor& e, TapeMeasureStyle s){
-  using vec = std::vector<LineSegment>;
+static std::vector<LineSegment> get_lines(const LineSegment& diagonal,
+  TapeMeasureStyle s)
+{
   return s == TapeMeasureStyle::TRIANGLE ?
-    triangle_from_diagonal(e.GetLine()) :
-    vec{e.GetLine()};
+    triangle_from_diagonal(diagonal) :
+    std::vector<LineSegment>{diagonal};
+}
+
+static void add_tape_measure_overlays(const LineSegment& diagonal,
+  const utf8_string& preferredUnit,
+  TapeMeasureStyle tapeStyle,
+  const Calibration& c,
+  Overlays& overlays)
+{
+  const auto unit = c.unit.empty() ? utf8_string(unit_px) : preferredUnit;
+  const coord sc = get_distance_scaling(unit, c);
+
+  for (const auto& line : get_lines(diagonal, tapeStyle)){
+    overlays.Line(line);
+    overlays.Text(mid_point(line),
+      space_sep(str(length(line) * sc, 2_dec), unit));
+  }
 }
 
 class TapeMeasureTool : public StandardTool {
@@ -89,19 +106,13 @@ public:
   {}
 
   void Draw(FaintDC&, Overlays& overlays, const PosInfo& info) override{
-    if (!m_active){
-      return;
-    }
-
-    const auto& s = GetSettings();
-    Calibration c = get_calibration(info).Or(Calibration());
-    utf8_string unit = c.unit.empty() ? utf8_string(unit_px) : s.Get(ts_Unit);
-    const coord sc = get_distance_scaling(unit, c);
-
-    for (const auto& line : get_lines(m_editor, s.Get(ts_TapeStyle))){
-      overlays.Line(line);
-      overlays.Text(mid_point(line),
-        space_sep(str(length(line) * sc, 2_dec), unit));
+    if (m_active){
+      const auto& s = GetSettings();
+      add_tape_measure_overlays(m_editor.GetLine(),
+        s.Get(ts_Unit),
+        s.Get(ts_TapeStyle),
+        get_calibration(info).Or(Calibration()),
+        overlays);
     }
   }
 
