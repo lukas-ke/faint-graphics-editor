@@ -13,6 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include <vector>
 #include "editors/line-editor.hh"
 #include "geo/angle.hh"
 #include "geo/calibration.hh"
@@ -64,6 +65,22 @@ static coord get_distance_scaling(const utf8_string& unit, const Calibration& c)
   }
 }
 
+static std::vector<LineSegment> triangle_from_diagonal(const LineSegment& l){
+  const bool east = l.p0.x < l.p1.x;
+  const bool south = l.p0.y < l.p1.y;
+  const Rect r(bounding_rect(l));
+  return {l,
+      east ? left_side(r) : right_side(r),
+      south ? bottom_side(r) : top_side(r)};
+}
+
+static std::vector<LineSegment> get_lines(const LineEditor& e, TapeMeasureStyle s){
+  using vec = std::vector<LineSegment>;
+  return s == TapeMeasureStyle::TRIANGLE ?
+    triangle_from_diagonal(e.GetLine()) :
+    vec{e.GetLine()};
+}
+
 class TapeMeasureTool : public StandardTool {
 public:
   explicit TapeMeasureTool(const Settings& allSettings)
@@ -76,29 +93,15 @@ public:
       return;
     }
 
-    const auto line = m_editor.GetLine();
-    const auto& settings = GetSettings();
-
+    const auto& s = GetSettings();
     Calibration c = get_calibration(info).Or(Calibration());
-    utf8_string unit = c.unit.empty() ? utf8_string(unit_px) :
-      settings.Get(ts_Unit);
+    utf8_string unit = c.unit.empty() ? utf8_string(unit_px) : s.Get(ts_Unit);
     const coord sc = get_distance_scaling(unit, c);
 
-    auto measured_line = [&](const LineSegment& line){
-      // Draws a line and its measurement as overlay
+    for (const auto& line : get_lines(m_editor, s.Get(ts_TapeStyle))){
       overlays.Line(line);
       overlays.Text(mid_point(line),
         space_sep(str(length(line) * sc, 2_dec), unit));
-    };
-
-    measured_line(line);
-
-    if (settings.Get(ts_TapeStyle) == TapeMeasureStyle::TRIANGLE){
-      const bool east = line.p0.x < line.p1.x;
-      const bool south = line.p0.y < line.p1.y;
-      const Rect r(bounding_rect(line));
-      measured_line(east ? left_side(r) : right_side(r));
-      measured_line(south ? bottom_side(r) : top_side(r));
     }
   }
 
