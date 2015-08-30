@@ -2,9 +2,9 @@ page:"Raster and Object Graphics"
 summary:"Description of the raster and object modes"
 
 = Raster and Object graphics {raster-and-object} =
-Faint has two modes: the 'Raster mode', for drawing and the 'Object
-mode' (or 'Vector mode') for adding objects. A Faint image can mix
-elements from both modes. Objects are on top of the raster graphics,
+Faint has two modes: the 'Raster mode', for drawing and the
+'Object mode' (or 'Vector mode') for adding objects. A Faint image can mix
+elements from both modes. Objects lie on top of the raster graphics,
 which form the background.
 
 The current mode determines the output created by

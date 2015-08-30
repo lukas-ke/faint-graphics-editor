@@ -5,7 +5,7 @@ summary:"Color and pattern selection"
 Faint features a primary and a secondary color choice.\br
 \image(selected-color-control.png)
 
-The primary color is (normally) used for drawing lines, and borders of shapes,
+The primary color is (normally) used for lines and borders of shapes,
 while the secondary color is used for filling.
 
 To select the primary color, left click a color in the palette. To select the
@@ -16,7 +16,7 @@ Single-click either the primary or the secondary color in the selected
 color control to adjust the color freely in the
 \ref(gui-color-selection-dialog.txt). Double click a color in the palette
 to adjust it with the color selection dialog. Colors can also be
-selected in an image, using the \ref(tool-picker).
+selected from an image, using the \ref(tool-picker).
 
 == Alpha {color-rgba} ==
 Faint uses RGBA-colors. That is, colors are defined by their relative
