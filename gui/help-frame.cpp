@@ -64,10 +64,13 @@ bool common_help_key(wxWindow* window, const wxKeyEvent& event){
   // window parameter is the window that received the event, and is used
   // for propagating new events to the frame
   if (event.GetKeyCode() == WXK_ESCAPE){
-    return send_event(window, FAINT_CLOSE_HELP);
+    return send_event(window, FAINT_BACK_HELP);
   }
   else if (event.GetKeyCode() == WXK_RETURN && event.AltDown()){
     return send_event(window, FAINT_MAXIMIZE_HELP);
+  }
+  else if (event.GetKeyCode() == WXK_F3){
+    return send_event(window, FAINT_BACK_HELP);
   }
   else if (event.GetKeyCode() == WXK_BACK){
     return send_event(window, FAINT_BACK_HELP);
@@ -322,6 +325,11 @@ public:
     toolbar->Realize();
     SetToolBar(toolbar);
 
+    bind(this, EVT_FAINT_BACK_HELP,
+      [this](){
+        GoBack();
+      });
+
     bind_fwd(this, wxEVT_CLOSE_WINDOW,
       [this](wxCloseEvent& event){
         if (event.CanVeto()){
@@ -398,6 +406,7 @@ public:
 
     bind_fwd(this, wxEVT_TOOL,
       [this](wxCommandEvent& evt){
+        // Forward or backward toolbar-buttons.
         if (evt.GetId() == help_toolbar_back){
           GoBack();
         }
