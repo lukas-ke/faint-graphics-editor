@@ -185,8 +185,7 @@ Command* get_auto_crop_command(const Image& image){
 }
 
 BitmapCommand* get_blend_alpha_command(const ColRGB& bgColor){
-  return function_command("Replace Alpha",
-    [=](Bitmap& bmp){blend_alpha(bmp, bgColor);});
+  return function_command("Replace Alpha", blend_alpha, bgColor);
 }
 
 BitmapCommand* get_sepia_command(int intensity){
@@ -216,9 +215,7 @@ CommandType get_collective_command_type(const commands_t& cmds){
 }
 
 BitmapCommand* get_clear_command(const Paint& paint){
-    // Using lambda because clear is overloaded
-  return function_command("Clear",
-    [=](Bitmap& bmp){clear(bmp, paint);});
+  return function_command("Clear", clear, paint);
 }
 
 Command* get_crop_command(const objects_t& objects){

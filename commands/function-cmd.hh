@@ -44,6 +44,32 @@ BitmapCommand* function_command(const utf8_string& name,
     });
 }
 
+template<typename Function, typename Arg, typename... Rest>
+BitmapCommand* function_command(const utf8_string& name,
+  void(*f)(Bitmap&, Arg, Rest...),
+  Arg&& a,
+  Rest&&... rest)
+{
+  // Bind all arguments of the function, except the bitmap parameter (the first
+  // argument) which is provided as the only parameter when the
+  // function is run as a command.
+  return function_command(name,
+    [=](Bitmap& bmp){
+      return f(bmp, a, rest...);
+    });
+}
+
+template<typename Arg>
+BitmapCommand* function_command(const utf8_string& name,
+  void(*f)(Bitmap&, Arg),
+  Arg&& a)
+{
+  return function_command(name,
+    [=](Bitmap& bmp){
+      return f(bmp, a);
+    });
+}
+
 } // namespace
 
 #endif
