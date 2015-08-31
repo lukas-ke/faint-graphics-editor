@@ -262,8 +262,6 @@ public:
     if (!ok){
       return show_init_error(Title("Faint Internal Error"),
         "Faint crashed!\n\n...while running envsetup.py");
-      // Fixme: Previously deleted m_faintWindow here, when it was a wxFrame.
-      // Must the frame be deleted on error if before SetTopWindow?
     }
 
     if (!m_cmd.silentMode){
@@ -375,13 +373,3 @@ private:
 } // namespace
 
 IMPLEMENT_APP(faint::Application)
-
-namespace faint{
-
-const Art& get_art(){
-  // Fixme: Remove this global accessor, Art should be passed where
-  // needed. - Remember to remove stubs in tests too.
-  return wxGetApp().GetArt();
-}
-
-} // namespace
