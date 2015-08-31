@@ -13,8 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_ROTATION_ADJUSTMENT_HH
-#define FAINT_ROTATION_ADJUSTMENT_HH
+#ifndef FAINT_ROTATED_SIZE_HH
+#define FAINT_ROTATED_SIZE_HH
 #include "geo/angle.hh"
 #include "geo/int-point.hh"
 #include "geo/int-size.hh"

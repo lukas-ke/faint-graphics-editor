@@ -22,7 +22,7 @@
 #include "geo/arc.hh"
 #include "geo/geo-func.hh"
 #include "geo/pathpt.hh"
-#include "geo/rotation-adjustment.hh"
+#include "geo/rotated-size.hh"
 #include "geo/scale.hh"
 #include "geo/size.hh"
 #include "geo/tri.hh"

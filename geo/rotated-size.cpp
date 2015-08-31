@@ -14,7 +14,7 @@
 // permissions and limitations under the License.
 
 #include <cmath>
-#include "geo/rotation-adjustment.hh"
+#include "geo/rotated-size.hh"
 
 namespace faint{
 
