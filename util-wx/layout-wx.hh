@@ -85,6 +85,6 @@ T* focused(T* obj){
   return obj;
 }
 
-}} // Namespace
+}} // namespace
 
 #endif
