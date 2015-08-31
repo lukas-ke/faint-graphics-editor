@@ -126,7 +126,7 @@ public:
     acc.push_back({keyCode, cmdEvtFunc});
     return raw(create_button(this,
       bmp,
-      ui::big_button_size, // Fixme: Would be better to specify padding.
+      ui::big_button_size,
       tooltip,
       cmdEvtFunc));
 
