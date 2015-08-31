@@ -114,8 +114,6 @@ static void dialog_save_file(PyFuncContext& ctx, Canvas* c){
 /* method: "threshold()\n
 Show the threshold dialog." */
 static void dialog_threshold(PyFuncContext& ctx){
-  // const Settings& s = app.GetToolSettings();
-  // Fixme: Pass settings?
   show_threshold_dialog(ctx.app.GetDialogContext(), ctx.app.GetToolSettings());
 }
 
