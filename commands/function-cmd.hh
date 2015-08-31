@@ -68,6 +68,16 @@ BitmapCommand* function_command(const utf8_string& name,
     });
 }
 
+template<typename Arg>
+BitmapCommand* function_command(const utf8_string& name,
+  void(*func)(Bitmap&))
+{
+  return function_command(name,
+    [=](Bitmap& bmp){
+      return func(bmp);
+    });
+}
+
 } // namespace
 
 #endif
