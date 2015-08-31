@@ -30,7 +30,7 @@
 #include "gui/interpreter-frame.hh"
 #include "python/py-exception.hh"
 #include "python/py-initialize-ifaint.hh"
-#include "python/py-interface.hh" // list_ifaint_names // Fixme: Remove
+#include "python/py-interface.hh" // list_ifaint_names
 #include "python/py-key-press.hh"
 #include "python/python-context.hh"
 #include "text/formatting.hh"
@@ -86,6 +86,20 @@ static PaintMap default_palette(){
   palette.Append(Paint(Color(111, 49, 152)));
   palette.Append(Paint(Color(181, 165, 213)));
   return palette;
+}
+
+static bool raise_other_instance(const CommandLine& cmd, FaintInstance& instance){
+  if (cmd.forceNew || !instance.IsAnotherRunning()){
+    return false;
+  }
+
+  // Send any command line files to the previously running
+  // Faint-instance
+  auto remote = instance.OtherInstance(cmd.port.c_str());
+  if (remote == nullptr){
+    return false;
+  }
+  return remote->Notify(cmd.files);
 }
 
 class Application : public wxApp{
@@ -205,20 +219,9 @@ public:
     // Try to become the main Faint-instance
     m_faintInstance = create_faint_instance();
 
-    // Fixme: Move this block to a function
-    if (!m_cmd.forceNew && m_faintInstance->IsAnotherRunning()){
-      // Send any command line files to the previously running
-      // Faint-instance
-      auto remote = m_faintInstance->OtherInstance(m_cmd.port.c_str());
-      if (remote != nullptr && remote->Notify(m_cmd.files)){
-        // The old Faint instance was notified successfully. Close
-        // this instance.
-        return false;
-      }
-      else {
-        // Failed communicating with the old instance for some reason,
-        // Allow starting.
-     }
+    if (raise_other_instance(m_cmd, *m_faintInstance)){
+      // A previously running Faint was raised instead.
+      return false;
     }
 
     wxInitAllImageHandlers();
