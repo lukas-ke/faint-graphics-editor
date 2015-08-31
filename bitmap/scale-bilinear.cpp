@@ -47,7 +47,6 @@ Bitmap scale_bilinear(const Bitmap& src, const Scale& scale){
       const_color_ptr c(data + srcIndex + src.m_row_stride);
       const_color_ptr d(data + srcIndex + src.m_row_stride + ByPP);
 
-      // Fixme: Check for possible overflow
       const uchar blue = static_cast<uchar>((a.b)*(1-x_diff)*(1-y_diff) +
         (b.b)*(x_diff)*(1-y_diff) +
         (c.b)*(y_diff)*(1-x_diff) +
