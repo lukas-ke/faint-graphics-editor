@@ -55,7 +55,19 @@
 
 namespace faint{
 
-using namespace std::placeholders; // Fixme: Replace all bind with lambda.
+template<typename Function, typename... Args>
+auto bmp_function_command(const utf8_string& name,
+  Function&& f,
+  Args&&... a)
+{
+  // Bind all arguments of the function, except the bitmap parameter (the first
+  // argument) which is provided as the only parameter when the
+  // function is run as a command.
+  return get_function_command(name,
+    [&](Bitmap& bmp){
+      return f(bmp, std::forward<Args>(a)...);
+    });
+}
 
 static Optional<Color> get_dwim_delete_color(
   const Either<Bitmap, ColorSpan>& bg,
@@ -141,8 +153,7 @@ Command* crop_one_object(Object* obj){
 }
 
 BitmapCommand* get_aa_line_command(const IntLineSegment& line, const ColRGB& c){
-  return get_function_command("Draw Wu-line",
-    std::bind(draw_line_aa_Wu, _1, line, c));
+  return bmp_function_command("Draw Wu-line", draw_line_aa_Wu, line, c);
 }
 
 Command* get_add_objects_command(const objects_t& objects,
@@ -195,12 +206,12 @@ BitmapCommand* get_blend_alpha_command(const ColRGB& bgColor){
 }
 
 BitmapCommand* get_sepia_command(int intensity){
-  return get_function_command("Sepia", std::bind(sepia, _1, intensity));
+  return bmp_function_command("Sepia", sepia, intensity);
 }
 
 BitmapCommand* get_pinch_whirl_command(coord pinch, const Angle& whirl){
-  return get_function_command("Pinch/Whirl",
-    std::bind(filter_pinch_whirl, _1, pinch, whirl));
+  return bmp_function_command("Pinch/Whirl",
+    filter_pinch_whirl, pinch, whirl);
 }
 
 Command* get_change_raster_background_command(ObjRaster* obj, const Color& color){
@@ -355,7 +366,7 @@ Command* get_insert_raster_bitmap_command(const Bitmap& bmp,
 }
 
 BitmapCommand* get_pixelize_command(const pixelize_range_t& width){
-  return get_function_command("Pixelize", std::bind(pixelize, _1, width));
+  return bmp_function_command("Pixelize", pixelize, width);
 }
 
 BitmapCommand* get_quantize_command(){
@@ -398,7 +409,7 @@ Command* get_select_all_command(const Image& image,
 }
 
 BitmapCommand* get_set_alpha_command(uchar alpha){
-  return get_function_command("Set Alpha", std::bind(set_alpha, _1, alpha));
+  return bmp_function_command("Set Alpha", set_alpha, alpha);
 }
 
 BitmapCommand* get_desaturate_simple_command(){
@@ -410,8 +421,7 @@ BitmapCommand* get_desaturate_weighted_command(){
 }
 
 BitmapCommand* get_erase_but_color_command(const Color& keep, const Paint& eraser){
-  return get_function_command("Replace Colors",
-    std::bind(erase_but, _1, keep, eraser));
+  return bmp_function_command("Replace Colors", erase_but, keep, eraser);
 }
 
 Command* get_fill_boundary_command(Object* obj, const Paint& paint){
@@ -448,14 +458,15 @@ Command* get_flatten_command(const objects_t& objects, const Image& image){
 }
 
 BitmapCommand* get_flood_fill_command(const IntPoint& pos, const Paint& fill){
-  return get_function_command("Flood fill", std::bind(flood_fill, _1, pos, fill));
+  return bmp_function_command("Flood fill", flood_fill, pos, fill);
 }
 
-BitmapCommand* get_boundary_fill_command(const IntPoint& pos, const Paint& fill,
+BitmapCommand* get_boundary_fill_command(const IntPoint& pos,
+  const Paint& fill,
   const Color& boundary)
 {
-  return get_function_command("Boundary fill",
-    std::bind(boundary_fill, _1, pos, fill, boundary));
+  return bmp_function_command("Boundary fill", boundary_fill,
+    pos, fill, boundary);
 }
 
 BitmapCommand* get_brightness_and_contrast_command(const brightness_contrast_t& v){
@@ -464,8 +475,7 @@ BitmapCommand* get_brightness_and_contrast_command(const brightness_contrast_t& 
 }
 
 BitmapCommand* get_invert_command(){
-  return get_function_command("Invert colors",
-    [=](Bitmap& bmp){invert(bmp);});
+  return get_function_command("Invert colors", [=](Bitmap& bmp){invert(bmp);});
 }
 
 Command* get_move_objects_command(const objects_t& objects,
@@ -654,8 +664,8 @@ Command* get_objects_to_paths_command(const objects_t& objects,
 BitmapCommand* get_replace_color_command(const OldColor& oldColor,
   const Paint& newColor)
 {
-  return get_function_command("Replace color",
-    std::bind(replace_color, _1, oldColor, newColor));
+  return bmp_function_command("Replace color", replace_color,
+    oldColor, newColor);
 }
 
 Command* get_replace_object_command(const OldObject& oldWrap,
@@ -840,9 +850,9 @@ Command* get_scale_rotate_command(const objects_t& objects, const Scale& scale,
 BitmapCommand* get_threshold_command(const threshold_range_t& range,
   const Paint& in, const Paint& out)
 {
-  return get_function_command("Threshold",
-    std::bind(threshold, _1, range, in, out));
+  return bmp_function_command("Threshold", threshold, range, in, out);
 }
+
 Command* get_scale_raster_selection_command(const Image& image,
   const IntSize& newSize, ScaleQuality quality)
 {
