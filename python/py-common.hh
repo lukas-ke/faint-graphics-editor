@@ -149,7 +149,7 @@ Flip the image horizontally (across the vertical axis)." */
 template<typename T>
 void Common_flip_horizontally(T target){
   py_common_run_command(target,
-    target_full_image(get_function_command("Flip horizontally",
+    target_full_image(function_command("Flip horizontally",
       [=](Bitmap& bmp){bmp = flip(bmp, along(Axis::HORIZONTAL));})));
 }
 
@@ -158,7 +158,7 @@ Flip the image vertically (across the horizontal axis)." */
 template<typename T>
 void Common_flip_vertically(T target){
   py_common_run_command(target,
-    target_full_image(get_function_command("Flip vertically",
+    target_full_image(function_command("Flip vertically",
       [=](Bitmap& bmp){bmp = flip(bmp, along(Axis::VERTICAL));})));
 }
 
@@ -185,7 +185,7 @@ void Common_gaussian_blur(T target, coord sigma){
   }
 
   py_common_run_command(target,
-    target_full_image(get_function_command("Gaussian blur",
+    target_full_image(function_command("Gaussian blur",
       [=](Bitmap& bmp){
           bmp = gaussian_blur_exact(bmp, sigma);
         })));
@@ -346,9 +346,10 @@ void Common_color_balance(T target, const color_range_t& r,
   const color_range_t& b)
 {
   py_common_run_command(target,
-    target_full_image(get_function_command("Color balance",
-      [=](Bitmap& bmp){color_balance(bmp, r, g, b);})));
+    target_full_image(bmp_function_command("Color balance",
+        color_balance, r, g, b)));
 }
 
 } // namespace
+
 #endif

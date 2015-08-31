@@ -741,7 +741,7 @@ static void canvas_scroll_max_right(CanvasT canvas){
 Sharpen the image using an unsharp mask." */
 static void canvas_unsharp_mask(CanvasT canvas, coord sigma){
   canvas.ctx.RunCommand(canvas,
-    target_full_image(get_function_command("Unsharp mask",
+    target_full_image(function_command("Unsharp mask",
       [=](Bitmap& bmp){
         bmp = unsharp_mask_fast(bmp, sigma);
       })));

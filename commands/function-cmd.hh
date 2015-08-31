@@ -23,8 +23,22 @@ class Bitmap;
 class BitmapCommand;
 class utf8_string;
 
-BitmapCommand* get_function_command(const utf8_string& name,
+BitmapCommand* function_command(const utf8_string& name,
   const std::function<void(Bitmap&)>&);
+
+template<typename Function, typename... Args>
+BitmapCommand* bmp_function_command(const utf8_string& name,
+  Function&& f,
+  Args&&... a)
+{
+  // Bind all arguments of the function, except the bitmap parameter (the first
+  // argument) which is provided as the only parameter when the
+  // function is run as a command.
+  return function_command(name,
+    [&](Bitmap& bmp){
+      return f(bmp, std::forward<Args>(a)...);
+    });
+}
 
 } // namespace
 

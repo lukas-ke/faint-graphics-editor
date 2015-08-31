@@ -55,20 +55,6 @@
 
 namespace faint{
 
-template<typename Function, typename... Args>
-auto bmp_function_command(const utf8_string& name,
-  Function&& f,
-  Args&&... a)
-{
-  // Bind all arguments of the function, except the bitmap parameter (the first
-  // argument) which is provided as the only parameter when the
-  // function is run as a command.
-  return get_function_command(name,
-    [&](Bitmap& bmp){
-      return f(bmp, std::forward<Args>(a)...);
-    });
-}
-
 static Optional<Color> get_dwim_delete_color(
   const Either<Bitmap, ColorSpan>& bg,
   const IntRect& r)
@@ -198,10 +184,8 @@ Command* get_auto_crop_command(const Image& image){
     });
 }
 
-
-
 BitmapCommand* get_blend_alpha_command(const ColRGB& bgColor){
-  return get_function_command("Replace Alpha",
+  return bmp_function_command("Replace Alpha",
     [=](Bitmap& bmp){blend_alpha(bmp, bgColor);});
 }
 
@@ -233,8 +217,8 @@ CommandType get_collective_command_type(const commands_t& cmds){
 }
 
 BitmapCommand* get_clear_command(const Paint& paint){
-  return get_function_command("Clear",
-    // Using lambda instead of bind because clear is overloaded
+    // Using lambda because clear is overloaded
+  return function_command("Clear",
     [=](Bitmap& bmp){clear(bmp, paint);});
 }
 
@@ -370,7 +354,7 @@ BitmapCommand* get_pixelize_command(const pixelize_range_t& width){
 }
 
 BitmapCommand* get_quantize_command(){
-  return get_function_command("Quantize",
+  return function_command("Quantize",
     [=](Bitmap& bmp){
       quantize(bmp, Dithering::ON);
     });
@@ -413,11 +397,11 @@ BitmapCommand* get_set_alpha_command(uchar alpha){
 }
 
 BitmapCommand* get_desaturate_simple_command(){
-  return get_function_command("Desaturate", desaturate_simple);
+  return function_command("Desaturate", desaturate_simple);
 }
 
 BitmapCommand* get_desaturate_weighted_command(){
-  return get_function_command("Desaturate Weighted", desaturate_weighted);
+  return function_command("Desaturate Weighted", desaturate_weighted);
 }
 
 BitmapCommand* get_erase_but_color_command(const Color& keep, const Paint& eraser){
@@ -470,12 +454,12 @@ BitmapCommand* get_boundary_fill_command(const IntPoint& pos,
 }
 
 BitmapCommand* get_brightness_and_contrast_command(const brightness_contrast_t& v){
-  return get_function_command("Brightness and contrast",
+  return function_command("Brightness and contrast",
     [=](Bitmap& bmp){bmp = brightness_and_contrast(bmp, v);});
 }
 
 BitmapCommand* get_invert_command(){
-  return get_function_command("Invert colors", [=](Bitmap& bmp){invert(bmp);});
+  return function_command("Invert colors", [=](Bitmap& bmp){invert(bmp);});
 }
 
 Command* get_move_objects_command(const objects_t& objects,

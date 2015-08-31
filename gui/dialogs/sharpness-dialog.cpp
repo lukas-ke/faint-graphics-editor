@@ -96,11 +96,11 @@ public:
   BitmapCommand* GetCommand(){
     coord sharpness = GetSharpness();
     if (sharpness < 0){
-      return get_function_command("Blur",
+      return function_command("Blur",
         [=](Bitmap& bmp){bmp = gaussian_blur_fast(bmp, -sharpness);});
     }
     else{
-      return get_function_command("Sharpen",
+      return function_command("Sharpen",
         [=](Bitmap& bmp){bmp = unsharp_mask_fast(bmp, sharpness);});
     }
   }

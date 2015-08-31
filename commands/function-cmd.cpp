@@ -39,7 +39,7 @@ private:
   std::function<void(Bitmap&)> m_func;
 };
 
-BitmapCommand* get_function_command(const utf8_string& name,
+BitmapCommand* function_command(const utf8_string& name,
   const std::function<void(Bitmap&)>& func)
 {
   return new FunctionCommand(name, func);
