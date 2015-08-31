@@ -77,6 +77,9 @@ static utf8_string to_string(PngReadResult result, const FilePath& p){
   else if (result == R::ERROR_MALLOC){
     return failed_read_libpng("Out of memory.");
   }
+  else if (result == R::ERROR_READ_PALETTE){
+    return failed_read_libpng("png_get_PLTE");
+  }
   else{
     return failed_read("For reasons unknown.");
   }

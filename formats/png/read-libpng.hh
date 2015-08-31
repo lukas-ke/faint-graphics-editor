@@ -28,11 +28,11 @@ enum class PngReadResult{
   ERROR_CREATE_INFO_STRUCT,
   ERROR_INIT_IO,
   ERROR_READ_DATA,
-  ERROR_READ_PALETTE, // Fixme: Add error handling for this
+  ERROR_READ_PALETTE,
   ERROR_MALLOC
 };
 
-  PngReadResult read_with_libpng(const FilePath&,
+PngReadResult read_with_libpng(const FilePath&,
   png_byte** rows,
   png_uint_32* width,
   png_uint_32* height,
@@ -43,6 +43,6 @@ enum class PngReadResult{
   int* numPalette,
   std::map<utf8_string, utf8_string>& textChunks);
 
-} // namespace faint
+} // namespace
 
 #endif
