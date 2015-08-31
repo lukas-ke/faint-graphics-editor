@@ -80,6 +80,7 @@ text_lines_t split_string(const TextInfo& info,
   size_t lineStart = 0;
 
   text_lines_t result;
+
   do {
     lineEnd = string.find(chars::eol, lineStart);
     bool softBreak = lineEnd == std::string::npos;
@@ -109,7 +110,6 @@ text_lines_t split_string(const TextInfo& info,
 
   if (!result.empty()){
     // Remove trailing space from last line
-    // Fixme: Only if added space. (Yuck)
     auto& last = result.back().text;
     last = slice_up_to(last, -1);
   }
