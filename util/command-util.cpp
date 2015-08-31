@@ -139,7 +139,7 @@ Command* crop_one_object(Object* obj){
 }
 
 BitmapCommand* get_aa_line_command(const IntLineSegment& line, const ColRGB& c){
-  return bmp_function_command("Draw Wu-line", draw_line_aa_Wu, line, c);
+  return function_command("Draw Wu-line", draw_line_aa_Wu, line, c);
 }
 
 Command* get_add_objects_command(const objects_t& objects,
@@ -185,17 +185,16 @@ Command* get_auto_crop_command(const Image& image){
 }
 
 BitmapCommand* get_blend_alpha_command(const ColRGB& bgColor){
-  return bmp_function_command("Replace Alpha",
+  return function_command("Replace Alpha",
     [=](Bitmap& bmp){blend_alpha(bmp, bgColor);});
 }
 
 BitmapCommand* get_sepia_command(int intensity){
-  return bmp_function_command("Sepia", sepia, intensity);
+  return function_command("Sepia", sepia, intensity);
 }
 
 BitmapCommand* get_pinch_whirl_command(coord pinch, const Angle& whirl){
-  return bmp_function_command("Pinch/Whirl",
-    filter_pinch_whirl, pinch, whirl);
+  return function_command("Pinch/Whirl", filter_pinch_whirl, pinch, whirl);
 }
 
 Command* get_change_raster_background_command(ObjRaster* obj, const Color& color){
@@ -350,7 +349,7 @@ Command* get_insert_raster_bitmap_command(const Bitmap& bmp,
 }
 
 BitmapCommand* get_pixelize_command(const pixelize_range_t& width){
-  return bmp_function_command("Pixelize", pixelize, width);
+  return function_command("Pixelize", pixelize, width);
 }
 
 BitmapCommand* get_quantize_command(){
@@ -393,7 +392,7 @@ Command* get_select_all_command(const Image& image,
 }
 
 BitmapCommand* get_set_alpha_command(uchar alpha){
-  return bmp_function_command("Set Alpha", set_alpha, alpha);
+  return function_command("Set Alpha", set_alpha, alpha);
 }
 
 BitmapCommand* get_desaturate_simple_command(){
@@ -405,7 +404,7 @@ BitmapCommand* get_desaturate_weighted_command(){
 }
 
 BitmapCommand* get_erase_but_color_command(const Color& keep, const Paint& eraser){
-  return bmp_function_command("Replace Colors", erase_but, keep, eraser);
+  return function_command("Replace Colors", erase_but, keep, eraser);
 }
 
 Command* get_fill_boundary_command(Object* obj, const Paint& paint){
@@ -442,15 +441,14 @@ Command* get_flatten_command(const objects_t& objects, const Image& image){
 }
 
 BitmapCommand* get_flood_fill_command(const IntPoint& pos, const Paint& fill){
-  return bmp_function_command("Flood fill", flood_fill, pos, fill);
+  return function_command("Flood fill", flood_fill, pos, fill);
 }
 
 BitmapCommand* get_boundary_fill_command(const IntPoint& pos,
   const Paint& fill,
   const Color& boundary)
 {
-  return bmp_function_command("Boundary fill", boundary_fill,
-    pos, fill, boundary);
+  return function_command("Boundary fill", boundary_fill, pos, fill, boundary);
 }
 
 BitmapCommand* get_brightness_and_contrast_command(const brightness_contrast_t& v){
@@ -648,8 +646,7 @@ Command* get_objects_to_paths_command(const objects_t& objects,
 BitmapCommand* get_replace_color_command(const OldColor& oldColor,
   const Paint& newColor)
 {
-  return bmp_function_command("Replace color", replace_color,
-    oldColor, newColor);
+  return function_command("Replace color", replace_color, oldColor, newColor);
 }
 
 Command* get_replace_object_command(const OldObject& oldWrap,
@@ -834,7 +831,7 @@ Command* get_scale_rotate_command(const objects_t& objects, const Scale& scale,
 BitmapCommand* get_threshold_command(const threshold_range_t& range,
   const Paint& in, const Paint& out)
 {
-  return bmp_function_command("Threshold", threshold, range, in, out);
+  return function_command("Threshold", threshold, range, in, out);
 }
 
 Command* get_scale_raster_selection_command(const Image& image,

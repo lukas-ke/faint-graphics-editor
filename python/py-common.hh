@@ -346,8 +346,8 @@ void Common_color_balance(T target, const color_range_t& r,
   const color_range_t& b)
 {
   py_common_run_command(target,
-    target_full_image(bmp_function_command("Color balance",
-        color_balance, r, g, b)));
+    target_full_image(function_command("Color balance",
+      color_balance, r, g, b)));
 }
 
 } // namespace
