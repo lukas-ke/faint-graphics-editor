@@ -68,7 +68,9 @@ wxSizer* create_row_no_pad(const std::vector<SizerItem>&);
 wxSizer* create_column(OuterSpacing, ItemSpacing, const std::vector<SizerItem>&);
 wxSizer* create_column(const std::vector<SizerItem>&);
 
-// Sets wxEXPAND (Fixme: Document)
+// Sets wxEXPAND, i.e. makes the item grow to fill the alotted space
+// in the secondary direction.
+// <../doc/grow.png>
 SizerItem grow(wxSizer*);
 SizerItem grow(wxWindow*);
 SizerItem center(wxSizer*);
