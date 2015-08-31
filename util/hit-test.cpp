@@ -50,7 +50,7 @@ static std::pair<Object*, Hit> object_at(const Point& p,
     if (object->HitTest(p)){
       object->DrawMask(dc, expressionContext);
       Color color = dc.GetPixel(p);
-      if (color == mask_edge){ // Fixme: Consider fuzzy or disabling AA
+      if (color == mask_edge){
         return std::make_pair(object, Hit::BOUNDARY);
       }
       else if (color == mask_fill){
