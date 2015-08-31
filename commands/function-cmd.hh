@@ -26,6 +26,9 @@ class utf8_string;
 BitmapCommand* function_command(const utf8_string& name,
   const std::function<void(Bitmap&)>&);
 
+BitmapCommand* function_command(const utf8_string& name,
+  std::function<void(Bitmap&)>&&);
+
 template<typename Function, typename Arg, typename... Rest>
 BitmapCommand* function_command(const utf8_string& name,
   Function&& f,

@@ -27,6 +27,12 @@ class FunctionCommand : public BitmapCommand {
       m_func(func)
   {}
 
+  FunctionCommand(const utf8_string& name,
+    std::function<void(Bitmap&)>&& func)
+    : m_name(name),
+      m_func(std::move(func))
+  {}
+
   utf8_string Name() const override{
     return m_name;
   }
@@ -43,6 +49,12 @@ BitmapCommand* function_command(const utf8_string& name,
   const std::function<void(Bitmap&)>& func)
 {
   return new FunctionCommand(name, func);
+}
+
+BitmapCommand* function_command(const utf8_string& name,
+  std::function<void(Bitmap&)>&& func)
+{
+  return new FunctionCommand(name, std::move(func));
 }
 
 } // namespace
