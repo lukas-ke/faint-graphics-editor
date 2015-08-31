@@ -269,7 +269,7 @@ def to_PyGetSetDef_entry(cpp_struct_name, py_name, doc):
     property-struct (as returned by parse_file).
 
     """
-    return 'PROPERTY_FORWARDER(%s, "%s", "%s")' % (
+    return 'PROPERTY_FORWARDER(%s, "%s", %s)' % (
         cpp_struct_name, py_name, doc)
 
 

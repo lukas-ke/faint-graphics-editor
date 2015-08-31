@@ -252,11 +252,11 @@ Bitmap cairo_skew(const Bitmap& src, coord skew_angle, coord skew_pixels){
 }
 
 Bitmap rotate_bilinear(const Bitmap& src, const Angle& angle, const Paint& bg){
-  RotationAdjustment adj = get_rotation_adjustment(angle, src.GetSize());
+  IntSize newSize = get_rotated_size(angle, src.GetSize());
   Point offset(-src.m_w / 2.0, -src.m_h / 2.0);
-  return transform_copy(src, adj.size, bg, offset,
+  return transform_copy(src, newSize, bg, offset,
     [&](cairo_t* cr){
-      cairo_translate(cr, adj.size.w / 2.0, adj.size.h / 2.0);
+      cairo_translate(cr, newSize.w / 2.0, newSize.h / 2.0);
       cairo_rotate(cr, angle.Rad());
     });
 }
@@ -269,8 +269,7 @@ IntSize rotate_scale_bilinear_size(const IntSize& size,
   const Angle& angle,
   const Scale& scale)
 {
-  RotationAdjustment adj = get_rotation_adjustment(angle, size);
-  return rounded(floated(adj.size) * scale);
+  return rounded(floated(get_rotated_size(angle, size)) * scale);
 }
 
 Bitmap rotate_scale_bilinear(const Bitmap& src, const Angle& angle,

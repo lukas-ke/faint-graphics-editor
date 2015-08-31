@@ -151,7 +151,6 @@ void replace_color_color(Bitmap&, const OldColor&, const NewColor&);
 void replace_color_pattern(Bitmap&, const OldColor&, const Bitmap& pattern);
 void rect(Bitmap&, const IntRect&, const Optional<BorderSettings>&,
   const Optional<Paint>& bg);
-Bitmap rotate_nearest(const Bitmap&, const Angle&, const Color& bg);
 Bitmap rotate_bilinear(const Bitmap&, const Angle&, const Paint& bg);
 Bitmap rotate_bilinear(const Bitmap&, const Angle&);
 Bitmap rotate_90cw(const Bitmap&);

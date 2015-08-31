@@ -5,9 +5,7 @@
 
 void test_rotation_adjustment(){
   using namespace faint;
-  using RA = RotationAdjustment;
 
-  auto a = get_rotation_adjustment(Angle::Deg(45), IntSize(20, 20));
-  KNOWN_INEQUAL(a.size, IntSize(30, 30)); // Becomes 30, 29
-  EQUAL(a.offset, IntPoint(-15, 0)); // Fixme: What is this?
+  auto newSize = get_rotated_size(Angle::Deg(45), IntSize(20, 20));
+  KNOWN_INEQUAL(newSize, IntSize(30, 30)); // Becomes 30, 29
 }

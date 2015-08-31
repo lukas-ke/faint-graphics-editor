@@ -52,13 +52,7 @@ static double max4(double a, double b, double c, double d){
   }
 }
 
-RotationAdjustment::RotationAdjustment(const IntPoint& offset,
-  const IntSize& size)
-  : offset(offset),
-    size(size)
-{}
-
-RotationAdjustment get_rotation_adjustment(const Angle& angle,
+IntSize get_rotated_size(const Angle& angle,
   const IntSize& size)
 {
   // Use the upper-left corner as pivot
@@ -84,7 +78,7 @@ RotationAdjustment get_rotation_adjustment(const Angle& angle,
   IntSize newSize(ceiled(max4(x1, x2, x3, x4)) - offset.x,
     ceiled(max4(y1,y2,y3,y4)) - offset.y);
 
-  return RotationAdjustment(offset, newSize);
+  return newSize;
 }
 
 } // namespace

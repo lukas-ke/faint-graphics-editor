@@ -2006,8 +2006,6 @@ void replace_color(Bitmap& bmp, const OldColor& oldColor, const Paint& paint){
     });
 }
 
-// Note: rotate_nearest is implemented in rotate-util.cpp
-
 Bitmap rotate_90cw(const Bitmap& src){
   Bitmap dst(transposed(src.GetSize()));
   uchar* pDst = dst.m_data;

@@ -21,20 +21,9 @@
 
 namespace faint{
 
-class RotationAdjustment{
-public:
-  RotationAdjustment(const IntPoint&, const IntSize&);
-
-  // Some offset possibly meaningful to rotation algorithms.
-  // Fixme: Clarify
-  IntPoint offset;
-
-  // The required size for an image after rotation
-  // <../doc/rotation-adjustment-size.png>
-  IntSize size;
-};
-
-RotationAdjustment get_rotation_adjustment(const Angle&, const IntSize&);
+// The required size for an image after rotation
+// <../doc/rotation-adjustment-size.png>
+IntSize get_rotated_size(const Angle&, const IntSize&);
 
 } // namespace
 
