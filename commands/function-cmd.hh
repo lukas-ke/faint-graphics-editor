@@ -29,6 +29,22 @@ BitmapCommand* function_command(const utf8_string& name,
 BitmapCommand* function_command(const utf8_string& name,
   std::function<void(Bitmap&)>&&);
 
+
+template<typename Function, typename Arg, typename... Rest>
+BitmapCommand* in_place_function_command(const utf8_string& name,
+  Function&& f,
+  Arg&& a,
+  Rest&&... rest)
+{
+  // Bind all arguments of the function, except the bitmap parameter (the first
+  // argument) which is provided as the only parameter when the
+  // function is run as a command.
+  return function_command(name,
+    [=](Bitmap& bmp){
+      bmp = f(bmp, a, rest...);
+    });
+}
+
 template<typename Function, typename Arg, typename... Rest>
 BitmapCommand* function_command(const utf8_string& name,
   Function&& f,
