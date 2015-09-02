@@ -15,11 +15,14 @@
 
 #include "wx/panel.h"
 #include "wx/sizer.h"
-#include "app/app-context.hh" // Fixme: Remove
-#include "app/canvas.hh" // Fixme: Remove
-#include "bitmap/bitmap.hh" // Fixme: Remove
-#include "bitmap/color-span.hh" // Fixme: Remove
-#include "util/setting-id.hh" // Fixme: Remove
+// <fixme> Remove these, pass Accessor and pick_paint_f etc.
+// to the ColorPanel instead of these overly broad classes.
+#include "app/app-context.hh"
+#include "app/canvas.hh"
+#include "bitmap/bitmap.hh"
+#include "bitmap/color-span.hh"
+#include "util/setting-id.hh"
+// </fixme>
 #include "geo/int-size.hh"
 #include "gui/color-panel.hh"
 #include "gui/events.hh"
@@ -98,7 +101,7 @@ public:
             });
         };
 
-        return show_paint_dialog(nullptr, // Fixme: ?
+        return show_paint_dialog(nullptr,
           title,
           initial,
           secondary,
