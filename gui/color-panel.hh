@@ -16,6 +16,7 @@
 #ifndef FAINT_COLOR_PANEL_HH
 #define FAINT_COLOR_PANEL_HH
 #include "util/dumb-ptr.hh"
+#include "util/pick-paint.hh"
 
 class wxWindow;
 
@@ -37,6 +38,7 @@ class ColorPanel {
 public:
   ColorPanel(wxWindow* parent,
     const PaintMap& palette,
+    const pick_paint_f&,
     AppContext&,
     StatusInterface&,
     const Art&);

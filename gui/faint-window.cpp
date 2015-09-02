@@ -24,6 +24,7 @@
 #include "app/faint-window-app-context.hh"
 #include "app/faint-tool-actions.hh"
 #include "app/faint-window-python-context.hh"
+#include "bitmap/bitmap.hh"
 #include "bitmap/bitmap-exception.hh"
 #include "gui/canvas-panel.hh"
 #include "gui/color-panel.hh"
@@ -32,6 +33,7 @@
 #include "gui/freezer.hh"
 #include "gui/help-frame.hh"
 #include "gui/menu-bar.hh"
+#include "gui/paint-dialog.hh"
 #include "gui/setting-events.hh"
 #include "gui/tab-ctrl.hh"
 #include "gui/tool-panel.hh"
@@ -212,9 +214,41 @@ static void initialize_panels(wxFrame& frame, FaintWindowContext& app,
     app.GetStatusInfo());
   row1->Add(panels.tabControl->AsWindow(), 1, wxEXPAND);
 
+
+
+  auto pickPaint =
+    [&app, &frame](const utf8_string& title,
+      const Paint& initial,
+      const Color& secondary)
+    {
+      auto getBitmap = [&app](){
+        const auto& background = app.GetActiveCanvas().GetBackground();
+        return background.Visit(
+          [&](const Bitmap& bmp) -> Bitmap{
+            return bmp;
+          },
+          [&](const ColorSpan& colorSpan){
+            // Not using the colorSpan size, since it might be huge, and
+            // it would be pointless with only one color.
+            const IntSize size(1,1);
+            return Bitmap(size, colorSpan.color);
+          });
+      };
+
+      return show_paint_dialog(&frame,
+        title,
+        initial,
+        secondary,
+        getBitmap,
+        app.GetStatusInfo(),
+        app.GetDialogContext());
+    };
+
+
   // Bottom half, the selected color, palette and zoom controls.
   panels.color = std::make_unique<ColorPanel>(&frame,
     palette,
+    pickPaint,
     app,
     app.GetStatusInfo(),
     art);

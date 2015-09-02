@@ -74,6 +74,7 @@ class ColorPanelImpl : public wxPanel {
 public:
   ColorPanelImpl(wxWindow* parent,
     const PaintMap& palette,
+    const pick_paint_f& pickPaint,
     AppContext& app,
     StatusInterface& status,
     const Art& art)
@@ -81,34 +82,6 @@ public:
   {
     // The spacing between controls in this panel
     const int spacing = 5;
-
-    auto pickPaint =
-      [&app, &art, &status](const utf8_string& title,
-        const Paint& initial,
-        const Color& secondary)
-      {
-        auto getBitmap = [&app](){
-          const auto& background = app.GetActiveCanvas().GetBackground();
-          return background.Visit(
-            [&](const Bitmap& bmp) -> Bitmap{
-              return bmp;
-            },
-            [&](const ColorSpan& colorSpan){
-              // Not using the colorSpan size, since it might be huge, and
-              // it would be pointless with only one color.
-              const IntSize size(1,1);
-              return Bitmap(size, colorSpan.color);
-            });
-        };
-
-        return show_paint_dialog(nullptr,
-          title,
-          initial,
-          secondary,
-          getBitmap,
-          status,
-          app.GetDialogContext());
-    };
 
     auto getBg = [&](){
       return get_color_default(app.Get(ts_Bg), color_white);
@@ -159,10 +132,15 @@ public:
 
 ColorPanel::ColorPanel(wxWindow* parent,
   const PaintMap& palette,
+  const pick_paint_f& pickPaint,
   AppContext& app,
   StatusInterface& status,
   const Art& art)
-  : m_impl(make_dumb<ColorPanelImpl>(parent, palette, app, status,
+  : m_impl(make_dumb<ColorPanelImpl>(parent,
+      palette,
+      pickPaint,
+      app,
+      status,
       art))
 {}
 
