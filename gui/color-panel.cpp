@@ -15,7 +15,6 @@
 
 #include "wx/panel.h"
 #include "wx/sizer.h"
-#include "app/app-context.hh" // Fixme: Rework FrameCtrl to not require App
 #include "geo/int-size.hh"
 #include "gui/color-panel.hh"
 #include "gui/events.hh"
@@ -38,7 +37,7 @@ public:
     const Getter<Color>& getBg,
     const Accessor<Grid>& gridAccess,
     const std::function<void()>& showGridDialog,
-    AppContext& app,
+    const Getter<Canvas&>& getCanvas,
     StatusInterface& status,
     const Art& art)
     : wxPanel(parent)
@@ -68,7 +67,7 @@ public:
     m_grid = make_dumb<GridCtrl>(this, art, status, showGridDialog, gridAccess);
     sizer->Add(m_grid.get(), 0, wxALL, spacing);
 
-    m_frameCtrl = make_dumb<FrameCtrl>(this, app, status, art);
+    m_frameCtrl = make_dumb<FrameCtrl>(this, getCanvas, status, art);
     sizer->Add(m_frameCtrl->AsWindow(), 0, wxALL, spacing);
     SetSizer(sizer);
     Layout();
@@ -95,7 +94,7 @@ ColorPanel::ColorPanel(wxWindow* parent,
   const Getter<Color>& getBg,
   const Accessor<Grid>& gridAccess,
   const std::function<void()>& showGridDialog,
-  AppContext& app,
+  const Getter<Canvas&>& getCanvas,
   StatusInterface& status,
   const Art& art)
   : m_impl(make_dumb<ColorPanelImpl>(parent,
@@ -104,7 +103,7 @@ ColorPanel::ColorPanel(wxWindow* parent,
       getBg,
       gridAccess,
       showGridDialog,
-      app,
+      getCanvas,
       status,
       art))
 {}

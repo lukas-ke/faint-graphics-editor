@@ -15,18 +15,18 @@
 
 #ifndef FAINT_FRAME_CTRL_HH
 #define FAINT_FRAME_CTRL_HH
+#include "util/accessor.hh"
 
 namespace faint{
 
 class Art;
+class Canvas;
 class StatusInterface;
-
-class AppContext;
 
 class FrameCtrl{
   // Control for selecting and reordering animation frames (and such).
 public:
-  FrameCtrl(wxWindow*, AppContext&, StatusInterface&, const Art&);
+  FrameCtrl(wxWindow*, const Getter<Canvas&>&, StatusInterface&, const Art&);
   ~FrameCtrl();
 
   wxWindow* AsWindow();

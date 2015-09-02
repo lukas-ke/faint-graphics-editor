@@ -273,6 +273,10 @@ static void initialize_panels(wxFrame& frame, FaintWindowContext& app,
       canvas.Refresh();
     }};
 
+  auto getCanvas = [&]() -> Canvas&{
+    return app.GetActiveCanvas();
+  };
+
   // Bottom half, the selected color, palette and zoom controls.
   panels.color = std::make_unique<ColorPanel>(&frame,
     palette,
@@ -280,7 +284,7 @@ static void initialize_panels(wxFrame& frame, FaintWindowContext& app,
     getBg,
     gridAccessor,
     showGridDialog,
-    app,
+    getCanvas,
     app.GetStatusInfo(),
     art);
 

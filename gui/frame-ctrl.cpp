@@ -120,11 +120,11 @@ static utf8_string get_frame_label(const Index& index, bool capitalize){
 class FrameListCtrl : public wxPanel {
 public:
   FrameListCtrl(wxWindow* parent,
-    AppContext& app,
+    const Getter<Canvas&>& getCanvas,
     const Art& art,
     StatusInterface& status)
     : wxPanel(parent),
-      m_app(app),
+      m_getCanvas(getCanvas),
       m_closeFrameBitmap(art.Get(Icon::CLOSE_FRAME)),
       m_closeFrameHighlightBitmap(art.Get(Icon::CLOSE_FRAME_HIGHLIGHT)),
       m_cursorArrow(art.Get(Cursor::ARROW)),
@@ -160,7 +160,7 @@ public:
         if (m_mouse.HasCapture()){
           return;
         }
-        Canvas& active = m_app.GetActiveCanvas();
+        Canvas& active = m_getCanvas();
         Index frame = GetFrameIndex(pos, active, false);
         Index selected = active.GetSelectedFrame();
         if (frame == selected && CloseBoxHitTest(pos, frame.Get())){
@@ -184,7 +184,7 @@ public:
         UpdateDragKeyState(wxGetKeyState(WXK_CONTROL));
         FrameDragInfo dragResult(then_reset(m_dragInfo));
         if (dragResult.WouldChange()){
-          run_frame_drag_command(m_app.GetActiveCanvas(), dragResult);
+          run_frame_drag_command(m_getCanvas(), dragResult);
           Refresh();
         }
         else{
@@ -196,7 +196,7 @@ public:
     events::on_mouse_motion(this,
       [this](const IntPoint& pos){
         if (!m_mouse.HasCapture()){
-          Canvas& active = m_app.GetActiveCanvas();
+          Canvas& active = m_getCanvas();
           Index frame = GetFrameIndex(pos, active, true);
           if (frame == active.GetSelectedFrame() && CloseBoxHitTest(pos,
               frame.Get()))
@@ -217,7 +217,7 @@ public:
           if (m_dragInfo.active){
             UpdateDragKeyState(ctrlHeld);
 
-            Index frame = GetDropFrameIndex(pos, m_app.GetActiveCanvas());
+            Index frame = GetDropFrameIndex(pos, m_getCanvas());
             if (m_dragInfo.dropPost != frame){
               m_dragInfo.dropPost = frame;
               Refresh();
@@ -245,7 +245,7 @@ public:
         if (!ctrlHeld){
           return;
         }
-        Canvas& active = m_app.GetActiveCanvas();
+        Canvas& active = m_getCanvas();
         Index index = GetFrameIndex(pos, active, false);
         active.RunCommand(remove_frame_command(index));
       });
@@ -347,7 +347,7 @@ private:
   }
 
   int GetSelectedFrame(){
-    Canvas& active = m_app.GetActiveCanvas();
+    Canvas& active = m_getCanvas();
     return active.GetSelectedFrame().Get();
   }
 
@@ -389,7 +389,6 @@ private:
     }
   }
 
-  AppContext& m_app;
   wxBitmap m_bitmap;
   wxBitmap m_closeFrameBitmap;
   wxBitmap m_closeFrameHighlightBitmap;
@@ -398,6 +397,7 @@ private:
   wxCursor m_cursorDragFrame;
   FrameDragInfo m_dragInfo;
   wxSize m_frameBoxSize;
+  Getter<Canvas&> m_getCanvas;
   bool m_highlightCloseFrame;
   MouseCapture m_mouse;
   Index m_numFrames;
@@ -407,12 +407,12 @@ private:
 class FrameCtrl::FrameCtrlImpl : public wxPanel {
 public:
   FrameCtrlImpl(wxWindow* parent,
-    AppContext& app,
+    const Getter<Canvas&>& getCanvas,
     StatusInterface& status,
     const Art& art)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
         wxTAB_TRAVERSAL|FRAMECTRL_BORDER_STYLE),
-      m_app(app),
+      m_getCanvas(getCanvas),
       m_listCtrl(nullptr)
   {
     wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -425,7 +425,7 @@ public:
     sizer->Add(addButton);
 
     m_listCtrl = new FrameListCtrl(this,
-      app,
+      m_getCanvas,
       art,
       status);
     sizer->Add(m_listCtrl);
@@ -434,7 +434,7 @@ public:
 
     events::on_button(addButton,
       [this](){
-        Canvas& canvas(m_app.GetActiveCanvas());
+        Canvas& canvas(m_getCanvas());
         canvas.RunCommand(add_frame_command(canvas.GetSize()));
       });
   }
@@ -455,7 +455,7 @@ public:
   }
 
   bool UpdateFrames(){
-    const Index numFrames = m_app.GetActiveCanvas().GetNumFrames();
+    const Index numFrames = m_getCanvas().GetNumFrames();
     if (GetShownFrames() == numFrames){
       m_listCtrl->Refresh();
       return false;
@@ -465,15 +465,16 @@ public:
   }
 
 private:
-  AppContext& m_app;
+  Getter<Canvas&> m_getCanvas;
   FrameListCtrl* m_listCtrl;
 };
 
-FrameCtrl::FrameCtrl(wxWindow* parent, AppContext& app,
+FrameCtrl::FrameCtrl(wxWindow* parent,
+  const Getter<Canvas&>& getCanvas,
   StatusInterface& status,
   const Art& art)
 {
-  m_impl = new FrameCtrlImpl(parent, app, status, art);
+  m_impl = new FrameCtrlImpl(parent, getCanvas, status, art);
 }
 
 FrameCtrl::~FrameCtrl(){
