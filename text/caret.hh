@@ -15,10 +15,11 @@
 
 #ifndef FAINT_CARET_HH
 #define FAINT_CARET_HH
+#include <cstddef>
 
 namespace faint{
 
-using Caret = size_t;
+using Caret = std::size_t;
 
 // Selection range
 class CaretRange{
