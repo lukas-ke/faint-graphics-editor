@@ -60,8 +60,6 @@ public:
   PythonContext& GetPythonContext();
   wxFrame& GetRawFrame();
 
-  void EnableToolbar(bool); // Fixme: Remove
-
   // Returns the currently shown settings, including overrides by
   // tools (especially the ObjSelectTool).
   Settings GetShownSettings() const;

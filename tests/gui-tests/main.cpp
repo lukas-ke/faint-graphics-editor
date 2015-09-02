@@ -78,6 +78,10 @@ public:
     m_onClose(c);
   }
 
+  bool FloatingSelection() const override{
+    return false;
+  }
+
   faint::Bitmap GetBitmap() override{
     return faint::Bitmap(faint::IntSize(10,10), faint::Color(255,0,255));
   }
@@ -125,7 +129,7 @@ public:
   void Show(std::unique_ptr<faint::CommandWindow>&& w) override{
     assert(w != nullptr);
     m_commandWindow = std::move(w);
-    m_commandWindow->Show(*m_parent, *m_windowFeedback);
+    m_commandWindow->Show(*m_parent, m_settings, *m_windowFeedback);
   }
 
 private:
@@ -140,6 +144,7 @@ private:
   wxWindow* m_parent;
   faint::FaintCommonCursors m_commonCursors;
   faint::FaintSliderCursors m_sliderCursors;
+  faint::Settings m_settings;
 };
 
 class GuiTestFrame: public wxFrame {

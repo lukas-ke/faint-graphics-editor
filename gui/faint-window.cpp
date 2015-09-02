@@ -630,10 +630,6 @@ FaintWindow::~FaintWindow(){
   // FaintWindowImpl won't compile.
 }
 
-void FaintWindow::EnableToolbar(bool e){
-  m_impl->panels->tool->Enable(e);
-}
-
 void FaintWindow::AddFormat(Format* f){
   m_impl->state->formats.push_back(f);
 }
