@@ -17,7 +17,7 @@
 #define FAINT_COMMAND_UTIL_HH
 #include <deque>
 #include "bitmap/bitmap-fwd.hh"
-#include "bitmap/draw.hh" // OldColor.. Todo: Move?
+#include "bitmap/draw.hh" // OldColor.. Fixme: Move?
 #include "bitmap/filter.hh"
 #include "commands/add-object-cmd.hh"
 #include "commands/bitmap-cmd.hh"

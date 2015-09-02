@@ -74,6 +74,10 @@ public:
     m_onClose(onClose)
   {}
 
+  bool FloatingSelection() const override{
+    return m_rasterSelection != nullptr && m_reallyFloating;
+  }
+
   void Closed() override{
     m_onClose(nullptr);
   }
@@ -146,6 +150,7 @@ private:
             m_bitmap = std::make_shared<Bitmap>(span.size,
               span.color);
           });
+        m_reallyFloating = false;
       },
       [&](const sel::Rectangle& r){
         // Create a floating selection chimera from the non-floating
@@ -165,10 +170,12 @@ private:
             m_rasterSelection->SetState(SelectionState(*m_bitmap,
               r.TopLeft()));
           });
+        m_reallyFloating = false;
       },
       [&](const sel::Floating& f){
         m_rasterSelection = std::make_shared<RasterSelection>(selection);
         m_bitmap = std::make_shared<Bitmap>(f.GetBitmap());
+        m_reallyFloating = true;
       });
   }
 
@@ -176,6 +183,7 @@ private:
   std::shared_ptr<Bitmap> m_bitmap;
   T m_onClose;
   std::shared_ptr<RasterSelection> m_rasterSelection;
+  bool m_reallyFloating;
 };
 
 template<typename T>

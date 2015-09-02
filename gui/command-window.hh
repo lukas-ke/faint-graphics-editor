@@ -32,6 +32,7 @@ public:
   virtual void Closed() = 0;
   virtual void Closed(BitmapCommand*) = 0;
 
+  virtual bool FloatingSelection() const = 0;
   virtual Bitmap GetBitmap() = 0;
   virtual void SetPreview(const Bitmap&) = 0;
 
@@ -59,7 +60,6 @@ public:
   virtual void UpdateSettings(const Settings&) = 0;
   virtual void Reinitialize(WindowFeedback&) = 0;
   virtual const Settings& GetSettings() const = 0;
-
 };
 
 } // namespace

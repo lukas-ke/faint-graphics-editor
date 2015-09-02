@@ -29,7 +29,6 @@ BitmapCommand* function_command(const utf8_string& name,
 BitmapCommand* function_command(const utf8_string& name,
   std::function<void(Bitmap&)>&&);
 
-
 template<typename... Args, typename... Rest>
 BitmapCommand* in_place_function_command(const utf8_string& name,
   Bitmap(*func)(const Bitmap&, Args...),

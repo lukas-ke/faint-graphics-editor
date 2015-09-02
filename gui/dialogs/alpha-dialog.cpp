@@ -39,15 +39,18 @@ static int get_initial_alpha(const Bitmap& bmp){
     255;
 }
 
-static Optional<Color> get_mask_color(const Settings& s){
-  if (s.Get(ts_BackgroundStyle) == BackgroundStyle::MASKED){
-    const auto& bg = s.Get(ts_Bg);
-    if (bg.IsColor()){
-      // Fixme: Not if no selection or non-floating selection
-      return option(bg.GetColor());
-    }
+static Optional<Color> get_mask_color(const Settings& s,
+  const WindowFeedback& feedback)
+{
+  bool maskedBg = s.Get(ts_BackgroundStyle) == BackgroundStyle::MASKED;
+  if (!feedback.FloatingSelection() || !maskedBg){
+    return {};
   }
-  return {};
+
+  const auto& bg = s.Get(ts_Bg);
+  return bg.IsColor() ?
+    option(bg.GetColor()) :
+    no_option();
 }
 
 static void set_preview(const Bitmap& src,
@@ -55,7 +58,7 @@ static void set_preview(const Bitmap& src,
   WindowFeedback& feedback,
   const Settings& s)
 {
-  get_mask_color(s).Visit(
+  get_mask_color(s, feedback).Visit(
     [&](const Color& c){
       const auto mask = mask_not_color(src, c);
       feedback.SetPreview(onto_new(set_alpha_masked, src, alpha, mask));
