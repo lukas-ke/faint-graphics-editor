@@ -16,6 +16,7 @@
 #include "gui/paint-dialog/gradient-slider.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/layout-wx.hh"
+#include "tests/test-util/pick-random-color.hh"
 
 namespace faint{ class StatusInterface; }
 
@@ -28,6 +29,7 @@ void gui_test_gradient_slider(wxWindow* p, faint::StatusInterface&,
   faint::DialogContext& c)
 {
   using namespace faint;
+
   linearGradient = faint::LinearGradient(Angle::Zero(),
     {{color_red, 0.0}, {color_magenta, 1.0}});
 
@@ -36,11 +38,17 @@ void gui_test_gradient_slider(wxWindow* p, faint::StatusInterface&,
 
   // Fixme: Leaked. (Crash if LinearGradientSlider is destroyed).
    auto* linearSlider = new faint::LinearGradientSlider(p,
-    IntSize(300, 200), linearGradient, c);
+     IntSize(300, 200),
+     linearGradient,
+     test::random_color_picker(42),
+     c);
    linearSlider->SetBackgroundColor({0,0,100});
 
    auto* radialSlider = new faint::RadialGradientSlider(p,
-    IntSize(300, 200), radialGradient, c);
+     IntSize(300, 200),
+     radialGradient,
+     test::random_color_picker(42),
+     c);
    radialSlider->SetBackgroundColor({0,0,100});
 
    // TODO: Add gradient displays (linear-gradient-display.hh)

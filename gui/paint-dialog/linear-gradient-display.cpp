@@ -67,6 +67,7 @@ class LinearGradientDisplay::LinearGradientDisplayImpl{
 public:
   LinearGradientDisplayImpl(wxWindow* parent,
     const IntSize& size,
+    const pick_color_f& getColor,
     DialogContext& dialogContext)
     : m_panel(create_panel(parent)),
       m_mouse(m_panel),
@@ -78,6 +79,7 @@ public:
     m_slider = std::make_unique<LinearGradientSlider>(m_panel,
       IntSize(size.w, LinearGradientSlider::HEIGHT),
       m_gradient,
+      getColor,
       dialogContext);
     set_pos(m_slider->AsWindow(), {0, size.h - LinearGradientSlider::HEIGHT});
     dialogContext.GetCommonCursors().SetCrosshair(m_panel);
@@ -189,10 +191,12 @@ private:
 
 LinearGradientDisplay::LinearGradientDisplay(wxWindow* parent,
   const IntSize& size,
+  const pick_color_f& getColor,
   DialogContext& ctx)
 {
   m_impl = std::make_unique<LinearGradientDisplayImpl>(parent,
     size,
+    getColor,
     ctx);
 }
 

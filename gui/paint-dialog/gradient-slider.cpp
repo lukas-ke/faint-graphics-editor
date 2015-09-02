@@ -25,7 +25,6 @@
 #include "geo/int-size.hh"
 #include "gui/dialog-context.hh"
 #include "gui/mouse-capture.hh"
-#include "gui/paint-dialog.hh" // Fixme: Pass lambda instead for color-selection?
 #include "gui/paint-dialog/gradient-slider.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
@@ -237,9 +236,11 @@ public:
   TypedColorStopSlider(wxWindow* parent,
     const IntSize& size,
     T& gradient,
+    const pick_color_f& getColor,
     DialogContext& dialogContext)
     : m_panel(create_panel(parent)),
       m_dialogContext(dialogContext),
+      m_getColor(getColor),
       m_gradient(gradient),
       m_handle(-1),
       m_mouse(m_panel)
@@ -343,9 +344,7 @@ public:
 private:
   void PickHandleColor(Index handle){
     ColorStop stop(m_gradient.GetStop(handle));
-    Optional<Color> c = show_color_only_dialog(m_panel,
-      "Select Stop Color", stop.GetColor(),
-      m_dialogContext);
+    Optional<Color> c = m_getColor("Select Stop Color", stop.GetColor());
     if (c.IsSet()){
       m_gradient.SetStop(handle, ColorStop(c.Get(), stop.GetOffset()));
       UpdateGradient();
@@ -380,6 +379,7 @@ private:
   wxWindow* m_panel;
 
   DialogContext& m_dialogContext;
+  pick_color_f m_getColor;
   T& m_gradient;
   int m_handle;
   MouseCapture m_mouse;
@@ -389,11 +389,13 @@ private:
 LinearGradientSlider::LinearGradientSlider(wxWindow* parent,
   const IntSize& size,
   LinearGradient& gradient,
+  const pick_color_f& getColor,
   DialogContext& ctx)
 {
   m_impl = new TypedColorStopSlider<LinearGradient>(parent,
     size,
     gradient,
+    getColor,
     ctx);
 }
 
@@ -416,11 +418,13 @@ void LinearGradientSlider::SetBackgroundColor(const Color& c){
 RadialGradientSlider::RadialGradientSlider(wxWindow* parent,
   const IntSize& size,
   RadialGradient& gradient,
+  const pick_color_f& getColor,
   DialogContext& ctx)
 {
   m_impl = new TypedColorStopSlider<RadialGradient>(parent,
     size,
     gradient,
+    getColor,
     ctx);
 }
 

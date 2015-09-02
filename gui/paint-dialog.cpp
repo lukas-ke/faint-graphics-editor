@@ -100,6 +100,12 @@ public:
     #endif
 
     m_panelGradient = std::make_unique<PaintPanel_Gradient>(m_tabs,
+      [&](const utf8_string& title, const Color& initial){
+        return show_color_only_dialog(this,
+          title,
+          initial,
+          dialogContext);
+      },
       themeBg,
       statusInfo,
       dialogContext);

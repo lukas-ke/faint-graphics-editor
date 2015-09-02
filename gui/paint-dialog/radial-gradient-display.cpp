@@ -34,6 +34,7 @@ class RadialGradientDisplay::RadialGradientDisplayImpl{
 public:
   RadialGradientDisplayImpl(wxWindow* parent,
     const IntSize& size,
+    const pick_color_f& getColor,
     DialogContext& dialogContext)
   {
     m_panel = create_panel(parent);
@@ -43,6 +44,7 @@ public:
     m_slider = std::make_unique<RadialGradientSlider>(m_panel,
       IntSize(size.w, RadialGradientSlider::HEIGHT),
       m_gradient,
+      getColor,
       dialogContext);
     set_pos(m_slider->AsWindow(), {0, size.h - RadialGradientSlider::HEIGHT});
 
@@ -113,9 +115,13 @@ private:
 
 RadialGradientDisplay::RadialGradientDisplay(wxWindow* parent,
   const IntSize& size,
+  const pick_color_f& getColor,
   DialogContext& ctx)
 {
-  m_impl = std::make_unique<RadialGradientDisplayImpl>(parent, size, ctx);
+  m_impl = std::make_unique<RadialGradientDisplayImpl>(parent,
+    size,
+    getColor,
+    ctx);
 }
 
 RadialGradientDisplay::~RadialGradientDisplay(){

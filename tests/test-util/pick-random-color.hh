@@ -13,24 +13,10 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "wx/cursor.h"
-#include "wx/window.h"
-#include "gui/dialog-context.hh"
-#include "gui/paint-dialog/gradient-panel.hh"
-#include "tests/test-util/pick-random-color.hh"
+#include "util/pick-paint.hh"
 
-namespace faint{ class StatusInterface; }
+namespace faint{ namespace test{
 
-void gui_test_gradient_panel(wxWindow* p,
-  faint::StatusInterface& status,
-  faint::DialogContext& dialogContext)
-{
-  using namespace faint;
-  PaintPanel_Gradient gradientPanel(p,
-    test::random_color_picker(42),
-    color_white,
-    status,
-    dialogContext);
+pick_color_f random_color_picker(int seed);
 
-  gradientPanel.AsWindow()->SetSize(640, 480);
-}
+}} // namespace

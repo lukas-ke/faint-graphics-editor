@@ -17,6 +17,7 @@
 #define FAINT_LINEAR_GRADIENT_DISPLAY_HH
 #include <memory>
 #include "bitmap/gradient.hh"
+#include "util/pick-paint.hh"
 
 class wxCursor;
 class wxWindow;
@@ -30,6 +31,7 @@ class LinearGradientDisplay{
 public:
   LinearGradientDisplay(wxWindow* parent,
     const IntSize&,
+    const pick_color_f& pickStopColor,
     DialogContext&);
   ~LinearGradientDisplay();
   wxWindow* AsWindow();

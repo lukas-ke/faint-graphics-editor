@@ -30,6 +30,10 @@ using pick_paint_f = std::function<Optional<Paint>(
   const Paint& initial,
   const Color& secondary)>;
 
+using pick_color_f = std::function<Optional<Color>(
+  const utf8_string& title,
+  const Color& initial)>;
+
 } // namespace
 
 #endif

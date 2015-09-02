@@ -17,6 +17,7 @@
 #define FAINT_RADIAL_GRADIENT_DISPLAY_HH
 #include <memory>
 #include "bitmap/gradient.hh"
+#include "util/pick-paint.hh"
 
 class wxWindow;
 
@@ -27,7 +28,10 @@ class IntSize;
 
 class RadialGradientDisplay{
 public:
-  RadialGradientDisplay(wxWindow* parent, const IntSize&, DialogContext&);
+  RadialGradientDisplay(wxWindow* parent,
+    const IntSize&,
+    const pick_color_f& pickStopColor,
+    DialogContext&);
   ~RadialGradientDisplay();
   wxWindow* AsWindow();
   void Hide();

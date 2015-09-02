@@ -17,6 +17,7 @@
 #define FAINT_GRADIENT_PANEL_HH
 #include "bitmap/color.hh"
 #include "bitmap/gradient.hh"
+#include "util/pick-paint.hh"
 
 class wxWindow;
 
@@ -28,6 +29,7 @@ class StatusInterface;
 class PaintPanel_Gradient{
 public:
   PaintPanel_Gradient(wxWindow* parent,
+    const pick_color_f& stopColorPicker,
     const Color& bgColor,
     StatusInterface&,
     DialogContext&);

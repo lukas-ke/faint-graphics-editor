@@ -76,6 +76,7 @@ static wxBitmap radial_icon(const IntSize& size){
 class PaintPanel_Gradient::PaintPanel_Gradient_Impl : public wxPanel{
 public:
   PaintPanel_Gradient_Impl(wxWindow* parent,
+    const pick_color_f& getColor,
     StatusInterface& statusInfo,
     DialogContext& dialogContext)
     : wxPanel(parent, wxID_ANY)
@@ -98,12 +99,14 @@ public:
 
     m_linearDisplay = std::make_unique<LinearGradientDisplay>(this,
       displaySize,
+      getColor,
       dialogContext);
     set_pos(m_linearDisplay->AsWindow(), to_the_right_of(m_gradientTypeCtrl));
     m_linearDisplay->Hide();
 
     m_radialDisplay = std::make_unique<RadialGradientDisplay>(this,
       displaySize,
+      getColor,
       dialogContext);
     set_pos(m_radialDisplay->AsWindow(), to_the_right_of(m_gradientTypeCtrl));
     m_radialDisplay->Hide();
@@ -212,11 +215,13 @@ private:
 };
 
 PaintPanel_Gradient::PaintPanel_Gradient(wxWindow* parent,
+  const pick_color_f& getColor,
   const Color& bgColor,
   StatusInterface& statusInfo,
   DialogContext& dialogContext)
 {
   m_impl = new PaintPanel_Gradient_Impl(parent,
+    getColor,
     statusInfo,
     dialogContext);
   m_impl->SetBackgroundColour(to_wx(bgColor));

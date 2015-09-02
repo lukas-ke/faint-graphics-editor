@@ -18,6 +18,7 @@
 #include <functional>
 #include "bitmap/gradient.hh"
 #include "geo/int-size.hh"
+#include "util/pick-paint.hh"
 
 class wxWindow;
 
@@ -35,6 +36,7 @@ public:
   LinearGradientSlider(wxWindow* parent,
     const IntSize&,
     LinearGradient&,
+    const pick_color_f& pickStopColor,
     DialogContext&);
   ~LinearGradientSlider();
 
@@ -55,6 +57,7 @@ public:
   RadialGradientSlider(wxWindow* parent,
     const IntSize&,
     RadialGradient&,
+    const pick_color_f& pickStopColor,
     DialogContext&);
   ~RadialGradientSlider();
 
