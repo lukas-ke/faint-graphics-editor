@@ -15,6 +15,7 @@
 
 #ifndef FAINT_COLOR_PANEL_HH
 #define FAINT_COLOR_PANEL_HH
+#include "util/accessor.hh"
 #include "util/dumb-ptr.hh"
 #include "util/pick-paint.hh"
 
@@ -22,7 +23,6 @@ class wxWindow;
 
 namespace faint{
 
-class AppContext;
 class Art;
 class ColorChoice;
 class ColorPanelImpl;
@@ -39,6 +39,9 @@ public:
   ColorPanel(wxWindow* parent,
     const PaintMap& palette,
     const pick_paint_f&,
+    const Getter<Color>& getBg,
+    const Accessor<Grid>&,
+    const std::function<void()>& showGridDialog,
     AppContext&,
     StatusInterface&,
     const Art&);

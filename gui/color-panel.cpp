@@ -15,21 +15,12 @@
 
 #include "wx/panel.h"
 #include "wx/sizer.h"
-// <fixme> Remove these, pass Accessor and pick_paint_f etc.
-// to the ColorPanel instead of these overly broad classes.
-#include "app/app-context.hh"
-#include "app/canvas.hh"
-#include "bitmap/bitmap.hh"
-#include "bitmap/color-span.hh"
-#include "util/setting-id.hh"
-// </fixme>
+#include "app/app-context.hh" // Fixme: Rework FrameCtrl to not require App
 #include "geo/int-size.hh"
 #include "gui/color-panel.hh"
 #include "gui/events.hh"
 #include "gui/frame-ctrl.hh"
 #include "gui/grid-ctrl.hh"
-#include "gui/grid-dialog.hh"
-#include "gui/paint-dialog.hh"
 #include "gui/palette-ctrl.hh"
 #include "gui/selected-color-ctrl.hh"
 #include "gui/zoom-ctrl.hh"
@@ -39,42 +30,14 @@
 
 namespace faint{
 
-static auto create_grid_ctrl(wxWindow* parent, AppContext& app,
-  const Art& art,
-  StatusInterface& status)
-{
-  auto showGridDialog =
-    [&](){
-    auto& canvas = app.GetActiveCanvas();
-
-    auto result = show_grid_dialog(nullptr,
-      canvas.GetGrid(),
-      app.GetDialogContext());
-
-    result.Visit([&](const Grid& grid){
-        canvas.SetGrid(grid);
-        canvas.Refresh();
-      });
-  };
-
-  Accessor<Grid> gridAccess(
-    [&](){
-      return app.GetActiveCanvas().GetGrid();
-    },
-    [&](const Grid& grid){
-      auto& canvas = app.GetActiveCanvas();
-      canvas.SetGrid(grid);
-      canvas.Refresh();
-    });
-
-  return make_dumb<GridCtrl>(parent, art, status, showGridDialog, gridAccess);
-}
-
 class ColorPanelImpl : public wxPanel {
 public:
   ColorPanelImpl(wxWindow* parent,
     const PaintMap& palette,
     const pick_paint_f& pickPaint,
+    const Getter<Color>& getBg,
+    const Accessor<Grid>& gridAccess,
+    const std::function<void()>& showGridDialog,
     AppContext& app,
     StatusInterface& status,
     const Art& art)
@@ -82,10 +45,6 @@ public:
   {
     // The spacing between controls in this panel
     const int spacing = 5;
-
-    auto getBg = [&](){
-      return get_color_default(app.Get(ts_Bg), color_white);
-    };
 
     wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
     m_selectedColor = std::make_unique<SelectedColorCtrl>(this,
@@ -106,7 +65,7 @@ public:
     m_zoom = std::make_unique<ZoomCtrl>(this, status);
     sizer->Add(m_zoom->AsWindow(), 0, wxALL, spacing);
 
-    m_grid = create_grid_ctrl(this, app, art, status);
+    m_grid = make_dumb<GridCtrl>(this, art, status, showGridDialog, gridAccess);
     sizer->Add(m_grid.get(), 0, wxALL, spacing);
 
     m_frameCtrl = make_dumb<FrameCtrl>(this, app, status, art);
@@ -133,12 +92,18 @@ public:
 ColorPanel::ColorPanel(wxWindow* parent,
   const PaintMap& palette,
   const pick_paint_f& pickPaint,
+  const Getter<Color>& getBg,
+  const Accessor<Grid>& gridAccess,
+  const std::function<void()>& showGridDialog,
   AppContext& app,
   StatusInterface& status,
   const Art& art)
   : m_impl(make_dumb<ColorPanelImpl>(parent,
       palette,
       pickPaint,
+      getBg,
+      gridAccess,
+      showGridDialog,
       app,
       status,
       art))

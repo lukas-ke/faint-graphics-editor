@@ -31,6 +31,7 @@
 #include "gui/events.hh"
 #include "gui/faint-window.hh"
 #include "gui/freezer.hh"
+#include "gui/grid-dialog.hh"
 #include "gui/help-frame.hh"
 #include "gui/menu-bar.hh"
 #include "gui/paint-dialog.hh"
@@ -245,10 +246,40 @@ static void initialize_panels(wxFrame& frame, FaintWindowContext& app,
     };
 
 
+  auto showGridDialog = [&](){
+    auto& canvas = app.GetActiveCanvas();
+
+    auto result = show_grid_dialog(nullptr,
+      canvas.GetGrid(),
+      app.GetDialogContext());
+
+    result.Visit([&](const Grid& grid){
+        canvas.SetGrid(grid);
+        canvas.Refresh();
+      });
+  };
+
+  auto getBg = [&](){
+    return get_color_default(app.Get(ts_Bg), color_white);
+  };
+
+  auto gridAccessor = Accessor<Grid>{
+    [&](){
+      return app.GetActiveCanvas().GetGrid();
+    },
+    [&](const Grid& grid){
+      auto& canvas = app.GetActiveCanvas();
+      canvas.SetGrid(grid);
+      canvas.Refresh();
+    }};
+
   // Bottom half, the selected color, palette and zoom controls.
   panels.color = std::make_unique<ColorPanel>(&frame,
     palette,
     pickPaint,
+    getBg,
+    gridAccessor,
+    showGridDialog,
     app,
     app.GetStatusInfo(),
     art);
