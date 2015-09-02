@@ -449,8 +449,8 @@ BitmapCommand* get_boundary_fill_command(const IntPoint& pos,
 }
 
 BitmapCommand* get_brightness_and_contrast_command(const brightness_contrast_t& v){
-  return function_command("Brightness and contrast",
-    [=](Bitmap& bmp){bmp = brightness_and_contrast(bmp, v);});
+  return in_place_function_command("Brightness and contrast",
+    brightness_and_contrast, v);
 }
 
 BitmapCommand* get_invert_command(){

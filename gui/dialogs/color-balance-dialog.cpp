@@ -107,9 +107,9 @@ public:
   }
 
   BitmapCommand* GetCommand(){
-    color_range_t red = GetRange(m_redSlider);
-    color_range_t green = GetRange(m_greenSlider);
-    color_range_t blue = GetRange(m_blueSlider);
+    const color_range_t red = GetRange(m_redSlider);
+    const color_range_t green = GetRange(m_greenSlider);
+    const color_range_t blue = GetRange(m_blueSlider);
     return function_command("Color balance", color_balance, red, green, blue);
   }
 

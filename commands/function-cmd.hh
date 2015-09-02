@@ -45,10 +45,9 @@ BitmapCommand* in_place_function_command(const utf8_string& name,
     });
 }
 
-template<typename Function, typename Arg, typename... Rest>
+template<typename... Rest, typename...Args>
 BitmapCommand* function_command(const utf8_string& name,
-  Function&& f,
-  Arg&& a,
+  void(*func)(Bitmap&, Args...),
   Rest&&... rest)
 {
   // Bind all arguments of the function, except the bitmap parameter (the first
@@ -56,7 +55,31 @@ BitmapCommand* function_command(const utf8_string& name,
   // function is run as a command.
   return function_command(name,
     [=](Bitmap& bmp){
-      return f(bmp, a, rest...);
+      return func(bmp, rest...);
+    });
+}
+
+template<typename ArgHere, typename ArgThere>
+BitmapCommand* function_command(const utf8_string& name,
+  void(*func)(Bitmap&, ArgThere),
+  ArgHere&& a)
+{
+  // This function_command variant helps resolving the correct
+  // bitmap-taking function in the face of overloads by requiring
+  // matching arguments, instead of the compile failing on ambiguity.
+  //
+  // For example, with these overloads:
+  //
+  // 1. ColRGB blend_alpha(const Color&, const ColRGB&)
+  // 2. void blend_alpha(Bitmap&, const ColRGB&)
+  // 3. void blend_alpha(Bitmap&, const SpaceShip&)
+  //
+  // function_command(blend_alpha, ColRGB(255, 0, 0)) will correctly
+  // resolve to #2.
+
+  return function_command(name,
+    [=](Bitmap& bmp){
+      return func(bmp, a);
     });
 }
 
@@ -81,16 +104,6 @@ BitmapCommand* function_command(const utf8_string& name,
   return function_command(name,
     [=](Bitmap& bmp){
       return func(bmp, a);
-    });
-}
-
-template<typename Arg>
-BitmapCommand* function_command(const utf8_string& name,
-  void(*func)(Bitmap&))
-{
-  return function_command(name,
-    [=](Bitmap& bmp){
-      return func(bmp);
     });
 }
 
