@@ -16,7 +16,7 @@
 #include <cassert>
 #include <cmath>
 #include "bitmap/auto-crop.hh"
-#include "bitmap/draw.hh" // Fixme: For flip
+#include "bitmap/draw.hh"
 #include "bitmap/scale-bilinear.hh"
 #include "commands/set-bitmap-cmd.hh"
 #include "geo/axis.hh"
@@ -105,7 +105,9 @@ void ObjRaster::Draw(FaintDC& dc, ExpressionContext&){
 void ObjRaster::Draw(FaintDC& dc){
   Rect r = bounding_rect(m_tri);
   // Shift the bitmap half a pixel so that handles anchor inside like
-  // for other objects (fixme: Should this be done in FaintDC?)
+  // for other objects
+  // Fixme #1: Should this be done inside FaintDC instead?
+  // Fixme #2: Didn't I remove realigning of other objects?)
   Point shift(-0.5, -0.5);
   dc.Blit(m_scaled, r.TopLeft() + shift, m_settings);
 }
