@@ -221,9 +221,10 @@ CommonCursors& FaintDialogContext::GetCommonCursors(){
 void FaintDialogContext::Show(std::unique_ptr<CommandWindow>&& w){
   assert(w != nullptr);
   m_app.BeginModalDialog(); // Fixme
-  // m_faintWindow.EnableToolbar(false);
   m_commandWindow = std::move(w);
-  m_commandWindow->Show(m_faintWindow.GetRawFrame(), *m_windowFeedback);
+  m_commandWindow->Show(m_faintWindow.GetRawFrame(),
+    m_app.GetToolSettings(),
+    *m_windowFeedback);
 }
 
 void FaintDialogContext::UpdateSettings(const Settings& s){

@@ -98,7 +98,12 @@ public:
 
   void Draw(FaintDC&, Overlays&, const PosInfo&) override{}
 
-  void Show(wxWindow& parent, WindowFeedback& feedback) override{
+  void Show(wxWindow& parent,
+    const Settings& settings,
+    WindowFeedback& feedback) override
+  {
+    m_settings.Update(settings);
+
     auto cancel = [&](){Close(feedback);};
 
     auto rescale = [&](){

@@ -43,7 +43,11 @@ public:
     m_settings.Set(ts_Bg, s.GetDefault(ts_Bg, Paint(color_white)));
   }
 
-  void Show(wxWindow& parent, WindowFeedback& feedback) override{
+  void Show(wxWindow& parent,
+    const Settings& settings,
+    WindowFeedback& feedback) override
+  {
+    m_settings.Update(settings);
     m_bitmap = feedback.GetBitmap();
     m_feedback = &feedback;
 

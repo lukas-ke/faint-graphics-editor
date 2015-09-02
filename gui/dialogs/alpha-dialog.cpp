@@ -79,7 +79,11 @@ public:
     m_settings.Set(ts_BackgroundStyle, BackgroundStyle::MASKED);
   }
 
-  void Show(wxWindow& parent, WindowFeedback& feedback) override{
+  void Show(wxWindow& parent,
+    const Settings& settings,
+    WindowFeedback& feedback) override
+  {
+    m_settings.Update(settings);
     auto cancel = [&](){Close(feedback);};
     auto ok = [&](){Close(feedback, true);};
 

@@ -52,7 +52,7 @@ class CommandWindow{
   // the algorithm controlled by the CommandWindow.
 public:
   virtual ~CommandWindow(){}
-  virtual void Show(wxWindow&, WindowFeedback&) = 0;
+  virtual void Show(wxWindow&, const Settings&, WindowFeedback&) = 0;
   virtual bool IsShown() const = 0;
   virtual bool MouseMove(const PosInfo&) = 0;
   virtual bool MouseDown(const PosInfo&) = 0;
