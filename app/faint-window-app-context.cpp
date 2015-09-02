@@ -153,7 +153,7 @@ private:
         m_reallyFloating = false;
       },
       [&](const sel::Rectangle& r){
-        // Create a floating selection chimera from the non-floating
+        // Create a floating selection mirage from the non-floating
         // selection
         active.GetBackground().Visit(
           [&](const Bitmap& bmp){
@@ -323,6 +323,7 @@ private:
   void Initialize(){
     const Image& active = m_canvas.GetImage();
     const RasterSelection& selection = active.GetRasterSelection();
+    // Fixme: Duplicates WindowFeedbackImpl
     sel::visit(selection,
       [&](const sel::Empty&){
         // Fixme: Handle possible OOM ..or I dunno, use some fake bitmap
@@ -336,7 +337,7 @@ private:
           });
       },
       [&](const sel::Rectangle& r){
-        // Create a floating selection chimera from the non-floating
+        // Create a floating selection mirage from the non-floating
         // selection
         active.GetBackground().Visit(
           [&](const Bitmap& bmp){
