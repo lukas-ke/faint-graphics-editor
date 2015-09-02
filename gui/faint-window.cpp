@@ -21,6 +21,7 @@
 #include "wx/statusbr.h"
 #include "wx/sizer.h"
 #include "app/active-canvas.hh"
+#include "app/faint-frame-context.hh"
 #include "app/faint-window-app-context.hh"
 #include "app/faint-tool-actions.hh"
 #include "app/faint-window-python-context.hh"
@@ -55,7 +56,6 @@
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-format-util.hh"
 #include "util-wx/gui-util.hh"
-
 #ifdef __WXMSW__
 #include "wx/msw/private.h"
 #include "tablet/msw/tablet-error-message.hh"
@@ -192,7 +192,9 @@ public:
   }
 };
 
-static void initialize_panels(wxFrame& frame, FaintWindowContext& app,
+static void initialize_panels(wxFrame& frame,
+  FaintWindowContext& app,
+  FrameContext& frameContext,
   FaintPanels& panels,
   Art& art,
   const PaintMap& palette)
@@ -214,8 +216,6 @@ static void initialize_panels(wxFrame& frame, FaintWindowContext& app,
     app,
     app.GetStatusInfo());
   row1->Add(panels.tabControl->AsWindow(), 1, wxEXPAND);
-
-
 
   auto pickPaint =
     [&app, &frame](const utf8_string& title,
@@ -273,10 +273,6 @@ static void initialize_panels(wxFrame& frame, FaintWindowContext& app,
       canvas.Refresh();
     }};
 
-  auto getCanvas = [&]() -> Canvas&{
-    return app.GetActiveCanvas();
-  };
-
   // Bottom half, the selected color, palette and zoom controls.
   panels.color = std::make_unique<ColorPanel>(&frame,
     palette,
@@ -284,7 +280,7 @@ static void initialize_panels(wxFrame& frame, FaintWindowContext& app,
     getBg,
     gridAccessor,
     showGridDialog,
-    getCanvas,
+    frameContext,
     app.GetStatusInfo(),
     art);
 
@@ -428,10 +424,12 @@ public:
     std::unique_ptr<FaintPanels>&& in_panels,
     std::unique_ptr<FaintState>&& in_state,
     FaintWindowContext& app,
+    FrameContext* frameContext,
     PythonContext& python,
     HelpFrame& help,
     InterpreterFrame& interpreter)
     : appContext(app),
+      m_frameContext(frameContext),
       panels(std::move(in_panels)),
       pythonContext(python),
       state(std::move(in_state)),
@@ -441,11 +439,16 @@ public:
     frame.reset(f);
   }
 
+  ~FaintWindowImpl(){
+    delete m_frameContext;
+  }
+
   FaintDialogContext& GetDialogContext(){
     return appContext.GetDialogContext();
   }
 
   FaintWindowContext& appContext;
+  FrameContext* m_frameContext;
   dumb_ptr<FaintFrame> frame;
   std::unique_ptr<FaintPanels> panels;
   PythonContext& pythonContext;
@@ -493,16 +496,23 @@ FaintWindow::FaintWindow(Art& art,
   FaintWindowPythonContext* pythonContext = new
     FaintWindowPythonContext(*this, *interpreterFrame);
 
-  initialize_panels(*frame, *appContext, *panels, art, palette);
+  FrameContext* frameContext = new FaintFrameContext(
+    [=]() -> Canvas&{return appContext->GetActiveCanvas();}); // Fixme: unique_ptr
+
+  initialize_panels(*frame, *appContext, *frameContext, *panels, art, palette);
 
   // Fixme: Wrong place for such stuff, has nothing todo with main
   // frame. Consider App.
   state->formats = built_in_file_formats();
 
   m_impl = std::make_unique<FaintWindowImpl>(frame,
-    std::move(panels), std::move(state),
-    *appContext, *pythonContext,
-    *helpFrame, *interpreterFrame);
+    std::move(panels),
+    std::move(state),
+    *appContext,
+    frameContext,
+    *pythonContext,
+    *helpFrame,
+    *interpreterFrame);
 
   bind_fwd(frame, EVT_FAINT_AddToPalette,
     [&](const PaintEvent& event){

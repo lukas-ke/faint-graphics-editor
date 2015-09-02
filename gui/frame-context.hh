@@ -1,5 +1,5 @@
 // -*- coding: us-ascii-unix -*-
-// Copyright 2012 Lukas Kemmer
+// Copyright 2015 Lukas Kemmer
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you
 // may not use this file except in compliance with the License. You
@@ -13,33 +13,25 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_FRAME_CTRL_HH
-#define FAINT_FRAME_CTRL_HH
-#include "gui/frame-context.hh"
+#ifndef FAINT_FRAME_CONTEXT_HH
+#define FAINT_FRAME_CONTEXT_HH
+#include "geo/int-size.hh"
+#include "util/index.hh"
 
 namespace faint{
 
-class Art;
-class StatusInterface;
-
-class FrameCtrl{
-  // Control for selecting and reordering animation frames (and such).
+class FrameContext{
 public:
-  FrameCtrl(wxWindow*, FrameContext&, StatusInterface&, const Art&);
-  ~FrameCtrl();
-
-  wxWindow* AsWindow();
-
-  // Update the number of frames shown in the control. Returns true if
-  // changed, to allow parents to accomodate changed size
-  // requirements.
-  bool Update();
-
-  FrameCtrl(const FrameCtrl&) = delete;
-private:
-  class FrameCtrlImpl;
-  FrameCtrlImpl* m_impl;
+  virtual ~FrameContext() = default;
+  virtual void AddFrame() = 0;
+  virtual void CopyFrame(const OldIndex&, const NewIndex&) = 0;
+  virtual Index GetNumFrames() const = 0;
+  virtual Index GetSelectedFrame() const = 0;
+  virtual void MoveFrame(const OldIndex&, const NewIndex&) = 0;
+  virtual void RemoveFrame(const Index&) = 0;
+  virtual void SelectFrame(const Index&) = 0;
 };
 
 } // namespace
+
 #endif

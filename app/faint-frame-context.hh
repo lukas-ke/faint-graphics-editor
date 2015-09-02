@@ -1,5 +1,5 @@
 // -*- coding: us-ascii-unix -*-
-// Copyright 2012 Lukas Kemmer
+// Copyright 2015 Lukas Kemmer
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you
 // may not use this file except in compliance with the License. You
@@ -13,33 +13,29 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_FRAME_CTRL_HH
-#define FAINT_FRAME_CTRL_HH
+#ifndef FAINT_FAINT_FRAME_CONTEXT_HH
+#define FAINT_FAINT_FRAME_CONTEXT_HH
 #include "gui/frame-context.hh"
+#include "util/accessor.hh"
 
 namespace faint{
 
-class Art;
-class StatusInterface;
+class Canvas;
 
-class FrameCtrl{
-  // Control for selecting and reordering animation frames (and such).
+class FaintFrameContext : public FrameContext{
 public:
-  FrameCtrl(wxWindow*, FrameContext&, StatusInterface&, const Art&);
-  ~FrameCtrl();
-
-  wxWindow* AsWindow();
-
-  // Update the number of frames shown in the control. Returns true if
-  // changed, to allow parents to accomodate changed size
-  // requirements.
-  bool Update();
-
-  FrameCtrl(const FrameCtrl&) = delete;
+  FaintFrameContext(const Getter<Canvas&>&);
+  void AddFrame() override;
+  void CopyFrame(const OldIndex&, const NewIndex&) override;
+  Index GetNumFrames() const override;
+  Index GetSelectedFrame() const override;
+  void MoveFrame(const OldIndex&, const NewIndex&) override;
+  void RemoveFrame(const Index&) override;
+  void SelectFrame(const Index&) override;
 private:
-  class FrameCtrlImpl;
-  FrameCtrlImpl* m_impl;
+  Getter<Canvas&> m_canvas;
 };
 
 } // namespace
+
 #endif

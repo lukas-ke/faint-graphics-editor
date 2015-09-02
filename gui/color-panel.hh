@@ -24,14 +24,13 @@ class wxWindow;
 namespace faint{
 
 class Art;
-class Canvas;
 class ColorChoice;
 class ColorPanelImpl;
+class FrameContext;
 class Grid;
 class Paint;
 class PaintMap;
 class StatusInterface;
-class Settings;
 class ZoomLevel;
 
 class ColorPanel {
@@ -44,7 +43,7 @@ public:
     const Getter<Color>& getBg,
     const Accessor<Grid>&,
     const std::function<void()>& showGridDialog,
-    const Getter<Canvas&>&, // Fixme: For FrameCtrl. Shouldn't need canvas.
+    FrameContext& frameContext,
     StatusInterface&,
     const Art&);
   void AddToPalette(const Paint&);

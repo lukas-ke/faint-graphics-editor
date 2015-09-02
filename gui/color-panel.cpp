@@ -23,9 +23,9 @@
 #include "gui/palette-ctrl.hh"
 #include "gui/selected-color-ctrl.hh"
 #include "gui/zoom-ctrl.hh"
-#include "util-wx/bind-event.hh"
 #include "util/dumb-ptr.hh"
 #include "util/either.hh"
+#include "util-wx/bind-event.hh"
 
 namespace faint{
 
@@ -37,7 +37,7 @@ public:
     const Getter<Color>& getBg,
     const Accessor<Grid>& gridAccess,
     const std::function<void()>& showGridDialog,
-    const Getter<Canvas&>& getCanvas,
+    FrameContext& frameContext,
     StatusInterface& status,
     const Art& art)
     : wxPanel(parent)
@@ -67,7 +67,7 @@ public:
     m_grid = make_dumb<GridCtrl>(this, art, status, showGridDialog, gridAccess);
     sizer->Add(m_grid.get(), 0, wxALL, spacing);
 
-    m_frameCtrl = make_dumb<FrameCtrl>(this, getCanvas, status, art);
+    m_frameCtrl = make_dumb<FrameCtrl>(this, frameContext, status, art);
     sizer->Add(m_frameCtrl->AsWindow(), 0, wxALL, spacing);
     SetSizer(sizer);
     Layout();
@@ -94,7 +94,7 @@ ColorPanel::ColorPanel(wxWindow* parent,
   const Getter<Color>& getBg,
   const Accessor<Grid>& gridAccess,
   const std::function<void()>& showGridDialog,
-  const Getter<Canvas&>& getCanvas,
+  FrameContext& frameContext,
   StatusInterface& status,
   const Art& art)
   : m_impl(make_dumb<ColorPanelImpl>(parent,
@@ -103,7 +103,7 @@ ColorPanel::ColorPanel(wxWindow* parent,
       getBg,
       gridAccess,
       showGridDialog,
-      getCanvas,
+      frameContext,
       status,
       art))
 {}
