@@ -21,7 +21,57 @@
 namespace faint{ class StatusInterface; }
 namespace faint{ class DialogContext; }
 
-void gui_test_frame_ctrl(wxWindow*, faint::StatusInterface&,
-  faint::DialogContext&, const faint::Art&)
+void gui_test_frame_ctrl(wxWindow* p, faint::StatusInterface& status,
+  faint::DialogContext&, const faint::Art& art)
 {
+  using namespace faint;
+  class GuiTestFrameContext : public FrameContext{
+  public:
+    GuiTestFrameContext()
+      : m_numFrames(3),
+        m_selectedFrame(0)
+    {}
+
+    void AddFrame() override{
+      m_numFrames = Index(m_numFrames.Get() + 1);
+    }
+
+    void CopyFrame(const OldIndex&, const NewIndex&) override{
+      AddFrame();
+    }
+
+    Index GetNumFrames() const override{
+      return m_numFrames;
+    }
+
+    Index GetSelectedFrame() const override{
+      return m_selectedFrame;
+    }
+
+    void MoveFrame(const OldIndex&, const NewIndex&) override{}
+
+    void RemoveFrame(const Index&) override{
+      if (m_numFrames == 1){
+        return;
+      }
+      m_numFrames = Index(m_numFrames.Get() - 1);
+      if (m_numFrames <= m_selectedFrame){
+        m_selectedFrame = Index(m_numFrames.Get() - 1);
+      }
+    }
+
+    void SelectFrame(const Index& i) override{
+      m_selectedFrame = i;
+    }
+
+    Index m_numFrames;
+    Index m_selectedFrame;
+  };
+
+  // Fixme: Need reacting on updates and resizing panel.
+  auto f = new FrameCtrl(p,
+    std::make_unique<GuiTestFrameContext>(),
+    status,
+    art);
+  f->Update();
 }

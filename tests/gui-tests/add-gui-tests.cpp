@@ -12,6 +12,7 @@ namespace faint{ class Art; }
 GUI_TEST_FUNCTION(gui_test_alpha_dialog);
 GUI_TEST_FUNCTION(gui_test_gradient_slider);
 GUI_TEST_FUNCTION_ART(gui_test_bitmap_list_ctrl);
+GUI_TEST_FUNCTION_ART(gui_test_frame_ctrl);
 GUI_TEST_FUNCTION(gui_test_gradient_panel);
 GUI_TEST_FUNCTION(gui_test_grid_dialog);
 GUI_TEST_FUNCTION(gui_test_hsl_panel);
@@ -53,6 +54,7 @@ void add_gui_tests(wxBookCtrlBase* pageList,
 
   add_test("AlphaDialog", gui_test_alpha_dialog);
   add_test_art("BitmapListCtrl", gui_test_bitmap_list_ctrl);
+  add_test_art("FrameCtrl", gui_test_frame_ctrl);
   add_test("GradientPanel", gui_test_gradient_panel);
   add_test("GradientSlider", gui_test_gradient_slider);
   add_test("GridDialog", gui_test_grid_dialog);
