@@ -43,7 +43,7 @@ public:
     const Getter<Color>& getBg,
     const Accessor<Grid>&,
     const std::function<void()>& showGridDialog,
-    FrameContext& frameContext,
+    std::unique_ptr<FrameContext>&& frameContext,
     StatusInterface&,
     const Art&);
   void AddToPalette(const Paint&);

@@ -37,7 +37,7 @@ public:
     const Getter<Color>& getBg,
     const Accessor<Grid>& gridAccess,
     const std::function<void()>& showGridDialog,
-    FrameContext& frameContext,
+    std::unique_ptr<FrameContext>&& frameContext,
     StatusInterface& status,
     const Art& art)
     : wxPanel(parent)
@@ -67,7 +67,7 @@ public:
     m_grid = make_dumb<GridCtrl>(this, art, status, showGridDialog, gridAccess);
     sizer->Add(m_grid.get(), 0, wxALL, spacing);
 
-    m_frameCtrl = make_dumb<FrameCtrl>(this, frameContext, status, art);
+    m_frameCtrl = make_dumb<FrameCtrl>(this, std::move(frameContext), status, art);
     sizer->Add(m_frameCtrl->AsWindow(), 0, wxALL, spacing);
     SetSizer(sizer);
     Layout();
@@ -94,7 +94,7 @@ ColorPanel::ColorPanel(wxWindow* parent,
   const Getter<Color>& getBg,
   const Accessor<Grid>& gridAccess,
   const std::function<void()>& showGridDialog,
-  FrameContext& frameContext,
+  std::unique_ptr<FrameContext>&& frameContext,
   StatusInterface& status,
   const Art& art)
   : m_impl(make_dumb<ColorPanelImpl>(parent,
@@ -103,7 +103,7 @@ ColorPanel::ColorPanel(wxWindow* parent,
       getBg,
       gridAccess,
       showGridDialog,
-      frameContext,
+      std::move(frameContext),
       status,
       art))
 {}

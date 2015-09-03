@@ -15,6 +15,7 @@
 
 #ifndef FAINT_FRAME_CTRL_HH
 #define FAINT_FRAME_CTRL_HH
+#include <memory>
 #include "gui/frame-context.hh"
 
 namespace faint{
@@ -25,7 +26,9 @@ class StatusInterface;
 class FrameCtrl{
   // Control for selecting and reordering animation frames (and such).
 public:
-  FrameCtrl(wxWindow*, FrameContext&, StatusInterface&, const Art&);
+  FrameCtrl(wxWindow*, std::unique_ptr<FrameContext>&&,
+    StatusInterface&,
+    const Art&);
   ~FrameCtrl();
 
   wxWindow* AsWindow();

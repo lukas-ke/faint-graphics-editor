@@ -194,7 +194,6 @@ public:
 
 static void initialize_panels(wxFrame& frame,
   FaintWindowContext& app,
-  FrameContext& frameContext,
   FaintPanels& panels,
   Art& art,
   const PaintMap& palette)
@@ -273,6 +272,8 @@ static void initialize_panels(wxFrame& frame,
       canvas.Refresh();
     }};
 
+  auto getCanvas = [&app]()->Canvas&{return app.GetActiveCanvas();};
+
   // Bottom half, the selected color, palette and zoom controls.
   panels.color = std::make_unique<ColorPanel>(&frame,
     palette,
@@ -280,7 +281,7 @@ static void initialize_panels(wxFrame& frame,
     getBg,
     gridAccessor,
     showGridDialog,
-    frameContext,
+    std::make_unique<FaintFrameContext>(getCanvas),
     app.GetStatusInfo(),
     art);
 
@@ -424,12 +425,10 @@ public:
     std::unique_ptr<FaintPanels>&& in_panels,
     std::unique_ptr<FaintState>&& in_state,
     FaintWindowContext& app,
-    FrameContext* frameContext,
     PythonContext& python,
     HelpFrame& help,
     InterpreterFrame& interpreter)
     : appContext(app),
-      m_frameContext(frameContext),
       panels(std::move(in_panels)),
       pythonContext(python),
       state(std::move(in_state)),
@@ -439,16 +438,11 @@ public:
     frame.reset(f);
   }
 
-  ~FaintWindowImpl(){
-    delete m_frameContext;
-  }
-
   FaintDialogContext& GetDialogContext(){
     return appContext.GetDialogContext();
   }
 
   FaintWindowContext& appContext;
-  FrameContext* m_frameContext;
   dumb_ptr<FaintFrame> frame;
   std::unique_ptr<FaintPanels> panels;
   PythonContext& pythonContext;
@@ -496,10 +490,7 @@ FaintWindow::FaintWindow(Art& art,
   FaintWindowPythonContext* pythonContext = new
     FaintWindowPythonContext(*this, *interpreterFrame);
 
-  FrameContext* frameContext = new FaintFrameContext(
-    [=]() -> Canvas&{return appContext->GetActiveCanvas();}); // Fixme: unique_ptr
-
-  initialize_panels(*frame, *appContext, *frameContext, *panels, art, palette);
+  initialize_panels(*frame, *appContext, *panels, art, palette);
 
   // Fixme: Wrong place for such stuff, has nothing todo with main
   // frame. Consider App.
@@ -509,7 +500,6 @@ FaintWindow::FaintWindow(Art& art,
     std::move(panels),
     std::move(state),
     *appContext,
-    frameContext,
     *pythonContext,
     *helpFrame,
     *interpreterFrame);

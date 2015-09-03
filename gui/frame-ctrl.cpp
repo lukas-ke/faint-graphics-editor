@@ -399,12 +399,12 @@ private:
 class FrameCtrl::FrameCtrlImpl : public wxPanel {
 public:
   FrameCtrlImpl(wxWindow* parent,
-    FrameContext& ctx,
+    std::unique_ptr<FrameContext>&& ctx,
     StatusInterface& status,
     const Art& art)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
         wxTAB_TRAVERSAL|FRAMECTRL_BORDER_STYLE),
-      m_ctx(ctx),
+      m_ctx(std::move(ctx)),
       m_listCtrl(nullptr)
   {
     wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -417,14 +417,14 @@ public:
     sizer->Add(addButton);
 
     m_listCtrl = new FrameListCtrl(this,
-      m_ctx,
+      *m_ctx,
       art,
       status);
     sizer->Add(m_listCtrl);
     SetSizer(sizer);
     Layout();
 
-    events::on_button(addButton, [=](){m_ctx.AddFrame();});
+    events::on_button(addButton, [=](){m_ctx->AddFrame();});
   }
 
   Index GetShownFrames() const {
@@ -443,7 +443,7 @@ public:
   }
 
   bool UpdateFrames(){
-    const Index numFrames = m_ctx.GetNumFrames();
+    const Index numFrames = m_ctx->GetNumFrames();
     if (GetShownFrames() == numFrames){
       m_listCtrl->Refresh();
       return false;
@@ -453,16 +453,16 @@ public:
   }
 
 private:
-  FrameContext& m_ctx;
+  std::unique_ptr<FrameContext> m_ctx;
   FrameListCtrl* m_listCtrl;
 };
 
 FrameCtrl::FrameCtrl(wxWindow* parent,
-  FrameContext& ctx,
+  std::unique_ptr<FrameContext>&& ctx,
   StatusInterface& status,
   const Art& art)
 {
-  m_impl = new FrameCtrlImpl(parent, ctx, status, art);
+  m_impl = new FrameCtrlImpl(parent, std::move(ctx), status, art);
 }
 
 FrameCtrl::~FrameCtrl(){
