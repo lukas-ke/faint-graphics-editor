@@ -33,7 +33,6 @@ public:
   coord Ascent() const;
   std::vector<int> CumulativeTextWidth(const utf8_string&);
   std::vector<PathPt> GetTextPath(const Tri& tri, const utf8_string&);
-  TextMeasures TextExtents(const utf8_string&);
   FontMetrics GetFontMetrics();
 
   TextInfoDC& operator=(const TextInfoDC&) = delete;

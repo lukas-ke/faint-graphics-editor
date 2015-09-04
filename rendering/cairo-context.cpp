@@ -85,11 +85,9 @@ static int get_font_descent(const Settings& s){
   return ascent;
 }
 
-static Rect to_faint(const PangoRectangle& r){
-  return Rect(Point(r.x, r.y), Size(r.width, r.height));
-}
-
-static cairo_matrix_t faint_cairo_gradient_matrix(const LinearGradient& g, const Size& sz){
+static cairo_matrix_t faint_cairo_gradient_matrix(const LinearGradient& g,
+  const Size& sz)
+{
   cairo_matrix_t m;
   cairo_matrix_init_identity(&m);
   cairo_matrix_translate(&m, 0.5, 0.5);
@@ -624,32 +622,6 @@ FontMetrics CairoContext::pango_font_metrics(const Settings& s) const{
   m.ascent = get_font_ascent(s);
   m.descent = get_font_descent(s);
   return m;
-}
-
-TextMeasures CairoContext::pango_text_extents(const utf8_string& text,
-  const Settings& s) const
-{
-  auto fd(get_font_description(s));
-  auto layout(manage(pango_cairo_create_layout(m_impl->cr.get())));
-  pango_layout_set_font_description(layout, fd);
-  utf8_string useText;
-  if (text.size() > 1){
-    // Fixme: What's this?
-    useText = text.substr(0, text.size() - 2);
-  }
-  else{
-    useText = text;
-  }
-  pango_layout_set_text(layout.get(), text.c_str(), -1);
-  PangoRectangle ink = {0,0,0,0};
-  PangoRectangle logical = {0,0,0,0};
-  pango_layout_get_pixel_extents(layout.get(),
-    &ink,
-    &logical);
-  TextMeasures result;
-  result.ink = to_faint(ink);
-  result.logical = to_faint(logical);
-  return result;
 }
 
 std::vector<int> CairoContext::cumulative_text_width(const utf8_string& text,

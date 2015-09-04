@@ -74,7 +74,6 @@ public:
   void Text(const Tri&, const utf8_string&, const Settings&,
     const Optional<Tri>& clip);
   IntSize TextSize(const utf8_string&, const Settings&) const;
-  TextMeasures TextExtents(const utf8_string&, const Settings&) const;
 
   FontMetrics GetFontMetrics(const Settings&) const;
 

@@ -67,7 +67,17 @@ static CairoArc cairo_arc_from_svg_arc(const Point& p0,
   int sweepFlag,
   const Point& p)
 {
+  if (r.x == 0 || r.y == 0){
+    // Radius of zero not supported
+    CairoArc arc;
+    arc.center = p0;
+    arc.r = r;
+    arc.startAngleRad = 0.0;
+    arc.angleExtentRad = 0.0;
+    arc.xAxisRotationRad = 0.0;
+    return arc;
 
+  }
   // Step 1: Compute x1', y1' (i.e. p1)
   const Point d = (p0 - p) / 2.0;
   xAxisRotation = std::fmod(xAxisRotation, 2 * math::pi);
@@ -82,7 +92,6 @@ static CairoArc cairo_arc_from_svg_arc(const Point& p0,
   const Point p1sq = p1 * p1;
   Radii rsq = r * r;
 
-  // Fixme: Ensure non-zero radius
   coord radiusCheck = p1sq.x / rsq.x  + p1sq.y / rsq.y; // F.6.6.2
   if (radiusCheck > 1){
     r *= sqrt(radiusCheck); // F.6.6.3
@@ -892,13 +901,6 @@ void FaintDC::Text(const Tri& t, const utf8_string& text, const Settings& s,
 
 IntSize FaintDC::TextSize(const utf8_string& text, const Settings& s) const{
   return m_cr->pango_text_size(text, s);
-}
-
-TextMeasures FaintDC::TextExtents(const utf8_string& text,
-  const Settings& s) const
-{
-  // Fixme: Maybe this (and pango_text_extents) not needed.
-  return m_cr->pango_text_extents(text, s);
 }
 
 FontMetrics FaintDC::GetFontMetrics(const Settings& s) const{

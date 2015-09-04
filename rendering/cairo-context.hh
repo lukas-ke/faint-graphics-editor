@@ -68,7 +68,6 @@ public:
   std::vector<PathPt> get_text_path(const Tri&, const utf8_string&,
     const Settings&);
   IntSize pango_text_size(const utf8_string&, const Settings&) const;
-  TextMeasures pango_text_extents(const utf8_string&, const Settings&) const;
   FontMetrics pango_font_metrics(const Settings&) const;
   std::vector<int> cumulative_text_width(const utf8_string&,
     const Settings&) const;

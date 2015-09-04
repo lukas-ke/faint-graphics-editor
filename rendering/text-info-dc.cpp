@@ -55,10 +55,6 @@ std::vector<PathPt> TextInfoDC::GetTextPath(const Tri& tri,
   return m_dc.GetTextPath(tri, str, m_settings);
 }
 
-TextMeasures TextInfoDC::TextExtents(const utf8_string& str){
-  return m_dc.TextExtents(str, m_settings);
-}
-
 FontMetrics TextInfoDC::GetFontMetrics(){
   return m_dc.GetFontMetrics(m_settings);
 }

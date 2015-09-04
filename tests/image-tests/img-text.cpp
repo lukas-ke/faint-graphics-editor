@@ -23,7 +23,7 @@ void img_text(){
   // Test FaintDC::Text
 
   using namespace faint;
-  ImageTable t(get_test_name(), {"", "Text", "Ink extents", "Given bounds"});
+  ImageTable t(get_test_name(), {"", "Text", "Given bounds"});
   const utf8_string text = "J" + chars::latin_small_letter_o_with_diaresis +
     "rpsylta";
 
@@ -52,18 +52,13 @@ void img_text(){
     Tri bounds({10,10},{190,10},{10,40});
     dc.Text(bounds, text, s);
 
-    auto extents = dc.TextExtents(text, s);
     t.AddRow(label,
       save_test_image(bmp,
         FileName("text_" + str_int(imageNum, left_pad(3)) + ".png")),
 
-      save_test_image(with_rect(bmp,
-          tri_from_rect(translated(extents.ink, bounds.P0()))),
-        FileName("text_" + str_int(imageNum + 1, left_pad(3)) + ".png")),
-
       save_test_image(with_rect(bmp, bounds),
-        FileName("text_" + str_int(imageNum + 2, left_pad(3)) + ".png")));
-    imageNum += 3;
+        FileName("text_" + str_int(imageNum + 1, left_pad(3)) + ".png")));
+    imageNum += 2;
   }
 
   save_image_table(t);
