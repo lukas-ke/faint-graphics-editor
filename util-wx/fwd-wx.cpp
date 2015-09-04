@@ -654,4 +654,8 @@ void process_event(window_t w, wxCommandEvent& e){
   w.w->GetEventHandler()->ProcessEvent(e);
 }
 
+void refresh_layout(window_t w){
+  w.w->Layout();
+}
+
 } // namespace

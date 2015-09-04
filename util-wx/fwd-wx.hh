@@ -255,6 +255,8 @@ void process_event(window_t, wxCommandEvent&);
 
 void fit_size_to(wxTextCtrl*, const utf8_string&);
 
+void refresh_layout(window_t);
+
 } // namespace
 
 #endif

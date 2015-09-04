@@ -13,10 +13,15 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include "wx/window.h" // Fixme
 #include "app/resource-id.hh"
 #include "geo/int-point.hh"
 #include "gui/art.hh"
 #include "gui/frame-ctrl.hh"
+#include "gui/events.hh" // Fixme: For EVT_FAINT_ControlResized,
+#include "util-wx/fwd-wx.hh"
+#include "util-wx/layout-wx.hh"
+#include "util-wx/bind-event.hh"
 
 namespace faint{ class StatusInterface; }
 namespace faint{ class DialogContext; }
@@ -34,6 +39,7 @@ void gui_test_frame_ctrl(wxWindow* p, faint::StatusInterface& status,
 
     void AddFrame() override{
       m_numFrames = Index(m_numFrames.Get() + 1);
+
     }
 
     void CopyFrame(const OldIndex&, const NewIndex&) override{
@@ -68,10 +74,20 @@ void gui_test_frame_ctrl(wxWindow* p, faint::StatusInterface& status,
     Index m_selectedFrame;
   };
 
-  // Fixme: Need reacting on updates and resizing panel.
   auto f = new FrameCtrl(p,
     std::make_unique<GuiTestFrameContext>(),
     status,
     art);
+
+  using namespace layout;
+  set_sizer(p,
+    create_row({grow(f->AsWindow())}));
+
   f->Update();
+  refresh_layout(p);
+  bind(p, EVT_FAINT_ControlResized,
+    [=](){
+      refresh_layout(p);
+      refresh(p);
+    });
 }
