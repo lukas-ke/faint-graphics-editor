@@ -431,11 +431,28 @@ public:
     : appContext(app),
       panels(std::move(in_panels)),
       pythonContext(python),
+      m_shouldClose(false),
       state(std::move(in_state)),
       m_toolActions(app),
       windows(help, interpreter)
   {
     frame.reset(f);
+    on_idle(f,
+      [this](){
+        if (m_shouldClose){
+          m_shouldClose = false;
+          frame->Close(m_forceClose);
+        }
+      });
+  }
+
+  void Close(bool force){
+    // Flag close, and check it in the idle processing instead, to
+    // avoid a crash when AppContext::Close is called from some
+    // function which can't deal with Faint being closed immediately.
+
+    m_shouldClose = true;
+    m_forceClose = force;
   }
 
   FaintDialogContext& GetDialogContext(){
@@ -450,6 +467,10 @@ public:
   FaintToolActions m_toolActions;
   FaintFloatingWindows windows;
   std::vector<std::unique_ptr<Cleaner>> cleanup;
+
+  bool m_shouldClose = false;
+  bool m_forceClose = false;
+
 };
 
 static void select_tool(ToolId id, FaintState& state, FaintPanels& panels,
@@ -716,7 +737,7 @@ void FaintWindow::BeginTextEntry(){
 }
 
 void FaintWindow::Close(bool force){
-  m_impl->frame->Close(force);
+  m_impl->Close(force);
 }
 
 void FaintWindow::CloseDocument(Canvas& canvas){
