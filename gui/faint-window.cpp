@@ -55,6 +55,7 @@
 #include "util-wx/clipboard.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-format-util.hh"
+#include "util-wx/fwd-bind.hh"
 #include "util-wx/gui-util.hh"
 #ifdef __WXMSW__
 #include "wx/msw/private.h"
@@ -429,6 +430,7 @@ public:
     HelpFrame& help,
     InterpreterFrame& interpreter)
     : appContext(app),
+      frame(f),
       panels(std::move(in_panels)),
       pythonContext(python),
       m_shouldClose(false),
@@ -436,14 +438,12 @@ public:
       m_toolActions(app),
       windows(help, interpreter)
   {
-    frame.reset(f);
-    on_idle(f,
-      [this](){
-        if (m_shouldClose){
-          m_shouldClose = false;
-          frame->Close(m_forceClose);
-        }
-      });
+    events::on_idle(frame.get(), [this](){
+      if (m_shouldClose){
+        m_shouldClose = false;
+        frame->Close(m_forceClose);
+      }
+    });
   }
 
   void Close(bool force){
