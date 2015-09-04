@@ -16,6 +16,7 @@
 # permissions and limitations under the License.
 
 import faint
+import os
 
 def erase_columns(x0, x1):
     """Reduces the image width by removing all pixel columns from x0
@@ -98,3 +99,37 @@ def snowman():
         s.font = preferred_font
 
     return faint.Text((20,20,100,100), '\u2603', s)
+
+def _open_relative(image, replace, get_new_index):
+    if image is None:
+        image = faint.get_active_image()
+    path = image.get_filename()
+    if path is None:
+        return
+
+    d, f = os.path.split(path)
+    files = sorted(os.listdir(d))
+
+    i = files.index(f)
+    new_index = get_new_index(i)
+    if new_index < len(files):
+        new_image = faint.app.open(os.path.join(d, files[new_index]))
+        if replace and new_image is not None:
+            faint.app.close(image)
+
+
+def open_next(image=None, replace=False):
+    _open_relative(image, replace, lambda i: i + 1)
+
+
+
+def open_prev(image=None, replace=False):
+    _open_relative(image, replace, lambda i: i - 1)
+
+
+def open_first(image=None, replace=False):
+    _open_relative(image, replace, lambda i: 0)
+
+
+def open_last(image=None, replace=False):
+    _open_relative(image, replace, lambda i: -1)

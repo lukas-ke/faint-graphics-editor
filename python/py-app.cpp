@@ -190,12 +190,14 @@ static void faintapp_open_files(PyFuncContext& ctx,
 
 /* method: "open(file_path)->Image\n
 Open the specified image file in a new tab." */
-static Bound<Canvas> faintapp_open(PyFuncContext& ctx,
+static Optional<Bound<Canvas>> faintapp_open(PyFuncContext& ctx,
   const utf8_string& pathStr)
 {
   Canvas* c = ctx.app.Load(get_openable_path(pathStr), change_tab(true));
-  // Fixme: Check c != nullptr
-  return bind(*c, ctx);
+  if (c == nullptr){
+    return no_option();
+  }
+  return option(bind(*c, ctx));
 }
 
 /* method: "quit()\nExit faint" */
