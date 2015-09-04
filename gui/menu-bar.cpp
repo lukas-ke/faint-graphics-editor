@@ -377,10 +377,7 @@ public:
         active.RunCommand(context_crop(active, bg));
       });
 
-    Add(editMenu, wxID_DELETE, Label("&Delete\tDel"),
-      // Fixme: Should be disabled on numeric entry, to allow using
-      // delete in line width edit field (et. al.), but that ruins the
-      // use of the delete key in the edit tool
+    Add(editMenu, wxID_DELETE, Label("&Delete\tDel", ToggleShortcut::ALL),
       MenuPred(MenuPred::ANY_SELECTION),
       [&](){context_delete(app.GetActiveCanvas(),
         app.GetToolSettings().Get(ts_Bg));});
