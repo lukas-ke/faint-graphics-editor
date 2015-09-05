@@ -137,5 +137,4 @@ def one_color_bg(obj):
     try:
         return obj._one_color_bg()
     except AttributeError:
-        pass
-    return ifaint._one_color_bg(obj)
+        return ifaint._one_color_bg(obj)

@@ -24,6 +24,7 @@ __all__ = ["write", "to_string"]
 import base64
 from faint.svg.util import arrow_line_end, rad2deg, rad_angle
 from faint.svg.write import SvgBuildState
+from faint.image import one_color_bg
 from math import atan2, cos, sin, tan
 import xml.etree.ElementTree as ET
 
