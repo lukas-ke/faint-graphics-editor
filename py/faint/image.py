@@ -1,5 +1,4 @@
 import ifaint
-from ifaint import Shape
 
 class FakeGrid:
     anchor = 0, 0
