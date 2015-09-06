@@ -36,6 +36,68 @@ static void free_rows(png_bytep* rowPointers, png_uint_32 height){
   free(rowPointers);
 }
 
+static PngWriteResult init_text_chunks(const png_tEXt_map& textChunks,
+  png_text* textItems)
+{
+  // Convert the Faint png_tEXt_map to an array.
+  // Note: textItems must be allocated with as many slots as textChunks.size().
+
+  size_t i = 0;
+
+  for (const auto& kv : textChunks){
+    const auto& key = kv.first;
+    if (!is_ascii(key)){
+      return PngWriteResult::ERROR_WRITE_TEXT_KEY_ENCODING;
+    }
+
+    if (key.size() > PNG_KEYWORD_MAX_LENGTH){
+      return PngWriteResult::ERROR_WRITE_TEXT_KEY_TOO_LONG;
+    }
+    else if (key.size() == 0){
+      return PngWriteResult::ERROR_WRITE_TEXT_KEY_EMPTY;
+    }
+
+    const auto& value = kv.second;
+    if (!is_ascii(value)){
+      return PngWriteResult::ERROR_WRITE_TEXT_VALUE_ENCODING;
+    }
+
+    if (!can_represent<png_size_t>(value.size())){
+      return PngWriteResult::ERROR_WRITE_TEXT_VALUE_TOO_LONG;
+    }
+
+    auto& text(textItems[i]);
+    text.compression = -1; // tEXt
+    text.key = (png_charp)key.c_str(); // Fixme
+    text.text = (png_charp)value.c_str(); // Fixme
+    text.text_length = value.size();
+    i++;
+  }
+  return PngWriteResult::OK;
+}
+
+static PngWriteResult write_text_chunks(png_structp png_ptr,
+  png_infop info_ptr,
+  const png_tEXt_map& textChunks)
+{
+  if (textChunks.empty()){
+    return PngWriteResult::OK;
+  }
+
+  if (!can_represent<int>(textChunks.size())){
+    return PngWriteResult::ERROR_WRITE_TOO_MANY_TEXT_CHUNKS;
+  }
+
+  const int numChunks = static_cast<int>(textChunks.size());
+  png_text* textItems = new png_text[numChunks];
+  auto result = init_text_chunks(textChunks, textItems);
+  if (result == PngWriteResult::OK){
+    png_set_text(png_ptr, info_ptr, textItems, numChunks);
+  }
+  delete[] textItems;
+  return result;
+}
+
 PngWriteResult write_with_libpng(const FilePath& path,
   const Bitmap& bmp,
   const int colorType,
@@ -91,59 +153,12 @@ PngWriteResult write_with_libpng(const FilePath& path,
     PNG_COMPRESSION_TYPE_BASE,
     PNG_FILTER_TYPE_BASE);
 
-  if (textChunks.size() != 0){
-
-    if (!can_represent<int>(textChunks.size())){
+  {
+    auto result = write_text_chunks(png_ptr, info_ptr, textChunks);
+    if (result != PngWriteResult::OK){
       fclose(f);
-      return PngWriteResult::ERROR_WRITE_TOO_MANY_TEXT_CHUNKS;
+      return result;
     }
-
-    const int numChunks = static_cast<int>(textChunks.size());
-    png_text* textItems = new png_text[numChunks];
-    size_t i = 0;
-
-    for (const auto& kv : textChunks){
-      const auto& key = kv.first;
-      if (!is_ascii(key)){
-        delete[] textItems;
-        fclose(f);
-        return PngWriteResult::ERROR_WRITE_TEXT_KEY_ENCODING;
-      }
-
-      if (key.size() > PNG_KEYWORD_MAX_LENGTH){
-        delete[] textItems;
-        fclose(f);
-        return PngWriteResult::ERROR_WRITE_TEXT_KEY_TOO_LONG;
-      }
-      else if (key.size() == 0){
-        delete[] textItems;
-        fclose(f);
-        return PngWriteResult::ERROR_WRITE_TEXT_KEY_EMPTY;
-      }
-
-      const auto& value = kv.second;
-      if (!is_ascii(value)){
-        delete[] textItems;
-        fclose(f);
-        return PngWriteResult::ERROR_WRITE_TEXT_VALUE_ENCODING;
-      }
-
-      if (!can_represent<png_size_t>(value.size())){
-        delete[] textItems;
-        fclose(f);
-        return PngWriteResult::ERROR_WRITE_TEXT_VALUE_TOO_LONG;
-      }
-
-      auto& text(textItems[i]);
-      text.compression = -1; // tEXt
-      text.key = (png_charp)key.c_str(); // Fixme
-      text.text = (png_charp)value.c_str(); // Fixme
-      text.text_length = value.size();
-      i++;
-    }
-
-    png_set_text(png_ptr, info_ptr, textItems, numChunks);
-    delete[] textItems;
   }
 
   png_write_info(png_ptr, info_ptr);
@@ -204,6 +219,10 @@ PngWriteResult write_with_libpng(const FilePath& path,
         }
       }
     }
+  }
+  else {
+    // Color type was checked earlier, so just assert.
+    assert(false); // Unsupported color type
   }
 
   // Write the image data
