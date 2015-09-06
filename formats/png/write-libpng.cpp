@@ -143,7 +143,7 @@ PngWriteResult write_with_libpng(const FilePath& path,
     }
 
     png_set_text(png_ptr, info_ptr, textItems, numChunks);
-    delete[] textItems; // Fixme: Safe or wait?
+    delete[] textItems;
   }
 
   png_write_info(png_ptr, info_ptr);
