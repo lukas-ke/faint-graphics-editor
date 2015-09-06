@@ -46,8 +46,7 @@ public:
   {
     // Do all adjustments through a mirage. The final changes to the
     // real selection are done in a command.
-    m_selection = std::make_shared<RasterSelection>(
-      m_canvas.GetRasterSelection());
+    m_selection = std::make_shared<RasterSelection>(m_canvas.GetRasterSelection());
     assert(!m_selection->Empty());
 
     if (floatSelected){

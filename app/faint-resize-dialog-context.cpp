@@ -92,7 +92,7 @@ public:
       },
       [&](RASTER_SELECTION){
         canvas.RunCommand(get_scale_raster_selection_command(canvas.GetImage(),
-          rounded(size), // Fixme
+            rounded(size),
           quality));
       },
       [&](IMAGE){
