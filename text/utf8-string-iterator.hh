@@ -37,7 +37,6 @@ public:
   bool operator!=(const utf8_string_const_iterator&) const;
   utf8_string_const_iterator& operator=(const utf8_string_const_iterator&);
 private:
-  // Fixme: store the raw data instead for faster iteration
   const utf8_string* m_str;
   size_t m_index;
 };
