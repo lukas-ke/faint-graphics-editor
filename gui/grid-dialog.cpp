@@ -18,6 +18,7 @@
 #include "geo/geo-func.hh" // floated
 #include "geo/int-point.hh"
 #include "geo/int-size.hh"
+#include "gui/accelerator-entry.hh"
 #include "gui/grid-dialog.hh"
 #include "gui/paint-dialog.hh"
 #include "gui/static-bitmap.hh"
@@ -26,6 +27,7 @@
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/layout-wx.hh"
+#include "util-wx/key-codes.hh"
 
 namespace faint{
 
@@ -67,7 +69,7 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
   auto editY = make_edit(anchor.y);
 
   // Dashes-checkbox
-  auto dashed = create_checkbox(dlg, "&Dashed lines", grid.Dashed());
+  auto dashed = create_checkbox(dlg, "&dashed lines", grid.Dashed());
 
   using namespace layout;
   auto spacingRow = create_row(OuterSpacing(0), ui::item_spacing,
@@ -81,17 +83,32 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
     return color_bitmap(grid.GetColor(), IntSize(20, 20));
   };
 
-  auto colorLabel = create_label(dlg, "Line color");
+  auto colorLabel = create_label(dlg, "&color");
   auto colorButton = new StaticBitmap(raw(dlg.get()), make_color_bitmap());
+  set_size(colorButton, get_size(dashed));
+  set_stock_cursor(colorButton, wxCURSOR_HAND);
+  set_stock_cursor(colorLabel, wxCURSOR_HAND);
+
+  auto pick_grid_color =  [&](){
+    show_color_only_dialog(raw(dlg), "Grid color",
+      grid.GetColor(), c).Visit(
+        [&](const Color& c){
+          grid.SetColor(c);
+          colorButton->SetBitmap(make_color_bitmap());
+        });
+  };
+
+  set_accelerators(raw(dlg), {
+   {key::C, Alt+key::C, pick_grid_color}});
 
   events::on_mouse_left_down(colorButton,
     [&](const IntPoint&){
-      show_color_only_dialog(raw(dlg.get()), "Grid color",
-        grid.GetColor(), c).Visit(
-          [&](const Color& c){
-            grid.SetColor(c);
-            colorButton->SetBitmap(make_color_bitmap());
-          });
+      pick_grid_color();
+    });
+
+  events::on_mouse_left_down(colorLabel,
+    [&](const IntPoint&){
+      pick_grid_color();
     });
 
   set_sizer(dlg.get(),
