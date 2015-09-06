@@ -153,16 +153,16 @@ def clean_exe(faintDir):
     jp = os.path.join
     # Fixme: Windows-centric
 
-    fi = faint_info
+    t = faint_info.target
     executables = existing([
-        jp(faintDir, fi.target_faint.executable + ".exe"),
-        jp(faintDir, fi.target_faint.executable + "d.exe"),
-        jp(faintDir, fi.target_benchmark.executable + ".exe"),
-        jp(faintDir, fi.target_gui_test.executable + ".exe"),
-        jp(faintDir, fi.target_image_test.executable + ".exe"),
-        jp(faintDir, fi.target_unit_test.executable + ".exe"),
-        jp(faintDir, fi.target_python_extension.out_lib + ".pyd"),
-        jp(faintDir, fi.target_python_extension.out_lib + ".pyd.manifest")])
+        jp(faintDir, t.faint.executable + ".exe"),
+        jp(faintDir, t.faint.executable + "d.exe"),
+        jp(faintDir, t.benchmark.executable + ".exe"),
+        jp(faintDir, t.gui_test.executable + ".exe"),
+        jp(faintDir, t.image_test.executable + ".exe"),
+        jp(faintDir, t.unit_test.executable + ".exe"),
+        jp(faintDir, t.python_extension.out_lib + ".pyd"),
+        jp(faintDir, t.python_extension.out_lib + ".pyd.manifest")])
 
     for f in executables:
         os.remove(f)

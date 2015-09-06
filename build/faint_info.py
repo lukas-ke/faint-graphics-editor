@@ -111,44 +111,45 @@ def get_src_folders(platform='msw', test=False):
     return sorted(folders)
 
 
-class target_faint:
-    objs_folder_prefix = "objs"
-    executable = "faint"
+class target:
+    class faint:
+        objs_folder_prefix = "objs"
+        executable = "faint"
 
 
-class target_image_test:
-    objs_folder_prefix = "objs-image-test"
-    source_folder = "tests/image-tests"
-    executable = "tests/run-image-tests"
+    class image_test:
+        objs_folder_prefix = "objs-image-test"
+        source_folder = "tests/image-tests"
+        executable = "tests/run-image-tests"
 
 
-class target_unit_test:
-    objs_folder_prefix = "objs-unit-test"
-    source_folder = "tests/unit-tests"
-    executable = "tests/run-unit-tests"
+    class unit_test:
+        objs_folder_prefix = "objs-unit-test"
+        source_folder = "tests/unit-tests"
+        executable = "tests/run-unit-tests"
 
 
-class target_benchmark:
-    objs_folder_prefix = "objs-bench"
-    source_folder = "tests/benchmarks"
-    executable = "tests/run-benchmarks"
+    class benchmark:
+        objs_folder_prefix = "objs-bench"
+        source_folder = "tests/benchmarks"
+        executable = "tests/run-benchmarks"
 
 
-class target_gui_test:
-    objs_folder_prefix = "objs-gui-test"
-    source_folder = "tests/gui-tests"
-    executable = "tests/run-gui-tests"
+    class gui_test:
+        objs_folder_prefix = "objs-gui-test"
+        source_folder = "tests/gui-tests"
+        executable = "tests/run-gui-tests"
 
-class target_python_extension:
-    objs_folder_prefix = "objs-python-ext"
-    source_folder = "ext"
-    out_lib = "ext/out/ifaint"
+    class python_extension:
+        objs_folder_prefix = "objs-python-ext"
+        source_folder = "ext"
+        out_lib = "ext/out/ifaint"
 
 TARGETS = [
-    target_faint,
-    target_image_test,
-    target_unit_test,
-    target_benchmark,
-    target_gui_test,
-    target_python_extension,
+    target.faint,
+    target.image_test,
+    target.unit_test,
+    target.benchmark,
+    target.gui_test,
+    target.python_extension,
 ]

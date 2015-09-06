@@ -189,7 +189,7 @@ def test_extra_objs(bo):
     def excluded(obj):
         return obj.startswith('app.') or obj.startswith('py-initialize-ifaint.')
 
-    obj_root = join_path(os.getcwd(), faint_info.target_faint.objs_folder_prefix)
+    obj_root = join_path(os.getcwd(), faint_info.target.faint.objs_folder_prefix)
     obj_root = obj_root + ("-debug" if bo.debug_compile else "-release")
 
     return [join_path(obj_root, strip_ext(item)) for item in
@@ -275,7 +275,7 @@ def run_py_tests(platform, cmdline):
         return 1
 
 def build_faint(platform, cmdline):
-    target = faint_info.target_faint
+    target = faint_info.target.faint
     def faint_source_files(platform, project_root):
         src_folders = faint_info.get_src_folders(platform)
         src_folders = [join_path(project_root, folder)
@@ -324,7 +324,7 @@ def build_faint(platform, cmdline):
 
 
 def build_benchmarks(platform, cmdline):
-    target = faint_info.target_benchmark
+    target = faint_info.target.benchmark
     def precompile_steps(bo):
         bench_root = join_path(bo.project_root, target.source_folder)
         test_root = join_path(bo.project_root, "tests")
@@ -347,7 +347,7 @@ def build_benchmarks(platform, cmdline):
 
 
 def build_unit_tests(platform, cmdline):
-    target = faint_info.target_unit_test
+    target = faint_info.target.unit_test
 
     def precompile_steps(bo):
         tests_root = join_path(bo.project_root, target.source_folder)
@@ -371,7 +371,7 @@ def build_unit_tests(platform, cmdline):
 
 
 def build_image_tests(platform, cmdline):
-    target = faint_info.target_image_test
+    target = faint_info.target.image_test
 
     def precompile_steps(bo):
         tests_root = join_path(bo.project_root, target.source_folder)
@@ -394,7 +394,7 @@ def build_image_tests(platform, cmdline):
 
 
 def build_gui_tests(platform, cmdline):
-    target = faint_info.target_gui_test
+    target = faint_info.target.gui_test
     def precompile_steps(bo):
         bo.create_build_info = False
 
@@ -428,7 +428,7 @@ def build_python_extension(platform, cmdline):
         bo.create_build_info = False
         bo.target_type = bo.Target.shared_python_library
 
-    target = faint_info.target_python_extension
+    target = faint_info.target.python_extension
 
     def extension_source_files(platform, bo):
         src_folder = join_path(bo.project_root, target.source_folder)
