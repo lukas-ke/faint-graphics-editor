@@ -23,7 +23,7 @@
 namespace faint{
 
 FrameInfo::FrameInfo()
-  : delay(0),
+  : delay(0_cs),
     hotSpot(0,0)
 {}
 
@@ -33,7 +33,7 @@ FrameInfo::FrameInfo(const Delay& delay)
 {}
 
 FrameInfo::FrameInfo(const HotSpot& hotSpot)
-  : delay(0),
+  : delay(0_cs),
     hotSpot(hotSpot)
 {}
 
@@ -44,12 +44,12 @@ FrameInfo::FrameInfo(const Delay& delay, const HotSpot& hotSpot)
 
 FrameProps::FrameProps()
   : m_background(ColorSpan(color_white, IntSize(640,480))),
-    m_delay(0)
+    m_delay(0_cs)
 {}
 
 FrameProps::FrameProps(const Bitmap& bmp)
   : m_background(bmp),
-    m_delay(0),
+    m_delay(jiffies_t(0)),
     m_hotSpot(0,0)
 {
   assert(bitmap_ok(bmp));
@@ -57,7 +57,7 @@ FrameProps::FrameProps(const Bitmap& bmp)
 
 FrameProps::FrameProps(const Bitmap& bmp, const objects_t& objects)
   : m_background(bmp),
-    m_delay(0),
+    m_delay(jiffies_t(0)),
     m_hotSpot(0,0),
     m_objects(objects)
 {}
@@ -70,13 +70,13 @@ FrameProps::FrameProps(const Bitmap& bmp, const FrameInfo& info)
 
 FrameProps::FrameProps(const IntSize& size, const objects_t& objects)
   : m_background(ColorSpan(color_white, size)),
-    m_delay(0),
+    m_delay(jiffies_t(0)),
     m_objects(objects)
 {}
 
 FrameProps::FrameProps(const ImageInfo& info)
   : m_background(ColorSpan(info.backgroundColor, info.size)),
-    m_delay(0)
+    m_delay(jiffies_t(0))
 {
   if (info.createBitmap){
     assert(info.size.w > 0 && info.size.h > 0);
@@ -146,7 +146,7 @@ void FrameProps::RemoveObject(Object* obj){
 
 void FrameProps::SetBackground(const Either<Bitmap, ColorSpan>& bg){
   m_background = bg;
-  m_delay = Delay(0);
+  m_delay = Delay(0_cs);
   m_hotSpot = HotSpot(0,0);
 }
 

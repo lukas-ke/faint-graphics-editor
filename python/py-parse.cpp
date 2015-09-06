@@ -320,11 +320,12 @@ bool parse_flat(DefaultConstructible<Delay>& delay,
   PyObject* args,
   Py_ssize_t& n, Py_ssize_t len)
 {
+  // Fixme: Allow specifying e.g. seconds somehow from Python.
   throw_insufficient_args_if(len - n < 1, "Delay");
-  Delay::value_type v;
-  if (parse_int(args, n, &v)){
+  int jiffies = 0;
+  if (parse_int(args, n, &jiffies)){
     n += 1;
-    delay.Set(Delay(v));
+    delay.Set(Delay(jiffies_t(jiffies)));
     return true;
   }
   return false;
@@ -904,7 +905,8 @@ PyObject* build_result(const Angle& angle){
 }
 
 PyObject* build_result(const Delay& delay){
-  return build_result(delay.Get());
+  // Fixme: Would be better to return a Python type.
+  return build_result(delay.Get().count());
 }
 
 PyObject* build_result(bool value){

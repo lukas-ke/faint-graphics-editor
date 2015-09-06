@@ -15,17 +15,22 @@
 
 #ifndef FAINT_DELAY_HH
 #define FAINT_DELAY_HH
-#include "util/distinct.hh"
+#include <chrono>
 
 namespace faint{
 
 class category_frame_properties;
 
-// The time an animation should remain on a given frame in hundredths
-// of a second.
-// Fixme: Consider using e.g. std::chrono, converting to hundredths
-// when saving as gif
-using Delay = Distinct<int, category_frame_properties, 0>;
+// Hundredths of a second is used as the base for delays (since it is what the
+// gif-format uses).
+using jiffies_t = std::chrono::duration<int, std::centi>;
+
+constexpr jiffies_t operator "" _cs(unsigned long long centiSeconds){
+  return jiffies_t(centiSeconds);
+}
+
+// The duration an animation should remain on a given frame.
+using Delay = Distinct<jiffies_t, category_frame_properties, 0>;
 
 } // namespace
 

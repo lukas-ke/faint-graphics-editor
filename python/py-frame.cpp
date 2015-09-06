@@ -151,7 +151,8 @@ static BoundObjects frame_get_selected(const Frame& frame){
 Sets the duration, in hundredths of a second, that this frame will be
 shown when saved as a gif." */
 static void frame_set_delay(const Frame& frame, const Delay& delay){
-  if (delay.Get() < 0){ // Fixme: -1 should probably mean 'forever' for gifs.
+  if (delay.Get().count() < 0){
+    // Fixme: -1 should probably mean 'forever' for gifs.
     throw ValueError("Negative delay");
   }
 

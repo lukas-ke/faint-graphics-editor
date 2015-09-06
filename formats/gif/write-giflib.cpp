@@ -143,7 +143,7 @@ GifWriteResult write_with_giflib(const FilePath& path,
     GraphicsControlBlock gcb;
     gcb.DisposalMode = DISPOSE_BACKGROUND;
     gcb.UserInputFlag = false;
-    gcb.DelayTime = entry.delay.Get();
+    gcb.DelayTime = entry.delay.Get().count();
     gcb.TransparentColor =
       entry.image.transparencyIndex.Or(NO_TRANSPARENT_COLOR);
 

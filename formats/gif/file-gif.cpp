@@ -222,7 +222,7 @@ public:
   }
 
   auto GetDelay(){
-    return Delay(delayTime_cs);
+    return Delay(jiffies_t(delayTime_cs));
   }
 
   Disposal disposal;

@@ -95,7 +95,7 @@ Image::Image(const Image& other)
 
 Image::Image()
   : m_bg(ColorSpan(color_white, IntSize(1,1))),
-    m_delay(0)
+    m_delay(0_cs)
 {
   m_expressionContext = std::make_unique<ImageExpressionContext>(*this);
 }

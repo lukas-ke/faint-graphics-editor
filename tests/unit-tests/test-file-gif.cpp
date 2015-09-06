@@ -16,7 +16,7 @@ void check_frame(const faint::FrameProps& p,
 {
   using namespace faint;
 
-  EQUAL(p.GetDelay().Get(), expectedDelay.Get());
+  EQUAL(p.GetDelay().Get().count(), expectedDelay.Get().count());
 
   return p.GetBackground().Visit(
     [&](const Bitmap& bmp){
@@ -50,17 +50,17 @@ void test_file_gif(){
     ImageProps props;
     read_gif(get_test_load_path(FileName("86-68.gif")), props);
     ABORT_IF(props.GetNumFrames() != 4);
-    FWD(check_frame(props.GetFrame(0_idx), keys[0], Delay(10)));
-    FWD(check_frame(props.GetFrame(1_idx), keys[1], Delay(10)));
-    FWD(check_frame(props.GetFrame(2_idx), keys[2], Delay(10)));
-    FWD(check_frame(props.GetFrame(3_idx), keys[3], Delay(10)));
+    FWD(check_frame(props.GetFrame(0_idx), keys[0], Delay(10_cs)));
+    FWD(check_frame(props.GetFrame(1_idx), keys[1], Delay(10_cs)));
+    FWD(check_frame(props.GetFrame(2_idx), keys[2], Delay(10_cs)));
+    FWD(check_frame(props.GetFrame(3_idx), keys[3], Delay(10_cs)));
   }
 
   {
     // Write a single frame
     auto img = load_test_image(FileName("gauss-source.png"));
     auto mapped = quantized(img, Dithering::ON);
-    std::vector<GifFrame> images = {{mapped, Delay(0)}};
+    std::vector<GifFrame> images = {{mapped, Delay(0_cs)}};
 
     auto filename = suffix_u8_chars(FileName("single-frame.gif"));
     auto savePath = get_test_save_path(filename);
@@ -76,14 +76,14 @@ void test_file_gif(){
     ImageProps props;
     read_gif(savePath, props);
     ABORT_IF(props.GetNumFrames() != 1);
-    FWD(check_frame(props.GetFrame(0_idx), key, Delay(0)));
+    FWD(check_frame(props.GetFrame(0_idx), key, Delay(0_cs)));
   }
 
   {
     // Write a single frame with transparency
     auto src = load_test_image(FileName("86-68-key-1.png"));
     auto mapped = quantized(src, Dithering::ON);
-    std::vector<GifFrame> images = {{mapped, Delay(0)}};
+    std::vector<GifFrame> images = {{mapped, Delay(0_cs)}};
 
     auto outFile = suffix_u8_chars(FileName("single-frame-transparency.gif"));
     auto savePath = get_test_save_path(outFile);
@@ -97,7 +97,7 @@ void test_file_gif(){
     ImageProps props;
     read_gif(savePath, props);
     ABORT_IF(props.GetNumFrames() != 1);
-    FWD(check_frame(props.GetFrame(0_idx), src, Delay(0)));
+    FWD(check_frame(props.GetFrame(0_idx), src, Delay(0_cs)));
   }
 
   {
@@ -119,10 +119,10 @@ void test_file_gif(){
       };
 
     auto delays = std::vector<Delay>{
-      Delay(10),
-      Delay(20),
-      Delay(30),
-      Delay(40)};
+      Delay(10_cs),
+      Delay(20_cs),
+      Delay(30_cs),
+      Delay(40_cs)};
 
     std::vector<GifFrame> images = {
       {get_bmp(srcProps.GetFrame(0_idx)), delays[0]},
