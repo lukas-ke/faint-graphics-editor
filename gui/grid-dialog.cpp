@@ -54,6 +54,9 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
     return edit;
   };
 
+  // Enabled-checkbox
+  auto enabled = create_checkbox(dlg, "&enabled", grid.Enabled());
+
   // Spacing edit field
   auto labelSpacing = create_label(dlg.get(), "&Spacing", TextAlign::RIGHT);
   auto editSpacing = make_edit(grid.Spacing());
@@ -67,9 +70,6 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
 
   auto labelY = create_label(dlg.get(), "&Y");
   auto editY = make_edit(anchor.y);
-
-  // Enabled-checkbox
-  auto enabled = create_checkbox(dlg, "&enabled", grid.Enabled());
 
   // Dashes-checkbox
   auto dashed = create_checkbox(dlg, "&dashes", grid.Dashed());
@@ -128,7 +128,8 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
       dashed_t(get(dashed)),
       to_coord(get_text(editSpacing), grid.Spacing()),
       grid.GetColor(),
-      Point(to_coord(get_text(editX), anchor.x), to_coord(get_text(editY), anchor.y)));
+      Point(to_coord(get_text(editX), anchor.x),
+        to_coord(get_text(editY), anchor.y)));
 
   };
 
