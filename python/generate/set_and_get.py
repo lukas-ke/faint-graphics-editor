@@ -18,6 +18,9 @@ import sys
 
 SHORTHAND = 1
 
+def color_doc_str(name):
+    return name + ". Can be a color tuple, a gradient or a pattern.";
+
 class CppEnum:
     """Contains the fields for creating a C++-enum for an
     IntSetting."""
@@ -140,10 +143,10 @@ setters_and_getters = {
             "SOLID"))),
 
     "ts_Bg" : Color(
-        "ts_Bg",
-        "bg",
-        "Background Color.",
-        "Background color. Can be a color tuple, a gradient or a pattern."),
+        cpp_name="ts_Bg",
+        py_name="bg",
+        pretty_name="Background Color.",
+        doc_str=color_doc_str("Background Color")),
 
     "ts_BoundedText" : Bool(
         cpp_name="ts_BoundedText",
@@ -184,10 +187,10 @@ setters_and_getters = {
         doc_str="Point-editing?"),
 
     "ts_Fg" : Color(
-        "ts_Fg",
-        "fg",
-        "Foreground Color.",
-        "Foreground color. Can be a color tuple, a gradient or a pattern."),
+        cpp_name="ts_Fg",
+        py_name="fg",
+        pretty_name="Foreground Color.",
+        doc_str=color_doc_str("Foreground color")),
 
     "ts_FillStyle" : StringToInt(
         cpp_name="ts_FillStyle",
