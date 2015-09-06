@@ -97,7 +97,7 @@ public:
     Command* cmd = s.Visit(makeCmd);
     if (cmd != nullptr){
       m_settings.Update(s);
-      m_activeCanvas->RunCommand(cmd); // Fixme: Will this update m_settings again?
+      m_activeCanvas->RunCommand(cmd);
       return true;
     }
     return false;

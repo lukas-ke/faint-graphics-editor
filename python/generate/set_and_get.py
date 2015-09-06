@@ -142,8 +142,8 @@ setters_and_getters = {
     "ts_Bg" : Color(
         "ts_Bg",
         "bg",
-        "Background Color. Can be a color tuple, a gradient or a pattern.",
-        "Background color."),
+        "Background Color.",
+        "Background color. Can be a color tuple, a gradient or a pattern."),
 
     "ts_BoundedText" : Bool(
         cpp_name="ts_BoundedText",
@@ -186,8 +186,8 @@ setters_and_getters = {
     "ts_Fg" : Color(
         "ts_Fg",
         "fg",
-        "Foreground Color. Can be a color tuple, a gradient or a pattern.",
-        "Foreground color."),
+        "Foreground Color.",
+        "Foreground color. Can be a color tuple, a gradient or a pattern."),
 
     "ts_FillStyle" : StringToInt(
         cpp_name="ts_FillStyle",
