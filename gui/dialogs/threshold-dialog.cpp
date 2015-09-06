@@ -54,7 +54,7 @@ public:
     auto cancel = [&](){Close();};
     auto ok = [&](){Close(true);};
 
-    m_dialog = create_dialog(parent, "Threshold");
+    m_dialog = resizable_dialog(parent, "Threshold");
 
     events::on_close_window(m_dialog, cancel);
     m_enablePreview = create_checkbox(m_dialog, "Preview", true,

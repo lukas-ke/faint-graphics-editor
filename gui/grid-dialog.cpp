@@ -43,7 +43,7 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
   DialogContext& c)
 {
   Grid grid = oldGrid;
-  auto dlg = create_fixed_size_dialog(parent, "Grid");
+  auto dlg = fixed_size_dialog(parent, "Grid");
 
   auto make_edit = [&](int value){
     auto edit = create_text_control(dlg.get(), "");

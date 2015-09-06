@@ -92,7 +92,7 @@ public:
     };
 
     m_bitmap = feedback.GetBitmap();
-    m_dialog = create_dialog(parent, "Alpha");
+    m_dialog = resizable_dialog(parent, "Alpha");
 
     events::on_close_window(m_dialog, cancel);
 

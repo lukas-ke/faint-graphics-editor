@@ -143,7 +143,7 @@ public:
       Close(feedback);
     };
 
-    m_dialog = create_dialog(parent, m_ctx->GetTitle().c_str());
+    m_dialog = fixed_size_dialog(parent, m_ctx->GetTitle().c_str());
     events::on_close_window(m_dialog, cancel);
 
     const auto& options(m_ctx->GetOptions());

@@ -80,7 +80,7 @@ static wxStaticText* details_text(wxWindow* parent){
 static auto create_about_dialog(wxWindow* parent){
   using namespace layout;
 
-  auto dlg = create_dialog(parent, "About Faint");
+  auto dlg = fixed_size_dialog(parent, "About Faint");
   auto tabs = create_notebook(dlg.get());
 
   auto create_about_panel = [](wxWindow* tabs){

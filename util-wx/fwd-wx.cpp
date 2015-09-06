@@ -192,13 +192,13 @@ static std::unique_ptr<wxDialog, delete_dialog_f> create_dialog(window_t parent,
     destroy);
 }
 
-std::unique_ptr<wxDialog, delete_dialog_f> create_dialog(window_t parent,
+std::unique_ptr<wxDialog, delete_dialog_f> resizable_dialog(window_t parent,
   const utf8_string& title)
 {
   return create_dialog(parent, title, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER);
 }
 
-std::unique_ptr<wxDialog, delete_dialog_f> create_fixed_size_dialog(
+std::unique_ptr<wxDialog, delete_dialog_f> fixed_size_dialog(
   window_t parent,
   const utf8_string& title)
 {
