@@ -38,7 +38,6 @@ class Stream:
         elif item == "Resources":
             return self._format_resources()
         else:
-            print(item) # Fixme
             assert(False)
 
     def keys(self): # For PDF-dictionary behavior
