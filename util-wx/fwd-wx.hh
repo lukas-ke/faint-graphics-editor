@@ -101,6 +101,14 @@ wxButton* create_ok_button(window_t parent);
 wxButton* create_cancel_button(window_t parent);
 wxButton* create_cancel_button(window_t parent, const IntSize&);
 
+// Bitmap button which inhibits the noise on keypress if button has
+// focus
+wxButton* noiseless_button(wxWindow* parent,
+  const wxBitmap&,
+  const Tooltip&,
+  const IntSize&,
+  const button_fn&);
+
 wxStaticText* create_label(window_t parent,
   const utf8_string&,
   FontSize,

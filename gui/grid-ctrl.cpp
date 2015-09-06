@@ -107,7 +107,7 @@ wxButton* grid_toggle_button(wxWindow* parent,
 {
   // Create the button that enables/disables the grid
 
-  wxButton* button = noiseless_button(parent, "", Tooltip(""),
+  wxButton* button = noiseless_button_old(parent, "", Tooltip(""),
     wxSize(60,50));
   update_grid_toggle_button(false, button, art);
   sizer->Add(button, 0, wxEXPAND);

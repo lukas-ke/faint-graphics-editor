@@ -51,12 +51,12 @@ void console_message(const utf8_string&);
 
 // Label or Bitmap button which inhibits the noise on keypress if
 // button has focus
-wxButton* noiseless_button(wxWindow* parent,
+wxButton* noiseless_button_old(wxWindow* parent,
   const wxBitmap&,
   const Tooltip&,
   const wxSize&);
 
-wxButton* noiseless_button(wxWindow* parent,
+wxButton* noiseless_button_old(wxWindow* parent,
   const utf8_string&,
   const Tooltip&,
   const wxSize&);

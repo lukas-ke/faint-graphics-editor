@@ -34,7 +34,6 @@
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/fwd-wx.hh"
-#include "util-wx/gui-util.hh"
 
 namespace faint{
 
@@ -409,12 +408,11 @@ public:
   {
     wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
 
-    // Fixme: Add binding to creation for noiseless_button (move to fwd-wx.hh)
-    wxButton* addButton = noiseless_button(this,
+    sizer->Add(noiseless_button(this,
       art.Get(Icon::ADD_FRAME),
       Tooltip("Add Frame"),
-      wxSize(60,50));
-    sizer->Add(addButton);
+      IntSize(60,50),
+      [=](){m_ctx->AddFrame();}));
 
     m_listCtrl = new FrameListCtrl(this,
       *m_ctx,
@@ -423,8 +421,6 @@ public:
     sizer->Add(m_listCtrl);
     SetSizer(sizer);
     Layout();
-
-    events::on_button(addButton, [=](){m_ctx->AddFrame();});
   }
 
   Index GetShownFrames() const {

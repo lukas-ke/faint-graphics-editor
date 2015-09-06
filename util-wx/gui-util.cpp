@@ -39,15 +39,15 @@ void console_message(const utf8_string& text){
   msgOut->Output(to_wx(text));
 }
 
-wxButton* noiseless_button(wxWindow* parent, const wxBitmap& bmp,
+wxButton* noiseless_button_old(wxWindow* parent, const wxBitmap& bmp,
   const Tooltip& tooltip, const wxSize& size)
 {
-  wxButton* button = noiseless_button(parent, "", tooltip, size);
+  wxButton* button = noiseless_button_old(parent, "", tooltip, size);
   button->SetBitmap(bmp);
   return button;
 }
 
-wxButton* noiseless_button(wxWindow* parent, const utf8_string& label,
+wxButton* noiseless_button_old(wxWindow* parent, const utf8_string& label,
   const Tooltip& tooltip,
   const wxSize& size)
 {
