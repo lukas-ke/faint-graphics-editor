@@ -115,19 +115,19 @@ def clean_help(faintDir):
 
 def clean_obj(faintDir):
     jp = os.path.join
+    bd = jp(faintDir, "build")
     dirs = [
-        # Fixme: Simplify over release/debug, and don't duplicate faint_info
-        jp(faintDir, "build", "objs-bench-release"),
-        jp(faintDir, "build", "objs-debug"),
-        jp(faintDir, "build", "objs-release"),
-        jp(faintDir, "build", "objs-image-test-debug"),
-        jp(faintDir, "build", "objs-image-test-release"),
-        jp(faintDir, "build", "objs-unit-test-debug"),
-        jp(faintDir, "build", "objs-unit-test-release"),
-        jp(faintDir, "build", "objs-gui-test-debug"),
-        jp(faintDir, "build", "objs-gui-test-release"),
-        jp(faintDir, "build", "objs-python-ext-release"),
-        jp(faintDir, "build", "objs-python-ext-debug"),
+        jp(bd, "objs-bench-release"),
+        jp(bd, "objs-debug"),
+        jp(bd, "objs-release"),
+        jp(bd, "objs-image-test-debug"),
+        jp(bd, "objs-image-test-release"),
+        jp(bd, "objs-unit-test-debug"),
+        jp(bd, "objs-unit-test-release"),
+        jp(bd, "objs-gui-test-debug"),
+        jp(bd, "objs-gui-test-release"),
+        jp(bd, "objs-python-ext-release"),
+        jp(bd, "objs-python-ext-debug"),
     ]
 
     def should_remove(f):
@@ -147,7 +147,6 @@ def clean_obj(faintDir):
             maybe_remove(jp(obj_dir, f))
         remove_dir_if_empty(obj_dir)
 
-    bd = jp(faintDir, "build")
     for f in existing((jp(bd, "out.txt"), jp(bd, "err.txt"))):
         os.remove(f)
 
