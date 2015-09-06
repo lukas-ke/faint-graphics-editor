@@ -113,22 +113,19 @@ def clean_help(faintDir):
             os.remove(os.path.join(helpDir, file))
 
 
-def clean_obj(faintDir):
+def get_obj_folders(faintDir):
     jp = os.path.join
     bd = jp(faintDir, "build")
-    dirs = [
-        jp(bd, "objs-bench-release"),
-        jp(bd, "objs-debug"),
-        jp(bd, "objs-release"),
-        jp(bd, "objs-image-test-debug"),
-        jp(bd, "objs-image-test-release"),
-        jp(bd, "objs-unit-test-debug"),
-        jp(bd, "objs-unit-test-release"),
-        jp(bd, "objs-gui-test-debug"),
-        jp(bd, "objs-gui-test-release"),
-        jp(bd, "objs-python-ext-release"),
-        jp(bd, "objs-python-ext-debug"),
-    ]
+    prefixes = [t.objs_folder_prefix for t in faint_info.TARGETS]
+    prefixes_release = [p + "-release" for p in prefixes]
+    prefixes_debug = [p + "-debug" for p in prefixes]
+    return [jp(bd, p) for p in (prefixes_release + prefixes_debug)]
+
+
+def clean_obj(faintDir):
+    jp = os.path.join
+
+    dirs = get_obj_folders(faintDir)
 
     def should_remove(f):
         cleaned_exts = [
@@ -147,6 +144,7 @@ def clean_obj(faintDir):
             maybe_remove(jp(obj_dir, f))
         remove_dir_if_empty(obj_dir)
 
+    bd = jp(faintDir, "build")
     for f in existing((jp(bd, "out.txt"), jp(bd, "err.txt"))):
         os.remove(f)
 

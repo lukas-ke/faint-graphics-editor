@@ -189,10 +189,8 @@ def test_extra_objs(bo):
     def excluded(obj):
         return obj.startswith('app.') or obj.startswith('py-initialize-ifaint.')
 
-    if bo.debug_compile:
-        obj_root = join_path(os.getcwd(), "objs-debug")
-    else:
-        obj_root = join_path(os.getcwd(), "objs-release")
+    obj_root = join_path(os.getcwd(), faint_info.target_faint.objs_folder_prefix)
+    obj_root = obj_root + ("-debug" if bo.debug_compile else "-release")
 
     return [join_path(obj_root, strip_ext(item)) for item in
             os.listdir(join_path(os.getcwd(), obj_root))
@@ -448,12 +446,8 @@ def build_python_extension(platform, cmdline):
                  "console",
                  lambda bo: join_path(bo.project_root, "util", "msw_warn.hh"))
 
-    # if result == 0:
-    #     # Rename .dll to .pyd (used for Python dll-modules on windows)
-    #     out_abs = join_path(root_dir, target.out_lib)
-    #     shutil.move(out_abs + ".dll",
-    #                 out_abs + ".pyd")
     return result
+
 
 if __name__ == '__main__':
     platform = ("linux" if sys.platform.startswith('linux') else "msw")

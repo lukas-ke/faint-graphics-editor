@@ -112,7 +112,7 @@ def get_src_folders(platform='msw', test=False):
 
 
 class target_faint:
-    objs_folder_prefix = "objs-bench"
+    objs_folder_prefix = "objs"
     executable = "faint"
 
 
@@ -143,3 +143,12 @@ class target_python_extension:
     objs_folder_prefix = "objs-python-ext"
     source_folder = "ext"
     out_lib = "ext/out/ifaint"
+
+TARGETS = [
+    target_faint,
+    target_image_test,
+    target_unit_test,
+    target_benchmark,
+    target_gui_test,
+    target_python_extension,
+]
