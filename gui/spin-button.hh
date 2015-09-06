@@ -16,18 +16,30 @@
 #ifndef FAINT_SPIN_BUTTON_HH
 #define FAINT_SPIN_BUTTON_HH
 #include <string>
+#include <functional>
+#include "util/distinct.hh"
 
 class wxWindow;
 
 namespace faint{
+
 class SpinButtonImpl;
 class IntSize;
+
+class category_spin_button;
+using on_spin_up = Distinct<std::function<void()>, category_spin_button, 0>;
+using on_spin_down = Distinct<std::function<void()>, category_spin_button, 1>;
 
 class SpinButton{
   // A wrapper around a wxWidgets Spinbutton
 public:
-  SpinButton(wxWindow* parent, const IntSize&, const std::string& toolTip);
+  SpinButton(wxWindow* parent,
+    const IntSize&,
+    const std::string& toolTip,
+    const on_spin_up&,
+    const on_spin_down&);
   wxWindow* GetRaw();
+
 private:
   SpinButton(const SpinButton&);
   SpinButtonImpl* m_impl;

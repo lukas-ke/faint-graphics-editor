@@ -86,9 +86,13 @@ private:
 
 SpinButton::SpinButton(wxWindow* parent,
   const IntSize& size,
-  const std::string& toolTip)
+  const std::string& toolTip,
+  const on_spin_up& onSpinUp,
+  const on_spin_down& onSpinDown)
 {
   m_impl = new SpinButtonImpl(parent, to_wx(size), toolTip);
+  bind(m_impl, wxEVT_SPIN_UP, onSpinUp.Get());
+  bind(m_impl, wxEVT_SPIN_DOWN, onSpinDown.Get());
 }
 
 wxWindow* SpinButton::GetRaw(){

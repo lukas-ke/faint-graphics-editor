@@ -16,7 +16,6 @@
 #include <algorithm>
 #include "wx/button.h"
 #include "wx/sizer.h"
-#include "wx/spinbutt.h" // For wxEVT_SPIN_...
 #include "app/resource-id.hh"
 #include "gui/art.hh"
 #include "gui/drag-value-ctrl.hh"
@@ -58,13 +57,17 @@ static void set_active_grid_spacing(Accessor<Grid>& gridAccess, int spacing){
 
 static std::unique_ptr<SpinButton> grid_spinbutton(wxWindow* parent,
   wxSizer* sizer,
-  winvec_t& showhide)
+  winvec_t& showhide,
+  const on_spin_up& onSpinUp,
+  const on_spin_down& onSpinDown)
 {
   // Create the buttons for single-stepping the spacing
 
   auto spinButton = std::make_unique<SpinButton>(parent,
     IntSize(40,50),
-    "Adjust Grid Spacing");
+    "Adjust Grid Spacing",
+    onSpinUp,
+    onSpinDown);
   spinButton->GetRaw()->Hide();
   sizer->Add(spinButton->GetRaw());
   showhide.push_back(spinButton->GetRaw());
@@ -129,7 +132,16 @@ GridCtrl::GridCtrl(wxWindow* parent,
   m_sizer = new wxBoxSizer(wxHORIZONTAL);
   m_txtCurrentSize = grid_text(this, m_sizer, m_showhide, m_art, statusInfo,
     showDialog);
-  m_spinButton = grid_spinbutton(this, m_sizer, m_showhide);
+  m_spinButton = grid_spinbutton(this, m_sizer, m_showhide,
+    on_spin_up([this](){
+      auto g = offset_spacing(m_grid.Get(), +1);
+      m_newValue.Set(g.Spacing());
+    }),
+    on_spin_down([this](){
+      auto g = offset_spacing(m_grid.Get(), -1);
+      m_newValue.Set(g.Spacing());
+  }));
+
   m_btnToggle = grid_toggle_button(this, m_sizer, art);
 
   events::on_mouse_right_down(m_txtCurrentSize, [this](const IntPoint&){
@@ -149,18 +161,6 @@ GridCtrl::GridCtrl(wxWindow* parent,
       set_active_grid_spacing(m_grid, m_newValue.Take());
     }
   });
-
-  bind(this, wxEVT_SPIN_UP,
-   [this](){
-      auto g = offset_spacing(m_grid.Get(), +1);
-      m_newValue.Set(g.Spacing());
-   });
-
-  bind(this, wxEVT_SPIN_DOWN,
-    [this](){
-      auto g = offset_spacing(m_grid.Get(), -1);
-      m_newValue.Set(g.Spacing());
-    });
 
   bind_fwd(this, EVT_FAINT_DRAG_VALUE_CHANGE,
     [this](wxCommandEvent& event){
