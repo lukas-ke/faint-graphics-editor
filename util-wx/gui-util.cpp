@@ -39,27 +39,6 @@ void console_message(const utf8_string& text){
   msgOut->Output(to_wx(text));
 }
 
-wxButton* noiseless_button_old(wxWindow* parent, const wxBitmap& bmp,
-  const Tooltip& tooltip, const wxSize& size)
-{
-  wxButton* button = noiseless_button_old(parent, "", tooltip, size);
-  button->SetBitmap(bmp);
-  return button;
-}
-
-wxButton* noiseless_button_old(wxWindow* parent, const utf8_string& label,
-  const Tooltip& tooltip,
-  const wxSize& size)
-{
-  // wxWANTS_CHARS prevents noise on keypress when button has focus
-  wxButton* button = new wxButton(parent, wxID_ANY,
-    to_wx(label), wxDefaultPosition, size,
-    wxWANTS_CHARS);
-  button->SetInitialSize(size);
-  button->SetToolTip(to_wx(tooltip.Get()));
-  return button;
-}
-
 static int show_modal(wxDialog& dlg, AppContext& app){
   // Application::FilterEvent catches keypresses even when
   // dialogs are shown. Using this function for all dialogs

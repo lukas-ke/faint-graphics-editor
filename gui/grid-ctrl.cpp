@@ -25,7 +25,7 @@
 #include "gui/spin-button.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/fwd-bind.hh"
-#include "util-wx/gui-util.hh"
+#include "util-wx/fwd-wx.hh"
 #include "util/grid.hh"
 
 namespace faint{
@@ -106,9 +106,10 @@ wxButton* grid_toggle_button(wxWindow* parent,
   const Art& art)
 {
   // Create the button that enables/disables the grid
-
-  wxButton* button = noiseless_button_old(parent, "", Tooltip(""),
-    wxSize(60,50));
+  wxButton* button = noiseless_button(parent,
+    "",
+    Tooltip(""),
+    IntSize(60,50));
   update_grid_toggle_button(false, button, art);
   sizer->Add(button, 0, wxEXPAND);
   return button;

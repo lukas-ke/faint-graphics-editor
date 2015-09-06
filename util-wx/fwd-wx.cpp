@@ -462,11 +462,10 @@ utf8_string get_text(wxChoice* c){
   return to_faint(c->GetString(c->GetSelection()));
 }
 
-static wxButton* noiseless_button(wxWindow* parent,
+wxButton* noiseless_button(wxWindow* parent,
   const utf8_string& label,
   const Tooltip& tooltip,
-  const IntSize& size,
-  const button_fn& fn)
+  const IntSize& size)
 {
   // wxWANTS_CHARS prevents noise on keypress when button has focus
   wxButton* button = new wxButton(parent, wxID_ANY,
@@ -474,7 +473,17 @@ static wxButton* noiseless_button(wxWindow* parent,
     wxWANTS_CHARS);
   button->SetInitialSize(to_wx(size));
   button->SetToolTip(to_wx(tooltip.Get()));
-  return bind(button, wxEVT_BUTTON, fn);
+  return button;
+}
+
+wxButton* noiseless_button(wxWindow* parent,
+  const utf8_string& label,
+  const Tooltip& tooltip,
+  const IntSize& size,
+  const button_fn& fn)
+{
+  return bind(noiseless_button(parent, label, tooltip, size),
+    wxEVT_BUTTON, fn);
 }
 
 wxButton* noiseless_button(wxWindow* parent,
