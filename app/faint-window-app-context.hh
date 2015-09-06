@@ -193,7 +193,7 @@ private:
   HelpFrame& m_helpFrame;
   FaintWindowInteraction m_interaction;
   InterpreterFrame& m_interpreterFrame;
-  bool m_modalDialog;
+  int m_modalDialog;
   SBInterface m_statusbar;
   Grid m_defaultGrid;
   ResizeDialogOptions m_defaultResizeSettings;

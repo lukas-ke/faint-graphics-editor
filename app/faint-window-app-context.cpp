@@ -407,7 +407,7 @@ FaintWindowContext::FaintWindowContext(FaintWindow& window,
     m_helpFrame(helpFrame),
     m_interaction(m_dialogContext),
     m_interpreterFrame(interpreterFrame),
-    m_modalDialog(false),
+    m_modalDialog(0),
     m_statusbar(statusbar),
     m_tabletCursor(TABLET_CURSOR_PUCK)
 {}
@@ -421,7 +421,7 @@ void FaintWindowContext::AddToPalette(const Paint& paint){
 }
 
 void FaintWindowContext::BeginModalDialog(){
-  m_modalDialog = true;
+  m_modalDialog += 1;
 }
 
 void FaintWindowContext::BeginTextEntry(){
@@ -450,7 +450,8 @@ void FaintWindowContext::DialogSaveAs(Canvas& canvas, bool backup){
 }
 
 void FaintWindowContext::EndModalDialog(){
-  m_modalDialog = false;
+  m_modalDialog -= 1;
+  assert(m_modalDialog >= 0);
 }
 
 void FaintWindowContext::EndTextEntry(){
@@ -611,7 +612,7 @@ void FaintWindowContext::MaximizeInterpreter(){
 }
 
 bool FaintWindowContext::ModalDialogShown() const{
-  return m_modalDialog;
+  return m_modalDialog > 0;
 }
 
 Canvas& FaintWindowContext::NewDocument(const ImageInfo& info){
