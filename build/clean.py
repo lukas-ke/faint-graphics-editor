@@ -27,16 +27,28 @@ root_dir = os.path.split(build_dir)[0]
 sys.path.append(os.path.join(root_dir, "build-sys"))
 import build_sys.gen_method_def as gen_method_def
 
+
+def existing(paths):
+    return [p for p in paths if os.path.exists(p)]
+
+
+def remove_dir_if_empty(d):
+    if len(os.listdir(d)) == 0:
+        os.rmdir(d)
+
+
 def matches_any_ext(filename, extensions):
     for ext in extensions:
         if filename.endswith(ext):
             return True
     return False
 
+
 def erase_matching_files(path, extensions):
     for filename in os.listdir(path):
         if matches_any_ext(filename, extensions):
             os.remove(os.path.join(path, filename))
+
 
 def clean_path(base, levels, extensions):
     assert levels.__class__ == tuple
@@ -46,6 +58,7 @@ def clean_path(base, levels, extensions):
         if os.path.exists(path):
             erase_matching_files(path, extensions)
             os.rmdir(path)
+
 
 def clean_generated(faintDir):
     clean_path(os.path.join(faintDir, 'generated', 'python'),
@@ -99,6 +112,7 @@ def clean_help(faintDir):
         if file.endswith(".html") or file.endswith(".dat"):
             os.remove(os.path.join(helpDir, file))
 
+
 def clean_obj(faintDir):
     jp = os.path.join
     dirs = [
@@ -116,35 +130,40 @@ def clean_obj(faintDir):
         jp(faintDir, "build", "objs-python-ext-debug"),
     ]
 
-    for objDir in dirs:
-        if os.path.exists(objDir):
-            for file in os.listdir(objDir):
-                # Fixme: Tidy up
-                if file.endswith('.o') or file.endswith('.obj') or file.endswith(".res") or file.endswith(".pdb"):
-                    os.remove(os.path.join(objDir, file))
+    def should_remove(f):
+        cleaned_exts = [
+            '.o',
+            '.obj',
+            '.res',
+            '.pdb',]
+        return any([f.endswith(ext) for ext in cleaned_exts])
 
-            if len(os.listdir(objDir)) == 0:
-                os.rmdir(objDir)
-
-    for f in (os.path.join(faintDir, "build", "out.txt"),
-              os.path.join(faintDir, "build", "err.txt")):
-        if os.path.exists(f):
+    def maybe_remove(f):
+        if should_remove(f):
             os.remove(f)
+
+    for obj_dir in existing(dirs):
+        for f in os.listdir(obj_dir):
+            maybe_remove(jp(obj_dir, f))
+        remove_dir_if_empty(obj_dir)
+
+    bd = jp(faintDir, "build")
+    for f in existing((jp(bd, "out.txt"), jp(bd, "err.txt"))):
+        os.remove(f)
 
 
 def clean_exe(faintDir):
     jp = os.path.join
     # Fixme: Windows-centric
     # Fixme: Derive from faint_info.target_*
-    executables = [f for f in (
+    executables = existing([
         jp(faintDir, "faint.exe"),
         jp(faintDir, "faintd.exe"),
         jp(faintDir, "tests", "run-benchmarks.exe"),
         jp(faintDir, "tests", "run-image-tests.exe"),
         jp(faintDir, "tests", "run-unit-tests.exe"),
         jp(faintDir, "tests", "run-gui-tests.exe"),
-        jp(faintDir, "ext", "out", "faint.pyd")
-    ) if os.path.exists(f)]
+        jp(faintDir, "ext", "out", "faint.pyd")])
 
     for f in executables:
         os.remove(f)
