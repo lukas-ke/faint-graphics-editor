@@ -27,10 +27,11 @@ class TestShape(unittest.TestCase):
         self.assertEqual(s1.pos, dst)
         self.assertNotEqual(s2.pos, dst)
 
+
     def test_types(self):
         def check(obj, type_str):
             self.assertEqual(obj.type, type_str)
-
+        ce = faint.create_Ellipse
         r = (0, 0, 100, 100)
         pos = (20, 10)
         size = (10, 10)
@@ -43,12 +44,13 @@ class TestShape(unittest.TestCase):
         check(faint.create_Rect(r), "Rectangle")
         check(faint.create_Spline(points), "Spline")
         check(faint.create_Text(pos, "Hello world"), "Text Region")
-        # Fixme: Add Group
+        check(faint.create_Group(ce(r), ce(r)), "Group")
+
 
     def test_group(self):
-        r = faint.create_Ellipse((0,0,100,100))
-        e = faint.create_Rect((0,20,20,30))
-        g = faint.create_Group(r, e)
+        e = faint.create_Ellipse((0,0,100,100))
+        r = faint.create_Rect((0,20,20,30))
+        g = faint.create_Group(e, r)
         self.assertEqual(g.num_objs(), 2)
         self.assertEqual(g.get_obj(0).type, "Ellipse")
         self.assertEqual(g.get_obj(1).type, "Rectangle")
