@@ -113,7 +113,7 @@ wxButton* grid_toggle_button(wxWindow* parent,
     "",
     Tooltip(""),
     IntSize(60,50));
-  update_grid_toggle_button(false, button, art);
+  update_grid_toggle_button(Grid(), button, art);
   sizer->Add(button, 0, wxEXPAND);
   return button;
 }

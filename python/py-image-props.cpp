@@ -83,9 +83,12 @@ static void frameprops_set_grid(ImageProps& self,
   bool enabled,
   int spacing)
 {
-  Grid g(enabled, spacing, default_grid_color(), anchor);
-  g.SetDashed(dashed);
-  self.SetGrid(g);
+
+  self.SetGrid(Grid(enabled_t(enabled),
+    dashed_t(dashed),
+    spacing,
+    default_grid_color(),
+    anchor));
 }
 
 /* method: "add_warning(s)\n

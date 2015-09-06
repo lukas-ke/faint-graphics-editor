@@ -124,12 +124,12 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
       center(create_row({create_ok_cancel_buttons(dlg.get())}))}));
 
   auto get_grid = [&](){
-    return Grid(get(enabled),
+    return Grid(enabled_t(get(enabled)),
+      dashed_t(get(dashed)),
       to_coord(get_text(editSpacing), grid.Spacing()),
       grid.GetColor(),
-      Point(to_coord(get_text(editX), anchor.x),
-        to_coord(get_text(editY), anchor.y)),
-      get(dashed));
+      Point(to_coord(get_text(editX), anchor.x), to_coord(get_text(editY), anchor.y)));
+
   };
 
   center_over_parent(dlg);

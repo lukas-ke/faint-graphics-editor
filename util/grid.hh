@@ -17,18 +17,23 @@
 #define FAINT_GRID_HH
 #include "bitmap/color.hh"
 #include "geo/point.hh"
+#include "util/distinct.hh"
 
 namespace faint{
 
 Color default_grid_color();
 
+class category_grid;
+using enabled_t = Distinct<bool, category_grid, 0>;
+using dashed_t = Distinct<bool, category_grid, 1>;
+
 class Grid{
 public:
-  Grid(bool enabled=false,
+  explicit Grid(const enabled_t=enabled_t(false),
+    const dashed_t=dashed_t(false),
     int spacing=10,
     const Color=default_grid_color(),
-    const Point anchor=Point(0,0),
-    bool dashed=true);
+    const Point anchor=Point(0,0));
   Point Anchor() const;
   Color GetColor() const;
   bool Enabled() const;
