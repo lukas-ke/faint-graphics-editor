@@ -119,7 +119,7 @@ static auto create_about_dialog(wxWindow* parent){
   auto select_about_tab = [=](){set_selection(tabs, 0);};
   auto select_details_tab = [=](){set_selection(tabs, 1);};
   auto close_dialog = [dlg=dlg.get()](){end_modal_ok(dlg);};
-  set_accelerators(raw(dlg.get()), {
+  set_accelerators(raw(dlg), {
     {key::A, select_about_tab},
     {Alt+key::A, select_about_tab},
     {key::Q, select_about_tab},

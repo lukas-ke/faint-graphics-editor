@@ -87,7 +87,7 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
   };
 
   auto colorLabel = create_label(dlg, "&color");
-  auto colorButton = new StaticBitmap(raw(dlg.get()), make_color_bitmap());
+  auto colorButton = new StaticBitmap(raw(dlg), make_color_bitmap());
   set_size(colorButton, get_size(dashed));
   set_stock_cursor(colorButton, wxCURSOR_HAND);
   set_stock_cursor(colorLabel, wxCURSOR_HAND);
