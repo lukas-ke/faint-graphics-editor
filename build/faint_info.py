@@ -123,7 +123,7 @@ class target_image_test:
 
 
 class target_unit_test:
-    objs_folder_prefix = "objs-test" # Fixme: Change to objs-unit-tests
+    objs_folder_prefix = "objs-unit-test"
     source_folder = "tests/unit-tests"
     executable = "tests/run-unit-tests"
 

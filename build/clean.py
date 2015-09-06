@@ -102,17 +102,16 @@ def clean_help(faintDir):
 def clean_obj(faintDir):
     jp = os.path.join
     dirs = [
-        # Fixme: Simplify over release/debug
+        # Fixme: Simplify over release/debug, and don't duplicate faint_info
         jp(faintDir, "build", "objs-bench-release"),
         jp(faintDir, "build", "objs-debug"),
+        jp(faintDir, "build", "objs-release"),
         jp(faintDir, "build", "objs-image-test-debug"),
         jp(faintDir, "build", "objs-image-test-release"),
-        jp(faintDir, "build", "objs-release"),
-        jp(faintDir, "build", "objs-test-debug"), # Fixme: Rename to objs-unit-test
-        jp(faintDir, "build", "objs-test-release"),
-        jp(faintDir, "build", "objs-test-debug"),
-        jp(faintDir, "build", "objs-gui-test-release"),
+        jp(faintDir, "build", "objs-unit-test-debug"),
+        jp(faintDir, "build", "objs-unit-test-release"),
         jp(faintDir, "build", "objs-gui-test-debug"),
+        jp(faintDir, "build", "objs-gui-test-release"),
         jp(faintDir, "build", "objs-python-ext-release"),
         jp(faintDir, "build", "objs-python-ext-debug"),
     ]
