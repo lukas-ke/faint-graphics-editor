@@ -21,6 +21,7 @@
 #include "wx/statusbr.h"
 #include "wx/sizer.h"
 #include "app/active-canvas.hh"
+#include "app/context-grid-dialog.hh"
 #include "app/faint-frame-context.hh"
 #include "app/faint-window-app-context.hh"
 #include "app/faint-tool-actions.hh"
@@ -247,16 +248,7 @@ static void initialize_panels(wxFrame& frame,
 
 
   auto showGridDialog = [&](){
-    auto& canvas = app.GetActiveCanvas();
-
-    auto result = show_grid_dialog(nullptr,
-      canvas.GetGrid(),
-      app.GetDialogContext());
-
-    result.Visit([&](const Grid& grid){
-        canvas.SetGrid(grid);
-        canvas.Refresh();
-      });
+    context_show_grid_dialog(app.GetActiveCanvas(), app.GetDialogContext());
   };
 
   auto getBg = [&](){

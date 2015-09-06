@@ -20,6 +20,7 @@
 #include "wx/menu.h"
 #include "app/canvas.hh"
 #include "app/context-commands.hh"
+#include "app/context-grid-dialog.hh"
 #include "app/cut-and-paste.hh"
 #include "app/faint-resize-dialog-context.hh"
 #include "app/app-getter-util.hh"
@@ -540,6 +541,12 @@ public:
       Label("&Resize...\tCtrl+E", "Scale or resize the image or selection"),
       [&](){
         show_resize_dialog(app, art);
+      });
+
+    Add(imageMenu,
+      Label("&Grid...", "Customize the grid"),
+      [&](){
+        context_show_grid_dialog(app.GetActiveCanvas(), app.GetDialogContext());
       });
 
     imageMenu->AppendSeparator();
