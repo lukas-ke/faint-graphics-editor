@@ -17,6 +17,7 @@
 #define FAINT_PRIMITIVE_HH
 #include <cstddef>
 #include <limits>
+
 namespace faint{
 
 using coord = double;

@@ -27,7 +27,8 @@ public:
   Grid(bool enabled=false,
     int spacing=10,
     const Color=default_grid_color(),
-    const Point anchor=Point(0,0));
+    const Point anchor=Point(0,0),
+    bool dashed=true);
   Point Anchor() const;
   Color GetColor() const;
   bool Enabled() const;

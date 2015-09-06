@@ -20,6 +20,7 @@
 #include "bitmap/color.hh"
 #include "geo/int-point.hh"
 #include "geo/int-size.hh"
+#include "text/formatting.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-wx.hh"
@@ -618,6 +619,19 @@ void draw_line(wxDC& dc, const IntPoint& p0, const IntPoint& p1){
 void set_number_text(wxTextCtrl* ctrl, int value, Signal signal){
   wxString s;
   s << value;
+  if (signal == Signal::YES){
+    ctrl->SetValue(s);
+  }
+  else{
+    ctrl->ChangeValue(s);
+  }
+}
+
+void set_number_text(wxTextCtrl* ctrl, coord value,
+  const Precision& precision,
+  Signal signal)
+{
+  wxString s = to_wx(str(value, precision));
   if (signal == Signal::YES){
     ctrl->SetValue(s);
   }

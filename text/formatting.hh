@@ -17,31 +17,13 @@
 #define FAINT_FORMATTING_HH
 #include <functional>
 #include <vector>
+#include "text/precision.hh"
 #include "text/utf8-string.hh"
 #include "util/common-fwd.hh"
 #include "util/template-fwd.hh"
 #include "util/distinct.hh"
 
 namespace faint{
-
-class Precision{
-public:
-  explicit constexpr Precision(int decimals) : m_decimals(decimals)
-  {}
-
-  Precision(float) = delete;
-
-  operator int() const{
-    return m_decimals;
-  }
-
-private:
-  int m_decimals;
-};
-
-inline Precision operator "" _dec(unsigned long long decimals){
-  return Precision(static_cast<int>(decimals));
-}
 
 utf8_string bracketed(const utf8_string&);
 utf8_string capitalized(const utf8_string&);

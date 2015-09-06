@@ -17,7 +17,9 @@
 #define FAINT_FWD_WX_HH
 #include <functional>
 #include <vector>
+#include "geo/primitive.hh"
 #include "gui/gui-string-types.hh"
+#include "text/precision.hh"
 #include "util-wx/window-types-wx.hh"
 #include "util/distinct.hh"
 
@@ -233,9 +235,15 @@ public:
   int subrelease_number;
 };
 
-enum class Signal{YES, NO};
+
+enum class Signal{
+  // Whether a value change should trigger an event or not
+  YES, NO
+};
 
 void set_number_text(wxTextCtrl*, int value, Signal);
+void set_number_text(wxTextCtrl*, coord value, Signal) = delete;
+void set_number_text(wxTextCtrl*, coord value, const Precision&, Signal);
 
 void append_text(wxTextCtrl*, const utf8_string&);
 bool is_empty(wxTextCtrl*);

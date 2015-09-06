@@ -13,7 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include <string> // std::stoi
+#include <string> // std::stod
 #include "bitmap/bitmap.hh"
 #include "geo/geo-func.hh" // floated
 #include "geo/int-point.hh"
@@ -29,9 +29,9 @@
 
 namespace faint{
 
-static int to_int(const utf8_string& s, int defaultValue){
+static coord to_coord(const utf8_string& s, coord defaultValue){
   try{
-    return std::stoi(s.c_str());
+    return std::stod(s.c_str());
   }
   catch (const std::exception&){
     return defaultValue;
@@ -45,10 +45,10 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
   Grid grid = oldGrid;
   auto dlg = fixed_size_dialog(parent, "Grid");
 
-  auto make_edit = [&](int value){
+  auto make_edit = [&](coord value){
     auto edit = create_text_control(dlg.get(), "");
     fit_size_to(edit, "10000");
-    set_number_text(edit, value, Signal::NO);
+    set_number_text(edit, value, 2_dec, Signal::NO);
     return edit;
   };
 
@@ -57,7 +57,7 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
   auto editSpacing = make_edit(grid.Spacing());
 
   // Anchor edit fields
-  auto anchor = rounded(grid.Anchor()); // Fixme: Rounded, eh?
+  Point anchor = grid.Anchor();
 
   auto labelX = create_label(dlg, "&X", TextAlign::RIGHT);
   make_uniformly_sized({labelSpacing, labelX});
@@ -103,13 +103,12 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
       center(create_row({create_ok_cancel_buttons(dlg.get())}))}));
 
   auto get_grid = [&](){
-    auto g = Grid(true,
-      to_int(get_text(editSpacing), grid.Spacing()),
+    return Grid(true, // Enabled
+      to_coord(get_text(editSpacing), grid.Spacing()),
       grid.GetColor(),
-      floated(IntPoint(to_int(get_text(editX), anchor.x),
-        to_int(get_text(editY), anchor.y))));
-    g.SetDashed(get(dashed));
-    return g;
+      Point(to_coord(get_text(editX), anchor.x),
+        to_coord(get_text(editY), anchor.y)),
+      get(dashed));
   };
 
   center_over_parent(dlg);
