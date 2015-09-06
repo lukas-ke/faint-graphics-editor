@@ -68,8 +68,11 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
   auto labelY = create_label(dlg.get(), "&Y");
   auto editY = make_edit(anchor.y);
 
+  // Enabled-checkbox
+  auto enabled = create_checkbox(dlg, "&enabled", grid.Enabled());
+
   // Dashes-checkbox
-  auto dashed = create_checkbox(dlg, "&dashed lines", grid.Dashed());
+  auto dashed = create_checkbox(dlg, "&dashes", grid.Dashed());
 
   using namespace layout;
   auto spacingRow = create_row(OuterSpacing(0), ui::item_spacing,
@@ -113,6 +116,7 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
 
   set_sizer(dlg.get(),
     create_column({
+      create_row({raw(enabled)}),
       spacingRow,
       anchorRow,
       create_row({raw(dashed)}),
@@ -120,7 +124,7 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
       center(create_row({create_ok_cancel_buttons(dlg.get())}))}));
 
   auto get_grid = [&](){
-    return Grid(true, // Enabled
+    return Grid(get(enabled),
       to_coord(get_text(editSpacing), grid.Spacing()),
       grid.GetColor(),
       Point(to_coord(get_text(editX), anchor.x),
