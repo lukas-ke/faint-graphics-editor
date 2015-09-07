@@ -18,14 +18,13 @@
 #include "app/app-context.hh"
 #include "app/faint-common-cursors.hh"
 #include "app/faint-slider-cursors.hh"
-#include "gui/canvas-panel.hh" // Fixme
 #include "gui/command-window.hh"
-#include "gui/dialogs/resize-dialog-options.hh" // Fixme: impl
-#include "gui/transparency-style.hh" // Fixme: impl
+#include "gui/dialogs/resize-dialog-options.hh"
+#include "gui/transparency-style.hh"
 #include "tools/tool.hh"
-#include "util/bound-setting.hh" // Fixme: For BoundSetting
-#include "util/dumb-ptr.hh" // Fixme: impl
-#include "util/grid.hh" // Fixme: impl
+#include "util/bound-setting.hh" // Fixme: For BoundSetting (change_setting)
+#include "util/dumb-ptr.hh"
+#include "util/grid.hh"
 
 class wxStatusBar;
 
