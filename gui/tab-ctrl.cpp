@@ -144,10 +144,9 @@ public:
         event.Skip();
       });
 
-    bind_fwd(this, EVT_FAINT_CANVAS_CHANGE,
-      [&](CanvasChangeEvent& event){
-        RefreshTabName(event.GetCanvasId());
-        event.Skip();
+    events::on_canvas_modified_skip(this,
+      [&](CanvasId canvasId){
+        RefreshTabName(canvasId);
       });
   }
 

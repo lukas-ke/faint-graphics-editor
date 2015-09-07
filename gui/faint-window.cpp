@@ -564,10 +564,10 @@ FaintWindow::FaintWindow(Art& art,
       app.Set(ts_Bg, oldFg);
     });
 
-  bind_fwd(frame, EVT_FAINT_GRID_CHANGE,
-    [this](CanvasChangeEvent& e){
+  events::on_grid_modified(frame,
+    [this](CanvasId canvasId){
       auto& panels(*m_impl->panels);
-      if (e.GetCanvasId() == get_active_canvas(panels).GetId()){
+      if (canvasId == get_active_canvas(panels).GetId()){
         panels.color->UpdateGrid();
       }
     });
@@ -600,19 +600,19 @@ FaintWindow::FaintWindow(Art& art,
       m_impl->GetDialogContext().Reinitialize();
     });
 
-  bind_fwd(frame, EVT_FAINT_CANVAS_CHANGE,
-    [this](CanvasChangeEvent& e){
+  events::on_canvas_modified(frame,
+    [this](CanvasId canvasId){
       auto& panels(*m_impl->panels);
       auto& state(*m_impl->state);
-      update_canvas_state(e.GetCanvasId(), panels, state);
+      update_canvas_state(canvasId, panels, state);
       update_shown_settings(state, panels);
       m_impl->GetDialogContext().Reinitialize();
     });
 
-  bind_fwd(frame, EVT_FAINT_ZOOM_CHANGE,
-    [this](CanvasChangeEvent& e){
+  events::on_zoom_modified(frame,
+    [this](CanvasId canvasId){
       auto& panels(*m_impl->panels);
-      if (e.GetCanvasId() == get_active_canvas(panels).GetId()){
+      if (canvasId == get_active_canvas(panels).GetId()){
         update_zoom(panels);
       }
     });

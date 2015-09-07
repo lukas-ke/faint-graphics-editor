@@ -18,7 +18,6 @@
 #include "wx/panel.h"
 #include "app/canvas.hh"
 #include "geo/int-rect.hh"
-#include "gui/canvas-change-event.hh"
 #include "gui/canvas-panel-contexts.hh"
 #include "gui/canvas-state.hh"
 #include "gui/menu-predicate.hh"
@@ -26,6 +25,7 @@
 #include "tools/tool.hh"
 #include "tools/tool-wrapper.hh"
 #include "util-wx/file-path.hh"
+#include "util-wx/window-types-wx.hh"
 #include "util/command-history.hh"
 #include "util/distinct.hh"
 #include "util/grid.hh"
@@ -43,11 +43,6 @@ class ToolModifiers;
 
 enum class PreemptResult{ NONE, COMMIT, CANCEL };
 enum class PreemptOption{ ALLOW_COMMAND, DISCARD_COMMAND };
-
-using CanvasChangeTag = const wxEventTypeTag<CanvasChangeEvent>;
-extern CanvasChangeTag EVT_FAINT_CANVAS_CHANGE;
-extern CanvasChangeTag EVT_FAINT_GRID_CHANGE;
-extern CanvasChangeTag EVT_FAINT_ZOOM_CHANGE;
 
 class category_canvas_panel;
 using initially_dirty = Distinct<bool, category_canvas_panel, 1>;
@@ -219,5 +214,17 @@ private:
 };
 
 } // namespace
+
+namespace faint{ namespace events{
+
+using canvas_id_fn = const std::function<void(CanvasId)>&;
+
+void on_canvas_modified(window_t, canvas_id_fn);
+void on_canvas_modified_skip(window_t, canvas_id_fn);
+
+void on_grid_modified(window_t, canvas_id_fn);
+void on_zoom_modified(window_t, canvas_id_fn);
+
+}}
 
 #endif

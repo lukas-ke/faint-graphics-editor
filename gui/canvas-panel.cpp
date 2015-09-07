@@ -23,6 +23,7 @@
 #include "geo/scale.hh"
 #include "geo/size.hh"
 #include "gui/art.hh"
+#include "gui/canvas-change-event.hh"
 #include "gui/canvas-panel.hh"
 #include "gui/canvas-panel-contexts.hh"
 #include "rendering/paint-canvas.hh"
@@ -43,6 +44,10 @@ namespace faint{
 
 const ColRGB g_canvasBg(160, 140, 160);
 const int g_lineSize = 10;
+
+using CanvasChangeTag = const wxEventTypeTag<CanvasChangeEvent>;
+extern CanvasChangeTag EVT_FAINT_GRID_CHANGE;
+extern CanvasChangeTag EVT_FAINT_ZOOM_CHANGE;
 
 const wxEventType FAINT_CANVAS_CHANGE = wxNewEventType();
 CanvasChangeTag EVT_FAINT_CANVAS_CHANGE(FAINT_CANVAS_CHANGE);
@@ -1164,3 +1169,42 @@ bool CanvasPanel::HandleToolResult(ToolResult ref){
 }
 
 } // namespace
+
+namespace faint{ namespace events{
+
+static void on_canvas_modified(window_t w,
+  const std::function<void(CanvasId)>& f,
+  bool skip)
+{
+  bind_fwd(w.w, EVT_FAINT_CANVAS_CHANGE,
+    [f, skip](CanvasChangeEvent& e){
+      f(e.GetCanvasId());
+      if (skip){
+        e.Skip();
+      }
+    });
+}
+
+void on_canvas_modified(window_t w, const std::function<void(CanvasId)>& f){
+  on_canvas_modified(w, f, false);
+}
+
+void on_canvas_modified_skip(window_t w, const std::function<void(CanvasId)>& f){
+  on_canvas_modified(w, f, true);
+}
+
+void on_grid_modified(window_t w, canvas_id_fn f){
+  bind_fwd(w.w, EVT_FAINT_GRID_CHANGE,
+    [f](CanvasChangeEvent& e){
+      f(e.GetCanvasId());
+    });
+}
+
+void on_zoom_modified(window_t w, canvas_id_fn f){
+  bind_fwd(w.w, EVT_FAINT_ZOOM_CHANGE,
+    [f](CanvasChangeEvent& e){
+      f(e.GetCanvasId());
+    });
+}
+
+}} // namespace
