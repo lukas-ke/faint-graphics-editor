@@ -177,13 +177,14 @@ public:
   void ShowStatusbar(bool show) override;
   void ShowToolPanel(bool show) override;
   int TabletGetCursor() override;
+
   // Note: Not an override, used directly by FaintWindow
   void TabletSetCursor(int tabletCursor);
+
   void ToggleFullScreen(bool) override;
   void ToggleMaximize() override;
   void UpdateShownSettings() override;
   void UpdateToolSettings(const Settings&) override;
-  bool FloatingWindowFocused() const; // Non-virtual <- Fixme: remove
   void SetTabCtrl(TabCtrl*); // Non virtual
 
 private:

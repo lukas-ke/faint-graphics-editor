@@ -463,7 +463,12 @@ bool FaintWindowContext::Exists(const CanvasId& id){
 }
 
 bool FaintWindowContext::FaintWindowFocused() const{
-  return !(ModalDialogShown() || FloatingWindowFocused());
+  const bool otherFocused =
+    ModalDialogShown() ||
+    m_helpFrame.HasFocus() ||
+    m_interpreterFrame.HasFocus();
+
+  return !otherFocused;
 }
 
 BoolSetting::ValueType FaintWindowContext::Get(const BoolSetting& s){
@@ -787,12 +792,6 @@ void FaintWindowContext::UpdateShownSettings(){
 
 void FaintWindowContext::UpdateToolSettings(const Settings& s){
   m_faintWindow.UpdateToolSettings(s);
-}
-
-bool FaintWindowContext::FloatingWindowFocused() const{
-  // Non-virtual // Fixme: remove this method
-  return m_helpFrame.HasFocus() ||
-    m_interpreterFrame.HasFocus();
 }
 
 void FaintWindowContext::SetTabCtrl(TabCtrl* tabControl){ // Non virtual

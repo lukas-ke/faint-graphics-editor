@@ -761,8 +761,7 @@ bool FaintWindow::Exists(const CanvasId& id) const{
 }
 
 bool FaintWindow::Focused() const{
-  // Fixme: Can probably be done here, without appContext.
-  return m_impl->appContext.FaintWindowFocused();
+   return m_impl->appContext.FaintWindowFocused();
 }
 
 void FaintWindow::FullScreen(bool enable){
