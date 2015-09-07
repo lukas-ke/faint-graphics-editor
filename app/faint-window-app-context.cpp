@@ -16,25 +16,20 @@
 #include <memory>
 #include "wx/frame.h"
 #include "wx/statusbr.h"
-#include "app/app-context.hh"
-#include "app/context-commands.hh"
+#include "app/context-commands.hh" // For context_targetted
 #include "app/faint-window-app-context.hh"
 #include "bitmap/draw.hh"
-#include "gui/command-window.hh"
-#include "gui/dialogs/resize-dialog-options.hh"
+#include "gui/art.hh"
 #include "gui/faint-window.hh"
 #include "gui/help-frame.hh"
 #include "gui/interpreter-frame.hh"
 #include "gui/tab-ctrl.hh" // Fixme: Remove
-#include "gui/art.hh"
-#include "gui/transparency-style.hh"
 #include "rendering/extra-overlay.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-format-util.hh"
 #include "util-wx/gui-util.hh"
-#include "util/bound-setting.hh"
-#include "util/image.hh"
 #include "util/image-props.hh"
+#include "util/image.hh"
 #include "util/pos-info-constants.hh"
 #include "util/visit-selection.hh"
 
