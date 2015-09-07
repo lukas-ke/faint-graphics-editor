@@ -690,8 +690,8 @@ FaintWindow::FaintWindow(Art& art,
 
   bind_fwd(toolPanel,EVT_FAINT_SettingsChange,
     [this](const SettingsEvent& e){
-      // Note that m_fromCtrl is not used when changing multiple
-      // settings. This is because font dialog can change the font
+      // Note that from_control(...) is not used when changing multiple
+      // settings. This is because the font dialog can change the font
       // size, which is also shown in another control which must be
       // updated, so there's no point in trying to not refresh controls.
       change_settings(*this, e.GetSettings());
