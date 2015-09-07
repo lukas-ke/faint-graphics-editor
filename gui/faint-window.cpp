@@ -564,14 +564,6 @@ FaintWindow::FaintWindow(Art& art,
       app.Set(ts_Bg, oldFg);
     });
 
-  events::on_grid_modified(frame,
-    [this](CanvasId canvasId){
-      auto& panels(*m_impl->panels);
-      if (canvasId == get_active_canvas(panels).GetId()){
-        panels.color->UpdateGrid();
-      }
-    });
-
   bind(frame, EVT_FAINT_SetFocusEntryControl,
     [this](){
       if (m_impl->state->textEntryCount == 0){
@@ -588,6 +580,23 @@ FaintWindow::FaintWindow(Art& art,
       EndTextEntry();
     });
 
+  events::on_canvas_modified_final(frame,
+    [this](CanvasId canvasId){
+      auto& panels(*m_impl->panels);
+      auto& state(*m_impl->state);
+      update_canvas_state(canvasId, panels, state);
+      update_shown_settings(state, panels);
+      m_impl->GetDialogContext().Reinitialize();
+    });
+
+  events::on_grid_modified(frame,
+    [this](CanvasId canvasId){
+      auto& panels(*m_impl->panels);
+      if (canvasId == get_active_canvas(panels).GetId()){
+        panels.color->UpdateGrid();
+      }
+    });
+
   events::on_switch_canvas(frame,
     [this](CanvasId canvasId){
       auto& panels(*m_impl->panels);
@@ -596,15 +605,6 @@ FaintWindow::FaintWindow(Art& art,
       panels.color->UpdateGrid();
       update_canvas_state(canvasId, panels, state);
       state.activeTool->SelectionChange();
-      update_shown_settings(state, panels);
-      m_impl->GetDialogContext().Reinitialize();
-    });
-
-  events::on_canvas_modified_final(frame,
-    [this](CanvasId canvasId){
-      auto& panels(*m_impl->panels);
-      auto& state(*m_impl->state);
-      update_canvas_state(canvasId, panels, state);
       update_shown_settings(state, panels);
       m_impl->GetDialogContext().Reinitialize();
     });
@@ -708,8 +708,8 @@ FaintWindow::FaintWindow(Art& art,
 }
 
 FaintWindow::~FaintWindow(){
-  // This destructor must be defined or unique_ptr to forward-declared
-  // FaintWindowImpl won't compile.
+  // This destructor must be defined otherwise unique_ptr to
+  // forward-declared FaintWindowImpl won't compile.
 }
 
 void FaintWindow::AddFormat(Format* f){
