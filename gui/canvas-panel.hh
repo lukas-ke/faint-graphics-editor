@@ -219,12 +219,19 @@ namespace faint{ namespace events{
 
 using canvas_id_fn = const std::function<void(CanvasId)>&;
 
+// Handler function called when the Canvas is modified.
 void on_canvas_modified(window_t, canvas_id_fn);
+
+// Same as on_canvas_modified, but skips the event so that later
+// event-handlers may handle it.
 void on_canvas_modified_skip(window_t, canvas_id_fn);
 
+// Called when the grid settings have changed for a canvas
 void on_grid_modified(window_t, canvas_id_fn);
+
+// Called when the zoom has changed for a canvas
 void on_zoom_modified(window_t, canvas_id_fn);
 
-}}
+}} // namespace
 
 #endif

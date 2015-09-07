@@ -1172,11 +1172,12 @@ bool CanvasPanel::HandleToolResult(ToolResult ref){
 
 namespace faint{ namespace events{
 
-static void on_canvas_modified(window_t w,
+static void on_canvas_event(wxWindow* w,
+  const CanvasChangeTag& tag,
   const std::function<void(CanvasId)>& f,
   bool skip)
 {
-  bind_fwd(w.w, EVT_FAINT_CANVAS_CHANGE,
+  bind_fwd(w, tag,
     [f, skip](CanvasChangeEvent& e){
       f(e.GetCanvasId());
       if (skip){
@@ -1186,25 +1187,19 @@ static void on_canvas_modified(window_t w,
 }
 
 void on_canvas_modified(window_t w, const std::function<void(CanvasId)>& f){
-  on_canvas_modified(w, f, false);
+  on_canvas_event(w.w, EVT_FAINT_CANVAS_CHANGE, f, false);
 }
 
 void on_canvas_modified_skip(window_t w, const std::function<void(CanvasId)>& f){
-  on_canvas_modified(w, f, true);
+  on_canvas_event(w.w, EVT_FAINT_CANVAS_CHANGE, f, true);
 }
 
 void on_grid_modified(window_t w, canvas_id_fn f){
-  bind_fwd(w.w, EVT_FAINT_GRID_CHANGE,
-    [f](CanvasChangeEvent& e){
-      f(e.GetCanvasId());
-    });
+  on_canvas_event(w.w, EVT_FAINT_GRID_CHANGE, f, false);
 }
 
 void on_zoom_modified(window_t w, canvas_id_fn f){
-  bind_fwd(w.w, EVT_FAINT_ZOOM_CHANGE,
-    [f](CanvasChangeEvent& e){
-      f(e.GetCanvasId());
-    });
+  on_canvas_event(w.w, EVT_FAINT_ZOOM_CHANGE, f, false);
 }
 
 }} // namespace
