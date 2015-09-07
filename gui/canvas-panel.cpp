@@ -1174,7 +1174,7 @@ namespace faint{ namespace events{
 
 static void on_canvas_event(wxWindow* w,
   const CanvasChangeTag& tag,
-  const std::function<void(CanvasId)>& f,
+  canvas_id_fn f,
   bool skip)
 {
   bind_fwd(w, tag,
@@ -1186,11 +1186,11 @@ static void on_canvas_event(wxWindow* w,
     });
 }
 
-void on_canvas_modified(window_t w, const std::function<void(CanvasId)>& f){
+void on_canvas_modified_final(window_t w, canvas_id_fn f){
   on_canvas_event(w.w, EVT_FAINT_CANVAS_CHANGE, f, false);
 }
 
-void on_canvas_modified_skip(window_t w, const std::function<void(CanvasId)>& f){
+void on_canvas_modified_skip(window_t w, canvas_id_fn f){
   on_canvas_event(w.w, EVT_FAINT_CANVAS_CHANGE, f, true);
 }
 

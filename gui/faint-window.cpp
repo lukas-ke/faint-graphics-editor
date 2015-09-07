@@ -600,7 +600,7 @@ FaintWindow::FaintWindow(Art& art,
       m_impl->GetDialogContext().Reinitialize();
     });
 
-  events::on_canvas_modified(frame,
+  events::on_canvas_modified_final(frame,
     [this](CanvasId canvasId){
       auto& panels(*m_impl->panels);
       auto& state(*m_impl->state);
