@@ -21,7 +21,6 @@
 #include "gui/canvas-panel.hh" // Fixme
 #include "gui/command-window.hh"
 #include "gui/dialogs/resize-dialog-options.hh" // Fixme: impl
-#include "gui/faint-window.hh" // Fixme: Consider forward declaration
 #include "gui/transparency-style.hh" // Fixme: impl
 #include "tools/tool.hh"
 #include "util/bound-setting.hh" // Fixme: For BoundSetting
