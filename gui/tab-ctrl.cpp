@@ -339,3 +339,14 @@ bool TabCtrl::UnsavedDocuments() const{
 }
 
 } // namespace
+
+namespace faint{ namespace events{
+
+void on_switch_canvas(window_t w, const std::function<void(CanvasId)>& f){
+  bind_fwd(w.w, EVT_FAINT_ACTIVE_CANVAS_CHANGE,
+    [f](CanvasChangeEvent& e){
+      f(e.GetCanvasId());
+    });
+}
+
+}}

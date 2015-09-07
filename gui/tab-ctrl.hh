@@ -15,7 +15,7 @@
 
 #ifndef FAINT_TAB_CTRL_HH
 #define FAINT_TAB_CTRL_HH
-#include "wx/event.h" // Fixme: Hide in impl? (events::on...)
+#include "util-wx/window-types-wx.hh"
 #include "app/app-context.hh"
 #include "gui/canvas-panel.hh" // Fixme: For initially_dirty
 
@@ -24,8 +24,6 @@ namespace faint{
 class Art;
 class CanvasChangeEvent;
 class CanvasPanel;
-
-extern const wxEventTypeTag<CanvasChangeEvent> EVT_FAINT_ACTIVE_CANVAS_CHANGE;
 
 class TabCtrlImpl;
 
@@ -60,5 +58,11 @@ private:
 };
 
 } // namespace
+
+namespace faint{ namespace events{
+
+void on_switch_canvas(window_t, const std::function<void(CanvasId)>&);
+
+}}
 
 #endif

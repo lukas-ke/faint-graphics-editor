@@ -588,13 +588,13 @@ FaintWindow::FaintWindow(Art& art,
       EndTextEntry();
     });
 
-  bind_fwd(frame, EVT_FAINT_ACTIVE_CANVAS_CHANGE,
-    [this](CanvasChangeEvent& e){
+  events::on_switch_canvas(frame,
+    [this](CanvasId canvasId){
       auto& panels(*m_impl->panels);
       auto& state(*m_impl->state);
       update_zoom(panels);
       panels.color->UpdateGrid();
-      update_canvas_state(e.GetCanvasId(), panels, state);
+      update_canvas_state(canvasId, panels, state);
       state.activeTool->SelectionChange();
       update_shown_settings(state, panels);
       m_impl->GetDialogContext().Reinitialize();
