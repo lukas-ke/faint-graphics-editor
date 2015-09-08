@@ -76,9 +76,9 @@ def load_dot_string(txt, image_props):
     _run_dot(cmd, image_props, graph_input=txt)
 
 
-def init_dot_format():
+def init_dot_format(app):
     """Adds a format for opening GraphViz dot-files. Requires that the
     dot-application is available on the path.
 
     """
-    faint.add_format(load_dot, None, "GraphViz dot", "dot")
+    app.add_format(load_dot, None, "GraphViz dot", "dot")

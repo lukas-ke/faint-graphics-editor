@@ -101,6 +101,24 @@ def snowman():
     return faint.Text((20,20,100,100), '\u2603', s)
 
 
+def scroll_traverse():
+    """Scrolls through the image column by column, using
+    scroll_page_down and scroll_page_right, eventually wrapping back
+    to 0,0"""
+
+    active = faint.get_active_image()
+    max = active.get_max_scroll()
+    current = active.get_scroll_pos()
+    if current[1] >= max[1]:
+        if current[0] >= max[0]:
+            active.set_scroll_pos(0,0)
+        else:
+            active.set_scroll_pos(current[0], 0)
+            active.scroll_page_right()
+    else:
+        active.scroll_page_down()
+
+
 def _open_relative(image, replace, get_new_index):
     if image is None:
         image = faint.get_active_image()

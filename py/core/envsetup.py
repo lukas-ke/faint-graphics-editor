@@ -19,6 +19,7 @@ import sys
 from code import InteractiveConsole
 import copy
 import ifaint
+import faint.util
 import os
 import __main__
 
@@ -249,7 +250,6 @@ def printDoc(docstr, indent):
 
 def special_char(keycode):
     return not (40 < keycode < 150)
-
 
 mod = ifaint.mod
 key = ifaint.key
@@ -556,25 +556,13 @@ bindk(key.arrow_up, NamedFunc("Offset Up",
 bindk(key.arrow_down, NamedFunc("Offset Down",
     lambda: ifaint.context_offset(0,1)))
 
-def _scroll_traverse():
-    """Scrolls through the image column by column, using
-    scroll_page_down and scroll_page_right, eventually wrapping back
-    to 0,0"""
-
-    active = ifaint.get_active_image()
-    max = active.get_max_scroll()
-    current = active.get_scroll_pos()
-    if current[1] >= max[1]:
-        if current[0] >= max[0]:
-            active.set_scroll_pos(0,0)
-        else:
-            active.set_scroll_pos(current[0], 0)
-            active.scroll_page_right()
+def select_or_traverse():
+    if ifaint.get_layer() == 1:
+        ifaint.select_top_object()
     else:
-        active.scroll_page_down()
-ifaint.scroll_traverse = _scroll_traverse
+        faint.util.scroll_traverse()
 
-bindk(key.space, NamedFunc("Select or Traverse", lambda: (ifaint.select_top_object() if ifaint.get_layer() == 1 else ifaint.scroll_traverse())))
+bindk(key.space, NamedFunc("Select or Traverse", select_or_traverse))
 
 try:
     import faint.formatsvg as formatsvg
@@ -613,10 +601,17 @@ def _list_frames():
     return ifaint.get_active_image().get_frames()
 ifaint.list_frames = _list_frames
 
-ifaint.frames = ContextList(ifaint.list_frames, "A list of frames in the active image.")
-ifaint.images = ContextList(ifaint.list_images, "A list of all opened images.")
-ifaint.objects = ContextList(ifaint.get_objects, "A list of all objects in the active image.")
-ifaint.selected = ContextList(ifaint.get_selected, "A list of all selected objects in the active image.")
+ifaint.frames = ContextList(ifaint.list_frames,
+    "A list of frames in the active image.")
+
+ifaint.images = ContextList(ifaint.list_images,
+    "A list of all opened images.")
+
+ifaint.objects = ContextList(ifaint.get_objects,
+    "A list of all objects in the active image.")
+
+ifaint.selected = ContextList(ifaint.get_selected,
+    "A list of all selected objects in the active image.")
 
 def help_class(c):
     print(c.__name__ + ":")
@@ -677,11 +672,9 @@ bindk(key.arrow_left, NamedFunc("Select next object left",
     lambda: select(obj_rel.next_left(selected[0]))),
     mod.shift)
 
-
 bindk(key.arrow_right, NamedFunc("Select next object right",
     lambda: select(obj_rel.next_right(selected[0]))),
     mod.shift)
-
 
 bindk(key.arrow_up, NamedFunc("Select next behind",
     lambda: select(obj_rel.next_behind(selected[0]))),
@@ -697,7 +690,6 @@ def _select_next_front():
 
 bindk(key.arrow_down, _select_next_front, mod.alt)
 
-import faint.util
 bindk(key.delete, faint.util.erase_selection, mod.ctrl)
 
 import faint.anchor
@@ -705,7 +697,6 @@ bindc('n', faint.anchor.toggle_flag_pixel)
 
 import faint.browse_to_file
 bindc('e', faint.browse_to_file.browse_to_active_file)
-
 
 # Make all of ifaint (Faint built-ins) available for the user config script
 # and interpreter.
