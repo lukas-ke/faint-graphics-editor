@@ -100,6 +100,7 @@ def snowman():
 
     return faint.Text((20,20,100,100), '\u2603', s)
 
+
 def _open_relative(image, replace, get_new_index):
     if image is None:
         image = faint.get_active_image()
@@ -120,6 +121,7 @@ def _open_relative(image, replace, get_new_index):
 
 def open_next(image=None, replace=False):
     _open_relative(image, replace, lambda i: i + 1)
+
 
 def open_prev(image=None, replace=False):
     _open_relative(image, replace, lambda i: i - 1)
