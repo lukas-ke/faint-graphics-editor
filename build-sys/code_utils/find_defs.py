@@ -18,6 +18,7 @@
 import os
 from core import enumerate_files, get_root_dir
 import re
+import sys
 
 EXTENSIONS = [
     ".cpp",
@@ -51,7 +52,8 @@ def format_def_content(text):
     return "\n".join(format_def_line(l) for l in text.split("\n"))
 
 if __name__ == '__main__':
-    root_dir = get_root_dir()
+    root_dir = sys.argv[1]
+    out_file = sys.argv[2]
 
     defs_pattern = re.compile(r"\\def\((.*?)\)(.*?);", re.DOTALL|re.MULTILINE)
     refs_pattern = re.compile(r"\\ref\((.*?)\)")
@@ -101,4 +103,4 @@ if __name__ == '__main__':
         if name not in defs.keys():
             print("Invalid reference: %s %s" % (name, refs[name][0]))
 
-    write_defs_summary("defs-summary.txt", defs)
+    write_defs_summary(out_file, defs)

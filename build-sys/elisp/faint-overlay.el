@@ -22,7 +22,10 @@
 
 (defun faint-generate-defs ()
   (interactive)
-  (compile (concat (faint-code-utils-dir) "find_defs.py")))
+  (compile (concat (faint-code-utils-dir) "find_defs.py "
+                   faint-root
+                   " "
+                   (faint-defs-file-name))))
 
 
 (defun faint-load-defs ()
