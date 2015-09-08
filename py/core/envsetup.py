@@ -356,49 +356,6 @@ ifaint.toggle_selection_type = _toggle_selection_type
 ifaint.raster_layer = NamedFunc("raster_layer", lambda: ifaint.set_layer(0))
 ifaint.object_layer = NamedFunc("object_layer", lambda: ifaint.set_layer(1))
 
-# Function used for producing the arguments for subprocess.Popen for
-# browsing to a file.
-#
-# The return value is used for subprocess.Popen, so this should return
-# a list or a string (list is preferable, except on Windows, see
-# http://docs.python.org/2/library/subprocess.html#converting-argument-sequence
-ifaint.external_browse_to_file_command = None
-
-def _file_browse_cmd_msie(file_path):
-    if os.path.exists(file_path):
-        return 'explorer /select,"%s"' % file_path
-
-    # The file is missing (probably renamed or moved), explore
-    # the directory instead, if it exists
-    dir_path = os.path.dirname(file_path)
-    if os.path.exists(dir_path):
-        return u'explorer "%s"' % dir_path
-    else:
-        return ""
-
-ifaint.file_browse_cmd_msie = _file_browse_cmd_msie
-ifaint.file_browse_cmd_thunar = lambda f: ('thunar', os.path.dirname(f))
-ifaint.file_browse_command_nautilus = lambda f: ('nautilus', os.path.dirname(f))
-
-if os.name == 'nt':
-    ifaint.external_browse_to_file_command = ifaint.file_browse_cmd_msie
-
-def _browse_to_active_file():
-    """Calls ifaint.external_browse_to_file_command with the filename of the
-    active image."""
-
-    if ifaint.external_browse_to_file_command is None:
-        raise ValueError("ifaint.external_browse_to_file_command not configured.")
-    filename = ifaint.get_active_image().get_filename()
-    if filename is not None:
-        import subprocess
-        cmd_string = ifaint.external_browse_to_file_command(filename)
-        if len(cmd_string) != 0:
-            cmd = ifaint.external_browse_to_file_command(filename)
-            subprocess.Popen(cmd, shell=True)
-
-ifaint.browse_to_active_file = _browse_to_active_file
-
 #
 # Forwarding functions for object creation to the active canvas
 #
@@ -569,7 +526,6 @@ def _toggle_zoom_fit_all():
     else:
         ifaint.zoom_default(ifaint.images)
 
-bindc('e', ifaint.browse_to_active_file)
 bindc('y', ifaint.dwim, mod.alt)
 bindc('r', ifaint.prev_frame)
 bindc('t', ifaint.next_frame)
@@ -746,6 +702,10 @@ bindk(key.delete, faint.util.erase_selection, mod.ctrl)
 
 import faint.anchor
 bindc('n', faint.anchor.toggle_flag_pixel)
+
+import faint.browse_to_file
+bindc('e', faint.browse_to_file.browse_to_active_file)
+
 
 # Make all of ifaint (Faint built-ins) available for the user config script
 # and interpreter.
