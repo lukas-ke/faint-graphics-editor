@@ -776,23 +776,12 @@ def _select_next_front():
 
 bindk(key.arrow_down, _select_next_front, mod.alt)
 
-from ifaint import *
-
 import faint.util
 bindk(key.delete, faint.util.erase_selection, mod.ctrl)
 
-def is_iterable(v):
-    try:
-        it = iter(v)
-        return True
-    except TypeError:
-        return False
-
-def pixel_snap(objects):
-    if not is_iterable(objects):
-        objects = [objects,]
-    for obj in objects:
-        obj.pixel_snap()
-
 import faint.anchor
 bindc('n', faint.anchor.toggle_flag_pixel)
+
+# Make all of ifaint (Faint built-ins) available for the user config script
+# and interpreter.
+from ifaint import *
