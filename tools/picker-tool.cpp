@@ -34,6 +34,15 @@ static bool should_anchor_topleft(const PosInfo& info){
   return info.modifiers.Secondary();
 }
 
+static utf8_string picker_description(const PosInfo& info){
+  return
+    should_pick_to_pattern(info) ?
+      should_anchor_topleft(info) ?
+        "Pick as pattern, anchor top left" :
+        "Pick as pattern (Shift=anchor top left)" :
+    "Ctrl=Pick as pattern";
+}
+
 static Paint pattern_get_hovered_paint(const PosInside& info){
   // Pick either the hovered object fill, the color at the pixel in
   // the background or floating raster selection.
@@ -109,25 +118,23 @@ public:
   }
 
   ToolResult MouseMove(const PosInfo& info) override{
+    info.status.SetMainText(picker_description(info));
     inside_canvas(info).Visit(
       [](const PosInside& info){
         // Inside canvas
         if (should_pick_to_pattern(info)){
-          info->status.SetMainText("Click to use image as pattern");
           info->status.SetText(should_anchor_topleft(info) ?
             "Anchor: Top Left (0,0)" :
             space_sep("Anchor:", bracketed(str_floor((info->pos)))));
         }
         else{
           Paint paint(pattern_get_hovered_paint(info));
-          info->status.SetMainText("");
           info->status.SetText(space_sep(str(paint),
             bracketed(str_floor(info->pos))));
         }
       },
       [&info](){
         // Outside
-        info.status.SetMainText("");
         info.status.SetText(bracketed(str_floor(info.pos)));
       });
     return ToolResult::NONE;
