@@ -19,6 +19,22 @@ import os
 from core import enumerate_files, get_root_dir
 import re
 
+EXTENSIONS = [
+    ".cpp",
+    ".hh",
+    ".txt",
+]
+
+EXCLUDED_DIRS = [
+    "__pycache__",
+    "build",
+    "build-sys",
+    "code_utils",
+    "doxygen",
+    "help",
+    "installer",
+]
+
 def format_filename(root_dir, f):
     f = f.replace(root_dir, "")
     return  f[1:]  if f[0] == "\\" else f
@@ -42,7 +58,10 @@ if __name__ == '__main__':
 
     defs = {}
     refs = {}
-    for filename in enumerate_files(root_dir, (".hh", ".cpp", ".txt"), excluded_dirs=["help"]):
+
+    for filename in enumerate_files(root_dir,
+                                    extensions=EXTENSIONS,
+                                    excluded_dirs=EXCLUDED_DIRS):
         with open(filename) as f:
             text = f.read()
             for entry in re.finditer(defs_pattern, text):
