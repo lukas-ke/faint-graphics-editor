@@ -708,62 +708,27 @@ def reverse_frames():
     for i in range(n // 2):
         img.swap_frames(i, n - i - 1)
 
-def next_left(obj):
-    frame = get_object_frame(obj)
-    by_x = sorted(frame.get_objects(), key=lambda o: o.pos()[0])
-    i = by_x.index(obj)
-    return by_x[i - 1]
-
-def next_right(obj):
-    frame = get_object_frame(obj)
-    by_x = sorted(frame.get_objects(), key=lambda o: o.pos()[0])
-    i = by_x.index(obj)
-    return by_x[(i + 1) % len(by_x)]
-
-def next_up(obj):
-    frame = get_object_frame(obj)
-    by_y = sorted(frame.get_objects(), key=lambda o: o.pos()[1])
-    i = by_y.index(obj)
-    return by_y[(i - 1)]
-
-def next_down(obj):
-    frame = get_object_frame(obj)
-    by_y = sorted(frame.get_objects(), key=lambda o: o.pos()[1])
-    i = by_y.index(obj)
-    return by_y[(i + 1) % len(by_y)]
-
-def next_behind(obj):
-    frame = get_object_frame(obj)
-    by_z = frame.get_objects()
-    i = by_z.index(obj)
-    return by_z[i - 1]
-
-def next_ahead(obj):
-    frame = get_object_frame(obj)
-    by_z = frame.get_objects()
-    i = by_z.index(obj)
-    return by_z[(i + 1) % len(by_z)]
-
+import faint.object_relative as obj_rel
 bindk(key.arrow_down, NamedFunc("Select next object down",
-                                lambda: select(next_down(selected[0]))),
-      mod.shift)
+    lambda: select(obj_rel.next_down(selected[0]))),
+    mod.shift)
 
 bindk(key.arrow_up, NamedFunc("Select next object up",
-    lambda: select(next_up(selected[0]))),
+    lambda: select(obj_rel.next_up(selected[0]))),
     mod.shift)
 
 bindk(key.arrow_left, NamedFunc("Select next object left",
-    lambda: select(next_left(selected[0]))),
+    lambda: select(obj_rel.next_left(selected[0]))),
     mod.shift)
 
 
 bindk(key.arrow_right, NamedFunc("Select next object right",
-    lambda: select(next_right(selected[0]))),
+    lambda: select(obj_rel.next_right(selected[0]))),
     mod.shift)
 
 
 bindk(key.arrow_up, NamedFunc("Select next behind",
-    lambda: select(next_behind(selected[0]))),
+    lambda: select(obj_rel.next_behind(selected[0]))),
     mod.alt)
 
 
@@ -772,7 +737,7 @@ def _select_next_front():
         if (len(objects) != 0):
             _select_bottom_object()
     else:
-        select(next_ahead(selected[0]))
+        select(obj_rel.next_ahead(selected[0]))
 
 bindk(key.arrow_down, _select_next_front, mod.alt)
 
