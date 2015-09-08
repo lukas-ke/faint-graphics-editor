@@ -662,68 +662,6 @@ ifaint.images = ContextList(ifaint.list_images, "A list of all opened images.")
 ifaint.objects = ContextList(ifaint.get_objects, "A list of all objects in the active image.")
 ifaint.selected = ContextList(ifaint.get_selected, "A list of all selected objects in the active image.")
 
-def anchor(images, anchors):
-    """Expands the images so that all the anchors (one per image) end
-    up at the same x,y position in all images.
-
-    Useful for example when comparing diagrams, so that the content
-    align in all images regardless of caption sizes
-
-    """
-    assert(len(images) == len(anchors))
-    assert(len(images) > 1)
-    max_x = anchors[0][0]
-    max_y = anchors[0][1]
-    for p in anchors:
-        max_x = max(p[0], max_x)
-        max_y = max(p[1], max_y)
-
-    for img, anchor in zip(images, anchors):
-        w, h = img.get_size()
-        dx = anchor[0] - max_x
-        dy = anchor[1] - max_y
-        if (dx != 0 or dy != 0):
-            img.set_rect(dx, dy, w - dx, h - dy)
-
-_flagged = {}
-
-def flagged():
-    return copy.copy(_flagged)
-
-def toggle_flag_pixel():
-    """Adds the image and the current mouse position to a map of
-    image-to-pixel. Indicates this with the set_point_overlay-function.
-
-    If the mouse position is already flagged for the image, the flag
-    is removed instead.
-
-    The flagging can be used for to re-anchor images with anchor_flagged.
-
-    """
-    image = ifaint.get_active_image()
-    pos = ifaint.get_mouse_pos()
-    if image in _flagged and _flagged[image] == pos:
-        del _flagged[image]
-        image.clear_point_overlay()
-    else:
-        _flagged[image] = pos
-        image.set_point_overlay(*pos)
-
-def anchor_flagged():
-    """Expands flagged images so that the flagged pixels are at the
-    same x,y-position in all images.
-
-    """
-    anchor(_flagged.keys(), list(_flagged.values()))
-    clear_flagged()
-
-def clear_flagged():
-    for image in _flagged:
-        image.clear_point_overlay()
-    _flagged.clear()
-
-bindc('n', toggle_flag_pixel)
-
 def help_class(c):
     print(c.__name__ + ":")
     for line in c.__doc__.split('\n'):
@@ -855,3 +793,6 @@ def pixel_snap(objects):
         objects = [objects,]
     for obj in objects:
         obj.pixel_snap()
+
+import faint.anchor
+bindc('n', faint.anchor.toggle_flag_pixel)

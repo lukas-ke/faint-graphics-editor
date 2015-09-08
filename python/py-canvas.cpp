@@ -92,6 +92,25 @@ struct MappedType<CanvasT>{
   }
 };
 
+template<>
+struct MappedType<canvasObject*>{
+  // Overload to allow getting expired canvases too.
+  // Pretty much only useful for expired-checks,
+  // other methods should use CanvasT, not canvasObject*.
+
+  using PYTHON_TYPE = canvasObject;
+
+  static canvasObject* GetCppObject(canvasObject* self){
+    return self;
+  }
+
+  static bool Expired(canvasObject*){
+    return false;
+  }
+
+  static void ShowError(canvasObject*){}
+};
+
 bool has_object(const Image& image, ObjectId id){
   return image.Has(id);
 }
@@ -128,6 +147,13 @@ static BoundObject<Object> canvas_add_object(CanvasT bc,
   PyFuncContext& ctx = bc.ctx;
   ctx.RunCommand(canvas, add_object_command(obj, select_added(false)));
   return bind_object(ctx, canvas, obj, canvas.GetImage().GetId());
+}
+
+/* method: "expired()\n
+True if the Canvas has been closed, and this reference is dangling." */
+static bool canvas_expired(canvasObject* raw){
+  auto self = (canvasObject*)raw;
+  return !canvas_ok(self->id, *self->ctx);
 }
 
 // Returns the base settings updated with maybe if it is set.
