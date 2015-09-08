@@ -17,6 +17,10 @@
   (concat (file-name-as-directory faint-root)
           "build-sys/code_utils/defs-summary.txt"))
 
+(defun faint-defs-index-file-name ()
+  (concat (file-name-as-directory faint-root)
+          "build-sys/code_utils/defs-index.txt"))
+
 
 (defun faint-build-dir ()
   (concat (file-name-as-directory faint-root)

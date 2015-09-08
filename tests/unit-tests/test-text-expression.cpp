@@ -219,7 +219,7 @@ void test_text_expression(){
 
   VALID_EXPRESSION("\\pi()", utf8_string(1, chars::greek_small_letter_pi));
 
-  KNOWN_ERROR(get_valid("\\perimeter(text1,px)", c) != "0.00"); // \def(err1)
+  KNOWN_ERROR(get_valid("\\perimeter(text1,px)", c) != "0.00"); // \def(err1);
   VALID_EXPRESSION("\\width(text1,px)", "100.00");
   VALID_EXPRESSION("\\height(text1,px)", "20.00");
 

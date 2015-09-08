@@ -43,7 +43,16 @@ def format_filename(root_dir, f):
 def write_defs_summary(file_name, defs):
     with open(file_name, 'w') as f:
         for d in sorted(defs.keys()):
-            f.write(d + "---" + defs[d][0] + "---" + str(defs[d][2]) + "---" + defs[d][1] + "===")
+            key = d
+            path = defs[d][0]
+            charNum = str(defs[d][2])
+            label = defs[d][1]
+            if len(label) == 0:
+                label = key
+            f.write(key + "---" +
+                    path + "---" +
+                    charNum + "---" +
+                    label + "===")
 
 def format_def_line(l):
     return l.strip().replace("// ", "")
@@ -51,9 +60,19 @@ def format_def_line(l):
 def format_def_content(text):
     return "\n".join(format_def_line(l) for l in text.split("\n"))
 
+def write_defs_index(file_name, defs):
+    with open(file_name, 'w') as f:
+        f.write("Index of definitions in Faint source files.\n")
+        f.write("With faint-start-magic, the following entries\n")
+        f.write("should be clickable links.\n\n")
+
+        for key in sorted(defs.keys()):
+            f.write("\\ref(%s) (%s)\n" % (key, key))
+
 if __name__ == '__main__':
     root_dir = sys.argv[1]
     out_file = sys.argv[2]
+    index_file = sys.argv[3]
 
     defs_pattern = re.compile(r"\\def\((.*?)\)(.*?);", re.DOTALL|re.MULTILINE)
     refs_pattern = re.compile(r"\\ref\((.*?)\)")
@@ -104,3 +123,4 @@ if __name__ == '__main__':
             print("Invalid reference: %s %s" % (name, refs[name][0]))
 
     write_defs_summary(out_file, defs)
+    write_defs_index(index_file, defs)

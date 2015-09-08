@@ -1,0 +1,16 @@
+Index of definitions in Faint source files.
+With faint-start-magic, the following entries
+should be clickable links.
+
+\ref(Optional) (Optional)
+\ref(allows-global-redo) (allows-global-redo)
+\ref(alt-xubuntu) (alt-xubuntu)
+\ref(ctrl-enter-workaround) (ctrl-enter-workaround)
+\ref(draw-before-zoom) (draw-before-zoom)
+\ref(err1) (err1)
+\ref(hack-miter-growth) (hack-miter-growth)
+\ref(quantize-error) (quantize-error)
+\ref(refresh-on-mouse-out) (refresh-on-mouse-out)
+\ref(rotation-blending) (rotation-blending)
+\ref(text-rendering) (text-rendering)
+\ref(wide-ellipse-dash) (wide-ellipse-dash)
