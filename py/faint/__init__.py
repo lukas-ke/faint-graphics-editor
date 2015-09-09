@@ -24,25 +24,33 @@ def __expose_built_ins(ifaint):
         for item in methods:
             module.__dict__[item] = obj.__getattribute__(item)
 
-    # Add all Faint global functions to the ifaint module
-    #
-    # ... these are actually methods on an instantiated (built-in) object in
-    # order to access Faint-state, but are meant to be accessible like
-    # functions.
-    # Fixme: This should probably be part of faint/__init__.py
-    expose(ifaint,
-           [m for m in dir(ifaint.fgl) if not m.startswith("__")],
-           ifaint.fgl)
+    try:
+        # Add all Faint global functions to the ifaint module
+        #
+        # ... these are actually methods on an instantiated (built-in) object in
+        # order to access Faint-state, but are meant to be accessible like
+        # functions.
+        expose(ifaint,
+               [m for m in dir(ifaint.fgl) if not m.startswith("__")],
+               ifaint.fgl)
+    except AttributeError:
+        pass
 
-    expose(ifaint,
-           [m for m in dir(ifaint.active_settings) if not m.startswith("__")],
-           ifaint.active_settings)
+    try:
+        expose(ifaint,
+               [m for m in dir(ifaint.active_settings) if not m.startswith("__")],
+               ifaint.active_settings)
+    except AttributeError:
+        pass
 
-    # For backwards-compatibility with Faint <= 0.23, add some methods from
-    # "app" which were previously global.
-    APP_METHODS = ["add_format", "swap_colors", "update_settings"]
-    APP_METHODS.extend([m for m in dir(ifaint.app) if m.startswith("tool")])
-    expose(ifaint, APP_METHODS, ifaint.app)
+    try:
+        # For backwards-compatibility with Faint <= 0.23, add some methods from
+        # "app" which were previously global.
+        APP_METHODS = ["add_format", "swap_colors", "update_settings"]
+        APP_METHODS.extend([m for m in dir(ifaint.app) if m.startswith("tool")])
+        expose(ifaint, APP_METHODS, ifaint.app)
+    except AttributeError:
+        pass
 
 try:
     import ifaint
