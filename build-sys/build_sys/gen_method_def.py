@@ -336,10 +336,15 @@ def _write_result(file_name, name, entries, extra_includes, src_file_names):
 
 def _doc_to_html(doc):
     """Makes the doc-string more suitable for html."""
-    return (doc.replace('\\n','<br>')
-            .replace('->','&rarr;')
-            .replace('...', '&#8230;')
-            .replace('\\\\', '\\'))
+    doc = (doc.replace('\\n','<br>')
+           .replace('->','&rarr;')
+           .replace('...', '&#8230;')
+           .replace('\\\\', '\\'))
+    if doc.startswith('"'):
+        doc = doc[1:]
+    if doc.endswith('"'):
+        doc = doc[:-1]
+    return doc
 
 
 def _write_method_doc(file_name, entries):
