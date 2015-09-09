@@ -112,8 +112,8 @@ static utf8_string status_for_object(const PosInfo& info){
         if (corner_handle(handle)){
           return info.modifiers.Primary() ?
             Sentence("Click to rotate the", object_type(info)) :
-            Sentence("Click to resize the", object_type(info) +
-              primary_modifier("Rotate"));
+            space_sep(Sentence("Click to resize the", object_type(info)),
+              primary_modifier("Rotate."));
         }
         else{
           return Sentence("Click to resize the", object_type(info));
