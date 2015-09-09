@@ -19,33 +19,15 @@ import sys
 from code import InteractiveConsole
 import copy
 import ifaint
-import faint.util
 import os
 import __main__
-
-def expose(module, methods, obj):
-    for item in methods:
-        module.__dict__[item] = obj.__getattribute__(item)
-
-# Add all Faint global functions to the ifaint module
-expose(ifaint,
-       [m for m in dir(ifaint.fgl) if not m.startswith("__")],
-       ifaint.fgl)
-
-expose(ifaint,
-       [m for m in dir(ifaint.active_settings) if not m.startswith("__")],
-       ifaint.active_settings)
-
-# For backwards-compatibility with Faint <= 0.23, add some methods from
-# "app" which were previously global.
-APP_METHODS = ["add_format", "swap_colors", "update_settings"]
-APP_METHODS.extend([m for m in dir(ifaint.app) if m.startswith("tool")])
-expose(ifaint, APP_METHODS, ifaint.app)
-
-del expose
-del APP_METHODS
+import faint.util
+import faint.object_relative as obj_rel
 
 class NamedFunc:
+    """Wrapper to supply names for lambdas or prettier names for functions
+    when bound to keys for the binds-list."""
+
     def __init__(self, name, function):
         self.function = function
         self.__name__ = name
@@ -351,10 +333,10 @@ def _toggle_selection_type():
     else:
         ifaint.tool_selection()
 
-ifaint.toggle_selection_type = _toggle_selection_type
+faint.toggle_selection_type = _toggle_selection_type
 
-ifaint.raster_layer = NamedFunc("raster_layer", lambda: ifaint.set_layer(0))
-ifaint.object_layer = NamedFunc("object_layer", lambda: ifaint.set_layer(1))
+faint.raster_layer = NamedFunc("raster_layer", lambda: ifaint.set_layer(0))
+faint.object_layer = NamedFunc("object_layer", lambda: ifaint.set_layer(1))
 
 #
 # Forwarding functions for object creation to the active canvas
@@ -401,7 +383,7 @@ def _center_on_cursor():
     image = ifaint.get_active_image()
     pos = image.get_mouse_pos()
     image.center(*pos)
-ifaint.center_on_cursor = _center_on_cursor
+faint.center_on_cursor = _center_on_cursor
 
 def _scroll_top_left(*args, **kwArgs):
     ifaint.scroll_max_left()
@@ -460,10 +442,10 @@ ifaint.next_frame = _forwarder(_c.next_frame)
 ifaint.prev_frame = _forwarder(_c.prev_frame)
 ifaint.redo = _forwarder(_c.redo)
 ifaint.undo = _forwarder(_c.undo)
-ifaint.zoom_default = _forwarder(_c.zoom_default)
-ifaint.zoom_fit = _forwarder(_c.zoom_fit)
-ifaint.zoom_in = _forwarder(_c.zoom_in)
-ifaint.zoom_out = _forwarder(_c.zoom_out)
+faint.zoom_default = _forwarder(_c.zoom_default)
+faint.zoom_fit = _forwarder(_c.zoom_fit)
+faint.zoom_in = _forwarder(_c.zoom_in)
+faint.zoom_out = _forwarder(_c.zoom_out)
 
 # Forwarding to the active image, supports arguments
 ifaint.aa_line = _active(_c.aa_line)
@@ -471,10 +453,10 @@ ifaint.add_frame = _active(_c.add_frame)
 ifaint.center = _active(_c.center)
 ifaint.context_delete = _active(_c.context_delete)
 ifaint.context_set_alpha = _active(_c.context_set_alpha)
-ifaint.context_flip_horizontal = _active(_c.context_flip_horizontal)
-ifaint.context_flip_vertical = _active(_c.context_flip_vertical)
+faint.context_flip_horizontal = _active(_c.context_flip_horizontal)
+faint.context_flip_vertical = _active(_c.context_flip_vertical)
 ifaint.context_offset = _active(_c.context_offset)
-ifaint.context_rotate_90CW = _active(_c.context_rotate_90CW)
+faint.context_rotate_90CW = _active(_c.context_rotate_90CW)
 ifaint.rotate = _active(_c.rotate)
 ifaint.delete_objects = _active(_c.delete_objects)
 ifaint.deselect = _active(_c.deselect)
@@ -522,9 +504,9 @@ def _toggle_zoom_fit_all():
     depending on the current zoom of the active image"""
     active = ifaint.get_active_image()
     if active.get_zoom() == 1.0:
-        ifaint.zoom_fit(ifaint.images)
+        faint.zoom_fit(ifaint.images)
     else:
-        ifaint.zoom_default(ifaint.images)
+        faint.zoom_default(ifaint.images)
 
 bindc('y', ifaint.dwim, mod.alt)
 bindc('r', ifaint.prev_frame)
@@ -542,8 +524,8 @@ bindk(key.pgdn, ifaint.scroll_page_down)
 bindk(key.pgdn, ifaint.scroll_page_right, mod.ctrl)
 bindk(key.pgup, ifaint.scroll_page_left, mod.ctrl)
 bindk(key.pgup, ifaint.scroll_page_up)
-bindk(key.num_minus, ifaint.zoom_out)
-bindk(key.num_plus, ifaint.zoom_in)
+bindk(key.num_minus, faint.zoom_out)
+bindk(key.num_plus, faint.zoom_in)
 bindk(key.backspace, ifaint.context_delete)
 bindk(key.paragraph, ifaint.dialogs.open_file, mod.ctrl)
 bindk(key.asterisk, _toggle_zoom_fit_all, mod.ctrl)
@@ -562,7 +544,7 @@ def select_or_traverse():
     else:
         faint.util.scroll_traverse()
 
-bindk(key.space, NamedFunc("Select or Traverse", select_or_traverse))
+bindk(key.space, select_or_traverse)
 
 try:
     import faint.formatsvg as formatsvg
@@ -659,7 +641,6 @@ def reverse_frames():
     for i in range(n // 2):
         img.swap_frames(i, n - i - 1)
 
-import faint.object_relative as obj_rel
 bindk(key.arrow_down, NamedFunc("Select next object down",
     lambda: select(obj_rel.next_down(selected[0]))),
     mod.shift)
@@ -698,6 +679,6 @@ bindc('n', faint.anchor.toggle_flag_pixel)
 import faint.browse_to_file
 bindc('e', faint.browse_to_file.browse_to_active_file)
 
-# Make all of ifaint (Faint built-ins) available for the user config script
-# and interpreter.
-from ifaint import *
+bindc('o', NamedFunc("Open next in folder",
+    lambda: faint.util.open_next(replace=True)),
+    mod.ctrl|mod.shift)

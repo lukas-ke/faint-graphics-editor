@@ -462,7 +462,6 @@ public:
 
   bool m_shouldClose = false;
   bool m_forceClose = false;
-
 };
 
 static void select_tool(ToolId id, FaintState& state, FaintPanels& panels,
