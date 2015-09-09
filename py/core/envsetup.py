@@ -338,46 +338,6 @@ faint.toggle_selection_type = _toggle_selection_type
 faint.raster_layer = NamedFunc("raster_layer", lambda: ifaint.set_layer(0))
 faint.object_layer = NamedFunc("object_layer", lambda: ifaint.set_layer(1))
 
-#
-# Forwarding functions for object creation to the active canvas
-#
-def _Spline(*args, **kwArgs):
-    return ifaint.get_active_image().Spline(*args, **kwArgs)
-ifaint.Spline = _Spline
-
-def _Rect(*args, **kwArgs):
-    return ifaint.get_active_image().Rect(*args, **kwArgs)
-ifaint.Rect = _Rect
-
-def _Polygon(*args, **kwArgs):
-    return ifaint.get_active_image().Polygon(*args, **kwArgs)
-ifaint.Polygon = _Polygon
-
-def _Line(*args, **kwArgs):
-    return ifaint.get_active_image().Line(*args, **kwArgs)
-ifaint.Line = _Line
-
-def _Ellipse(*args, **kwArgs):
-    return ifaint.get_active_image().Ellipse(*args, **kwArgs)
-ifaint.Ellipse = _Ellipse
-
-def _Group(*args, **kwArgs):
-    return ifaint.get_active_image().Group(*args, **kwArgs)
-ifaint.Group = _Group
-
-def _Raster(*args, **kwArgs):
-    return ifaint.get_active_image().Raster(*args, **kwArgs)
-ifaint.Raster = _Raster
-
-def _Text(*args, **kwArgs):
-    return ifaint.get_active_image().Text(*args, **kwArgs)
-_Text.__doc__ = "Adds a text object to the active image. Equivalent to get_active_images().Text(*args, **kwArgs)\n\nCanvas.Text:\n" + "".join(["  %s\n" % line for line in ifaint.Canvas.Text.__doc__.split("\n")])
-ifaint.Text = _Text
-
-def _Path(*args, **kwArgs):
-    return ifaint.get_active_image().Path(*args, **kwArgs)
-ifaint.Path = _Path
-
 # Custom
 def _center_on_cursor():
     image = ifaint.get_active_image()
@@ -492,6 +452,17 @@ ifaint.set_pixel = _active(_c.set_pixel)
 ifaint.set_selection = _active(_c.set_selection)
 ifaint.set_threshold = _active(_c.set_threshold)
 ifaint.shrink_selection = _active(_c.shrink_selection)
+
+# Object creation forwards
+ifaint.Ellipse = _active(_c.Ellipse)
+ifaint.Group = _active(_c.Group)
+ifaint.Line = _active(_c.Line)
+ifaint.Path = _active(_c.Path)
+ifaint.Polygon = _active(_c.Polygon)
+ifaint.Raster = _active(_c.Raster)
+ifaint.Rect = _active(_c.Rect)
+ifaint.Spline = _active(_c.Spline)
+ifaint.Text = _active(_c.Text)
 
 def _scroll_top_left_all():
     for img in ifaint.images:
@@ -682,3 +653,5 @@ bindc('e', faint.browse_to_file.browse_to_active_file)
 bindc('o', NamedFunc("Open next in folder",
     lambda: faint.util.open_next(replace=True)),
     mod.ctrl|mod.shift)
+
+from ifaint import *

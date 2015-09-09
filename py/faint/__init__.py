@@ -55,8 +55,10 @@ def __expose_built_ins(ifaint):
 try:
     import ifaint
     __expose_built_ins(ifaint)
+
     # Make all built-ins available under the faint module
     from ifaint import *
+
 except ImportError as e:
     # When running simple API tests outside faint, without the
     # extension module, ifaint will not be available.
