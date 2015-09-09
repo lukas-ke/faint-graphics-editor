@@ -211,7 +211,11 @@ def string_to_int(item, property):
 
     # Defaulting else (error case)
     cc += 'else{'
-    cc += 'throw ValueError("Invalid string");'
+    def quoted(l):
+        return ["'%s'" % e for e in l]
+
+    cc += ('throw ValueError("Invalid string, expected one of: %s");'
+           % ", ".join(quoted(keys)))
     cc += '}'
     return cc.get_text()
 
