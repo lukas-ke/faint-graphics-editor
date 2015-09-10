@@ -20,12 +20,12 @@
 #include "text/slice.hh"
 #include "text/split-string.hh"
 #include "text/text-buffer.hh"
+#include "text/text-geo.hh" // text_selection_region
 #include "util-wx/font.hh"
 #include "util/default-settings.hh"
 #include "util/iter.hh" // zip
 #include "util/setting-id.hh"
 #include "util/setting-util.hh"
-#include "util/text-geo.hh" // text_selection_region
 
 namespace faint{
 

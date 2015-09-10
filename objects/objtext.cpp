@@ -24,8 +24,11 @@
 #include "geo/size.hh"
 #include "objects/objtext.hh"
 #include "rendering/faint-dc.hh"
+#include "rendering/render-text.hh"
+#include "rendering/text-info-dc.hh"
 #include "text/slice.hh"
 #include "text/split-string.hh"
+#include "text/text-geo.hh"
 #include "text/text-expression.hh"
 #include "text/utf8-string.hh"
 #include "util-wx/font.hh"
@@ -33,9 +36,6 @@
 #include "util/iter.hh"
 #include "util/optional.hh"
 #include "util/settings.hh"
-#include "util/text-geo.hh"
-#include "rendering/render-text.hh"
-#include "rendering/text-info-dc.hh"
 
 namespace faint{
 

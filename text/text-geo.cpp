@@ -19,7 +19,7 @@
 #include "geo/tri.hh"
 #include "text/slice.hh"
 #include "text/text-buffer.hh"
-#include "util/text-geo.hh"
+#include "text/text-geo.hh"
 
 namespace faint{
 

@@ -8,8 +8,8 @@
 #include "geo/tri.hh"
 #include "text/formatting.hh"
 #include "text/text-buffer.hh"
+#include "text/text-geo.hh"
 #include "text/text-line.hh"
-#include "util/text-geo.hh"
 
 namespace{
 using namespace faint;
