@@ -44,7 +44,7 @@ int char_from_extents(const std::vector<int>& extents,
   const Point& pointerPos, coord extentOffset);
 
 // Return the tri offset for the specified alignment. 'whole' is the
-// width of the text region, 'part'' is the width of the text to be
+// width of the text region, 'part' is the width of the text to be
 // aligned within.
 Tri aligned(const Tri&, HorizontalAlign, coord part, coord whole);
 

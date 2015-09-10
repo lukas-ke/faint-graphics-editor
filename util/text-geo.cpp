@@ -63,9 +63,8 @@ int char_from_extents(const std::vector<int>& extents,
 }
 
 Tri aligned(const Tri& tri, HorizontalAlign align, coord part, coord whole){
-  // <../doc/text-centering.png>
-
   if (align == HorizontalAlign::CENTER){
+  // <../doc/text-centering.png>
     return offset_aligned(tri, (whole - part) / 2, 0.0);
   }
   else if (align == HorizontalAlign::RIGHT){
