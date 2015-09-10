@@ -14,12 +14,12 @@
 // permissions and limitations under the License.
 
 #include <cassert>
+#include "geo/geo-func.hh" // rotate_point
 #include "geo/size.hh"
 #include "geo/tri.hh"
 #include "text/slice.hh"
 #include "text/text-buffer.hh"
 #include "util/text-geo.hh"
-#include "geo/geo-func.hh" // rotate_point
 
 namespace faint{
 
@@ -64,7 +64,7 @@ int char_from_extents(const std::vector<int>& extents,
 
 Tri aligned(const Tri& tri, HorizontalAlign align, coord part, coord whole){
   if (align == HorizontalAlign::CENTER){
-  // <../doc/text-centering.png>
+    // <../doc/text-centering.png>
     return offset_aligned(tri, (whole - part) / 2, 0.0);
   }
   else if (align == HorizontalAlign::RIGHT){
