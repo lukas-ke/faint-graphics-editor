@@ -302,6 +302,14 @@ auto otherwise(T&& v){
   return [=](){return v;};
 }
 
+template<typename T, typename Exception>
+T or_throw(Optional<T>&& opt, const Exception& ex){
+  if (opt.NotSet()){
+    throw ex;
+  }
+  return opt.Get();
+}
+
 } // namespace
 
 #endif

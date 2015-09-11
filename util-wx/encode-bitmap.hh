@@ -16,13 +16,14 @@
 #ifndef FAINT_ENCODE_BITMAP_HH
 #define FAINT_ENCODE_BITMAP_HH
 #include <string>
+#include "util/optional.hh"
 
 namespace faint{
 
 class Bitmap;
 
-Bitmap from_jpg(const char*, size_t len); // Implemented in util-wx.cpp
-Bitmap from_png(const char*, size_t len); // Implemented in util-wx.cpp
+Optional<Bitmap> from_jpg(const char*, size_t len); // Implemented in util-wx.cpp
+Optional<Bitmap> from_png(const char*, size_t len); // Implemented in util-wx.cpp
 
 // Returns a string representing the Bitmap encoded as a PNG
 std::string to_png_string(const Bitmap&); // Implemented in util-wx.cpp

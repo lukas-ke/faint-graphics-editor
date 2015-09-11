@@ -130,88 +130,66 @@ static bool one_color_bg(const Image* image){
     });
 }
 
-static bool parse_png_bitmap(PyObject* args, Bitmap& out){
+static Bitmap parse_png_bitmap(PyObject* args){
+  // Fixme: Duplicates parse_jpg_bitmap, extract PyBytes-parsing.
+
   if (PySequence_Length(args) != 1){
-    PyErr_SetString(PyExc_TypeError, "A single string argument required.");
-    return false;
+    throw TypeError("A single string argument is required.");
   }
 
   scoped_ref pngStrPy(PySequence_GetItem(args, 0));
   if (!PyBytes_Check(pngStrPy.get())){
-    PyErr_SetString(PyExc_TypeError, "Invalid png-string.");
-    return false;
+    throw TypeError("Argument 1 must be a bytes object");
   }
 
   auto len = PyBytes_Size(pngStrPy.get());
   if (len <= 0){
-    return false;
+    throw ValueError("Empty string");
   }
 
   const char* bytes = PyBytes_AsString(pngStrPy.get());
   if (bytes == nullptr){
-    return false;
+    throw TypeError("Failed reading byte string");
   }
 
-  Bitmap bmp(from_png(bytes, static_cast<size_t>(len)));
-  if (bitmap_ok(bmp)){
-    out = bmp;
-    return true;
-  }
-  else{
-    return false;
-  }
+  return or_throw(from_png(bytes, static_cast<size_t>(len)),
+    ValueError("Failed decoding jpg"));
 }
 
 /* function: "bitmap_from_png_string(s)->bmp\n
 Creates a bitmap from the PNG string." */
 static Bitmap bitmap_from_png_string(PyObject*, PyObject* args){
-  Bitmap bmp;
-  if (!parse_png_bitmap(args, bmp)){
-    throw PresetFunctionError();
-  }
-  return bmp;
+  return parse_png_bitmap(args);
 }
 
-static bool parse_jpg_bitmap(PyObject* args, Bitmap& out){
+static Bitmap parse_jpg_bitmap(PyObject* args){
   if (PySequence_Length(args) != 1){
-    PyErr_SetString(PyExc_TypeError, "A single string argument required.");
-    return false;
+    throw TypeError("A single bytes argument is required.");
   }
 
   scoped_ref jpgStrPy(PySequence_GetItem(args, 0));
   if (!PyBytes_Check(jpgStrPy.get())){
-    PyErr_SetString(PyExc_TypeError, "Invalid jpg-string.");
-    return false;
+    throw TypeError("Argument 1 must be a bytes object");
   }
 
   auto len = PyBytes_Size(jpgStrPy.get());
   if (len <= 0){
-    return false;
+    throw ValueError("Empty string");
   }
 
   const char* bytes = PyBytes_AsString(jpgStrPy.get());
-  if (bytes == 0){
-    return false;
+  if (bytes == nullptr){
+    throw TypeError("Failed reading byte string");
   }
 
-  Bitmap bmp(from_jpg(bytes, static_cast<size_t>(len)));
-  if (bitmap_ok(bmp)){
-    out = bmp;
-    return true;
-  }
-  else{
-    return false;
-  }
+  return or_throw(from_jpg(bytes, static_cast<size_t>(len)),
+    ValueError("Failed decoding jpg"));
 }
 
 /* function: "bitmap_from_jpg_string(s)->bmp\n
 Creates a bitmap from the JPG string." */
 static Bitmap bitmap_from_jpg_string(PyObject*, PyObject* args){
-  Bitmap bmp;
-  if (!parse_jpg_bitmap(args, bmp)){
-    throw PresetFunctionError();
-  }
-  return bmp;
+  return parse_jpg_bitmap(args);
 }
 
 /* function: "encode_bitmap_png(bmp)->bytes\n

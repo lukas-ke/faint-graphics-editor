@@ -33,25 +33,28 @@
 
 namespace faint{
 
-static wxBitmap from_any(const char* data, size_t len, wxBitmapType type){
+static Optional<Bitmap> bmp_from_format(wxBitmapType type,
+  const char* data,
+  size_t len)
+{
+  // Fixme: Suppress wx error dialog
   wxMemoryInputStream stream(data, len);
   wxImage image(stream, type);
   if (!image.IsOk()){
-    // Fixme: Add proper, propagating error handling
-    return wxBitmap(10,10);
+    return {};
   }
   if (image.HasMask()){
     image.InitAlpha();
   }
-  return wxBitmap(image);
+  return option(to_faint(wxBitmap(image)));
 }
 
-Bitmap from_jpg(const char* jpg, size_t len){
-  return to_faint(from_any(jpg, len, wxBITMAP_TYPE_JPEG));
+Optional<Bitmap> from_jpg(const char* jpgData, size_t len){
+  return bmp_from_format(wxBITMAP_TYPE_JPEG, jpgData, len);
 }
 
-Bitmap from_png(const char* png, size_t len){
-  return to_faint(from_any(png, len, wxBITMAP_TYPE_PNG));
+Optional<Bitmap> from_png(const char* pngData, size_t len){
+  return bmp_from_format(wxBITMAP_TYPE_PNG, pngData, len);
 }
 
 std::string to_png_string(const Bitmap& bmp){
