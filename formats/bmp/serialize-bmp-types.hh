@@ -156,7 +156,7 @@ inline bool invalid_header_length(int len){
 }
 
 template<typename T>
-T or_throw(const Optional<T>& o, const char* s){
+T or_throw_ReadBmpError(const Optional<T>& o, const char* s){
   return o.Visit(
     [](const T& o) -> T{
       return o;

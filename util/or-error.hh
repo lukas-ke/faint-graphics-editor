@@ -19,8 +19,21 @@
 
 namespace faint{
 
+class utf8_string;
+
 template<typename T>
 using OrError = Either<T, utf8_string>;
+
+template<typename Exception, typename T>
+T or_throw(OrError<T>&& o){
+  return o.Visit(
+    [](const T& v){
+      return v;
+    },
+    [](const utf8_string& error) -> T {
+      throw Exception(error);
+    });
+}
 
 } // namespace
 

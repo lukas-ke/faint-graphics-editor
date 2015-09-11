@@ -195,12 +195,12 @@ auto get_read_pixeldata_func(const Index num, int bitsPerPixel)
   }
 }
 
-static Optional<Bitmap> ico_read_png(BinaryReader& in, int len){
+static OrError<Bitmap> ico_read_png(BinaryReader& in, int len){
   assert(len > 0);
   std::vector<char> v(len);
   in.read(v.data(), len);
   if (!in.good()){
-    return {};
+    return {"Failed reading png stream"};
   }
 
   return from_png(v.data(), to_size_t(len));
@@ -299,9 +299,14 @@ typename BmpType::ResultType read_or_throw(const FilePath& filePath){
     }
 
     if (peek_png_signature(in, BmpType::type(), i)){
-      auto bmp = or_throw(ico_read_png(in, iconDirEntry.bytes),
-        [i](){return error_truncated_png_data(Index(i));});
-      BmpType::add(bitmaps, std::move(bmp), iconDirEntry);
+      ico_read_png(in, iconDirEntry.bytes).Visit(
+        [&](Bitmap bmp){
+          BmpType::add(bitmaps, std::move(bmp), iconDirEntry);
+        },
+        [i](const utf8_string& /*error*/ ){
+          // Fixme: losing error info
+          throw ReadBmpError(error_truncated_png_data(Index(i)));
+        });
     }
     else {
       const auto on_error_image = [i](){

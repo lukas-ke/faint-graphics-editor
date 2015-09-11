@@ -28,32 +28,35 @@
 #include "geo/geo-func.hh"
 #include "geo/point.hh"
 #include "text/utf8-string.hh"
+#include "util/or-error.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-path.hh"
+#include "util-wx/scoped-error-log.hh"
 
 namespace faint{
 
-static Optional<Bitmap> bmp_from_format(wxBitmapType type,
+static OrError<Bitmap> bmp_from_format(wxBitmapType type,
   const char* data,
   size_t len)
 {
-  // Fixme: Suppress wx error dialog
+  ScopedErrorLog errorLog;
+
   wxMemoryInputStream stream(data, len);
   wxImage image(stream, type);
   if (!image.IsOk()){
-    return {};
+    return {errorLog.GetMessages()};
   }
   if (image.HasMask()){
     image.InitAlpha();
   }
-  return option(to_faint(wxBitmap(image)));
+  return {to_faint(wxBitmap(image))};
 }
 
-Optional<Bitmap> from_jpg(const char* jpgData, size_t len){
+OrError<Bitmap> from_jpg(const char* jpgData, size_t len){
   return bmp_from_format(wxBITMAP_TYPE_JPEG, jpgData, len);
 }
 
-Optional<Bitmap> from_png(const char* pngData, size_t len){
+OrError<Bitmap> from_png(const char* pngData, size_t len){
   return bmp_from_format(wxBITMAP_TYPE_PNG, pngData, len);
 }
 

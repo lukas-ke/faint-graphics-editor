@@ -152,8 +152,7 @@ static Bitmap parse_png_bitmap(PyObject* args){
     throw TypeError("Failed reading byte string");
   }
 
-  return or_throw(from_png(bytes, static_cast<size_t>(len)),
-    ValueError("Failed decoding jpg"));
+  return or_throw<ValueError>(from_png(bytes, static_cast<size_t>(len)));
 }
 
 /* function: "bitmap_from_png_string(s)->bmp\n
@@ -182,8 +181,7 @@ static Bitmap parse_jpg_bitmap(PyObject* args){
     throw TypeError("Failed reading byte string");
   }
 
-  return or_throw(from_jpg(bytes, static_cast<size_t>(len)),
-    ValueError("Failed decoding jpg"));
+  return or_throw<ValueError>(from_jpg(bytes, static_cast<size_t>(len)));
 }
 
 /* function: "bitmap_from_jpg_string(s)->bmp\n
