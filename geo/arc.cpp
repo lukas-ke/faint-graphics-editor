@@ -17,6 +17,7 @@
 #include <cmath>
 #include "geo/angle.hh"
 #include "geo/arc.hh"
+#include "geo/pathpt.hh"
 #include "geo/tri.hh"
 
 namespace faint{
@@ -74,7 +75,7 @@ std::vector<Point> ArcEndPoints::GetVector() const{
   return { m_p0, m_p1 };
 }
 
-std::vector<Point> arc_as_path(const Tri& tri, const AngleSpan& angles){
+std::vector<PathPt> arc_as_path(const Tri& tri, const AngleSpan& angles){
   // This algorithm is based on documentation and code from
   // SpaceRoots.org, by L. Maisonobe "Drawing an elliptical arc using
   // polylines, quadratic or cubic Bezier curves" and
@@ -107,12 +108,12 @@ std::vector<Point> arc_as_path(const Tri& tri, const AngleSpan& angles){
   coord yDot = -rxSinCurrentAngle * sinMainAngle +
     ryCosCurrentAngle * cosMainAngle;
 
-  // Fixme: Using Point requires knowledge that one should move_to or
-  // line_to v[0], and then use curve_to with the remaining points (in
-  // sets of three), use PathPt (or similar) instead.
-  std::vector<Point> v;
+  std::vector<PathPt> v;
+  // Start at the tri center
+  v.emplace_back(MoveTo({c.x, c.y}));
+
   // Arc start point
-  v.emplace_back(x, y);
+  v.emplace_back(LineTo({x, y}));
   coord t = tan(0.5 * curveSpan);
   coord alpha = sin(curveSpan) * (std::sqrt(4 + 3 * t * t) - 1) / 3.0;
 
@@ -132,10 +133,12 @@ std::vector<Point> arc_as_path(const Tri& tri, const AngleSpan& angles){
     y = c.y + rxCosCurrentAngle * sinMainAngle + rySinCurrentAngle * cosMainAngle;
     xDot = -rxSinCurrentAngle * cosMainAngle - ryCosCurrentAngle * sinMainAngle;
     yDot = -rxSinCurrentAngle * sinMainAngle + ryCosCurrentAngle * cosMainAngle;
-    v.emplace_back(prevX + alpha * prevXDot, prevY + alpha * prevYDot);
-    v.emplace_back(x - alpha * xDot, y - alpha * yDot);
-    v.emplace_back(x, y);
+
+    v.emplace_back(CubicBezier({x,y},
+        {prevX + alpha * prevXDot, prevY + alpha * prevYDot},
+        {x - alpha * xDot, y - alpha * yDot}));
   }
+  v.emplace_back(Close());
   return v;
 }
 

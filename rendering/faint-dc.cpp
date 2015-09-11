@@ -371,15 +371,8 @@ void FaintDC::Arc(const Tri& tri, const AngleSpan& span, const Settings& s){
 
   m_cr->set_source_tri(tri);
   from_settings(*m_cr, s);
-  std::vector<Point> v = arc_as_path(tri, span);
-  Point c(center_point(tri));
-  m_cr->move_to(c);
-  m_cr->line_to(v[0]);
-  for (size_t i = 1; i < v.size(); i+= 3){
-    m_cr->curve_to(v[i], v[i+1], v[i+2]);
-  }
-  m_cr->close_path();
-  fill_and_or_stroke(*m_cr, s);
+  std::vector<PathPt> v = arc_as_path(tri, span);
+  Path(v, s);
 }
 
 void FaintDC::Blit(const Bitmap& bmp, const Point& topLeft,
