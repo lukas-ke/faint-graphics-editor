@@ -303,9 +303,9 @@ typename BmpType::ResultType read_or_throw(const FilePath& filePath){
         [&](Bitmap bmp){
           BmpType::add(bitmaps, std::move(bmp), iconDirEntry);
         },
-        [i](const utf8_string& /*error*/ ){
-          // Fixme: losing error info
-          throw ReadBmpError(error_truncated_png_data(Index(i)));
+        [i](const utf8_string& errorInfo ){
+          throw ReadBmpError(endline_sep(error_truncated_png_data(Index(i)),
+            errorInfo));
         });
     }
     else {
