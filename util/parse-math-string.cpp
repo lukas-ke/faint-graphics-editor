@@ -110,7 +110,7 @@ static double my_stof(const string& s){
 }
 
 // Compute the value of a postfix expression
-static double compute(std::vector<string> postfix){
+static Optional<coord> compute(std::vector<string> postfix){
   std::stack<double> operands;
   for (const string& token : postfix){
     if (is_operand(token)){
@@ -119,7 +119,7 @@ static double compute(std::vector<string> postfix){
     else {
       if (operands.size() < 2){
         // Error - crap stack
-        return -1;
+        return {};
       }
       double rhs = operands.top();
       operands.pop();
@@ -140,23 +140,23 @@ static double compute(std::vector<string> postfix){
     }
   }
   if (!operands.empty()){
-    return operands.top();
+    return option(operands.top());
   }
-  return 0;
+  return option(0.0);
 }
 
-coord parse_math_string(const string& s, coord originalValue){
+Optional<coord> parse_math_string(const string& s, coord originalValue){
   std::vector<string> tokens = tokenize(s);
   bool previousWasOperator = false;
   for (size_t i = 0; i != tokens.size(); i++){
     if (tokens[i] == "%" && i != tokens.size() - 1){
       // Error: % within expression
-      return -1;
+      return {};
     }
     else if (is_operator(tokens[i])){
       if (previousWasOperator){
         // Error: Two operators in a row
-        return -1;
+        return {};
       }
       previousWasOperator = true;
     }
@@ -171,11 +171,11 @@ coord parse_math_string(const string& s, coord originalValue){
   }
 
   std::vector<string> postfix = infix_to_postfix(tokens);
-  double result = compute(postfix);
-  if (percentage){
-    return rounded((originalValue * result) / 100);
-  }
-  return result;
+  auto result = compute(postfix);
+
+  return (percentage && result.IsSet()) ?
+    option(floated(rounded((originalValue * result.Get()) / 100))) :
+    result;
 }
 
 } // namespace

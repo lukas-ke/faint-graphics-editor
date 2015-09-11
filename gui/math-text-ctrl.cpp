@@ -109,11 +109,14 @@ private:
   coord m_originalValue;
 
   coord UpdateValue(){
-    coord value = parse_math_string((std::string)GetValue(), m_originalValue);
     coord lastValue = m_value;
-    if (value > 0){
-      m_value = value;
-    }
+    auto result = parse_math_string((std::string)GetValue(), m_originalValue);
+    result.Visit(
+      [&](coord value){
+        if (value > 0){
+          m_value = value;
+        }
+      });
     return lastValue;
   }
 };

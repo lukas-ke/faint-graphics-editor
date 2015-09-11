@@ -17,14 +17,13 @@
 #define FAINT_PARSE_MATH_STRING_HH
 #include <string>
 #include "geo/primitive.hh"
+#include "util/or-error.hh"
 
 namespace faint{
 
 // Computes simple math expressions or percentages. Percentages are
 // applied to originalValue.
-//
-// Returns -1 on evaluation errors <- Fixme: Improve.
-coord parse_math_string(const std::string&, coord originalValue);
+Optional<coord> parse_math_string(const std::string&, coord originalValue);
 
 } // namespace
 
