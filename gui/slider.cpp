@@ -110,21 +110,8 @@ public:
         if (m_mouse.HasCapture()){
           return;
         }
-
-        int pos = m_dir == SliderDir::HORIZONTAL ?
-          mousePos.x :
-          mousePos.y;
-
-        int length = m_dir == SliderDir::HORIZONTAL ?
-          GetSize().x :
-          GetSize().y;
-
-        m_value = m_range.Constrain(pos_to_value(pos, length, m_range));
         m_mouse.Capture();
-        Refresh();
-        SliderEvent newEvent(GetValue());
-        newEvent.SetEventObject(this);
-        ProcessEvent(newEvent);
+        UpdateFromMousePos(mousePos);
       });
 
     events::on_mouse_left_up(this,
@@ -137,23 +124,9 @@ public:
 
     events::on_mouse_motion(this,
       [this](const IntPoint& mousePos){
-        if (!m_mouse.HasCapture()){
-          return;
+        if (m_mouse.HasCapture()){
+          UpdateFromMousePos(mousePos);
         }
-
-        // Fixme: Duplicates left_down
-        int pos = m_dir == SliderDir::HORIZONTAL ?
-          mousePos.x : mousePos.y;
-
-        int length = m_dir == SliderDir::HORIZONTAL ?
-          GetSize().x :
-          GetSize().y;
-
-        m_value = m_range.Constrain(pos_to_value(pos, length, m_range));
-        Refresh();
-        SliderEvent newEvent(GetValue());
-        newEvent.SetEventObject(this);
-        ProcessEvent(newEvent);
       });
 
     events::on_paint(this,
@@ -194,6 +167,22 @@ private:
     int pos = value_to_pos(m_value, length, m_range);
     m_marker->Draw(bmp, m_dir, to_faint(sz), pos);
     m_bitmap = to_wx_bmp(bmp);
+  }
+
+  void UpdateFromMousePos(const IntPoint& mousePos){
+    int pos = m_dir == SliderDir::HORIZONTAL ?
+      mousePos.x :
+      mousePos.y;
+
+    int length = m_dir == SliderDir::HORIZONTAL ?
+      GetSize().x :
+      GetSize().y;
+
+    m_value = m_range.Constrain(pos_to_value(pos, length, m_range));
+    Refresh();
+    SliderEvent newEvent(GetValue());
+    newEvent.SetEventObject(this);
+    ProcessEvent(newEvent);
   }
 
   std::unique_ptr<SliderBackground> m_background;
