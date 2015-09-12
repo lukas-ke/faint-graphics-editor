@@ -247,6 +247,10 @@ static expr_list parse_args(ParseState& st){
         return args;
       }
       else{
+        if (st.pos < st.str.size()){
+          throw ExpressionParseError(st.pos, "Expected closing parenthesis, got '"
+            + st.str[st.pos] + "'.");
+        }
         throw ExpressionParseError(st.pos, "Expected closing parenthesis.");
       }
     }
