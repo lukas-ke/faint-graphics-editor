@@ -62,15 +62,13 @@ ToolSettingPanel::ToolSettingPanel(wxWindow* parent,
   auto int_spinner =
     [&](const IntSetting& s, const char* label){
     static const int initialValue = 1;
-    return control(create_int_spinner(m_panel, wxSize(50, -1), s, initialValue,
-      label));
+    return control(create_int_spinner(m_panel, s, initialValue, label));
   };
 
   auto semi_float_spinner =
     [&](const FloatSetting& s, const char* label){
     static float initialValue = 1;
-    return control(create_semi_float_spinner(m_panel,
-      wxSize(50, -1), s, initialValue, label));
+    return control(create_semi_float_spinner(m_panel, s, initialValue, label));
   };
 
   auto image_toggle =

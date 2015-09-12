@@ -20,18 +20,16 @@
 namespace faint{
 
 IntSettingCtrl* create_int_spinner(wxWindow* parent,
-  const wxSize&,
   const IntSetting&,
   int value,
-  const std::string& label);
+  const utf8_string& label);
 
 // Alternative, only actually works with integers, but returns/accepts
 // floating point. Used due to problems with wxSpinCtrlDouble.
 FloatSettingControl* create_semi_float_spinner(wxWindow* parent,
-  const wxSize& size,
   const FloatSetting&,
   coord value,
-  const std::string&); // Fixme: Why std::string
+  const utf8_string& label);
 
 } // namespace
 

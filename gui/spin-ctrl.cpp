@@ -29,12 +29,12 @@ namespace faint{
 template<typename WXCTRL_T>
 class FocusRelayingCtrl : public WXCTRL_T{
 public:
-  FocusRelayingCtrl(wxWindow* parent, const wxSize& size) :
+  FocusRelayingCtrl(wxWindow* parent) :
     WXCTRL_T(parent,
       wxID_ANY,
       wxEmptyString,
       wxDefaultPosition,
-      size,
+      wxSize(50, -1),
       wxSP_ARROW_KEYS | wxTE_PROCESS_ENTER)
   {
     events::on_set_focus(this, [this](){
@@ -69,10 +69,9 @@ public:
   using value_t = typename SettingCtrl_T::value_type;
 
   SizeControl(wxWindow* parent,
-    const wxSize& size,
     const setting_t& setting,
     value_t value,
-    const std::string& label)
+    const utf8_string& label)
     : SettingCtrl_T(parent, setting),
       m_changed(false),
       m_spinCtrl(nullptr)
@@ -84,7 +83,7 @@ public:
 
     // Using Int FocusRelayingCtrl regardless of SettingCtrl_T, due to
     // the wxSpinCtrlDouble sometimes ceasing to work on Windows.
-    m_spinCtrl = new FocusRelayingSpinCtrlInt(this, size);
+    m_spinCtrl = new FocusRelayingSpinCtrlInt(this);
     set_value(m_spinCtrl, value);
     m_spinCtrl->SetRange(1, 255);
     m_spinCtrl->SetBackgroundColour(wxColour(255, 255, 255));
@@ -133,12 +132,11 @@ public:
 };
 
 IntSettingCtrl* create_int_spinner(wxWindow* parent,
-  const wxSize& size,
   const IntSetting& setting,
   int value,
-  const std::string& label)
+  const utf8_string& label)
 {
-  return new IntSizeControl(parent, size, setting, value, label);
+  return new IntSizeControl(parent, setting, value, label);
 }
 
 class SemiFloatSizeControl : public SizeControl<FloatSettingControl>{
@@ -151,12 +149,11 @@ public:
 };
 
 FloatSettingControl* create_semi_float_spinner(wxWindow* parent,
-  const wxSize& size,
   const FloatSetting& setting,
   coord value,
-  const std::string& label)
+  const utf8_string& label)
 {
-  return new SemiFloatSizeControl(parent, size, setting, value, label);
+  return new SemiFloatSizeControl(parent, setting, value, label);
 }
 
 } // namespace
