@@ -323,9 +323,8 @@ Optional<IntPoint> CommandHistory::Apply(Command* cmd,
   cmd->Do(commandContext);
   if (oldSize != activeImage->GetSize()){
     if (targetCurrentFrame){
-      Point pos(geo.pos.x, geo.pos.y); // Fixme: geo should have an IntPoint
-      coord zoom = geo.zoom.GetScaleFactor();
-      offset.Set(floored(cmd->Translate(pos / zoom) * zoom));
+      const coord zoom = geo.zoom.GetScaleFactor();
+      offset.Set(floored(cmd->Translate(geo.pos / zoom) * zoom));
     }
 
     // Clip the current selection to the new image size
