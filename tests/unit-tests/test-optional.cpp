@@ -84,7 +84,7 @@ void test_optional(){
   static_assert(is_true<decltype(has_or(optional))>(),
     "Optional of value type lacks Or-method");
   EQUAL(optional.Or(alt).GetSize(), altSize);
-  optional.Visit(FAIL_IF_CALLED());
+  optional.IfSet(FAIL_IF_CALLED());
   optional.Visit(FAIL_IF_CALLED(), FAIL_UNLESS_CALLED());
 
   optional.Set(bmp);
@@ -92,7 +92,7 @@ void test_optional(){
   VERIFY(optional.IsSet());
   VERIFY(optional);
   EQUAL(optional.Or(alt).GetSize(), bmpSize);
-  optional.Visit(FAIL_UNLESS_CALLED());
+  optional.IfSet(FAIL_UNLESS_CALLED());
   optional.Visit(FAIL_UNLESS_CALLED(), FAIL_IF_CALLED());
   IntSize sz = optional.VisitSimple(
     [](const Bitmap& bmp){

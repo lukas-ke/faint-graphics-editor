@@ -40,7 +40,7 @@ public:
 
   void Draw(FaintDC&, Overlays& overlays, const PosInfo& info) override{
     const auto& c = get_calibration(info);
-    c.Visit(
+    c.IfSet(
       [&](const Calibration& c){
         overlays.Line(c.pixelLine);
         overlays.Text(mid_point(c.pixelLine),

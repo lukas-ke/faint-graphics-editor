@@ -1025,7 +1025,7 @@ static void blend_gradient(const Offsat<AlphaMapRef>& offsatAlphaMap,
   const Gradient& g)
 {
   const AlphaMapRef& alphaMap = offsatAlphaMap.Get();
-  alphaMap.BoundingRect().Visit(
+  alphaMap.BoundingRect().IfSet(
     [&](const IntRect& r){
       Bitmap strokeMap(alphaMap.GetSize()); // Fixme: Costly allocation
       blend_pixels(strokeMap, ColorFromGradient(g, r),
@@ -1937,11 +1937,11 @@ void rect(Bitmap& bmp, const IntRect& inRect,
     },
     inRect));
 
-  bg.Visit([&](const Paint& f){
-      fill_rect(bmp, r, f);
+  bg.IfSet([&](const Paint& f){
+    fill_rect(bmp, r, f);
   });
 
-  fg.Visit([&](const BorderSettings& b){
+  fg.IfSet([&](const BorderSettings& b){
     draw_rect(bmp, r, b);
   });
 }
@@ -1984,7 +1984,7 @@ void replace_color_gradient(Bitmap& bmp, const OldColor& in_oldColor,
 {
   const Color& oldColor(in_oldColor.Get());
   auto r = find_color_extents(bmp, in_oldColor.Get());
-  r.Visit(
+  r.IfSet(
     [&](const IntRect& r){
       set_pixels_if(bmp, ColorFromGradient(gradient, r),
         [&](int x, int y){

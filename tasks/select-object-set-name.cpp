@@ -53,11 +53,11 @@ public:
       m_active(false),
       m_canvas(canvas)
   {
-    get_namee(m_canvas).Visit(
+    get_namee(m_canvas).IfSet(
       [&](const Object* object){
         m_active = true;
         m_actions.BeginTextEntry();
-        object->GetName().Visit(
+        object->GetName().IfSet(
           [&](const utf8_string& s){
             m_text.set(s);
             m_text.caret(m_text.size());

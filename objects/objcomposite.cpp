@@ -163,7 +163,7 @@ public:
     std::vector<CmdFunc> undoFuncs;
 
     for (Object* obj : m_objects){
-      obj->PixelSnapFunc().Visit(
+      obj->PixelSnapFunc().IfSet(
         [&](const CmdFuncs& f){
           doFuncs.push_back(f.Do);
           undoFuncs.push_back(f.Undo);

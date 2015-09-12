@@ -247,7 +247,7 @@ public:
       // to the width and height.
       {Alt+key::V,
         [&](){
-          clipboard_get_size().Visit(
+          clipboard_get_size().IfSet(
             [this](const Size& size){
               // Disable proportional resize, since both pasted values
               // should remain intact

@@ -122,7 +122,7 @@ public:
           "Select Foreground Color" :
           "Select Background Color");
 
-        m_pickPaint(title, paint, m_getSecondary()).Visit(
+        m_pickPaint(title, paint, m_getSecondary()).IfSet(
           [&](const Paint& picked){
             SendChangeEvent(ToSetting(hit), picked);
           });

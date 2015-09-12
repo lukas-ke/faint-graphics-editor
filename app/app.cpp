@@ -322,7 +322,7 @@ public:
       }
     }
     else {
-      run_python_file(scriptPath).Visit(
+      run_python_file(scriptPath).IfSet(
         [&](const FaintPyExc& err){
           const utf8_string errStr(format_run_script_error(scriptPath, err));
           if (m_cmd.silentMode){
@@ -338,7 +338,7 @@ public:
 
   int OnRun() override{
     assert(CallOrder(1));
-    m_cmd.scriptPath.Visit(
+    m_cmd.scriptPath.IfSet(
       [&](const FilePath& path){
         RunScript(path);
       });

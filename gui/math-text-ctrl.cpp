@@ -111,7 +111,7 @@ private:
   coord UpdateValue(){
     coord lastValue = m_value;
     auto result = parse_math_string((std::string)GetValue(), m_originalValue);
-    result.Visit(
+    result.IfSet(
       [&](coord value){
         if (value > 0){
           m_value = value;

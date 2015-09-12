@@ -210,7 +210,7 @@ public:
   }
 
   template<typename FUNC>
-  void Visit(const FUNC& whenSet) const{
+  void IfSet(const FUNC& whenSet) const{
     if (m_obj != nullptr){
       whenSet(*m_obj);
     }

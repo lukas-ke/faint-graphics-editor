@@ -149,7 +149,7 @@ private:
     Color bg(to_faint(GetBackgroundColour()));
     Bitmap bmp(m_paintMap.CreateBitmap(cellSize, spacing, bg));
 
-    maybeHighlight.Visit(
+    maybeHighlight.IfSet(
       [&](const CellPos& highlight){
         add_cell_border(bmp, highlight, cellSize, spacing,
           discernible_border_color(m_paintMap.Get(highlight)));
@@ -216,7 +216,7 @@ private:
     CreateBitmap(highlight(pos));
 
     m_pickPaint("Edit Palette Color", m_paintMap.Get(pos),
-      m_getSecondary()).Visit(
+      m_getSecondary()).IfSet(
         [&](const Paint& paint){
           m_paintMap.Replace(pos, paint);
           SetFg(paint);

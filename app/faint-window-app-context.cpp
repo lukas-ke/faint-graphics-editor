@@ -223,7 +223,7 @@ void FaintDialogContext::Show(std::unique_ptr<CommandWindow>&& w){
 }
 
 void FaintDialogContext::UpdateSettings(const Settings& s){
-  ShownWindow().Visit(
+  ShownWindow().IfSet(
     [&](CommandWindow& w){
       m_windowFeedback->UpdateSettings(s);
       w.UpdateSettings(s);
@@ -231,7 +231,7 @@ void FaintDialogContext::UpdateSettings(const Settings& s){
 }
 
 void FaintDialogContext::Reinitialize(){
-  ShownWindow().Visit(
+  ShownWindow().IfSet(
     [&](CommandWindow& w){
       m_windowFeedback->Reinitialize();
       w.Reinitialize(*m_windowFeedback);
@@ -384,7 +384,7 @@ void FaintWindowExtraOverlay::Draw(FaintDC& dc,
   Overlays& overlays,
   const PosInfo& info)
 {
-    m_dialogContext.ShownWindow().Visit(
+    m_dialogContext.ShownWindow().IfSet(
       [&](CommandWindow& w){
         w.Draw(dc, overlays, info);
       });

@@ -242,7 +242,7 @@ Deletes the objects in the sequence from the image." */
 static void canvas_delete_objects(CanvasT canvas,
   const Optional<BoundObjects>& maybeObjects)
 {
-  maybeObjects.Visit(
+  maybeObjects.IfSet(
     [&canvas](const BoundObjects& objects){
       if (objects.empty()){
         return;

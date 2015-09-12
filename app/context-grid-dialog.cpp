@@ -20,8 +20,7 @@ namespace faint{
 
 void context_show_grid_dialog(Canvas& canvas, DialogContext& c){
   auto result = show_grid_dialog(nullptr, canvas.GetGrid(), c);
-
-  result.Visit([&](const Grid& grid){
+  result.IfSet([&](const Grid& grid){
     canvas.SetGrid(grid);
     canvas.Refresh();
   });

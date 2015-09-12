@@ -94,7 +94,7 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
 
   auto pick_grid_color =  [&](){
     show_color_only_dialog(raw(dlg), "Grid color",
-      grid.GetColor(), c).Visit(
+      grid.GetColor(), c).IfSet(
         [&](const Color& c){
           grid.SetColor(c);
           colorButton->SetBitmap(make_color_bitmap());
