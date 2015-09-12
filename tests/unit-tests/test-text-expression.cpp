@@ -252,4 +252,6 @@ void test_text_expression(){
   PARSE_ERROR("01234\\perimeter(rect1,mm,crap)", 5,
     "perimeter expects 2 arguments");
 
+  PARSE_ERROR("01234\\u(a,b,c)", 5,
+    "u expects 1 argument");
 }

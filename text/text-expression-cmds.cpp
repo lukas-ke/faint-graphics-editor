@@ -65,8 +65,7 @@ static void throw_if_wrong_arg_count(const utf8_string& command,
   if (size != expected){
     throw CommandParseError(space_sep(command,
       "expects",
-      str_uint(expected),
-      "arguments"));
+      pluralize_count(expected, "argument")));
   }
 }
 

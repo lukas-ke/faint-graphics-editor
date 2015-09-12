@@ -32,6 +32,10 @@ utf8_string lbl(const utf8_string& label, const utf8_string& value);
 utf8_string lbl(const utf8_string& label, int value);
 utf8_string lbl_u(const utf8_string& label, size_t value);
 
+// Use the plural form of the type if amount != 1
+// Naivete-note: This just appends an s. :)
+utf8_string pluralize_count(size_t amount, const utf8_string& type);
+
 // Returns "<ModifierKey>=action"
 utf8_string primary_modifier(const utf8_string& action);
 utf8_string secondary_modifier(const utf8_string& action);

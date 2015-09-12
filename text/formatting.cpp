@@ -302,6 +302,12 @@ utf8_string lbl_u(const utf8_string& label, size_t value){
   return label + utf8_string(ss.str());
 }
 
+utf8_string pluralize_count(size_t amount, const utf8_string& type){
+  return space_sep(str_uint(amount),
+    amount == 1 ? type :
+    type + "s");
+}
+
 utf8_string primary_modifier(const utf8_string& action){
   return "Ctrl=" + action;
 }
