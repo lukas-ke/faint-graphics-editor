@@ -219,13 +219,12 @@ static void create_command(ParseState& st, const utf8_string& commandName,
   }
 }
 
-static void parse_args(ParseState& st, const utf8_string& commandName){
+static expr_list parse_args(ParseState& st){
   expr_list args;
-
   st.EatWhitespace();
   if (st.Eat(chars::right_parenthesis)){
     // No arguments
-    create_command(st, commandName, args);
+    return args;
   }
   else{
     while (st.pos < st.str.size()){
@@ -239,8 +238,7 @@ static void parse_args(ParseState& st, const utf8_string& commandName){
         st.EatWhitespace();
       }
       else if (st.Eat(chars::right_parenthesis)){
-        create_command(st, commandName, args);
-        return;
+        return args;
       }
       else{
         throw ExpressionParseError(st.pos, "Expected closing parenthesis.");
@@ -255,7 +253,8 @@ static void read_command(ParseState& st){
   assert(st.Eat(chars::backslash));
   utf8_string name = read_identifier(st);
   if (st.Eat(chars::left_parenthesis)){
-    parse_args(st, name);
+    auto args = parse_args(st);
+    create_command(st, name, args);
   }
   else if (!create_constant(st, name)){
     auto names(command_expr_names());
