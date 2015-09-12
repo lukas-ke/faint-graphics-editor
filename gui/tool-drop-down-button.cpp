@@ -69,9 +69,12 @@ static wxBitmap drop_down_bitmap(const wxBitmap& src, const IntSize& outerSize){
   return to_wx_bmp(b);
 }
 
-static void set_bitmaps(wxBitmapToggleButton* b, const ToolInfo& item){
-  auto active(drop_down_bitmap(item.active, {25,25})); // Fixme: Dupl. 25, 25
-  auto inactive(drop_down_bitmap(item.inactive, {25,25}));
+static void set_bitmaps(wxBitmapToggleButton* b,
+  const IntSize& buttonSize,
+  const ToolInfo& item)
+{
+  auto active(drop_down_bitmap(item.active, buttonSize));
+  auto inactive(drop_down_bitmap(item.inactive, buttonSize));
   b->SetBitmap(inactive);
   b->SetBitmapFocus(active);
   b->SetBitmapCurrent(active);
@@ -86,15 +89,16 @@ ToolDropDownButton::ToolDropDownButton(wxWindow* parent,
       wxDefaultPosition,
       to_wx(size),
       wxWANTS_CHARS|wxBORDER_NONE),
-    m_items(items)
+    m_items(items),
+    m_buttonSize(size)
 {
-  set_bitmaps(this, items.front());
+  set_bitmaps(this, m_buttonSize, items.front());
 }
 
 bool ToolDropDownButton::SetSelectedTool(ToolId toolId){
   for (auto item : m_items){
     if (item.toolId == toolId){
-      set_bitmaps(this, item);
+      set_bitmaps(this, m_buttonSize, item);
       SetValue(true);
       return true;
     }
@@ -130,8 +134,8 @@ public:
       auto b = new wxBitmapToggleButton(this, wxID_ANY,
         item.inactive,
         wxDefaultPosition,
-        wxSize(25,25),
-        wxWANTS_CHARS); // Fixme: wxSize(25, 25) == duplication
+        to_wx(buttonSize),
+        wxWANTS_CHARS);
       m_buttons.push_back({b, item});
       boxSizer->Add(b);
     }

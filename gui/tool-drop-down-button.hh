@@ -50,6 +50,7 @@ public:
   void RefreshHover();
 private:
   std::vector<ToolInfo> m_items;
+  IntSize m_buttonSize;
 };
 
 ToolDropDownButton* tool_drop_down_button(wxWindow*,
