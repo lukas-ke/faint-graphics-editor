@@ -48,6 +48,7 @@ std::vector<utf8_string> command_expr_names();
 
 // Returns the map of names to constant text values.
 const std::map<utf8_string, utf8_string>& constant_exprs();
+bool is_text_expression_constant(const utf8_string&);
 
 } // namespace
 

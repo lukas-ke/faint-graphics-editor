@@ -242,4 +242,10 @@ void test_text_expression(){
 
   PARSE_ERROR("\\nonsense()", 0,
     "Unknown command: nonsense");
+
+  PARSE_ERROR("012\\nonsense", 3,
+    "Unknown constant: nonsense");
+
+  PARSE_ERROR("0123\\nonsense()", 4,
+    "Unknown command: nonsense");
 }

@@ -79,6 +79,11 @@ auto not_equal_to(const T& key){
   return [=](const T& value){return value != key;};
 }
 
+template<class Container, class Value>
+bool contains(Container&& c, const Value& v){
+  return std::find(begin(c), end(c), v) != end(c);
+}
+
 } // namespace
 
 #endif

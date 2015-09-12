@@ -18,6 +18,7 @@
 #include "text/formatting.hh"
 #include "text/text-expression.hh"
 #include "text/text-expression-cmds.hh"
+#include "util/generator-adapter.hh"
 
 namespace faint{
 
@@ -191,32 +192,32 @@ static utf8_string read_identifier(ParseState& st){
   return st.ConsumeTo(pos);
 }
 
-static bool create_constant(ParseState& st, const utf8_string& name){
+static TextExpression* create_constant(const utf8_string& name,
+  size_t commandPos){
   const auto& constants = constant_exprs();
   auto it = constants.find(name);
   if (it != constants.end()){
-    st.Append(new Text(it->second));
-    return true;
+    return new Text(it->second);
   }
-  return false;
+  else {
+    throw ExpressionParseError(commandPos, space_sep("Unknown constant:", name));
+  }
 }
 
-static void create_command(ParseState& st, const utf8_string& commandName,
-  expr_list& args)
+static TextExpression* create_command(const utf8_string& commandName,
+  expr_list& args,
+  size_t commandPos)
 {
-  if (TextExpression* expr = create_command_expr(commandName, args)){
-    st.tree.Append(expr);
+  if (contains(command_expr_names(), commandName)){
+    return create_command_expr(commandName, args);
   }
-  else if (args.empty()){
-    if (!create_constant(st, commandName)){
-      throw ExpressionParseError(0, // Fixme: Use real pos
-        space_sep("Unknown command:", commandName));
-    }
+  else if (args.empty() && is_text_expression_constant(commandName)){
+    // Allow expressing constants as commands with empty argument lists
+    return create_constant(commandName, commandPos);
   }
-  else{
-    throw ExpressionParseError(0, // Fixme: Use real pos
-      space_sep("Unknown command:", commandName));
-  }
+  throw ExpressionParseError(commandPos,
+    space_sep("Unknown command:", commandName));
+
 }
 
 static expr_list parse_args(ParseState& st){
@@ -254,16 +255,15 @@ static void read_command(ParseState& st){
   utf8_string name = read_identifier(st);
   if (st.Eat(chars::left_parenthesis)){
     auto args = parse_args(st);
-    create_command(st, name, args);
+    st.Append(create_command(name, args, commandPos));
   }
-  else if (!create_constant(st, name)){
-    auto names(command_expr_names());
-    if (std::find(names.begin(), names.end(), name) != names.end()){
+  else{
+    if (contains(command_expr_names(), name)){
       throw ExpressionParseError(commandPos,
         space_sep(name, "missing parameter list."));
     }
     else{
-      throw ExpressionParseError(commandPos, space_sep("Unknown constant:", name));
+      st.Append(create_constant(name, commandPos));
     }
   }
 }

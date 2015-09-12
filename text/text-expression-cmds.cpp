@@ -364,4 +364,9 @@ TextExpression* create_command_expr(const utf8_string& name, expr_list& args){
   return command_expressions().Create(name, args);
 }
 
+bool is_text_expression_constant(const utf8_string& name){
+  auto e = constant_exprs();
+  return e.find(name) != e.end();
+}
+
 } // namespace
