@@ -115,10 +115,10 @@ bool ToolDropDownButton::SetSelectedTool(ToolId toolId){
 }
 
 void ToolDropDownButton::RefreshHover(){
-  // Fixme: This is workaround for sticking hover-state when the popup
-  // was opened, but no tool in it selected (i.e. clicked outside).
-  // It seems the button gets no wxEVT_LEAVE, so the hover appearance
-  // is never cleared.
+  // This is workaround for sticking hover-state when the popup was
+  // opened, but no tool in it selected (i.e. clicked outside). It
+  // seems the button gets no wxEVT_LEAVE, so the hover appearance is
+  // never cleared.
   if (GetValue()){
     SetValue(false);
     SetValue(true);
