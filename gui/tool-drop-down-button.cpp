@@ -43,14 +43,7 @@ ToolInfo::ToolInfo(const wxBitmap& inactive,
     toolId(toolId)
 {}
 
-static wxBitmap drop_down_bitmap(const wxBitmap& src, const IntSize& outerSize){
-  // Adds a drop-down indicating triangle to the bitmap
-  IntSize innerSize(to_faint(src.GetSize()));
-  IntPoint offset(point_from_size(outerSize - innerSize)/ 2);
-  Bitmap b(outerSize, color_transparent_black);
-
-  blit_masked(offsat(to_faint(src), offset), onto(b),
-    Color(1,0,0));
+static void draw_drop_down_marker(Bitmap& b){
   int dx = 6;
   int dy = 3;
   int spacing = 2;
@@ -61,11 +54,25 @@ static wxBitmap drop_down_bitmap(const wxBitmap& src, const IntSize& outerSize){
   fill_triangle_color(b, p1, p2, p3, color_white);
 
   // Draw the triangle edge
-  // Fixme: Draw polygon?
   auto s = solid_1px(color_black);
   draw_line(b, {p1, p2}, s);
   draw_line(b, {p2, p3}, s);
-  draw_line(b, {p1 - delta_y(1), p3 - delta_y(1)}, s);
+
+  // The border looks a bit nicer if the top-line is shifted one step
+  // up, <../doc/drop-down-shifted-top-line.png>.
+  const auto shift = delta_y(-1);
+  draw_line(b, {p1 + shift, p3 + shift}, s);
+}
+
+static wxBitmap drop_down_bitmap(const wxBitmap& src, const IntSize& outerSize){
+  // Adds a drop-down indicating triangle to the bitmap
+  IntSize innerSize(to_faint(src.GetSize()));
+  IntPoint offset(point_from_size(outerSize - innerSize)/ 2);
+  Bitmap b(outerSize, color_transparent_black);
+
+  blit_masked(offsat(to_faint(src), offset), onto(b),
+    Color(1,0,0));
+  draw_drop_down_marker(b);
   return to_wx_bmp(b);
 }
 
