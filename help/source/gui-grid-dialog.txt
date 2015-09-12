@@ -1,0 +1,16 @@
+page:"Grid Dialog"
+summary:"Dialog for adjusting the grid"
+
+= The Grid dialog =
+The grid dialog is used to adjust more
+detailed \ref(feat-grid.txt,grid) settings than possible in the
+the \ref(gui-grid-control.txt,grid control).
+
+\image(gui-grid-dialog.png)
+
+|| *Element* || *Description* ||
+|| Enabled-checkbox || Whether the grid is used or not. ||
+|| Spacing || The spacing between grid-cells in (sub-)pixels. ||
+|| X, Y || The offset of the first grid lines from the upper-left corner. ||
+|| Dashes-checkbox || Whether the grid lines are dashed or not. ||
+|| Color || The color of grid-lines. ||

@@ -13,3 +13,7 @@ the grid spacing controls.
 
 ||\image(icon-info.png)|| The spacing digit can be dragged for quick-adjustment: ||
 \image(gui-grid-control-drag.png)
+
+To adjust additional grid settings, use
+the \ref(gui-grid-dialog.txt,grid dialog). The grid dialog can be
+opened by double-clicking the grid spacing digit of the grid control.

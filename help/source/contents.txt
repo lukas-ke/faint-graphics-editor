@@ -43,6 +43,7 @@ ref-gui.txt
 >gui-color-selection-dialog.txt
 >gui-frame-control.txt
 >gui-grid-control.txt
+>gui-grid-dialog.txt
 >gui-help-window.txt
 >gui-image-resize-handles.txt
 >ref-menu.txt

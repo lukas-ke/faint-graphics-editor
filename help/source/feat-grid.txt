@@ -4,12 +4,12 @@ summary:"The grid supports snapping to positions in an image"
 = Grid =
 The grid supports constraining drawing and positions of objects to
 grid intersections. To enable the grid, use
-the \ref(gui-grid-control.txt).
+the \ref(gui-grid-control.txt) or \ref(gui-grid-dialog.txt).
 
 \image(feat-grid.png)
 
 Many tools snap to the grid when Ctrl is held.
 
 ---
-See \ref(gui-grid-control.txt).\br
+See \ref(gui-grid-control.txt), \ref(gui-grid-dialog.txt).\br
 \ref(py-grid.txt,Grid Python class)
