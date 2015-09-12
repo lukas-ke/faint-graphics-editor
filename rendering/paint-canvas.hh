@@ -36,7 +36,6 @@ bool should_draw_raster(const ToolWrapper&, Layer);
 // options should be enabled.
 bool should_draw_vector(const ToolWrapper&, Layer);
 
-class ExtraOverlay;
 class Drawable{
 public:
   virtual ~Drawable() = default;
