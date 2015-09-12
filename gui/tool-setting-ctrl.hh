@@ -36,6 +36,9 @@ public:
   virtual void SetValue(int) = 0;
   virtual bool UpdateControl(const Settings&) override;
   virtual void SendChangeEvent() override;
+
+  using setting_type = IntSetting;
+  using value_type = setting_type::ValueType;
 private:
   IntSetting m_setting;
 };
@@ -48,6 +51,9 @@ public:
   virtual void SetValue(coord) = 0;
   virtual bool UpdateControl(const Settings&) override;
   virtual void SendChangeEvent() override;
+
+  using setting_type = FloatSetting;
+  using value_type = setting_type::ValueType;
 private:
   FloatSetting m_setting;
 };

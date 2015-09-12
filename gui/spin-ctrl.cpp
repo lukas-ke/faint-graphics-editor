@@ -26,18 +26,16 @@
 
 namespace faint{
 
-// Fixme: The controls in this class file duplicate eachother a lot.
-
 template<typename WXCTRL_T>
 class FocusRelayingCtrl : public WXCTRL_T{
 public:
-  FocusRelayingCtrl(wxWindow* parent, const wxSize& size)
-    : WXCTRL_T(parent,
-        wxID_ANY,
-        wxEmptyString,
-        wxDefaultPosition,
-        size,
-        wxSP_ARROW_KEYS | wxTE_PROCESS_ENTER)
+  FocusRelayingCtrl(wxWindow* parent, const wxSize& size) :
+    WXCTRL_T(parent,
+      wxID_ANY,
+      wxEmptyString,
+      wxDefaultPosition,
+      size,
+      wxSP_ARROW_KEYS | wxTE_PROCESS_ENTER)
   {
     events::on_set_focus(this, [this](){
       wxCommandEvent newEvent(EVT_FAINT_SetFocusEntryControl, wxID_ANY);
@@ -56,32 +54,49 @@ public:
 using FocusRelayingSpinCtrlInt = FocusRelayingCtrl<wxSpinCtrl>;
 using FocusRelayingSpinCtrlDouble = FocusRelayingCtrl<wxSpinCtrlDouble>;
 
-class IntSizeControl : public IntSettingCtrl{
+static void set_value(wxSpinCtrl* ctrl, int value){
+  ctrl->SetValue(value);
+}
+
+static void set_value(wxSpinCtrl* ctrl, coord value){
+  ctrl->SetValue(static_cast<int>(value));
+}
+
+template<typename SettingCtrl_T>
+class SizeControl : public SettingCtrl_T{
 public:
-  IntSizeControl(wxWindow* parent,
-    wxSize size,
-    const IntSetting& setting,
-    int value,
-    const std::string& label) // Fixme: Why std::string?
-    : IntSettingCtrl(parent, setting),
-      m_changed(false)
+  using setting_t = typename SettingCtrl_T::setting_type;
+  using value_t = typename SettingCtrl_T::value_type;
+
+  SizeControl(wxWindow* parent,
+    const wxSize& size,
+    const setting_t& setting,
+    value_t value,
+    const std::string& label)
+    : SettingCtrl_T(parent, setting),
+      m_changed(false),
+      m_spinCtrl(nullptr)
   {
     auto sizer = new wxBoxSizer(wxVERTICAL);
     if (label.size() > 0){
       layout::add(sizer, create_label(this, label.c_str()));
     }
+
+    // Using Int FocusRelayingCtrl regardless of SettingCtrl_T, due to
+    // the wxSpinCtrlDouble sometimes ceasing to work on Windows.
     m_spinCtrl = new FocusRelayingSpinCtrlInt(this, size);
-    m_spinCtrl->SetValue(value);
+    set_value(m_spinCtrl, value);
     m_spinCtrl->SetRange(1, 255);
     m_spinCtrl->SetBackgroundColour(wxColour(255, 255, 255));
     sizer->Add(m_spinCtrl, 0, wxALIGN_CENTER_HORIZONTAL);
     SetSizerAndFit(sizer);
 
-    events::on_idle(this, [this](){
-      if (then_false(m_changed)){
-        SendChangeEvent();
-      }
-    });
+    events::on_idle(this,
+      [this](){
+        if (then_false(m_changed)){
+          SendChangeEvent();
+        }
+      });
 
     bind_fwd(this, wxEVT_SPINCTRL,
       [this](wxSpinEvent& event){
@@ -95,12 +110,12 @@ public:
       });
   }
 
-  int GetValue() const override{
-    return m_spinCtrl->GetValue();
+  void SetValue(value_t value) override{
+    set_value(m_spinCtrl, value);
   }
 
-  void SetValue(int value) override{
-    m_spinCtrl->SetValue(value);
+  int GetControlValue() const{
+    return m_spinCtrl->GetValue();
   }
 
 private:
@@ -108,75 +123,31 @@ private:
   wxSpinCtrl* m_spinCtrl;
 };
 
-IntSettingCtrl* create_int_spinner(wxWindow* parent, const wxSize& size,
-  const IntSetting& setting, int value, const std::string& label)
+class IntSizeControl : public SizeControl<IntSettingCtrl>{
+public:
+  using SizeControl::SizeControl;
+
+  int GetValue() const override{
+    return GetControlValue();
+  }
+};
+
+IntSettingCtrl* create_int_spinner(wxWindow* parent,
+  const wxSize& size,
+  const IntSetting& setting,
+  int value,
+  const std::string& label)
 {
   return new IntSizeControl(parent, size, setting, value, label);
 }
 
-class SemiFloatSizeControl : public FloatSettingControl{
+class SemiFloatSizeControl : public SizeControl<FloatSettingControl>{
 public:
-  SemiFloatSizeControl(wxWindow* parent, wxSize size, const FloatSetting& setting,
-    coord value, const std::string& label)
-  : FloatSettingControl(parent, setting)
-  {
-    auto sizer = new wxBoxSizer(wxVERTICAL);
-    if (label.size() > 0){
-      layout::add(sizer, create_label(this, label.c_str()));
-    }
-
-    // Using ...Int due to the double control sometimes ceasing to work
-    // on Windows
-    m_spinCtrl = new FocusRelayingSpinCtrlInt(this, size);
-
-    m_spinCtrl->SetValue(static_cast<int>(value));
-    m_spinCtrl->SetRange(1, 255);
-    m_spinCtrl->SetBackgroundColour(wxColour(255, 255, 255));
-    m_lastValue = static_cast<int>(value);
-    sizer->Add(m_spinCtrl, 0, wxALIGN_CENTER_HORIZONTAL);
-    SetSizerAndFit(sizer);
-
-    bind_fwd(this, wxEVT_SPINCTRL,
-      [this](wxSpinEvent& event){
-        m_changed = true;
-        event.Skip();
-      });
-
-    bind(this, wxEVT_TEXT_ENTER,
-      [this](){
-        m_lastValue = m_spinCtrl->GetValue();
-        SendChangeEvent();
-      });
-
-    events::on_idle(this, [this](){
-      if (then_false(m_changed)){
-        m_lastValue = m_spinCtrl->GetValue();
-        SendChangeEvent();
-      }
-    });
-
-    bind_fwd(this, EVT_FAINT_KillFocusEntryControl,
-      [this](wxEvent& event){
-        // Set value on focus lost
-        if (m_lastValue  != m_spinCtrl->GetValue()){
-          SendChangeEvent();
-        }
-        event.Skip();
-      });
-  }
+  using SizeControl::SizeControl;
 
   coord GetValue() const override{
-    return static_cast<coord>(m_spinCtrl->GetValue());
+    return static_cast<coord>(GetControlValue());
   }
-
-  virtual void SetValue(coord value) override{
-    m_spinCtrl->SetValue(static_cast<int>(value));
-  }
-
-private:
-  wxSpinCtrl* m_spinCtrl;
-  bool m_changed;
-  int m_lastValue;
 };
 
 FloatSettingControl* create_semi_float_spinner(wxWindow* parent,

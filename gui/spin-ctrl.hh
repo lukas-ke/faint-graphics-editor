@@ -31,7 +31,7 @@ FloatSettingControl* create_semi_float_spinner(wxWindow* parent,
   const wxSize& size,
   const FloatSetting&,
   coord value,
-  const std::string&);
+  const std::string&); // Fixme: Why std::string
 
 } // namespace
 
