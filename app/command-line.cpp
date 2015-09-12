@@ -16,6 +16,7 @@
 #include <cctype>
 #include <sstream>
 #include "app/command-line.hh"
+#include "python/py-initialize-ifaint.hh" // for CMDLINE_ARGUMENT_NAME
 #include "text/formatting.hh"
 #include "util-wx/convert-wx.hh"
 #include "wx/filename.h"
@@ -118,7 +119,7 @@ static const wxCmdLineEntryDesc g_cmdLineDesc[] = {
    wxCMD_LINE_PARAM_OPTIONAL},
 
   {wxCMD_LINE_OPTION, "", CMD_SCRIPT_ARG,
-   "Custom argument stored in faint.cmd_arg.", // Fixme: Duplication
+   wxString("Custom argument stored in faint.") + CMDLINE_ARGUMENT_NAME,
    wxCMD_LINE_VAL_STRING,
    wxCMD_LINE_PARAM_OPTIONAL},
 

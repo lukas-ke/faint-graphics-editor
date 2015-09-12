@@ -205,12 +205,13 @@ bool init_python(const utf8_string& arg, PyFuncContext& ctx){
   // are found from envsetup and the user ini.
   add_to_python_path(dataDir.SubDir("py"));
 
-  run_envsetup(dataDir.SubDir("py").SubDir("core").File("envsetup.py"));
-
   if (!arg.empty()){
     auto dict = borrowed(PyModule_GetDict(ifaint.get()));
-    PyDict_SetItemString(dict.get(), "cmd_arg", build_unicode(arg));
+    PyDict_SetItemString(dict.get(), CMDLINE_ARGUMENT_NAME,
+      build_unicode(arg));
   }
+
+  run_envsetup(dataDir.SubDir("py").SubDir("core").File("envsetup.py"));
 
   return true;
 }

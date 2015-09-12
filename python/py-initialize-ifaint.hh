@@ -25,6 +25,8 @@ class FaintPyExc;
 class FilePath;
 class PythonContext;
 
+const char* const CMDLINE_ARGUMENT_NAME = "cmd_arg";
+
 // Initializes the ifaint module.
 // The string argument will be available as ifaint.cmd_arg.
 // Returns true on success.
