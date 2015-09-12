@@ -243,7 +243,7 @@ static unsigned int from_hex_str(const utf8_string& s){
 class UnicodeExpression : public TextExpression{
 public:
   explicit UnicodeExpression(expr_list& args){
-    throw_if_wrong_arg_count("u", // Fixme: Duplication
+    throw_if_wrong_arg_count(Name(),
       1, args);
     m_arg = std::move(args[0]);
   }
@@ -266,6 +266,10 @@ public:
     expr_list args;
     args.emplace_back(m_arg->Clone());
     return new UnicodeExpression(args);
+  }
+
+  static utf8_string Name(){
+    return "u";
   }
 
 private:
@@ -340,7 +344,7 @@ static CommandExpressions init_command_expressions(){
         }, args);});
 
 
-  c.Add("u",
+  c.Add(UnicodeExpression::Name(),
     [](expr_list& args){
       return new UnicodeExpression(args);
     });
