@@ -130,64 +130,22 @@ static bool one_color_bg(const Image* image){
     });
 }
 
-static Bitmap parse_png_bitmap(PyObject* args){
-  // Fixme: Duplicates parse_jpg_bitmap, extract PyBytes-parsing.
-
-  if (PySequence_Length(args) != 1){
-    throw TypeError("A single string argument is required.");
-  }
-
-  scoped_ref pngStrPy(PySequence_GetItem(args, 0));
-  if (!PyBytes_Check(pngStrPy.get())){
-    throw TypeError("Argument 1 must be a bytes object");
-  }
-
-  auto len = PyBytes_Size(pngStrPy.get());
-  if (len <= 0){
-    throw ValueError("Empty string");
-  }
-
-  const char* bytes = PyBytes_AsString(pngStrPy.get());
-  if (bytes == nullptr){
-    throw TypeError("Failed reading byte string");
-  }
-
-  return or_throw<ValueError>(from_png(bytes, static_cast<size_t>(len)));
-}
-
 /* function: "bitmap_from_png_string(s)->bmp\n
 Creates a bitmap from the PNG string." */
-static Bitmap bitmap_from_png_string(PyObject*, PyObject* args){
-  return parse_png_bitmap(args);
-}
-
-static Bitmap parse_jpg_bitmap(PyObject* args){
-  if (PySequence_Length(args) != 1){
-    throw TypeError("A single bytes argument is required.");
-  }
-
-  scoped_ref jpgStrPy(PySequence_GetItem(args, 0));
-  if (!PyBytes_Check(jpgStrPy.get())){
-    throw TypeError("Argument 1 must be a bytes object");
-  }
-
-  auto len = PyBytes_Size(jpgStrPy.get());
-  if (len <= 0){
+static Bitmap bitmap_from_png_string(const std::string& bytes){
+  if (bytes.size() == 0){
     throw ValueError("Empty string");
   }
-
-  const char* bytes = PyBytes_AsString(jpgStrPy.get());
-  if (bytes == nullptr){
-    throw TypeError("Failed reading byte string");
-  }
-
-  return or_throw<ValueError>(from_jpg(bytes, static_cast<size_t>(len)));
+  return or_throw<ValueError>(from_png(bytes.c_str(), bytes.size()));
 }
 
 /* function: "bitmap_from_jpg_string(s)->bmp\n
 Creates a bitmap from the JPG string." */
-static Bitmap bitmap_from_jpg_string(PyObject*, PyObject* args){
-  return parse_jpg_bitmap(args);
+static Bitmap bitmap_from_jpg_string(const std::string& bytes){
+  if (bytes.size() == 0){
+    throw ValueError("Empty string");
+  }
+  return or_throw<ValueError>(from_jpg(bytes.c_str(), bytes.size()));
 }
 
 /* function: "encode_bitmap_png(bmp)->bytes\n

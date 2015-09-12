@@ -87,7 +87,6 @@ template<> struct arg_traits<utf8_string>{static const TypeName name;};
 
 bool parse_int(PyObject*, Py_ssize_t n, int* value);
 bool parse_coord(PyObject*, Py_ssize_t n, coord* value);
-bool parse_bytes(PyObject*, Py_ssize_t n, std::string* value);
 
 // Parse flat for Faint Objects
 template<typename T>
