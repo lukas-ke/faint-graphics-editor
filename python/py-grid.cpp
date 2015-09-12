@@ -44,7 +44,6 @@ void CanvasGrid::SetGrid(const Grid& g) const{
 extern PyTypeObject GridType;
 
 struct gridObject {
-  // Fixme: Move into impl..
   PyObject_HEAD
   PyFuncContext* ctx;
   bool targetActive;
