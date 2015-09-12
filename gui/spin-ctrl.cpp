@@ -28,11 +28,16 @@ namespace faint{
 
 // Fixme: The controls in this class file duplicate eachother a lot.
 
-class FocusRelayingSpinCtrl : public wxSpinCtrl{
+template<typename WXCTRL_T>
+class FocusRelayingCtrl : public WXCTRL_T{
 public:
-  FocusRelayingSpinCtrl(wxWindow* parent, wxSize size) :
-    wxSpinCtrl(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, size,
-      wxSP_ARROW_KEYS | wxTE_PROCESS_ENTER)
+  FocusRelayingCtrl(wxWindow* parent, const wxSize& size)
+    : WXCTRL_T(parent,
+        wxID_ANY,
+        wxEmptyString,
+        wxDefaultPosition,
+        size,
+        wxSP_ARROW_KEYS | wxTE_PROCESS_ENTER)
   {
     events::on_set_focus(this, [this](){
       wxCommandEvent newEvent(EVT_FAINT_SetFocusEntryControl, wxID_ANY);
@@ -48,25 +53,8 @@ public:
   }
 };
 
-class FocusRelayingSpinCtrlDouble : public wxSpinCtrlDouble{
-public:
-  FocusRelayingSpinCtrlDouble(wxWindow* parent, wxSize size) :
-    wxSpinCtrlDouble(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, size,
-      wxSP_ARROW_KEYS | wxTE_PROCESS_ENTER)
-  {
-    events::on_set_focus(this, [this](){
-      wxCommandEvent newEvent(EVT_FAINT_SetFocusEntryControl, wxID_ANY);
-      newEvent.SetEventObject(this);
-      GetEventHandler()->ProcessEvent(newEvent);
-    });
-
-    events::on_kill_focus(this, [this](){
-      wxCommandEvent newEvent(EVT_FAINT_KillFocusEntryControl, wxID_ANY);
-      newEvent.SetEventObject(this);
-      GetEventHandler()->ProcessEvent(newEvent);
-    });
-  }
-};
+using FocusRelayingSpinCtrl = FocusRelayingCtrl<wxSpinCtrl>;
+using FocusRelayingSpinCtrlDouble = FocusRelayingCtrl<wxSpinCtrlDouble>;
 
 class IntSizeControl : public IntSettingCtrl{
 public:
@@ -243,8 +231,11 @@ private:
   int m_lastValue;
 };
 
-FloatSettingControl* create_semi_float_spinner(wxWindow* parent, const wxSize& size,
-  const FloatSetting& setting, coord value, const std::string& label)
+FloatSettingControl* create_semi_float_spinner(wxWindow* parent,
+  const wxSize& size,
+  const FloatSetting& setting,
+  coord value,
+  const std::string& label)
 {
   return new SemiFloatSizeControl(parent, size, setting, value, label);
 }
