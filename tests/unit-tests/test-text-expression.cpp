@@ -248,4 +248,8 @@ void test_text_expression(){
 
   PARSE_ERROR("0123\\nonsense()", 4,
     "Unknown command: nonsense");
+
+  PARSE_ERROR("01234\\perimeter(rect1,mm,crap)", 5,
+    "perimeter expects 2 arguments");
+
 }

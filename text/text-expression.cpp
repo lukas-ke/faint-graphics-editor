@@ -209,7 +209,13 @@ static TextExpression* create_command(const utf8_string& commandName,
   size_t commandPos)
 {
   if (contains(command_expr_names(), commandName)){
-    return create_command_expr(commandName, args);
+    try{
+      return create_command_expr(commandName, args);
+    }
+    catch (const CommandParseError& e){
+      // Add the position information
+      throw ExpressionParseError(commandPos, e.description);
+    }
   }
   else if (args.empty() && is_text_expression_constant(commandName)){
     // Allow expressing constants as commands with empty argument lists
@@ -217,7 +223,6 @@ static TextExpression* create_command(const utf8_string& commandName,
   }
   throw ExpressionParseError(commandPos,
     space_sep("Unknown command:", commandName));
-
 }
 
 static expr_list parse_args(ParseState& st){

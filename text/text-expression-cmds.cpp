@@ -63,9 +63,10 @@ static void throw_if_wrong_arg_count(const utf8_string& command,
 {
   size_t size = args.size();
   if (size != expected){
-    size_t pos = 0; // Fixme: Use real command position
-    throw ExpressionParseError(pos,
-      space_sep(command, "expects", str_uint(expected), "arguments"));
+    throw CommandParseError(space_sep(command,
+      "expects",
+      str_uint(expected),
+      "arguments"));
   }
 }
 

@@ -22,6 +22,13 @@
 
 namespace faint{
 
+class CommandParseError{
+  // Error thrown when initializing a specific text command
+public:
+  CommandParseError(const utf8_string& d) : description(d) {}
+  utf8_string description;
+};
+
 class TextExpression{
 public:
   TextExpression(){}
