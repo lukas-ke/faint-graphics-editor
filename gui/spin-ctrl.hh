@@ -25,12 +25,6 @@ IntSettingCtrl* create_int_spinner(wxWindow* parent,
   int value,
   const std::string& label);
 
-FloatSettingControl* create_float_spinner(wxWindow* parent,
-  const wxSize& size,
-  const FloatSetting&,
-  coord value,
-  const std::string&);
-
 // Alternative, only actually works with integers, but returns/accepts
 // floating point. Used due to problems with wxSpinCtrlDouble.
 FloatSettingControl* create_semi_float_spinner(wxWindow* parent,

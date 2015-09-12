@@ -53,7 +53,7 @@ public:
   }
 };
 
-using FocusRelayingSpinCtrl = FocusRelayingCtrl<wxSpinCtrl>;
+using FocusRelayingSpinCtrlInt = FocusRelayingCtrl<wxSpinCtrl>;
 using FocusRelayingSpinCtrlDouble = FocusRelayingCtrl<wxSpinCtrlDouble>;
 
 class IntSizeControl : public IntSettingCtrl{
@@ -70,7 +70,7 @@ public:
     if (label.size() > 0){
       layout::add(sizer, create_label(this, label.c_str()));
     }
-    m_spinCtrl = new FocusRelayingSpinCtrl(this, size);
+    m_spinCtrl = new FocusRelayingSpinCtrlInt(this, size);
     m_spinCtrl->SetValue(value);
     m_spinCtrl->SetRange(1, 255);
     m_spinCtrl->SetBackgroundColour(wxColour(255, 255, 255));
@@ -114,63 +114,6 @@ IntSettingCtrl* create_int_spinner(wxWindow* parent, const wxSize& size,
   return new IntSizeControl(parent, size, setting, value, label);
 }
 
-class FloatSizeControl : public FloatSettingControl{
-public:
-  FloatSizeControl(wxWindow* parent, wxSize size, const FloatSetting& setting,
-    coord value, const std::string& label)
-    : FloatSettingControl(parent, setting),
-      m_changed(false)
-  {
-    auto sizer = new wxBoxSizer(wxVERTICAL);
-    if (label.size() > 0){
-      layout::add(sizer, create_label(this, label.c_str()));
-    }
-    m_spinCtrl = new wxSpinCtrlDouble(this, wxID_ANY, wxEmptyString,
-      wxDefaultPosition, size, wxSP_ARROW_KEYS | wxTE_PROCESS_ENTER);
-    m_spinCtrl->SetValue(value);
-    m_spinCtrl->SetRange(0.1, 255);
-    m_spinCtrl->SetBackgroundColour(wxColour(255, 255, 255));
-
-    sizer->Add(m_spinCtrl, 0, wxALIGN_CENTER_HORIZONTAL);
-    SetSizerAndFit(sizer);
-
-    events::on_idle(this, [this](){
-      if (then_false(m_changed)){
-        SendChangeEvent();
-      }
-    });
-
-    bind_fwd(this, wxEVT_SPINCTRLDOUBLE,
-      [this](wxSpinDoubleEvent& event){
-        m_changed = true;
-        event.Skip();
-      });
-
-    bind(this, wxEVT_TEXT_ENTER,
-      [this](){
-        SendChangeEvent();
-      });
-  }
-
-  coord GetValue() const override{
-    return m_spinCtrl->GetValue();
-  }
-
-  void SetValue(coord value) override{
-    m_spinCtrl->SetValue(value);
-  }
-
-private:
-  bool m_changed;
-  wxSpinCtrlDouble* m_spinCtrl;
-};
-
-FloatSettingControl* create_float_spinner(wxWindow* parent, const wxSize& size,
-  const FloatSetting& setting, coord value, const std::string& label)
-{
-  return new FloatSizeControl(parent, size, setting, value, label);
-}
-
 class SemiFloatSizeControl : public FloatSettingControl{
 public:
   SemiFloatSizeControl(wxWindow* parent, wxSize size, const FloatSetting& setting,
@@ -181,7 +124,11 @@ public:
     if (label.size() > 0){
       layout::add(sizer, create_label(this, label.c_str()));
     }
-    m_spinCtrl = new FocusRelayingSpinCtrl(this, size);
+
+    // Using ...Int due to the double control sometimes ceasing to work
+    // on Windows
+    m_spinCtrl = new FocusRelayingSpinCtrlInt(this, size);
+
     m_spinCtrl->SetValue(static_cast<int>(value));
     m_spinCtrl->SetRange(1, 255);
     m_spinCtrl->SetBackgroundColour(wxColour(255, 255, 255));
@@ -210,10 +157,11 @@ public:
 
     bind_fwd(this, EVT_FAINT_KillFocusEntryControl,
       [this](wxEvent& event){
-        event.Skip();
+        // Set value on focus lost
         if (m_lastValue  != m_spinCtrl->GetValue()){
           SendChangeEvent();
         }
+        event.Skip();
       });
   }
 
