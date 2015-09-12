@@ -148,22 +148,32 @@ utf8_string CommandHistory::GetRedoName(const ImageList& images) const{
   }
 }
 
+static utf8_string command_count_name(const std::deque<OldCommand>& commands){
+  assert(commands.back().type == UndoType::CLOSE_GROUP);
+
+  // Count the number of commands within the group (between open and close).
+  for (auto cmd : enumerate(reversed(but_last(commands)))){
+    if (cmd.item.type == UndoType::OPEN_GROUP){
+      return space_sep("Python Commands", bracketed(str_int(cmd.num)));
+    }
+  }
+  assert(false);
+  return "";
+}
+
 utf8_string CommandHistory::GetUndoName(const ImageList& images) const{
   if (m_undoList.empty()){
     return "";
   }
   const OldCommand& last = m_undoList.back();
   if (last.type == UndoType::CLOSE_GROUP){
-    if (last.name.IsSet()){ // Todo: Visit instead
-      return last.name.Get();
-    }
-    for (auto cmd : enumerate(reversed(but_last(m_undoList)))){
-      if (cmd.item.type == UndoType::OPEN_GROUP){
-        return space_sep("Python Commands", bracketed(str_int(cmd.num)));
-      }
-    }
-    assert(false);
-    return "";
+    return last.name.Visit(
+      [](const utf8_string& name){
+        return name;
+      },
+      [&](){
+        return command_count_name(m_undoList);
+      });
   }
   else if (last.type == UndoType::OPEN_GROUP){
     // This should never be visible to the user.
