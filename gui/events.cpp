@@ -58,26 +58,6 @@ void send_control_resized_event(wxEvtHandler* handler){
   handler->ProcessEvent(sizeEvent);
 }
 
-// ColorEvent
-const wxEventType FAINT_CopyColorHex = wxNewEventType();
-const wxEventType FAINT_CopyColorRgb = wxNewEventType();
-ColorEventTag EVT_FAINT_CopyColorHex(FAINT_CopyColorHex);
-ColorEventTag EVT_FAINT_CopyColorRgb(FAINT_CopyColorRgb);
-
-ColorEvent::ColorEvent(wxEventType type, const Color& color)
-  : wxCommandEvent(type, -1),
-    m_color(color)
-{}
-
-wxEvent* ColorEvent::Clone() const{
-  return new ColorEvent(*this);
-}
-
-Color ColorEvent::GetColor() const{
-  return m_color;
-}
-
-
 } // namespace
 
 namespace faint{ namespace events{
@@ -252,6 +232,54 @@ void on_add_to_palette(window_t w, const std::function<void(const Paint&)>& f){
     [f](const PaintEvent& e){
       f(e.GetPaint());
     });
+}
+
+// ColorEvent
+// ----------
+const wxEventType FAINT_CopyColorHex = wxNewEventType();
+const wxEventType FAINT_CopyColorRgb = wxNewEventType();
+
+class ColorEvent : public wxCommandEvent{
+public:
+  ColorEvent(wxEventType type, const Color& color)
+    : wxCommandEvent(type, -1),
+      m_color(color)
+  {}
+
+  wxEvent* Clone() const override{
+    return new ColorEvent(*this);
+  }
+
+  Color GetColor() const{
+    return m_color;
+  }
+
+private:
+  Color m_color;
+};
+
+const wxEventTypeTag<ColorEvent> EVT_FAINT_CopyColorHex(FAINT_CopyColorHex);
+const wxEventTypeTag<ColorEvent> EVT_FAINT_CopyColorRgb(FAINT_CopyColorRgb);
+
+void copy_color_string(window_t w, const Color& color, CopyColorMode mode){
+  const auto& type = mode == CopyColorMode::RGB ?
+    EVT_FAINT_CopyColorRgb : EVT_FAINT_CopyColorHex;
+
+  ColorEvent newEvent(type, color);
+  newEvent.SetEventObject(w.w);
+  w.w->GetEventHandler()->ProcessEvent(newEvent);
+}
+
+void on_copy_color_string(window_t w,
+  const std::function<void(const Color&, CopyColorMode)>& f)
+{
+  bind_fwd(w.w, EVT_FAINT_CopyColorRgb, [f](const ColorEvent& e){
+    f(e.GetColor(), CopyColorMode::RGB);
+  });
+
+  bind_fwd(w.w, EVT_FAINT_CopyColorHex, [f](const ColorEvent& e){
+    f(e.GetColor(), CopyColorMode::HEX);
+  });
 }
 
 }} // namespace

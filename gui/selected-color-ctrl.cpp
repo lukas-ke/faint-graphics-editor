@@ -247,13 +247,11 @@ private:
       }
       else if (action == menu_copyHex){
         assert(paint.IsColor()); // Hex copy available only for plain colors
-        ColorEvent newEvent(FAINT_CopyColorHex, paint.GetColor());
-        ProcessEvent(newEvent);
+        events::copy_color_string(this, paint.GetColor(), CopyColorMode::HEX);
       }
       else if (action == menu_copyRgb){
         assert(paint.IsColor()); // RGB copy available only for plain color
-        ColorEvent newEvent(FAINT_CopyColorRgb, paint.GetColor());
-        ProcessEvent(newEvent);
+        events::copy_color_string(this, paint.GetColor(), CopyColorMode::RGB);
       }
     }
   }

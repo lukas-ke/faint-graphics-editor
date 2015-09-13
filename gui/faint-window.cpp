@@ -511,25 +511,16 @@ FaintWindow::FaintWindow(Art& art,
     UpdateShownSettings();
   });
 
-  bind_fwd(frame, EVT_FAINT_CopyColorHex,
-    [this](const ColorEvent& event){
-      Clipboard clipboard;
-      if (!clipboard.Good()){
-        show_copy_color_error(m_impl->frame.get(), m_impl->appContext);
-        return;
-      }
-      clipboard.SetText(str_hex(event.GetColor()));
-    });
-
-  bind_fwd(frame, EVT_FAINT_CopyColorRgb,
-    [this](const ColorEvent& event){
-      Clipboard clipboard;
-      if (!clipboard.Good()){
-        show_copy_color_error(m_impl->frame.get(), m_impl->appContext);
-        return;
-      }
-      clipboard.SetText(str_smart_rgba(event.GetColor()));
-    });
+  events::on_copy_color_string(frame, [&](const Color& color, CopyColorMode mode){
+    Clipboard clipboard;
+    if (!clipboard.Good()){
+      show_copy_color_error(m_impl->frame.get(), m_impl->appContext);
+      return;
+    }
+    clipboard.SetText(mode == CopyColorMode::HEX ?
+      str_hex(color) :
+      str_smart_rgba(color));
+  });
 
   bind(frame, EVT_FAINT_SwapColors,
     [this](){

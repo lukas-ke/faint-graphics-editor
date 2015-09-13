@@ -60,22 +60,11 @@ extern CommandEventTag EVT_FAINT_ControlResized;
 
 void send_control_resized_event(wxEvtHandler*);
 
+} // namespace
 
-// ColorEvent
-class ColorEvent : public wxCommandEvent{
-public:
-  ColorEvent(wxEventType, const Color&);
-  wxEvent* Clone() const override;
-  Color GetColor() const;
-private:
-  Color m_color;
-};
+namespace faint{
 
-extern const wxEventType FAINT_CopyColorHex;
-extern const wxEventType FAINT_CopyColorRgb;
-using ColorEventTag = const wxEventTypeTag<ColorEvent>;
-extern const ColorEventTag EVT_FAINT_CopyColorHex;
-extern const ColorEventTag EVT_FAINT_CopyColorRgb;
+enum class CopyColorMode { HEX, RGB };
 
 } // namespace
 
@@ -99,6 +88,10 @@ void on_tool_change(window_t, const std::function<void(ToolId)>&);
 
 void add_to_palette(window_t, const Paint&);
 void on_add_to_palette(window_t, const std::function<void(const Paint&)>&);
+
+void copy_color_string(window_t, const Color&, CopyColorMode);
+void on_copy_color_string(window_t,
+  const std::function<void(const Color&, CopyColorMode)>&);
 
 }} // namespace
 
