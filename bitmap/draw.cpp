@@ -2028,7 +2028,7 @@ Bitmap scale(const Bitmap& bmp, const Scale& scale, ScaleQuality quality){
 
   switch (quality){
   case ScaleQuality::NEAREST:
-    return scale_nearest(bmp, scale);
+    return scale_nearest(bmp, newSize);
 
   case ScaleQuality::BILINEAR:
     return scale_bilinear(bmp, newSize);

@@ -16,13 +16,12 @@
 #ifndef FAINT_SCALE_NEAREST_HH
 #define FAINT_SCALE_NEAREST_HH
 #include "bitmap/bitmap.hh"
-#include "geo/scale.hh"
 
 namespace faint{
 
 // Returns a scaled copy of the bitmap (using nearest neighbour
 // interpolation).
-Bitmap scale_nearest(const Bitmap&, const Scale&);
+Bitmap scale_nearest(const Bitmap&, const IntSize&);
 
 // Returns a uniformly scaled copy of the bitmap (using nearest
 // neighbour interpolation).

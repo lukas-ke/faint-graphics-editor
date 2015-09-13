@@ -13,12 +13,13 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include <cassert>
 #include "bitmap/scale-nearest.hh"
-#include "geo/scale.hh"
 
 namespace faint{
 
 Bitmap scale_nearest(const Bitmap& src, int scale){
+  assert(scale > 0);
   const int w2 = src.m_w * scale;
   const int h2 = src.m_h * scale;
 
@@ -46,9 +47,10 @@ Bitmap scale_nearest(const Bitmap& src, int scale){
   return scaled;
 }
 
-Bitmap scale_nearest(const Bitmap& src, const Scale& scale){
-  const int w2 = static_cast<int>(src.m_w * scale.x);
-  const int h2 = static_cast<int>(src.m_h * scale.y);
+Bitmap scale_nearest(const Bitmap& src, const IntSize& newSize){
+  assert(newSize.w > 0 && newSize.h > 0);
+  const int w2 = newSize.w;
+  const int h2 = newSize.h;
 
   Bitmap scaled(IntSize(w2, h2));
   int x_ratio = (src.m_w << 16) / scaled.m_w + 1;
