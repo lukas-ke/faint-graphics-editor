@@ -94,23 +94,6 @@ Color ColorEvent::GetColor() const{
   return m_color;
 }
 
-// ToolChangeEvent
-ToolChangeEvent::ToolChangeEvent(ToolId toolId)
-  : wxCommandEvent(FAINT_ToolChange, -1),
-    m_toolId(toolId)
-{}
-
-wxEvent* ToolChangeEvent::Clone() const{
-  return new ToolChangeEvent(*this);
-}
-
-ToolId ToolChangeEvent::GetTool() const{
-  return m_toolId;
-}
-
-const wxEventType FAINT_ToolChange = wxNewEventType();
-const wxEventTypeTag<ToolChangeEvent> EVT_FAINT_ToolChange(FAINT_ToolChange);
-
 
 } // namespace
 
@@ -209,8 +192,45 @@ void layer_change(window_t w, Layer layer){
 
 void on_layer_change(window_t w, const std::function<void(Layer)>& f){
   bind_fwd(w.w, EVT_FAINT_LayerChange,
-    [f](const LayerChangeEvent e){
+    [f](const LayerChangeEvent& e){
       f(e.GetLayer());
+    });
+}
+
+// ToolChangeEvent
+// ----------------
+const wxEventType FAINT_ToolChange = wxNewEventType();
+
+class ToolChangeEvent : public wxCommandEvent{
+public:
+  ToolChangeEvent(ToolId toolId)
+    : wxCommandEvent(FAINT_ToolChange, -1),
+      m_toolId(toolId)
+  {}
+
+  wxEvent* Clone() const override{
+    return new ToolChangeEvent(*this);
+  }
+
+  ToolId GetTool() const{
+    return m_toolId;
+  }
+private:
+  ToolId m_toolId;
+};
+
+const wxEventTypeTag<ToolChangeEvent> EVT_FAINT_ToolChange(FAINT_ToolChange);
+
+void tool_change(window_t w, ToolId toolId){
+  ToolChangeEvent newEvent(toolId);
+  newEvent.SetEventObject(w.w);
+  w.w->GetEventHandler()->ProcessEvent(newEvent);
+}
+
+void on_tool_change(window_t w, const std::function<void(ToolId)>& f){
+  bind_fwd(w.w, EVT_FAINT_ToolChange,
+    [f](const ToolChangeEvent& e){
+      f(e.GetTool());
     });
 }
 

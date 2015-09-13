@@ -122,8 +122,7 @@ public:
       // Tool without button.
     }
 
-    ToolChangeEvent evt(id);
-    m_panel->GetEventHandler()->ProcessEvent(evt);
+    events::tool_change(m_panel, id);
   }
 
   void SendLayerChoiceEvent(Layer layer){
@@ -162,9 +161,9 @@ private:
   {
     auto* button = tool_drop_down_button(m_panel, to_faint(g_toolButtonSize), tools);
     sizer->Add(button);
-    bind_fwd(button, EVT_FAINT_ToolChange,
-      [&](ToolChangeEvent& event){
-        SendToolChoiceEvent(event.GetTool());
+    events::on_tool_change(button,
+      [&](ToolId toolId){
+        SendToolChoiceEvent(toolId);
       });
     return button;
   }

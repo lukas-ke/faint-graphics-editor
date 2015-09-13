@@ -91,20 +91,6 @@ using ColorEventTag = const wxEventTypeTag<ColorEvent>;
 extern const ColorEventTag EVT_FAINT_CopyColorHex;
 extern const ColorEventTag EVT_FAINT_CopyColorRgb;
 
-
-// ToolChangeEvent
-class ToolChangeEvent : public wxCommandEvent{
-public:
-  ToolChangeEvent(ToolId);
-  wxEvent* Clone() const override;
-  ToolId GetTool() const;
-private:
-  ToolId m_toolId;
-};
-
-extern const wxEventType FAINT_ToolChange;
-extern const wxEventTypeTag<ToolChangeEvent> EVT_FAINT_ToolChange;
-
 } // namespace
 
 namespace faint{ namespace events{
@@ -113,7 +99,6 @@ namespace faint{ namespace events{
 // focus (used to disable some Python binds)
 void set_focus_entry(window_t);
 void on_set_focus_entry(window_t, const void_func&);
-
 void kill_focus_entry(window_t);
 void on_kill_focus_entry(window_t, const void_func&);
 
@@ -122,6 +107,9 @@ void on_open_files(window_t, const std::function<void(const FileList&)>&);
 
 void layer_change(window_t, Layer);
 void on_layer_change(window_t, const std::function<void(Layer)>&);
+
+void tool_change(window_t, ToolId);
+void on_tool_change(window_t, const std::function<void(ToolId)>&);
 
 }} // namespace
 

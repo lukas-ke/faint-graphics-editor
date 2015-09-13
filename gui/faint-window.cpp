@@ -505,13 +505,12 @@ FaintWindow::FaintWindow(Art& art,
     Open(files);
   });
 
-  bind_fwd(frame, EVT_FAINT_ToolChange,
-    [&](const ToolChangeEvent& event){
-      select_tool(event.GetTool(), *m_impl->state,
-        *m_impl->panels, m_impl->appContext,
-        m_impl->m_toolActions);
-      UpdateShownSettings();
-    });
+  events::on_tool_change(frame, [&](ToolId toolId){
+    select_tool(toolId, *m_impl->state,
+      *m_impl->panels, m_impl->appContext,
+      m_impl->m_toolActions);
+    UpdateShownSettings();
+  });
 
   bind_fwd(frame, EVT_FAINT_CopyColorHex,
     [this](const ColorEvent& event){

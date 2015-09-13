@@ -168,8 +168,7 @@ public:
             // Hit a button
             ReleaseMouse();
             Hide();
-            ToolChangeEvent newEvent(b.second.toolId);
-            parent->GetEventHandler()->ProcessEvent(newEvent);
+            events::tool_change(parent, b.second.toolId);
           }
         }
       });
