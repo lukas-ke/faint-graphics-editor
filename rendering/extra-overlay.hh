@@ -17,12 +17,16 @@
 #define FAINT_EXTRA_OVERLAY_HH
 
 namespace faint{
+
 class FaintDC;
 class Overlays;
 class PosInfo;
 
 class ExtraOverlay{
-// Fixme: Rename or remove or something
+  // Used for adding overlay graphics from CommandWindow:s.
+  //
+  // Fixme: Quite a hack to get drawing support for CommandWindows.
+  // Should at least be renamed.
 public:
   virtual void Draw(FaintDC&, Overlays&, const PosInfo&) = 0;
 protected:
