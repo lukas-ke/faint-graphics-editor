@@ -105,20 +105,6 @@ private:
 extern const wxEventType FAINT_ToolChange;
 extern const wxEventTypeTag<ToolChangeEvent> EVT_FAINT_ToolChange;
 
-
-// LayerChangeEvent
-class LayerChangeEvent : public wxCommandEvent{
-public:
-  LayerChangeEvent(Layer);
-  wxEvent* Clone() const override;
-  Layer GetLayer() const;
-private:
-  Layer m_layer;
-};
-
-extern const wxEventType FAINT_LayerChange;
-extern const wxEventTypeTag<LayerChangeEvent> EVT_FAINT_LayerChange;
-
 } // namespace
 
 namespace faint{ namespace events{
@@ -133,6 +119,9 @@ void on_kill_focus_entry(window_t, const void_func&);
 
 void queue_open_files(window_t, const FileList&);
 void on_open_files(window_t, const std::function<void(const FileList&)>&);
+
+void layer_change(window_t, Layer);
+void on_layer_change(window_t, const std::function<void(Layer)>&);
 
 }} // namespace
 

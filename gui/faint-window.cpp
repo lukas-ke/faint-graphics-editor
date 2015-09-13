@@ -592,16 +592,15 @@ FaintWindow::FaintWindow(Art& art,
       }
     });
 
-  bind_fwd(frame, EVT_FAINT_LayerChange,
-    [&](const LayerChangeEvent event){
-      auto& state(*m_impl->state);
-      auto& panels(*m_impl->panels);
-      state.layer = event.GetLayer();
-      CanvasPanel& activeCanvas = get_active_canvas_panel(panels);
-      activeCanvas.MousePosRefresh();
-      activeCanvas.Refresh();
-      update_canvas_state(activeCanvas.GetCanvasId(), panels, state);
-    });
+  events::on_layer_change(frame, [&](Layer layer){
+    auto& state(*m_impl->state);
+    auto& panels(*m_impl->panels);
+    state.layer = layer;
+    CanvasPanel& activeCanvas = get_active_canvas_panel(panels);
+    activeCanvas.MousePosRefresh();
+    activeCanvas.Refresh();
+    update_canvas_state(activeCanvas.GetCanvasId(), panels, state);
+  });
 
   bind_fwd(frame, wxEVT_CLOSE_WINDOW,
     [&](wxCloseEvent& event){

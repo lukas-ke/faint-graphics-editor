@@ -112,23 +112,6 @@ const wxEventType FAINT_ToolChange = wxNewEventType();
 const wxEventTypeTag<ToolChangeEvent> EVT_FAINT_ToolChange(FAINT_ToolChange);
 
 
-// LayerChangeEvent
-LayerChangeEvent::LayerChangeEvent(Layer layer)
-  : wxCommandEvent(FAINT_LayerChange, -1),
-    m_layer(layer)
-{}
-
-wxEvent* LayerChangeEvent::Clone() const{
-  return new LayerChangeEvent(*this);
-}
-
-Layer LayerChangeEvent::GetLayer() const{
-  return m_layer;
-}
-
-const wxEventType FAINT_LayerChange = wxNewEventType();
-const wxEventTypeTag<LayerChangeEvent> EVT_FAINT_LayerChange(FAINT_LayerChange);
-
 } // namespace
 
 namespace faint{ namespace events{
@@ -194,6 +177,41 @@ void on_open_files(window_t w, const std::function<void(const FileList&)>& f){
     [f](const OpenFilesEvent& e){
       f(e.GetFileNames());
   });
+}
+
+// LayerChangeEvent
+// ----------------
+const wxEventType FAINT_LayerChange = wxNewEventType();
+
+class LayerChangeEvent : public wxCommandEvent{
+public:
+  LayerChangeEvent(Layer layer)
+  : wxCommandEvent(FAINT_LayerChange, -1),
+    m_layer(layer)
+  {}
+  wxEvent* Clone() const override{
+    return new LayerChangeEvent(*this);
+  }
+  Layer GetLayer() const{
+    return m_layer;
+  }
+private:
+  Layer m_layer;
+};
+
+const wxEventTypeTag<LayerChangeEvent> EVT_FAINT_LayerChange(FAINT_LayerChange);
+
+void layer_change(window_t w, Layer layer){
+  LayerChangeEvent newEvent(layer);
+  newEvent.SetEventObject(w.w);
+  w.w->GetEventHandler()->ProcessEvent(newEvent);
+}
+
+void on_layer_change(window_t w, const std::function<void(Layer)>& f){
+  bind_fwd(w.w, EVT_FAINT_LayerChange,
+    [f](const LayerChangeEvent e){
+      f(e.GetLayer());
+    });
 }
 
 }} // namespace

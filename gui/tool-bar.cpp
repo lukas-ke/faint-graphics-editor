@@ -90,9 +90,8 @@ public:
 
     bind_fwd(m_panel, EVT_FAINT_IntSettingChange,
       [&](const SettingEvent<IntSetting>& e){
-        int layer = e.GetValue();
-        LayerChangeEvent newEvent(to_layerstyle(layer));
-        m_panel->GetEventHandler()->ProcessEvent(newEvent);
+        assert(e.GetSetting() == g_layerSetting);
+        events::layer_change(m_panel, to_layerstyle(e.GetValue()));
       });
   }
 
