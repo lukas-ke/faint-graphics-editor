@@ -38,15 +38,11 @@ public:
       wxSP_ARROW_KEYS | wxTE_PROCESS_ENTER)
   {
     events::on_set_focus(this, [this](){
-      wxCommandEvent newEvent(EVT_FAINT_SetFocusEntryControl, wxID_ANY);
-      newEvent.SetEventObject(this);
-      GetEventHandler()->ProcessEvent(newEvent);
+      events::set_focus_entry(this);
     });
 
     events::on_kill_focus(this, [this](){
-      wxCommandEvent newEvent(EVT_FAINT_KillFocusEntryControl, wxID_ANY);
-      newEvent.SetEventObject(this);
-      GetEventHandler()->ProcessEvent(newEvent);
+      events::kill_focus_entry(this);
     });
   }
 };

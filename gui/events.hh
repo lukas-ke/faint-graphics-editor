@@ -133,22 +133,17 @@ private:
 extern const wxEventType FAINT_OpenFiles;
 extern const wxEventTypeTag<OpenFilesEvent> EVT_FAINT_OpenFiles;
 
-
-// Event for notifying that a text entry control has received or lost
-// focus (used to disable some Python binds)
-extern const wxEventType FAINT_SetFocusEntryControl;
-extern const wxEventTypeTag<wxCommandEvent> EVT_FAINT_SetFocusEntryControl;
-
-extern const wxEventType FAINT_KillFocusEntryControl;
-extern const wxEventTypeTag<wxCommandEvent> EVT_FAINT_KillFocusEntryControl;
-
 } // namespace
 
 namespace faint{ namespace events{
 
+// Event for notifying that a text entry control has received or lost
+// focus (used to disable some Python binds)
 void on_kill_focus_entry(window_t, const void_func&);
 void on_set_focus_entry(window_t, const void_func&);
 void on_set_focus_entry_skip(window_t, const void_func&);
+void set_focus_entry(window_t);
+void kill_focus_entry(window_t);
 
 }} // namespace
 

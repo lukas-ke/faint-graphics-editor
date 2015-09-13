@@ -147,15 +147,15 @@ const FileList& OpenFilesEvent::GetFileNames() const{
 const wxEventType FAINT_OpenFiles = wxNewEventType();
 const wxEventTypeTag<OpenFilesEvent> EVT_FAINT_OpenFiles(FAINT_OpenFiles);
 
+} // namespace
+
+namespace faint{ namespace events{
+
 const wxEventType FAINT_SetFocusEntryControl = wxNewEventType();
 CommandEventTag EVT_FAINT_SetFocusEntryControl(FAINT_SetFocusEntryControl);
 
 const wxEventType FAINT_KillFocusEntryControl = wxNewEventType();
 CommandEventTag EVT_FAINT_KillFocusEntryControl(FAINT_KillFocusEntryControl);
-
-} // namespace
-
-namespace faint{ namespace events{
 
 void on_kill_focus_entry(window_t w, const void_func& f){
   bind(w.w, EVT_FAINT_KillFocusEntryControl, f);
@@ -171,6 +171,18 @@ void on_set_focus_entry_skip(window_t w, const void_func& f){
       f();
       e.Skip();
     });
+}
+
+void set_focus_entry(window_t w){
+  wxCommandEvent newEvent(EVT_FAINT_SetFocusEntryControl, wxID_ANY);
+  newEvent.SetEventObject(w.w);
+  w.w->GetEventHandler()->ProcessEvent(newEvent);
+}
+
+void kill_focus_entry(window_t w){
+  wxCommandEvent newEvent(EVT_FAINT_KillFocusEntryControl, wxID_ANY);
+  newEvent.SetEventObject(w.w);
+  w.w->GetEventHandler()->ProcessEvent(newEvent);
 }
 
 }} // namespace
