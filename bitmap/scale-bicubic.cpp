@@ -82,7 +82,7 @@ static auto current_row_weights(coord dy){
   return nWeight;
 }
 
-Bitmap scale_bicubic(const Bitmap& src, const Scale& scale){
+Bitmap scale_bicubic(const Bitmap& src, const IntSize& dstSize){
   // Bicubic interpolation estimates the destination pixel colors by
   // considering the 16 surrounding pixels in the source image.
   //
@@ -101,9 +101,8 @@ Bitmap scale_bicubic(const Bitmap& src, const Scale& scale){
   // http://paulbourke.net/texture_colour/imageprocess/
 
   const auto srcSize = src.GetSize();
-  const auto dstSize = rounded(floated(srcSize) * scale);
   assert(srcSize.w > 0 && srcSize.h > 0);
-  assert(dstSize.w > 0 && dstSize.h > 0); // Fixme: Clamp instead?
+  assert(dstSize.w > 0 && dstSize.h > 0);
 
   Bitmap dst(dstSize);
   const auto dstStride = dst.GetStride();

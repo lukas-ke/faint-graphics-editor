@@ -5,6 +5,7 @@
 
 #include "bitmap/scale-bicubic.hh"
 #include "bitmap/scale-bilinear.hh"
+#include "geo/geo-func.hh"
 #include "text/formatting.hh"
 
 void img_scale_bicubic(){
@@ -19,7 +20,7 @@ void img_scale_bicubic(){
   for (auto scale : {0.2, 0.5, 1.0, 1.5, 2.0}){
 
     const auto fileBicubic =
-      save_test_image(scale_bicubic(bmp, Scale(scale, scale)),
+      save_test_image(scale_bicubic(bmp, rounded(bmp.GetSize() * Scale(scale))),
         FileName(no_sep("bicubic-", str(scale, 1_dec), ".png"))).StripPath();
 
     const auto fileBilinear =

@@ -15,6 +15,7 @@
 
 #include <cmath>
 #include "geo/scale.hh"
+#include "geo/geo-func.hh"
 
 namespace faint{
 
@@ -42,6 +43,14 @@ Size operator*(const Scale& sc, const Size& sz){
 
 Size operator*(const Size& sz, const Scale& sc){
   return Size(sc.x * sz.w, sc.y * sz.h);
+}
+
+Size operator*(const IntSize& sz, const Scale& sc){
+  return floated(sz) * sc;
+}
+
+Size operator*(const Scale& sc, const IntSize& sz){
+  return floated(sz) * sc;
 }
 
 Scale inverse(const Scale& sc){

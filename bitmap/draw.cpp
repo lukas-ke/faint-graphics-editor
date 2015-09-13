@@ -2030,7 +2030,7 @@ Bitmap scale(const Bitmap& bmp, const Scale& scale, ScaleQuality quality){
   case ScaleQuality::BILINEAR:
     return scale_bilinear(bmp, scale);
   case ScaleQuality::BICUBIC:
-    return scale_bicubic(bmp, scale);
+    return scale_bicubic(bmp, rounded(bmp.GetSize() * scale));
   };
   assert(false);
   return Bitmap();

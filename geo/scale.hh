@@ -34,9 +34,16 @@ public:
 
 Scale invert_x_scale();
 Scale invert_y_scale();
+
 Scale abs(const Scale&);
+
 Size operator*(const Scale&, const Size&);
 Size operator*(const Size&, const Scale&);
+
+class IntSize;
+Size operator*(const IntSize&, const Scale&);
+Size operator*(const Scale&, const IntSize&);
+
 Scale inverse(const Scale&);
 
 } // namespace

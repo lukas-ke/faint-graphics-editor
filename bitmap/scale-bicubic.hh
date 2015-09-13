@@ -21,7 +21,7 @@
 namespace faint{
 
 // Returns a scaled copy of the bitmap (using bicubic interpolation).
-Bitmap scale_bicubic(const Bitmap&, const Scale&);
+Bitmap scale_bicubic(const Bitmap&, const IntSize& dstSize);
 
 } // namespace
 
