@@ -50,6 +50,8 @@ Angle operator*(coord, const Angle&);
 
 Angle abs(const Angle&);
 
+Angle atan(coord);
+
 // Signed angle between x-axis and x, y
 Angle atan2(coord y, coord x);
 coord sin(const Angle&);
@@ -58,7 +60,12 @@ coord tan(const Angle&);
 
 Angle normalized(const Angle&);
 
+// Returns the quadrant of the angle (0-3)
+int quadrant(const Angle&);
+
 bool rather_zero(const Angle&);
+
+Angle within_quadrant(const Angle&);
 
 constexpr Angle Angle::Rad(coord a){
   return Angle(a);

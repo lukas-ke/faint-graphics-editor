@@ -52,4 +52,20 @@ void test_angle(){
   NEAR(abs(-pi), pi, eps);
   VERIFY(rather_zero(Angle::Zero()));
   NEAR(-pi, pi * -1, eps);
+
+  EQUAL(quadrant(0_deg), 0);
+  EQUAL(quadrant(89_deg), 0);
+  EQUAL(quadrant(90_deg), 1);
+  EQUAL(quadrant(179_deg), 1);
+  EQUAL(quadrant(180_deg), 2);
+  EQUAL(quadrant(270_deg), 3);
+  EQUAL(quadrant(360_deg), 0);
+
+  NEAR(within_quadrant(1_deg).Deg(), 1.0, eps);
+  NEAR(within_quadrant(89_deg).Deg(), 89.0, eps);
+  NEAR(within_quadrant(90_deg).Deg(), 0.0, eps);
+  NEAR(within_quadrant(91_deg).Deg(), 1.0, eps);
+  NEAR(within_quadrant(180_deg).Deg(), 0.0, eps);
+  NEAR(within_quadrant(181_deg).Deg(), 1.0, eps);
+  NEAR(within_quadrant(360_deg).Deg(), 0.0, eps);
 }

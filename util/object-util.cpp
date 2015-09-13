@@ -338,6 +338,7 @@ void offset_by(const objects_t& objects, const IntPoint& d){
 coord object_area(const Object* obj){
   if (is_ellipse(obj)){
     // Fixme: Handle arcs
+    // Fixme: Can Width, height be negative?
     Tri t = obj->GetTri();
     return math::pi * (t.Width() / 2) * (t.Height() / 2);
   }
