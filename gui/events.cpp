@@ -129,28 +129,12 @@ Layer LayerChangeEvent::GetLayer() const{
 const wxEventType FAINT_LayerChange = wxNewEventType();
 const wxEventTypeTag<LayerChangeEvent> EVT_FAINT_LayerChange(FAINT_LayerChange);
 
-
-// OpenFilesEvent
-OpenFilesEvent::OpenFilesEvent(const FileList& files)
-  : wxCommandEvent(FAINT_OpenFiles, -1),
-    m_files(files)
-{}
-
-wxEvent* OpenFilesEvent::Clone() const{
-  return new OpenFilesEvent(*this);
-}
-
-const FileList& OpenFilesEvent::GetFileNames() const{
-  return m_files;
-}
-
-const wxEventType FAINT_OpenFiles = wxNewEventType();
-const wxEventTypeTag<OpenFilesEvent> EVT_FAINT_OpenFiles(FAINT_OpenFiles);
-
 } // namespace
 
 namespace faint{ namespace events{
 
+// Entry-control focus events
+// --------------------------
 const wxEventType FAINT_SetFocusEntryControl = wxNewEventType();
 CommandEventTag EVT_FAINT_SetFocusEntryControl(FAINT_SetFocusEntryControl);
 
@@ -175,6 +159,41 @@ void kill_focus_entry(window_t w){
 
 void on_kill_focus_entry(window_t w, const void_func& f){
   bind(w.w, EVT_FAINT_KillFocusEntryControl, f);
+}
+
+// OpenFilesEvent
+// --------------
+const wxEventType FAINT_OpenFiles = wxNewEventType();
+
+class OpenFilesEvent : public wxCommandEvent{
+public:
+  OpenFilesEvent(const FileList& files)
+    : wxCommandEvent(FAINT_OpenFiles, -1),
+      m_files(files)
+  {}
+
+  wxEvent* Clone() const override{
+    return new OpenFilesEvent(*this);
+  }
+
+  const FileList& GetFileNames() const{
+    return m_files;
+  }
+private:
+  FileList m_files;
+};
+
+const wxEventTypeTag<OpenFilesEvent> EVT_FAINT_OpenFiles(FAINT_OpenFiles);
+
+void queue_open_files(window_t w, const FileList& files){
+  w.w->GetEventHandler()->QueueEvent(new OpenFilesEvent(files));
+}
+
+void on_open_files(window_t w, const std::function<void(const FileList&)>& f){
+  bind_fwd(w.w, EVT_FAINT_OpenFiles,
+    [f](const OpenFilesEvent& e){
+      f(e.GetFileNames());
+  });
 }
 
 }} // namespace

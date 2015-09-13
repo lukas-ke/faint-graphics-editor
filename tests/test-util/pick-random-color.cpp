@@ -13,10 +13,11 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include <functional>
 #include <random>
 #include "tests/test-util/pick-random-color.hh"
 #include "bitmap/color.hh"
-#include <functional>
+
 namespace faint{ namespace test{
 
 pick_color_f random_color_picker(int seed){

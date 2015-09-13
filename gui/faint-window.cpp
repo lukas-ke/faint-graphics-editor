@@ -501,10 +501,9 @@ FaintWindow::FaintWindow(Art& art,
       AddToPalette(event.GetPaint());
   });
 
-  bind_fwd(frame, EVT_FAINT_OpenFiles,
-    [&](const OpenFilesEvent& event){
-      Open(event.GetFileNames());
-    });
+  events::on_open_files(frame, [this](const FileList& files){
+    Open(files);
+  });
 
   bind_fwd(frame, EVT_FAINT_ToolChange,
     [&](const ToolChangeEvent& event){
@@ -1003,8 +1002,8 @@ void FaintWindow::PreviousTab(){
   m_impl->panels->tabControl->SelectPrevious();
 }
 
-void FaintWindow::QueueLoad(const FileList& filenames){
-  m_impl->frame->GetEventHandler()->QueueEvent(new OpenFilesEvent(filenames));
+void FaintWindow::QueueLoad(const FileList& files){
+  events::queue_open_files(*m_impl->frame, files);
 }
 
 void FaintWindow::Raise(){
