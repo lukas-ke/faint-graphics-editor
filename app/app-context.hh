@@ -103,7 +103,7 @@ public:
   // Queues the files for loading, but returns immediately
   virtual void QueueLoad(const FileList&) = 0;
 
-  virtual void Quit() = 0;
+  virtual void Quit(bool force) = 0;
   virtual void RaiseWindow() = 0;
   virtual bool Save(Canvas&) = 0;
   virtual void SelectTool(ToolId) = 0;

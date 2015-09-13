@@ -200,9 +200,10 @@ static Optional<Bound<Canvas>> faintapp_open(PyFuncContext& ctx,
   return option(bind(*c, ctx));
 }
 
-/* method: "quit()\nExit faint" */
+/* method: "quit()\n
+Exit faint" */
 static void faintapp_quit(PyFuncContext& ctx){
-  ctx.app.Quit(); // Fixme: Crashes. :)
+  ctx.app.Quit();
 }
 
 /* method: "set_transparency_indicator(r,g,b)\n

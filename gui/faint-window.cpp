@@ -500,6 +500,10 @@ FaintWindow::FaintWindow(Art& art,
     AddToPalette(paint);
   });
 
+  events::on_request_close_faint(frame, [this](bool force){
+    m_impl->frame->Close(force);
+  });
+
   events::on_open_files(frame, [this](const FileList& files){
     Open(files);
   });
@@ -692,7 +696,7 @@ void FaintWindow::BeginTextEntry(){
 }
 
 void FaintWindow::Close(bool force){
-  m_impl->frame->Close(force);
+  events::queue_request_close_faint(*m_impl->frame, force);
 }
 
 void FaintWindow::CloseDocument(Canvas& canvas){

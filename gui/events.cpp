@@ -282,4 +282,21 @@ void on_copy_color_string(window_t w,
   });
 }
 
+// request_close_faint
+// -------------------
+const wxEventType FAINT_RequestClose = wxNewEventType();
+CommandEventTag EVT_FAINT_RequestClose(FAINT_RequestClose);
+
+void queue_request_close_faint(window_t w, bool force){
+  auto* evt = new wxCommandEvent(EVT_FAINT_RequestClose);
+  evt->SetInt(force ? 1 : 0);
+  w.w->GetEventHandler()->QueueEvent(evt);
+}
+
+void on_request_close_faint(window_t w, const std::function<void(bool force)>& f){
+  bind_fwd(w.w, EVT_FAINT_RequestClose, [f](wxCommandEvent& e){
+    f(e.GetInt() == 1);
+  });
+}
+
 }} // namespace

@@ -93,6 +93,9 @@ void copy_color_string(window_t, const Color&, CopyColorMode);
 void on_copy_color_string(window_t,
   const std::function<void(const Color&, CopyColorMode)>&);
 
+void queue_request_close_faint(window_t, bool force);
+void on_request_close_faint(window_t, const std::function<void(bool force)>&);
+
 }} // namespace
 
 #endif
