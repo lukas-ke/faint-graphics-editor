@@ -320,7 +320,7 @@ public:
 
     Add(fileMenu, wxID_EXIT, Label("E&xit\tAlt+F4", "Exit Faint"),
       [&](){
-        app.Quit();
+        app.Quit(false); // false means "Don't force"
       });
     m_menuRef->Append(fileMenu, "&File");
 

@@ -637,8 +637,8 @@ void FaintWindowContext::QueueLoad(const FileList& filenames){
   m_faintWindow.QueueLoad(filenames);
 }
 
-void FaintWindowContext::Quit(){
-  m_faintWindow.Close(false); // False means don't force
+void FaintWindowContext::Quit(bool force){
+  m_faintWindow.Close(force);
 }
 
 void FaintWindowContext::RaiseWindow(){

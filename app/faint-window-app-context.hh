@@ -149,7 +149,7 @@ public:
   void NextTab() override;
   void PreviousTab() override;
   void QueueLoad(const FileList& filenames) override;
-  void Quit() override;
+  void Quit(bool) override;
   void RaiseWindow() override;
   bool Save(Canvas& canvas) override;
   void SelectTool(ToolId id) override;

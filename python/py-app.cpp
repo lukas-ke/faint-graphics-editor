@@ -200,10 +200,11 @@ static Optional<Bound<Canvas>> faintapp_open(PyFuncContext& ctx,
   return option(bind(*c, ctx));
 }
 
-/* method: "quit()\n
-Exit faint" */
-static void faintapp_quit(PyFuncContext& ctx){
-  ctx.app.Quit();
+/* method: "quit(force=False)\n
+Exit Faint. Asks for confirmation if there are unsaved files unless
+force=True." */
+static void faintapp_quit(PyFuncContext& ctx, Optional<bool> force){
+  ctx.app.Quit(force.Or(false));
 }
 
 /* method: "set_transparency_indicator(r,g,b)\n
