@@ -139,11 +139,12 @@ namespace faint{ namespace events{
 
 // Event for notifying that a text entry control has received or lost
 // focus (used to disable some Python binds)
-void on_kill_focus_entry(window_t, const void_func&);
-void on_set_focus_entry(window_t, const void_func&);
-void on_set_focus_entry_skip(window_t, const void_func&);
 void set_focus_entry(window_t);
+void on_set_focus_entry(window_t, const void_func&);
+
 void kill_focus_entry(window_t);
+void on_kill_focus_entry(window_t, const void_func&);
+
 
 }} // namespace
 

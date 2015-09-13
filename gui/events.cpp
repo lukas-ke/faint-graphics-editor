@@ -157,32 +157,24 @@ CommandEventTag EVT_FAINT_SetFocusEntryControl(FAINT_SetFocusEntryControl);
 const wxEventType FAINT_KillFocusEntryControl = wxNewEventType();
 CommandEventTag EVT_FAINT_KillFocusEntryControl(FAINT_KillFocusEntryControl);
 
-void on_kill_focus_entry(window_t w, const void_func& f){
-  bind(w.w, EVT_FAINT_KillFocusEntryControl, f);
-}
-
-void on_set_focus_entry(window_t w, const void_func& f){
-  bind(w.w, EVT_FAINT_SetFocusEntryControl, f);
-}
-
-void on_set_focus_entry_skip(window_t w, const void_func& f){
-  bind_fwd(w.w, EVT_FAINT_SetFocusEntryControl,
-    [f](wxCommandEvent& e){
-      f();
-      e.Skip();
-    });
-}
-
 void set_focus_entry(window_t w){
   wxCommandEvent newEvent(EVT_FAINT_SetFocusEntryControl, wxID_ANY);
   newEvent.SetEventObject(w.w);
   w.w->GetEventHandler()->ProcessEvent(newEvent);
 }
 
+void on_set_focus_entry(window_t w, const void_func& f){
+  bind(w.w, EVT_FAINT_SetFocusEntryControl, f);
+}
+
 void kill_focus_entry(window_t w){
   wxCommandEvent newEvent(EVT_FAINT_KillFocusEntryControl, wxID_ANY);
   newEvent.SetEventObject(w.w);
   w.w->GetEventHandler()->ProcessEvent(newEvent);
+}
+
+void on_kill_focus_entry(window_t w, const void_func& f){
+  bind(w.w, EVT_FAINT_KillFocusEntryControl, f);
 }
 
 }} // namespace
