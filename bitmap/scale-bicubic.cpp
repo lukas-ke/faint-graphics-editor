@@ -101,6 +101,10 @@ Bitmap scale_bicubic(const Bitmap& src, const IntSize& dstSize){
   // http://paulbourke.net/texture_colour/imageprocess/
 
   const auto srcSize = src.GetSize();
+  if (srcSize == dstSize){
+    return src;
+  }
+
   assert(srcSize.w > 0 && srcSize.h > 0);
   assert(dstSize.w > 0 && dstSize.h > 0);
 

@@ -19,15 +19,12 @@
 #include "geo/axis.hh" // For flip
 #include "geo/geo-func.hh"
 #include "geo/range.hh" // constrained
-#include "geo/scale.hh"
 
 namespace faint{
 
-Bitmap scale_bilinear(const Bitmap& src, const Scale& scale){
-  IntSize newSize(constrained(rounded(floated(src.GetSize()) * abs(scale)),
-      min_t(1), min_t(1)));
+Bitmap scale_bilinear(const Bitmap& src, const IntSize& newSize){
   if (newSize == src.GetSize()){
-    return Bitmap(src);
+    return src;
   }
 
   Bitmap dst(newSize);
@@ -75,12 +72,6 @@ Bitmap scale_bilinear(const Bitmap& src, const Scale& scale){
     }
   }
 
-  if (scale.x < 0){
-    dst = flip(dst, across(Axis::VERTICAL));
-  }
-  if (scale.y < 0) {
-    dst = flip(dst, across(Axis::HORIZONTAL));
-  }
   return dst;
 }
 

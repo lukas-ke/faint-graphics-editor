@@ -16,7 +16,6 @@
 #ifndef FAINT_SCALE_BICUBIC_HH
 #define FAINT_SCALE_BICUBIC_HH
 #include "bitmap/bitmap.hh"
-#include "geo/scale.hh"
 
 namespace faint{
 

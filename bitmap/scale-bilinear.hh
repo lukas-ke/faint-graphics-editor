@@ -16,12 +16,11 @@
 #ifndef FAINT_SCALE_BILINEAR_HH
 #define FAINT_SCALE_BILINEAR_HH
 #include "bitmap/bitmap.hh"
-#include "geo/scale.hh"
 
 namespace faint{
 
 // Returns a scaled copy of the bitmap (using bilinear interpolation).
-Bitmap scale_bilinear(const Bitmap&, const Scale&);
+Bitmap scale_bilinear(const Bitmap&, const IntSize& dstSize);
 
 } // namespace
 

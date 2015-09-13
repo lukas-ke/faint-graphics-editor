@@ -1,9 +1,9 @@
 // -*- coding: us-ascii-unix -*-
 #include "test-sys/test.hh"
 #include "tests/test-util/file-handling.hh"
-#include "geo/geo-func.hh"
-
 #include "bitmap/scale-bicubic.hh"
+#include "geo/geo-func.hh"
+#include "geo/scale.hh"
 
 void test_scale_bicubic(){
   using namespace faint;

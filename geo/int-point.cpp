@@ -54,7 +54,6 @@ IntPoint max_coords(const IntPoint& a, const IntPoint& b){
   return IntPoint(std::max(a.x, b.x), std::max(a.y, b.y));
 }
 
-
 IntPoint max_coords(const IntPoint& a, const IntPoint& b, const IntPoint& c){
   return IntPoint(std::max({a.x, b.x, c.x}),
     std::max({a.y, b.y, c.y}));

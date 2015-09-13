@@ -6,6 +6,7 @@
 #include "bitmap/scale-bicubic.hh"
 #include "bitmap/scale-bilinear.hh"
 #include "geo/geo-func.hh"
+#include "geo/scale.hh"
 #include "text/formatting.hh"
 
 void img_scale_bicubic(){
@@ -24,7 +25,7 @@ void img_scale_bicubic(){
         FileName(no_sep("bicubic-", str(scale, 1_dec), ".png"))).StripPath();
 
     const auto fileBilinear =
-      save_test_image(scale_bilinear(bmp, Scale(scale, scale)),
+      save_test_image(scale_bilinear(bmp, rounded(bmp.GetSize() * Scale(scale))),
         FileName(no_sep("bilinear-", str(scale, 1_dec), ".png"))).StripPath();
 
     t.AddToggleRow(str(scale, 1_dec), fileBicubic, fileBilinear);

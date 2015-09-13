@@ -61,18 +61,17 @@ static void apply_transform(const Bitmap& src,
   if (!coord_eq(fabs(t2.Width()), src.m_w) ||
     !coord_eq(fabs(t2.Height()), src.m_h))
   {
-    // Only scale bilinear if the width is truly different, not just inverted
-    // ScaleBilinear can invert too, but with distortion
-    dst = scale_bilinear(dst, Scale((t2.Width() + 1) / src.m_w,
-      (t2.Height() + 1) / src.m_h));
+    // Only scale bilinear if the width is truly different, not just
+    // inverted.
+    dst = scale_bilinear(dst, rounded(Size(std::fabs(t2.Width()) + 1,
+      std::fabs(t2.Height()) + 1)));
   }
-  else {
-    if (t2.Width() < 0){
-      dst = flip(dst, along(Axis::HORIZONTAL));
-    }
-    if (t2.Height() < 0){
-      dst = flip(dst, across(Axis::HORIZONTAL));
-    }
+
+  if (t2.Width() < 0){
+    dst = flip(dst, along(Axis::HORIZONTAL));
+  }
+  if (t2.Height() < 0){
+    dst = flip(dst, across(Axis::HORIZONTAL));
   }
 
   if (!rather_zero(angle)){

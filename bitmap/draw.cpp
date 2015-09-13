@@ -2024,13 +2024,17 @@ Bitmap rotate_90cw(const Bitmap& src){
 }
 
 Bitmap scale(const Bitmap& bmp, const Scale& scale, ScaleQuality quality){
+  const auto newSize = rounded(bmp.GetSize() * scale);
+
   switch (quality){
   case ScaleQuality::NEAREST:
     return scale_nearest(bmp, scale);
+
   case ScaleQuality::BILINEAR:
-    return scale_bilinear(bmp, scale);
+    return scale_bilinear(bmp, newSize);
+
   case ScaleQuality::BICUBIC:
-    return scale_bicubic(bmp, rounded(bmp.GetSize() * scale));
+    return scale_bicubic(bmp, newSize);
   };
   assert(false);
   return Bitmap();

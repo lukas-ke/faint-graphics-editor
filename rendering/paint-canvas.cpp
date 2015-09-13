@@ -369,7 +369,8 @@ void paint_canvas(wxDC& paintDC,
   Bitmap scaled = state.geo.zoom.At100() ?
     info.subBitmap : (zoom > 1.0 ?
       scale_nearest(info.subBitmap, rounded(zoom)):
-      scale_bilinear(info.subBitmap, Scale(zoom)));
+      scale_bilinear(info.subBitmap,
+        rounded(info.subBitmap.GetSize() * Scale(zoom))));
 
   if (!bitmap_ok(scaled)){
     return paint_without_image(paintDC, updateRegion, state.geo,

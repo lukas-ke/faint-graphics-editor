@@ -409,7 +409,8 @@ void FaintDC::BitmapBlendAlpha(const Bitmap& drawnBitmap,
   const IntPoint& topLeft)
 {
   if (m_sc < 1){
-    const Bitmap scaled(scale_bilinear(drawnBitmap, Scale(m_sc)));
+    const Bitmap scaled(scale_bilinear(drawnBitmap,
+      rounded(drawnBitmap.GetSize() * Scale(m_sc))));
     blend(offsat(scaled, topLeft), onto(m_bitmap));
   }
   else if (m_sc > 1){
@@ -425,7 +426,8 @@ void FaintDC::BitmapBlendAlphaMasked(const Bitmap& drawnBitmap,
   const Color& maskColor, const IntPoint& topLeft)
 {
   if (m_sc < 1){
-    const Bitmap scaled(scale_bilinear(drawnBitmap, Scale(m_sc)));
+    const Bitmap scaled(scale_bilinear(drawnBitmap,
+      rounded(drawnBitmap.GetSize() * Scale(m_sc))));
     blend_masked(offsat(scaled, topLeft), onto(m_bitmap), maskColor);
   }
   else if (m_sc > 1){
@@ -441,7 +443,8 @@ void FaintDC::BitmapSetAlpha(const Bitmap& drawnBitmap,
   const IntPoint& topLeft)
 {
   if (m_sc < 1){
-    const Bitmap scaled(scale_bilinear(drawnBitmap, Scale(m_sc)));
+    const Bitmap scaled(scale_bilinear(drawnBitmap,
+      rounded(drawnBitmap.GetSize() * Scale(m_sc))));
     blit(offsat(scaled, topLeft), onto(m_bitmap));
   }
   else if (m_sc > 1){
@@ -457,7 +460,8 @@ void FaintDC::BitmapSetAlphaMasked(const Bitmap& drawnBitmap,
   const Color& maskColor, const IntPoint& topLeft)
 {
   if (m_sc < 1){
-    Bitmap scaled(scale_bilinear(drawnBitmap, Scale(m_sc)));
+    Bitmap scaled(scale_bilinear(drawnBitmap,
+      rounded(drawnBitmap.GetSize() * Scale(m_sc))));
     blit_masked(offsat(scaled, topLeft), onto(m_bitmap), maskColor);
   }
   else if (m_sc > 1){
