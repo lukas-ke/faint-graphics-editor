@@ -15,6 +15,7 @@
 
 #include "app/app-context.hh"
 #include "app/app-getter-util.hh"
+#include "app/context-grid-dialog.hh"
 #include "app/faint-resize-dialog-context.hh"
 #include "gui/dialogs.hh"
 #include "text/formatting.hh"
@@ -68,6 +69,13 @@ Show the color balance dialog." */
 static void dialog_color_balance(PyFuncContext& ctx){
 
   ctx.app.Modal(show_color_balance_dialog);
+}
+
+/* method: "grid()\n
+Show the grid dialog." */
+static void dialog_grid(PyFuncContext& ctx){
+  context_show_grid_dialog(ctx.app.GetActiveCanvas(),
+    ctx.app.GetDialogContext());
 }
 
 /* method: "help()\n

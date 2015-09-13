@@ -5,8 +5,18 @@ tablestyle:fancy
 tablewidths:10%,10%,*
 
 = Menu reference =
-This section is an overview of all menu items.
+Here's an overview of all menu items.
 
+*Sections:*
+\ref(menu-file, File),
+\ref(menu-edit, Edit),
+\ref(menu-view, View),
+\ref(menu-objects, Objects),
+\ref(menu-image, Image),
+\ref(menu-tabs, Tabs),
+\ref(menu-help, Help)
+
+\label(menu-file)
 == File Menu ==
 The file menu has commands for file handling, such as loading and saving.
 
@@ -26,8 +36,9 @@ A sub menu to the File menu. Contains a list of recent files, if any.
 || Clear/Undo Clear || || Clears the recent files list/undoes clearing. ||
 || Files 1-9 || || Each entry opens the indicated file. ||
 
+\label(menu-edit)
 == Edit Menu ==
-The edit menu has commands that alter the active image or selection.
+The edit menu has commands that modify the active image or selection.
 
 || *Menu option* || *Quick key* || *Description* ||
 || Undo || Ctrl+Z || Revert the previous change. ||
@@ -42,10 +53,10 @@ The edit menu has commands that alter the active image or selection.
 || Select None || Ctrl+D || Deselects everything. ||
 || Python Console || F8 || Opens the \ref(gui-python-console.txt,Python scripting console) ||
 
+\label(menu-view)
 == View ==
-The view menu has commands that affect the view of the active
-document, such as maximizing the document to screen and zooming, or
-hiding parts of the Faint-window.
+The view menu has commands that affect the display of the active image
+and the Faint application window.
 
 || *Menu option* || *Quick key* || *Description* ||
 || Zoom In || + || Zooms in one step. ||
@@ -57,6 +68,7 @@ hiding parts of the Faint-window.
 || Maximize || Alt+Enter || Maximizes the Faint Window ||
 || Full Screen || F11 || Shows the active canvas across the entire screen ||
 
+\label(menu-objects)
 == Objects ==
 The Objects menu has commands that affect selected (or sometimes all-) objects.
 
@@ -70,12 +82,14 @@ The Objects menu has commands that affect selected (or sometimes all-) objects.
 || Become Path || || The selected objects are \ref(feat-become-path.txt,converted) to path objects. ||
 || Flatten || Ctrl+Space || Draws all, or the selected, objects onto the background and removes the objects. See \ref(feat-flatten.txt). ||
 
+\label(menu-image)
 == Image ==
 The Image menu has commands that affect the entire image, the selection or the selected objects.
 
 || *Menu option* || *Quick key* || *Description* ||
 || Flip/Rotate || Ctrl+R || Open the \ref(gui-rotate-dialog.txt,rotation dialog) for rotating or flipping the image, the selected objects or the raster selection. ||
 || Resize || Ctrl+E || Open the \ref(gui-resize-dialog.txt,resize dialog), for resizing the drawing area or scaling the image. ||
+|| Grid || || Shows the \ref(gui-grid-dialog.txt,grid dialog). ||
 || Color || || A sub menu with color modification options. ||
 || Effects || || A sub menu with image effects (filters). ||
 
@@ -98,6 +112,7 @@ The Effects sub menu of Image contains graphical effect options (filters).
 || Pinch/Whirl || || Opens a dialog distorting the image by pinching and whirling. ||
 || Pixelize || || Opens a dialog for \ref(feat-pixelize.txt,pixelizing) the image. ||
 
+\label(menu-tabs)
 == Tabs ==
 The Tabs menu has commands for switching and closing tabs.
 
@@ -106,8 +121,9 @@ The Tabs menu has commands for switching and closing tabs.
 || Previous Tab || Ctrl+Shift+Tab || Activates the previous tab (image) ||
 || Close || Ctrl+W || Closes the active tab (image) ||
 
+\label(menu-help)
 == Help ==
-The Help menu is used to access the help system and information about Faint.
+The Help menu is used to access this help system and the about dialog.
 
 || *Menu option* || *Quick key* || *Description* ||
 || Help Index || F1 || Opens the Faint documentation ||

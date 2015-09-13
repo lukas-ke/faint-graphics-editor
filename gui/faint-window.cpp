@@ -884,6 +884,7 @@ Canvas& FaintWindow::NewDocument(const ImageInfo& info){
   CanvasPanel* canvas = tabControl.NewDocument(ImageProps(info),
     change_tab(true), initially_dirty(false));
   assert(canvas != nullptr);
+  canvas->SetGrid(m_impl->appContext.GetDefaultGrid());
   return canvas->GetInterface();
 }
 

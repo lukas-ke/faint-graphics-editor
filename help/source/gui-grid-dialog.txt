@@ -8,6 +8,11 @@ the \ref(gui-grid-control.txt,grid control).
 
 \image(gui-grid-dialog.png)
 
+The grid dialog is available under Image->Grid in the menu.
+It is also shown when double-clicking the spacing digit in the
+\ref(gui-grid-control.txt,grid control), and with the Python method
+dialogs.grid().
+
 || *Element* || *Description* ||
 || Enabled-checkbox || Whether the grid is used or not. ||
 || Spacing || The spacing between grid-cells in (sub-)pixels. ||
