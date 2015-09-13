@@ -243,16 +243,15 @@ private:
     else{
       Paint paint(MenuTargetColor());
       if (action == menu_add){
-        PaintEvent newEvent(FAINT_AddToPalette, paint);
-        ProcessEvent(newEvent);
+        events::add_to_palette(this, paint);
       }
       else if (action == menu_copyHex){
-        assert(paint.IsColor()); // Should be unavailable for other than plain color
+        assert(paint.IsColor()); // Hex copy available only for plain colors
         ColorEvent newEvent(FAINT_CopyColorHex, paint.GetColor());
         ProcessEvent(newEvent);
       }
       else if (action == menu_copyRgb){
-        assert(paint.IsColor()); // Should be unavailable for other than plain color
+        assert(paint.IsColor()); // RGB copy available only for plain color
         ColorEvent newEvent(FAINT_CopyColorRgb, paint.GetColor());
         ProcessEvent(newEvent);
       }

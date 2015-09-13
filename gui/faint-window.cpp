@@ -496,9 +496,8 @@ FaintWindow::FaintWindow(Art& art,
     *helpFrame,
     *interpreterFrame);
 
-  bind_fwd(frame, EVT_FAINT_AddToPalette,
-    [&](const PaintEvent& event){
-      AddToPalette(event.GetPaint());
+  events::on_add_to_palette(frame, [this](const Paint& paint){
+    AddToPalette(paint);
   });
 
   events::on_open_files(frame, [this](const FileList& files){

@@ -58,23 +58,6 @@ void send_control_resized_event(wxEvtHandler* handler){
   handler->ProcessEvent(sizeEvent);
 }
 
-// PaintEvent
-const wxEventType FAINT_AddToPalette = wxNewEventType();
-const wxEventTypeTag<PaintEvent> EVT_FAINT_AddToPalette(FAINT_AddToPalette);
-
-PaintEvent::PaintEvent(wxEventType type, const Paint& paint)
-  : wxCommandEvent(type, -1),
-    m_paint(paint)
-{}
-
-wxEvent* PaintEvent::Clone() const{
-  return new PaintEvent(*this);
-}
-
-Paint PaintEvent::GetPaint() const{
-  return m_paint;
-}
-
 // ColorEvent
 const wxEventType FAINT_CopyColorHex = wxNewEventType();
 const wxEventType FAINT_CopyColorRgb = wxNewEventType();
@@ -231,6 +214,43 @@ void on_tool_change(window_t w, const std::function<void(ToolId)>& f){
   bind_fwd(w.w, EVT_FAINT_ToolChange,
     [f](const ToolChangeEvent& e){
       f(e.GetTool());
+    });
+}
+
+// PaintEvent
+// ----------
+const wxEventType FAINT_AddToPalette = wxNewEventType();
+
+class PaintEvent : public wxCommandEvent{
+public:
+  PaintEvent(wxEventType type, const Paint& paint)
+    : wxCommandEvent(type, -1),
+      m_paint(paint)
+  {}
+
+  wxEvent* Clone() const override{
+    return new PaintEvent(*this);
+  }
+
+  Paint GetPaint() const{
+    return m_paint;
+  }
+private:
+  Paint m_paint;
+};
+
+const wxEventTypeTag<PaintEvent> EVT_FAINT_AddToPalette(FAINT_AddToPalette);
+
+void add_to_palette(window_t w, const Paint& paint){
+  PaintEvent newEvent(FAINT_AddToPalette, paint);
+  newEvent.SetEventObject(w.w);
+  w.w->GetEventHandler()->ProcessEvent(newEvent);
+}
+
+void on_add_to_palette(window_t w, const std::function<void(const Paint&)>& f){
+  bind_fwd(w.w, EVT_FAINT_AddToPalette,
+    [f](const PaintEvent& e){
+      f(e.GetPaint());
     });
 }
 

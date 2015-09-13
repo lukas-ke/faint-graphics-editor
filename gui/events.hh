@@ -61,20 +61,6 @@ extern CommandEventTag EVT_FAINT_ControlResized;
 void send_control_resized_event(wxEvtHandler*);
 
 
-// PaintEvent
-class PaintEvent : public wxCommandEvent{
-public:
-  PaintEvent(wxEventType, const Paint&);
-  wxEvent* Clone() const override;
-  Paint GetPaint() const;
-private:
-  Paint m_paint;
-};
-
-extern const wxEventType FAINT_AddToPalette;
-extern const wxEventTypeTag<PaintEvent> EVT_FAINT_AddToPalette;
-
-
 // ColorEvent
 class ColorEvent : public wxCommandEvent{
 public:
@@ -110,6 +96,9 @@ void on_layer_change(window_t, const std::function<void(Layer)>&);
 
 void tool_change(window_t, ToolId);
 void on_tool_change(window_t, const std::function<void(ToolId)>&);
+
+void add_to_palette(window_t, const Paint&);
+void on_add_to_palette(window_t, const std::function<void(const Paint&)>&);
 
 }} // namespace
 
