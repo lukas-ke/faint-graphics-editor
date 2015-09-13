@@ -227,8 +227,16 @@ private:
   }
 };
 
+static bool is_hex(const utf8_string& str_u8){
+  if (!is_ascii(str_u8)){
+    return false;
+  }
+  std::string s(str_u8.str());
+  return s.find_first_not_of("0123456789abcdefABCDEF") == std::string::npos;
+}
+
 static unsigned int from_hex_str(const utf8_string& s){
-  if (!is_ascii(s)){
+  if (!is_hex(s)){
     throw ExpressionEvalError(space_sep(s, "is not a hexadecimal value."));
   }
   std::istringstream ss(s.str());
