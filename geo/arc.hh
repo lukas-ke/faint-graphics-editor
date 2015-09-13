@@ -48,6 +48,11 @@ private:
   Point m_p1;
 };
 
+// <../doc/elliptic-arc-area.png>
+coord arc_area(const Radii&, const AngleSpan&);
+
+coord circle_arc_area(coord r, const Angle& span);
+
 } // namespace
 
 #endif

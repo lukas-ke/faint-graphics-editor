@@ -2,40 +2,14 @@
 #include "test-sys/test.hh"
 #include "geo/arc.hh"
 #include "geo/radii.hh"
-#include <algorithm> // Fixme
-#include <iostream> // Fixme
-
-namespace faint{
-
-coord circle_arc_area(coord r, const Angle& a){
-  return sq(r) * a.Rad() / 2;
-}
-
-coord arc_area(const Radii& r, const AngleSpan& angles){
-  // Scale to a circle
-  coord a = r.y;
-  coord b = r.x;
-  const auto sc = b / a;
-
-  const coord qstart = quadrant(angles.start);
-  const coord qstop = quadrant(angles.stop);
-  const auto perQuadrant = atan(sc * tan(90_deg));
-
-  const auto a0 = atan(sc * tan(within_quadrant(angles.start)));
-  const auto a1 = atan(sc * tan(within_quadrant(angles.stop)));
-
-  return circle_arc_area(a * sc, (a1 + perQuadrant * qstop - (a0 + perQuadrant * qstart))) * (1.0 / sc);
-}
-
-coord ellipse_area(const Radii& r){
-  return math::pi * r.x * r.y;
-}
-
-}
 
 void test_arc_area(){
   using namespace faint;
   auto e = 0.0001_eps; // Fixme
+
+  auto ellipse_area = [](const Radii& r){
+    return math::pi * r.x * r.y;
+  };
 
   EQUAL(quadrant(0_deg), 0);
   EQUAL(quadrant(45_deg), 0);
@@ -64,9 +38,8 @@ void test_arc_area(){
   NEAR(arc_area(Radii(5, 2), AngleSpan(0_deg, 180_deg)),
     ellipse_area(Radii(5,2)) / 2.0, e);
 
-  // Error: Stop angle of 360 is interpreted as 0
-  KNOWN_ERROR(test_near(arc_area(Radii(5, 2), AngleSpan(0_deg, 360_deg)),
-    ellipse_area(Radii(5,2)), e));
+  NEAR(arc_area(Radii(5, 2), AngleSpan(0_deg, 360_deg)),
+    ellipse_area(Radii(5,2)), e);
 
   // Opposite radiuses
   {
@@ -82,9 +55,8 @@ void test_arc_area(){
   NEAR(arc_area(Radii(2, 5), AngleSpan(0_deg, 180_deg)),
     ellipse_area(Radii(2,5)) / 2.0, e);
 
-  // Error: Stop angle of 360 is interpreted as 0
-  KNOWN_ERROR(test_near(arc_area(Radii(5, 2), AngleSpan(0_deg, 360_deg)),
-    ellipse_area(Radii(5,2)), e));
+  NEAR(arc_area(Radii(5, 2), AngleSpan(0_deg, 360_deg)),
+    ellipse_area(Radii(5,2)), e);
 
   // Start angles
   NEAR(arc_area(Radii(5, 2), AngleSpan(10_deg, 32_deg)),

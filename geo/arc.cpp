@@ -142,4 +142,22 @@ std::vector<PathPt> arc_as_path(const Tri& tri, const AngleSpan& angles){
   return v;
 }
 
+coord arc_area(const Radii& r, const AngleSpan& angles){
+  // Based on "The Area of Intersecting Ellipses" by Dave Eberly
+  // http://www.geometrictools.com/Documentation/AreaIntersectingEllipses.pdf
+
+  auto F = [a=r.x, b=r.y](coord theta){
+    return ((a*b)/2) *
+    (theta - std::atan(
+      ((b - a)*std::sin(2*theta)) /
+      (b + a + (b - a)*std::cos(2*theta))));
+  };
+
+  return F(angles.stop.Rad()) - F(angles.start.Rad());
+}
+
+coord circle_arc_area(coord r, const Angle& a){
+  return sq(r) * a.Rad() / 2;
+}
+
 } // namespace
