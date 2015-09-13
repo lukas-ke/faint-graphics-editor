@@ -152,8 +152,8 @@ void set_angle_span(Object* obj, const AngleSpan& angleSpan){
   }
 }
 
-Optional<AngleSpan> get_angle_span(Object* obj){
-  if (ObjEllipse* ellipse = dynamic_cast<ObjEllipse*>(obj)){
+Optional<AngleSpan> get_angle_span(const Object* obj){
+  if (const ObjEllipse* ellipse = dynamic_cast<const ObjEllipse*>(obj)){
     return option(ellipse->GetAngleSpan());
   }
   return no_option();

@@ -17,6 +17,7 @@
 #include <cassert>
 #include "bitmap/paint.hh"
 #include "bitmap/pattern.hh"
+#include "geo/arc.hh"
 #include "geo/geo-func.hh"
 #include "geo/measure.hh"
 #include "geo/points.hh"
@@ -336,11 +337,23 @@ void offset_by(const objects_t& objects, const IntPoint& d){
 }
 
 coord object_area(const Object* obj){
-  if (is_ellipse(obj)){
-    // Fixme: Handle arcs
-    // Fixme: Can Width, height be negative?
+  // Fixme: Move area calculation into the object classes.
+  auto ellipse_area = [](const Object* obj){
     Tri t = obj->GetTri();
-    return math::pi * (t.Width() / 2) * (t.Height() / 2);
+    auto r = abs(get_radii(obj->GetTri()));
+    return math::pi * r.x * r.y;
+  };
+
+  if (is_ellipse(obj)){
+    return get_angle_span(obj).Visit(
+      [=](const AngleSpan& span){
+        return span.start == span.stop ?
+          ellipse_area(obj) :
+          arc_area(abs(get_radii(obj->GetTri())), span);
+      },
+      [=](){
+        return ellipse_area(obj);
+      });
   }
   if (is_line(*obj)){
     // No area for you.

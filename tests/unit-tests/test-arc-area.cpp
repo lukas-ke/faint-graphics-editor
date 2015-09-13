@@ -11,12 +11,6 @@ void test_arc_area(){
     return math::pi * r.x * r.y;
   };
 
-  EQUAL(quadrant(0_deg), 0);
-  EQUAL(quadrant(45_deg), 0);
-  EQUAL(quadrant(90_deg), 1);
-  EQUAL(quadrant(91_deg), 1);
-  NEAR(within_quadrant(91_deg).Deg(), 1.0, e);
-
   NEAR(circle_arc_area(1, 360_deg), math::pi, e);
   NEAR(circle_arc_area(1, 180_deg), math::pi / 2, e);
   NEAR(circle_arc_area(1, 90_deg), math::pi / 4, e);

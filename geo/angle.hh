@@ -60,12 +60,7 @@ coord tan(const Angle&);
 
 Angle normalized(const Angle&);
 
-// Returns the quadrant of the angle (0-3)
-int quadrant(const Angle&);
-
 bool rather_zero(const Angle&);
-
-Angle within_quadrant(const Angle&);
 
 constexpr Angle Angle::Rad(coord a){
   return Angle(a);

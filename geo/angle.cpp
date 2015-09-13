@@ -95,20 +95,9 @@ bool multiple_of_90(const Angle& a){
 }
 
 Angle normalized(const Angle& a){
-  auto radians = std::fmod(a.Rad(), 2 * math::pi);
+  auto radians = std::fmod(a.Rad(), math::tau);
   return (radians < 0) ?
-    Angle::Rad(radians + 2 * math::pi) :
-    Angle::Rad(radians);
-}
-
-int quadrant(const Angle& a){
-  return rounded(normalized(a).Deg()) / 90;
-}
-
-Angle within_quadrant(const Angle& a){
-  auto radians = std::fmod(a.Rad(), math::pi / 2);
-  return (radians < 0) ?
-    Angle::Rad(radians + 2 * math::pi) :
+    Angle::Rad(radians + math::tau) :
     Angle::Rad(radians);
 }
 

@@ -25,7 +25,7 @@ class Settings;
 
 Object* create_ellipse_object(const Tri&, const Settings&);
 bool is_ellipse(const Object*);
-Optional<AngleSpan> get_angle_span(Object*);
+Optional<AngleSpan> get_angle_span(const Object*);
 void set_angle_span(Object*, const AngleSpan&);
 
 } // namespace
