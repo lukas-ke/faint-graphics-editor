@@ -138,7 +138,6 @@ Bitmap scale_bicubic(const Bitmap& src, const Scale& scale){
       coord a = 0;
       coord totalWeight = 0;
 
-      // Fixme: Move into inner loop.
       const uchar* pSrc = src.GetRaw() + (yi - 1) * src.GetStride() +
         (xi - 1) * ByPP;
 
