@@ -20,6 +20,7 @@
 #include "bitmap/paint.hh"
 #include "tools/tool-id.hh"
 #include "util-wx/file-path.hh"
+#include "util-wx/fwd-bind.hh"
 
 namespace faint{
 
@@ -142,5 +143,13 @@ extern const wxEventType FAINT_KillFocusEntryControl;
 extern const wxEventTypeTag<wxCommandEvent> EVT_FAINT_KillFocusEntryControl;
 
 } // namespace
+
+namespace faint{ namespace events{
+
+void on_kill_focus_entry(window_t, const void_func&);
+void on_set_focus_entry(window_t, const void_func&);
+void on_set_focus_entry_skip(window_t, const void_func&);
+
+}} // namespace
 
 #endif

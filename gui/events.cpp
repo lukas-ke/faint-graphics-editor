@@ -13,7 +13,9 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include "wx/window.h"
 #include "gui/events.hh"
+#include "util-wx/bind-event.hh"
 
 namespace faint{
 
@@ -152,3 +154,23 @@ const wxEventType FAINT_KillFocusEntryControl = wxNewEventType();
 CommandEventTag EVT_FAINT_KillFocusEntryControl(FAINT_KillFocusEntryControl);
 
 } // namespace
+
+namespace faint{ namespace events{
+
+void on_kill_focus_entry(window_t w, const void_func& f){
+  bind(w.w, EVT_FAINT_KillFocusEntryControl, f);
+}
+
+void on_set_focus_entry(window_t w, const void_func& f){
+  bind(w.w, EVT_FAINT_SetFocusEntryControl, f);
+}
+
+void on_set_focus_entry_skip(window_t w, const void_func& f){
+  bind_fwd(w.w, EVT_FAINT_SetFocusEntryControl,
+    [f](wxCommandEvent& e){
+      f();
+      e.Skip();
+    });
+}
+
+}} // namespace

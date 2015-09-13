@@ -543,30 +543,27 @@ FaintWindow::FaintWindow(Art& art,
       app.Set(ts_Bg, oldFg);
     });
 
-  bind(frame, EVT_FAINT_SetFocusEntryControl,
-    [this](){
-      if (m_impl->state->textEntryCount == 0){
-        // Entry controls are numeric, not all shortcuts need to be
-        // disabled
-        const bool numeric = true;
-        m_impl->panels->menubar->BeginTextEntry(numeric);
-      }
-      m_impl->state->textEntryCount++;
-    });
+  events::on_set_focus_entry(frame, [this](){
+    if (m_impl->state->textEntryCount == 0){
+      // Entry controls are numeric, not all shortcuts need to be
+      // disabled
+      const bool numeric = true;
+      m_impl->panels->menubar->BeginTextEntry(numeric);
+    }
+    m_impl->state->textEntryCount++;
+  });
 
-  bind(frame, EVT_FAINT_KillFocusEntryControl,
-    [this](){
-      EndTextEntry();
-    });
+  events::on_kill_focus_entry(frame, [this](){
+    EndTextEntry();
+  });
 
-  events::on_canvas_modified_final(frame,
-    [this](CanvasId canvasId){
-      auto& panels(*m_impl->panels);
-      auto& state(*m_impl->state);
-      update_canvas_state(canvasId, panels, state);
-      update_shown_settings(state, panels);
-      m_impl->GetDialogContext().Reinitialize();
-    });
+  events::on_canvas_modified_final(frame, [this](CanvasId canvasId){
+    auto& panels(*m_impl->panels);
+    auto& state(*m_impl->state);
+    update_canvas_state(canvasId, panels, state);
+    update_shown_settings(state, panels);
+    m_impl->GetDialogContext().Reinitialize();
+  });
 
   events::on_grid_modified(frame,
     [this](CanvasId canvasId){
