@@ -102,6 +102,7 @@ public:
       Point stop = c + polar(r, m_angleSpan.stop);
 
       // Fixme: Compute arc-flag/sweep-flag
+      // Fixme: Consider ts_ArcSides
       return {
         PathPt::MoveTo(c),
         PathPt::LineTo(start),
@@ -111,6 +112,7 @@ public:
   }
 
   Point GetPoint(int index) const override{
+    assert(index < 2);
     return ArcEndPoints(m_tri, m_angleSpan)[to_size_t(index)];
   }
 
@@ -126,10 +128,10 @@ public:
     assert(index < 2);
     Point c(center_point(m_tri));
     if (index == 0){
-      m_angleSpan.start = line_angle_cw({c, p});
+      m_angleSpan.start = 360_deg - angle360_ccw({c, p});
     }
     else{
-      m_angleSpan.stop = line_angle_cw({c, p});
+      m_angleSpan.stop = 360_deg - angle360_ccw({c, p});
     }
   }
 
