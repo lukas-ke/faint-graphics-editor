@@ -17,14 +17,18 @@ void img_arc(){
   auto ellipseSettings = default_ellipse_settings();
   ellipseSettings.Set(ts_Fg, Paint(grayscale_rgba(128)));
 
-  for (int i = 0; i < 360; i += 20){
-    const auto tri = tri_from_rect(Rect(Point(5,5), Size(200, 100)));
-    Bitmap bmp({210, 110}, color_white);
-    FaintDC dc(bmp);
-    dc.Ellipse(tri, ellipseSettings);
-    dc.Arc(tri, AngleSpan(0_deg, Angle::Deg(i)), arcSettings);
-    save_test_image(bmp, FileName("render-arc-" +
-      str_int(i, left_pad(4)) +
-      ".png"));
+  for (int startAngle = 0; startAngle < 360; startAngle += 40){
+    for (int stopAngle = 0; stopAngle < 360; stopAngle += 40){
+      const auto tri = tri_from_rect(Rect(Point(5,5), Size(200, 100)));
+      Bitmap bmp({210, 110}, color_white);
+      FaintDC dc(bmp);
+      dc.Ellipse(tri, ellipseSettings);
+      dc.Arc(tri, AngleSpan(Angle::Deg(startAngle), Angle::Deg(stopAngle)),
+        arcSettings);
+      save_test_image(bmp, FileName("render-arc-" +
+          str_int(startAngle, left_pad(3)) + "-" +
+          str_int(stopAngle, left_pad(3)) +
+          ".png"));
+    }
   }
 }
