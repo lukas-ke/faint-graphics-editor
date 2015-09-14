@@ -371,8 +371,29 @@ void FaintDC::Arc(const Tri& tri, const AngleSpan& span, const Settings& s){
 
   m_cr->set_source_tri(tri);
   from_settings(*m_cr, s);
-  std::vector<PathPt> v = arc_as_path(tri, span);
-  Path(v, s);
+  const auto arcSides = s.GetDefault(ts_ArcSides, true);
+  if (!border(s) || arcSides){
+    std::vector<PathPt> v = arc_as_path(tri, span, true);
+    Path(v, s);
+  }
+  else{
+    if (s.Get(ts_FillStyle) == FillStyle::BORDER_AND_FILL){
+      std::vector<PathPt> vb = arc_as_path(tri, span, true);
+      Settings fillSettings(s);
+      fillSettings.Set(ts_FillStyle, FillStyle::FILL);
+      fillSettings.Set(ts_SwapColors, true);
+      Path(vb, fillSettings);
+
+      Settings edgeSettings(s);
+      edgeSettings.Set(ts_FillStyle, FillStyle::BORDER);
+      std::vector<PathPt> v = arc_as_path(tri, span, false);
+      Path(v, edgeSettings);
+    }
+    else{
+      std::vector<PathPt> v = arc_as_path(tri, span, false);
+      Path(v, s);
+    }
+  }
 }
 
 void FaintDC::Blit(const Bitmap& bmp, const Point& topLeft,

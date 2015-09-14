@@ -75,7 +75,9 @@ std::vector<Point> ArcEndPoints::GetVector() const{
   return { m_p0, m_p1 };
 }
 
-std::vector<PathPt> arc_as_path(const Tri& tri, const AngleSpan& angles){
+std::vector<PathPt> arc_as_path(const Tri& tri, const AngleSpan& angles,
+  bool arcSides)
+{
   // This algorithm is based on documentation and code from
   // SpaceRoots.org, by L. Maisonobe "Drawing an elliptical arc using
   // polylines, quadratic or cubic Bezier curves" and
@@ -109,11 +111,17 @@ std::vector<PathPt> arc_as_path(const Tri& tri, const AngleSpan& angles){
     ryCosCurrentAngle * cosMainAngle;
 
   std::vector<PathPt> v;
-  // Start at the tri center
-  v.emplace_back(MoveTo({c.x, c.y}));
+  if (arcSides){
+    // Start at the tri center
+    v.emplace_back(MoveTo({c.x, c.y}));
 
-  // Arc start point
-  v.emplace_back(LineTo({x, y}));
+    // Arc start point
+    v.emplace_back(LineTo({x, y}));
+  }
+  else{
+    v.emplace_back(MoveTo({x, y}));
+
+  }
   coord t = tan(0.5 * curveSpan);
   coord alpha = sin(curveSpan) * (std::sqrt(4 + 3 * t * t) - 1) / 3.0;
 
@@ -138,7 +146,9 @@ std::vector<PathPt> arc_as_path(const Tri& tri, const AngleSpan& angles){
         {prevX + alpha * prevXDot, prevY + alpha * prevYDot},
         {x - alpha * xDot, y - alpha * yDot}));
   }
-  v.emplace_back(Close());
+  if (arcSides){
+    v.emplace_back(Close());
+  }
   return v;
 }
 

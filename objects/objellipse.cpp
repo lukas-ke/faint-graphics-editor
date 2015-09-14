@@ -32,7 +32,11 @@
 
 namespace faint{
 
-static void draw_ellipse_span(FaintDC& dc, const Tri& tri, const AngleSpan& angles, const Settings& settings){
+static void draw_ellipse_span(FaintDC& dc,
+  const Tri& tri,
+  const AngleSpan& angles,
+  const Settings& settings)
+{
   if (angles.start == angles.stop){
     dc.Ellipse(tri, settings);
   }

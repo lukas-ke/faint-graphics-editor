@@ -33,7 +33,7 @@ public:
   Angle stop;
 };
 
-std::vector<PathPt> arc_as_path(const Tri&, const AngleSpan&);
+std::vector<PathPt> arc_as_path(const Tri&, const AngleSpan&, bool arcSides);
 
 class ArcEndPoints{
   // The end points for the arc with a specific angle span on an

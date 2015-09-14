@@ -54,6 +54,7 @@ Settings init_default_ellipse_settings(){
   Settings s;
   s.Set(ts_AlignedResize, false);
   s.Set(ts_AntiAlias, true);
+  s.Set(ts_ArcSides, true);
   s.Set(ts_Bg, Paint(Color(255, 255, 255)));
   s.Set(ts_Fg, Paint(Color(0,0,0)));
   s.Set(ts_FillStyle, FillStyle::BORDER);

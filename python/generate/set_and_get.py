@@ -128,6 +128,12 @@ setters_and_getters = {
         pretty_name="Anti Aliasing",
         doc_str="Anti-aliasing?"),
 
+    "ts_ArcSides" : Bool(
+        cpp_name="ts_ArcSides",
+        py_name="arcsides",
+        pretty_name="Arc sides",
+        doc_str="Show the side edges from the arc end-points?"),
+
     "ts_BackgroundStyle" : StringToInt(
         cpp_name="ts_BackgroundStyle",
         py_name="bgstyle",
