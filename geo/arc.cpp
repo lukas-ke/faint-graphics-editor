@@ -47,20 +47,23 @@ int required_curve_count(const AngleSpan& angles){
 }
 
 ArcEndPoints::ArcEndPoints(const Tri& tri, const AngleSpan& angles){
-  coord rx = tri.Width() / 2;
-  coord ry = tri.Height() / 2;
-  coord aCosEta1 = rx * cos(angles.start);
-  coord bSinEta1 = ry * sin(angles.start);
-  Point c(center_point(tri));
-  Angle mainAngle(tri.GetAngle());
-  coord x1 = c.x + aCosEta1 * cos(mainAngle) - bSinEta1 * sin(mainAngle);
-  coord y1 = c.y + aCosEta1 * sin(mainAngle) + bSinEta1 * cos(mainAngle);
+  const coord rx = tri.Width() / 2;
+  const coord ry = tri.Height() / 2;
+  const coord aCosEta1 = rx * cos(angles.start);
+  const coord bSinEta1 = ry * sin(angles.start);
+  const auto mainAngle = tri.GetAngle();
+  const coord cosTheta = cos(mainAngle);
+  const coord sinTheta = sin(mainAngle);
+
+  const Point c(center_point(tri));
+  const coord x1 = c.x + aCosEta1 * cosTheta - bSinEta1 * sinTheta;
+  const coord y1 = c.y + aCosEta1 * sinTheta + bSinEta1 * cosTheta;
 
   // end point
-  double aCosEta2 = rx * cos(angles.stop);
-  double bSinEta2 = ry * sin(angles.stop);
-  coord x2 = c.x + aCosEta2 * cos(mainAngle) - bSinEta2 * sin(mainAngle);
-  coord y2 = c.y + aCosEta2 * sin(mainAngle) + bSinEta2 * cos(mainAngle);
+  const double aCosEta2 = rx * cos(angles.stop);
+  const double bSinEta2 = ry * sin(angles.stop);
+  const coord x2 = c.x + aCosEta2 * cosTheta - bSinEta2 * sinTheta;
+  const coord y2 = c.y + aCosEta2 * sinTheta + bSinEta2 * cosTheta;
 
   p0 = Point(x1, y1);
   p1 = Point(x2, y2);

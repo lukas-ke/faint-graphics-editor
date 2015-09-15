@@ -136,6 +136,13 @@ public:
   void SetPoint(const Point& p, int index) override{
     assert(index < 2);
     Point c(center_point(m_tri));
+    // Fixme: The angle-span will be different after
+    // \def(elliptic-arc-problem);
+    // e.SetPoint(<whatever>, 0)
+    // followed by
+    // e.SetPoint(e.GetPoint(0), 0),
+    // because ArcEndPoints and angle360_ccw({c, p}) disagree increasingly
+    // the less circular we are.
     if (index == 0){
       m_angleSpan.start = 360_deg - angle360_ccw({c, p});
     }
