@@ -72,7 +72,16 @@ public:
   }
 
   std::vector<Point> GetAttachPoints() const override{
-    return get_attach_points(m_tri);
+    if (m_angleSpan.start == m_angleSpan.stop){
+      return get_attach_points(m_tri);
+    }
+    else{
+      auto pts = get_attach_points(m_tri);
+      const auto endPoints = ArcEndPoints(m_tri, m_angleSpan);
+      pts.push_back(endPoints.p0);
+      pts.push_back(endPoints.p1);
+      return pts;
+    }
   }
 
   std::vector<Point> GetMovablePoints() const override{

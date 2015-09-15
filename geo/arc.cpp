@@ -62,17 +62,17 @@ ArcEndPoints::ArcEndPoints(const Tri& tri, const AngleSpan& angles){
   coord x2 = c.x + aCosEta2 * cos(mainAngle) - bSinEta2 * sin(mainAngle);
   coord y2 = c.y + aCosEta2 * sin(mainAngle) + bSinEta2 * cos(mainAngle);
 
-  m_p0 = Point(x1, y1);
-  m_p1 = Point(x2, y2);
+  p0 = Point(x1, y1);
+  p1 = Point(x2, y2);
 }
 
 Point ArcEndPoints::operator[](size_t i) const{
   assert(i <= 1);
-  return i == 0 ? m_p0 : m_p1;
+  return i == 0 ? p0 : p1;
 }
 
 std::vector<Point> ArcEndPoints::GetVector() const{
-  return { m_p0, m_p1 };
+  return { p0, p1 };
 }
 
 std::vector<PathPt> arc_as_path(const Tri& tri, const AngleSpan& angles,

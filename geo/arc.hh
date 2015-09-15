@@ -43,9 +43,8 @@ public:
   Point operator[](size_t) const;
   std::vector<Point> GetVector() const;
   static const int num_points = 2;
-private:
-  Point m_p0;
-  Point m_p1;
+  Point p0;
+  Point p1;
 };
 
 // <../doc/elliptic-arc-area.png>
