@@ -473,6 +473,13 @@ def _generate(root_dir, force):
                               TEMPLATES.shape_bool,
                               replacements)
 
+            generate_property(smth_declarations,
+                              smth_cc,
+                              TEMPLATES.object_property,
+                              TEMPLATES.object_bool,
+                              replacements)
+
+
         elif setting_type == 'color':
             replacements = common_replacements(setting, item)
 
