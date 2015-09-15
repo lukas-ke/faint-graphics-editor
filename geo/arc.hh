@@ -29,6 +29,11 @@ public:
   static AngleSpan Rad(coord start, coord stop){
     return AngleSpan(Angle::Rad(start), Angle::Rad(stop));
   }
+
+  Angle Length() const{
+    return stop - start;
+  }
+
   Angle start;
   Angle stop;
 };

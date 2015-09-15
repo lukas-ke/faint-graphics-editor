@@ -33,7 +33,7 @@ AngleSpan::AngleSpan(const Angle& start, const Angle& stop)
 {}
 
 int required_curve_count(const AngleSpan& angles){
-  Angle span = angles.start - angles.stop;
+  Angle span = abs(angles.Length());
   if (span <= pi / 2){
     return 2;
   }
