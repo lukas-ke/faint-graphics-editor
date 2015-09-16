@@ -45,6 +45,12 @@ static void draw_ellipse_span(FaintDC& dc,
   }
 }
 
+static Angle stretch_angle(const Angle& a, const Radii& r){
+  // Turn the circular angle into an elliptic angle
+  // Fixme: Handle r.y == 0
+  return atan2(r.x * (r.x / r.y) * sin(a), r.y * (r.x / r.y) * cos(a));
+}
+
 class ObjEllipse : public StandardObject{
 public:
   ObjEllipse(const Tri& tri, const Settings& settings)
@@ -135,19 +141,15 @@ public:
 
   void SetPoint(const Point& p, int index) override{
     assert(index < 2);
-    Point c(center_point(m_tri));
-    // Fixme: The angle-span will be different after
-    // \def(elliptic-arc-problem);
-    // e.SetPoint(<whatever>, 0)
-    // followed by
-    // e.SetPoint(e.GetPoint(0), 0),
-    // because ArcEndPoints and angle360_ccw({c, p}) disagree increasingly
-    // the less circular we are.
+    const auto c = center_point(m_tri);
+    const auto ellipseAngle = stretch_angle(360_deg - angle360_ccw({c, p}),
+      get_radii(m_tri));
+
     if (index == 0){
-      m_angleSpan.start = 360_deg - angle360_ccw({c, p});
+      m_angleSpan.start = ellipseAngle;
     }
     else{
-      m_angleSpan.stop = 360_deg - angle360_ccw({c, p});
+      m_angleSpan.stop = ellipseAngle;
     }
   }
 

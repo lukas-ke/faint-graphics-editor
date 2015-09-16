@@ -68,7 +68,6 @@ class MovePointTask : public StandardTask {
 public:
   MovePointTask(Object* object, int pointIndex, const Point& oldPos)
     : m_object(object),
-      m_newPos(object->GetPoint(pointIndex)),
       m_oldPos(oldPos),
       m_pointIndex(pointIndex),
       m_renderSnapped(render_snapped(object, pointIndex))
@@ -158,7 +157,6 @@ public:
         get_corners(m_object, m_pointIndex));
     }
 
-    m_newPos = p;
     m_object->SetPoint(p, m_pointIndex);
     utf8_string statusString = m_object->StatusString();
     info.status.SetText(statusString.empty() ?
@@ -174,14 +172,13 @@ private:
   TaskResult Commit(){
     m_object->ClearActive();
     m_command.Set(new MovePointCommand(m_object, m_pointIndex,
-      New(m_newPos), Old(m_oldPos)));
+      New(m_object->GetPoint(m_pointIndex)), Old(m_oldPos)));
     return TaskResult::COMMIT_AND_CHANGE;
   }
 
   PendingCommand m_command;
   Optional<Point> m_constrainPos;
   Object* m_object;
-  Point m_newPos; // Fixme: \ref(elliptic-arc-problem)
   Point m_oldPos;
   int m_pointIndex;
   bool m_renderSnapped;
