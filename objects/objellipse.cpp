@@ -46,8 +46,10 @@ static void draw_ellipse_span(FaintDC& dc,
 }
 
 static Angle stretch_angle(const Angle& a, const Radii& r){
+  if (r.y == 0){
+    return 0_deg;
+  }
   // Turn the circular angle into an elliptic angle
-  // Fixme: Handle r.y == 0
   return atan2(r.x * (r.x / r.y) * sin(a), r.y * (r.x / r.y) * cos(a));
 }
 
