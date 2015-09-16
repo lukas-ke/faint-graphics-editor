@@ -339,7 +339,6 @@ void offset_by(const objects_t& objects, const IntPoint& d){
 coord object_area(const Object* obj){
   // Fixme: Move area calculation into the object classes.
   auto ellipse_area = [](const Object* obj){
-    Tri t = obj->GetTri();
     auto r = abs(get_radii(obj->GetTri()));
     return math::pi * r.x * r.y;
   };

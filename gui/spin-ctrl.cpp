@@ -84,24 +84,24 @@ public:
     m_spinCtrl->SetRange(1, 255);
     m_spinCtrl->SetBackgroundColour(wxColour(255, 255, 255));
     sizer->Add(m_spinCtrl, 0, wxALIGN_CENTER_HORIZONTAL);
-    SetSizerAndFit(sizer);
+    this->SetSizerAndFit(sizer);
 
     events::on_idle(this,
       [this](){
         if (then_false(m_changed)){
-          SendChangeEvent();
+          this->SendChangeEvent();
         }
       });
 
     bind_fwd(this, wxEVT_SPINCTRL,
       [this](wxSpinEvent& event){
         event.Skip();
-        SendChangeEvent();
+        this->SendChangeEvent();
       });
 
     bind(this, wxEVT_TEXT_ENTER,
       [this](){
-        SendChangeEvent();
+	 this->SendChangeEvent();
       });
   }
 

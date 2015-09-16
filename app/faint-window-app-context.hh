@@ -20,6 +20,7 @@
 #include "app/faint-slider-cursors.hh"
 #include "gui/command-window.hh"
 #include "gui/dialogs/resize-dialog-options.hh"
+#include "gui/faint-window.hh"
 #include "gui/transparency-style.hh"
 #include "tools/tool.hh"
 #include "util/bound-setting.hh" // Fixme: For BoundSetting (change_setting)

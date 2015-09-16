@@ -16,11 +16,11 @@
 #include <memory>
 #include "wx/frame.h"
 #include "wx/statusbr.h"
+#include "app/canvas.hh" // For context_targetted
 #include "app/context-commands.hh" // For context_targetted
 #include "app/faint-window-app-context.hh"
 #include "bitmap/draw.hh"
 #include "gui/art.hh"
-#include "gui/faint-window.hh"
 #include "gui/help-frame.hh"
 #include "gui/interpreter-frame.hh"
 #include "gui/tab-ctrl.hh" // Fixme: Remove
