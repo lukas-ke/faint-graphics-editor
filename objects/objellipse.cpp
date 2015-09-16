@@ -50,7 +50,7 @@ static Angle stretch_angle(const Angle& a, const Radii& r){
     return 0_deg;
   }
   // Turn the circular angle into an elliptic angle
-  return atan2(r.x * (r.x / r.y) * sin(a), r.y * (r.x / r.y) * cos(a));
+  return atan2((r.x * r.x / r.y) * sin(a), r.x * cos(a));
 }
 
 class ObjEllipse : public StandardObject{
