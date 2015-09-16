@@ -26,13 +26,9 @@ class AngleSpan{
 public:
   AngleSpan();
   AngleSpan(const Angle& start, const Angle& stop);
-  static AngleSpan Rad(coord start, coord stop){
-    return AngleSpan(Angle::Rad(start), Angle::Rad(stop));
-  }
-
-  Angle Length() const{
-    return stop - start;
-  }
+  static AngleSpan Rad(coord start, coord stop);
+  bool Empty() const;
+  Angle Length() const;
 
   Angle start;
   Angle stop;

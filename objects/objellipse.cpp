@@ -37,7 +37,7 @@ static void draw_ellipse_span(FaintDC& dc,
   const AngleSpan& angles,
   const Settings& settings)
 {
-  if (angles.start == angles.stop){
+  if (angles.Empty()){
     dc.Ellipse(tri, settings);
   }
   else {
@@ -80,7 +80,7 @@ public:
   }
 
   std::vector<Point> GetAttachPoints() const override{
-    if (m_angleSpan.start == m_angleSpan.stop){
+    if (m_angleSpan.Empty()){
       return get_attach_points(m_tri);
     }
     else{
@@ -109,23 +109,9 @@ public:
   }
 
   std::vector<PathPt> GetPath(const ExpressionContext&) const override{
-    if (m_angleSpan.start == m_angleSpan.stop){
-      return ellipse_as_path(m_tri);
-    }
-    else{
-      Point c = center_point(m_tri);
-      Radii r = get_radii(m_tri);
-      Point start = c + polar(r, m_angleSpan.start);
-      Point stop = c + polar(r, m_angleSpan.stop);
-
-      // Fixme: Compute arc-flag/sweep-flag
-      // Fixme: Consider ts_ArcSides
-      return {
-        PathPt::MoveTo(c),
-        PathPt::LineTo(start),
-        PathPt::Arc(r, 0_rad, 1, 1, stop),
-        PathPt::PathCloser()};
-    }
+    return m_angleSpan.Empty() ?
+      ellipse_as_path(m_tri) :
+      arc_as_path(m_tri, m_angleSpan, m_settings.Get(ts_ArcSides));
   }
 
   Point GetPoint(int index) const override{

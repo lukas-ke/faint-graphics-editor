@@ -27,10 +27,22 @@ AngleSpan::AngleSpan()
     stop(Angle::Zero())
 {}
 
+AngleSpan AngleSpan::Rad(coord start, coord stop){
+  return AngleSpan(Angle::Rad(start), Angle::Rad(stop));
+}
+
 AngleSpan::AngleSpan(const Angle& start, const Angle& stop)
   : start(start),
     stop(stop)
 {}
+
+bool AngleSpan::Empty() const{
+  return start == stop;
+}
+
+Angle AngleSpan::Length() const{
+  return stop - start;
+}
 
 int required_curve_count(const AngleSpan& angles){
   Angle span = abs(angles.Length());
