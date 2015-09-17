@@ -90,7 +90,7 @@ void Common_blit(T target, const IntPoint& pos, const Bitmap& bmp){
   py_common_run_command(target, get_blit_bitmap_command(pos, bmp));
 }
 
-/* method: "boundary_fill(x,y, fill, boundary_color)\n
+/* method: "boundary_fill((x,y), fill, boundary_color)\n
 Boundary fill from x,y with fill, up to the boundary_color." */
 template<typename T>
 void Common_boundary_fill(T target, const IntPoint& pos, const Paint& fill,

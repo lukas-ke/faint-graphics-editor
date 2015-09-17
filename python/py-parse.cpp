@@ -666,32 +666,30 @@ bool parse_flat(Paint& paint, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
       throw TypeError("Expected a color, pattern or gradient.");
     }
   }
-  else if (len - n == 1){
-    scoped_ref ref(PySequence_GetItem(args, n));
-    Optional<Gradient> gradient = as_Gradient(ref.get());
-    if (gradient.IsSet()){
-      paint = Paint(gradient.Get());
-      n += 1;
-      return true;
-    }
 
-    PyErr_Clear();
-    Pattern* pattern = as_Pattern(ref.get());
-    if (pattern != nullptr){
-      paint = Paint(*pattern);
-      n += 1;
-      return true;
-    }
-    throw TypeError(type_name(paint), n);
+  scoped_ref ref(PySequence_GetItem(args, n));
+  Optional<Gradient> gradient = as_Gradient(ref.get());
+  if (gradient.IsSet()){
+    paint = Paint(gradient.Get());
+    n += 1;
+    return true;
   }
-  else {
-    Color c;
-    if (parse_flat(c, args, n, len)){ // Fixme: For some reason wrong n if error
-      paint = Paint(c);
-      return true;
-    }
-    return false;
+
+  PyErr_Clear();
+  Pattern* pattern = as_Pattern(ref.get());
+  if (pattern != nullptr){
+    paint = Paint(*pattern);
+    n += 1;
+    return true;
   }
+  PyErr_Clear();
+
+  Color c;
+  if (parse_flat(c, args, n, len)){ // Fixme: For some reason wrong n if error
+    paint = Paint(c);
+    return true;
+  }
+  throw TypeError(type_name(paint), n);
 }
 
 bool parse_flat(IntLineSegment& line, PyObject* args, Py_ssize_t& n, Py_ssize_t len){

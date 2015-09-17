@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from faint import Bitmap, blit
+from faint import Bitmap, blit, Pattern
 
 class TestBitmap(unittest.TestCase):
 
@@ -112,7 +112,7 @@ class TestBitmap(unittest.TestCase):
         b1.replace_alpha((100, 100, 100))
         b1.set_alpha(10)
         b1.color_balance((0,100), (0,100), (0,100))
-
         b1.line((0,0,10,10), (255,0,0))
-        # Fixme: Add boundary fill
-        # Fixme: Paste
+
+        b1.boundary_fill((2, 3), (0,0,0), (255,0,0))
+        b1.boundary_fill((2, 3), Pattern(Bitmap((10,10))), (255,0,0))
