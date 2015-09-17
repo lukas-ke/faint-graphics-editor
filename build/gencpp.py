@@ -43,13 +43,14 @@ def method_def_sentinel():
 
 def _should_generate(sources, out_dir):
     """True if the source-files are modified more recently than the output
-    files
+    files.
 
     """
     # Fixme: Rework. Use smarter file-name discovery
     outfiles = [os.path.join(out_dir, f) for f in
                 ["setting-functions.hh",
-                 "py-settings-properties.hh"]]
+                 "py-settings-properties.hh",
+                 "py-shape-properties.hh"]]
     newest = max([os.path.getmtime(f) for f in sources])
 
     for f in outfiles:
