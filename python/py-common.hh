@@ -15,7 +15,6 @@
 
 #ifndef FAINT_PY_COMMON_HH
 #define FAINT_PY_COMMON_HH
-
 #include "bitmap/color-counting.hh"
 #include "bitmap/filter.hh"
 #include "bitmap/gaussian-blur.hh"
@@ -228,24 +227,23 @@ void Common_sepia(T target, int intensity){
     target_full_image(get_sepia_command(intensity)));
 }
 
-static std::string& Common_set_threshold_doc(){
-  static std::string doc(std::string("set_threshold(low,high[,c1,c2])\n\n"
-    "Assigns pixels with summed RGB components:\n"
-    "  - between low<->high to c1,\n"
-    "  - outside low<->high to c2.\n\n"
-    "The active foreground and background are used if c1, c2 omitted.\n"
-    "The range for min and max is ") +
-    str_range(as_closed_range<threshold_range_t>()).str() + ".");
-  return doc;
-}
-
-/* method: Common_set_threshold_doc() */
+/* method: "Common_set_threshold(low, high[, c1, c2])\n
+Assigns pixels with lightness:\n:
+ - between low<->high to c1,\n
+ - outside low<->high to c2.\n\n
+The active foreground and background is used if c1, c2 omitted.\n\n
+The valid range for low and high is 0.0->1.0, where 1.0 corresponds\n
+to R=255, G=255 and B=255." */
 template<typename T>
-void Common_set_threshold(T target, const threshold_range_t& range,
+void Common_set_threshold(T target, const std::pair<double, double>& range,
   const Optional<Paint>& paintIn, const Optional<Paint>& paintOut)
 {
+
+  const auto lower = constrained(Min(0.0), range.first, Max(1.0));
+  const auto upper = constrained(Min(0.0), range.second, Max(1.0));
+  const auto r = fractional_bounded_interval<threshold_range_t>(lower, upper);
   py_common_run_command(target,
-    target_full_image(get_threshold_command(range,
+    target_full_image(get_threshold_command(r,
       paintIn.Or(common_get_fg(target)),
       paintOut.Or(common_get_bg(target)))));
 }

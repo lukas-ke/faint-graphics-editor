@@ -50,7 +50,7 @@ def _should_generate(sources, out_dir):
     outfiles = [os.path.join(out_dir, f) for f in
                 ["setting-functions.hh",
                  "py-settings-properties.hh",
-                 "py-shape-properties.hh"]]
+                 "shape-properties.hh"]]
     newest = max([os.path.getmtime(f) for f in sources])
 
     for f in outfiles:

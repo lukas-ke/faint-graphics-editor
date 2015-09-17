@@ -204,6 +204,41 @@ bool parse_flat(std::vector<T>& vec, PyObject* args, Py_ssize_t& n, Py_ssize_t l
   return true;
 }
 
+// Parse flat for pairs
+template<typename T1, typename T2>
+bool parse_flat(std::pair<T1, T2>& pair,
+  PyObject* args,
+  Py_ssize_t& n,
+  Py_ssize_t len)
+{
+  if (len - n < 0){
+    throw TypeError(space_sep("Too few arguments for parsing pair of",
+      comma_sep(arg_traits<T1>::name.Get(), arg_traits<T2>::name.Get())));
+  }
+
+  if (PyUnicode_Check(args)){
+    throw TypeError(space_sep(
+      Sentence("Expected pair of",
+        comma_sep(arg_traits<T1>::name.Get(), arg_traits<T2>::name.Get())),
+      " - Got string."));
+  }
+
+  T1 v1;
+  auto i0 = n;
+  if (!parse_item(v1, args, i0, len, true)){
+    return false;
+  }
+  T2 v2;
+  auto i1 = n + 1;
+  if (!parse_item(v2, args, i1, len, true)){
+    return false;
+  }
+  pair.first = v1;
+  pair.second = v2;
+  n += 2;
+  return true;
+}
+
 // Parse flat for maps (dictionaries)
 template<typename T1, typename T2>
 bool parse_item(std::map<T1, T2>& theMap, PyObject* args,

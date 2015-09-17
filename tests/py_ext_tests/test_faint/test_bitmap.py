@@ -105,7 +105,7 @@ class TestBitmap(unittest.TestCase):
         b1.replace_color((0, 0, 255, 200), (255, 0, 0, 255))
         b1.rotate(3.14, (255, 0, 255))
         b1.sepia(1.0)
-        b1.set_threshold(0, 255, (255, 0, 255), (0, 255, 255))
+        b1.set_threshold((0.2, 0.8), (255, 0, 255), (0, 255, 255))
         b1.quantize()
         b1.pixelize(2)
         b1.erase_but_color((255,255,255), (255, 0, 255))

@@ -232,7 +232,7 @@ template<>
 void Common_set_alpha(Image&, const color_value_t&){}
 
 template<>
-void Common_set_threshold(Image&, const threshold_range_t&,
+void Common_set_threshold(Image&, const std::pair<double, double>&,
   const Optional<Paint>&, const Optional<Paint>&)
 {}
 

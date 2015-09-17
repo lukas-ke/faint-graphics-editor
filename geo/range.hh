@@ -15,6 +15,7 @@
 
 #ifndef FAINT_RANGE_HH
 #define FAINT_RANGE_HH
+#include <algorithm>
 #include <cassert>
 #include <limits>
 #include "geo/int-size.hh"

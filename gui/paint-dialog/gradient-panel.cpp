@@ -26,7 +26,6 @@
 #include "geo/int-rect.hh"
 #include "geo/int-size.hh"
 #include "geo/line.hh"
-#include "geo/range.hh" // for constrained
 #include "gui/bitmap-list-ctrl.hh"
 #include "gui/mouse-capture.hh"
 #include "gui/paint-dialog.hh"

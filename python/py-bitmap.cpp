@@ -308,7 +308,7 @@ void Common_set_alpha(Bitmap& bmp, const color_value_t& alpha){
 }
 
 template<>
-void Common_set_threshold(Bitmap& bmp, const threshold_range_t& range,
+void Common_set_threshold(Bitmap& bmp, const std::pair<double, double>& range,
   const Optional<Paint>& in, const Optional<Paint>& out)
 {
   if (in.NotSet()){
@@ -317,7 +317,10 @@ void Common_set_threshold(Bitmap& bmp, const threshold_range_t& range,
   if (out.NotSet()){
     throw ValueError("No outside fill specified");
   }
-  threshold(bmp, range, in.Get(), out.Get());
+  const auto lower = constrained(Min(0.0), range.first, Max(1.0));
+  const auto upper = constrained(Min(0.0), range.second, Max(1.0));
+  const auto r = fractional_bounded_interval<threshold_range_t>(lower, upper);
+  threshold(bmp, r, in.Get(), out.Get());
 }
 
 #define COMMONFWD(bundle)FORWARDER(bundle::Func<Bitmap&>, bundle::ArgType(), bundle::Name(), bundle::Doc())
