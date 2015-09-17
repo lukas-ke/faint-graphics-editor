@@ -682,8 +682,8 @@ bool parse_flat(Paint& paint, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
     n += 1;
     return true;
   }
-  PyErr_Clear();
 
+  PyErr_Clear();
   Color c;
   if (parse_flat(c, args, n, len)){ // Fixme: For some reason wrong n if error
     paint = Paint(c);
