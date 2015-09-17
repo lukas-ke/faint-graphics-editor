@@ -113,6 +113,6 @@ class TestBitmap(unittest.TestCase):
         b1.set_alpha(10)
         b1.color_balance((0,100), (0,100), (0,100))
 
+        b1.line((0,0,10,10), (255,0,0))
         # Fixme: Add boundary fill
-        # Fixme: bmp.line(0,0,10,10) # Fixme: Removed
         # Fixme: Paste
