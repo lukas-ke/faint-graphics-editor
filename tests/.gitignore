@@ -4,6 +4,7 @@ run-gui-tests
 run-image-tests
 run-unit-tests
 config.ini
+tracebacks.log
 *.manifest
 *.exp
 *.lib

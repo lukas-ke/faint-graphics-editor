@@ -15,6 +15,7 @@ import shutil
 import svg_suite.config as config
 from svg_suite.html_index import write_html_index, target_name
 import sys
+import traceback
 
 # Use the .pyd in ext/out
 FAINT_ROOT = os.path.abspath(os.path.join(os.getcwd(), ".."))
@@ -162,7 +163,13 @@ def test_svg_suite(cfg, args, silent=False):
                                len(args), silent)
     print()
     print("Total failures: %d/%d" % (len(total_fails), len(svg_files)))
-    print("\n".join(["%s, %s" % (item[0], str(item[1])) for item in total_fails]))
+
+    if len(total_fails) != 0:
+        with open("tracebacks.log", 'w') as f:
+            for failure in total_fails:
+                f.write("%s, %s" % (failure[0], str(failure[1])))
+                f.write("".join(traceback.format_exception(failure[1].__class__, failure[1], failure[1].__traceback__)))
+
 
 if __name__ == '__main__':
     if config.maybe_create_config():

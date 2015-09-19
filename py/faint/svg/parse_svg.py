@@ -103,7 +103,7 @@ def parse_defs(node, state, id_to_etree_node=None):
             id_to_etree_node[ref_id] = child
 
     for child, func in match_children(node, svg_defs_content_functions):
-        item = func(child, state, id_to_etree_node)
+        item = func(child, state)
 
         if item is None or item.__class__ is int:
             # I guess "None" is failed parsing? Could
@@ -771,7 +771,6 @@ def object_common(func):
     instead of scattering it in the individual parse functions.
 
     """
-
     def update_object(node, state):
         obj_id = func(node, state)
         if obj_id is not None:
