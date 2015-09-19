@@ -5,3 +5,4 @@ summary:"List of Faint Python functions"
 This is a list of all Faint-specific built in Python functions.
 
 \include(generated/py-functions-methods.txt)
+\include(generated/py-global-functions-methods.txt)
