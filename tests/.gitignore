@@ -3,6 +3,7 @@ run-benchmarks
 run-gui-tests
 run-image-tests
 run-unit-tests
+config.ini
 *.manifest
 *.exp
 *.lib
