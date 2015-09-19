@@ -76,6 +76,9 @@ class Pimage:
         """For compatibility with FrameProps"""
         obj.set_tri(tri)
 
+    def set_obj_name(self, obj, name):
+        obj.name = name
+
     def get_size(self):
         return self.w, self.h
 

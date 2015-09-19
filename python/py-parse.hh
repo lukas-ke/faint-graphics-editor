@@ -80,6 +80,7 @@ template<> struct arg_traits<Index>{static const TypeName name;};
 template<> struct arg_traits<IntLineSegment>{static const TypeName name;};
 template<> struct arg_traits<LineSegment>{static const TypeName name;};
 template<> struct arg_traits<Object> {static const TypeName name;};
+template<> struct arg_traits<Object*> {static const TypeName name;};
 template<> struct arg_traits<Paint>{static const TypeName name;};
 template<> struct arg_traits<Settings>{static const TypeName name;};
 template<> struct arg_traits<Tri>{static const TypeName name;};
@@ -133,7 +134,7 @@ bool parse_item(DefaultConstructible<Either<T1, T2> >& obj, PyObject* args, Py_s
   }
   return false;
 }
-
+bool parse_flat(Object*&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
 bool parse_flat(DefaultConstructible<Angle>&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
 bool parse_flat(DefaultConstructible<Delay>&, PyObject*, Py_ssize_t& n, Py_ssize_t len);
 bool parse_flat(bitmapObject*&, PyObject*, Py_ssize_t& n, Py_ssize_t len);

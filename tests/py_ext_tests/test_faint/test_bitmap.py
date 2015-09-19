@@ -2,7 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+import os
+
 from faint import Bitmap, blit, Pattern
+import faint
+import py_ext_tests
 
 class TestBitmap(unittest.TestCase):
 
@@ -116,3 +120,9 @@ class TestBitmap(unittest.TestCase):
 
         b1.boundary_fill((2, 3), (0,0,0), (255,0,0))
         b1.boundary_fill((2, 3), Pattern(Bitmap((10,10))), (255,0,0))
+
+    def test_draw_objects(self):
+        out_dir = py_ext_tests.make_test_dir(self)
+        b1 = Bitmap((100, 100))
+        b1.draw_objects([faint.create_Ellipse((0,0, 10, 10)),])
+        faint.write_png(b1, os.path.join(out_dir, "b.png"), faint.png.RGB)

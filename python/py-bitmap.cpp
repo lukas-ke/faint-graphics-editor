@@ -27,6 +27,7 @@
 #include "rendering/faint-dc.hh"
 #include "util/command-util.hh" // Fixme: Remove
 #include "util/optional.hh"
+#include "objects/object.hh"
 #include "python/py-common.hh"
 #include "python/mapped-type.hh"
 #include "python/py-include.hh"
@@ -88,6 +89,26 @@ Returns a copy of the bitmap."
 name: "copy" */
 static Bitmap Bitmap_copy(Bitmap& self){
   return self;
+}
+
+/* method: "draw_objects(objects)\n
+Draw the objects onto this bitmap." */
+static void Bitmap_draw_objects(Bitmap& self, const objects_t& objects){
+  class NoCtx : public ExpressionContext{
+    Optional<Calibration> GetCalibration() const override{
+      return {};
+    }
+
+    const Object* GetObject(const utf8_string&) const override{
+      return nullptr;
+    }
+  };
+
+  FaintDC dc(self);
+  NoCtx ctx;
+  for (Object* obj : objects){
+    obj->Draw(dc, ctx);
+  }
 }
 
 /* method: "get_raw_rgb_string()->s\n

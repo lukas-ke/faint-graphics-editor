@@ -37,6 +37,7 @@
 #include "python/py-parse.hh"
 #include "python/py-pattern.hh"
 #include "python/py-settings.hh"
+#include "python/py-shape.hh"
 #include "python/py-something.hh"
 #include "python/py-tri.hh"
 #include "python/py-frame.hh"
@@ -49,6 +50,7 @@
 
 namespace faint{
 const TypeName arg_traits<Object>::name("Object");
+const TypeName arg_traits<Object*>::name("Object");
 const TypeName arg_traits<BoundObject<Object>>::name(arg_traits<Object>::name);
 
 const TypeName arg_traits<bitmapObject>::name("Bitmap");
@@ -222,6 +224,28 @@ bool parse_flat(bitmapObject*& bmp, PyObject* args, Py_ssize_t& n, Py_ssize_t le
   }
 
   bmp = (bitmapObject*)(ref.get()); // Fixme: Looks dangerous
+  return true;
+}
+
+bool parse_flat(Object*& obj, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
+  // Fixme: This variant was added for parsing from PyShape,
+  // Should probably have a specific C++-side object for this.
+
+  throw_insufficient_args_if(len - n < 1, "Object");
+
+  if (!PySequence_Check(args)){
+    obj = shape_get_object(args);
+    if (obj == nullptr){
+      throw TypeError(type_name(obj), n);
+    }
+    return true;
+  }
+
+  scoped_ref ref(PySequence_GetItem(args, n));
+  obj = shape_get_object(ref.get());
+  if (obj == nullptr){
+    throw TypeError(arg_traits<Object>::name, n);
+  }
   return true;
 }
 

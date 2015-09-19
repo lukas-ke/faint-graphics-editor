@@ -92,7 +92,6 @@ def set_name(node, object_id, props):
         props.set_obj_name(object_id, name)
 
 
-# Fixme: Rename id_to_node, it maps to parsed objects
 def parse_defs(node, state, id_to_etree_node=None):
     """Recursively parses an SVG defs-node."""
     if id_to_etree_node is None:
@@ -113,7 +112,7 @@ def parse_defs(node, state, id_to_etree_node=None):
             state.add_warning("Ignored referenced item in <defs>")
 
         elif item == 'marker':
-            # Ignore ignored markers for now, since I add them for
+            # No warning on ignored markers for now, since I add them for
             # arrowhead, arrowtail.
             # Fixme: These should be indexed for referencing.
             pass

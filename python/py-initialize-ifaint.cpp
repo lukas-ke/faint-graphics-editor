@@ -28,6 +28,7 @@
 #include "python/py-png.hh"
 #include "python/py-settings.hh"
 #include "python/py-something.hh"
+#include "python/py-shape.hh"
 #include "python/py-util.hh" // build_unicode
 #include "python/py-tri.hh"
 #include "python/py-exception-types.hh"
@@ -47,6 +48,7 @@ static void add_faint_types(PyObject* module){
   add_type_Grid(module);
   add_type_Pattern(module);
   add_type_Settings(module);
+  add_type_Shape(module);
   add_type_Tri(module);
 
   add_gradient_types(module);
