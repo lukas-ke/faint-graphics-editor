@@ -38,6 +38,7 @@ def remove_dir_if_empty(d):
 
 
 def matches_any_ext(filename, extensions):
+    # Fixme: Use any
     for ext in extensions:
         if filename.endswith(ext):
             return True

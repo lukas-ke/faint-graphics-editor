@@ -29,6 +29,7 @@ def any_changed(sources, target):
         return True
 
     target_time = os.path.getmtime(target)
+    # Fixme: Use any
     for source in sources:
         if target_time < os.path.getmtime(source):
             return True

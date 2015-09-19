@@ -18,7 +18,7 @@
 import os
 import sys
 
-def match_ext( extensions, filename ):
+def match_ext(extensions, filename):
     if extensions is None:
         print("extensions is None", filename)
         return True
@@ -26,6 +26,7 @@ def match_ext( extensions, filename ):
         print("extensions is str: ", filename)
         return filename.endswith(extensions)
     else:
+        # Fixme: Use any
         for ext in extensions:
             if filename.endswith(ext):
                 return True

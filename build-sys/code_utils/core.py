@@ -19,6 +19,7 @@ import os
 import sys
 
 def excluded(item, exclude_list):
+    # Fixme: Use any
     for exclude in exclude_list:
         if exclude in item:
             return True
