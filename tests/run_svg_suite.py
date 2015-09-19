@@ -127,7 +127,8 @@ def run_test(svg_test_suite_root,
         try:
             test_file(num, f, target_dir, target_type, silent, svg_file_paths)
         except Exception as e:
-            total_fails.append((f, str(e)))
+            total_fails.append((f, e))
+
     return total_fails
 
 
@@ -161,7 +162,7 @@ def test_svg_suite(cfg, args, silent=False):
                                len(args), silent)
     print()
     print("Total failures: %d/%d" % (len(total_fails), len(svg_files)))
-    print("\n".join([",".join(item) for item in total_fails]))
+    print("\n".join(["%s, %s" % (item[0], str(item[1])) for item in total_fails]))
 
 if __name__ == '__main__':
     if config.maybe_create_config():

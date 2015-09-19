@@ -17,8 +17,9 @@
 
 """Builds Faint images from for SVG read from string or file."""
 
-__all__ = ["parse_doc", "parse_svg_string"]
+__all__ = ["parse_doc", "from_string"]
 
+import gzip
 from math import atan2
 import re
 from . import wrapped_etree as ET
@@ -1214,6 +1215,22 @@ def parse_svg_root_node(svg_node, image_props, system_language):
             svg_content_functions[child.tag](child, state)
 
 
+def parse_svgz_file(path, image_props, system_language):
+    with gzip.open(path, 'rb') as f:
+        file_content = f.read()
+    return from_string(file_content, image_props)
+
+
+def _parse_svg_file(path, image_props, system_language):
+    ET.register_namespace("svg", "{http://www.w3.org/2000/svg}")
+    tree = ET.parse(path)
+    root = tree.getroot()
+    if root.tag == ns_svg('svg'):
+        parse_svg_root_node(root, image_props, system_language)
+    else:
+        raise faint.LoadError("Root element was not <svg>.")
+
+
 def parse_doc(path, image_props, system_language="en"):
     """Parses the SVG document at the given file path, using the
     image_props to build an image.
@@ -1221,15 +1238,14 @@ def parse_doc(path, image_props, system_language="en"):
     """
 
     try:
-        ET.register_namespace("svg", "{http://www.w3.org/2000/svg}")
-        tree = ET.parse(path)
-        root = tree.getroot()
-        if root.tag == ns_svg('svg'):
-            parse_svg_root_node(root, image_props, system_language)
+        if path.endswith(".svgz"):
+            parse_svgz_file(path, image_props, system_language)
         else:
-            raise faint.LoadError("Root element was not <svg>.")
+            _parse_svg_file(path, image_props, system_language)
+
     except svg_error as e:
         raise faint.LoadError(str(e))
+
 
 def from_string(xml_string, image_props, system_language="en"):
     """Parses the SVG document in the given string, using the image_props

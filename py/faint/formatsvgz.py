@@ -17,18 +17,13 @@
 
 """Load and save functions for zipped svg files."""
 
-import gzip
 import faint.svg.parse_svg as parse_svg
 import faint.svg.write_svg as write_svg
 
 def load(filename, imageprops):
     """Load image from the zipped svg file."""
-    with gzip.open(filename, 'rb') as f:
-        file_content = f.read()
-        return parse_svg.parse_svg_string(file_content, imageprops, "en")
+    parse_svg.parse_svgz_file(filename, imageprops, "en")
 
 def save(filename, canvas):
     """Save the image to the specified file as zipped svg."""
-    data = write_svg.to_string(canvas).encode('utf-8')
-    with gzip.open(filename, 'wb') as f:
-        f.write(data)
+    write_svg.write_svgz(filename, canvas)

@@ -22,6 +22,7 @@
 __all__ = ["write", "to_string"]
 
 import base64
+import gzip
 from faint.svg.util import arrow_line_end, rad2deg, rad_angle
 from faint.svg.write import SvgBuildState
 from faint.image import one_color_bg
@@ -793,3 +794,8 @@ def write(path, canvas):
     svg_str = to_string(canvas)
     with open_for_writing_binary(path) as svg_file:
         svg_file.write(svg_str.encode('utf-8'))
+
+def write_svgz(path, canvas):
+    svg_str = to_string(canvas).encode('utf-8')
+    with gzip.open(path, 'wb') as f:
+        f.write(svg_str)

@@ -29,6 +29,7 @@
 #include "python/py-settings.hh"
 #include "python/py-shape.hh"
 #include "python/py-tri.hh"
+#include "wx/image.h"
 
 // Module definition for the Faint Python module. This is built to a
 // shared library for use with a Python executable; it is not used
@@ -77,7 +78,7 @@ static PyObject* init_extension_module(){
 
   // And some I'd rather not have
   add_compatibility_types(ifaint);
-
+  wxInitAllImageHandlers();
   return ifaint;
 }
 
