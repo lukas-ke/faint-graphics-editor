@@ -193,7 +193,6 @@ public:
     SetDefaultStyle(wxTextAttr(to_wx(text), to_wx(bg),
         interpreter_font()));
 
-    WriteText("Faint Python Interpreter\n");
     SetFocus();
     const auto pos = GetLastPosition();
     SetSelection(pos, pos);

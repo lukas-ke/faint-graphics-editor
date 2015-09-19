@@ -40,7 +40,7 @@ static void run_string_interpreter(const utf8_string& str, scoped_ref& module){
 class InterpreterFrameImpl : public wxFrame{
 public:
   InterpreterFrameImpl()
-    : wxFrame(null_parent(), wxID_ANY, "Faint Python Interpreter")
+    : wxFrame(null_parent(), wxID_ANY, "Faint Python Console")
   {
     m_interpreterCtrl = make_dumb<InterpreterCtrl>(this);
     SetMinSize(wxSize(200,200));

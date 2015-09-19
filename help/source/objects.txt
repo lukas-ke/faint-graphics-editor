@@ -41,8 +41,8 @@ can be adjusted independently. Ellipses also have adjustable points
 used to limit them to arc segments. To edit the points of such an
 object, select it with the selection tool and enable 'Edit points'.
 
-|| \graphic(edit-points.png) || \image(editable-polygon.png) ||
-|| The edit points setting. || A polygon with editable points ||
+|| \graphic(edit-points.png) || \image(editable-polygon.png) || \image(editable-arc.png) ||
+|| The edit points setting. || A polygon with editable points || An elliptic arc ||
 
 == Naming objects {naming-objects} ==
 Objects can be given names which can be used to refer to their

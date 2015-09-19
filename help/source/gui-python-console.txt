@@ -5,11 +5,11 @@ summary:"The Python scripting console"
 The Python Console in Faint is used for
 interactive \ref(scripting-intro.txt,scripting).
 
-To show the console use Edit->Python Interpreter
+To show the console use Edit->Python Console
 bind:dialog_python_console; The console can also be toggled with the
-Python function withbind:dialog_python_console();.
+Python function withbind:dialogs.python_console();.
 
-\image(python-interpreter.png)
+\image(python-console.png)
 
 
 == Command history ==

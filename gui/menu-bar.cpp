@@ -399,7 +399,7 @@ public:
       });
     editMenu->AppendSeparator();
 
-    Add(editMenu, Label("Python &Interpreter...\tF8"),
+    Add(editMenu, Label("P&ython Console...\tF8"),
       [&](){app.TogglePythonConsole();});
 
     m_menuRef->Append(editMenu, "&Edit");
