@@ -23,10 +23,7 @@ def maybe_create_config():
     return False
 
 def matches_ext(filename, exts):
-    for e in exts:
-        if filename.endswith(e):
-            return True
-    return False
+    return any(filename.endswith(e) for e in exts)
 
 def recreate_out_dir(out_dir, cleaned_exts):
     if os.path.exists(out_dir):

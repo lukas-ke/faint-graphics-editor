@@ -168,7 +168,10 @@ def test_svg_suite(cfg, args, silent=False):
         with open("tracebacks.log", 'w') as f:
             for failure in total_fails:
                 f.write("%s, %s" % (failure[0], str(failure[1])))
-                f.write("".join(traceback.format_exception(failure[1].__class__, failure[1], failure[1].__traceback__)))
+                f.write("".join(traceback.format_exception(failure[1].__class__,
+                    failure[1],
+                    failure[1].__traceback__)))
+        print("See tracebacks.log for exception traces.")
 
 
 if __name__ == '__main__':
