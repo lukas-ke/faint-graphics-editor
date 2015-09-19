@@ -607,7 +607,7 @@ void FaintWindowContext::Maximize(){
   m_faintWindow.Maximize(!m_faintWindow.IsMaximized());
 }
 
-void FaintWindowContext::MaximizeInterpreter(){
+void FaintWindowContext::MaximizePythonConsole(){
   m_interpreterFrame.Maximize(!m_interpreterFrame.IsMaximized());
 }
 
@@ -685,11 +685,11 @@ void FaintWindowContext::SetDefaultResizeDialogOptions(const ResizeDialogOptions
   m_defaultResizeSettings = opts;
 }
 
-void FaintWindowContext::SetInterpreterBackground(const ColRGB& c){
+void FaintWindowContext::SetPythonConsoleBackground(const ColRGB& c){
   m_interpreterFrame.SetBackgroundColor(c);
 }
 
-void FaintWindowContext::SetInterpreterTextColor(const ColRGB& c){
+void FaintWindowContext::SetPythonConsoleTextColor(const ColRGB& c){
   m_interpreterFrame.SetTextColor(c);
 }
 

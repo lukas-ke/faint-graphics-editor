@@ -93,7 +93,7 @@ public:
   virtual void Load(const FileList&) = 0;
   virtual Canvas* LoadAsFrames(const FileList&, const change_tab&) = 0;
   virtual void Maximize() = 0;
-  virtual void MaximizeInterpreter() = 0;
+  virtual void MaximizePythonConsole() = 0;
   virtual bool ModalDialogShown() const = 0;
   virtual Canvas& NewDocument(const ImageInfo&) = 0;
   virtual Canvas& NewDocument(ImageProps&&) = 0;
@@ -115,8 +115,8 @@ public:
   virtual void SetActiveCanvas(const CanvasId&) = 0;
   virtual void SetDefaultGrid(const Grid&) = 0;
   virtual void SetDefaultResizeDialogOptions(const ResizeDialogOptions&) = 0;
-  virtual void SetInterpreterBackground(const ColRGB&) = 0;
-  virtual void SetInterpreterTextColor(const ColRGB&) = 0;
+  virtual void SetPythonConsoleBackground(const ColRGB&) = 0;
+  virtual void SetPythonConsoleTextColor(const ColRGB&) = 0;
   virtual void SetLayer(Layer) = 0;
   virtual void SetPalette(const PaintMap&) = 0;
   virtual void SetTransparencyStyle(const TransparencyStyle&) = 0;

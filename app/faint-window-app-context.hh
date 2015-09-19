@@ -143,7 +143,7 @@ public:
   Canvas* LoadAsFrames(const FileList& paths,
     const change_tab& changeTab) override;
   void Maximize() override;
-  void MaximizeInterpreter() override;
+  void MaximizePythonConsole() override;
   bool ModalDialogShown() const override;
   Canvas& NewDocument(const ImageInfo& info) override;
   Canvas& NewDocument(ImageProps&& props) override;
@@ -162,8 +162,8 @@ public:
   void SetActiveCanvas(const CanvasId&) override;
   void SetDefaultGrid(const Grid&) override;
   void SetDefaultResizeDialogOptions(const ResizeDialogOptions& opts) override;
-  void SetInterpreterBackground(const ColRGB& c) override;
-  void SetInterpreterTextColor(const ColRGB& c) override;
+  void SetPythonConsoleBackground(const ColRGB& c) override;
+  void SetPythonConsoleTextColor(const ColRGB& c) override;
   void SetPalette(const PaintMap& paintMap) override;
   void SetTransparencyStyle(const TransparencyStyle& style) override;
   void SetLayer(Layer layer) override;

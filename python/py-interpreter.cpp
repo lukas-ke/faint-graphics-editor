@@ -61,7 +61,7 @@ void add_interpreter_to_module(PyObject* module){
 /* method: "maximize()\n
 Maximize or de-maximize the interpreter window." */
 static void faintinterpreter_maximize(AppContext& app){
-  app.MaximizeInterpreter();
+  app.MaximizePythonConsole();
 }
 
 /* method: "set_background_color(r,g,b)\n
@@ -69,13 +69,13 @@ Set the background color of the interpreter window" */
 static void faintinterpreter_set_background_color(AppContext& app,
   const ColRGB& c)
 {
-  app.SetInterpreterBackground(c);
+  app.SetPythonConsoleBackground(c);
 }
 
 /* method: "set_text_color(r,g,b)\n
 Sets the text color of the interpreter window." */
 static void faintinterpreter_set_text_color(AppContext& app, const ColRGB& c){
-  app.SetInterpreterTextColor(c);
+  app.SetPythonConsoleTextColor(c);
 }
 
 /* method: "__copy__()"
