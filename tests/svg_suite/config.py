@@ -6,7 +6,6 @@ def _create_config():
     with open('config.ini', 'w') as f:
         f.write('[test]\n')
         f.write('svg_test_suite_root=\n')
-        f.write('faint_exe=\n')
 
     print("Created config file config.ini.")
     print("Update this file and run the test again.")
