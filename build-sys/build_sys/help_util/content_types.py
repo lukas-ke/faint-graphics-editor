@@ -272,12 +272,20 @@ class PythonFunction:
         self.name = signature[:parenPos]
         self.args = signature[parenPos:]
         self.withBind = withBind
+
     def to_html(self, state, **kwArgs):
         if self.withBind:
-            return self._name_and_args() + " " + "<bind>%s</bind>" % self.name
-        return self._name_and_args()
+            return "%s <bind>%s</bind>" % (
+                self.name_and_args(), self.stripped_object())
+        return self.name_and_args()
 
-    def _name_and_args(self):
+    def stripped_object(self):
+        dot = self.name.find('.')
+        if dot != -1:
+            return self.name[dot + 1:]
+        return self.name
+
+    def name_and_args(self):
         return self.name + self.args
 
 
