@@ -4,7 +4,7 @@
 # List of files from the SVG test suite that Faint has
 # a chance of parsing somewhat.
 # http://www.w3.org/Graphics/SVG/WG/wiki/Test_Suite_Overview
-TESTABLE_FILES_REAL = [
+TESTABLE_FILES = [
     # Color properties
     # ----------------------------------------
     'color-prop-01-b.svg',
@@ -426,11 +426,4 @@ TESTABLE_FILES_REAL = [
     # ----------------------------------------
     'types-basic-01-f.svg',
     'types-basic-02-f.svg', # css, though should upper case PX be supported?
-]
-
-TESTABLE_FILES = [
-    # Color properties
-    # ----------------------------------------
-    'color-prop-01-b.svg',
-    'color-prop-02-f.svg',
 ]

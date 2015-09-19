@@ -16,7 +16,6 @@ import svg_suite.config as config
 from svg_suite.html_index import write_html_index, target_name
 import sys
 
-
 # Use the .pyd in ext/out
 FAINT_ROOT = os.path.abspath(os.path.join(os.getcwd(), ".."))
 EXT_OUT = os.path.join(FAINT_ROOT, "ext/out")
@@ -26,6 +25,7 @@ sys.path.insert(1, PY)
 
 import faint.svg.parse_svg as svg
 import faint
+from faint import Bitmap
 
 # Console width, All output is adjusted (ljust) to this width to
 # clear old output after stepping back with '\b', so the
@@ -76,54 +76,59 @@ def get_out_error(source_file, target_file, error_num):
 def get_blank_line():
     return ' ' * COLUMNS + '\n'
 
+old_info_str_len = 0
+error_num = 0
+def test_file(num, f, target_dir, target_type, silent, svg_file_paths):
+    global old_info_str_len
+    global error_num
+    l = faint.PimageList()
+    svg.parse_doc(f, l)
+    img = l.frames[0]
+    img.flatten()
+    target_file = os.path.join(target_dir, target_name(f, target_type))
+    faint.write_png(img.background, target_file, faint.png.RGB)
+    if not os.path.exists(target_file):
+        if old_info_str_len != 0 and not silent:
+            sys.stdout.write("\b" * old_info_str_len)
+
+        if error_num > 0 and not silent:
+            sys.stdout.write(get_blank_line())
+        error_num += 1
+        sys.stdout.write(get_out_error(f, target_file, error_num))
+
+        old_info_str_len = 0
+
+    if not silent:
+        info_str = get_info_str(target_type,
+                            num, svg_file_paths)
+
+        sys.stdout.write("\b" * old_info_str_len + info_str)
+        old_info_str_len = len(info_str)
+        sys.stdout.flush()
+
 
 def run_test(svg_test_suite_root,
              target_type,
              svg_file_paths,
              test_num,
              total_tests, silent):
+    total_fails = []
 
     target_info = TARGET_INFO[target_type]
     target_dir = target_info['target_dir']
-    old_info_str_len = 0
 
     if total_tests > 1 and not silent:
         sys.stdout.write(get_heading(target_type, test_num, total_tests))
-
-    error_num = 0
 
     if target_type == 'png':
         write_html_index(target_dir, 'png', svg_file_paths, svg_test_suite_root)
 
     for num, f in enumerate(svg_file_paths):
-        l = faint.PimageList()
-
-        svg.parse_doc(f, l)
-        target_file = os.path.join(target_dir, target_name(f, target_type))
-        write_png(
-        if not os.path.exists(target_file):
-            if old_info_str_len != 0 and not silent:
-                sys.stdout.write("\b" * old_info_str_len)
-
-            if error_num > 0 and not silent:
-                sys.stdout.write(get_blank_line())
-            error_num += 1
-            sys.stdout.write(get_out_error(f, target_file, error_num))
-
-            old_info_str_len = 0
-
-        if not silent:
-            info_str = get_info_str(target_type,
-                                num, svg_file_paths)
-
-            sys.stdout.write("\b" * old_info_str_len + info_str)
-            old_info_str_len = len(info_str)
-            sys.stdout.flush()
-
-
-
-
-
+        try:
+            test_file(num, f, target_dir, target_type, silent, svg_file_paths)
+        except Exception as e:
+            total_fails.append((f, str(e)))
+    return total_fails
 
 
 def setup_test(target_type):
@@ -152,8 +157,11 @@ def test_svg_suite(cfg, args, silent=False):
 
     for num, target_type in enumerate(sorted(args)):
         setup_test(target_type)
-        run_test(svg_test_suite_root, target_type, svg_files, num,
-                 len(args), silent)
+        total_fails = run_test(svg_test_suite_root, target_type, svg_files, num,
+                               len(args), silent)
+    print()
+    print("Total failures: %d/%d" % (len(total_fails), len(svg_files)))
+    print("\n".join([",".join(item) for item in total_fails]))
 
 if __name__ == '__main__':
     if config.maybe_create_config():

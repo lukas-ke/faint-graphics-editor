@@ -19,6 +19,7 @@ class Pimage:
         self.w = w
         self.h = h
         self.objects = []
+        self.background = None
 
     def Rect(self, *args):
         sh = ifaint.create_Rect(*args)
@@ -98,7 +99,12 @@ class Pimage:
     def save_backup(self, path):
         ifaint.write_png(self.background, path)
 
-    background = None
+    def flatten(self):
+        if self.background is None:
+            self.background = ifaint.Bitmap((self.w, self.h))
+        self.background.draw_objects(self.objects)
+        self.objects = []
+
 
 class PimageList:
     """List of frames in Python."""
