@@ -5,6 +5,6 @@ summary:"Dialog for adjusting the color balance"
 The color balance dialog is used for adjusting the color balance.
 
 To open the color balance dialog use Image->Color->Color balance,
-or the Python function withbind:dialog_color_balance();.
+or the Python function withbind:dialogs.color_balance();.
 
 See \ref(feat-color-balance.txt) for more details.

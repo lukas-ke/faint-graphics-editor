@@ -5,4 +5,4 @@ summary:"The dialog for opening images"
 The dialog used for opening images in Faint.
 
 To open this dialog, use File->Open or the Python function
-withbind:dialog_open_file();
+withbind:dialogs.open_file();

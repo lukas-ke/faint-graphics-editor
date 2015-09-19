@@ -8,7 +8,7 @@ selected objects. The available functionality depends on the active
 selection.
 
 To open the resize dialog use Image->Resize... (Ctrl+E) or the Python
-function withbind:dialog_resize();
+function withbind:dialogs.resize();
 
 ||\image(gui-resize-dialog-image.png)||
 || /The standard resize dialog/ ||

@@ -7,7 +7,7 @@ which all pixels are set to the primary color, while all pixels
 outside are set to the secondary color.
 
 To open the threshold dialog use Image->Color->Threshold, or the
-Python function withbind:dialog_threshold();.
+Python function withbind:dialogs.threshold();.
 
 \image(gui-threshold-dialog.png)
 

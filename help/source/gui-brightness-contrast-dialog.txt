@@ -8,7 +8,7 @@ and contrast of an image.
 \image(gui-brightness-contrast-dialog.png)
 
 To open the brightness contrast dialog use Image->Brightness Contrast,
-or the Python function withbind:dialog_brightness_contrast();.
+or the Python function withbind:dialogs.brightness_contrast();.
 
 The "Brightness"-slider modifies the average brightness level, while
 the "Contrast"-slider amplifies values, see

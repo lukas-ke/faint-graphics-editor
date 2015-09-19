@@ -8,7 +8,7 @@ image. If a raster area or objects are selected, only that selection
 will be affected.
 
 To open the rotate dialog use Image->Rotate (Ctrl+R) or the Python
-function withbind:dialog_rotate();
+function withbind:dialogs.rotate();
 
 ||\image(gui-rotate-dialog1.png)||\image(gui-rotate-dialog2.png)||
 || / The first page of the rotate dialog / || / The second page of the rotate dialog / ||
