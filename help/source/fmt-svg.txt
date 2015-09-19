@@ -4,9 +4,11 @@ summary:"A vector format"
 \image(fmt-vector.png)
 
 = Scalable Vector Graphics (.svg) =
-A format for Vector images. Faint also saves the background (unless it
-consists of a single color) as an embedded PNG, so SVG is a suitable
-for storing images with both vector and raster elements.
+SVG is a vector image file format.
+
+When saving as SVG, Faint saves the background (unless it consists of
+a single color) as an embedded PNG, so SVG is a suitable for storing
+images with both vector and raster elements.
 
 Note that svg images saved from Faint with embedded raster graphics
 tend to have large file sizes.

@@ -7,8 +7,9 @@ summary:"A document format"
 PDF is a document format with vector graphics.
 
 Faint has limited PDF support, which can be used to save graphics for
-inclusion in PDF-documents generated with for example pdflatex. In
-other situations, \ref(fmt-svg.txt,SVG) is preferable when saving
+inclusion in PDF-documents generated with for example
+\extref(https://en.wikipedia.org/wiki/LaTeX LaTeX).
+In other situations, \ref(fmt-svg.txt,SVG) is preferable when saving
 vector images from Faint.
 
 Faint can open the PDF:s it has saved, but not PDF:s from other
