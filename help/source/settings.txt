@@ -14,20 +14,23 @@ Python-name from the following table.
 
 tablestyle:fancy
 || *Icon* ||*Setting*||*Python name*||*Applies to*||
+||\image(na.png)||Arc sides||arcsides||Ellipse||
 ||\graphic(line-no-arrow.png)\graphic(line-arrow-front.png)||Arrowhead||arrow||Line, Polyline||
-||\graphic(choice-transparent.png)\graphic(choice-opaque.png)||Background style||bgstyle||Raster selection, Raster object||
-||\graphic(brush-rect.png)\graphic(brush-circle.png)||Brush shape||brushshape||Brush tool||
-||\image(brush-size.png)||Brush size||brushsize||Brush tool||
+||\graphic(choice-transparent.png)\graphic(choice-opaque.png)||Background style||bgstyle||\ref(tool-selection.txt,Raster selection), Raster object||
+||\graphic(brush-rect.png)\graphic(brush-circle.png)||Brush shape||brushshape||\ref(tool-brush,Brush tool)||
+||\image(brush-size.png)||Brush size||brushsize||\ref(tool-brush.txt,Brush tool)||
+||\image(na.png)||Corner X-radius||rx||Rectangle||
+||\image(na.png)||Corner Y-radius||ry||Rectangle||
 ||\graphic(edit-points.png)||Edit points||editpoints||Line, Polygon, Spline, Path||
 ||\graphic(fillstyle-border.png)\graphic(fillstyle-fill.png)\br\graphic(fillstyle-border-and-fill.png)||Fill style||fillstyle||Rectangle, Ellipse, Polygon, Path||
-||\image(fontsize.png)||Font size||fontsize||Text||
 ||\image(fontface.png)||Font face||font||Text||
-||\graphic(layer-raster.png)\graphic(layer-object.png)||Layer type||-||Most||
+||\image(fontsize.png)||Font size||fontsize||Text||
+||\graphic(layer-raster.png)\graphic(layer-object.png)||\ref(raster-vs-object.txt,Layer type)||-||Most||
 ||\image(na.png)||Line cap||cap||Line, Polygon, Spline, Path||
 ||\image(na.png)||Line join||join||Polyline, Polygon, Spline, Path||
 ||\graphic(linestyle-solid.png)\graphic(linestyle-long-dash.png)||Line style||linestyle||Line, Polygon, Spline, Path||
 ||\image(linewidth.png) ||Line width||linewidth||Line, Polygon, Spline, Path||
-||\graphic(text-parsing.png)||Parse expressions||parsing||Text||
-||\graphic(line-polyline.png)||Polyline||polyline||Line tool||
-||\image(setting-fg.png)||Primary color||fg||Most||
-||\image(setting-bg.png)||Secondary color||bg||Most||
+||\graphic(text-parsing.png)||\ref(ref-text-expressions.txt,Parse expressions)||parsing||Text||
+||\graphic(line-polyline.png)||Polyline||polyline||\ref(tool-line.txt,Line tool)        ||
+||\image(setting-fg.png)||\ref(color.txt,Primary color)||fg||Most||
+||\image(setting-bg.png)||\ref(color.txt,Secondary color)||bg||Most||
