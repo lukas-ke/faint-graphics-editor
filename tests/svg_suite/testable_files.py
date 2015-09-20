@@ -337,8 +337,8 @@ TESTABLE_FILES = [
 
     # Structure: SVG
     # ----------------------------------------
-    'struct-svg-01-f.svg',
-    'struct-svg-02-f.svg', # Also png wrong (ok in firefox)
+    # 'struct-svg-01-f.svg',  # Uses javascript
+    # 'struct-svg-02-f.svg', # Uses javascript
     'struct-svg-03-f.svg',
 
     # Structure: Symbol

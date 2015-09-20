@@ -124,8 +124,8 @@ class TestBitmap(unittest.TestCase):
 
     def test_draw_objects(self):
         out_dir = py_ext_tests.make_test_dir(self)
-        b1 = Bitmap((100, 100))
-        b1.draw_objects([faint.create_Ellipse((0,0, 10, 10)),])
+        b1 = Bitmap((20, 20))
+        b1.draw_objects([faint.create_Ellipse((5,5, 15, 15)),])
         faint.write_png(b1, os.path.join(out_dir, "b.png"), faint.png.RGB)
 
     def test_equal(self):
