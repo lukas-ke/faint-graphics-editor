@@ -22,6 +22,7 @@ tablestyle:fancy
 ||\image(na.png)||Corner X-radius||rx||Rectangle||
 ||\image(na.png)||Corner Y-radius||ry||Rectangle||
 ||\graphic(edit-points.png)||Edit points||editpoints||Line, Polygon, Spline, Path||
+||\image(na.png)||Fill rule||fillrule||Path, Polygon||
 ||\graphic(fillstyle-border.png)\graphic(fillstyle-fill.png)\br\graphic(fillstyle-border-and-fill.png)||Fill style||fillstyle||Rectangle, Ellipse, Polygon, Path||
 ||\image(fontface.png)||Font face||font||Text||
 ||\image(fontsize.png)||Font size||fontsize||Text||
