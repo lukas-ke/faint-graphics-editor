@@ -42,7 +42,7 @@ class TestBitmap(unittest.TestCase):
     def test_copy(self):
         from copy import copy
 
-        src = Bitmap((3, 4));
+        src = Bitmap((3, 4))
         pos, color = (2,1), (1,2,3,4)
         src.set_pixel(pos, color)
 
@@ -150,4 +150,4 @@ class TestBitmap(unittest.TestCase):
         encoded = faint.encode_bitmap_png(b1)
         b2 = faint.bitmap_from_png_string(encoded)
 
-        self.assertEqual(b1, b2);
+        self.assertEqual(b1, b2)
