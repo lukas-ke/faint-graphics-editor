@@ -283,7 +283,7 @@ static void from_settings(CairoContext& cr, const Settings& s){
   cr.set_line_join(s.GetDefault(ts_LineJoin, LineJoin::DEFAULT));
   coord lineWidth = s.GetDefault(ts_LineWidth, 1.0);
   cr.set_line_width(lineWidth);
-
+  cr.set_fill_rule(s.GetDefault(ts_FillRule, FillRule::DEFAULT));
   cr.set_source(get_fg(s)); // Fixme: This might duplicate pattern creation, compare fill_and_or_stroke
   if (dashed(s)) {
     coord dashes[] = {2 * lineWidth, 2 * lineWidth};

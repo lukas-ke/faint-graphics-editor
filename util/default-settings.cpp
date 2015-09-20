@@ -89,6 +89,7 @@ Settings init_default_polygon_settings(){
   s.Set(ts_LineJoin, LineJoin::MITER);
   s.Set(ts_LineStyle, LineStyle::SOLID);
   s.Set(ts_LineWidth, 1);
+  s.Set(ts_FillRule, FillRule::FR_WINDING);
   s.Set(ts_SwapColors, false);
   return s;
 }

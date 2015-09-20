@@ -37,6 +37,15 @@ from faint.svg.ifaint_util import (
     to_faint_cap_str)
 
 
+def to_faint_fill_rule(svg_fill_rule):
+    if svg_fill_rule == "nonzero":
+        return "winding"
+    elif svg_fill_rule == "evenodd":
+        return "even_odd"
+    else:
+        return "winding"
+
+
 class ParseState:
     """The state when arriving at a node. Contains the inheritable
     settings from "above", as well as the current transformation matrix
@@ -161,6 +170,8 @@ class ParseState:
         fill = attributes.get("fill")
         fillstyle_to_settings(settings, stroke, fill, stroke_opacity, fill_opacity, self)
 
+        fillrule = attributes.get("fill-rule", "nonzero")
+
         stroke_width = attributes.get('stroke-width')
 
         if stroke_width == "inherit":
@@ -222,6 +233,9 @@ class ParseState:
         font_weight = attributes.get('font-weight', None)
         if font_weight is not None:
             settings.fontbold = font_weight == 'bold'
+
+        if fillrule != "inherit":
+            settings.fillrule = to_faint_fill_rule(fillrule)
 
         parse_marker_attr(node, settings)
         return settings

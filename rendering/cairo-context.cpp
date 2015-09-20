@@ -675,6 +675,18 @@ void CairoContext::set_dash(const coord* dashes, int num, double offset){
   cairo_set_dash(m_impl->cr.get(), dashes, num, offset);
 }
 
+void CairoContext::set_fill_rule(FillRule rule){
+  if (rule == FillRule::FR_WINDING){
+    cairo_set_fill_rule(m_impl->cr.get(), CAIRO_FILL_RULE_WINDING);
+  }
+  else if (rule == FillRule::FR_EVEN_ODD){
+    cairo_set_fill_rule(m_impl->cr.get(), CAIRO_FILL_RULE_EVEN_ODD);
+  }
+  else{
+    assert(false);
+  }
+}
+
 void CairoContext::set_line_cap(LineCap cap){
   if (cap == LineCap::ROUND){
     cairo_set_line_cap(m_impl->cr.get(), CAIRO_LINE_CAP_ROUND);
@@ -682,7 +694,7 @@ void CairoContext::set_line_cap(LineCap cap){
   else if (cap == LineCap::BUTT){
     cairo_set_line_cap(m_impl->cr.get(), CAIRO_LINE_CAP_BUTT);
   }
-  else {
+  else{
     assert(false);
   }
 }

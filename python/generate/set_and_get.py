@@ -198,6 +198,15 @@ setters_and_getters = {
         pretty_name="Foreground Color.",
         doc_str=color_doc_str("Foreground color")),
 
+    "ts_FillRule" : StringToInt(
+        cpp_name="ts_FillRule",
+        py_name="fillrule",
+        pretty_name="Fill Rule",
+        py_to_cpp_map={"winding": "FillRule::FR_WINDING",
+                       "even_odd": "FillRule::FR_EVEN_ODD"},
+        doc_str="Fill rule, 'winding' or 'even_odd'",
+        cpp_enum=CppEnum("FillRule", entries=("FR_WINDING", "FR_EVEN_ODD"))),
+
     "ts_FillStyle" : StringToInt(
         cpp_name="ts_FillStyle",
         py_name="fillstyle",

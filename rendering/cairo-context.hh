@@ -23,8 +23,10 @@
 
 namespace faint{
 
+enum class FillRule;
 enum class LineCap;
 enum class LineJoin;
+
 class Angle;
 class AngleSpan;
 class Bitmap;
@@ -76,6 +78,7 @@ public:
   void save();
   void scale(coord, coord);
   void set_dash(const coord* dashes, int num, double offset);
+  void set_fill_rule(FillRule);
   void set_line_cap(LineCap);
   void set_line_join(LineJoin);
   void set_source_tri(const Tri&);
