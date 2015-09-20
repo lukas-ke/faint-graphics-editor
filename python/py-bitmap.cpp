@@ -84,6 +84,23 @@ static void Bitmap_dealloc(bitmapObject* self){
 name: "__copy__" */
 static Bitmap Bitmap_copy(Bitmap&);
 
+PyObject* Bitmap_richcompare(bitmapObject* self, PyObject* otherRaw, int op){
+  if (!PyObject_IsInstance(otherRaw, (PyObject*)&BitmapType)){
+    Py_RETURN_NOTIMPLEMENTED;
+  }
+  if (op != Py_EQ){
+    Py_RETURN_NOTIMPLEMENTED;
+  }
+
+  auto other((bitmapObject*)otherRaw);
+  const Bitmap& lhs(self->bmp);
+  const Bitmap& rhs(other->bmp);
+  if (lhs == rhs){
+    Py_RETURN_TRUE;
+  }
+  Py_RETURN_FALSE;
+}
+
 /* method: "copy()->bmp\n
 Returns a copy of the bitmap."
 name: "copy" */
@@ -109,13 +126,6 @@ static void Bitmap_draw_objects(Bitmap& self, const objects_t& objects){
   for (Object* obj : objects){
     obj->Draw(dc, ctx);
   }
-}
-
-/* method: "identical(bmp)->True/False\n
-True if the bitmaps are identical." */
-static bool Bitmap_identical(Bitmap& self, const Bitmap& other){
-  // Fixme: Replace with richcompare
-  return self == other;
 }
 
 /* method: "get_raw_rgb_string()->s\n
@@ -382,7 +392,7 @@ PyTypeObject BitmapType = {
   "Bitmap for RGBA pixel data.",
   nullptr, // tp_traverse
   nullptr, // tp_clear
-  nullptr, // tp_richcompare
+  (richcmpfunc)Bitmap_richcompare, // tp_richcompare
   0, // tp_weaklistoffset
   nullptr, // tp_iter
   nullptr, // tp_iternext

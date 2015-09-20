@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
@@ -127,6 +128,20 @@ class TestBitmap(unittest.TestCase):
         b1.draw_objects([faint.create_Ellipse((0,0, 10, 10)),])
         faint.write_png(b1, os.path.join(out_dir, "b.png"), faint.png.RGB)
 
+    def test_equal(self):
+        b1 = Bitmap((10, 10))
+        b2 = Bitmap((10, 10))
+        self.assertEqual(b1, b2)
+
+        b1.set_pixel((1,3), (255,0,0))
+        self.assertNotEqual(b1, b2)
+
+        b2.set_pixel((1,3), (255,0,0))
+        self.assertEqual(b1, b2)
+
+        b3 = Bitmap((10,20))
+        b3.set_pixel((1,3), (255,0,0))
+        self.assertNotEqual(b1, b3)
 
     def test_encode_bitmap_png(self):
         b1 = Bitmap((10, 10))
@@ -135,4 +150,4 @@ class TestBitmap(unittest.TestCase):
         encoded = faint.encode_bitmap_png(b1)
         b2 = faint.bitmap_from_png_string(encoded)
 
-        self.assertTrue(b1.identical(b2));
+        self.assertEqual(b1, b2);
