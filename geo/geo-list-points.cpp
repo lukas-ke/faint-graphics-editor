@@ -122,7 +122,7 @@ std::vector<PathPt> ellipse_as_path(const Tri& tri0){
      rotate_point(Point(x + rx + rx * t + skew_1, y + dy), angle, origin),
      rotate_point(Point(x + dx + skew_2, y + ry + ry * t), angle, origin)),
 
-
+    // Segment 2
     PathPt::CubicBezierTo(rotate_point(Point(x + rx + skew_5, y), angle, origin),
       rotate_point(Point(x + dx + skew_4, y + ry - ry * t), angle, origin),
       rotate_point(Point(x + rx + rx * t + skew_5, y), angle, origin)),

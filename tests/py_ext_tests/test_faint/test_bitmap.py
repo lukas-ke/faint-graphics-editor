@@ -126,3 +126,13 @@ class TestBitmap(unittest.TestCase):
         b1 = Bitmap((100, 100))
         b1.draw_objects([faint.create_Ellipse((0,0, 10, 10)),])
         faint.write_png(b1, os.path.join(out_dir, "b.png"), faint.png.RGB)
+
+
+    def test_encode_bitmap_png(self):
+        b1 = Bitmap((10, 10))
+        b1.line((0,0,10,10), (255,0,255))
+
+        encoded = faint.encode_bitmap_png(b1)
+        b2 = faint.bitmap_from_png_string(encoded)
+
+        # Fixme: Compare the bitmaps

@@ -206,12 +206,14 @@ bool parse_coord(PyObject* args, Py_ssize_t n, coord* value){
 }
 
 bool parse_bytes(PyObject* args, Py_ssize_t, std::string* value){
-  char* str = PyBytes_AsString(args);
-  if (str == nullptr){
+  Py_ssize_t size = 0;
+  char* buffer = nullptr;
+  int result = PyBytes_AsStringAndSize(args, &buffer, &size);
+  if (result == -1){
     // PyBytes_AsString will have raised TypeError
     return false;
   }
-  *value = std::string(str);
+  *value = std::string(buffer, size);
   return true;
 }
 
