@@ -41,7 +41,7 @@ def to_faint_fill_rule(svg_fill_rule):
     if svg_fill_rule == "nonzero":
         return "winding"
     elif svg_fill_rule == "evenodd":
-        return "even_odd"
+        return "evenodd"
     else:
         return "winding"
 

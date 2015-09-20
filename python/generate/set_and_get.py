@@ -203,8 +203,8 @@ setters_and_getters = {
         py_name="fillrule",
         pretty_name="Fill Rule",
         py_to_cpp_map={"winding": "FillRule::FR_WINDING",
-                       "even_odd": "FillRule::FR_EVEN_ODD"},
-        doc_str="Fill rule, 'winding' or 'even_odd'",
+                       "evenodd": "FillRule::FR_EVEN_ODD"},
+        doc_str="Fill rule, 'winding' or 'evenodd'",
         cpp_enum=CppEnum("FillRule", entries=("FR_WINDING", "FR_EVEN_ODD"))),
 
     "ts_FillStyle" : StringToInt(
