@@ -79,7 +79,6 @@ def to_opacity_str(color):
         return "1.0"
     return "%s" % str(color[3] / 255.0)
 
-
 def svg_fill_style(obj, state):
     """Returns an SVG style string with style settings for the passed in
     Faint object.
@@ -118,6 +117,16 @@ def svg_fill_style(obj, state):
     else:
         assert(False)
 
+
+def svg_fill_rule(obj):
+    """Returns an SVG style string describing the fill rule.
+    'fill-rule:nonzero' or 'fill-rule:winding'
+
+    """
+    if obj.fillrule == 'winding':
+        return "fill-rule:nonzero"
+    else:
+        return "fill-rule:evenodd"
 
 
 def svg_line_dash_style(obj):
@@ -429,7 +438,8 @@ def create_path(obj, state):
     element.set('d', path_str)
     style = (svg_fill_style(obj, state) +
              svg_line_dash_style(obj) +
-             svg_line_join_style(obj))
+             svg_line_join_style(obj)+
+             svg_fill_rule(obj))
     element.set('style', style)
     return element
 
@@ -471,8 +481,10 @@ def create_polygon(obj, state):
     element = ET.Element('polygon')
     points_str = ' '.join([str(coord) for coord in obj.get_points()])
     element.set('points', points_str)
-    style = (svg_fill_style(obj, state) + svg_line_dash_style(obj) +
-             svg_line_join_style(obj))
+    style = (svg_fill_style(obj, state) +
+             svg_line_dash_style(obj) +
+             svg_line_join_style(obj) +
+             svg_fill_rule(obj))
     element.set('style', style)
     return element
 
