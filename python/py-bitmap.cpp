@@ -111,6 +111,13 @@ static void Bitmap_draw_objects(Bitmap& self, const objects_t& objects){
   }
 }
 
+/* method: "identical(bmp)->True/False\n
+True if the bitmaps are identical." */
+static bool Bitmap_identical(Bitmap& self, const Bitmap& other){
+  // Fixme: Replace with richcompare
+  return self == other;
+}
+
 /* method: "get_raw_rgb_string()->s\n
 Returns the bitmap as a bytes object with binary rgb values." */
 static std::string Bitmap_get_raw_rgb_string(Bitmap& self){

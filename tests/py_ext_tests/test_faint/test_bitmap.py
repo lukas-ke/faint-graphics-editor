@@ -135,4 +135,4 @@ class TestBitmap(unittest.TestCase):
         encoded = faint.encode_bitmap_png(b1)
         b2 = faint.bitmap_from_png_string(encoded)
 
-        # Fixme: Compare the bitmaps
+        self.assertTrue(b1.identical(b2));
