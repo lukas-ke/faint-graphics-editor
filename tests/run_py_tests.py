@@ -14,7 +14,7 @@ def run_tests(test_args=None):
     sys.path.insert(1, EXT_OUT)
     sys.path.insert(1, PY)
 
-    py_tests.TEST_OUT_PATH = os.path.join(FAINT_ROOT, "tests/out")
+    py_tests.TEST_OUT_PATH = os.path.join(FAINT_ROOT, "tests/out/py")
     py_tests.TEST_DATA_PATH = os.path.join(FAINT_ROOT, "tests/test-data")
 
     # Run the tests

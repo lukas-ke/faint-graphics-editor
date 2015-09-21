@@ -274,6 +274,7 @@ def run_py_tests(platform, cmdline):
         print("* Error: Python Unit tests failed!");
         return 1
 
+
 def build_faint(platform, cmdline):
     target = faint_info.target.faint
     def faint_source_files(platform, project_root):
