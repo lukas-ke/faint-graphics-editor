@@ -59,3 +59,6 @@ class TestSVG(unittest.TestCase):
 
     def test_text_anchor(self):
         test_file(self, "text-anchor")
+
+    def test_image_element(self):
+        test_file(self, "image-element")
