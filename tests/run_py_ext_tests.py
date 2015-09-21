@@ -16,8 +16,8 @@ def run_tests(test_args=None):
 
     py_ext_tests.TEST_OUT_PATH = os.path.join(FAINT_ROOT, "tests/out")
     py_ext_tests.TEST_DATA_PATH = os.path.join(FAINT_ROOT, "tests/test-data")
-    # Run the tests
 
+    # Run the tests
     tp = unittest.main(py_ext_tests, argv=test_args, exit=False)
     result = tp.result
     return len(result.errors) == 0
