@@ -1,18 +1,23 @@
 import os
 import unittest
 from . import test_extra
+from . import test_svg
 
 def load_tests(loader, standard_tests, pattern):
-    return loader.discover("py_ext_tests/test_faint")
+    s = loader.discover("py_ext_tests/test_faint", top_level_dir="py_ext_tests/")
+    s.addTests(svg())
+    return s
 
 def extra():
-    return unittest.defaultTestLoader.discover("py_ext_tests/test_extra")
-
+    return unittest.defaultTestLoader.discover("py_ext_tests/test_extra",
+                                               top_level_dir="py_ext_tests/")
 def normal():
-    return unittest.defaultTestLoader.discover("py_ext_tests/test_faint")
+    return unittest.defaultTestLoader.discover("py_ext_tests/test_faint",
+                                               top_level_dir="py_ext_tests/")
 
 def svg():
-    return unittest.defaultTestLoader.discover("py_ext_tests/test_svg")
+    return unittest.defaultTestLoader.discover("py_ext_tests/test_svg",
+                                               top_level_dir="py_ext_tests/")
 
 TEST_OUT_PATH = None
 TEST_DATA_PATH = None
