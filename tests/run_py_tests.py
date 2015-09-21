@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 import os
-import py_ext_tests
+import py_tests
 import sys
 import unittest
 
 def run_tests(test_args=None):
     if (test_args == None):
-        test_args = ["run_py_ext_tests",]
+        test_args = ["run_py_tests",]
     # Use the .pyd in ext/out
     FAINT_ROOT = os.path.abspath(os.path.join(os.getcwd(), ".."))
     EXT_OUT = os.path.join(FAINT_ROOT, "ext/out")
@@ -14,11 +14,11 @@ def run_tests(test_args=None):
     sys.path.insert(1, EXT_OUT)
     sys.path.insert(1, PY)
 
-    py_ext_tests.TEST_OUT_PATH = os.path.join(FAINT_ROOT, "tests/out")
-    py_ext_tests.TEST_DATA_PATH = os.path.join(FAINT_ROOT, "tests/test-data")
+    py_tests.TEST_OUT_PATH = os.path.join(FAINT_ROOT, "tests/out")
+    py_tests.TEST_DATA_PATH = os.path.join(FAINT_ROOT, "tests/test-data")
 
     # Run the tests
-    tp = unittest.main(py_ext_tests, argv=test_args, exit=False)
+    tp = unittest.main(py_tests, argv=test_args, exit=False)
     result = tp.result
     return len(result.errors) == 0
 

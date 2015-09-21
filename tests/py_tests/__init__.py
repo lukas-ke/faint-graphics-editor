@@ -8,29 +8,29 @@ def extra():
     requiring extensions (e.g. tesseract or GraphViz dot).
 
     """
-    return unittest.defaultTestLoader.discover("py_ext_tests/test_extra",
-                                               top_level_dir="py_ext_tests/")
+    return unittest.defaultTestLoader.discover("py_tests/test_extra",
+                                               top_level_dir="py_tests/")
 def normal():
     """Regular Python extension unit tests."""
-    return unittest.defaultTestLoader.discover("py_ext_tests/test_faint",
-                                               top_level_dir="py_ext_tests/")
+    return unittest.defaultTestLoader.discover("py_tests/test_faint",
+                                               top_level_dir="py_tests/")
 
 def svg():
     """More detailed SVG-related unit tests."""
-    return unittest.defaultTestLoader.discover("py_ext_tests/test_svg",
-                                               top_level_dir="py_ext_tests/")
+    return unittest.defaultTestLoader.discover("py_tests/test_svg",
+                                               top_level_dir="py_tests/")
 
 def pdf():
     """More detailed PDF-related unit tests."""
-    return unittest.defaultTestLoader.discover("py_ext_tests/test_pdf",
-                                               top_level_dir="py_ext_tests/")
+    return unittest.defaultTestLoader.discover("py_tests/test_pdf",
+                                               top_level_dir="py_tests/")
 
 def load_tests(loader, standard_tests, pattern):
     """The default used by 'unittest' for test discovery when no command
     line argument given.
 
     """
-    s = loader.discover("py_ext_tests/test_faint", top_level_dir="py_ext_tests/")
+    s = loader.discover("py_tests/test_faint", top_level_dir="py_tests/")
     s.addTests(svg())
     s.addTests(pdf())
     return s

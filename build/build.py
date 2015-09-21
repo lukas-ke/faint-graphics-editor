@@ -263,10 +263,10 @@ def run_unit_tests(platform, cmdline):
 
 def run_py_tests(platform, cmdline):
     sys.path.append(faint_info.FAINT_TESTS_ROOT)
-    import run_py_ext_tests
+    import run_py_tests as py_tests
 
     with no_output(), working_dir(faint_info.FAINT_TESTS_ROOT):
-        ok = run_py_ext_tests.run_tests()
+        ok = py_tests.run_tests()
     if ok:
         print('* Python Unit tests OK')
         return 0

@@ -4,7 +4,7 @@
 import os
 import unittest
 import faint.extra.tesseract as tesseract
-from py_ext_tests import make_test_dir, test_data_dir
+from py_tests import make_test_dir, test_data_dir
 from faint import read_png
 from faint.image import Pimage
 

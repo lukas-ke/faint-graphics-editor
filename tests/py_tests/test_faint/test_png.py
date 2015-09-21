@@ -5,12 +5,12 @@ import unittest
 import faint
 from faint import png
 import os
-import py_ext_tests
+import py_tests
 
 class TestPng(unittest.TestCase):
 
     def test_write_png(self):
-        out_dir = py_ext_tests.make_test_dir(self)
+        out_dir = py_tests.make_test_dir(self)
 
         b1 = faint.Bitmap((5,7))
         b1.set_pixel((0,0),(255,0,255))
@@ -24,7 +24,7 @@ class TestPng(unittest.TestCase):
 
 
     def test_write_tEXt(self):
-        out_dir = py_ext_tests.make_test_dir(self)
+        out_dir = py_tests.make_test_dir(self)
 
         b1 = faint.Bitmap((5,7))
         b1.set_pixel((0,0),(255,0,255))
@@ -39,7 +39,7 @@ class TestPng(unittest.TestCase):
 
 
     def test_bad_args(self):
-        out_dir = py_ext_tests.make_test_dir(self)
+        out_dir = py_tests.make_test_dir(self)
 
         with self.assertRaises(TypeError):
             faint.write_png("not a bitmap", out_dir, 0)

@@ -8,7 +8,7 @@ from faint.pdf.xobject import XObject
 from faint.pdf.document import Document
 from faint.pdf.stream import Stream
 
-from py_ext_tests import make_common_test_dir
+from py_tests import make_common_test_dir
 
 class TestPdfDocument(unittest.TestCase):
 

@@ -6,7 +6,7 @@ import unittest
 
 import faint.svg.parse_svg as svg
 import faint
-from py_ext_tests import test_data_dir, make_common_test_dir
+from py_tests import test_data_dir, make_common_test_dir
 
 def svg_file(file_name):
     return os.path.join(test_data_dir(), "svg", file_name + ".svg")

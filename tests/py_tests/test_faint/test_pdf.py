@@ -3,7 +3,7 @@ import os
 import faint
 import faint.pdf.write_pdf as write_pdf
 import faint.pdf.parse_pdf as parse_pdf
-import py_ext_tests
+import py_tests
 from faint import settings
 
 class TestWritePDF(unittest.TestCase):
@@ -23,7 +23,7 @@ class TestWritePDF(unittest.TestCase):
         f.Line((10, 109, 109, 10)) # Fixme: 110 cuts the rectangle
         f.Text((10, 10, 100, 100), "Hello")
 
-        out_dir = py_ext_tests.make_test_dir(self)
+        out_dir = py_tests.make_test_dir(self)
         filename = os.path.join(out_dir, "test.pdf")
         write_pdf.write(filename, l)
 
