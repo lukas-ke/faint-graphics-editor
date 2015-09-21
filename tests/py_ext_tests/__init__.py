@@ -32,6 +32,7 @@ def load_tests(loader, standard_tests, pattern):
     """
     s = loader.discover("py_ext_tests/test_faint", top_level_dir="py_ext_tests/")
     s.addTests(svg())
+    s.addTests(pdf())
     return s
 
 TEST_OUT_PATH = None
