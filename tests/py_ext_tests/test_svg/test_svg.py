@@ -6,6 +6,7 @@ import unittest
 
 import faint.svg.parse_svg as svg
 import faint
+# Messes everything up probably?
 from py_ext_tests import test_data_dir, make_common_test_dir
 
 def svg_file(file_name):

@@ -3,21 +3,31 @@ import unittest
 from . import test_extra
 from . import test_svg
 
-def load_tests(loader, standard_tests, pattern):
-    s = loader.discover("py_ext_tests/test_faint", top_level_dir="py_ext_tests/")
-    s.addTests(svg())
-    return s
-
 def extra():
+    """Tests faint.extra. That is, less central faint code, possibly
+    requiring extensions (e.g. tesseract or GraphViz dot).
+
+    """
     return unittest.defaultTestLoader.discover("py_ext_tests/test_extra",
                                                top_level_dir="py_ext_tests/")
 def normal():
+    """Regular Python extension unit tests."""
     return unittest.defaultTestLoader.discover("py_ext_tests/test_faint",
                                                top_level_dir="py_ext_tests/")
 
 def svg():
+    """More detailed SVG-related unit tests."""
     return unittest.defaultTestLoader.discover("py_ext_tests/test_svg",
                                                top_level_dir="py_ext_tests/")
+
+def load_tests(loader, standard_tests, pattern):
+    """The default used by 'unittest' for test discovery when no command
+    line argument given.
+
+    """
+    s = loader.discover("py_ext_tests/test_faint", top_level_dir="py_ext_tests/")
+    s.addTests(svg())
+    return s
 
 TEST_OUT_PATH = None
 TEST_DATA_PATH = None
