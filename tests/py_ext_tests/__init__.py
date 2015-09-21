@@ -20,6 +20,11 @@ def svg():
     return unittest.defaultTestLoader.discover("py_ext_tests/test_svg",
                                                top_level_dir="py_ext_tests/")
 
+def pdf():
+    """More detailed PDF-related unit tests."""
+    return unittest.defaultTestLoader.discover("py_ext_tests/test_pdf",
+                                               top_level_dir="py_ext_tests/")
+
 def load_tests(loader, standard_tests, pattern):
     """The default used by 'unittest' for test discovery when no command
     line argument given.
