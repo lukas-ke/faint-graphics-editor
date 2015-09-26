@@ -217,9 +217,7 @@ std::pair<int, int> top_bottom(const IntRect& r){
 }
 
 IntRect centered(const IntSize& item, const IntSize& span){
-  return IntRect(IntPoint(span.w / 2 - item.w / 2,
-      span.h / 2- item.h / 2),
-    span);
+  return IntRect(point_from_size(span - item) / 2, span);
 }
 
 } // namespace

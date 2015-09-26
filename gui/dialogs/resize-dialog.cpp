@@ -69,9 +69,7 @@ static WithLabel<wxButton>* defaultable_button(wxWindow* parent,
 static IntRect centered_resize_rect(const IntSize& newSize,
   const IntSize& oldSize)
 {
-  return IntRect(IntPoint(-(newSize.w - oldSize.w) / 2,
-      -(newSize.h - oldSize.h) / 2),
-    newSize);
+  return IntRect(-point_from_size((newSize - oldSize) / 2), newSize);
 }
 
 class ResizeDialog : public CommandWindow{
