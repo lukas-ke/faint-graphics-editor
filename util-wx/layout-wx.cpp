@@ -65,16 +65,20 @@ SizerItem::SizerItem(wxButton* item, int flags)
     windowItem(item)
 {}
 
-bool add(wxBoxSizer* sizer, const SizerItem& item){
+static bool add(wxSizer& sizer, const SizerItem& item){
   if (item.windowItem != nullptr){
-    sizer->Add(item.windowItem, item.proportion.Get(), item.flags, item.border);
+    sizer.Add(item.windowItem, item.proportion.Get(), item.flags, item.border);
     return true;
   }
   else if (item.sizerItem != nullptr){
-    sizer->Add(item.sizerItem, item.proportion.Get(), item.flags, item.border);
+    sizer.Add(item.sizerItem, item.proportion.Get(), item.flags, item.border);
     return true;
   }
   return false;
+}
+
+bool add(wxBoxSizer* sizer, const SizerItem& item){
+  return add(*sizer, item);
 }
 
 wxSizer* create_row(const std::vector<SizerItem>& items){
@@ -82,7 +86,7 @@ wxSizer* create_row(const std::vector<SizerItem>& items){
 
   row->AddSpacer(ui::panel_padding);
   for (auto& item : but_last(items)){
-    if (add(row, item)){
+    if (add(*row, item)){
       row->AddSpacer(ui::item_spacing);
     }
   }
@@ -91,40 +95,35 @@ wxSizer* create_row(const std::vector<SizerItem>& items){
   return row;
 }
 
-wxSizer* create_row(OuterSpacing os, ItemSpacing is,
-  const std::vector<SizerItem>& items)
-{
-  // Fixme: Unify this and create_column
-  wxBoxSizer* column = new wxBoxSizer(wxHORIZONTAL);
-  if (os != 0){
-    column->AddSpacer(os);
+template<typename SpacingType>
+void add_spacing(wxSizer& sizer, SpacingType spacing){
+  if (spacing != 0){
+    sizer.AddSpacer(spacing);
   }
-
-  for (auto& item : but_last(items)){
-    if (item.windowItem != nullptr){
-      column->Add(item.windowItem, item.proportion.Get(), item.flags, item.border);
-    }
-    else{
-      column->Add(item.sizerItem, item.proportion.Get(), item.flags, item.border);
-    }
-    if (is != 0){
-      column->AddSpacer(is);
-    }
-  }
-  auto& last = items.back();
-  if (last.windowItem != nullptr){
-    column->Add(last.windowItem, last.proportion.Get(), last.flags, last.border);
-  }
-  else{
-    column->Add(last.sizerItem, last.proportion.Get(), last.flags, last.border);
-  }
-  if (os != 0){
-    column->AddSpacer(os);
-  }
-
-  return column;
 }
 
+static void add_items(wxSizer& sizer,
+  OuterSpacing os,
+  ItemSpacing is,
+  const std::vector<SizerItem>& items)
+{
+  add_spacing(sizer, os);
+  for (auto& item : but_last(items)){
+    add(sizer, item);
+    add_spacing(sizer, is);
+  }
+  add(sizer, items.back());
+  add_spacing(sizer, os);
+}
+
+wxSizer* create_row(OuterSpacing os,
+  ItemSpacing is,
+  const std::vector<SizerItem>& items)
+{
+  wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
+  add_items(*row, os, is, items);
+  return row;
+}
 
 wxSizer* create_row_outer_pad(const std::vector<SizerItem>& items){
   wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
@@ -140,53 +139,24 @@ wxSizer* create_row_outer_pad(const std::vector<SizerItem>& items){
 wxSizer* create_row_no_pad(const std::vector<SizerItem>& items){
   wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
   for (auto& item : items){
-    if (item.windowItem != nullptr){
-      row->Add(item.windowItem, item.proportion.Get(), item.flags, item.border);
-    }
-    else{
-      row->Add(item.sizerItem, item.proportion.Get(), item.flags, item.border);
-    }
+    add(row, item);
   }
   return row;
 }
 
-wxSizer* create_column(OuterSpacing os, ItemSpacing is,
+wxSizer* create_column(OuterSpacing os,
+  ItemSpacing is,
   const std::vector<SizerItem>& items)
 {
   wxBoxSizer* column = new wxBoxSizer(wxVERTICAL);
-  if (os != 0){
-    column->AddSpacer(os);
-  }
-
-  for (auto& item : but_last(items)){
-    if (item.windowItem != nullptr){
-      column->Add(item.windowItem, item.proportion.Get(), item.flags, item.border);
-    }
-    else{
-      column->Add(item.sizerItem, item.proportion.Get(), item.flags, item.border);
-    }
-    if (is != 0){
-      column->AddSpacer(is);
-    }
-  }
-  auto& last = items.back();
-  if (last.windowItem != nullptr){
-    column->Add(last.windowItem, last.proportion.Get(), last.flags, last.border);
-  }
-  else{
-    column->Add(last.sizerItem, last.proportion.Get(), last.flags, last.border);
-  }
-  if (os != 0){
-    column->AddSpacer(os);
-  }
-
+  add_items(*column, os, is, items);
   return column;
 }
 
 wxSizer* create_column(const std::vector<SizerItem>& items){
   return create_column(OuterSpacing(ui::panel_padding), ui::item_spacing, items);
-
 }
+
 SizerItem grow(wxSizer* sizer){
   return SizerItem(sizer, Proportion(1), wxEXPAND);
 }
