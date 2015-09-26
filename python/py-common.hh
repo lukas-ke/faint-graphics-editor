@@ -16,6 +16,7 @@
 #ifndef FAINT_PY_COMMON_HH
 #define FAINT_PY_COMMON_HH
 #include "bitmap/color-counting.hh"
+#include "bitmap/draw.hh"
 #include "bitmap/filter.hh"
 #include "bitmap/gaussian-blur.hh"
 #include "commands/blit-bitmap-cmd.hh"

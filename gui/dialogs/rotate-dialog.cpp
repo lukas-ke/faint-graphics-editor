@@ -19,6 +19,7 @@
 #include "app/canvas.hh"
 #include "app/context-commands.hh"
 #include "app/resource-id.hh"
+#include "geo/int-point.hh"
 #include "geo/measure.hh"
 #include "gui/art.hh"
 #include "gui/dialog-context.hh"

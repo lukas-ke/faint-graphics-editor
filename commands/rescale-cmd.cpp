@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include "bitmap/bitmap.hh"
+#include "bitmap/draw.hh" // scale
 #include "commands/command.hh"
 #include "commands/rescale-cmd.hh"
 #include "geo/geo-func.hh"

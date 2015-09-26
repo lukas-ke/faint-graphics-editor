@@ -17,8 +17,8 @@
 #define FAINT_COMMAND_UTIL_HH
 #include <deque>
 #include "bitmap/bitmap-fwd.hh"
-#include "bitmap/draw.hh" // OldColor.. Fixme: Move?
 #include "bitmap/filter.hh"
+#include "bitmap/ordered-color.hh"
 #include "commands/add-object-cmd.hh"
 #include "commands/bitmap-cmd.hh"
 #include "commands/command.hh"
@@ -30,6 +30,7 @@
 namespace faint{
 
 class ObjRaster;
+enum class ScaleQuality;
 
 // Gets an add object or a draw object command depending on the layer
 Command* add_or_draw(Object*, Layer);
@@ -44,7 +45,6 @@ Command* get_add_objects_command(const objects_t&,
   const utf8_string& name="Add");
 
 Command* get_auto_crop_command(const Image&);
-
 
 BitmapCommand* get_blend_alpha_command(const ColRGB& bgColor);
 

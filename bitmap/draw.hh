@@ -16,6 +16,7 @@
 #ifndef FAINT_DRAW_HH
 #define FAINT_DRAW_HH
 #include <utility> // std::move
+#include "bitmap/ordered-color.hh"
 #include "bitmap/paint.hh"
 #include "geo/offsat.hh"
 #include "util/distinct.hh"
@@ -37,9 +38,6 @@ class Interval;
 class Mask;
 class Scale;
 template<typename T> class Offsat;
-
-using NewColor = Order<Color>::New;
-using OldColor = Order<Color>::Old;
 
 class category_axiality;
 using along = Distinct<Axis, category_axiality, 0>;

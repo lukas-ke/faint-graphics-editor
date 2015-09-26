@@ -19,6 +19,7 @@
 #include "app/cut-and-paste.hh"
 #include "app/frame.hh"
 #include "bitmap/auto-crop.hh"
+#include "bitmap/draw.hh"
 #include "commands/blit-bitmap-cmd.hh"
 #include "commands/draw-object-cmd.hh"
 #include "commands/flip-rotate-cmd.hh"

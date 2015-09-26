@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <cassert>
 #include <memory>
+#include "bitmap/draw.hh"
 #include "objects/object.hh"
 #include "rendering/faint-dc.hh"
 #include "util/command-util.hh"

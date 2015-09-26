@@ -16,6 +16,7 @@
 #include "app/canvas.hh"
 #include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
+#include "bitmap/draw.hh"
 #include "commands/flip-rotate-cmd.hh"
 #include "editors/line-editor.hh"
 #include "geo/geo-func.hh"

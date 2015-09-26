@@ -18,6 +18,7 @@
 #include "bitmap/bitmap.hh"
 #include "bitmap/bitmap-exception.hh"
 #include "bitmap/color.hh"
+#include "bitmap/draw.hh"
 #include "bitmap/filter.hh"
 #include "bitmap/gaussian-blur.hh"
 #include "bitmap/quantize.hh"

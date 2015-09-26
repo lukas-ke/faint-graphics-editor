@@ -18,6 +18,7 @@
 #include "bitmap/aa-line.hh"
 #include "bitmap/auto-crop.hh"
 #include "bitmap/color-counting.hh"
+#include "bitmap/draw.hh"
 #include "bitmap/filter.hh"
 #include "bitmap/quantize.hh"
 #include "commands/add-object-cmd.hh"
