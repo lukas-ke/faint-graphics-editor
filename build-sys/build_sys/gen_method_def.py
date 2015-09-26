@@ -52,7 +52,7 @@ class regex:
     property = r'/\* property: \"(.*?)\" \*/\n^struct (.*?)\{'
 
 
-def _to_py_name(cpp_name, entry_type):
+def to_py_name(cpp_name, entry_type):
     """Returns the name the function should have in the Python api, based
     on the c++-function name.
 
@@ -73,7 +73,7 @@ def _to_py_name(cpp_name, entry_type):
     return cpp_name[first_underscore + 1:]
 
 
-def _property_to_py_name(cpp_struct_name):
+def property_to_py_name(cpp_struct_name):
     """Returns the name the property should have in the Python api,
     based on the C++ struct name."""
     first_underscore = cpp_struct_name.find('_')
@@ -81,7 +81,7 @@ def _property_to_py_name(cpp_struct_name):
     return cpp_struct_name[first_underscore + 1:]
 
 
-def _clean_doc(doc):
+def clean_doc(doc):
     """Remove spurious end-lines and such from the doc-string specified in
     the comment preceding the C++-python functions.
 
@@ -96,7 +96,7 @@ def _clean_doc(doc):
     return '"%s"' % doc
 
 
-def _get_type(args_str, entry_type):
+def get_type(args_str, entry_type):
     """Determines the Python method type (METH_NOARGS or METH_VARARGS)
     from the C++ argument list and type of function.
 
@@ -108,7 +108,7 @@ def _get_type(args_str, entry_type):
             else "METH_VARARGS")
 
 
-def _find_extra_include(file_name):
+def find_extra_include(file_name):
     """Find any comment for including additional method definitions (e.g.
     hand-written for special cases) inside the generated method-defs
     array.
@@ -205,11 +205,11 @@ def parse_file(file_name):
             entry_type = 'method_template'
 
         if py_name is None:
-            py_name = _to_py_name(cpp_name, entry_type)
+            py_name = to_py_name(cpp_name, entry_type)
 
 
-        result[0].append((entry_type, cpp_name, _get_type(args, entry_type),
-                          py_name, _clean_doc(doc)))
+        result[0].append((entry_type, cpp_name, get_type(args, entry_type),
+                          py_name, clean_doc(doc)))
 
     for m in re.finditer(regex.function, text, re.DOTALL|re.MULTILINE):
         handle_entry(*m.groups())
@@ -217,12 +217,12 @@ def parse_file(file_name):
     # Properties
     for m in re.finditer(regex.property, text, re.DOTALL|re.MULTILINE):
         doc, cpp_struct_name = m.groups()
-        py_name = _property_to_py_name(cpp_struct_name)
-        result[1].append((cpp_struct_name, py_name, _clean_doc(doc)))
+        py_name = property_to_py_name(cpp_struct_name)
+        result[1].append((cpp_struct_name, py_name, clean_doc(doc)))
     return result
 
 
-def _to_PyMethodDef_entry(items):
+def to_PyMethodDef_entry(items):
     """Creates one entry for a PyMethodDef array from the entries for one
     function (as returned by parse_file).
 
@@ -248,7 +248,7 @@ def to_PyGetSetDef_entry(cpp_struct_name, py_name, doc):
         cpp_struct_name, py_name, doc)
 
 
-def _to_PyGetSetDef(name, entries):
+def to_PyGetSetDef(name, entries):
     """Creates a string of a C-PyGetSetDef array named <name>_getseters,
     containing all entries in the list (as created by
     to_PyGetSetDef_entry).
@@ -261,17 +261,17 @@ def _to_PyGetSetDef(name, entries):
     return getSetDef
 
 
-def _to_PyMethodDef(name, entries, extra_includes):
+def to_PyMethodDef(name, entries, extra_includes):
     """Creates a string of a C-PyMethodDef array named <name>_methods,
     containing all the entries in the list (as created by
-    _to_PyMethodDef_entry).
+    to_PyMethodDef_entry).
 
     Includes any include in the extra_includes list after the regular
     entries (before the sentinel).
 
     """
 
-    methodEntries = [_to_PyMethodDef_entry(items) for items in entries]
+    methodEntries = [to_PyMethodDef_entry(items) for items in entries]
     if name is not None:
         methodDef = ('static PyMethodDef %s_methods[] = {\n  ' % name +
             ',\n  '.join(methodEntries) + ',\n  ')
@@ -286,7 +286,7 @@ def _to_PyMethodDef(name, entries, extra_includes):
     return methodDef
 
 
-def _write_result(file_name, name, entries, extra_includes, src_file_names):
+def write_result(file_name, name, entries, extra_includes, src_file_names):
     """Writes a PyMethodDef array and/or a PyGetSetDef to the specified
     file, featuring entries from the entries lists (as returned by
     parse_file).
@@ -300,16 +300,16 @@ def _write_result(file_name, name, entries, extra_includes, src_file_names):
                  "these files"), ", ".join(src_file_names)))
         methods = entries[0]
         if len(methods) != 0:
-            f.write(_to_PyMethodDef(name, methods, extra_includes))
+            f.write(to_PyMethodDef(name, methods, extra_includes))
             f.write('\n')
 
         properties = entries[1]
         if len(properties) != 0:
             f.write('\n')
-            f.write(_to_PyGetSetDef(name, properties))
+            f.write(to_PyGetSetDef(name, properties))
 
 
-def _doc_to_html(doc):
+def doc_to_html(doc):
     """Makes the doc-string more suitable for html."""
     doc = (doc.replace('\\n','<br>')
            .replace('->','&rarr;')
@@ -322,7 +322,7 @@ def _doc_to_html(doc):
     return doc
 
 
-def _write_method_doc(file_name, entries):
+def write_method_doc(file_name, entries):
     """Writes an html-file documenting the passed in methods, using the
     doc-strings (as returned by parse_file)
 
@@ -333,7 +333,7 @@ def _write_method_doc(file_name, entries):
         f.write('<tr><td><b>Method</b></td><td><b>Description</b></td></tr>')
         for items in sorted(entries, key=itemgetter(3)):
             f.write('<tr><td valign="top">%s</td><td>%s</td></tr>' %
-                    (items[3], _doc_to_html(items[4])))
+                    (items[3], doc_to_html(items[4])))
         f.write('</table>')
 
 
@@ -353,7 +353,7 @@ def write_property_doc(file_name, entries):
         f.write('<tr><td><b>Property</b></td><td><b>Description</b></td></tr>')
         for items in entries:
             f.write('<tr><td valign="top">%s</td><td>%s</td></tr>' %
-                    (items[1], _doc_to_html(items[2])))
+                    (items[1], doc_to_html(items[2])))
         f.write('</table>')
 
 
@@ -380,13 +380,13 @@ def generate(src_file_names,
         methods.extend(m)
         properties.extend(p)
 
-        extra_includes.extend(_find_extra_include(src_file_name))
+        extra_includes.extend(find_extra_include(src_file_name))
         if len(entries[0]) == 0 and len(entries[1]) == 0:
             print("No entries found in %s." % src_file_name)
             exit(1)
 
-    _write_result(dst_file_name, name, entries, extra_includes, src_file_names)
-    _write_method_doc(dst_doc_file_name, entries[0])
+    write_result(dst_file_name, name, entries, extra_includes, src_file_names)
+    write_method_doc(dst_doc_file_name, entries[0])
     write_property_doc(dst_property_doc_file_name, entries[1])
 
 
