@@ -31,10 +31,10 @@ public:
       py(py)
   {}
 
-  // Forwarder Fixme: Check if I oughta use std::forward and such...
+  // Forwarder
   template<typename ...Args>
   void RunCommand(Args&&...args){
-    py.RunCommand(args...);
+    py.RunCommand(std::forward<Args>(args)...);
   }
 
   AppContext& app;
