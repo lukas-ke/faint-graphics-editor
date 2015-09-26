@@ -17,7 +17,7 @@
 #define FAINT_TAB_CTRL_HH
 #include "util-wx/window-types-wx.hh"
 #include "app/app-context.hh"
-#include "gui/canvas-panel.hh" // Fixme: For initially_dirty
+#include "gui/canvas-panel.hh"
 
 namespace faint{
 
