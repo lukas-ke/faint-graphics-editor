@@ -21,6 +21,9 @@ class wxWindow;
 namespace faint{
 
 class CommonCursors {
+  // Interface for letting dialogs, panels etc. set some commonly used
+  // cursors as their active window cursors, without having to reveal
+  // wxWidgets specifics or Faint resources.
 public:
   virtual ~CommonCursors() = default;
   virtual void SetBlank(wxWindow*) const = 0;
