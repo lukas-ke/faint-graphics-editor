@@ -13,30 +13,34 @@
 # permissions and limitations under the License.
 
 import os
+from os.path import getmtime
+
 
 def changed(source, target):
-    """Returns true if target is missing or if source is modified since
-    target."""
+    """Returns true if target is missing or if source is modified more
+    recently than target.
+
+    """
     return (not os.path.exists(target) or
             os.path.getmtime(target) < os.path.getmtime(source))
 
 
 def any_changed(sources, target):
-    """Returns true if target is missing or if any source is modified since
-    target."""
+    """Returns true if target is missing or if any source is modified more
+    recently than target.
+
+    """
 
     if not os.path.exists(target):
         return True
 
     target_time = os.path.getmtime(target)
-    # Fixme: Use any
-    for source in sources:
-        if target_time < os.path.getmtime(source):
-            return True
-    return False
+    return any(target_time < getmtime(source) for source in sources)
+
 
 def joined(root, folders):
     return [os.path.join(root, f) for f in folders]
+
 
 def strip_ext(file_name):
     dot = file_name.find('.')
@@ -58,6 +62,7 @@ def timed(func, *args, **kwArgs):
     print('  %s took %0.3f ms' % (func.__name__, (t2-t1)*1000.0))
     return res
 
+
 def not_timed(func, *args, **kwArgs):
     return func(*args, **kwArgs)
 
@@ -74,8 +79,9 @@ def print_timing(func):
 
 
 def list_by_ext(folder, ext):
-    return [file for file in os.listdir(folder) if file.endswith(ext)
-            and not file.startswith('.')]
+    return [f for f in os.listdir(folder)
+            if f.endswith(ext)
+            and not f.startswith('.')]
 
 
 def list_hh(folder):
@@ -83,6 +89,5 @@ def list_hh(folder):
 
 
 def list_cpp(folder):
-    l = list_by_ext(folder, '.cpp')
-    l.extend(list_by_ext(folder, '.c'))
-    return l
+    return (list_by_ext(folder, '.cpp') +
+            list_by_ext(folder, '.c'))

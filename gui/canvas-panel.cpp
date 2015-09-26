@@ -393,10 +393,12 @@ void CanvasPanel::AdjustHorizontalScrollbar(int pos){
   geo.pos.x = pos;
   pos = std::max(0,pos);
   m_scroll.startX = geo.pos.x < 0 ? geo.pos.x : 0;
+  const auto range = std::max(GetMaxScrollRight(),
+    pos + GetHorizontalPageSize() - m_scroll.startX);
   SetScrollbar(wxHORIZONTAL, // Orientation
     pos, // Position
     GetHorizontalPageSize(), // Thumb size
-    std::max(GetMaxScrollRight(), pos + GetHorizontalPageSize() - m_scroll.startX), // Range
+    range,
     true); // Refresh
 }
 
@@ -413,7 +415,7 @@ void CanvasPanel::AdjustVerticalScrollbar(int pos){
   const auto range = std::max(GetMaxScrollDown(),
     pos + GetVerticalPageSize() - m_scroll.startY);
   SetScrollbar(wxVERTICAL, // Orientation
-    pos, // Position
+    pos,
     GetVerticalPageSize(), // Thumb size
     range,
     true); // Refresh
