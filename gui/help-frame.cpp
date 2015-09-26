@@ -179,6 +179,19 @@ class HelpTree;
 using page_filename = Distinct<wxString, HelpTree, 0>;
 using page_map_t = std::map<wxTreeItemId, page_filename>;
 
+static size_t content_item_depth(const wxString& s){
+  size_t depth = 0;
+  for (size_t i = 0; i != s.size(); i++){
+    if (s[i] == '>'){
+      depth += 1;
+    }
+    else{
+      break;
+    }
+  }
+  return depth;
+}
+
 class HelpTree : public wxTreeCtrl{
 // The tree-based table of contents for the HelpFrame.
 public:
@@ -251,26 +264,24 @@ private:
   void CreateFromFile(const wxString& contentsFile){
     std::ifstream f(iostream_friendly(contentsFile));
     std::string s;
-    wxTreeItemId currentParent = m_root; // Note: This is too simplistic for deeper nesting
+    std::vector<wxTreeItemId> parents = {m_root};
+
     while (std::getline(f,s)){
       if (s.empty()){
         break;
       }
-
       size_t sep = s.find(";");
       assert(sep != wxString::npos);
       wxString name = slice_up_to(s, sep);
       page_filename filename(slice_from(s, sep + 1));
-      bool child = name[0] == '>';
-      if (child){
-        name = slice_from(name, 1);
+      auto depth = content_item_depth(name);
+      name = slice_from(name, depth);
+
+      while (parents.size() > depth + 1){
+        parents.pop_back();
       }
-      if (child){
-        AddChildPage(currentParent, name, filename);
-      }
-      else {
-        currentParent = AddPage(name, filename);
-      }
+      auto nodeId = AddChildPage(parents.back(), name, filename);
+      parents.push_back(nodeId);
     }
   }
 

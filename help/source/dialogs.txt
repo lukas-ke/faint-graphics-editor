@@ -1,0 +1,5 @@
+page:"Dialogs"
+summary:"Dialog reference"
+
+= Dialogs =
+\child_summary

@@ -21,6 +21,7 @@ import codecs
 from build_sys.help_util.markup_regex import *
 from build_sys.help_util.content_types import *
 from os.path import join
+from collections import OrderedDict
 
 HELP_OUT_FOLDER = "../help"
 HELP_SOURCE_FOLDER = "../help/source"
@@ -346,10 +347,11 @@ def parse_file(filename, prev, next, state):
     return Page(target_filename, os.path.split(filename)[-1], page_title, summary, doc)
 
 
-def write_child_summary(out, pages, child_pages):
+def write_child_summary(out, pages, pageNode):
     out.write('<table border="0" cellpadding="5">')
-    for child in child_pages:
-        out.write('<tr><td><a href="%s">%s</a></td><td width="10"></td><td>%s</td></tr>' % (pages[child].filename, pages[child].title, pages[child].summary))
+    for ch in pageNode.children:
+        p = pages[ch.title]
+        out.write('<tr><td><a href="%s">%s</a></td><td width="10"></td><td>%s</td></tr>' % (p.filename, p.title, p.summary))
     out.write('</table>')
 
 
@@ -402,7 +404,9 @@ def write(out_dir, pages, page_hierarchy, state):
                 in_list = False
 
             if item.__class__ == ChildSummary:
-                write_child_summary(outfile, pages, page_hierarchy[sourcename])
+                pageNode = page_hierarchy.find_page(sourcename)
+                write_child_summary(outfile, pages, pageNode)
+
             try:
                 outfile.write(item.to_html(state,row=row_num))
             except ContentError as e:
@@ -433,7 +437,6 @@ def _need_generate(srcRoot, dstRoot, sources):
 
 
 def get_files_from_contents(content_lines):
-
     """Returns the help source file names with depth prefixes stripped."""
     lines = [line.strip() for line in content_lines]
     return [line.replace(">", "") for line in lines if not len(line) == 0]
@@ -450,24 +453,52 @@ def read_contents_source(contents_path):
 def write_contents(contentLines, dst_path, pages):
     contents_file = open(dst_path, 'w')
     for line in contentLines:
-        if line.startswith(">"):
-            contents_file.write(">")
-        pageInfo = pages[line.replace(">","")]
+        depth, title = read_content_item(line)
+        if depth != 0:
+            contents_file.write(">" * depth)
+        pageInfo = pages[title]
         contents_file.write("%s;%s\n" % (pageInfo.title, pageInfo.filename))
 
+class PageNode:
+    def __init__(self, title):
+        self.title = title
+        self.children = []
+
+    def append(self, page, depth):
+        if depth == 0:
+            self.children.append(page)
+        else:
+            self.children[-1].append(page, depth - 1)
+
+    def find_page(self, title):
+        if self.title == title:
+            return self
+        else:
+            for ch in self.children:
+                page = ch.find_page(title)
+                if page is not None:
+                    return page
+        return None
+
+def read_content_item(line):
+    depth = 0
+    for ch in line:
+        if ch == '>':
+            depth += 1
+        else:
+            break
+    return depth, line.replace('>', '')
 
 def parse_contents(contentLines):
-    pages = {}
-    mainPage = ""
+    root = PageNode('root')
+
     for line in contentLines:
         line = line.strip()
-        if not line.startswith(">"):
-            mainPage = line
-            pages[line] = []
-        else:
-            pages[line[1:]] = []
-            pages[mainPage].append(line[1:])
-    return pages
+        depth, title = read_content_item(line)
+
+        root.append(PageNode(title), depth)
+
+    return root
 
 
 def find_unused_pages(referenced_pages, source_root_folder):
