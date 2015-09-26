@@ -45,16 +45,8 @@ class regex:
     # discover errors.
     function_strict = r'/\*[ ](method|function):[ ]\"(.*?)\"( |\nname: \"(.*?)\" )\*/'
 
-    # Similar to function_strict but allows specifying a function which produces
-    # the documentation instead of a literal string
-    # Example: /* method: some_func() [...]
-    function_strict_docfunc = r'/\*[ ](method|function):[ ][A-Za-z_]+\(\)( |\nname: \"(.*?)\" )\*/'
-
     # The actual regex used to match markup of methods and functions.
     function = r'/\* (method|function): \"(.*?)\"(?: |(?:\nname: \"(.*?)\" ))\*/\n^(?:static[ ]|extern[ ]|template[<]typename[ ]T[>]\n^)(?:const[ ])?.*?[ ](.*?)\((.*?)\)'
-
-    # Same as function, but matching a function (like function_strict_docfunc)
-    function_docfunc = r'/\* (method|function): ([A-Za-z_]+\(\))(?: |(?:\nname: \"(.*?)\" ))\*/\n^(?:static[ ]|extern[ ]|template[<]typename[ ]T[>]\n^)(?:const[ ])?.*?[ ](.*?)\((.*?)\)'
 
     # Syntax for a property-comment (struct with setter and getter).
     property = r'/\* property: \"(.*?)\" \*/\n^struct (.*?)\{'
@@ -103,13 +95,6 @@ def _clean_doc(doc):
     doc = doc.replace("\\n ", "\\n")
     return '"%s"' % doc
 
-def _doc_func(doc_func):
-    """Call the specified C++ function within the method_def to produce the
-    doc-string.
-
-    """
-    return doc_func + ".c_str()"
-
 
 def _get_type(args_str, entry_type):
     """Determines the Python method type (METH_NOARGS or METH_VARARGS)
@@ -157,10 +142,7 @@ def check_file(file_name):
                 raise ValueError('Extra quote (") in method markup: %s' %
                                  m.group(0))
         else:
-            m3 = re.match(regex.function_strict_docfunc,
-                          m.group(0), re.DOTALL|re.MULTILINE)
-            if not m3:
-                raise ValueError("Invalid method markup: %s" % m.group(0))
+            raise ValueError("Invalid method markup: %s" % m.group(0))
 
         result.append(m.group(0))
 
@@ -216,7 +198,7 @@ def parse_file(file_name):
         text = f.read()
 
     # Methods
-    def handle_entry(str_doc, entry_type, doc, py_name, cpp_name, args):
+    def handle_entry(entry_type, doc, py_name, cpp_name, args):
         entry_type, doc, py_name, cpp_name, args = m.groups()
         if m.group(0).find("template") != -1:
             assert entry_type == 'method'
@@ -224,20 +206,13 @@ def parse_file(file_name):
 
         if py_name is None:
             py_name = _to_py_name(cpp_name, entry_type)
-        if str_doc:
-            # The documentation is a literal string
-            result[0].append((entry_type, cpp_name, _get_type(args, entry_type),
-                py_name, _clean_doc(doc)))
-        else:
-            # The documentation is produced by a c++-function
-            result[0].append((entry_type, cpp_name, _get_type(args, entry_type),
-                py_name, _doc_func(doc)))
+
+
+        result[0].append((entry_type, cpp_name, _get_type(args, entry_type),
+                          py_name, _clean_doc(doc)))
 
     for m in re.finditer(regex.function, text, re.DOTALL|re.MULTILINE):
-        handle_entry(True, *m.groups())
-
-    for m in re.finditer(regex.function_docfunc, text, re.DOTALL|re.MULTILINE):
-        handle_entry(False, *m.groups())
+        handle_entry(*m.groups())
 
     # Properties
     for m in re.finditer(regex.property, text, re.DOTALL|re.MULTILINE):
