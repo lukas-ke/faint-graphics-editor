@@ -19,7 +19,6 @@ class TestSVGUtil(unittest.TestCase):
 
     def test_matrix(self):
         def matrix_near(m1, m2):
-            # Fixme: Use unittest near check
             d = 0.001
             def near(v1, v2):
                 return abs(v1 - v2) < d
