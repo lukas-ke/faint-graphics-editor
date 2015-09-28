@@ -612,26 +612,33 @@ def reverse_frames():
     for i in range(n // 2):
         img.swap_frames(i, n - i - 1)
 
+def _maybe_select(func):
+    def f():
+        if len(selected) != 0:
+            select(func(selected[0]))
+        elif len(objects) != 0:
+            _select_bottom_object()
+    return f
+
 bindk(key.arrow_down, NamedFunc("Select next object down",
-    lambda: select(obj_rel.next_down(selected[0]))),
+    _maybe_select(obj_rel.next_down)),
     mod.shift)
 
 bindk(key.arrow_up, NamedFunc("Select next object up",
-    lambda: select(obj_rel.next_up(selected[0]))),
+    _maybe_select(obj_rel.next_up)),
     mod.shift)
 
 bindk(key.arrow_left, NamedFunc("Select next object left",
-    lambda: select(obj_rel.next_left(selected[0]))),
+    _maybe_select(obj_rel.next_left)),
     mod.shift)
 
 bindk(key.arrow_right, NamedFunc("Select next object right",
-    lambda: select(obj_rel.next_right(selected[0]))),
+    _maybe_select(obj_rel.next_right)),
     mod.shift)
 
 bindk(key.arrow_up, NamedFunc("Select next behind",
-    lambda: select(obj_rel.next_behind(selected[0]))),
+    _maybe_select(obj_rel.next_behind)),
     mod.alt)
-
 
 def _select_next_front():
     if len(selected) == 0:
