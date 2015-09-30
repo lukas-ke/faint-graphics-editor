@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include <cassert>
+#include <functional>
 #include "commands/text-entry-cmd.hh"
 #include "editors/text-entry-util.hh"
 #include "geo/rect.hh"
@@ -33,6 +34,26 @@
 
 namespace faint{
 
+class TextCommand{
+public:
+  TextCommand(const std::function<void()>& doFunc,
+    const std::function<void()>& undoFunc)
+    : m_do(doFunc),
+      m_undo(undoFunc)
+  {}
+
+  void Do(){
+    m_do();
+  }
+
+  void Undo(){
+    m_undo();
+  }
+private:
+  std::function<void()> m_do;
+  std::function<void()> m_undo;
+};
+
 inline bool is_exit_key(const KeyPress& key){
   return key.Is(Ctrl, key::enter) ||
     key.Is(key::esc);
@@ -46,17 +67,24 @@ inline bool right_click(const PosInfo& info){
   return info.modifiers.RightMouse();
 }
 
-static bool handle_command_key(const KeyPress& key, ObjText* obj){
-  // Fixme: Need to support undo
+static Optional<TextCommand> handle_command_key(const KeyPress& key,
+  ObjText* obj)
+{
+  auto toggle = [obj](const auto& setting){
+    return [obj, setting](){
+      return obj->Set(setting, obj->GetSettings().Not(setting));
+    };
+  };
+
   if (key.Is(Ctrl, key::B)){
-    obj->Set(ts_FontBold, obj->GetSettings().Not(ts_FontBold));
-    return true;
+    auto toggleBold = toggle(ts_FontBold);
+    return option(TextCommand(toggleBold, toggleBold));
   }
   else if (key.Is(Ctrl, key::I)){
-    obj->Set(ts_FontItalic, obj->GetSettings().Not(ts_FontItalic));
-    return true;
+    auto toggleItalic = toggle(ts_FontItalic);
+    return option(TextCommand(toggleItalic, toggleItalic));
   }
-  return false;
+  return no_option();
 }
 
 static void select_word_at_pos(ObjText* textObject, const Point& pos){
@@ -149,15 +177,19 @@ public:
       }
       return TaskResult::DRAW; // Fixme: Insert tab if not completing
     }
-    else if (handle_command_key(info.key, m_textObject)){
-      m_autoComplete.Forget();
-      return TaskResult::DRAW;
-    }
-    else{
-      m_autoComplete.Forget();
-      return handle_key_press(info.key, m_textObject->GetTextBuffer()) ?
-        TaskResult::DRAW : TaskResult::NONE;
-    }
+
+    return handle_command_key(info.key, m_textObject).Visit(
+      [&](TextCommand& cmd){
+        m_autoComplete.Forget();
+        // Fixme: Need to support undo
+        cmd.Do();
+        return TaskResult::DRAW;
+      },
+      [&](){
+        m_autoComplete.Forget();
+        return handle_key_press(info.key, m_textObject->GetTextBuffer()) ?
+          TaskResult::DRAW : TaskResult::NONE;
+      });
   }
 
   Optional<utf8_string> CopyText() const override{
