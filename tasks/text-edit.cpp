@@ -31,19 +31,26 @@
 #include "util-wx/key-codes.hh"
 #include "util/command-util.hh"
 #include "util/pos-info.hh"
+#include "util/undo-redo.hh"
 
 namespace faint{
 
 class TextCommand{
 public:
   TextCommand(const std::function<void()>& doFunc,
-    const std::function<void()>& undoFunc)
+    const std::function<void()>& undoFunc,
+    const utf8_string& name)
     : m_do(doFunc),
-      m_undo(undoFunc)
+      m_undo(undoFunc),
+      m_name(name)
   {}
 
   void Do(){
     m_do();
+  }
+
+  const utf8_string& GetName() const{
+    return m_name;
   }
 
   void Undo(){
@@ -52,6 +59,7 @@ public:
 private:
   std::function<void()> m_do;
   std::function<void()> m_undo;
+  utf8_string m_name;
 };
 
 inline bool is_exit_key(const KeyPress& key){
@@ -78,13 +86,32 @@ static Optional<TextCommand> handle_command_key(const KeyPress& key,
 
   if (key.Is(Ctrl, key::B)){
     auto toggleBold = toggle(ts_FontBold);
-    return option(TextCommand(toggleBold, toggleBold));
+    return option(TextCommand(toggleBold, toggleBold, "Toggle bold"));
   }
   else if (key.Is(Ctrl, key::I)){
     auto toggleItalic = toggle(ts_FontItalic);
-    return option(TextCommand(toggleItalic, toggleItalic));
+    return option(TextCommand(toggleItalic, toggleItalic, "Toggle italic"));
   }
   return no_option();
+}
+
+static bool handle_completion(AutoCompleteState& autoComplete, TextBuffer& text){
+  // Find the preceeding backslash or character halting auto-completion
+  const size_t bs = text.prev_any_of(utf8_string(chars::backslash) +
+    utf8_string(chars::space) +
+    utf8_string(chars::comma) +
+    utf8_string(chars::eol));
+
+  if (bs == utf8_string::npos || text.at(bs) != chars::backslash){
+    return false;
+  }
+
+  auto completion = autoComplete.Empty() ?
+    autoComplete.Complete(text.get().substr(bs, text.caret() - bs)) :
+    autoComplete.Next();
+  text.select(CaretRange(bs, text.caret()));
+  text.insert(completion);
+  return true;
 }
 
 static void select_word_at_pos(ObjText* textObject, const Point& pos){
@@ -98,7 +125,10 @@ static AutoComplete& text_auto_complete(){
   return ac;
 }
 
-class EditText : public Task, public TextContext, public SelectionContext{
+class EditText : public Task,
+                 public TextContext,
+                 public SelectionContext,
+                 public HistoryContext{
 public:
   EditText(const Rect& r,
     const utf8_string& str,
@@ -144,38 +174,52 @@ public:
     return true;
   }
 
+  bool AllowsGlobalRedo() const override{
+    return !m_active;
+  }
+
+  bool CanUndo() const override{
+    return m_active && m_states.CanUndo();
+  }
+
+  bool CanRedo() const override{
+    return m_active && m_states.CanRedo();
+  }
+
+  utf8_string GetRedoName() const override{
+    return m_states.PeekRedo().GetName();
+  }
+
+  utf8_string GetUndoName() const override{
+    return m_states.PeekUndo().GetName();
+  }
+
   bool RefreshOnMouseOut() const override{
     return false;
   }
 
+  void Redo() override{
+    m_states.Redo().Do();
+  }
+
+  void Undo() override{
+    m_states.Undo().Undo();
+  }
+
   TaskResult Char(const KeyInfo& info) override{
+    auto handleKeyPress = [&](){
+      m_autoComplete.Forget();
+      return handle_key_press(info.key, m_textObject->GetTextBuffer()) ?
+        TaskResult::DRAW : TaskResult::NONE;
+    };
+
     if (is_exit_key(info.key)){
       return Commit(info.layerType);
     }
     else if (info.key.Is(key::tab) && m_settings.Get(ts_ParseExpressions)){
-      if (m_autoComplete.Empty()){
-        auto& buf = m_textObject->GetTextBuffer();
-        size_t bs = buf.prev(chars::backslash);
-        // Fixme: Should prev give npos? Optional?
-        if (bs != 0 || (!buf.empty() && buf.at(0) == chars::backslash)){
-          const utf8_string& s = buf.get().substr(bs, buf.caret() - bs);
-          auto word = m_autoComplete.Complete(s);
-          buf.select(CaretRange(bs, buf.caret()));
-          buf.insert(word);
-        }
-      }
-      else{
-        auto word = m_autoComplete.Next();
-        auto& buf = m_textObject->GetTextBuffer();
-        size_t bs = buf.prev(chars::backslash);
-        // Fixme: Should prev give npos? Optional?
-        if (bs != 0 || (!buf.empty() && buf.at(0) == chars::backslash)){
-          buf.select(CaretRange(bs, buf.caret()));
-          buf.insert(word);
-        }
-
-      }
-      return TaskResult::DRAW; // Fixme: Insert tab if not completing
+      return handle_completion(m_autoComplete, m_textObject->GetTextBuffer()) ?
+        TaskResult::DRAW :
+        handleKeyPress();
     }
 
     return handle_command_key(info.key, m_textObject).Visit(
@@ -183,13 +227,10 @@ public:
         m_autoComplete.Forget();
         // Fixme: Need to support undo
         cmd.Do();
+        m_states.Did(cmd);
         return TaskResult::DRAW;
       },
-      [&](){
-        m_autoComplete.Forget();
-        return handle_key_press(info.key, m_textObject->GetTextBuffer()) ?
-          TaskResult::DRAW : TaskResult::NONE;
-      });
+      handleKeyPress);
   }
 
   Optional<utf8_string> CopyText() const override{
@@ -280,7 +321,7 @@ public:
   }
 
   Optional<const faint::HistoryContext&> HistoryContext() const override{
-    return {};
+    return Optional<const faint::HistoryContext&>(*this);
   }
 
   void Paste(const utf8_string& str) override{
@@ -355,6 +396,7 @@ private:
   bool m_newTextObject;
   utf8_string m_oldText;
   Settings& m_settings;
+  UndoRedo<TextCommand> m_states;
   ObjText* m_textObject;
 };
 

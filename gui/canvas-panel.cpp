@@ -126,7 +126,10 @@ CanvasPanel::CanvasPanel(wxWindow* parent,
         event.Skip();
       }
       else if (HandleToolResult(m_contexts.GetTool().Char(info))) {
-        // The tool ate the character, don't propagate.
+        // Notify app to allow in-tool undo (e.g. Polygon tool point adding).
+        SendCanvasChangeEvent();
+
+        // The tool ate the character, don't propagate event.
         return;
       }
       else{

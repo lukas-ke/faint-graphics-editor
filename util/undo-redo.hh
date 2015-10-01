@@ -45,14 +45,14 @@ public:
     return !m_redoList.empty();
   }
 
-  const T& Undo(){
+  T& Undo(){
     assert(CanUndo());
     m_redoList.push_back(m_undoList.back());
     m_undoList.pop_back();
     return m_redoList.back();
   }
 
-  const T& Redo(){
+  T& Redo(){
     assert(CanRedo());
     m_undoList.push_back(m_redoList.back());
     m_redoList.pop_back();

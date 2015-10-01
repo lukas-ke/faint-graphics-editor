@@ -45,6 +45,7 @@ public:
   utf8_string& erase(size_t index=0, size_t n=npos);
   bool empty() const;
   size_t find(const utf8_char&, size_t start=0) const;
+  size_t find_last_of(const utf8_string&, size_t pos=npos) const;
   size_t rfind(const utf8_char&, size_t start=npos) const;
   utf8_string& insert(size_t, const utf8_string&);
   utf8_string& insert(size_t, size_t, const utf8_char&);

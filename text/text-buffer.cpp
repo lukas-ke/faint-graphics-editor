@@ -229,6 +229,10 @@ size_t TextBuffer::prev(const utf8_char& c, size_t pos) const{
   return found;
 }
 
+size_t TextBuffer::prev_any_of(const utf8_string& s) const{
+  return m_data.find_last_of(s, m_caret);
+}
+
 static bool word_delimiter(const utf8_char& ch){
   return is_punctuation(ch) ||
     ch == chars::eol ||

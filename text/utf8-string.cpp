@@ -142,6 +142,17 @@ size_t utf8_string::find(const utf8_char& ch, size_t start) const{
   return utf8::byte_num_to_char_num(pos, m_data);
 }
 
+size_t utf8_string::find_last_of(const utf8_string& s, size_t inPos) const{
+  const size_t endPos = inPos == npos ? size() : inPos;
+  for (size_t i = 0; i != endPos; i++){
+    auto pos = endPos - i - 1;
+    if (s.find((*this)[pos]) != utf8_string::npos){
+      return pos;
+    }
+  }
+  return utf8_string::npos;
+}
+
 size_t utf8_string::rfind(const utf8_char& ch, size_t start) const{
   // Since the leading byte has a unique pattern, using regular
   // std::string rfind should be OK, I think.

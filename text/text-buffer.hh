@@ -56,6 +56,7 @@ public:
   size_t next(const utf8_char&, size_t pos) const;
   size_t prev(const utf8_char&) const;
   size_t prev(const utf8_char&, size_t pos) const;
+  size_t prev_any_of(const utf8_string&) const;
   void select_none();
   void select(const CaretRange&);
   void set(const utf8_string&);
