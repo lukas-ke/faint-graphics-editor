@@ -6,7 +6,7 @@ Non-path objects can be converted to paths for more flexible editing.
 
 To convert the selected objects to path objects use either
 Objects->Become Path in the menu, or the Python method
-\ref(py-something.txt,become-path).
+\ref(py-something.txt,become_path).
 
 == Ellipse example ==
 After converting an ellipse to a path, control points become available.
