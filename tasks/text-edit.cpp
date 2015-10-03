@@ -105,23 +105,23 @@ inline bool right_click(const PosInfo& info){
 static Optional<TextChange> handle_command_key(const KeyPress& key,
   ObjText* obj)
 {
-  auto setter = [obj](const auto& setting, const auto& value){
-    return [obj, setting, value](){
-      return obj->Set(setting, value);
+  auto toggler = [obj](const BoolSetting& setting, const utf8_string& name){
+    auto setter = [obj](const auto& setting, const auto& value){
+      return [obj, setting, value](){
+        return obj->Set(setting, value);
+      };
     };
+
+    auto value = obj->GetSettings().Get(setting);
+    return TextChange(setter(setting, !value), setter(setting, value),
+      value ? "Clear " + name : "Set " + name);
   };
 
   if (key.Is(Ctrl, key::B)){
-    auto bold = obj->GetSettings().Get(ts_FontBold);
-    return option(TextChange(setter(ts_FontBold, !bold),
-      setter(ts_FontBold, bold),
-      bold ? "Clear bold" : "Set bold"));
+    return option(toggler(ts_FontBold, "bold"));
   }
   else if (key.Is(Ctrl, key::I)){
-    auto italic = obj->GetSettings().Get(ts_FontItalic);
-    return option(TextChange(setter(ts_FontItalic, !italic),
-      setter(ts_FontItalic, italic),
-      italic ? "Clear italic" : "Set italic"));
+    return option(toggler(ts_FontItalic, "italic"));
   }
   return no_option();
 }
