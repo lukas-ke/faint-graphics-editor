@@ -348,4 +348,4 @@ void on_switch_canvas(window_t w, const std::function<void(CanvasId)>& f){
     });
 }
 
-}}
+}} // namespace
