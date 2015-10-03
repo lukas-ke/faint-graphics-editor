@@ -15,6 +15,7 @@
 
 #include <cassert>
 #include <functional>
+#include "commands/command-bunch.hh"
 #include "commands/text-entry-cmd.hh"
 #include "editors/text-entry-util.hh"
 #include "geo/rect.hh"
@@ -35,9 +36,9 @@
 
 namespace faint{
 
-class TextCommand{
+class TextChange{
 public:
-  TextCommand(const std::function<void()>& doFunc,
+  TextChange(const std::function<void()>& doFunc,
     const std::function<void()>& undoFunc,
     const utf8_string& name)
     : m_do(doFunc),
@@ -62,6 +63,32 @@ private:
   utf8_string m_name;
 };
 
+
+class TextCommand : public Command{
+public:
+  TextCommand(const TextChange& change)
+    : Command(CommandType::OBJECT),
+      m_change(change)
+  {}
+
+  void Do(CommandContext&) override{
+    m_change.Do();
+  }
+
+  void Undo(CommandContext&) override{
+    m_change.Undo();
+  }
+
+  utf8_string Name() const override{
+    return m_change.GetName();
+  }
+
+  TextCommand& operator=(const TextCommand&) = delete;
+
+private:
+  TextChange m_change;
+};
+
 inline bool is_exit_key(const KeyPress& key){
   return key.Is(Ctrl, key::enter) ||
     key.Is(key::esc);
@@ -75,22 +102,26 @@ inline bool right_click(const PosInfo& info){
   return info.modifiers.RightMouse();
 }
 
-static Optional<TextCommand> handle_command_key(const KeyPress& key,
+static Optional<TextChange> handle_command_key(const KeyPress& key,
   ObjText* obj)
 {
-  auto toggle = [obj](const auto& setting){
-    return [obj, setting](){
-      return obj->Set(setting, obj->GetSettings().Not(setting));
+  auto setter = [obj](const auto& setting, const auto& value){
+    return [obj, setting, value](){
+      return obj->Set(setting, value);
     };
   };
 
   if (key.Is(Ctrl, key::B)){
-    auto toggleBold = toggle(ts_FontBold);
-    return option(TextCommand(toggleBold, toggleBold, "Toggle bold"));
+    auto bold = obj->GetSettings().Get(ts_FontBold);
+    return option(TextChange(setter(ts_FontBold, !bold),
+      setter(ts_FontBold, bold),
+      bold ? "Clear bold" : "Set bold"));
   }
   else if (key.Is(Ctrl, key::I)){
-    auto toggleItalic = toggle(ts_FontItalic);
-    return option(TextCommand(toggleItalic, toggleItalic, "Toggle italic"));
+    auto italic = obj->GetSettings().Get(ts_FontItalic);
+    return option(TextChange(setter(ts_FontItalic, !italic),
+      setter(ts_FontItalic, italic),
+      italic ? "Clear italic" : "Set italic"));
   }
   return no_option();
 }
@@ -203,7 +234,7 @@ public:
   }
 
   void Undo() override{
-    m_states.Undo().Undo();
+    m_states.Undo().Undo(); // Fixme: Bizarre: Undo just moves between lists.
   }
 
   TaskResult Char(const KeyInfo& info) override{
@@ -223,7 +254,7 @@ public:
     }
 
     return handle_command_key(info.key, m_textObject).Visit(
-      [&](TextCommand& cmd){
+      [&](TextChange& cmd){
         m_autoComplete.Forget();
         // Fixme: Need to support undo
         cmd.Do();
@@ -380,12 +411,31 @@ private:
     }
 
     const utf8_string& newText(m_textObject->GetTextBuffer().get());
-    if (newText == m_oldText){
-      // Text unchanged, create no no command.
+    std::deque<Command*> cmds;
+    while (m_states.CanUndo()){
+      // Fixme: Dificult to understand (first undo just moves between lists)
+      TextChange& change = m_states.Undo();
+      change.Undo();
+      cmds.push_front(new TextCommand(change));
+    }
+
+    if (newText != m_oldText){
+      // Fixme: Do all changes, also text edits, via TextChange instead
+      cmds.push_back(text_entry_command(m_textObject,
+        New(newText),
+        Old(m_oldText)));
+    }
+
+    if (cmds.empty()){
+      // No changes - create no command.
       return TaskResult::CHANGE;
     }
-    m_command.Set(text_entry_command(m_textObject, New(newText), Old(m_oldText)));
-    return TaskResult::COMMIT_AND_CHANGE;
+    else {
+      m_command.Set(cmds.size() == 1 ?
+        cmds.back() :
+        command_bunch(CommandType::OBJECT, bunch_name("Modify Text"), cmds));
+      return TaskResult::COMMIT_AND_CHANGE;
+    }
   }
 
   ToolActions& m_actions;
@@ -396,7 +446,7 @@ private:
   bool m_newTextObject;
   utf8_string m_oldText;
   Settings& m_settings;
-  UndoRedo<TextCommand> m_states;
+  UndoRedo<TextChange> m_states;
   ObjText* m_textObject;
 };
 
