@@ -489,6 +489,7 @@ bool parse_item(Optional<T>& item,
 }
 
 PyObject* build_result(const Angle&);
+PyObject* build_result(const AngleSpan&);
 PyObject* build_result(bool);
 PyObject* build_result(const Bitmap&);
 PyObject* build_result(const BoundObject<Object>&);

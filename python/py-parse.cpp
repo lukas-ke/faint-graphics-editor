@@ -928,6 +928,10 @@ PyObject* build_result(const Angle& angle){
   return build_result(angle.Rad());
 }
 
+PyObject* build_result(const AngleSpan& angleSpan){
+  return build_result(std::make_pair(angleSpan.start, angleSpan.stop));
+}
+
 PyObject* build_result(const Delay& delay){
   // Fixme: Would be better to return a Python type.
   return build_result(delay.Get().count());
