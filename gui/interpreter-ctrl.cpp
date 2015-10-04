@@ -279,7 +279,7 @@ public:
         }
 
         if (keyCode == WXK_RETURN){
-          if (event.ControlDown()){
+          if (event.ControlDown() || event.AltDown()){
             // Ignore enter when control held as this outputs some
             // garbage character. Attempts to change this with
             // Set[Raw]ControlDown didn't help much.
