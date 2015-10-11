@@ -230,11 +230,12 @@ public:
   }
 
   void Redo() override{
-    m_states.Redo().Do();
+    m_states.RedoToUndo().Do();
   }
 
   void Undo() override{
-    m_states.Undo().Undo(); // Fixme: Bizarre: Undo just moves between lists.
+    auto& cmd = m_states.UndoToRedo();
+    cmd.Undo();
   }
 
   TaskResult Char(const KeyInfo& info) override{
@@ -414,7 +415,7 @@ private:
     std::deque<Command*> cmds;
     while (m_states.CanUndo()){
       // Fixme: Dificult to understand (first undo just moves between lists)
-      TextChange& change = m_states.Undo();
+      TextChange& change = m_states.UndoToRedo();
       change.Undo();
       cmds.push_front(new TextCommand(change));
     }

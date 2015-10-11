@@ -240,7 +240,7 @@ public:
 
   void Redo() override{
     m_points.PopBack();
-    Point redone = m_states.Redo();
+    Point redone = m_states.RedoToUndo();
     m_points.Append(redone);
     m_points.Append(redone); // Cursor pos
   }
@@ -248,7 +248,7 @@ public:
   void Undo() override{
     assert(m_states.CanUndo());
     m_points.PopBack();
-    m_states.Undo();
+    m_states.UndoToRedo();
   }
 private:
   ToolResult AddPoint(const Point& pos, MouseButton button){

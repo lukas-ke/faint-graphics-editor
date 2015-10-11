@@ -217,7 +217,7 @@ public:
 
   void Redo() override{
     m_points.pop_back();
-    m_points.push_back(m_states.Redo());
+    m_points.push_back(m_states.RedoToUndo());
     m_points.push_back(m_points.back()); // Cursor position
     m_active = m_points.size() >= 2;
   }
@@ -225,7 +225,7 @@ public:
   void Undo() override{
     assert(m_states.CanUndo());
     m_points.pop_back();
-    m_states.Undo();
+    m_states.UndoToRedo();
     m_active = m_points.size() >= 2;
   }
 

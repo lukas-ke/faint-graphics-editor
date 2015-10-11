@@ -132,7 +132,6 @@ public:
     return ToolResult::NONE;
   }
 
-
   ToolResult Preempt(const PosInfo& info) override{
     if (m_active){
       return Commit(info.layerType);
@@ -141,11 +140,11 @@ public:
   }
 
   void Redo() override{
-    m_points.Append(m_states.Redo());
+    m_points.Append(m_states.RedoToUndo());
   }
 
   void Undo() override{
-    m_states.Undo();
+    m_states.UndoToRedo();
     m_points.PopBack();
     if (!m_states.CanUndo()){
       m_active = false;
