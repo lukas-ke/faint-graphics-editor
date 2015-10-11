@@ -15,7 +15,7 @@
 
 #include "app/canvas.hh"
 #include "app/context-commands.hh"
-#include "bitmap/auto-crop.hh" // Fixme: Move most-common-yada to color-counting
+#include "bitmap/auto-crop.hh"
 #include "commands/command-bunch.hh"
 #include "commands/flip-rotate-cmd.hh"
 #include "commands/group-objects-cmd.hh"
