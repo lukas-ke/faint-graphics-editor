@@ -525,7 +525,7 @@ static PyObject* canvas_Group(CanvasT bc, PyObject* args){
   // a single sequence-argument as the sequence. i.e. allow both
   // Group(a, b, c, d) and Group([a,b,c,d])
   PyObject* sequence = (PySequence_Length(args) == 1 &&
-    PySequence_Check(PySequence_GetItem(args, 0))) ?
+    PySequence_Check(PySequence_GetItem(args, 0))) ? // Fixme: Leak!
     PySequence_GetItem(args, 0) :
     args;
 

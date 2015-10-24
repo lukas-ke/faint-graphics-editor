@@ -9,13 +9,13 @@ which means Faint is cross-platform with native look and feel.
 
 The goal is for Faint to be as simple as possible while still having
 all the features that are commonly needed for most every-day graphics
-editing tasks. Faint supports diagramming (vector-based), drawing,
-sprite-art, animation and basic photo editing.
+editing tasks. Faint supports vector graphics, raster drawing and
+sprite-art, animation (frames, gif) and basic photo editing.
 
 Python scripting is available via an interpreter window and script
 files. This enables programmatic image editing and configuration.
 Functions can be connected to keys, so that they can be called
-conveniently while drawing as normally.
+conveniently while drawing.
 
 ## Build instructions
 * [Windows (Visual Studio)](build/build-instructions-visual-studio.md)
