@@ -46,9 +46,11 @@ Faint uses Cairo for rendering vector graphics, and Pango for
 rendering text.
 
 ### Get the Pango and Cairo development files
-**Update:** This info is out of date, www.gtk.org no longer provides these dll:s. Solution pending... :)
-
 ~~http://www.gtk.org/download/win32.php~~
+
+**Update:** This info is out of date, www.gtk.org no longer provides
+these dll:s. For now consider using the dll:s from archived gtk.org:
+http://web.archive.org/web/20150905072710/http://www.gtk.org/download/win32.php
 
 The required items are listed below. Unzip these somewhere convenient.
 
