@@ -34,17 +34,21 @@ This clones the wxWidgets source to c:\dev\wxWidgets.
 
 ## 2. Python
 Python is used both for generating some code when building Faint and
-as the embedded scripting language of Faint. Faint requires Python 3.4.
+as the embedded scripting language of Faint. Faint requires Python 3.4.0.
 
-### Install Python 3.4
+### Install Python 3.4.0
 http://www.python.org/download/
+
+**Note:** It seems the exact version matters, only `3.4.0` is known to work.
 
 ## 3. Pango and Cairo
 Faint uses Cairo for rendering vector graphics, and Pango for
 rendering text.
 
 ### Get the Pango and Cairo development files
-http://www.gtk.org/download/win32.php
+**Update:** This info is out of date, www.gtk.org no longer provides these dll:s. Solution pending... :)
+
+~~http://www.gtk.org/download/win32.php~~
 
 The required items are listed below. Unzip these somewhere convenient.
 
