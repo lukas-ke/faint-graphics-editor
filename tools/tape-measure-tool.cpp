@@ -54,7 +54,7 @@ static coord get_distance_scaling(const utf8_string& unit, const Calibration& c)
       return 1.0;
     }
     else{
-      return it->second[unit].Visit(
+      return it->second[c.unit].Visit(
         [&](coord calibratedToWanted){
           return calibratedToWanted / c.Scale();
         },
