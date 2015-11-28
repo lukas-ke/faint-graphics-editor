@@ -130,24 +130,11 @@ IntRect deflated(const IntRect& r, int d){
 }
 
 IntRect intersection(const IntRect& r1, const IntRect& r2) {
-  int x1 = r1.x < r2.x ? r2.x : r1.x;
-  int y1 = r1.y < r2.y ? r2.y : r1.y;
-  int x2 = r1.Right();
-  int y2 = r1.Bottom();
-
-  if (x2 > r2.Right()){
-    x2 = r2.Right();
-  }
-  if (y2 > r2.Bottom()){
-    y2 = r2.Bottom();
-  }
-
-  int w2 = x2 - x1 + 1;
-  int h2 = y2 - y1 + 1;
-  if (w2 <= 0 || h2 <= 0){
-    return IntRect(IntPoint(0, 0), IntSize(0, 0));
-  }
-  return IntRect(IntPoint(x1, y1), IntSize(w2, h2));
+  const auto tl = max_coords(r1.TopLeft(), r2.TopLeft());
+  const auto br = min_coords(r1.BottomRight(), r2.BottomRight());
+  return br.x < tl.x || br.y < tl.y ?
+    IntRect::EmptyRect() :
+    IntRect(tl, br);
 }
 
 IntRect largest(const IntRect& r1, const IntRect& r2){
