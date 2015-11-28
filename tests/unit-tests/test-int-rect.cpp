@@ -1,6 +1,7 @@
 // -*- coding: us-ascii-unix -*-
 #include "test-sys/test.hh"
 #include "tests/test-util/print-objects.hh"
+#include "geo/measure.hh"
 #include "geo/int-point.hh"
 #include "geo/int-rect.hh"
 #include "geo/int-size.hh"
@@ -26,7 +27,7 @@ void test_int_rect(){
   IntRect r2(IntPoint(100,100), IntPoint(120,110));
   VERIFY(empty(intersection(r, r2)));
 
-  auto u = union_of(r,r2);
+  auto u = bounding_rect(r,r2);
   VERIFY(!empty(u));
   EQUAL(u.TopLeft(), IntPoint(-1,-2));
   EQUAL(u.BottomRight(), IntPoint(120,110));

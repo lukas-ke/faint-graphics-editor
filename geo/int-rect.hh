@@ -49,6 +49,7 @@ public:
 
 bool operator==(const IntRect&, const IntRect&);
 bool operator!=(const IntRect&, const IntRect&);
+
 int area(const IntRect&);
 bool empty(const IntRect&);
 
@@ -68,7 +69,6 @@ IntRect largest(const IntRect&, const IntRect&);
 IntRect smallest(const IntRect&, const IntRect&);
 
 IntRect translated(const IntRect&, const IntPoint&);
-IntRect union_of(const IntRect&, const IntRect&);
 
 } // namespace
 

@@ -48,7 +48,8 @@ public:
       m_refreshRect(floated(mainObject->GetRefreshRect()))
   {
     for (Object* object : allObjects){
-      m_refreshRect = union_of(m_refreshRect, floated(object->GetRefreshRect()));
+      m_refreshRect = bounding_rect(m_refreshRect,
+        floated(object->GetRefreshRect()));
       m_objects.push_back(object);
       m_origTris.push_back(object->GetTri());
       object->SetActive();

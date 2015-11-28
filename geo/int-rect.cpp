@@ -146,16 +146,6 @@ IntRect translated(const IntRect& r, const IntPoint& p){
   return IntRect(IntPoint(r.x + p.x, r.y + p.y), IntSize(r.w, r.h));
 }
 
-IntRect union_of(const IntRect& r1, const IntRect& r2) {
-  const int left = std::min(r1.x, r2.x);
-  const int top = std::min(r1.y, r2.y);
-  const int bottom = std::max(r1.Bottom(), r2.Bottom());
-  const int right = std::max(r1.Right(), r2.Right());
-
-  return IntRect(IntPoint(left, top),
-    IntSize(right - left + 1, bottom - top + 1));
-}
-
 bool operator==(const IntRect& r1, const IntRect& r2){
   return
     r1.x == r2.x &&

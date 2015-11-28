@@ -20,6 +20,7 @@
 #include "app/canvas-handle.hh"
 #include "app/template-drawable.hh"
 #include "geo/geo-func.hh"
+#include "geo/measure.hh" // bounding_rect
 #include "geo/scale.hh"
 #include "geo/size.hh"
 #include "gui/art.hh"
@@ -1128,12 +1129,12 @@ void CanvasPanel::RunCommand(Command* cmd,
   m_contexts.GetTool().SelectionChange();
 }
 
-// Refreshes the union of the rectangle parameter and the rectangle
+// Refreshes the rectangle surrounding the parameter and the rectangle
 // parameter from the previous call.
 void CanvasPanel::InclusiveRefresh(const IntRect& r){
   const coord zoom = m_state.geo.zoom.GetScaleFactor();
   if (zoom >= 1.0){
-    RefreshRect(to_wx(union_of(r, m_lastRefreshRect)).
+    RefreshRect(to_wx(bounding_rect(r, m_lastRefreshRect)).
       Inflate(floored(2.0 * zoom)));
     m_lastRefreshRect = r;
   }

@@ -58,7 +58,7 @@ public:
 
   IntRect GetRefreshRect() const override{
     if (m_settings.Get(ts_LineArrowhead) == LineArrowhead::FRONT){
-      return floored(union_of(GetLineRect(), GetArrowHeadRect()));
+      return floored(bounding_rect(GetLineRect(), GetArrowHeadRect()));
     }
     return floored(GetLineRect());
   }

@@ -31,6 +31,7 @@ Angle angle360_ccw(const LineSegment&);
 IntRect bounding_rect(const IntPoint&, const IntPoint&);
 IntRect bounding_rect(const IntPoint&, const IntPoint&, const IntPoint&);
 IntRect bounding_rect(const IntLineSegment&);
+IntRect bounding_rect(const IntRect&, const IntRect&);
 Rect bounding_rect(const Rect&, const Rect&);
 Rect bounding_rect(const LineSegment&);
 Rect bounding_rect(const Point&, const Point&, const Point&);

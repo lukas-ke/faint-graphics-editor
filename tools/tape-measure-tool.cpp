@@ -130,7 +130,7 @@ public:
 
   IntRect GetRefreshRect(const RefreshInfo&) const override{
     const auto line(m_editor.GetLine());
-    return floiled(union_of(bounding_rect(line),
+    return floiled(bounding_rect(bounding_rect(line),
         bounding_rect(get_tape_text_tri(line))));
   }
 

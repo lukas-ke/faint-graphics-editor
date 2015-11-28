@@ -50,8 +50,18 @@ IntRect bounding_rect(const IntPoint& p0, const IntPoint& p1, const IntPoint& p2
   return IntRect(min_coords(p0, p1, p2), max_coords(p0, p1, p2));
 }
 
+IntRect bounding_rect(const IntRect& r1, const IntRect& r2) {
+  const IntPoint tl = min_coords(r1.TopLeft(), r2.TopLeft());
+  const IntPoint br = max_coords(r1.BottomRight(), r2.BottomRight());
+  return IntRect(tl, br);
+}
+
 Rect bounding_rect(const Rect& r1, const Rect& r2){
-  return union_of(r1, r2);
+  const coord left = std::min(r1.x, r2.x);
+  const coord top = std::min(r1.y, r2.y);
+  const coord bottom = std::max(r1.Bottom(), r2.Bottom());
+  const coord right = std::max(r1.Right(), r2.Right());
+  return Rect(Point(left, top), Point(right, bottom));
 }
 
 Rect bounding_rect(const LineSegment& line){

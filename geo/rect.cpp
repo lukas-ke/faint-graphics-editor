@@ -147,12 +147,4 @@ Rect translated(const Rect& r, const Point& p){
   return Rect(r.TopLeft() + p, r.GetSize());
 }
 
-Rect union_of(const Rect& r1, const Rect& r2) {
-  const coord left = min(r1.x, r2.x);
-  const coord top = min(r1.y, r2.y);
-  const coord bottom = max(r1.Bottom(), r2.Bottom());
-  const coord right = max(r1.Right(), r2.Right());
-  return Rect(Point(left, top), Point(right, bottom));
-}
-
 } // namespace

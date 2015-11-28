@@ -17,6 +17,7 @@
 #include <cassert>
 #include <iterator> // back_inserter
 #include "geo/int-rect.hh"
+#include "geo/measure.hh" // bounding_rect
 #include "geo/pathpt.hh"
 #include "geo/rect.hh"
 #include "geo/scale.hh"
@@ -102,7 +103,7 @@ public:
     assert(!m_objects.empty());
     IntRect r(m_objects[0]->GetRefreshRect());
     for (size_t i = 1; i != m_objects.size(); i++){
-      r = union_of(r, m_objects[i]->GetRefreshRect());
+      r = bounding_rect(r, m_objects[i]->GetRefreshRect());
     }
     return r;
   }

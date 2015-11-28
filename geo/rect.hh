@@ -53,7 +53,6 @@ Rect inflated(const Rect&, coord, coord);
 Rect intersection(const Rect&, const Rect&);
 bool intersects(const Rect&, const Rect&);
 Rect translated(const Rect&, const Point&);
-Rect union_of(const Rect&, const Rect&);
 
 } // namespace
 

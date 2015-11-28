@@ -117,7 +117,7 @@ Point Tri::P3() const{
 }
 
 bool Tri::Contains(const Point& pt) const{
-  Rect r(union_of(Rect(m_p0, P1()), Rect(P1(), P2())));
+  const auto r = bounding_rect(Rect(m_p0, P1()), Rect(P1(), P2()));
   return r.Contains(pt);
 }
 
