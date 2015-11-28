@@ -18,9 +18,6 @@
 #include "geo/int-rect.hh"
 #include "geo/int-size.hh"
 
-using std::min;
-using std::max;
-
 namespace faint{
 
 IntRect::IntRect(){
@@ -28,10 +25,10 @@ IntRect::IntRect(){
 }
 
 IntRect::IntRect(const IntPoint& p0, const IntPoint& p1) :
-  x(min(p0.x, p1.x)),
-  y(min(p0.y, p1.y)),
-  w(abs(p0.x - p1.x) + 1),
-  h(abs(p0.y - p1.y) + 1)
+  x(std::min(p0.x, p1.x)),
+  y(std::min(p0.y, p1.y)),
+  w(std::abs(p0.x - p1.x) + 1),
+  h(std::abs(p0.y - p1.y) + 1)
 {}
 
 IntRect::IntRect(const IntPoint& pt, const IntSize& sz)
@@ -150,17 +147,18 @@ IntRect translated(const IntRect& r, const IntPoint& p){
 }
 
 IntRect union_of(const IntRect& r1, const IntRect& r2) {
-  const int left = min(r1.x, r2.x);
-  const int top = min(r1.y, r2.y);
-  const int bottom = max(r1.Bottom(), r2.Bottom());
-  const int right = max(r1.Right(), r2.Right());
+  const int left = std::min(r1.x, r2.x);
+  const int top = std::min(r1.y, r2.y);
+  const int bottom = std::max(r1.Bottom(), r2.Bottom());
+  const int right = std::max(r1.Right(), r2.Right());
 
   return IntRect(IntPoint(left, top),
     IntSize(right - left + 1, bottom - top + 1));
 }
 
 bool operator==(const IntRect& r1, const IntRect& r2){
-  return r1.x == r2.x &&
+  return
+    r1.x == r2.x &&
     r1.y == r2.y &&
     r1.w == r2.w &&
     r1.h == r2.h;
