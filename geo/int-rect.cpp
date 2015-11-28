@@ -138,17 +138,11 @@ IntRect intersection(const IntRect& r1, const IntRect& r2) {
 }
 
 IntRect largest(const IntRect& r1, const IntRect& r2){
-  if (area(r1) <= area(r2)){
-    return r2;
-  }
-  return r1;
+  return area(r1) <= area(r2) ? r2 : r1;
 }
 
 IntRect smallest(const IntRect& r1, const IntRect& r2){
-  if (area(r2) < area(r1)){
-    return r2;
-  }
-  return r1;
+  return area(r2) < area(r1) ? r2 : r1;
 }
 
 IntRect translated(const IntRect& r, const IntPoint& p){
