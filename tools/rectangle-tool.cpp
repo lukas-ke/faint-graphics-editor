@@ -128,7 +128,12 @@ public:
     info.status.SetMainText(info.modifiers.Either() ?
       utf8_string() :
       space_sep(primary_modifier("Snap"), secondary_modifier("Square")));
-    info.status.SetText(str_from_to(m_p0, m_p1), 0);
+
+    info.status.SetText(
+      space_sep(
+        str_from_to(m_p0, m_p1),
+        lbl("Size", str(IntRect(floored(m_p0), floored(m_p1)).GetSize()))),
+      0);
     return ToolResult::DRAW;
   }
 
