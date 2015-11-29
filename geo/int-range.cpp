@@ -53,4 +53,4 @@ bool IntRange::Has(int value) const{
   return true;
 }
 
-}
+} // namespace

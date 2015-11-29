@@ -34,7 +34,9 @@ public:
 
   // Lower bound only
   IntRange(const min_t&);
-  IntRange(const max_t&); // Upper bound only
+
+  // Upper bound only
+  IntRange(const max_t&);
 
   // Return the value constrained to the range.
   int Constrain(int) const;

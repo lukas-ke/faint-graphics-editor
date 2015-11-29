@@ -45,8 +45,8 @@ int ClosedIntRange::Delta() const{
 }
 
 Interval ClosedIntRange::Constrain(const Interval& interval) const{
-  return Interval(min_t(Constrain(interval.Lower())),
-    max_t(Constrain(interval.Upper())));
+  return {min_t(Constrain(interval.Lower())),
+    max_t(Constrain(interval.Upper()))};
 }
 
 bool ClosedIntRange::Has(int value) const{
@@ -74,11 +74,11 @@ BoundedInt::BoundedInt(const min_t& lower, int v, const max_t& upper)
 }
 
 BoundedInt BoundedInt::Mid(const min_t& lower, const max_t& upper){
-  return BoundedInt(lower, (lower.Get() + upper.Get()) / 2, upper);
+  return {lower, (lower.Get() + upper.Get()) / 2, upper};
 }
 
 BoundedInt BoundedInt::Min(const min_t& lower, const max_t& upper){
-  return BoundedInt(lower, lower.Get(), upper);
+  return {lower, lower.Get(), upper};
 }
 
 int BoundedInt::GetValue() const{
@@ -120,16 +120,15 @@ int Interval::Upper() const{
 }
 
 IntSize constrained(const IntSize& sz, const min_t& w, const min_t& h){
-  return IntSize(std::max(w.Get(), sz.w),
-    std::max(h.Get(), sz.h));
+  return {std::max(w.Get(), sz.w), std::max(h.Get(), sz.h)};
 }
 
 Interval make_interval(int v0, int v1){
-  return Interval(min_t(std::min(v0, v1)), max_t(std::max(v0, v1)));
+  return {min_t(std::min(v0, v1)), max_t(std::max(v0, v1))};
 }
 
 ClosedIntRange make_closed_range(int v0, int v1){
-  return ClosedIntRange(min_t(std::min(v0, v1)), max_t(std::max(v0, v1)));
+  return {min_t(std::min(v0, v1)), max_t(std::max(v0, v1))};
 }
 
 } // namespace

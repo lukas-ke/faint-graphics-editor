@@ -127,7 +127,7 @@ IntRect deflated(const IntRect& r, int d){
     IntSize(r.w - 2 * d, r.h - 2 * d)};
 }
 
-IntRect intersection(const IntRect& r1, const IntRect& r2) {
+IntRect intersection(const IntRect& r1, const IntRect& r2){
   const auto tl = max_coords(r1.TopLeft(), r2.TopLeft());
   const auto br = min_coords(r1.BottomRight(), r2.BottomRight());
   return br.x < tl.x || br.y < tl.y ?
