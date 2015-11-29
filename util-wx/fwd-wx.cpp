@@ -27,8 +27,8 @@
 
 namespace faint{
 
-static auto to_wx(const Width& w){
-  return wxSize(w.Get(), -1);
+static wxSize to_wx(const Width& w){
+  return {w.Get(), -1};
 }
 
 window_t::window_t(wxDialog* dlg) : w(dlg){}
@@ -243,7 +243,7 @@ static wxSize largest_size(const std::initializer_list<window_t>& controls){
     maxWidth = std::max(sz.GetWidth(), maxWidth);
     maxHeight = std::max(sz.GetHeight(), maxHeight);
   }
-  return wxSize(maxWidth + 10, maxHeight);
+  return {maxWidth + 10, maxHeight};
 }
 
 void make_uniformly_sized(const std::initializer_list<window_t>& controls){

@@ -50,11 +50,11 @@ static int show_modal(wxDialog& dlg, AppContext& app){
 }
 
 wxColour get_gui_selected_color(){
-  return wxColour(112,154,209);
+  return {112, 154, 209};
 }
 
 wxColour get_gui_deselected_color(){
-  return wxColour(255,255,255);
+  return {255, 255, 255};
 }
 
 wxIcon get_icon(const Art& art, Icon iconId){
@@ -248,7 +248,7 @@ FileList show_open_file_dialog(wxWindow& parent,
     fd.GetPaths(paths);
     return to_FileList(paths);
   }
-  return FileList();
+  return {};
 }
 
 void show_out_of_memory_cancelled_error(wxWindow* parent, AppContext& app){

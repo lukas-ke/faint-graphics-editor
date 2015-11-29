@@ -158,15 +158,15 @@ wxSizer* create_column(const std::vector<SizerItem>& items){
 }
 
 SizerItem grow(wxSizer* sizer){
-  return SizerItem(sizer, Proportion(1), wxEXPAND);
+  return {sizer, Proportion(1), wxEXPAND};
 }
 
 SizerItem grow(wxWindow* window){
-  return SizerItem(window, Proportion(1), wxEXPAND);
+  return {window, Proportion(1), wxEXPAND};
 }
 
 SizerItem center(wxSizer* sizer){
-  return SizerItem(sizer, Proportion(0), wxALIGN_CENTER);
+  return {sizer, Proportion(0), wxALIGN_CENTER};
 }
 
 wxWindow* make_default(wxDialog* parent, wxWindow* item){

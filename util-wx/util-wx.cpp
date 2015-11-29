@@ -142,8 +142,9 @@ IntPoint view_position(const wxWindow& w){
 Point image_position(const CanvasGeo& g, const wxWindow& w){
   Point p(floated(view_position(w)));
   const coord zoom = g.zoom.GetScaleFactor();
-  return Point((p.x + g.pos.x - g.border.w) / zoom,
-    (p.y + g.pos.y - g.border.w) / zoom);
+  return {
+    (p.x + g.pos.x - g.border.w) / zoom,
+    (p.y + g.pos.y - g.border.w) / zoom};
 }
 
 }} // namespace
