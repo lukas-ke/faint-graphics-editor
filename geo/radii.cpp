@@ -32,11 +32,11 @@ void Radii::operator*=(coord sc){
 }
 
 Radii abs(const Radii& r){
-  return Radii(std::fabs(r.x), std::fabs(r.y));
+  return {std::fabs(r.x), std::fabs(r.y)};
 }
 
 Radii operator*(const Radii& lhs, const Radii& rhs){
-  return Radii(lhs.x * rhs.x, lhs.y * rhs.y);
+  return {lhs.x * rhs.x, lhs.y * rhs.y};
 }
 
 } // namespace

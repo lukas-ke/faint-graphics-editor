@@ -73,9 +73,9 @@ IntSize get_rotated_size(const Angle& angle,
   const coord y3 = CtY + (size.h - CtY) * cA + (size.w - CtX) * sA;
   const coord y4 = CtY + (-CtY) * cA + (size.w - CtX) * sA;
 
-  IntPoint offset(floored(min4(x1, x2, x3, x4)),
+  const IntPoint offset(floored(min4(x1, x2, x3, x4)),
     floored(min4(y1, y2, y3, y4)));
-  IntSize newSize(ceiled(max4(x1, x2, x3, x4)) - offset.x,
+  const IntSize newSize(ceiled(max4(x1, x2, x3, x4)) - offset.x,
     ceiled(max4(y1,y2,y3,y4)) - offset.y);
 
   return newSize;

@@ -27,19 +27,19 @@ bool Size::operator!=(const Size& other) const {
 }
 
 Size operator+(const Size& lhs, const Size& rhs){
-  return Size(lhs.w + rhs.w, lhs.h + rhs.h);
+  return {lhs.w + rhs.w, lhs.h + rhs.h};
 }
 
 Size Size::operator/(const Size& other) const{
-  return Size(w / other.w, h / other.h);
+  return {w / other.w, h / other.h};
 }
 
 Size operator-(const Size& lhs, const Size& rhs){
-  return Size(lhs.w - rhs.w, lhs.h - rhs.h);
+  return {lhs.w - rhs.w, lhs.h - rhs.h};
 }
 
 Size operator/(const Size& lhs, coord scalar){
-  return Size(lhs.w / scalar, lhs.h / scalar);
+  return {lhs.w / scalar, lhs.h / scalar};
 }
 
 coord area(const Size& size){

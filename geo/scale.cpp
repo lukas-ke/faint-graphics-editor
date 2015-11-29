@@ -27,23 +27,23 @@ Scale::Scale(const NewSize& inNew, const Size& oldSz){
 }
 
 Scale invert_x_scale(){
-  return Scale(-1.0, 1.0);
+  return {-1.0, 1.0};
 }
 
 Scale invert_y_scale(){
-  return Scale(1.0, -1.0);
+  return {1.0, -1.0};
 }
 
 Scale abs(const Scale& sc){
-  return Scale(std::fabs(sc.x), std::fabs(sc.y));
+  return {std::fabs(sc.x), std::fabs(sc.y)};
 }
 
 Size operator*(const Scale& sc, const Size& sz){
-  return Size(sc.x * sz.w, sc.y * sz.h);
+  return {sc.x * sz.w, sc.y * sz.h};
 }
 
 Size operator*(const Size& sz, const Scale& sc){
-  return Size(sc.x * sz.w, sc.y * sz.h);
+  return {sc.x * sz.w, sc.y * sz.h};
 }
 
 Size operator*(const IntSize& sz, const Scale& sc){
@@ -56,18 +56,18 @@ Size operator*(const Scale& sc, const IntSize& sz){
 
 class Point;
 Point operator*(const Point& pt, const Scale& sc){
-  return {Point{sc.x, sc.y} * pt};
+  return Point{sc.x, sc.y} * pt;
 }
 
 Point operator*(const Scale& sc, const Point& pt){
-  return {Point{sc.x, sc.y} * pt};
+  return Point{sc.x, sc.y} * pt;
 }
 
 Scale inverse(const Scale& sc){
   if (sc.x == 0 || sc.y == 0){
     return sc;
   }
-  return Scale(1.0 / sc.x, 1.0 / sc.y);
+  return {1.0 / sc.x, 1.0 / sc.y};
 }
 
 } // namespace
