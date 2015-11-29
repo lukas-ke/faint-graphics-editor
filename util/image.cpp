@@ -293,7 +293,7 @@ void Image::SetHotSpot(const HotSpot& hotSpot){
 }
 
 IntRect image_rect(const Image& image){
-  return IntRect(IntPoint(0,0), image.GetSize());
+  return {IntPoint(0,0), image.GetSize()};
 }
 
 } // namespace faint

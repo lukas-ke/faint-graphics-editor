@@ -61,7 +61,7 @@ Rect bounding_rect(const objects_t& objects){
     minPt = min_coords(minPt, min_coords(t.P0(), t.P1(), t.P2(), t.P3()));
     maxPt = max_coords(maxPt, max_coords(t.P0(), t.P1(), t.P2(), t.P3()));
   }
-  return Rect(minPt, maxPt);
+  return {minPt, maxPt};
 }
 
 Rect bounding_rect(const Tri& tri, const Settings& s){

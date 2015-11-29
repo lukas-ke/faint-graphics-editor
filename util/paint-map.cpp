@@ -276,14 +276,14 @@ void PaintMap::Append(const Paint& paint){
   assert(!colors.empty()); // Must contain at least one row (possibly empty)
   paint_vec_t& row = get_shortest_row(colors);
   row.push_back(paint);
-  return;
 }
 
 void PaintMap::Copy(const OldPos& oldPos, const NewPos& newPos){
   return copy_paint(m_impl->colors, oldPos.Get(), newPos.Get(), false);
 }
 
-Bitmap PaintMap::CreateBitmap(const CellSize& size, const CellSpacing& spacing,
+Bitmap PaintMap::CreateBitmap(const CellSize& size,
+  const CellSpacing& spacing,
   const Color& bgColor) const
 {
   return palette_bitmap(m_impl->colors, size, spacing, bgColor);
@@ -299,8 +299,8 @@ const Paint& PaintMap::Get(const CellPos& pos) const{
 }
 
 IntSize PaintMap::GetSize() const{
-  return IntSize(get_max_column(m_impl->colors),
-    get_max_row(m_impl->colors));
+  return {get_max_column(m_impl->colors),
+    get_max_row(m_impl->colors)};
 }
 
 bool PaintMap::Has(const CellPos& pos) const{
@@ -329,8 +329,8 @@ PaintMap& PaintMap::operator=(const PaintMap& other){
 void add_cell_border(Bitmap& bmp, const CellPos& pos, const CellSize& cellSize,
   const CellSpacing& cellSpacing, const Color& c)
 {
-  IntPoint offset(point_from_size(cellSize + cellSpacing));
-  IntPoint topLeft(pos * offset);
+  const IntPoint offset(point_from_size(cellSize + cellSpacing));
+  const IntPoint topLeft(pos * offset);
   draw_rect(bmp,
     {topLeft, cellSize},
     {c, 2, LineStyle::SOLID});
@@ -339,10 +339,9 @@ void add_cell_border(Bitmap& bmp, const CellPos& pos, const CellSize& cellSize,
 CellPos view_to_cell_pos(const IntPoint& viewPos, const CellSize& cellSize,
   const CellSpacing& cellSpacing)
 {
-  IntPoint offset(point_from_size(cellSize + cellSpacing));
+  const IntPoint offset(point_from_size(cellSize + cellSpacing));
   assert(offset.x > 0 && offset.y > 0);
-  return CellPos(viewPos /
-    point_from_size(cellSize + cellSpacing));
+  return CellPos{viewPos / point_from_size(cellSize + cellSpacing)};
 }
 
 } // namespace faint

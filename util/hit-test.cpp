@@ -89,7 +89,7 @@ static std::pair<Object*, Hit> object_at(const Point& p,
       }
     }
   }
-  return std::make_pair(consider, considerType);
+  return {consider, considerType};
 }
 
 template<typename T>

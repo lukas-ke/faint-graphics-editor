@@ -29,13 +29,14 @@ ColorChoice get_color_choice(const Settings& preferred,
   const Settings& fallback,
   bool indicatePreferred)
 {
-  return ColorChoice(preferred.Has(ts_Fg) ?
+  return {
+    preferred.Has(ts_Fg) ?
     std::make_pair(preferred.Get(ts_Fg), indicatePreferred) :
     std::make_pair(fallback.Get(ts_Fg), false),
 
     preferred.Has(ts_Bg) ?
     std::make_pair(preferred.Get(ts_Bg), indicatePreferred) :
-    std::make_pair(fallback.Get(ts_Bg), false));
+    std::make_pair(fallback.Get(ts_Bg), false)};
 }
 
 } // namespace

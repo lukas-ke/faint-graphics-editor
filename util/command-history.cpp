@@ -96,16 +96,16 @@ void CommandHistory::CloseUndoBundle(const utf8_string& name){
   m_openBundle = false;
 }
 
-  Optional<CommandId> CommandHistory::GetLastModifying() const{
+Optional<CommandId> CommandHistory::GetLastModifying() const{
   for (const OldCommand& item : reversed(m_undoList)){
     if (item.type == UndoType::NORMAL_COMMAND){
       Command* cmd = item.command;
       if (cmd->ModifiesState()){
-        return option(cmd->GetId());
+        return {cmd->GetId()};
       }
     }
   }
-  return no_option();
+  return {};
 }
 
 bool CommandHistory::Bundling() const{
@@ -269,12 +269,14 @@ void CommandHistory::Redo(TargetableCommandContext& cmdContext,
   if (m_redoList.empty()){
     return;
   }
+
   OldCommand redone = m_redoList.front();
   m_redoList.pop_front();
 
   if (redone.type != UndoType::NORMAL_COMMAND){
     // Redo the entire command list
     m_undoList.push_back(redone);
+
     do{
       redone = m_redoList.front();
       m_redoList.pop_front();
@@ -284,6 +286,7 @@ void CommandHistory::Redo(TargetableCommandContext& cmdContext,
           images, cmdContext, geo);
       }
     } while (redone.type == UndoType::NORMAL_COMMAND);
+
     m_undoList.push_back(redone);
   }
   else{
@@ -358,6 +361,7 @@ bool CommandHistory::ApplyDWIM(ImageList& images,
   if (m_undoList.empty() || !m_undoList.back().command->HasDWIM()){
     return false;
   }
+
   Command* dwim = m_undoList.back().command->GetDWIM();
   Undo(ctx, geo);
   Apply(dwim, clear_redo(true), &images.Active(), images, ctx, geo);

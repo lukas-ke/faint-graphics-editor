@@ -331,7 +331,7 @@ bool Mod::None() const{
 }
 
 KeyPress operator+(const Mod& mod, const Key& key){
-  return KeyPress(mod, key);
+  return {mod, key};
 }
 
 } // namespace

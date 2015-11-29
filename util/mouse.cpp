@@ -31,8 +31,8 @@ IntPoint image_to_view(const IntPoint& p, const CanvasGeo& g){
 }
 
 IntRect image_to_view(const IntRect& r, const CanvasGeo& g){
-  return IntRect(image_to_view(r.TopLeft(), g),
-    image_to_view(r.BottomRight(), g));
+  return {image_to_view(r.TopLeft(), g),
+    image_to_view(r.BottomRight(), g)};
 }
 
 }} // namespace

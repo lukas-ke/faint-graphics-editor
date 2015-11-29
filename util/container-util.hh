@@ -32,7 +32,7 @@ const T& get_item(const std::vector<T>& v, int pos){
 
 template<typename T>
 std::pair<T,T> last_two(const std::vector<T>& v){
-  return std::make_pair(get_item(v,-2), get_item(v, -1));
+  return {get_item(v,-2), get_item(v, -1)};
 }
 
 } // namespace

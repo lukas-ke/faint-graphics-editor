@@ -66,6 +66,6 @@ using CommandId = FaintID<109>;
 // 110 reserved
 using FrameId = FaintID<111>;
 
-}
+} // namespace
 
 #endif

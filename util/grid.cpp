@@ -20,7 +20,7 @@
 namespace faint{
 
 Color default_grid_color(){
-  return Color(100,100,255,150);
+  return {100,100,255,150};
 }
 
 Grid::Grid(const enabled_t enabled,
