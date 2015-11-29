@@ -40,39 +40,39 @@ wxFileName absoluted(const wxFileName& filename){
 }
 
 wxColour to_wx(const ColRGB& c){
-  return wxColour(c.r, c.g, c.b);
+  return {c.r, c.g, c.b};
 }
 
 wxColour to_wx(const Color& c){
-  return wxColour(c.r, c.g, c.b, c.a);
+  return {c.r, c.g, c.b, c.a};
 }
 
 wxRect to_wx(const IntRect& r){
-  return wxRect(r.x, r.y, r.w, r.h);
+  return {r.x, r.y, r.w, r.h};
 }
 
 wxPoint to_wx(const IntPoint& p){
-  return wxPoint(p.x, p.y);
+  return {p.x, p.y};
 }
 
 wxSize to_wx(const IntSize& sz){
-  return wxSize(sz.w, sz.h);
+  return {sz.w, sz.h};
 }
 
 IntPoint to_faint(const wxPoint& p){
-  return IntPoint(p.x, p.y);
+  return {p.x, p.y};
 }
 
 Color to_faint(const wxColour& c){
-  return Color(c.Red(), c.Green(), c.Blue(), c.Alpha());
+  return {c.Red(), c.Green(), c.Blue(), c.Alpha()};
 }
 
 IntRect to_faint(const wxRect& r){
-  return IntRect(IntPoint(r.x, r.y), IntSize(r.width, r.height));
+  return {IntPoint(r.x, r.y), IntSize(r.width, r.height)};
 }
 
 IntSize to_faint(const wxSize& sz){
-  return IntSize(sz.GetWidth(), sz.GetHeight());
+  return {sz.GetWidth(), sz.GetHeight()};
 }
 
 static ToolModifiers get_key_tool_modifiers(){
@@ -137,8 +137,7 @@ wxImage to_wx_image(const Bitmap& bmp){
 
   // wxWidgets takes ownership of rgbData and aData, and uses free()
   // to release the memory.
-  wxImage result(bmp.m_w, bmp.m_h, rgbData, aData);
-  return result;
+  return wxImage{bmp.m_w, bmp.m_h, rgbData, aData};
 }
 
 using AlphaPixelData = wxPixelData<wxBitmap, wxAlphaPixelFormat>;
