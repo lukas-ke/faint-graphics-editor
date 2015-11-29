@@ -39,7 +39,7 @@ IntRect bounding_rect(const std::vector<IntPoint>& pts){
     max_x = std::max(max_x, pt.x);
     max_y = std::max(max_y, pt.y);
   }
-  return IntRect(IntPoint(min_x, min_y), IntPoint(max_x, max_y));
+  return {IntPoint(min_x, min_y), IntPoint(max_x, max_y)};
 }
 
 Rect bounding_rect(const std::vector<Point>& pts){
@@ -56,7 +56,7 @@ Rect bounding_rect(const std::vector<Point>& pts){
     max_x = std::max(max_x, pt.x);
     max_y = std::max(max_y, pt.y);
   }
-  return Rect(Point(min_x, min_y), Point(max_x, max_y));
+  return {Point(min_x, min_y), Point(max_x, max_y)};
 }
 
 std::array<Point,4> corners(const Rect& r){
@@ -91,10 +91,10 @@ std::vector<IntPoint> as_polygon(const IntRect& r){
 }
 
 std::vector<PathPt> ellipse_as_path(const Tri& tri0){
-  const coord skew = tri0.Skew();
-  Tri tri(skewed(tri0, -skew));
-  const Angle angle = tri.GetAngle();
-  tri = rotated(tri, -angle, tri.P0());
+  const auto skew = tri0.Skew();
+  const auto noSkewTri(skewed(tri0, -skew));
+  const auto angle = noSkewTri.GetAngle();
+  const auto tri = rotated(noSkewTri, -angle, noSkewTri.P0());
 
   const coord x = tri.P0().x;
   const coord y = tri.P0().y;
