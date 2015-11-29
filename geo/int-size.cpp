@@ -34,27 +34,27 @@ int area(const IntSize& sz){
 }
 
 IntSize min_coords(const IntSize& lhs, const IntSize& rhs){
-  return IntSize(std::min(lhs.w, rhs.w), std::min(lhs.h, rhs.h));
+  return {std::min(lhs.w, rhs.w), std::min(lhs.h, rhs.h)};
 }
 
 IntSize max_coords(const IntSize& lhs, const IntSize& rhs){
-  return IntSize(std::max(lhs.w, rhs.w), std::max(lhs.h, rhs.h));
+  return {std::max(lhs.w, rhs.w), std::max(lhs.h, rhs.h)};
 }
 
 IntSize operator+(const IntSize& lhs, const IntSize& rhs){
-  return IntSize(lhs.w + rhs.w, lhs.h + rhs.h);
+  return {lhs.w + rhs.w, lhs.h + rhs.h};
 }
 
 IntSize operator-(const IntSize& lhs, const IntSize& rhs){
-  return IntSize(lhs.w - rhs.w, lhs.h - rhs.h);
+  return {lhs.w - rhs.w, lhs.h - rhs.h};
 }
 
 IntSize operator*(const IntSize& lhs, const IntSize& rhs){
-  return IntSize(lhs.w * rhs.w, lhs.h * rhs.h);
+  return {lhs.w * rhs.w, lhs.h * rhs.h};
 }
 
 IntSize operator*(const IntSize& size, int scalar){
-  return IntSize(scalar * size.w, scalar * size.h);
+  return {scalar * size.w, scalar * size.h};
 }
 
 IntSize operator*(int scalar, const IntSize& size){
@@ -62,15 +62,15 @@ IntSize operator*(int scalar, const IntSize& size){
 }
 
 IntSize operator/(const IntSize& size, int scalar){
-  return IntSize(size.w / scalar, size.h / scalar);
+  return {size.w / scalar, size.h / scalar};
 }
 
 IntSize transposed(const IntSize& sz){
-  return IntSize(sz.h, sz.w);
+  return {sz.h, sz.w};
 }
 
 Size operator*(const IntSize& size, coord scale){
-  return Size(size.w * scale, size.h * scale);
+  return {size.w * scale, size.h * scale};
 }
 
 Size operator*(coord scale, const IntSize& size){
@@ -78,7 +78,7 @@ Size operator*(coord scale, const IntSize& size){
 }
 
 Size operator/(const IntSize& size, coord scale){
-  return Size(size.w / scale, size.h / scale);
+  return {size.w / scale, size.h / scale};
 }
 
 bool area_less(const IntSize& size, int area){
