@@ -44,6 +44,10 @@ class IntSize;
 Size operator*(const IntSize&, const Scale&);
 Size operator*(const Scale&, const IntSize&);
 
+class Point;
+Point operator*(const Point&, const Scale&);
+Point operator*(const Scale&, const Point&);
+
 Scale inverse(const Scale&);
 
 } // namespace

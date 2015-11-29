@@ -141,10 +141,7 @@ Point rotate_point(const Point& pt, const Angle& angle, const Point& origin){
 }
 
 Point scale_point(const Point& pt, const Scale& scale, const Point& origin){
-  Point p2 = pt - origin;
-  p2.x *= scale.x;
-  p2.y *= scale.y;
-  return p2 + origin;
+  return (pt - origin) * scale + origin;
 }
 
 IntSize rounded(const Size& sz){
