@@ -43,23 +43,23 @@ Angle angle360_ccw(const LineSegment& l){
 }
 
 IntRect bounding_rect(const IntPoint& p0, const IntPoint& p1){
-  return IntRect(p0, p1);
+  return {p0, p1};
 }
 
 IntRect bounding_rect(const IntPoint& p0, const IntPoint& p1, const IntPoint& p2){
-  return IntRect(min_coords(p0, p1, p2), max_coords(p0, p1, p2));
+  return {min_coords(p0, p1, p2), max_coords(p0, p1, p2)};
 }
 
 IntRect bounding_rect(const IntRect& r1, const IntRect& r2) {
   const auto tl = min_coords(r1.TopLeft(), r2.TopLeft());
   const auto br = max_coords(r1.BottomRight(), r2.BottomRight());
-  return IntRect(tl, br);
+  return {tl, br};
 }
 
 Rect bounding_rect(const Rect& r1, const Rect& r2){
   const auto tl = min_coords(r1.TopLeft(), r2.TopLeft());
   const auto br = max_coords(r1.BottomRight(), r2.BottomRight());
-  return Rect(tl, br);
+  return {tl, br};
 }
 
 Rect bounding_rect(const LineSegment& line){
@@ -67,15 +67,15 @@ Rect bounding_rect(const LineSegment& line){
 }
 
 IntRect bounding_rect(const IntLineSegment& line){
-  return IntRect(line.p0, line.p1);
+  return {line.p0, line.p1};
 }
 
 Rect bounding_rect(const Point& p0, const Point& p1){
-  return Rect(p0, p1);
+  return {p0, p1};
 }
 
 Rect bounding_rect(const Point& p0, const Point& p1, const Point& p2){
-  return Rect(min_coords(p0, p1, p2), max_coords(p0,p1, p2));
+  return {min_coords(p0, p1, p2), max_coords(p0,p1, p2)};
 }
 
 coord distance(const Point& p0, const Point& p1){
@@ -104,6 +104,7 @@ std::vector<Point> mid_points(const std::vector<Point>& pts){
   }
 
   std::vector<Point> midPts;
+  midPts.reserve(pts.size() - 1);
   for (size_t i = 1; i != pts.size(); i++){
     midPts.push_back(mid_point(pts[i-1], pts[i]));
   }

@@ -34,9 +34,9 @@ public:
   {}
 
   IntPoint operator*() const{
-    int xd = m_num % m_w;
-    return IntPoint(m_p0.x + xd,
-      m_p0.y + (m_num / m_w));
+    return {
+      m_p0.x + m_num % m_w,
+      m_p0.y + (m_num / m_w)};
   }
 
   void operator++(){

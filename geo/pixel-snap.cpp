@@ -30,15 +30,17 @@ Point pixel_snap_xy_middle(const Point& p){
 }
 
 Tri pixel_snap(const Tri& t, coord lineWidth){ // Fixme: Use lineWidth
-  return Tri(pixel_snap_xy(t.P0(), lineWidth),
+  return {
+    pixel_snap_xy(t.P0(), lineWidth),
     pixel_snap_xy(t.P1(), lineWidth),
-    pixel_snap_xy(t.P2(), lineWidth));
+    pixel_snap_xy(t.P2(), lineWidth)};
 }
 
 Tri pixel_snap_middle(const Tri& t){
-  return Tri(pixel_snap_xy_middle(t.P0()),
+  return {
+    pixel_snap_xy_middle(t.P0()),
     pixel_snap_xy_middle(t.P1()),
-    pixel_snap_xy_middle(t.P2()));
+    pixel_snap_xy_middle(t.P2())};
 }
 
 static MoveTo pixel_snap(const MoveTo& m, coord lineWidth){ // Fixme: Use lineWidth

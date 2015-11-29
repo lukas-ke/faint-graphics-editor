@@ -94,11 +94,11 @@ public:
   }
 
   static PathPt MoveTo(const Point& p){
-    return PathPt(Type::MoveTo, p);
+    return {Type::MoveTo, p};
   }
 
   static PathPt LineTo(const Point& p){
-    return PathPt(Type::LineTo, p);
+    return {Type::LineTo, p};
   }
 
   PathPt(const faint::ArcTo& arcTo)
@@ -140,7 +140,7 @@ public:
   {}
 
   static PathPt CubicBezierTo(const Point& p, const Point& c, const Point& d){
-    return PathPt(Type::CubicBezier, p, c, d);
+    return {Type::CubicBezier, p, c, d};
   }
 
   static PathPt Arc(const Radii& r,

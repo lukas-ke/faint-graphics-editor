@@ -25,7 +25,7 @@ namespace faint{
 
 Tri tri_from_points(const std::vector<PathPt>& points){
   if (points.empty()){
-    return Tri(Point(0,0), Angle::Zero(), Size(0,0));
+    return {Point(0,0), Angle::Zero(), Size(0,0)};
   }
   Point topLeft = points[0].p;
   Point bottomRight = topLeft;
@@ -45,14 +45,15 @@ Tri tri_from_points(const std::vector<PathPt>& points){
       });
   }
 
-  return Tri(topLeft,
-    Point(bottomRight.x, topLeft.y),
-    Point(topLeft.x, bottomRight.y));
+  return {
+    topLeft,
+    {bottomRight.x, topLeft.y},
+    {topLeft.x, bottomRight.y}};
 }
 
 Tri tri_from_points(const std::vector<Point>& points){
   if (points.empty()){
-    return Tri(Point(0,0), Angle::Zero(), Size(0,0));
+    return {Point(0,0), Angle::Zero(), Size(0,0)};
   }
   const Point& p0 = points[0];
   coord x_min = p0.x;
@@ -67,7 +68,7 @@ Tri tri_from_points(const std::vector<Point>& points){
     y_min = std::min(y_min, pt.y);
     y_max = std::max(y_max, pt.y);
   }
-  return Tri(Point(x_min, y_min), Point(x_max, y_min), Point(x_min, y_max));
+  return {Point(x_min, y_min), Point(x_max, y_min), Point(x_min, y_max)};
 }
 
 Points::Points()
@@ -183,6 +184,7 @@ std::vector<PathPt> Points::GetPoints() const{
 
 std::vector<Point> Points::GetPointsDumb() const{
   std::vector<Point> v;
+  v.reserve(m_points.size());
   for (size_t i = 0; i != m_points.size(); i++){
     const PathPt& pt(m_points[i]);
     v.push_back(pt.p);
@@ -193,6 +195,7 @@ std::vector<Point> Points::GetPointsDumb() const{
 std::vector<Point> Points::GetPointsDumb(const Tri& tri) const{
   std::vector<PathPt> pts(GetPoints(tri));
   std::vector<Point> v;
+  v.reserve(m_points.size());
   for (size_t i = 0; i != m_points.size(); i++){
     PathPt& pt(pts[i]);
     v.push_back(pt.p);
@@ -272,6 +275,7 @@ Points points_from_coords(const std::vector<coord>& coords){
 std::vector<PathPt> to_line_path(const std::vector<Point>& points){
   assert(points.size() > 1);
   std::vector<PathPt> path;
+  path.reserve(points.size());
   path.push_back(PathPt::MoveTo(points.front()));
   for (const Point& p : but_first(points)){
     path.push_back(PathPt::LineTo(p));

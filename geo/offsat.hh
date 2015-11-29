@@ -73,19 +73,19 @@ private:
 // Initialize an Offsat.
 template<typename T>
 Offsat<T> offsat(const T& obj, const IntPoint& offset){
-  return Offsat<T>(obj, offset);
+  return {obj, offset};
 }
 
 // Overload taking two coordinates instead of a point, mostly used
 // in unit tests, as macros can't handle initializer list syntax.
 template<typename T>
 Offsat<T> offsat(const T& obj, int x, int y){
-  return Offsat<T>(obj, {x,y});
+  return {obj, {x,y}};
 }
 
 template<typename T>
 Offsat<T> at_top_left(const T& obj){
-  return Offsat<T>(obj, {0,0});
+  return {obj, {0,0}};
 }
 
 } // namespace

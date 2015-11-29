@@ -92,10 +92,10 @@ Optional<Point> intersection(const Line& l1, const Line& l2){
 }
 
 Line unbounded(const LineSegment& seg){
-  coord a = seg.p1.y - seg.p0.y;
-  coord b = seg.p0.x - seg.p1.x;
-  coord c = a * seg.p1.x + b * seg.p1.y;
-  return Line(a,b,c);
+  const coord a = seg.p1.y - seg.p0.y;
+  const coord b = seg.p0.x - seg.p1.x;
+  const coord c = a * seg.p1.x + b * seg.p1.y;
+  return {a,b,c};
 }
 
 static Line perpendicular(const Point& p, const Line& l){
@@ -104,29 +104,29 @@ static Line perpendicular(const Point& p, const Line& l){
 
   coord k = -l.b/l.a;
   coord m = p.y + k * p.x;
-  return Line(-k, -1, -m);
+  return {-k, -1, -m};
 }
 
 Point projection(const Point& p, const Line& l){
   if (l.a == 0){
-    return Point(p.x, l.c / l.b);
+    return {p.x, l.c / l.b};
   }
   else if (l.b == 0){
-    return Point(l.c / l.a, p.y);
+    return {l.c / l.a, p.y};
   }
 
-  Line l2 = perpendicular(p, l);
+  const Line l2 = perpendicular(p, l);
   return intersection(l, l2).Get();
 }
 
 LineSegment reversed(const LineSegment& l){
-  return LineSegment(l.p1, l.p0);
+  return {l.p1, l.p0};
 }
 
 Side side(const Point& p, const LineSegment& l){
   const Point& A = l.p0;
   const Point& C = l.p1;
-  coord value = (p.x - A.x) * (C.y - A.y) - (p.y - A.y) * (C.x - A.x);
+  const coord value = (p.x - A.x) * (C.y - A.y) - (p.y - A.y) * (C.x - A.x);
   if (value == 0){
     return Side::ON;
   }
@@ -139,7 +139,7 @@ Side side(const Point& p, const LineSegment& l){
 }
 
 LineSegment translated(const LineSegment& l, const Point& tr){
-  return LineSegment(l.p0 + tr, l.p1 + tr);
+  return {l.p0 + tr, l.p1 + tr};
 }
 
 } // namespace

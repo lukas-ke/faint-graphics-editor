@@ -20,8 +20,11 @@ namespace faint{
 bool corner_handle(Handle handle){
   // The first four handles are at the corners. The following are edge
   // handles, i.e. for resizing up/down, left/right
-  return handle == Handle::P0 || handle == Handle::P1 ||
-    handle == Handle::P2 || handle == Handle::P3;
+  return
+    handle == Handle::P0 ||
+    handle == Handle::P1 ||
+    handle == Handle::P2 ||
+    handle == Handle::P3;
 }
 
-}
+} // namespace

@@ -26,35 +26,36 @@ Padding::Padding(int left, int right, int top, int bottom) :
 {}
 
 Padding Padding::All(int p){
-  return Padding(p, p, p, p);
+  return {p, p, p, p};
 }
 
 Padding Padding::Divide(int p){
-  int h = p / 2;
-  return Padding(h, h, h, h);
+  const int h = p / 2;
+  return {h, h, h, h};
 }
 
 Padding Padding::Right(int p){
-  return Padding(0,p,0,0);
+  return {0,p,0,0};
 }
 
 Padding Padding::Bottom(int p){
-  return Padding(0,0,0,p);
+  return {0,0,0,p};
 }
 
 Padding Padding::None(){
-  return Padding(0,0,0,0);
+  return {0,0,0,0};
 }
 
 IntSize Padding::GetSize() const{
-  return IntSize(left + right, bottom + top);
+  return {left + right, bottom + top};
 }
 
 Padding Padding::operator+(const Padding& other) const{
-  return Padding(left + other.left,
+  return {
+    left + other.left,
     right + other.right,
     top + other.top,
-    bottom + other.bottom);
+    bottom + other.bottom};
 }
 
 } // namespace
