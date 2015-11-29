@@ -39,11 +39,11 @@ IntRect::IntRect(const IntPoint& pt, const IntSize& sz)
 {}
 
 IntRect IntRect::EmptyRect(){
-  return IntRect();
+  return {};
 }
 
 IntSize IntRect::GetSize() const{
-  return IntSize(w, h);
+  return {w, h};
 }
 
 int IntRect::Left() const{
@@ -63,39 +63,40 @@ int IntRect::Bottom() const{
 }
 
 IntPoint IntRect::TopLeft() const{
-  return IntPoint(x,y);
+  return {x,y};
 }
 
 IntPoint IntRect::TopRight() const{
-  return IntPoint(Right(),y);
+  return {Right(),y};
 }
 
 IntPoint IntRect::BottomLeft() const{
-  return IntPoint(x, Bottom());
+  return {x, Bottom()};
 }
 
 IntPoint IntRect::BottomRight() const{
-  return IntPoint(Right(), Bottom());
+  return {Right(), Bottom()};
 }
 
 IntPoint IntRect::MidTop() const{
-  return IntPoint(x + w / 2, Top());
+  return {x + w / 2, Top()};
 }
 
 IntPoint IntRect::MidBottom() const{
-  return IntPoint(x + w / 2, Bottom());
+  return {x + w / 2, Bottom()};
 }
 
 IntPoint IntRect::MidLeft() const{
-  return IntPoint(Left(), y + h / 2);
+  return {Left(), y + h / 2};
 }
 
 IntPoint IntRect::MidRight() const{
-  return IntPoint(Right(), y + h / 2);
+  return {Right(), y + h / 2};
 }
 
 bool IntRect::Contains(const IntPoint& p) const{
-  return p.x >= x && p.y >= y &&
+  return
+    p.x >= x && p.y >= y &&
     p.x <= Right() && p.y <= Bottom();
 }
 
@@ -113,8 +114,8 @@ bool empty(const IntRect& r){
 }
 
 IntRect inflated(const IntRect& r, int dx, int dy){
-  return IntRect(IntPoint(r.x - dx, r.y - dy),
-    IntSize(r.w + 2 * dx, r.h + 2 * dy));
+  return {IntPoint(r.x - dx, r.y - dy),
+    IntSize(r.w + 2 * dx, r.h + 2 * dy)};
 }
 
 IntRect inflated(const IntRect& r, int d){
@@ -122,8 +123,8 @@ IntRect inflated(const IntRect& r, int d){
 }
 
 IntRect deflated(const IntRect& r, int d){
-  return IntRect(IntPoint(r.x + d, r.y + d),
-    IntSize(r.w - 2 * d, r.h - 2 * d));
+  return {IntPoint(r.x + d, r.y + d),
+    IntSize(r.w - 2 * d, r.h - 2 * d)};
 }
 
 IntRect intersection(const IntRect& r1, const IntRect& r2) {
@@ -143,7 +144,7 @@ IntRect smallest(const IntRect& r1, const IntRect& r2){
 }
 
 IntRect translated(const IntRect& r, const IntPoint& p){
-  return IntRect(IntPoint(r.x + p.x, r.y + p.y), IntSize(r.w, r.h));
+  return {IntPoint(r.x + p.x, r.y + p.y), IntSize(r.w, r.h)};
 }
 
 bool operator==(const IntRect& r1, const IntRect& r2){
