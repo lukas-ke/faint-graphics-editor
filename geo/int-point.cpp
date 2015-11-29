@@ -39,7 +39,7 @@ bool IntPoint::operator!=(const IntPoint& other) const{
 }
 
 IntPoint IntPoint::operator-() const {
-  return IntPoint(-x, -y);
+  return {-x, -y};
 }
 
 bool IntPoint::operator<(const IntPoint& other) const{
@@ -51,62 +51,62 @@ bool fully_positive(const IntPoint& p){
 }
 
 IntPoint max_coords(const IntPoint& a, const IntPoint& b){
-  return IntPoint(std::max(a.x, b.x), std::max(a.y, b.y));
+  return {std::max(a.x, b.x), std::max(a.y, b.y)};
 }
 
 IntPoint max_coords(const IntPoint& a, const IntPoint& b, const IntPoint& c){
-  return IntPoint(std::max({a.x, b.x, c.x}),
-    std::max({a.y, b.y, c.y}));
+  return {std::max({a.x, b.x, c.x}),
+    std::max({a.y, b.y, c.y})};
 }
 
 IntPoint min_coords(const IntPoint& a, const IntPoint& b){
-  return IntPoint(std::min(a.x, b.x), std::min(a.y, b.y));
+  return {std::min(a.x, b.x), std::min(a.y, b.y)};
 }
 
 IntPoint min_coords(const IntPoint& a, const IntPoint& b, const IntPoint& c){
-  return IntPoint(std::min({a.x, b.x, c.x}), std::min({a.y, b.y, c.y}));
+  return {std::min({a.x, b.x, c.x}), std::min({a.y, b.y, c.y})};
 }
 
 IntPoint operator-(const IntPoint& lhs, const IntPoint& rhs){
-  return IntPoint(lhs.x - rhs.x, lhs.y - rhs.y);
+  return {lhs.x - rhs.x, lhs.y - rhs.y};
 }
 
 IntPoint operator-(const IntPoint& p, int delta){
-  return IntPoint(p.x - delta, p.y - delta);
+  return {p.x - delta, p.y - delta};
 }
 
 IntPoint operator+(const IntPoint& p, int delta){
-  return IntPoint(p.x + delta, p.y + delta);
+  return {p.x + delta, p.y + delta};
 }
 
 IntPoint operator+(const IntPoint& lhs, const IntPoint& rhs){
-  return IntPoint(lhs.x + rhs.x, lhs.y + rhs.y);
+  return {lhs.x + rhs.x, lhs.y + rhs.y};
 }
 
 IntPoint operator*(const IntPoint& lhs, int rhs){
-  return IntPoint(lhs.x * rhs, lhs.y * rhs);
+  return {lhs.x * rhs, lhs.y * rhs};
 }
 
 IntPoint operator*(int lhs, const IntPoint& rhs){
-  return IntPoint(lhs * rhs.x, lhs * rhs.y);
+  return {lhs * rhs.x, lhs * rhs.y};
 }
 
 IntPoint operator*(const IntPoint& lhs, const IntPoint& rhs){
-  return IntPoint(lhs.x * rhs.x, lhs.y * rhs.y);
+  return {lhs.x * rhs.x, lhs.y * rhs.y};
 }
 
 IntPoint operator/(const IntPoint& lhs, const IntPoint& rhs){
   assert(rhs.x != 0);
   assert(rhs.y != 0);
-  return IntPoint(lhs.x / rhs.x, lhs.y / rhs.y);
+  return {lhs.x / rhs.x, lhs.y / rhs.y};
 }
 
 IntPoint operator/(const IntPoint& pt, int sc){
-  return IntPoint(pt.x / sc, pt.y / sc);
+  return {pt.x / sc, pt.y / sc};
 }
 
 Point operator*(const IntPoint& p, coord scale){
-  return Point(p.x * scale, p.y * scale);
+  return {p.x * scale, p.y * scale};
 }
 
 Point operator*(coord scale, const IntPoint& p){
@@ -114,7 +114,7 @@ Point operator*(coord scale, const IntPoint& p){
 }
 
 Point operator/(const IntPoint& pt, coord scale){
-  return Point(pt.x / scale, pt.y / scale);
+  return {pt.x / scale, pt.y / scale};
 }
 
 } // namespace

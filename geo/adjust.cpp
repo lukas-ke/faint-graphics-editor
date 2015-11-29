@@ -39,7 +39,7 @@ Point adjust_to(const Point& o,
       coord y_mplr = sin(newAngle);
       coord x = x_mplr * length + o.x;
       coord y = y_mplr * length + o.y;
-      return Point(x, y);
+      return {x, y};
     }
   }
   return p;
@@ -106,12 +106,12 @@ Point adjust_to_default(const Point& origin,
     foundAngle = altAngle.Rad();
   }
 
-  auto newAngle = -foundAngle;
-  coord x_mplr = std::cos(newAngle);
-  coord y_mplr = std::sin(newAngle);
-  coord x = x_mplr * length + origin.x;
-  coord y = y_mplr * length + origin.y;
-  return Point(x, y);
+  const auto newAngle = -foundAngle;
+  const coord x_mplr = std::cos(newAngle);
+  const coord y_mplr = std::sin(newAngle);
+  const coord x = x_mplr * length + origin.x;
+  const coord y = y_mplr * length + origin.y;
+  return {x, y};
 }
 
 ConstrainDir constrain_pos(IntPoint& p, const IntPoint& origin){

@@ -28,7 +28,7 @@ AngleSpan::AngleSpan()
 {}
 
 AngleSpan AngleSpan::Rad(coord start, coord stop){
-  return AngleSpan(Angle::Rad(start), Angle::Rad(stop));
+  return {Angle::Rad(start), Angle::Rad(stop)};
 }
 
 AngleSpan::AngleSpan(const Angle& start, const Angle& stop)
@@ -87,7 +87,7 @@ Point ArcEndPoints::operator[](size_t i) const{
 }
 
 std::vector<Point> ArcEndPoints::GetVector() const{
-  return { p0, p1 };
+  return {p0, p1};
 }
 
 std::vector<PathPt> arc_as_path(const Tri& tri, const AngleSpan& angles,

@@ -24,7 +24,7 @@ public:
   constexpr IntPoint() : x(0), y(0){}
   constexpr IntPoint(int x, int y) : x(x), y(y){}
 
-  static constexpr IntPoint Both(int v){ return IntPoint(v, v); }
+  static constexpr IntPoint Both(int v){ return {v, v}; }
   void operator+=(const IntPoint&);
   void operator-=(const IntPoint&);
   bool operator==(const IntPoint&) const;

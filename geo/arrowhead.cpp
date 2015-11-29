@@ -28,9 +28,9 @@ Arrowhead::Arrowhead(const Point& p0, const Point& p1, const Point& p2)
 {}
 
 Rect Arrowhead::BoundingBox() const{
-  Point p0(min_coords(m_p0, m_p1, m_p2));
-  Point p1(max_coords(m_p0, m_p1, m_p2));
-  return Rect(p0, p1);
+  const Point p0{min_coords(m_p0, m_p1, m_p2)};
+  const Point p1{max_coords(m_p0, m_p1, m_p2)};
+  return {p0, p1};
 }
 
 Point Arrowhead::LineAnchor() const{
@@ -50,19 +50,22 @@ Point Arrowhead::P2() const{
 }
 
 Arrowhead get_arrowhead(const LineSegment& l, coord lineWidth){
-  Angle angle = line_angle_cw(reversed(l));
-  Angle orth = angle + pi / 2.0;
-  coord ax0 = cos(orth) * 9 * (lineWidth / 3.0);
-  coord ay0 = sin(orth) * 9 * (lineWidth / 3.0);
+  const Angle angle = line_angle_cw(reversed(l));
+  const Angle orth = angle + pi / 2.0;
+  const coord ax0 = cos(orth) * 9 * (lineWidth / 3.0);
+  const coord ay0 = sin(orth) * 9 * (lineWidth / 3.0);
 
-  coord ax1 = cos(angle) * 15 * (lineWidth / 2.0);
-  coord ay1 = sin(angle) * 15 * (lineWidth / 2.0);
-  coord x1(l.p1.x);
-  coord y1(l.p1.y);
-  Point p1(x1 + ax0 + ax1, y1 + ay0 + ay1);
-  Point p2(x1, y1);
-  Point p3(x1 - ax0 + ax1, y1 - ay0 + ay1);
-  return Arrowhead(p1, p2, p3);
+  const coord ax1 = cos(angle) * 15 * (lineWidth / 2.0);
+  const coord ay1 = sin(angle) * 15 * (lineWidth / 2.0);
+
+  const coord x1(l.p1.x);
+  const coord y1(l.p1.y);
+
+  const Point p1(x1 + ax0 + ax1, y1 + ay0 + ay1);
+  const Point p2(x1, y1);
+  const Point p3(x1 - ax0 + ax1, y1 - ay0 + ay1);
+
+  return {p1, p2, p3};
 }
 
 } // namespace

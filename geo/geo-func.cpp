@@ -29,39 +29,39 @@
 namespace faint{
 
 IntPoint delta_x(int dx){
-  return IntPoint(dx, 0);
+  return {dx, 0};
 }
 
 Point delta_x(coord dx){
-  return Point(dx, 0);
+  return {dx, 0};
 }
 
 IntPoint delta_xy(int dx, int dy){
-  return IntPoint(dx, dy);
+  return {dx, dy};
 }
 
 Point delta_xy(coord dx, coord dy){
-  return Point(dx, dy);
+  return {dx, dy};
 }
 
 IntPoint delta_y(int dy){
-  return IntPoint(0, dy);
+  return {0, dy};
 }
 
 Point delta_y(coord dy){
-  return Point(0, dy);
+  return {0, dy};
 }
 
 Point floated(const IntPoint& p){
-  return Point(static_cast<coord>(p.x), static_cast<coord>(p.y));
+  return {floated(p.x), floated(p.y)};
 }
 
 Rect floated(const IntRect& r){
-  return Rect(floated(r.TopLeft()), floated(r.GetSize()));
+  return {floated(r.TopLeft()), floated(r.GetSize())};
 }
 
 Size floated(const IntSize& sz){
-  return Size(static_cast<coord>(sz.w), static_cast<coord>(sz.h));
+  return {floated(sz.w), floated(sz.h)};
 }
 
 std::vector<IntPoint> floored(const std::vector<Point>& points){
@@ -73,52 +73,52 @@ std::vector<IntPoint> floored(const std::vector<Point>& points){
 }
 
 IntRect padded(const IntRect& r, const Padding& p){
-  return IntRect(r.TopLeft() - IntPoint(p.left, p.top),
-    r.BottomRight() + IntPoint(p.right, p.bottom));
+  return {r.TopLeft() - IntPoint(p.left, p.top),
+    r.BottomRight() + IntPoint(p.right, p.bottom)};
 }
 
 Point point_from_size(const Size& sz){
-  return Point(sz.w, sz.h);
+  return {sz.w, sz.h};
 }
 
 IntPoint point_from_size(const IntSize& sz){
-  return IntPoint(sz.w, sz.h);
+  return {sz.w, sz.h};
 }
 
 Radii radii_from_point(const Point& pt){
-  return Radii(pt.x, pt.y);
+  return {pt.x, pt.y};
 }
 
 IntRect rect_from_size(const IntSize& sz){
-  return IntRect(IntPoint(0,0), sz);
+  return {IntPoint(0,0), sz};
 }
 
 Rect rect_from_size(const Size& sz){
-  return Rect(Point(0,0), sz);
+  return {Point(0,0), sz};
 }
 
 static IntPoint ceiled(const Point& p){
-  return IntPoint(ceiled(p.x), ceiled(p.y));
+  return {ceiled(p.x), ceiled(p.y)};
 }
 
 IntPoint floored(const Point& p){
-  return IntPoint(floored(p.x), floored(p.y));
+  return {floored(p.x), floored(p.y)};
 }
 
 IntPoint rounded(const Point& p){
-  return IntPoint(rounded(p.x), rounded(p.y));
+  return {rounded(p.x), rounded(p.y)};
 }
 
 IntPoint rounded_down(const Point& p){
-  return IntPoint(rounded_down(p.x), rounded_down(p.y));
+  return {rounded_down(p.x), rounded_down(p.y)};
 }
 
 IntPoint rounded_up(const Point& p){
-  return IntPoint(rounded_up(p.x), rounded_up(p.y));
+  return {rounded_up(p.x), rounded_up(p.y)};
 }
 
 IntRect floiled(const Rect& r){
-  return IntRect(floored(r.TopLeft()), ceiled(r.BottomRight()));
+  return {floored(r.TopLeft()), ceiled(r.BottomRight())};
 }
 
 IntLineSegment floored(const LineSegment& segment){
@@ -134,9 +134,10 @@ PathPt rotate_point(const PathPt& pt, const Angle& angle, const Point& origin){
 }
 
 Point rotate_point(const Point& pt, const Angle& angle, const Point& origin){
-  Point p2 = pt - origin;
-  return Point(p2.x * cos(angle) - p2.y * sin(angle),
-    p2.x * sin(angle) + p2.y * cos(angle)) + origin;
+  const Point p2(pt - origin);
+  const Point p3(p2.x * cos(angle) - p2.y * sin(angle),
+    p2.x * sin(angle) + p2.y * cos(angle));
+  return p3 + origin;
 }
 
 Point scale_point(const Point& pt, const Scale& scale, const Point& origin){
@@ -147,7 +148,7 @@ Point scale_point(const Point& pt, const Scale& scale, const Point& origin){
 }
 
 IntSize rounded(const Size& sz){
-  return IntSize(rounded(sz.w), rounded(sz.h));
+  return {rounded(sz.w), rounded(sz.h)};
 }
 
 PathPt scale_point(const PathPt& pt, const Scale& sc, const Point& origin){
@@ -161,27 +162,27 @@ PathPt scale_point(const PathPt& pt, const Scale& sc, const Point& origin){
 }
 
 IntSize size_from_point(const IntPoint& pt){
-  return IntSize(pt.x, pt.y);
+  return {pt.x, pt.y};
 }
 
 IntSize truncated(const Size& sz){
-  return IntSize(truncated(sz.w), truncated(sz.h));
+  return {truncated(sz.w), truncated(sz.h)};
 }
 
 IntPoint truncated(const Point& pt){
-  return IntPoint(truncated(pt.x), truncated(pt.y));
+  return {truncated(pt.x), truncated(pt.y)};
 }
 
 IntRect floored(const Rect& r){
-  return IntRect(floored(r.TopLeft()), truncated(r.GetSize()));
+  return {floored(r.TopLeft()), truncated(r.GetSize())};
 }
 
 IntSize floored(const Size& sz){
-  return IntSize(floored(sz.w), floored(sz.h));
+  return {floored(sz.w), floored(sz.h)};
 }
 
 Point polar(const Radii& r, const Angle& a){
-  return Point(r.x * cos(a), r.y * sin(a));
+  return {r.x * cos(a), r.y * sin(a)};
 }
 
 IntLineSegment left_side(const IntRect& r){
@@ -217,7 +218,7 @@ std::pair<int, int> top_bottom(const IntRect& r){
 }
 
 IntRect centered(const IntSize& item, const IntSize& span){
-  return IntRect(point_from_size(span - item) / 2, span);
+  return {point_from_size(span - item) / 2, span};
 }
 
 } // namespace

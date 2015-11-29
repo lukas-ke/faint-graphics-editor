@@ -23,7 +23,7 @@ class Point{
 public:
   constexpr Point() : x(0), y(0){}
   constexpr Point(coord x, coord y) : x(x), y(y){}
-  static constexpr Point Both(coord v){ return Point(v, v); }
+  static constexpr Point Both(coord v){ return {v, v}; }
   bool operator==(const Point&) const;
   bool operator!=(const Point&) const;
   Point operator-() const;
