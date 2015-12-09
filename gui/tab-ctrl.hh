@@ -34,7 +34,7 @@ public:
     AppContext&,
     StatusInterface&);
   wxWindow* AsWindow();
-  void Close(const Index&);
+  void Close(const Index&, bool force);
   void CloseActive();
   CanvasPanel* GetActiveCanvas();
   CanvasPanel* GetCanvas(const Index&);
@@ -63,6 +63,6 @@ namespace faint{ namespace events{
 
 void on_switch_canvas(window_t, const std::function<void(CanvasId)>&);
 
-}}
+}} // namespace
 
 #endif

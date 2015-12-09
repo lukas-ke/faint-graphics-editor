@@ -60,7 +60,7 @@ public:
   virtual void AddToPalette(const Paint&) = 0;
   virtual void BeginModalDialog() = 0;
   virtual void BeginTextEntry() = 0;
-  virtual void Close(Canvas&) = 0;
+  virtual void Close(Canvas&, bool force) = 0;
   virtual void DialogOpenFile() = 0;
   virtual void DialogSaveAs(Canvas&, bool backup) = 0;
   virtual void EndModalDialog() = 0;

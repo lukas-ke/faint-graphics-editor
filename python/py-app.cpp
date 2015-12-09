@@ -118,10 +118,13 @@ static void faintapp_add_format(PyFuncContext& ctx, PyObject* args){
   ctx.app.AddFormat(f);
 }
 
-/* method: "close()\n
-Close the canvas." */
-static void faintapp_close(PyFuncContext& ctx, Canvas* canvas){
-  ctx.app.Close(*canvas);
+/* method: "close(canvas,force=False)\n
+Close the canvas. Asks whether to save changes (message dialog) if the
+canvas is modified unless force=True." */
+static void faintapp_close(PyFuncContext& ctx, Canvas* canvas,
+  const Optional<bool>& force)
+{
+  ctx.app.Close(*canvas, force.Or(false));
 }
 
 /* method: "get_checkered_transparency_indicator()->b\n

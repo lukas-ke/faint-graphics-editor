@@ -44,7 +44,7 @@ public:
   void AddToPalette(const Paint&);
   void BeginTextEntry();
   void Close(bool force);
-  void CloseDocument(Canvas&);
+  void CloseDocument(Canvas&, bool force);
   void EndTextEntry();
   bool Exists(const CanvasId&) const;
   bool Focused() const;

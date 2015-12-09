@@ -423,8 +423,8 @@ void FaintWindowContext::BeginTextEntry(){
   m_faintWindow.BeginTextEntry();
 }
 
-void FaintWindowContext::Close(Canvas& canvas){
-  m_faintWindow.CloseDocument(canvas);
+void FaintWindowContext::Close(Canvas& canvas, bool force){
+  m_faintWindow.CloseDocument(canvas, force);
 }
 
 void FaintWindowContext::DialogOpenFile(){

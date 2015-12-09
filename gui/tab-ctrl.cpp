@@ -76,51 +76,7 @@ public:
     bind_fwd(this, wxEVT_AUINOTEBOOK_PAGE_CLOSE,
       [this, &app](wxAuiNotebookEvent& event){
         event.Veto();
-        int page = event.GetSelection();
-        CanvasPanel* canvas = GetCanvasPage(Index(page));
-        canvas->Preempt(PreemptOption::ALLOW_COMMAND);
-        if (canvas->IsDirty()){
-          SaveChoice choice = ask_close_unsaved_tab(this,
-            app,
-            canvas->GetFilePath());
-          if (choice == SaveChoice::CANCEL){
-            return;
-          }
-
-          if (choice == SaveChoice::YES){
-            bool saved = m_app.Save(canvas->GetInterface());
-            if (!saved){
-              return;
-            }
-          }
-        }
-
-        if (GetPageCount() == 1){
-          // Remove annyoing flashing appearance on windows when closing
-          // last tab. This freeze must only be done when the last tab is
-          // closed, because it causes a refresh error if the tabcontrol
-          // is split (see issue 86).
-          auto freezer = freeze(this);
-          DeletePage(to_size_t(page));
-        }
-        else {
-          DeletePage(to_size_t(page));
-        }
-        if (GetPageCount() == 0){
-          // Avoid flicker in the upper-left of the tab-bar from page
-          // creation
-          auto freezer = freeze(this);
-
-          AddPage(new CanvasPanel(this,
-              ImageList(ImageProps(m_app.GetDefaultImageInfo())),
-              initially_dirty(false),
-              CreateFileDropTarget(),
-              m_art,
-              m_app,
-              m_statusInfo),
-            get_new_canvas_title(),
-            false);
-        }
+        QueryClose(Index(event.GetSelection()));
       });
 
     bind(this, wxEVT_AUINOTEBOOK_PAGE_CHANGED,
@@ -150,21 +106,62 @@ public:
       });
   }
 
-  void Close(const Index& page){
-    // Create a close event so that its handler is called to avoid
-    // duplication between calls to CloseActiveTab and built in tab
-    // close (the x-button).
-    wxAuiNotebookEvent e(wxEVT_COMMAND_AUINOTEBOOK_PAGE_CLOSE, GetId());
-    e.SetSelection(page.Get());
-    e.SetEventObject(this);
-    GetEventHandler()->ProcessEvent(e);
+  void Close(const Index& page, bool force){
+    CanvasPanel* canvas = GetCanvasPage(page);
+    canvas->Preempt(PreemptOption::ALLOW_COMMAND);
+    if (canvas->IsDirty() && !force){
+      SaveChoice choice = ask_close_unsaved_tab(this,
+        m_app,
+        canvas->GetFilePath());
+      if (choice == SaveChoice::CANCEL){
+        return;
+      }
+
+      if (choice == SaveChoice::YES){
+        bool saved = m_app.Save(canvas->GetInterface());
+        if (!saved){
+          return;
+        }
+      }
+    }
+
+    if (GetPageCount() == 1){
+      // Remove annyoing flashing appearance on windows when closing
+      // last tab. This freeze must only be done when the last tab is
+      // closed, because it causes a refresh error if the tabcontrol
+      // is split (see issue 86).
+      auto freezer = freeze(this);
+      DeletePage(to_size_t(page));
+    }
+    else {
+      DeletePage(to_size_t(page));
+    }
+    if (GetPageCount() == 0){
+      // Avoid flicker in the upper-left of the tab-bar from page
+      // creation
+      auto freezer = freeze(this);
+
+      AddPage(new CanvasPanel(this,
+          ImageList(ImageProps(m_app.GetDefaultImageInfo())),
+          initially_dirty(false),
+          CreateFileDropTarget(),
+          m_art,
+          m_app,
+          m_statusInfo),
+        get_new_canvas_title(),
+        false);
+    }
+  }
+
+  void QueryClose(const Index& page){
+    Close(page, false);
   }
 
   void CloseActive(){
     if (GetPageCount() == 0){
       return;
     }
-    Close(Index(GetSelection()));
+    QueryClose(Index(GetSelection()));
   }
 
   CanvasPanel* GetCanvasPage(const Index& i){
@@ -253,9 +250,9 @@ wxWindow* TabCtrl::AsWindow(){
   return m_impl;
 }
 
-void TabCtrl::Close(const Index& i){
+void TabCtrl::Close(const Index& i, bool force){
   assert(i < GetCanvasCount());
-  m_impl->Close(i);
+  m_impl->Close(i, force);
 }
 
 void TabCtrl::CloseActive(){

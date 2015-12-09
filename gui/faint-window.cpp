@@ -699,7 +699,7 @@ void FaintWindow::Close(bool force){
   events::queue_request_close_faint(*m_impl->frame, force);
 }
 
-void FaintWindow::CloseDocument(Canvas& canvas){
+void FaintWindow::CloseDocument(Canvas& canvas, bool force){
   FaintPanels& panels(*m_impl->panels);
   auto& tabControl = *(panels.tabControl);
   for (auto i : up_to(tabControl.GetCanvasCount())){
@@ -708,7 +708,7 @@ void FaintWindow::CloseDocument(Canvas& canvas){
       // Freeze the color panel to avoid the FrameControl refreshing
       // during page close on GTK. (See issue 122).
       auto freezer = freeze(panels.color);
-      tabControl.Close(i);
+      tabControl.Close(i, force);
       return;
     }
   }

@@ -615,7 +615,7 @@ public:
       [&](){app.PreviousTab();});
 
     Add(tabMenu, wxID_REMOVE, Label("&Close\tCtrl+W"),
-      [&](){app.Close(app.GetActiveCanvas());});
+      [&](){app.Close(app.GetActiveCanvas(), false);});
     m_menuRef->Append(tabMenu, "&Tabs");
 
     wxMenu* helpMenu = new wxMenu();

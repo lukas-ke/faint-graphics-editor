@@ -107,7 +107,7 @@ public:
   void AddToPalette(const Paint&) override;
   void BeginModalDialog() override;
   void BeginTextEntry() override;
-  void Close(Canvas& canvas) override;
+  void Close(Canvas& canvas, bool force) override;
   void DialogOpenFile() override;
   void DialogSaveAs(Canvas& canvas, bool backup) override;
   void EndModalDialog() override;
