@@ -52,6 +52,7 @@
 #include "util/image-util.hh"
 #include "util/iter.hh"
 #include "util/object-util.hh"
+#include "util/make-vector.hh"
 #include "util/setting-util.hh"
 #include "util/visit-selection.hh"
 
@@ -157,13 +158,13 @@ CommandPtr get_add_objects_command(const objects_t& objects,
   const select_added& select,
   const utf8_string& name)
 {
-  std::vector<CommandPtr> commands;
-  for (Object* obj : objects){
-    commands.emplace_back(add_object_command(obj, select, name));
-  }
+  auto add_f = [&](Object* obj){
+    return add_object_command(obj, select, name);
+  };
 
   return perhaps_bunch(CommandType::OBJECT,
-    get_bunch_name(name, objects), std::move(commands));
+    get_bunch_name(name, objects),
+    make_vector(objects, add_f));
 }
 
 CommandPtr crop_to_raster_selection_command(const Image& image, const Paint& bg){
@@ -230,7 +231,7 @@ BitmapCommandPtr get_clear_command(const Paint& paint){
 }
 
 CommandPtr get_crop_command(const objects_t& objects){
-  std::vector<CommandPtr> commands;
+  commands_t commands;
   for (Object* obj : objects){
     auto cmd = crop_one_object(obj);
     if (cmd != nullptr){
@@ -258,16 +259,15 @@ CommandPtr get_delete_objects_command(const objects_t& objects,
   const Image& image,
   const utf8_string& name)
 {
-  commands_t commands;
+  auto del = [&](Object* obj){
+    return delete_object_command(obj, image.GetObjectZ(obj), name);
+  };
 
   // Objects must be deleted in reverse order so that the Z-order is
   // preserved.
-  for (Object* obj : reversed(objects)){
-    commands.push_back(delete_object_command(obj, image.GetObjectZ(obj), name));
-  }
   return perhaps_bunch(CommandType::OBJECT,
     get_bunch_name(name, objects),
-    std::move(commands));
+    make_vector(reversed(objects), del));
 }
 
 CommandPtr get_delete_raster_selection_command(const Image& image,
@@ -485,6 +485,7 @@ CommandPtr get_move_objects_command(const objects_t& objects,
   assert(oldTris.size() == newTris.size() && newTris.size() == objects.size());
 
   commands_t commands;
+  commands.reserve(objects.size());
   for (size_t i = 0; i != objects.size(); i++){
     commands.push_back(tri_command(objects[i],
       New(newTris[i]),
@@ -532,15 +533,16 @@ CommandPtr get_offset_objects_command(const objects_t& objects,
 {
   assert(!objects.empty());
 
-  commands_t commands;
-  for (Object* obj : objects){
+  auto offset_f = [&](Object* obj){
     Tri tri = obj->GetTri();
-    commands.emplace_back(tri_command(obj,
+    return tri_command(obj,
       New(translated(tri, delta.x, delta.y)),
       Old(tri),
       "Offset",
-      MergeMode::SOCIABLE));
-  }
+      MergeMode::SOCIABLE);
+  };
+
+  auto commands = make_vector(objects, offset_f);
 
   if (commands.size() == 1){
     return pop_back(commands);
@@ -552,7 +554,7 @@ CommandPtr get_offset_objects_command(const objects_t& objects,
     new MergeIfSameObjects(objects));
 }
 
-CommandPtr perhaps_bunched_reorder(std::vector<CommandPtr> commands,
+CommandPtr perhaps_bunched_reorder(commands_t commands,
   const objects_t& objects,
   const NewZ& newZ,
   const OldZ& oldZ)
@@ -650,17 +652,17 @@ CommandPtr get_objects_to_paths_command(const objects_t& objects,
   const Image& image,
   const select_added& selectAdded)
 {
-  commands_t commands;
+  auto toPath = [&](Object* obj){
+    return get_replace_object_command(
+      Old(obj),
+      clone_as_path(obj, image.GetExpressionContext()), image, selectAdded);
+  };
 
   // Delete the replaced objects from front-most to rear-most to
   // maintain valid Z-ordering
-  for (Object* obj : objects){
-    commands.push_back(get_replace_object_command(Old(obj),
-        clone_as_path(obj, image.GetExpressionContext()), image, selectAdded));
-  }
   return perhaps_bunch(CommandType::OBJECT,
     get_bunch_name(objects, objects.size() == 1 ? "to Path" : "to Paths"),
-    std::move(commands));
+    make_vector(objects, toPath));
 }
 
 BitmapCommandPtr get_replace_color_command(const OldColor& oldColor,
@@ -709,14 +711,13 @@ CommandPtr get_rotate_command(Object* obj, const Angle& angle,
 CommandPtr get_rotate_command(const objects_t& objects, const Angle& angle,
   const Point& origin)
 {
-  commands_t commands;
-  for (Object* obj : objects){
-    commands.emplace_back(get_rotate_command(obj, angle, origin));
-  }
+  auto rotate = [&](Object* obj){
+    return get_rotate_command(obj, angle, origin);
+  };
 
   return perhaps_bunch(CommandType::OBJECT,
     get_bunch_name("Rotate", objects),
-    std::move(commands));
+    make_vector(objects, rotate));
 }
 
 CommandPtr get_rotate_selection_command(const Image& image){
@@ -820,37 +821,38 @@ CommandPtr get_offset_raster_selection_command(const Image& image,
     });
 }
 
-CommandPtr get_scale_command(const objects_t& objects, const Scale& scale,
+CommandPtr get_scale_command(const objects_t& objects,
+  const Scale& scale,
   const Point& origin)
 {
-  commands_t commands;
-  for (Object* obj : objects){
+  auto scale_f = [&](Object* obj){
     const Tri& tri = obj->GetTri();
-    commands.push_back(tri_command(obj,
+    return tri_command(obj,
       New(scaled(tri, scale, origin)),
       Old(tri),
-      "Scale"));
-  }
+      "Scale");
+  };
+
   return perhaps_bunch(CommandType::OBJECT,
     get_bunch_name("Scale", objects),
-    std::move(commands));
+    make_vector(objects, scale_f));
 }
 
-CommandPtr get_scale_rotate_command(const objects_t& objects, const Scale& scale,
-  const Angle& angle, const Point& origin)
+CommandPtr get_scale_rotate_command(const objects_t& objects,
+  const Scale& scale, const Angle& angle, const Point& origin)
 {
-  commands_t commands;
-  for (Object* obj : objects){
-    const Tri& oldTri = obj->GetTri();
-    Tri newTri(rotated(scaled(oldTri, scale, origin), angle, origin));
-    commands.push_back(tri_command(obj,
+  auto scale_rotate_f = [&](Object* obj){
+    const auto& oldTri = obj->GetTri();
+    const auto newTri(rotated(scaled(oldTri, scale, origin), angle, origin));
+    return tri_command(obj,
       New(newTri),
       Old(oldTri),
-      "Scale and rotate"));
-  }
+      "Scale and rotate");
+  };
+
   return perhaps_bunch(CommandType::OBJECT,
     get_bunch_name("Scale and rotate", objects),
-    std::move(commands));
+    make_vector(objects, scale_rotate_f));
 }
 
 BitmapCommandPtr get_threshold_command(const threshold_range_t& range,
@@ -899,16 +901,15 @@ CommandPtr OperationFlip::DoObjects(const objects_t& objects) const{
   coord xScale = m_axis == Axis::HORIZONTAL ? -1.0 : 1.0;
   Scale scale(xScale, -xScale);
   Point origin = bounding_rect(objects).Center();
-  commands_t commands;
-  for (Object* obj : objects){
+
+  auto flip = [&](Object* obj){
     const Tri& tri = obj->GetTri();
-    commands.push_back(tri_command(obj,
-      New(scaled(tri, scale, origin)),
-      Old(tri),
-      "Flip"));
-  }
-  return perhaps_bunch(CommandType::OBJECT, get_bunch_name("Flip", objects),
-    std::move(commands));
+    return tri_command(obj, New(scaled(tri, scale, origin)), Old(tri), "Flip");
+  };
+
+  return perhaps_bunch(CommandType::OBJECT,
+    get_bunch_name("Flip", objects),
+    make_vector(objects, flip));
 }
 
 CommandPtr OperationFlip::DoRasterSelection(const Image& image) const{
