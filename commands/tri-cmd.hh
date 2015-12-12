@@ -30,33 +30,16 @@ using OldTri = Order<Tri>::Old;
 enum class MergeMode {
   // Whether a TriCommand wants to merge with consecutive TriCommands
   // targetting the same object.
-  SOCIABLE, SOLITARY };
+  SOCIABLE, SOLITARY};
 
-class TriCommand : public Command {
-  // Command which changes the boundary of an object.
-  // Allows specifying the name to describe the change more precisely
-  // (e.g. rotation, translation, scaling).
-public:
-  TriCommand(Object*,
-    const NewTri&,
-    const OldTri&,
-    const utf8_string& name="Adjust",
-    MergeMode=MergeMode::SOLITARY);
+CommandPtr tri_command(Object*,
+  const NewTri&,
+  const OldTri&,
+  const utf8_string& name="Adjust",
+  MergeMode=MergeMode::SOLITARY);
 
-  void Do(CommandContext&) override;
-  bool Merge(CommandPtr&, bool) override;
-  utf8_string Name() const override;
-  void Undo(CommandContext&) override;
-  bool Mergable() const;
-
-private:
-  TriCommand& operator=(const TriCommand&);
-  Object* m_object;
-  Tri m_new;
-  const Tri m_old;
-  utf8_string m_name;
-  bool m_mergable;
-};
+class MergeCondition;
+MergeCondition* append_tri_commands();
 
 } // namespace
 

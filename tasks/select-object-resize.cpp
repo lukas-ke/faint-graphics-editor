@@ -95,7 +95,8 @@ private:
   ResizeObjectBase& operator=(const ResizeObjectBase&);
   TaskResult Commit(){
     m_object->ClearActive();
-    m_command.Set(new TriCommand(m_object, New(m_object->GetTri()),
+    m_command.Set(tri_command(m_object,
+      New(m_object->GetTri()),
       Old(m_oldTri),
       "Resize"));
     return TaskResult::COMMIT_AND_CHANGE;

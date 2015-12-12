@@ -151,8 +151,10 @@ public:
 private:
   TaskResult Commit(){
     m_object->ClearActive();
-    m_command.Set(new TriCommand(m_object, New(m_object->GetTri()),
-      Old(m_oldTri), "Rotate"));
+    m_command.Set(tri_command(m_object,
+      New(m_object->GetTri()),
+      Old(m_oldTri),
+      "Rotate"));
     return TaskResult::COMMIT_AND_CHANGE;
   }
 

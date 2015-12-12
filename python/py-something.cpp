@@ -314,7 +314,7 @@ static void Smth_skew(const BoundObject<Object>& self, coord& skew){
   Tri newTri(skewed(oldTri, skew));
 
   run_command(self,
-    std::make_unique<TriCommand>(obj, New(newTri), Old(oldTri)));
+    tri_command(obj, New(newTri), Old(oldTri)));
 }
 
 /* method: "update_settings(s)\nUpdate this object's settings with
@@ -323,8 +323,8 @@ for this object will be ignored." */
 static void Smth_update_settings(const BoundObject<Object>& self,
   const Settings& s)
 {
-  run_command(self, change_settings_command(self.obj, New(s),
-      Old(self.obj->GetSettings())));
+  run_command(self,
+    change_settings_command(self.obj, New(s), Old(self.obj->GetSettings())));
 }
 
 static void Smth_init(smthObject& self){

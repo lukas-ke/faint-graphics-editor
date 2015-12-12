@@ -486,9 +486,10 @@ CommandPtr get_move_objects_command(const objects_t& objects,
 
   commands_t commands;
   for (size_t i = 0; i != objects.size(); i++){
-    commands.push_back(std::make_unique<TriCommand>(objects[i],
+    commands.push_back(tri_command(objects[i],
       New(newTris[i]),
-      Old(oldTris[i]), "Move"));
+      Old(oldTris[i]),
+      "Move"));
   }
 
   return perhaps_bunch(CommandType::OBJECT,
@@ -534,7 +535,7 @@ CommandPtr get_offset_objects_command(const objects_t& objects,
   commands_t commands;
   for (Object* obj : objects){
     Tri tri = obj->GetTri();
-    commands.emplace_back(std::make_unique<TriCommand>(obj,
+    commands.emplace_back(tri_command(obj,
       New(translated(tri, delta.x, delta.y)),
       Old(tri),
       "Offset",
@@ -701,7 +702,7 @@ CommandPtr get_rotate_command(Object* obj, const Angle& angle,
   const Point& origin)
 {
   const Tri& tri = obj->GetTri();
-  return std::make_unique<TriCommand>(obj,
+  return tri_command(obj,
     New(rotated(tri, angle, origin)), Old(tri), "Rotate");
 }
 
@@ -825,8 +826,10 @@ CommandPtr get_scale_command(const objects_t& objects, const Scale& scale,
   commands_t commands;
   for (Object* obj : objects){
     const Tri& tri = obj->GetTri();
-    commands.push_back(std::make_unique<TriCommand>(obj,
-        New(scaled(tri, scale, origin)), Old(tri), "Scale"));
+    commands.push_back(tri_command(obj,
+      New(scaled(tri, scale, origin)),
+      Old(tri),
+      "Scale"));
   }
   return perhaps_bunch(CommandType::OBJECT,
     get_bunch_name("Scale", objects),
@@ -840,8 +843,10 @@ CommandPtr get_scale_rotate_command(const objects_t& objects, const Scale& scale
   for (Object* obj : objects){
     const Tri& oldTri = obj->GetTri();
     Tri newTri(rotated(scaled(oldTri, scale, origin), angle, origin));
-    commands.push_back(std::make_unique<TriCommand>(obj,
-      New(newTri), Old(oldTri), "Scale and rotate"));
+    commands.push_back(tri_command(obj,
+      New(newTri),
+      Old(oldTri),
+      "Scale and rotate"));
   }
   return perhaps_bunch(CommandType::OBJECT,
     get_bunch_name("Scale and rotate", objects),
@@ -897,9 +902,10 @@ CommandPtr OperationFlip::DoObjects(const objects_t& objects) const{
   commands_t commands;
   for (Object* obj : objects){
     const Tri& tri = obj->GetTri();
-    commands.push_back(std::make_unique<TriCommand>(obj,
+    commands.push_back(tri_command(obj,
       New(scaled(tri, scale, origin)),
-      Old(tri), "Flip"));
+      Old(tri),
+      "Flip"));
   }
   return perhaps_bunch(CommandType::OBJECT, get_bunch_name("Flip", objects),
     std::move(commands));

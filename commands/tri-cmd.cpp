@@ -13,10 +13,38 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include "util/append-command-type.hh"
+#include "commands/command.hh"
 #include "commands/tri-cmd.hh"
 #include "objects/object.hh"
 
 namespace faint{
+
+class TriCommand : public Command {
+  // Command which changes the boundary of an object.
+  // Allows specifying the name to describe the change more precisely
+  // (e.g. rotation, translation, scaling).
+public:
+  TriCommand(Object*,
+    const NewTri&,
+    const OldTri&,
+    const utf8_string& name="Adjust",
+    MergeMode=MergeMode::SOLITARY);
+
+  void Do(CommandContext&) override;
+  bool Merge(CommandPtr&, bool) override;
+  utf8_string Name() const override;
+  void Undo(CommandContext&) override;
+
+private:
+  TriCommand& operator=(const TriCommand&);
+  Object* m_object;
+  Tri m_new;
+  const Tri m_old;
+  utf8_string m_name;
+  bool m_mergable;
+};
+
 
 TriCommand::TriCommand(Object* object,
   const NewTri& newTri,
@@ -33,10 +61,6 @@ TriCommand::TriCommand(Object* object,
 
 void TriCommand::Do(CommandContext&){
   m_object->SetTri(m_new);
-}
-
-bool TriCommand::Mergable() const{
-  return m_mergable;
 }
 
 bool TriCommand::Merge(CommandPtr& cmd, bool sameFrame){
@@ -77,6 +101,19 @@ utf8_string TriCommand::Name() const{
 
 void TriCommand::Undo(CommandContext&){
   m_object->SetTri(m_old);
+}
+
+CommandPtr tri_command(Object* obj,
+  const NewTri& newTri,
+  const OldTri& oldTri,
+  const utf8_string& name,
+  MergeMode mergeMode)
+{
+  return std::make_unique<TriCommand>(obj, newTri, oldTri, name, mergeMode);
+}
+
+MergeCondition* append_tri_commands(){
+  return new AppendCommandType<TriCommand>();
 }
 
 } // namespace

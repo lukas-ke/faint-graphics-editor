@@ -19,6 +19,7 @@
 #include "commands/add-object-cmd.hh"
 #include "commands/add-point-cmd.hh"
 #include "commands/command-bunch.hh"
+#include "commands/command.hh"
 #include "commands/move-point-cmd.hh"
 #include "commands/remove-point-cmd.hh"
 #include "commands/tri-cmd.hh"
@@ -36,6 +37,7 @@
 #include "tasks/text-edit.hh"
 #include "text/formatting.hh"
 #include "util-wx/key-codes.hh"
+#include "util/append-command-type.hh"
 #include "util/command-util.hh"
 #include "util/convenience.hh"
 #include "util/object-util.hh"
@@ -43,39 +45,6 @@
 #include "util/tool-util.hh"
 
 namespace faint{
-
-template<typename T>
-class AppendCommandType : public MergeCondition{
-  // Condition for appending a command of a certain type to a
-  // command-bunch.
-public:
-  AppendCommandType()
-    : m_appended(false)
-  {}
-
-  bool Satisfied(MergeCondition*) override{
-    // AppendCommandType is only used for appending, not merging
-    // CommandBunches.
-    return false;
-  }
-
-  bool Append(CommandPtr& cmd) override{
-    if (m_appended){
-      // Only append a single command
-      return false;
-    }
-    // Only attempt appending once
-    m_appended = true;
-
-    return dynamic_cast<T*>(cmd.get()) != nullptr;
-  }
-
-  bool AssumeName() const override{
-    return false;
-  }
-private:
-  bool m_appended;
-};
 
 static bool is_drag(const Point& p0, const Point& p1){
   return distance(p0, p1) >= 3;
@@ -260,9 +229,10 @@ static CommandPtr get_appending_add_object_command(Object* obj,
   const utf8_string& commandName)
 {
   auto cmd = add_object_command(obj, select_added(true), commandName);
-  return command_bunch(cmd->Type(), bunch_name(cmd->Name()),
+  return command_bunch(cmd->Type(),
+    bunch_name(cmd->Name()),
     std::move(cmd),
-    new AppendCommandType<TriCommand>());
+    append_tri_commands());
 }
 
 static TaskResult clicked_movable_handle(IdleSelectionState& impl,
