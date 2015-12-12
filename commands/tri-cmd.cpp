@@ -91,8 +91,6 @@ private:
   bool m_mergable;
 };
 
-
-
 CommandPtr tri_command(Object* obj,
   const NewTri& newTri,
   const OldTri& oldTri,
