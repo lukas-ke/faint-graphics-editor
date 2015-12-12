@@ -118,7 +118,7 @@ public:
       });
   }
 
-  BitmapCommand* GetCommand(){
+  BitmapCommandPtr GetCommand(){
     return get_brightness_and_contrast_command(GetValues());
   }
 
@@ -153,15 +153,15 @@ private:
   const SliderCursors& m_sliderCursors;
 };
 
-Optional<BitmapCommand*> show_brightness_contrast_dialog(wxWindow& parent,
+BitmapCommandPtr show_brightness_contrast_dialog(wxWindow& parent,
   DialogContext& c,
   DialogFeedback& feedback)
 {
   BrightnessContrastDialog dlg(parent, c.GetSliderCursors(), feedback);
 
   auto r = c.ShowModal(dlg);
-  return (r == DialogChoice::OK && dlg.ValuesModified()) ?
-    option(dlg.GetCommand()) : no_option();
+  bool ok = r == DialogChoice::OK && dlg.ValuesModified();
+  return ok ? dlg.GetCommand() : nullptr;
 }
 
 } // namespace

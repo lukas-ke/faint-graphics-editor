@@ -151,12 +151,12 @@ public:
 private:
   void Close(WindowFeedback& feedback, bool ok=false){
     if (m_dialog != nullptr){
-      BitmapCommand* cmd = ok ?
+      BitmapCommandPtr cmd = ok ?
         get_set_alpha_command(GetAlpha()) :
         nullptr;
 
       m_dialog.reset(nullptr);
-      feedback.Closed(cmd);
+      feedback.Closed(std::move(cmd));
     }
   }
 

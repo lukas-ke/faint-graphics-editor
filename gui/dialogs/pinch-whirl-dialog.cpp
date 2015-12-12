@@ -106,7 +106,7 @@ public:
     });
   }
 
-  BitmapCommand* GetCommand(){
+  BitmapCommandPtr GetCommand(){
     return get_pinch_whirl_command(GetPinchValue(), GetWhirlValue());
   }
 
@@ -144,16 +144,13 @@ private:
   const SliderCursors& m_sliderCursors;
 };
 
-Optional<BitmapCommand*> show_pinch_whirl_dialog(wxWindow& parent,
+BitmapCommandPtr show_pinch_whirl_dialog(wxWindow& parent,
   DialogContext& c,
   DialogFeedback& feedback)
 {
   PinchWhirlDialog dlg(parent, c.GetSliderCursors(), feedback);
-
   const bool ok = c.ShowModal(dlg) == DialogChoice::OK && dlg.ValuesModified();
-  return ok ?
-    option(dlg.GetCommand()) :
-    no_option();
+  return ok ? dlg.GetCommand() : nullptr;
 }
 
 } // namespace

@@ -77,8 +77,8 @@ public:
     m_onClose(nullptr);
   }
 
-  void Closed(BitmapCommand* cmd) override{
-    m_onClose(cmd);
+  void Closed(BitmapCommandPtr cmd) override{
+    m_onClose(std::move(cmd));
   }
 
   void Reinitialize() override{
@@ -200,8 +200,8 @@ FaintDialogContext::FaintDialogContext(AppContext& app,
       art.Get(Cursor::RESIZE_NS))
 {
   m_windowFeedback = std::move(create_window_feedback(app,
-    [this](BitmapCommand* cmd){
-      OnClosed(cmd);
+    [this](BitmapCommandPtr cmd){
+      OnClosed(std::move(cmd));
     }));
 }
 
@@ -257,10 +257,10 @@ void FaintDialogContext::EndModalDialog(){
   m_app.EndModalDialog();
 }
 
-void FaintDialogContext::OnClosed(BitmapCommand* cmd){
+void FaintDialogContext::OnClosed(BitmapCommandPtr cmd){
   auto& canvas = m_app.GetActiveCanvas();
   if (cmd != nullptr){
-    canvas.RunCommand(context_targetted(cmd, canvas));
+    canvas.RunCommand(context_targetted(std::move(cmd), canvas));
 
   }
   m_app.EndModalDialog(); // Fixme
@@ -725,18 +725,14 @@ void FaintWindowContext::Modal(const bmp_dialog_func& show_dialog){
   Canvas& canvas(GetActiveCanvas());
   DialogFeedbackImpl feedback(canvas);
 
-  auto maybeCmd = show_dialog(m_faintWindow.GetRawFrame(),
+  auto cmd = show_dialog(m_faintWindow.GetRawFrame(),
     m_dialogContext,
     feedback);
 
-  maybeCmd.Visit(
-    [&](BitmapCommand* cmd){
-      canvas.RunCommand(context_targetted(cmd, canvas));
-      canvas.Refresh();
-    },
-    [&](){
-      canvas.Refresh();
-    });
+  if (cmd != nullptr){
+    canvas.RunCommand(context_targetted(std::move(cmd), canvas));
+  }
+  canvas.Refresh();
 }
 
 void FaintWindowContext::ToggleHelpFrame(){

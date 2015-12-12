@@ -16,21 +16,21 @@
 #ifndef FAINT_FUNCTION_CMD_HH
 #define FAINT_FUNCTION_CMD_HH
 #include <functional>
+#include "commands/bitmap-cmd.hh"
 
 namespace faint{
 
 class Bitmap;
-class BitmapCommand;
 class utf8_string;
 
-BitmapCommand* function_command(const utf8_string& name,
+BitmapCommandPtr function_command(const utf8_string& name,
   const std::function<void(Bitmap&)>&);
 
-BitmapCommand* function_command(const utf8_string& name,
+BitmapCommandPtr function_command(const utf8_string& name,
   std::function<void(Bitmap&)>&&);
 
 template<typename... Args, typename... Rest>
-BitmapCommand* in_place_function_command(const utf8_string& name,
+BitmapCommandPtr in_place_function_command(const utf8_string& name,
   Bitmap(*func)(const Bitmap&, Args...),
   Rest&&... rest)
 {
@@ -41,7 +41,7 @@ BitmapCommand* in_place_function_command(const utf8_string& name,
 }
 
 template<typename... Rest, typename...Args>
-BitmapCommand* function_command(const utf8_string& name,
+BitmapCommandPtr function_command(const utf8_string& name,
   void(*func)(Bitmap&, Args...),
   Rest&&... rest)
 {
@@ -55,7 +55,7 @@ BitmapCommand* function_command(const utf8_string& name,
 }
 
 template<typename ArgHere, typename ArgThere>
-BitmapCommand* function_command(const utf8_string& name,
+BitmapCommandPtr function_command(const utf8_string& name,
   void(*func)(Bitmap&, ArgThere),
   ArgHere&& a)
 {
@@ -79,7 +79,7 @@ BitmapCommand* function_command(const utf8_string& name,
 }
 
 template<typename Arg>
-BitmapCommand* function_command(const utf8_string& name,
+BitmapCommandPtr function_command(const utf8_string& name,
   void(*func)(Bitmap&, Arg),
   Arg&& a)
 {

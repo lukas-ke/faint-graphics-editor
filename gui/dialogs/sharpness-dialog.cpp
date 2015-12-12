@@ -93,7 +93,7 @@ public:
         }});
   }
 
-  BitmapCommand* GetCommand(){
+  BitmapCommandPtr GetCommand(){
     coord sharpness = GetSharpness();
     return (sharpness < 0) ?
       in_place_function_command("Blur", gaussian_blur_fast, -sharpness) :
@@ -139,16 +139,14 @@ private:
   const SliderCursors& m_sliderCursors;
 };
 
-Optional<BitmapCommand*> show_sharpness_dialog(wxWindow& parent,
+BitmapCommandPtr show_sharpness_dialog(wxWindow& parent,
   DialogContext& c,
   DialogFeedback& feedback)
 {
   SharpnessDialog dlg(parent, c.GetSliderCursors(), feedback);
 
   bool ok = c.ShowModal(dlg) == DialogChoice::OK && dlg.ValidSharpness();
-  return ok ?
-    option(dlg.GetCommand()) :
-    no_option();
+  return ok ? dlg.GetCommand() : nullptr;
 }
 
 } // namespace

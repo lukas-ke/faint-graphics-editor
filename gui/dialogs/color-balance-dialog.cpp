@@ -106,7 +106,7 @@ public:
       });
   }
 
-  BitmapCommand* GetCommand(){
+  BitmapCommandPtr GetCommand(){
     const color_range_t red = GetRange(m_redSlider);
     const color_range_t green = GetRange(m_greenSlider);
     const color_range_t blue = GetRange(m_blueSlider);
@@ -142,14 +142,19 @@ private:
   const SliderCursors& m_sliderCursors;
 };
 
-Optional<BitmapCommand*> show_color_balance_dialog(wxWindow& parent,
+BitmapCommandPtr show_color_balance_dialog(wxWindow& parent,
   DialogContext& c,
   DialogFeedback& feedback)
 {
   ColorBalanceDialog dlg(parent, c.GetSliderCursors(), feedback);
-  return (c.ShowModal(dlg) == DialogChoice::OK) ?
-    option(dlg.GetCommand()) :
-    no_option();
+  bool ok = c.ShowModal(dlg) == DialogChoice::OK;
+
+  if (ok){
+    return {dlg.GetCommand()};
+  }
+  else{
+    return {};
+  }
 }
 
 } // namespace

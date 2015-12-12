@@ -29,16 +29,17 @@ class BitmapCommand{
   // These commands are only able to change the pixel content of a
   // bitmap.
 public:
-  virtual ~BitmapCommand() = default;
+  virtual ~BitmapCommand();
   virtual utf8_string Name() const = 0;
   virtual void Do(Bitmap&) = 0;
 };
 
-// Wrappers for assigning targets for a BitmapCommand.  The returned
-// command manages deletion of the BitmapCommand.
-CommandPtr target_full_image(BitmapCommand*);
-CommandPtr target_floating_selection(BitmapCommand*);
-CommandPtr target_rectangle(BitmapCommand*, const IntRect&);
+using BitmapCommandPtr = std::unique_ptr<BitmapCommand>;
+
+// Wrappers for assigning targets for a BitmapCommand.
+CommandPtr target_full_image(BitmapCommandPtr);
+CommandPtr target_floating_selection(BitmapCommandPtr);
+CommandPtr target_rectangle(BitmapCommandPtr, const IntRect&);
 
 } // namespace
 

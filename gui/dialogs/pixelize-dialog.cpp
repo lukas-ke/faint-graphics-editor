@@ -97,7 +97,7 @@ public:
     }
   }
 
-  BitmapCommand* GetCommand(){
+  BitmapCommandPtr GetCommand(){
     return get_pixelize_command(m_pixelSizeSlider->GetValue());
   }
 
@@ -126,15 +126,13 @@ private:
   const SliderCursors& m_sliderCursors;
 };
 
-Optional<BitmapCommand*> show_pixelize_dialog(wxWindow& parent,
+BitmapCommandPtr show_pixelize_dialog(wxWindow& parent,
   DialogContext& c,
   DialogFeedback& feedback)
 {
   PixelizeDialog dlg(parent, c.GetSliderCursors(), feedback);
   bool ok = c.ShowModal(dlg) == DialogChoice::OK && dlg.ValuesModified();
-  return ok ?
-    option(dlg.GetCommand()) :
-    no_option();
+  return ok ? dlg.GetCommand() : nullptr;
 }
 
 } // namespace

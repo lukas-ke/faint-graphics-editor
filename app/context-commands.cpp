@@ -33,16 +33,16 @@
 
 namespace faint{
 
-CommandPtr context_targetted(BitmapCommand* cmd, Canvas& canvas){
+CommandPtr context_targetted(BitmapCommandPtr cmd, Canvas& canvas){
   return sel::visit(canvas.GetRasterSelection(),
-    [=](const sel::Empty&){
-      return target_full_image(cmd);
+    [&](const sel::Empty&){
+      return target_full_image(std::move(cmd));
     },
-    [=](const sel::Rectangle& s){
-      return target_rectangle(cmd, s.Rect());
+    [&](const sel::Rectangle& s){
+      return target_rectangle(std::move(cmd), s.Rect());
     },
-    [=](const sel::Floating&){
-      return target_floating_selection(cmd);
+    [&](const sel::Floating&){
+      return target_floating_selection(std::move(cmd));
     });
 }
 
@@ -259,9 +259,8 @@ CommandPtr context_select_all(Canvas& canvas, const change_tool_f& selectTool){
   }
 }
 
-CommandPtr context_set_alpha(Canvas& canvas, uchar alpha){
-  BitmapCommand* cmd = get_set_alpha_command(alpha);
-  return context_targetted(cmd, canvas);
+CommandPtr context_set_alpha(Canvas& canvas, uchar alpha){  ;
+  return context_targetted(get_set_alpha_command(alpha), canvas);
 }
 
 CommandPtr context_scale_objects(const Canvas& canvas, const Size& size){

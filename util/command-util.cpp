@@ -149,7 +149,7 @@ CommandPtr crop_one_object(Object* obj){
   return nullptr;
 }
 
-BitmapCommand* get_aa_line_command(const IntLineSegment& line, const ColRGB& c){
+BitmapCommandPtr get_aa_line_command(const IntLineSegment& line, const ColRGB& c){
   return function_command("Draw Wu-line", draw_line_aa_Wu, line, c);
 }
 
@@ -195,15 +195,15 @@ CommandPtr get_auto_crop_command(const Image& image){
     });
 }
 
-BitmapCommand* get_blend_alpha_command(const ColRGB& bgColor){
+BitmapCommandPtr get_blend_alpha_command(const ColRGB& bgColor){
   return function_command("Replace Alpha", blend_alpha, bgColor);
 }
 
-BitmapCommand* get_sepia_command(int intensity){
+BitmapCommandPtr get_sepia_command(int intensity){
   return function_command("Sepia", sepia, intensity);
 }
 
-BitmapCommand* get_pinch_whirl_command(coord pinch, const Angle& whirl){
+BitmapCommandPtr get_pinch_whirl_command(coord pinch, const Angle& whirl){
   return function_command("Pinch/Whirl", filter_pinch_whirl, pinch, whirl);
 }
 
@@ -225,7 +225,7 @@ CommandType get_collective_command_type(const commands_t& cmds){
   return type;
 }
 
-BitmapCommand* get_clear_command(const Paint& paint){
+BitmapCommandPtr get_clear_command(const Paint& paint){
   return function_command("Clear", clear, paint);
 }
 
@@ -358,11 +358,11 @@ CommandPtr get_insert_raster_bitmap_command(const Bitmap& bmp,
     oldSelection);
 }
 
-BitmapCommand* get_pixelize_command(const pixelize_range_t& width){
+BitmapCommandPtr get_pixelize_command(const pixelize_range_t& width){
   return function_command("Pixelize", pixelize, width);
 }
 
-BitmapCommand* get_quantize_command(){
+BitmapCommandPtr get_quantize_command(){
   return function_command("Quantize",
     [=](Bitmap& bmp){
       quantize(bmp, Dithering::ON);
@@ -401,19 +401,21 @@ CommandPtr get_select_all_command(const Image& image,
   return maybe_stamp_old_selection(std::move(selectAll), currentSelection);
 }
 
-BitmapCommand* get_set_alpha_command(uchar alpha){
+BitmapCommandPtr get_set_alpha_command(uchar alpha){
   return function_command("Set Alpha", set_alpha, alpha);
 }
 
-BitmapCommand* get_desaturate_simple_command(){
+BitmapCommandPtr get_desaturate_simple_command(){
   return function_command("Desaturate", desaturate_simple);
 }
 
-BitmapCommand* get_desaturate_weighted_command(){
+BitmapCommandPtr get_desaturate_weighted_command(){
   return function_command("Desaturate Weighted", desaturate_weighted);
 }
 
-BitmapCommand* get_erase_but_color_command(const Color& keep, const Paint& eraser){
+BitmapCommandPtr get_erase_but_color_command(const Color& keep,
+  const Paint& eraser)
+{
   return function_command("Replace Colors", erase_but, keep, eraser);
 }
 
@@ -451,23 +453,25 @@ CommandPtr get_flatten_command(const objects_t& objects, const Image& image){
     std::move(commands));
 }
 
-BitmapCommand* get_flood_fill_command(const IntPoint& pos, const Paint& fill){
+BitmapCommandPtr get_flood_fill_command(const IntPoint& pos, const Paint& fill){
   return function_command("Flood fill", flood_fill, pos, fill);
 }
 
-BitmapCommand* get_boundary_fill_command(const IntPoint& pos,
+BitmapCommandPtr get_boundary_fill_command(const IntPoint& pos,
   const Paint& fill,
   const Color& boundary)
 {
   return function_command("Boundary fill", boundary_fill, pos, fill, boundary);
 }
 
-BitmapCommand* get_brightness_and_contrast_command(const brightness_contrast_t& v){
+BitmapCommandPtr get_brightness_and_contrast_command(
+  const brightness_contrast_t& v)
+{
   return in_place_function_command("Brightness and contrast",
     brightness_and_contrast, v);
 }
 
-BitmapCommand* get_invert_command(){
+BitmapCommandPtr get_invert_command(){
   return function_command("Invert colors", [=](Bitmap& bmp){invert(bmp);});
 }
 
@@ -658,7 +662,7 @@ CommandPtr get_objects_to_paths_command(const objects_t& objects,
     std::move(commands));
 }
 
-BitmapCommand* get_replace_color_command(const OldColor& oldColor,
+BitmapCommandPtr get_replace_color_command(const OldColor& oldColor,
   const Paint& newColor)
 {
   return function_command("Replace color", replace_color, oldColor, newColor);
@@ -844,7 +848,7 @@ CommandPtr get_scale_rotate_command(const objects_t& objects, const Scale& scale
     std::move(commands));
 }
 
-BitmapCommand* get_threshold_command(const threshold_range_t& range,
+BitmapCommandPtr get_threshold_command(const threshold_range_t& range,
   const Paint& in, const Paint& out)
 {
   return function_command("Threshold", threshold, range, in, out);

@@ -36,9 +36,9 @@ class BmpTargetBase : public Command{
   // special handling for different targets, for example the full
   // image or a selected region.
 public:
-  BmpTargetBase(CommandType type, BitmapCommand* cmd)
+  BmpTargetBase(CommandType type, BitmapCommandPtr cmd)
     : Command(type),
-      m_cmd(cmd)
+      m_cmd(std::move(cmd))
   {}
 
   void Do(CommandContext& ctx) override final {
@@ -56,13 +56,13 @@ public:
 private:
   virtual void DoBmp(BitmapCommand&, CommandContext&) = 0;
   virtual void UndoBmp(CommandContext&) = 0;
-  std::unique_ptr<BitmapCommand> m_cmd;
+  BitmapCommandPtr m_cmd;
 };
 
 class BmpTargetImage final : public BmpTargetBase {
 public:
-  explicit BmpTargetImage(BitmapCommand* cmd)
-    : BmpTargetBase(CommandType::RASTER, cmd)
+  explicit BmpTargetImage(BitmapCommandPtr cmd)
+    : BmpTargetBase(CommandType::RASTER, std::move(cmd))
   {}
 private:
   void DoBmp(BitmapCommand& cmd, CommandContext& ctx) override{
@@ -76,8 +76,8 @@ private:
 
 class BmpTargetRectangle final : public BmpTargetBase {
 public:
-  explicit BmpTargetRectangle(BitmapCommand* cmd, const IntRect& rect)
-    : BmpTargetBase(CommandType::RASTER, cmd),
+  explicit BmpTargetRectangle(BitmapCommandPtr cmd, const IntRect& rect)
+    : BmpTargetBase(CommandType::RASTER, std::move(cmd)),
       m_rect(rect)
   {}
 private:
@@ -97,8 +97,8 @@ private:
 
 class BmpTargetSelection final : public BmpTargetBase {
 public:
-  explicit BmpTargetSelection(BitmapCommand* cmd)
-    : BmpTargetBase(CommandType::SELECTION, cmd)
+  explicit BmpTargetSelection(BitmapCommandPtr cmd)
+    : BmpTargetBase(CommandType::SELECTION, std::move(cmd))
   {}
 private:
   void DoBmp(BitmapCommand& cmd, CommandContext& ctx) override{
@@ -126,16 +126,18 @@ private:
   Optional<Bitmap> m_old;
 };
 
-CommandPtr target_full_image(BitmapCommand* bmpCmd){
-  return std::make_unique<BmpTargetImage>(bmpCmd);
+BitmapCommand::~BitmapCommand(){}
+
+CommandPtr target_full_image(BitmapCommandPtr bmpCmd){
+  return std::make_unique<BmpTargetImage>(std::move(bmpCmd));
 }
 
-CommandPtr target_floating_selection(BitmapCommand* bmpCmd){
-  return std::make_unique<BmpTargetSelection>(bmpCmd);
+CommandPtr target_floating_selection(BitmapCommandPtr bmpCmd){
+  return std::make_unique<BmpTargetSelection>(std::move(bmpCmd));
 }
 
-CommandPtr target_rectangle(BitmapCommand* bmpCmd, const IntRect& rect){
-  return std::make_unique<BmpTargetRectangle>(bmpCmd, rect);
+CommandPtr target_rectangle(BitmapCommandPtr bmpCmd, const IntRect& rect){
+  return std::make_unique<BmpTargetRectangle>(std::move(bmpCmd), rect);
 }
 
 } // namespace

@@ -68,7 +68,7 @@ public:
 private:
   void BeginModalDialog() override;
   void EndModalDialog() override;
-  void OnClosed(BitmapCommand*);
+  void OnClosed(BitmapCommandPtr);
 
   AppContext& m_app;
   std::unique_ptr<CommandWindow> m_commandWindow;

@@ -15,13 +15,14 @@
 
 #ifndef FAINT_COMMAND_WINDOW_HH
 #define FAINT_COMMAND_WINDOW_HH
+#include "commands/bitmap-cmd.hh"
 #include "rendering/overlay.hh"
 #include "util/pos-info.hh"
 
 class wxWindow;
 
 namespace faint{
-class BitmapCommand;
+
 class Settings;
 
 class WindowFeedback{
@@ -30,7 +31,7 @@ class WindowFeedback{
 public:
   virtual ~WindowFeedback() = default;
   virtual void Closed() = 0;
-  virtual void Closed(BitmapCommand*) = 0;
+  virtual void Closed(BitmapCommandPtr) = 0;
 
   virtual bool FloatingSelection() const = 0;
   virtual Bitmap GetBitmap() = 0;

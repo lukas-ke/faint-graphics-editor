@@ -38,7 +38,7 @@ public:
   virtual void SetBitmap(Bitmap&&) = 0;
 };
 
-using bmp_dialog_func = std::function<Optional<BitmapCommand*>(
+using bmp_dialog_func = std::function<BitmapCommandPtr(
   wxWindow&,
   DialogContext&,
   DialogFeedback&)>;

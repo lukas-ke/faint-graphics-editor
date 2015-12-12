@@ -17,6 +17,7 @@
 #include "app/app-getter-util.hh"
 #include "app/context-grid-dialog.hh"
 #include "app/faint-resize-dialog-context.hh"
+#include "commands/bitmap-cmd.hh"
 #include "gui/dialogs.hh"
 #include "text/formatting.hh"
 #include "util/setting-id.hh"

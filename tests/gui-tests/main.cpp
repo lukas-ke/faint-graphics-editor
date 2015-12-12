@@ -74,8 +74,8 @@ public:
     m_onClose(nullptr);
   }
 
-  void Closed(faint::BitmapCommand* c) override{
-    m_onClose(c);
+  void Closed(faint::BitmapCommandPtr c) override{
+    m_onClose(std::move(c));
   }
 
   bool FloatingSelection() const override{
@@ -113,8 +113,8 @@ public:
         art.Get(faint::Cursor::RESIZE_NS))
   {
     m_windowFeedback = std::move(create_window_feedback(
-      [this](faint::BitmapCommand* cmd){
-        OnClosed(cmd);
+      [this](faint::BitmapCommandPtr cmd){
+        OnClosed(std::move(cmd));
       }));
   }
 
@@ -133,9 +133,8 @@ public:
   }
 
 private:
-  void OnClosed(faint::BitmapCommand* cmd){
+  void OnClosed(faint::BitmapCommandPtr cmd){
     m_commandWindow.reset(nullptr);
-    delete cmd;
   }
   void BeginModalDialog() override {};
   void EndModalDialog() override {};

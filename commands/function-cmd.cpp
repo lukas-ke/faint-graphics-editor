@@ -45,16 +45,16 @@ private:
   std::function<void(Bitmap&)> m_func;
 };
 
-BitmapCommand* function_command(const utf8_string& name,
+BitmapCommandPtr function_command(const utf8_string& name,
   const std::function<void(Bitmap&)>& func)
 {
-  return new FunctionCommand(name, func);
+  return std::make_unique<FunctionCommand>(name, func);
 }
 
-BitmapCommand* function_command(const utf8_string& name,
+BitmapCommandPtr function_command(const utf8_string& name,
   std::function<void(Bitmap&)>&& func)
 {
-  return new FunctionCommand(name, std::move(func));
+  return std::make_unique<FunctionCommand>(name, std::move(func));
 }
 
 } // namespace

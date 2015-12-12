@@ -18,13 +18,13 @@
 #include "app/app-getter-util.hh"
 #include "geo/angle.hh"
 #include "geo/primitive.hh"
+#include "commands/bitmap-cmd.hh"
 
 namespace faint{
 
 // Functions for creating commands depending on the current canvas
 // state - typically the current selection or the active tool.
 
-class BitmapCommand;
 class Canvas;
 class Command;
 class IntPoint;
@@ -32,7 +32,7 @@ class Operation;
 class Paint;
 class Size;
 
-CommandPtr context_targetted(BitmapCommand*, Canvas&);
+CommandPtr context_targetted(BitmapCommandPtr, Canvas&);
 
 // If the layer type is the raster layer and there's a raster
 // selection the image will be cropped to the selection.

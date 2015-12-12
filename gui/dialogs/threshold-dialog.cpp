@@ -124,13 +124,14 @@ public:
 private:
   void Close(bool ok=false){
     if (m_dialog != nullptr){
-      BitmapCommand* cmd = ok ?
+      auto cmd = ok ?
         get_threshold_command(GetCurrentRange(),
           m_settings.Get(ts_Fg),
           m_settings.Get(ts_Bg))
         : nullptr;
+
       m_dialog.reset(nullptr);
-      m_feedback->Closed(cmd);
+      m_feedback->Closed(std::move(cmd));
       m_feedback = nullptr;
     }
   }

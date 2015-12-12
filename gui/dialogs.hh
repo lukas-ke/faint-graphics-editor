@@ -17,7 +17,7 @@
 #define FAINT_DIALOGS_HH
 #include <functional>
 #include "gui/command-dialog.hh"
-
+#include "util/optional.hh"
 namespace faint{
 
 class Art;
@@ -28,26 +28,26 @@ enum class ToolId;
 
 void show_alpha_dialog(DialogContext&);
 
-Optional<BitmapCommand*> show_brightness_contrast_dialog(wxWindow&,
+BitmapCommandPtr show_brightness_contrast_dialog(wxWindow&,
   DialogContext&,
   DialogFeedback&);
 
-Optional<BitmapCommand*> show_color_balance_dialog(wxWindow&,
+BitmapCommandPtr show_color_balance_dialog(wxWindow&,
   DialogContext&,
   DialogFeedback&);
 
 void show_faint_about_dialog(wxWindow* parent, DialogContext&);
 
-Optional<BitmapCommand*> show_pinch_whirl_dialog(wxWindow&,
+BitmapCommandPtr show_pinch_whirl_dialog(wxWindow&,
   DialogContext&,
   DialogFeedback&);
 
-Optional<Command*> show_rotate_dialog(wxWindow&,
+Optional<CommandPtr> show_rotate_dialog(wxWindow&,
   const Canvas&, // Fixme: Replace with specific context, compare resize-dialog
   const Art&,
   const std::function<Paint()>& bgColor,
   const std::function<void()>& selectLevelTool,
-  DialogContext&);
+  DialogContext&); // Fixme: Not used?
 
 dialog_func bind_show_rotate_dialog(const Art&,
   const std::function<Paint()>& bgColor,
@@ -56,11 +56,11 @@ dialog_func bind_show_rotate_dialog(const Art&,
 
 void show_threshold_dialog(DialogContext&, const Settings&);
 
-Optional<BitmapCommand*> show_pixelize_dialog(wxWindow&,
+BitmapCommandPtr show_pixelize_dialog(wxWindow&,
   DialogContext&,
   DialogFeedback&);
 
-Optional<BitmapCommand*> show_sharpness_dialog(wxWindow&,
+BitmapCommandPtr show_sharpness_dialog(wxWindow&,
   DialogContext&,
   DialogFeedback&);
 
