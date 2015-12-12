@@ -42,13 +42,6 @@ BitmapCommandPtr show_pinch_whirl_dialog(wxWindow&,
   DialogContext&,
   DialogFeedback&);
 
-Optional<CommandPtr> show_rotate_dialog(wxWindow&,
-  const Canvas&, // Fixme: Replace with specific context, compare resize-dialog
-  const Art&,
-  const std::function<Paint()>& bgColor,
-  const std::function<void()>& selectLevelTool,
-  DialogContext&); // Fixme: Not used?
-
 dialog_func bind_show_rotate_dialog(const Art&,
   const std::function<Paint()>& bgColor,
   const std::function<void(ToolId)>& selectLevelTool,

@@ -291,7 +291,7 @@ private:
 };
 
 
-Optional<CommandPtr> show_rotate_dialog(wxWindow& parent,
+static Optional<CommandPtr> show_rotate_dialog(wxWindow& parent,
   const Canvas& canvas,
   const Art& art,
   const std::function<Paint()>& bgColor,
