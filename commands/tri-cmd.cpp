@@ -25,16 +25,62 @@ class TriCommand : public Command {
   // Allows specifying the name to describe the change more precisely
   // (e.g. rotation, translation, scaling).
 public:
-  TriCommand(Object*,
-    const NewTri&,
-    const OldTri&,
-    const utf8_string& name="Adjust",
-    MergeMode=MergeMode::SOLITARY);
+  TriCommand(Object* object,
+    const NewTri& newTri,
+    const OldTri& oldTri,
+    const utf8_string& name,
+    MergeMode mergeMode)
+    : Command(CommandType::OBJECT),
+      m_object(object),
+      m_new(newTri.Get()),
+      m_old(oldTri.Get()),
+      m_name(name),
+      m_mergable(mergeMode == MergeMode::SOCIABLE)
+  {}
 
-  void Do(CommandContext&) override;
-  bool Merge(CommandPtr&, bool) override;
-  utf8_string Name() const override;
-  void Undo(CommandContext&) override;
+  void Do(CommandContext&) override{
+    m_object->SetTri(m_new);
+  }
+
+  bool Merge(CommandPtr& cmd, bool sameFrame) override{
+    if (!m_mergable || !sameFrame){
+      return false;
+    }
+
+    auto get_command_tri = [&]() -> Optional<Tri>{
+      TriCommand* candidate = dynamic_cast<TriCommand*>(cmd.get());
+      if (candidate == nullptr){
+        return {};
+      }
+      else if (!candidate->m_mergable){
+        return {};
+      }
+      else if (m_object != candidate->m_object){
+        return {};
+      }
+      else{
+        return option(candidate->m_new);
+      }
+    };
+
+    return get_command_tri().Visit(
+      [&](const Tri& mergedTri){
+        CommandPtr release(std::move(cmd));
+        m_new = mergedTri;
+        return true;
+      },
+      [&](){
+        return false;
+      });
+  }
+
+  utf8_string Name() const override{
+    return m_name + " " + m_object->GetType();
+  }
+
+  void Undo(CommandContext&) override{
+    m_object->SetTri(m_old);
+  }
 
 private:
   TriCommand& operator=(const TriCommand&);
@@ -46,62 +92,6 @@ private:
 };
 
 
-TriCommand::TriCommand(Object* object,
-  const NewTri& newTri,
-  const OldTri& oldTri,
-  const utf8_string& name,
-  MergeMode mergeMode)
-  : Command(CommandType::OBJECT),
-    m_object(object),
-    m_new(newTri.Get()),
-    m_old(oldTri.Get()),
-    m_name(name),
-    m_mergable(mergeMode == MergeMode::SOCIABLE)
-{}
-
-void TriCommand::Do(CommandContext&){
-  m_object->SetTri(m_new);
-}
-
-bool TriCommand::Merge(CommandPtr& cmd, bool sameFrame){
-  if (!m_mergable || !sameFrame){
-    return false;
-  }
-
-  auto get_command_tri = [&]() -> Optional<Tri>{
-    TriCommand* candidate = dynamic_cast<TriCommand*>(cmd.get());
-    if (candidate == nullptr){
-      return {};
-    }
-    else if (!candidate->m_mergable){
-      return {};
-    }
-    else if (m_object != candidate->m_object){
-      return {};
-    }
-    else{
-      return option(candidate->m_new);
-    }
-  };
-
-  return get_command_tri().Visit(
-    [&](const Tri& mergedTri){
-      CommandPtr release(std::move(cmd));
-      m_new = mergedTri;
-      return true;
-    },
-    [&](){
-      return false;
-    });
-}
-
-utf8_string TriCommand::Name() const{
-  return m_name + " " + m_object->GetType();
-}
-
-void TriCommand::Undo(CommandContext&){
-  m_object->SetTri(m_old);
-}
 
 CommandPtr tri_command(Object* obj,
   const NewTri& newTri,
