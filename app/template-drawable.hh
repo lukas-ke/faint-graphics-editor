@@ -34,7 +34,7 @@ bool draw_before_zoom(const ExtraOverlay&, Layer){
   return true;
 }
 
-bool draw_before_zoom(const std::vector<Object*>&, Layer){
+bool draw_before_zoom(const objects_t&, Layer){
   return false;
 }
 
@@ -46,7 +46,7 @@ bool should_draw_raster(const Tool& t, Layer l){
   return get_tool_layer(t.GetId(), l) == Layer::RASTER;
 }
 
-bool should_draw_raster(const std::vector<Object*>&, Layer){
+bool should_draw_raster(const objects_t&, Layer){
   return false;
 }
 
@@ -55,7 +55,7 @@ void draw(T& obj, FaintDC& dc, Overlays& overlays, const PosInfo& info){
   obj.Draw(dc, overlays, info);
 }
 
-void draw(const std::vector<Object*>& objects,
+void draw(const objects_t& objects,
   FaintDC& dc,
   Overlays&,
   const PosInfo& info)

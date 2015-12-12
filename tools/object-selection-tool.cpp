@@ -20,6 +20,7 @@
 #include "tasks/select-object-idle.hh"
 #include "tools/multi-tool.hh"
 #include "util/bound-setting.hh"
+#include "util/make-vector.hh"
 #include "util/object-util.hh"
 #include "util/setting-id.hh"
 
@@ -35,12 +36,14 @@ CommandPtr change_setting_objects(const objects_t& objects,
   if (objects.empty()){
     return nullptr;
   }
-  std::vector<CommandPtr> commands;
+
+  commands_t commands;
   for (Object* obj : objects){
     if (obj->GetSettings().Has(s)){
       commands.emplace_back(change_setting_command(obj, s, value));
     }
   }
+
   if (commands.empty()){
     return nullptr;
   }
@@ -58,15 +61,14 @@ static CommandPtr change_settings_objects(const objects_t& objects,
   if (objects.empty()){
     return nullptr;
   }
-  std::vector<CommandPtr> commands;
-  commands.reserve(objects.size());
-  for (Object* obj : objects){
-    commands.emplace_back(change_settings_command(obj,
-      New(s),
-      Old(obj->GetSettings())));
-  }
+
+  auto change = [&](Object* obj){
+    return change_settings_command(obj, New(s), Old(obj->GetSettings()));
+  };
+
   return perhaps_bunch(CommandType::OBJECT,
-    bunch_name("Change object settings"), std::move(commands));
+    bunch_name("Change object settings"),
+    make_vector(objects, change));
 }
 
 class ObjectSelectionTool : public MultiTool {

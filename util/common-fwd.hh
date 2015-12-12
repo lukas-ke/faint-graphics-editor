@@ -21,6 +21,7 @@
 #include "commands/command-ptr.hh"
 #include "geo/geo-fwd.hh"
 #include "geo/primitive.hh"
+#include "util/objects.hh"
 
 namespace faint{
 
@@ -79,8 +80,6 @@ enum class Cursor;
 enum class Layer;
 enum class MouseButton;
 
-using commands_t = std::vector<CommandPtr>;
-using objects_t = std::vector<Object*>;
 using tris_t = std::vector<Tri>;
 using strings_t = std::vector<std::string>;
 

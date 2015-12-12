@@ -190,7 +190,7 @@ public:
   }
 
 private:
-  std::vector<CommandPtr> m_merged;
+  commands_t m_merged;
   IntPoint m_newPos;
   IntPoint m_oldPos;
 };

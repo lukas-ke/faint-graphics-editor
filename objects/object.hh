@@ -19,6 +19,7 @@
 #include <vector>
 #include "geo/point.hh"
 #include "util/id-types.hh"
+#include "util/objects.hh"
 #include "util/optional.hh"
 #include "util/settings.hh"
 
@@ -134,8 +135,6 @@ template<typename T>
 void Object::Set(const T& s, typename T::ValueType v){
   GetSettings().Set(s, v);
 }
-
-using objects_t = std::vector<Object*>;
 
 } // namespace
 

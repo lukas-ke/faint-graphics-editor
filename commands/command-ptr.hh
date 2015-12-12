@@ -16,11 +16,13 @@
 #ifndef FAINT_COMMAND_PTR_HH
 #define FAINT_COMMAND_PTR_HH
 #include <memory>
+#include <vector>
 
 namespace faint{
 
 class Command;
 using CommandPtr = std::unique_ptr<Command>;
+using commands_t = std::vector<CommandPtr>;
 
 } // namespace
 

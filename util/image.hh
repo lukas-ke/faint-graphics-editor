@@ -25,6 +25,7 @@
 #include "util/either.hh"
 #include "util/hot-spot.hh"
 #include "util/id-types.hh"
+#include "util/objects.hh"
 #include "util/optional.hh"
 #include "util/raster-selection.hh"
 
@@ -33,8 +34,6 @@ namespace faint {
 class ExpressionContext;
 class FrameProps;
 class Object;
-
-using objects_t = std::vector<Object*>;
 
 class Image {
 public:

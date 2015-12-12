@@ -17,6 +17,7 @@
 #define FAINT_BOUND_OBJECT_HH
 #include <vector>
 #include "util/id-types.hh"
+#include "util/objects.hh"
 
 namespace faint{
 
@@ -66,7 +67,7 @@ using BoundObjects = std::vector<BoundObject<Object>>;
 
 BoundObjects bind_objects(PyFuncContext&,
   Canvas&,
-  const std::vector<Object*>&, FrameId);
+  const objects_t&, FrameId);
 
 } // namespace
 

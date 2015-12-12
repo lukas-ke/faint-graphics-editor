@@ -172,19 +172,19 @@ static CommandPtr pixel_snap(const objects_t& objects){
     return nullptr;
   }
 
-  std::vector<CommandPtr> cmds;
+  commands_t commands;
   for (auto obj : objects){
     auto cmd = get_pixel_snap_command(obj);
     if (obj != nullptr){
-      cmds.emplace_back(std::move(cmd));
+      commands.emplace_back(std::move(cmd));
     }
   }
-  if (cmds.empty()){
+  if (commands.empty()){
     return nullptr;
   }
   else{
     return perhaps_bunch(CommandType::OBJECT, bunch_name("Pixel Snap"),
-      std::move(cmds));
+      std::move(commands));
   }
 }
 

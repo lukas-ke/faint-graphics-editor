@@ -55,7 +55,7 @@ public:
 // unchanged.
 CommandPtr perhaps_bunch(CommandType,
   const bunch_name&,
-  std::vector<CommandPtr>);
+  commands_t);
 
 CommandPtr perhaps_bunch(CommandType,
   const bunch_name&,
@@ -63,11 +63,11 @@ CommandPtr perhaps_bunch(CommandType,
 
 CommandPtr perhaps_bunch(CommandType,
   const bunch_name&,
-  std::vector<CommandPtr>);
+  commands_t);
 
 CommandPtr command_bunch(CommandType,
   const bunch_name&,
-  std::vector<CommandPtr>,
+  commands_t,
   MergeCondition* c=nullptr);
 
 CommandPtr command_bunch(CommandType,

@@ -25,7 +25,7 @@ namespace faint{
 class CommandBunch : public Command{
 public:
   CommandBunch(CommandType type,
-    std::vector<CommandPtr> commands,
+    commands_t commands,
     const bunch_name& name,
     MergeCondition* mergeCondition=nullptr)
     : Command(type),
@@ -99,7 +99,7 @@ public:
     }
   }
 private:
-  std::vector<CommandPtr> m_commands;
+  commands_t m_commands;
   utf8_string m_name;
   std::unique_ptr<MergeCondition> m_mergeCondition;
 };
@@ -115,7 +115,7 @@ CommandPtr first_element(T& commands){
 
 CommandPtr perhaps_bunch(CommandType type,
   const bunch_name& name,
-  std::vector<CommandPtr> commands)
+  commands_t commands)
 {
   assert(!commands.empty());
   if (commands.size() == 1){
@@ -126,8 +126,8 @@ CommandPtr perhaps_bunch(CommandType type,
   }
 }
 
-std::vector<CommandPtr> move_to_vec(std::deque<CommandPtr>& cmds){
-  std::vector<CommandPtr> v;
+commands_t move_to_vec(std::deque<CommandPtr>& cmds){
+  commands_t v;
   v.reserve(cmds.size());
   for (auto it = begin(cmds); it != end(cmds); it = cmds.erase(it)){
     v.emplace_back(std::move(*it));
@@ -151,7 +151,7 @@ CommandPtr perhaps_bunch(CommandType type,
 
 CommandPtr command_bunch(CommandType type,
   const bunch_name& name,
-  std::vector<CommandPtr> commands,
+  commands_t commands,
   MergeCondition* mergeCondition)
 {
   return std::make_unique<CommandBunch>(type, std::move(commands),
@@ -173,7 +173,7 @@ CommandPtr command_bunch(CommandType type,
   CommandPtr cmd,
   MergeCondition* mergeCondition)
 {
-  std::vector<CommandPtr> v;
+  commands_t v;
   v.emplace_back(std::move(cmd));
   return std::make_unique<CommandBunch>(type, std::move(v), name,
     mergeCondition);
@@ -185,7 +185,7 @@ CommandPtr command_bunch(CommandType type,
   CommandPtr cmd2,
   MergeCondition* mergeCondition)
 {
-  std::vector<CommandPtr> v;
+  commands_t v;
   v.emplace_back(std::move(cmd1));
   v.emplace_back(std::move(cmd2));
   return std::make_unique<CommandBunch>(type, std::move(v), name, mergeCondition);

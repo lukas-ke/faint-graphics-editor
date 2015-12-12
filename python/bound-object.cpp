@@ -20,7 +20,7 @@ namespace faint{
 
 BoundObjects bind_objects(PyFuncContext& ctx,
   Canvas& canvas,
-  const std::vector<Object*>& objects,
+  const objects_t& objects,
   FrameId frameId)
 {
   return make_vector(objects,
