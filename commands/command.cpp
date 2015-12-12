@@ -27,8 +27,12 @@ bool fully_reversible(CommandType t){
   return !has_raster_steps(t);
 }
 
-bool affects_raster(const Command* cmd){
-  return has_raster_steps(cmd->Type()) && cmd->ModifiesState();
+bool affects_raster(const Command& cmd){
+  return has_raster_steps(cmd.Type()) && cmd.ModifiesState();
+}
+
+bool affects_raster(const CommandPtr& cmd){
+  return affects_raster(*cmd);
 }
 
 bool somewhat_reversible(CommandType t){

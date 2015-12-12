@@ -40,7 +40,8 @@ class utf8_string;
 
 // True if the command affects the raster layer in a document-changing
 // way (not merely selecting a region for example).
-bool affects_raster(const Command*);
+bool affects_raster(const Command&);
+bool affects_raster(const CommandPtr&);
 bool fully_reversible(CommandType);
 bool somewhat_reversible(CommandType);
 

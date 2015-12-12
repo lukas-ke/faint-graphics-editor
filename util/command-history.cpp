@@ -311,7 +311,7 @@ Optional<IntPoint> CommandHistory::Apply(Command* cmd,
   const bool targetCurrentFrame = (activeImage == &images.Active());
   commandContext.SetFrame(activeImage);
 
-  if (affects_raster(cmd)){
+  if (affects_raster(*cmd)){
     if (!activeImage->HasStoredOriginal()){
       // Store the bitmap data (for undo) on the first change.
       activeImage->StoreAsOriginal();
