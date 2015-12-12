@@ -96,19 +96,19 @@ private:
   IntPoint m_topLeft;
 };
 
-Command* set_object_bitmap_command(ObjRaster* obj,
+CommandPtr set_object_bitmap_command(ObjRaster* obj,
   const Bitmap& bmp,
   const Tri& tri,
   const utf8_string& name)
 {
-  return new SetObjectBitmapCommand(obj, bmp, tri, name);
+  return std::make_unique<SetObjectBitmapCommand>(obj, bmp, tri, name);
 }
 
-Command* set_bitmap_command(const Bitmap& bmp,
+CommandPtr set_bitmap_command(const Bitmap& bmp,
   const IntPoint& topLeft,
   const utf8_string& name)
 {
-  return new SetBitmapCommand(bmp, topLeft, name);
+  return std::make_unique<SetBitmapCommand>(bmp, topLeft, name);
 }
 
 } // namespace

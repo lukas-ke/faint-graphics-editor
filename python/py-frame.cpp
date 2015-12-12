@@ -198,8 +198,8 @@ static void frame_set_pixel(const Frame& frame,
 
 using common_type = const Frame&;
 
-void py_common_run_command(const Frame& frame, Command* cmd){
-  frame.ctx.RunCommand(frame, cmd);
+void py_common_run_command(const Frame& frame, CommandPtr cmd){
+  frame.ctx.RunCommand(frame, std::move(cmd));
 }
 
 /* extra_include: "generated/python/method-def/py-common-method-def.hh" */

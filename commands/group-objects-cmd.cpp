@@ -131,20 +131,21 @@ private:
   bool m_select;
 };
 
-std::pair<Command*, Object*> group_objects_command(const objects_t& objects,
+std::pair<CommandPtr, Object*> group_objects_command(const objects_t& objects,
   const select_added& select)
 {
   assert(!objects.empty());
-  auto* cmd = new GroupObjectsCommand(objects, select);
-  return {cmd, cmd->GetComposite()};
+  auto cmd = std::make_unique<GroupObjectsCommand>(objects, select);
+  auto composite = cmd->GetComposite();
+  return {std::move(cmd), composite};
 }
 
-Command* ungroup_objects_command(const objects_t& objects,
+CommandPtr ungroup_objects_command(const objects_t& objects,
   const select_added& select)
 {
   assert(!objects.empty());
   assert(all_of(objects, has_subobjects));
-  return new UngroupObjectsCommand(objects, select);
+  return std::make_unique<UngroupObjectsCommand>(objects, select);
 }
 
 } // namespace

@@ -23,7 +23,7 @@ class Object;
 
 // Command which removes the point at pointIndex from the object. Only
 // valid for some object types.
-Command* remove_point_command(Object*, int pointIndex);
+CommandPtr remove_point_command(Object*, int pointIndex);
 
 } // namespace
 

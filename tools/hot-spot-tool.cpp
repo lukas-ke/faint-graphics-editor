@@ -82,7 +82,8 @@ public:
 
       m_hotSpot = hotSpot;
       m_command.Set(perhaps_bunch(CommandType::FRAME,
-          bunch_name("Set frame hot spots"), commands));
+        bunch_name("Set frame hot spots"),
+        std::move(commands)));
       return ToolResult::COMMIT;
     }
     else{
@@ -110,7 +111,7 @@ public:
     return ToolResult::NONE;
   }
 
-  Command* GetCommand() override{
+  CommandPtr GetCommand() override{
     return m_command.Take();
   }
 

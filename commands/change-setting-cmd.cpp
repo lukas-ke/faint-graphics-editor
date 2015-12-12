@@ -46,11 +46,11 @@ private:
   Settings m_oldSettings;
 };
 
-Command* change_settings_command(Object* obj,
+CommandPtr change_settings_command(Object* obj,
   const NewSettings& newSettings,
   const OldSettings& oldSettings){
 
-  return new ChangeSettingsCommand(obj, newSettings, oldSettings);
+  return std::make_unique<ChangeSettingsCommand>(obj, newSettings, oldSettings);
 }
 
 } // namespace

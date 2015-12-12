@@ -1,5 +1,5 @@
 // -*- coding: us-ascii-unix -*-
-// Copyright 2012 Lukas Kemmer
+// Copyright 2015 Lukas Kemmer
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you
 // may not use this file except in compliance with the License. You
@@ -13,21 +13,15 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_DRAW_OBJECT_CMD_HH
-#define FAINT_DRAW_OBJECT_CMD_HH
-#include "util/distinct.hh"
+#ifndef FAINT_COMMAND_PTR_HH
+#define FAINT_COMMAND_PTR_HH
+#include <memory>
 
 namespace faint{
+
 class Command;
-class Object;
+using CommandPtr = std::unique_ptr<Command>;
 
-// Command for drawing the object (as raster graphics).
-// Assumes ownership, will delete the object on destruction.
-CommandPtr draw_object_command(const its_yours_t<Object>&);
-
-// Does not delete the object.
-CommandPtr draw_object_command(const just_a_loan_t<Object>&);
-
-}
+} // namespace
 
 #endif

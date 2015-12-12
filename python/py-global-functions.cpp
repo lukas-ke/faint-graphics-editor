@@ -19,6 +19,7 @@
 #include "app/canvas.hh"
 #include "app/faint-resize-dialog-context.hh"
 #include "bitmap/pattern.hh" // For pattern_status
+#include "commands/command.hh"
 #include "geo/int-point.hh"
 #include "gui/dialogs.hh"
 #include "objects/objraster.hh"

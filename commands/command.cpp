@@ -49,7 +49,7 @@ void Command::DoRaster(CommandContext& context){
   Do(context);
 }
 
-Command* Command::GetDWIM(){
+CommandPtr Command::GetDWIM(){
   assert(false);
   return nullptr;
 }
@@ -62,7 +62,7 @@ bool Command::HasDWIM() const{
   return false;
 }
 
-bool Command::Merge(Command*, bool){
+bool Command::Merge(CommandPtr&, bool){
   return false;
 }
 

@@ -18,7 +18,7 @@ struct Smth_property_$name{
       throw ValueError("Argument outside range [$min_value, $max_value].");
     }
 
-    auto* cmd = change_setting_command(self.obj, $setting, value);
-    self.ctx->RunCommand(*self.canvas, cmd, self.frameId);
+    auto cmd = change_setting_command(self.obj, $setting, value);
+    self.ctx->RunCommand(*self.canvas, std::move(cmd), self.frameId);
   }
 };

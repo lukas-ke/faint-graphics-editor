@@ -42,8 +42,8 @@ private:
   IntPoint m_pos;
 };
 
-Command* put_pixel_command(const IntPoint& pos, const Color& color){
-  return new PutPixelCommand(pos, color);
+CommandPtr put_pixel_command(const IntPoint& pos, const Color& color){
+  return std::make_unique<PutPixelCommand>(pos, color);
 }
 
 } // namespace

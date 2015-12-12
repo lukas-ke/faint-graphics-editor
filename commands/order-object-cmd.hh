@@ -15,11 +15,11 @@
 
 #ifndef FAINT_ORDER_OBJECT_CMD_HH
 #define FAINT_ORDER_OBJECT_CMD_HH
+#include "commands/command-ptr.hh"
 #include "util/distinct.hh"
 
 namespace faint{
 
-class Command;
 class Object;
 class utf8_string;
 
@@ -31,7 +31,7 @@ utf8_string forward_or_back_str(const NewZ&, const OldZ&);
 
 // Command which changes the Z-order of the object to NewZ. OldZ is
 // used for undo.
-Command* order_object_command(Object*, const NewZ&, const OldZ&);
+CommandPtr order_object_command(Object*, const NewZ&, const OldZ&);
 
 } // namespace
 

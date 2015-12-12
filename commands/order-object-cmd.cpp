@@ -54,8 +54,11 @@ private:
   OldZ m_oldZ;
 };
 
-Command* order_object_command(Object* object, const NewZ& newZ, const OldZ& oldZ){
-  return new OrderObjectCommand(object,newZ, oldZ);
+CommandPtr order_object_command(Object* object,
+  const NewZ& newZ,
+  const OldZ& oldZ)
+{
+  return std::make_unique<OrderObjectCommand>(object,newZ, oldZ);
 }
 
 } // namespace

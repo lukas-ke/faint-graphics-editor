@@ -15,22 +15,22 @@
 
 #ifndef FAINT_SET_BITMAP_CMD_HH
 #define FAINT_SET_BITMAP_CMD_HH
+#include "commands/command-ptr.hh"
 
 namespace faint{
 
 class Bitmap;
-class Command;
 class ObjRaster;
 class Tri;
 class utf8_string;
 
 // Sets the image bitmap and offsets any objects using topLeft.
-Command* set_bitmap_command(const Bitmap&,
+CommandPtr set_bitmap_command(const Bitmap&,
   const IntPoint& topLeft,
   const utf8_string& name);
 
 // Sets the bitmap used by the raster object.
-Command* set_object_bitmap_command(ObjRaster*,
+CommandPtr set_object_bitmap_command(ObjRaster*,
   const Bitmap&, const Tri&,
   const utf8_string& name);
 

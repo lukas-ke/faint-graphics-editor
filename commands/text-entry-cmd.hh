@@ -15,17 +15,18 @@
 
 #ifndef FAINT_TEXT_ENTRY_CMD_HH
 #define FAINT_TEXT_ENTRY_CMD_HH
+#include "commands/command-ptr.hh"
 #include "util/distinct.hh"
 
 namespace faint{
-class Command;
+
 class ObjText;
 class utf8_string;
 
 using NewText = Order<utf8_string>::New;
 using OldText = Order<utf8_string>::Old;
 
-Command* text_entry_command(ObjText*, const NewText&, const OldText&);
+CommandPtr text_entry_command(ObjText*, const NewText&, const OldText&);
 
 } // namespace
 

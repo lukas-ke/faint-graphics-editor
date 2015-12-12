@@ -23,7 +23,7 @@ namespace faint{
 class Command;
 class Object;
 
-Command* set_object_name_command(Object*, const Optional<utf8_string>&);
+CommandPtr set_object_name_command(Object*, const Optional<utf8_string>&);
 
 } // namespace
 

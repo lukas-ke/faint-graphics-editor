@@ -169,9 +169,11 @@ public:
     ctx.SetBitmap(rotate_bilinear(ctx.GetBitmap(), m_angle, m_bg));
   }
 
-  Command* GetDWIM() override{
+  CommandPtr GetDWIM() override{
     assert(m_altBg.IsSet());
-    return new RotateImageCommand(m_angle, m_altBg.Get(), alternate(m_bg));
+    return std::make_unique<RotateImageCommand>(m_angle,
+      m_altBg.Get(),
+      alternate(m_bg));
   }
 
   utf8_string Name() const override{
@@ -194,24 +196,24 @@ private:
   Point m_offset;
 };
 
-Command* rotate_image_command(const Angle& angle, const Paint& bg){
-  return new RotateImageCommand(angle, bg);
+CommandPtr rotate_image_command(const Angle& angle, const Paint& bg){
+  return std::make_unique<RotateImageCommand>(angle, bg);
 }
 
-Command* rotate_image_command(const Angle& angle, const Paint& bg,
+CommandPtr rotate_image_command(const Angle& angle, const Paint& bg,
   const AltPaint& altBg)
 {
   return altBg.Get() == bg ?
-    new RotateImageCommand(angle, bg) :
-    new RotateImageCommand(angle, bg, altBg);
+    std::make_unique<RotateImageCommand>(angle, bg) :
+    std::make_unique<RotateImageCommand>(angle, bg, altBg);
 }
 
-Command* rotate_image_90cw_command(){
-  return new RotateImage90Command();
+CommandPtr rotate_image_90cw_command(){
+  return std::make_unique<RotateImage90Command>();
 }
 
-Command* flip_image_command(Axis axis){
-  return new FlipImageCommand(axis);
+CommandPtr flip_image_command(Axis axis){
+  return std::make_unique<FlipImageCommand>(axis);
 }
 
 static Point get_object_offset(const Rect& imageRect,
@@ -277,11 +279,11 @@ private:
   Scale m_scale;
 };
 
-Command* rotate_scale_image_bilinear_command(const Angle& angle,
+CommandPtr rotate_scale_image_bilinear_command(const Angle& angle,
   const Scale& scale,
   const Paint& bg)
 {
-  return new RotateScaleImageCommand(angle, scale, bg);
+  return std::make_unique<RotateScaleImageCommand>(angle, scale, bg);
 }
 
 } // namespace

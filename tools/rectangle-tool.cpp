@@ -76,7 +76,7 @@ public:
     return layer == Layer::RASTER;
   }
 
-  Command* GetCommand() override{
+  CommandPtr GetCommand() override{
     return m_command.Take();
   }
 

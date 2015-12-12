@@ -362,9 +362,9 @@ bool CommandHistory::ApplyDWIM(ImageList& images,
     return false;
   }
 
-  Command* dwim = m_undoList.back().command->GetDWIM();
+  CommandPtr dwim = m_undoList.back().command->GetDWIM();
   Undo(ctx, geo);
-  Apply(dwim, clear_redo(true), &images.Active(), images, ctx, geo);
+  Apply(dwim.release(), clear_redo(true), &images.Active(), images, ctx, geo);
   return true;
 }
 

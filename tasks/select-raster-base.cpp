@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include "app/canvas.hh"
+#include "commands/command.hh"
 #include "commands/set-raster-selection-cmd.hh"
 #include "tasks/select-raster-base.hh"
 #include "util/raster-selection.hh"
@@ -30,10 +31,10 @@ void RasterSelectionTask::UpdateSettings(){
   Canvas& canvas(GetCanvas());
   const RasterSelection& selection = canvas.GetRasterSelection();
   if (selection.Exists()){
-    Command* cmd =
+    canvas.RunCommand(
       set_selection_options_command(New(raster_selection_options(GetSettings())),
-        Old(selection.GetOptions()));
-    canvas.RunCommand(cmd);
+        Old(selection.GetOptions())));
+
   }
 }
 

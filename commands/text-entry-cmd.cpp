@@ -49,10 +49,10 @@ private:
   const utf8_string m_new;
 };
 
-Command* text_entry_command(ObjText* obj, const NewText& newText,
+CommandPtr text_entry_command(ObjText* obj, const NewText& newText,
   const OldText& oldText)
 {
-  return new TextEntryCommand(obj, newText, oldText);
+  return std::make_unique<TextEntryCommand>(obj, newText, oldText);
 }
 
 } // namespace

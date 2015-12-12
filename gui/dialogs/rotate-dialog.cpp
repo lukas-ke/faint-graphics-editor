@@ -40,7 +40,7 @@ namespace faint{
 
 using Accelerators = std::vector<AcceleratorEntry>;
 
-static Command* dummy_function(const Canvas&){
+static CommandPtr dummy_function(const Canvas&){
   // Avoids leaving RotateDialog::m_cmdFunc uninitialized
   return nullptr;
 }
@@ -239,7 +239,7 @@ public:
     center_over_parent(this);
   }
 
-  Command* GetCommand(const Canvas& canvas){
+  CommandPtr GetCommand(const Canvas& canvas){
     return m_cmdFunc(canvas);
   }
 
@@ -291,7 +291,7 @@ private:
 };
 
 
-Optional<Command*> show_rotate_dialog(wxWindow& parent,
+Optional<CommandPtr> show_rotate_dialog(wxWindow& parent,
   const Canvas& canvas,
   const Art& art,
   const std::function<Paint()>& bgColor,
@@ -304,9 +304,12 @@ Optional<Command*> show_rotate_dialog(wxWindow& parent,
     bgColor,
     selectTool);
 
-  return c.ShowModal(dlg) == DialogChoice::OK ?
-    option(dlg.GetCommand(canvas)) :
-    no_option();
+  if (c.ShowModal(dlg) == DialogChoice::OK){
+    return Optional<CommandPtr>(dlg.GetCommand(canvas));
+  }
+  else{
+    return {};
+  }
 }
 
 dialog_func bind_show_rotate_dialog(const Art& art,

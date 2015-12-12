@@ -64,13 +64,13 @@ public:
     context.SetBitmap(std::move(bmp));
   }
 
-  Command* GetDWIM() override{
+  CommandPtr GetDWIM() override{
     if (m_altBg.IsSet()){
-      return new ResizeCommand(m_rect, m_altBg.Get(),
+      return std::make_unique<ResizeCommand>(m_rect, m_altBg.Get(),
         alternate(m_bg), "Resize Image (DWIM)");
     }
     else if (m_altRect.IsSet()){
-      return new ResizeCommand(m_altRect.Get(),
+      return std::make_unique<ResizeCommand>(m_altRect.Get(),
         alternate(m_rect), m_bg, "Resize Image (DWIM)");
     }
     assert(false);
@@ -105,22 +105,22 @@ private:
   IntRect m_rect;
 };
 
-Command* resize_command(const IntRect& rect, const Paint& bg,
+CommandPtr resize_command(const IntRect& rect, const Paint& bg,
   const utf8_string& name)
 {
-  return new ResizeCommand(rect, bg, name);
+  return std::make_unique<ResizeCommand>(rect, bg, name);
 }
 
-Command* resize_command(const IntRect& rect, const AltIntRect& altRect,
+CommandPtr resize_command(const IntRect& rect, const AltIntRect& altRect,
   const Paint& bg, const utf8_string& name)
 {
-  return new ResizeCommand(rect, altRect, bg, name);
+  return std::make_unique<ResizeCommand>(rect, altRect, bg, name);
 }
 
-Command* resize_command(const IntRect& rect, const Paint& bg,
+CommandPtr resize_command(const IntRect& rect, const Paint& bg,
   const AltPaint& altBg, const utf8_string& name)
 {
-  return new ResizeCommand(rect, bg, altBg, name);
+  return std::make_unique<ResizeCommand>(rect, bg, altBg, name);
 }
 
 } // namespace

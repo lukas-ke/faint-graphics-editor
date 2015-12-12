@@ -63,20 +63,20 @@ private:
   Optional<int> m_z;
 };
 
-Command* add_object_command(Object* obj,
+CommandPtr add_object_command(Object* obj,
   const select_added& selectAdded,
   const utf8_string& name)
 {
-  return new AddObjectCommand(obj, selectAdded, no_option(), name);
+  return std::make_unique<AddObjectCommand>(obj, selectAdded, no_option(), name);
 }
 
-Command* insert_object_command(Object* obj,
+CommandPtr insert_object_command(Object* obj,
   const select_added& selectAdded,
   int z,
   const utf8_string& name)
 {
   assert(z >= 0);
-  return new AddObjectCommand(obj, selectAdded, option(z), name);
+  return std::make_unique<AddObjectCommand>(obj, selectAdded, option(z), name);
 }
 
 } // namespace

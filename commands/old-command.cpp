@@ -50,10 +50,12 @@ OldCommand OldCommand::CloseGroup(const utf8_string& name){
 }
 
 bool OldCommand::Merge(OldCommand& candidate){
-  return type == UndoType::NORMAL_COMMAND &&
+  CommandPtr c(candidate.command); // Fixme: Horrendous
+  bool m = type == UndoType::NORMAL_COMMAND &&
     candidate.type == UndoType::NORMAL_COMMAND &&
-    command->Merge(candidate.command,
-    targetFrame == candidate.targetFrame);
+    command->Merge(c, targetFrame == candidate.targetFrame);
+  c.release();
+  return m;
 }
 
 } // namespace

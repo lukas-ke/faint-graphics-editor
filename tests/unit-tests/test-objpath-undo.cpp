@@ -25,7 +25,7 @@ void test_objpath_undo(){
 
   {
     test::StubCommandContext ctx;
-    std::unique_ptr<Command> cmd(add_point_command(path.get(), 1, {10.0, 10.0}));
+    auto cmd = add_point_command(path.get(), 1, {10.0, 10.0});
     cmd->Do(ctx);
     EQUAL(path->GetMovablePoints().size(), 7); // Bezier split in half
 

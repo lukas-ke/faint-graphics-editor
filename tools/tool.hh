@@ -16,6 +16,7 @@
 #ifndef FAINT_TOOL_HH
 #define FAINT_TOOL_HH
 #include "app/resource-id.hh" // For Cursor
+#include "commands/command-ptr.hh"
 #include "tools/refresh-info.hh"
 #include "tools/tool-contexts.hh"
 #include "tools/tool-id.hh"
@@ -23,7 +24,6 @@
 
 namespace faint{
 
-class Command;
 class FaintDC;
 class IntRect;
 class Point;
@@ -61,7 +61,7 @@ public:
   // only used for making object selection setting changes affect the
   // objects, and leave the general tool settings unchanged.
   virtual bool EatsSettings() const = 0;
-  virtual Command* GetCommand() = 0;
+  virtual CommandPtr GetCommand() = 0;
   virtual Cursor GetCursor(const PosInfo&) const = 0;
   ToolId GetId() const;
 

@@ -52,8 +52,8 @@ private:
   std::function<void()> m_undoFunc;
 };
 
-Command* add_point_command(Object* object, int pointIndex, const Point& point){
-  return new AddPointCommand(object, pointIndex, point);
+CommandPtr add_point_command(Object* object, int pointIndex, const Point& point){
+  return std::make_unique<AddPointCommand>(object, pointIndex, point);
 }
 
 } // namespace

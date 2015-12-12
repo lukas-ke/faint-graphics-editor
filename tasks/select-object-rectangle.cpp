@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include "app/active-canvas.hh"
+#include "commands/command.hh"
 #include "geo/geo-func.hh"
 #include "geo/rect.hh"
 #include "rendering/overlay.hh"
@@ -85,7 +86,7 @@ public:
     return Cursor::CROSSHAIR;
   }
 
-  Command* GetCommand() override{
+  CommandPtr GetCommand() override{
     return nullptr;
   }
 

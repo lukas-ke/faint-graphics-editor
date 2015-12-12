@@ -46,8 +46,8 @@ private:
   int m_objectZ;
 };
 
-Command* delete_object_command(Object* object, int z, const utf8_string& name){
-  return new DeleteObjectCommand(object, z, name);
+CommandPtr delete_object_command(Object* object, int z, const utf8_string& name){
+  return std::make_unique<DeleteObjectCommand>(object, z, name);
 }
 
 } // namespace

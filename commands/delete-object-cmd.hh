@@ -23,7 +23,7 @@ class Object;
 
 // Command for removing an object from a Canvas. (note: Does not
 // delete the object pointer).
-Command* delete_object_command(Object*, int z, const utf8_string& name="Delete");
+CommandPtr delete_object_command(Object*, int z, const utf8_string& name="Delete");
 
 } // namespace
 

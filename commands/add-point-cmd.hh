@@ -15,14 +15,14 @@
 
 #ifndef FAINT_ADD_POINT_CMD_HH
 #define FAINT_ADD_POINT_CMD_HH
+#include "commands/command-ptr.hh"
 
 namespace faint{
 
-class Command;
 class Object;
 class Point;
 
-Command* add_point_command(Object*, int pointIndex, const Point&);
+CommandPtr add_point_command(Object*, int pointIndex, const Point&);
 
 } // namespace
 

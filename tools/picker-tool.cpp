@@ -16,6 +16,7 @@
 #include <cassert>
 #include "app/canvas.hh"
 #include "bitmap/pattern.hh"
+#include "commands/command.hh"
 #include "geo/geo-func.hh"
 #include "geo/int-rect.hh"
 #include "text/formatting.hh"
@@ -88,7 +89,7 @@ public:
     return false;
   }
 
-  Command* GetCommand() override{
+  CommandPtr GetCommand() override{
     assert(false);
     return nullptr;
   }

@@ -55,18 +55,19 @@ private:
   typename T::ValueType m_oldValue;
 };
 
+// Fixme: Why retaining explicit type? Try returning CommandPtr
 template<typename T>
-ChangeSettingCommand<T>* change_setting_command(Object* obj,
+std::unique_ptr<ChangeSettingCommand<T>> change_setting_command(Object* obj,
   const T& setting,
   const typename T::ValueType& value)
 {
-  return new ChangeSettingCommand<T>(obj, setting, value);
+  return std::make_unique<ChangeSettingCommand<T>>(obj, setting, value);
 }
 
 using NewSettings = Order<Settings>::New;
 using OldSettings = Order<Settings>::Old;
 
-Command* change_settings_command(Object*,
+CommandPtr change_settings_command(Object*,
   const NewSettings&,
   const OldSettings&);
 

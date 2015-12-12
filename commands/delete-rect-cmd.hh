@@ -16,16 +16,16 @@
 #ifndef FAINT_DELETE_RECT_CMD_HH
 #define FAINT_DELETE_RECT_CMD_HH
 #include "util/distinct.hh"
+#include "commands/command-ptr.hh"
 
 namespace faint{
 
-class Command;
 class IntRect;
 class Paint;
 
-Command* delete_rect_command(const IntRect&, const Paint&);
+CommandPtr delete_rect_command(const IntRect&, const Paint&);
 
-Command* delete_rect_command(const IntRect&,
+CommandPtr delete_rect_command(const IntRect&,
   const Paint&,
   const Alternative<Paint>&);
 

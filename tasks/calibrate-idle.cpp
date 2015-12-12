@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include "app/resource-id.hh"
+#include "commands/command.hh"
 #include "geo/measure.hh"
 #include "geo/rect.hh"
 #include "rendering/overlay.hh"
@@ -52,7 +53,7 @@ public:
     return false;
   }
 
-  Command* GetCommand() override{
+  CommandPtr GetCommand() override{
     return nullptr;
   }
 
@@ -70,7 +71,7 @@ public:
 
 
   Task* GetNewTask() override{
-    return m_newTask.Take();
+    return m_newTask.Take().release(); // Fixme
   }
 
   IntRect GetRefreshRect(const RefreshInfo&) const override{

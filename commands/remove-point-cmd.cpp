@@ -50,8 +50,8 @@ private:
   Point m_point;
 };
 
-Command* remove_point_command(Object* object, int pointIndex){
-  return new RemovePointCommand(object, pointIndex);
+CommandPtr remove_point_command(Object* object, int pointIndex){
+  return std::make_unique<RemovePointCommand>(object, pointIndex);
 }
 
 } // namespace

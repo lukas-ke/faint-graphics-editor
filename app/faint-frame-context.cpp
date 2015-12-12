@@ -15,6 +15,7 @@
 
 #include "app/canvas.hh"
 #include "app/faint-frame-context.hh"
+#include "commands/command.hh"
 #include "commands/frame-cmd.hh"
 #include "util/image.hh"
 

@@ -13,6 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include "commands/command.hh"
 #include "tasks/standard-task.hh"
 #include "tasks/text-edit.hh"
 #include "tasks/text-idle.hh"
@@ -37,7 +38,7 @@ public:
     return layer == Layer::RASTER;
   }
 
-  Command* GetCommand() override{
+  CommandPtr GetCommand() override{
     return nullptr;
   }
 
@@ -52,7 +53,7 @@ public:
   }
 
   Task* GetNewTask() override{
-    return m_newTask.Take();
+    return m_newTask.Take().release(); // Fixme
   }
 
   TaskResult MouseDown(const PosInfo& info) override{

@@ -314,7 +314,7 @@ public:
     return false; // Fixme: Actually... dunno
   }
 
-  Command* GetCommand() override{
+  CommandPtr GetCommand() override{
     return m_command.Take();
   }
 
@@ -326,7 +326,7 @@ public:
   }
 
   Task* GetNewTask() override{
-    return m_newTask.Take();
+    return m_newTask.Take().release(); // Fixme
   }
 
   IntRect GetRefreshRect(const RefreshInfo&) const override{
@@ -412,12 +412,12 @@ private:
     }
 
     const utf8_string& newText(m_textObject->GetTextBuffer().get());
-    std::deque<Command*> cmds;
+    std::deque<CommandPtr> cmds;
     while (m_states.CanUndo()){
       // Fixme: Dificult to understand (first undo just moves between lists)
       TextChange& change = m_states.UndoToRedo();
       change.Undo();
-      cmds.push_front(new TextCommand(change));
+      cmds.emplace_back(std::make_unique<TextCommand>(change));
     }
 
     if (newText != m_oldText){
@@ -431,10 +431,10 @@ private:
       // No changes - create no command.
       return TaskResult::CHANGE;
     }
-    else {
-      m_command.Set(cmds.size() == 1 ?
-        cmds.back() :
-        command_bunch(CommandType::OBJECT, bunch_name("Modify Text"), cmds));
+    else{
+      m_command.Set(perhaps_bunch(CommandType::OBJECT,
+        bunch_name("Modify Text"),
+        std::move(cmds)));
       return TaskResult::COMMIT_AND_CHANGE;
     }
   }

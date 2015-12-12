@@ -710,14 +710,14 @@ void FaintWindowContext::ModalFull(const dialog_func& show_dialog){
   Canvas& canvas = m_faintWindow.GetActiveCanvas();
   DialogFeedbackImpl feedback(canvas);
   BeginModalDialog();
-  Optional<Command*> maybeCmd = show_dialog(m_faintWindow.GetRawFrame(),
+  Optional<CommandPtr> maybeCmd = show_dialog(m_faintWindow.GetRawFrame(),
     feedback, canvas);
   EndModalDialog();
   if (maybeCmd.NotSet()){
     canvas.Refresh();
     return;
   }
-  canvas.RunCommand(maybeCmd.Get());
+  canvas.RunCommand(std::move(maybeCmd.Get()));
   canvas.Refresh();
 }
 

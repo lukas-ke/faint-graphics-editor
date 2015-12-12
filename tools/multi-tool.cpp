@@ -41,7 +41,7 @@ bool MultiTool::EatsSettings() const{
   return m_task->EatsSettings();
 }
 
-Command* MultiTool::GetCommand(){
+CommandPtr MultiTool::GetCommand(){
   return m_command.Take();
 }
 

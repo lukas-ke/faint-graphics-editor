@@ -15,28 +15,27 @@
 
 #ifndef FAINT_RESIZE_CMD_HH
 #define FAINT_RESIZE_CMD_HH
+#include "commands/command-ptr.hh"
 #include "geo/geo-fwd.hh"
 #include "text/utf8-string.hh"
 #include "util/distinct.hh"
 
 namespace faint{
 
-class Command;
-
 using AltIntRect = Alternative<IntRect>;
 using AltPaint = Alternative<Paint>;
 
 // Command for resizing the image to the specified rectangle, using
 // the Paint as the fill if growing.
-Command* resize_command(const IntRect&, const Paint&,
+CommandPtr resize_command(const IntRect&, const Paint&,
   const utf8_string& name="Resize Image");
 
 // Resize with an alternate IntRect used for DWIM-resize.
-Command* resize_command(const IntRect&, const AltIntRect&, const Paint&,
+CommandPtr resize_command(const IntRect&, const AltIntRect&, const Paint&,
   const utf8_string& name="Resize Image");
 
 // Resize with an alternate Paint for DWIM-resize.
-Command* resize_command(const IntRect&, const Paint&, const AltPaint&,
+CommandPtr resize_command(const IntRect&, const Paint&, const AltPaint&,
   const utf8_string& name="Resize Image");
 
 } // namespace

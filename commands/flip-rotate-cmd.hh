@@ -27,17 +27,17 @@ class Paint;
 
 using AltPaint = Alternative<Paint>;
 
-Command* rotate_scale_image_bilinear_command(const Angle&,
+CommandPtr rotate_scale_image_bilinear_command(const Angle&,
   const Scale&, const Paint& bg);
 
-Command* rotate_image_command(const Angle&, const Paint& bg);
+CommandPtr rotate_image_command(const Angle&, const Paint& bg);
 
-Command* rotate_image_command(const Angle&, const Paint& bg,
+CommandPtr rotate_image_command(const Angle&, const Paint& bg,
   const AltPaint& altBg);
 
-Command* rotate_image_90cw_command();
+CommandPtr rotate_image_90cw_command();
 
-Command* flip_image_command(Axis);
+CommandPtr flip_image_command(Axis);
 
 } // namespace
 

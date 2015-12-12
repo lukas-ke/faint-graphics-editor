@@ -128,7 +128,7 @@ public:
     return layer == Layer::RASTER;
   }
 
-  Command* GetCommand() override{
+  CommandPtr GetCommand() override{
     return m_command.Take();
   }
 
@@ -235,7 +235,7 @@ private:
     return m_command.Valid() ? ToolResult::COMMIT : ToolResult::NONE;
   }
 
-  Command* CreateCommand(Layer layer){
+  CommandPtr CreateCommand(Layer layer){
     assert(m_points.size() >= 2);
     std::vector<Point> points(std::move(m_points));
     m_states.Clear();

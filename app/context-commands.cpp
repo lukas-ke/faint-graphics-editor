@@ -33,7 +33,7 @@
 
 namespace faint{
 
-Command* context_targetted(BitmapCommand* cmd, Canvas& canvas){
+CommandPtr context_targetted(BitmapCommand* cmd, Canvas& canvas){
   return sel::visit(canvas.GetRasterSelection(),
     [=](const sel::Empty&){
       return target_full_image(cmd);
@@ -46,7 +46,7 @@ Command* context_targetted(BitmapCommand* cmd, Canvas& canvas){
     });
 }
 
-Command* get_apply_command(const Canvas& canvas, const Operation& op){
+CommandPtr get_apply_command(const Canvas& canvas, const Operation& op){
   return dispatch_target(get_apply_target(canvas),
     [&](OBJECT_SELECTION){
       return op.DoObjects(canvas.GetImage().GetObjectSelection());
@@ -59,27 +59,30 @@ Command* get_apply_command(const Canvas& canvas, const Operation& op){
     });
 }
 
-static Command* context_crop_raster(const Image& active, const Paint& bg){
+static CommandPtr context_crop_raster(const Image& active, const Paint& bg){
   return crop_to_raster_selection_command(active, bg);
 }
 
-static Command* context_crop_object(const Image& active){
+static CommandPtr context_crop_object(const Image& active){
   return get_crop_command(active.GetObjectSelection());
 }
 
-Command* context_crop(Canvas& canvas, const Paint& bg){
+CommandPtr context_crop(Canvas& canvas, const Paint& bg){
   const Image& active(canvas.GetImage());
   const Layer layer = canvas.GetTool().GetLayerType();
 
-  Command* cmd = layer == Layer::RASTER ?
+  auto cmd = layer == Layer::RASTER ?
     context_crop_raster(active, bg) :
     context_crop_object(active);
 
-  return cmd != nullptr ?
-    cmd :
+  if (cmd != nullptr){
+    return cmd;
+  }
+  else{
     // No active raster selections and no croppable objects selected,
     // do an auto-crop
-    get_auto_crop_command(active);
+    return get_auto_crop_command(active);
+  }
 }
 
 void context_delete(Canvas& canvas, const Paint& bg){
@@ -99,15 +102,15 @@ void context_delete(Canvas& canvas, const Paint& bg){
     canvas.RunCommand(get_delete_objects_command(objects, image));
   }
   else if (tool.GetLayerType() == Layer::RASTER){
-    Command* cmd = get_delete_raster_selection_command(canvas.GetImage(), bg);
+    auto cmd = get_delete_raster_selection_command(canvas.GetImage(), bg);
     if (cmd != nullptr){
-      canvas.RunCommand(cmd);
+      canvas.RunCommand(std::move(cmd));
     }
   }
   canvas.Refresh();
 }
 
-Command* context_deselect(Canvas& canvas){
+CommandPtr context_deselect(Canvas& canvas){
   ToolInterface& tool(canvas.GetTool());
   if (tool.Deselect()){
     return nullptr;
@@ -127,7 +130,7 @@ Command* context_deselect(Canvas& canvas){
   }
 }
 
-Command* context_flatten(Canvas& canvas){
+CommandPtr context_flatten(Canvas& canvas){
   const Image& active = canvas.GetImage();
   const objects_t& allObjects = active.GetObjects();
   if (allObjects.empty()){
@@ -140,15 +143,15 @@ Command* context_flatten(Canvas& canvas){
     active);
 }
 
-Command* context_flip_horizontal(const Canvas& canvas){
+CommandPtr context_flip_horizontal(const Canvas& canvas){
   return get_apply_command(canvas, OperationFlip(Axis::HORIZONTAL));
 }
 
-Command* context_flip_vertical(const Canvas& canvas){
+CommandPtr context_flip_vertical(const Canvas& canvas){
   return get_apply_command(canvas, OperationFlip(Axis::VERTICAL));
 }
 
-Command* context_offset(Canvas& canvas, const IntPoint& delta){
+CommandPtr context_offset(Canvas& canvas, const IntPoint& delta){
   return dispatch_target(get_apply_target(canvas),
     [&](OBJECT_SELECTION){
       const objects_t& objectSelection(canvas.GetImage().GetObjectSelection());
@@ -158,43 +161,40 @@ Command* context_offset(Canvas& canvas, const IntPoint& delta){
     [&](RASTER_SELECTION){
       return get_offset_raster_selection_command(canvas.GetImage(), delta);
     },
-    [&](IMAGE) -> Command*{
+    [&](IMAGE) -> CommandPtr{
       canvas.SetScrollPos(canvas.GetScrollPos() + delta);
       return nullptr;
     });
 }
 
-static Command* pixel_snap(const objects_t& objects){
+static CommandPtr pixel_snap(const objects_t& objects){
   if (objects.empty()){
     return nullptr;
   }
 
-  std::vector<Command*> cmds;
+  std::vector<CommandPtr> cmds;
   for (auto obj : objects){
-    auto* cmd = get_pixel_snap_command(obj);
+    auto cmd = get_pixel_snap_command(obj);
     if (obj != nullptr){
-      cmds.push_back(cmd);
+      cmds.emplace_back(std::move(cmd));
     }
   }
   if (cmds.empty()){
     return nullptr;
   }
-  else if (cmds.size() == 1){
-    return cmds.front();
-  }
   else{
     return perhaps_bunch(CommandType::OBJECT, bunch_name("Pixel Snap"),
-      cmds);
+      std::move(cmds));
   }
 }
 
-Command* context_pixel_snap(Canvas& canvas){
+CommandPtr context_pixel_snap(Canvas& canvas){
   const objects_t& objectSelection(canvas.GetImage().GetObjectSelection());
   return objectSelection.empty() ? pixel_snap(canvas.GetImage().GetObjects())
     : pixel_snap(objectSelection);
 }
 
-Command* context_rotate90cw(const Canvas& canvas){
+CommandPtr context_rotate90cw(const Canvas& canvas){
   return dispatch_target(get_apply_target(canvas),
     [&](OBJECT_SELECTION){
       const objects_t& objectSelection(canvas.GetImage().GetObjectSelection());
@@ -213,7 +213,7 @@ Command* context_rotate90cw(const Canvas& canvas){
     });
 }
 
-Command* context_rotate(const Canvas& canvas,
+CommandPtr context_rotate(const Canvas& canvas,
   const Angle& angle,
   const Paint& bg)
 {
@@ -236,7 +236,7 @@ Command* context_rotate(const Canvas& canvas,
     });
 }
 
-Command* context_select_all(Canvas& canvas, const change_tool_f& selectTool){
+CommandPtr context_select_all(Canvas& canvas, const change_tool_f& selectTool){
   ToolInterface& tool(canvas.GetTool());
 
   if (tool.SelectAll()){
@@ -259,12 +259,12 @@ Command* context_select_all(Canvas& canvas, const change_tool_f& selectTool){
   }
 }
 
-Command* context_set_alpha(Canvas& canvas, uchar alpha){
+CommandPtr context_set_alpha(Canvas& canvas, uchar alpha){
   BitmapCommand* cmd = get_set_alpha_command(alpha);
   return context_targetted(cmd, canvas);
 }
 
-Command* context_scale_objects(const Canvas& canvas, const Size& size){
+CommandPtr context_scale_objects(const Canvas& canvas, const Size& size){
   // Fixme: Make this take the list of objects instead
   const Image& active = canvas.GetImage();
   const objects_t& objectSelection(active.GetObjectSelection());
@@ -274,7 +274,7 @@ Command* context_scale_objects(const Canvas& canvas, const Size& size){
   return get_scale_command(objectSelection, scale, origin);
 }
 
-Command* group_selected_objects(Canvas& canvas){
+CommandPtr group_selected_objects(Canvas& canvas){
   const Image& active(canvas.GetImage());
   const objects_t& objectSelection(active.GetObjectSelection());
 
@@ -284,10 +284,10 @@ Command* group_selected_objects(Canvas& canvas){
   }
   cmd_and_group_t cmd =
     group_objects_command(objectSelection, select_added(true));
-  return cmd.first;
+  return std::move(cmd.first);
 }
 
-Command* context_objects_backward(Canvas& canvas){
+CommandPtr context_objects_backward(Canvas& canvas){
   const Image& active(canvas.GetImage());
   const objects_t& objectSelection(active.GetObjectSelection());
   if (objectSelection.empty()){
@@ -296,7 +296,7 @@ Command* context_objects_backward(Canvas& canvas){
   return get_objects_backward_command(objectSelection, active);
 }
 
-Command* context_objects_forward(Canvas& canvas){
+CommandPtr context_objects_forward(Canvas& canvas){
   const Image& active(canvas.GetImage());
   const objects_t& objectSelection(active.GetObjectSelection());
   if (objectSelection.empty()){
@@ -305,7 +305,7 @@ Command* context_objects_forward(Canvas& canvas){
   return get_objects_forward_command(objectSelection, active);
 }
 
-Command* context_objects_to_front(Canvas& canvas){
+CommandPtr context_objects_to_front(Canvas& canvas){
   const Image& active(canvas.GetImage());
   const objects_t& objectSelection(active.GetObjectSelection());
   if (objectSelection.empty()){
@@ -314,7 +314,7 @@ Command* context_objects_to_front(Canvas& canvas){
   return get_objects_to_front_command(objectSelection, active);
 }
 
-Command* context_objects_to_path(Canvas& canvas){
+CommandPtr context_objects_to_path(Canvas& canvas){
   const Image& image(canvas.GetImage());
   const objects_t& selection(image.GetObjectSelection());
   if (selection.empty()){
@@ -324,7 +324,7 @@ Command* context_objects_to_path(Canvas& canvas){
   return get_objects_to_paths_command(selection, image, select_added(true));
 }
 
-Command* context_objects_to_back(Canvas& canvas){
+CommandPtr context_objects_to_back(Canvas& canvas){
   const Image& active(canvas.GetImage());
   const objects_t& objectSelection(active.GetObjectSelection());
   if (objectSelection.empty()){
@@ -333,7 +333,7 @@ Command* context_objects_to_back(Canvas& canvas){
   return get_objects_to_back_command(objectSelection, active);
 }
 
-Command* ungroup_selected_objects(Canvas& canvas){
+CommandPtr ungroup_selected_objects(Canvas& canvas){
   const Image& active(canvas.GetImage());
   objects_t groups = get_groups(active.GetObjectSelection());
   if (groups.empty()){

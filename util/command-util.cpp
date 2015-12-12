@@ -24,6 +24,7 @@
 #include "commands/add-object-cmd.hh"
 #include "commands/change-setting-cmd.hh"
 #include "commands/command-bunch.hh"
+#include "commands/command.hh"
 #include "commands/delete-object-cmd.hh"
 #include "commands/draw-object-cmd.hh"
 #include "commands/flip-rotate-cmd.hh"
@@ -55,6 +56,15 @@
 #include "util/visit-selection.hh"
 
 namespace faint{
+
+static CommandPtr pop_back(commands_t& commands){
+  // Fixme: Move elsewhere
+  auto it = commands.begin() + commands.size() - 1;
+  CommandPtr p(std::move(*it));
+  commands.erase(it);
+  return p;
+}
+
 
 static Optional<Color> get_dwim_delete_color(
   const Either<Bitmap, ColorSpan>& bg,
@@ -94,40 +104,40 @@ static bunch_name get_bunch_name(const objects_t& objects,
   return bunch_name(space_sep(get_collective_type(objects), command));
 }
 
-static Command* maybe_stamp_old_selection(Command* newCommand,
+static CommandPtr maybe_stamp_old_selection(CommandPtr newCommand,
   const RasterSelection& currentSelection)
 {
-  auto do_stamp = [newCommand](const auto& selection) -> Command*{
+  auto do_stamp = [](const auto& selection, CommandPtr newCommand) -> CommandPtr{
     // Helper for Selection of type sel::Rectangle or sel::Moving.
     using namespace faint;
     return command_bunch(CommandType::HYBRID,
       bunch_name(newCommand->Name()),
       stamp_floating_selection_command(selection),
-      newCommand);
+      std::move(newCommand));
   };
 
   return sel::visit(currentSelection,
-    [&](const sel::Empty&){
-      return newCommand;
+    [&](const sel::Empty&) -> CommandPtr{
+      return std::move(newCommand);
     },
     [&](const sel::Rectangle&){
-      return newCommand;
+      return std::move(newCommand);
     },
     [&](const sel::Moving& s){
-      return do_stamp(s);
+      return do_stamp(s, std::move(newCommand));
     },
     [&](const sel::Copying& s){
-      return do_stamp(s);
+      return do_stamp(s, std::move(newCommand));
     });
 }
 
-Command* add_or_draw(Object* obj, Layer layer){
+CommandPtr add_or_draw(Object* obj, Layer layer){
   return layer == Layer::RASTER ?
     draw_object_command(its_yours(obj)) :
     add_object_command(obj, select_added(false));
 }
 
-Command* crop_one_object(Object* obj){
+CommandPtr crop_one_object(Object* obj){
   ObjRaster* raster = dynamic_cast<ObjRaster*>(obj);
   if (raster != nullptr){
     return crop_raster_object_command(raster);
@@ -143,20 +153,20 @@ BitmapCommand* get_aa_line_command(const IntLineSegment& line, const ColRGB& c){
   return function_command("Draw Wu-line", draw_line_aa_Wu, line, c);
 }
 
-Command* get_add_objects_command(const objects_t& objects,
+CommandPtr get_add_objects_command(const objects_t& objects,
   const select_added& select,
   const utf8_string& name)
 {
-  std::vector<Command*> commands;
+  std::vector<CommandPtr> commands;
   for (Object* obj : objects){
     commands.emplace_back(add_object_command(obj, select, name));
   }
 
   return perhaps_bunch(CommandType::OBJECT,
-    get_bunch_name(name, objects), commands);
+    get_bunch_name(name, objects), std::move(commands));
 }
 
-Command* crop_to_raster_selection_command(const Image& image, const Paint& bg){
+CommandPtr crop_to_raster_selection_command(const Image& image, const Paint& bg){
   const RasterSelection& selection(image.GetRasterSelection());
   if (!selection.Exists()){
     return nullptr;
@@ -164,14 +174,14 @@ Command* crop_to_raster_selection_command(const Image& image, const Paint& bg){
   return get_crop_to_selection_command(selection, bg);
 }
 
-Command* get_auto_crop_command(const Image& image){
+CommandPtr get_auto_crop_command(const Image& image){
   const bool hasObjects = !(image.GetObjects().empty());
   auto rectangles(hasObjects ?
     get_auto_crop_rectangles(flatten(image)) :
     get_auto_crop_rectangles(image.GetBackground().Get<Bitmap>()));
 
   return rectangles.Visit(
-    []() -> Command*{
+    []() -> CommandPtr{
       return nullptr;
     },
     [](const IntRect& r){
@@ -197,7 +207,7 @@ BitmapCommand* get_pinch_whirl_command(coord pinch, const Angle& whirl){
   return function_command("Pinch/Whirl", filter_pinch_whirl, pinch, whirl);
 }
 
-Command* get_change_raster_background_command(ObjRaster* obj, const Color& color){
+CommandPtr get_change_raster_background_command(ObjRaster* obj, const Color& color){
   return command_bunch(CommandType::OBJECT,
     bunch_name("Set Raster Object Background"),
     change_setting_command(obj, ts_Bg, Paint(color)),
@@ -207,7 +217,7 @@ Command* get_change_raster_background_command(ObjRaster* obj, const Color& color
 CommandType get_collective_command_type(const commands_t& cmds){
   assert(!cmds.empty());
   CommandType type = cmds.front()->Type();
-  for (const Command* cmd : but_first(cmds)){
+  for (const auto& cmd : but_first(cmds)){
     if (cmd->Type() != type){
       return CommandType::HYBRID;
     }
@@ -219,12 +229,12 @@ BitmapCommand* get_clear_command(const Paint& paint){
   return function_command("Clear", clear, paint);
 }
 
-Command* get_crop_command(const objects_t& objects){
-  std::vector<Command*> commands;
+CommandPtr get_crop_command(const objects_t& objects){
+  std::vector<CommandPtr> commands;
   for (Object* obj : objects){
-    Command* cmd = crop_one_object(obj);
+    auto cmd = crop_one_object(obj);
     if (cmd != nullptr){
-      commands.push_back(cmd);
+      commands.emplace_back(std::move(cmd));
     }
   }
 
@@ -234,21 +244,21 @@ Command* get_crop_command(const objects_t& objects){
   }
   return perhaps_bunch(CommandType::OBJECT,
     get_bunch_name("Crop", objects),
-    commands);
+    std::move(commands));
 }
 
-Command* get_crop_to_selection_command(const RasterSelection& selection,
+CommandPtr get_crop_to_selection_command(const RasterSelection& selection,
   const Paint& bg)
 {
   assert(selection.Exists());
   return resize_command(selection.GetRect(), bg, "Crop to Selection");
 }
 
-Command* get_delete_objects_command(const objects_t& objects,
+CommandPtr get_delete_objects_command(const objects_t& objects,
   const Image& image,
   const utf8_string& name)
 {
-  std::vector<Command*> commands;
+  commands_t commands;
 
   // Objects must be deleted in reverse order so that the Z-order is
   // preserved.
@@ -257,20 +267,22 @@ Command* get_delete_objects_command(const objects_t& objects,
   }
   return perhaps_bunch(CommandType::OBJECT,
     get_bunch_name(name, objects),
-    commands);
+    std::move(commands));
 }
 
-Command* get_delete_raster_selection_command(const Image& image, const Paint& bg){
+CommandPtr get_delete_raster_selection_command(const Image& image,
+  const Paint& bg)
+{
   // Fixme: Would be nicer to do sel::visit(image.GetRasterSelection())
   // and do all the work on the specific types (Floating, Moving etc),
   // but that requires adding some functionality to them.
   const RasterSelection& selection(image.GetRasterSelection());
   return sel::visit(selection,
-    [](const sel::Empty&) -> Command*{
+    [](const sel::Empty&) -> CommandPtr{
       return nullptr;
     },
 
-    [&image,&bg](const sel::Rectangle& s) -> Command*{
+    [&image,&bg](const sel::Rectangle& s) -> CommandPtr{
       IntRect rect(intersection(image_rect(image), s.Rect()));
       if (empty(rect)){
         return nullptr;
@@ -305,15 +317,15 @@ Command* get_delete_raster_selection_command(const Image& image, const Paint& bg
     });
 }
 
-Command* get_deselect_raster_command(const sel::Existing& selection){
+CommandPtr get_deselect_raster_command(const sel::Existing& selection){
   return sel::visit(selection,
-    [&](const sel::Rectangle&)->Command*{
+    [&](const sel::Rectangle&){
       // Just deselect
       return set_raster_selection_command(New(SelectionState()),
         Old(selection.GetState()), "Deselect Raster");
     },
 
-    [&](const sel::Moving& moving)->Command*{
+    [&](const sel::Moving& moving){
       return command_bunch(CommandType::HYBRID,
         bunch_name("Deselect Raster (moved)"),
         stamp_floating_selection_command(moving),
@@ -321,7 +333,7 @@ Command* get_deselect_raster_command(const sel::Existing& selection){
           Old(selection.GetState()), ""));
     },
 
-    [&](const sel::Copying& copying)->Command*{
+    [&](const sel::Copying& copying){
       return command_bunch(CommandType::HYBRID,
         bunch_name("Deselect Raster (copied)"),
         stamp_floating_selection_command(copying),
@@ -330,7 +342,7 @@ Command* get_deselect_raster_command(const sel::Existing& selection){
     });
 }
 
-Command* get_insert_raster_bitmap_command(const Bitmap& bmp,
+CommandPtr get_insert_raster_bitmap_command(const Bitmap& bmp,
   const IntPoint& topLeft,
   const RasterSelection& oldSelection,
   const Settings& s,
@@ -357,36 +369,36 @@ BitmapCommand* get_quantize_command(){
     });
 }
 
-Command* get_selection_rectangle_command(const IntRect& r,
+CommandPtr get_selection_rectangle_command(const IntRect& r,
   const RasterSelection& currentSelection)
 {
-  Command* selectRectangle =
+  auto selectRectangle =
     set_raster_selection_command(New(SelectionState(r)),
       Old(currentSelection.GetState()),
       "Select Rectangle");
-  return maybe_stamp_old_selection(selectRectangle, currentSelection);
+  return maybe_stamp_old_selection(std::move(selectRectangle), currentSelection);
 }
 
-Command* get_selection_rectangle_command(const IntRect& r,
+CommandPtr get_selection_rectangle_command(const IntRect& r,
   const Alternative<IntRect>& altRect,
   const RasterSelection& currentSelection)
 {
-  Command* selectRectangle =
+  auto selectRectangle =
     set_raster_selection_command(New(SelectionState(r)),
       alternate(SelectionState(altRect.Get())),
       Old(currentSelection.GetState()),
       "Select Rectangle");
-  return maybe_stamp_old_selection(selectRectangle, currentSelection);
+  return maybe_stamp_old_selection(std::move(selectRectangle), currentSelection);
 }
 
-Command* get_select_all_command(const Image& image,
+CommandPtr get_select_all_command(const Image& image,
   const RasterSelection& currentSelection)
 {
-  Command* selectAll =
+  auto selectAll =
     set_raster_selection_command(New(SelectionState(image_rect(image))),
     Old(currentSelection.GetState()),
     "Select All");
-  return maybe_stamp_old_selection(selectAll, currentSelection);
+  return maybe_stamp_old_selection(std::move(selectAll), currentSelection);
 }
 
 BitmapCommand* get_set_alpha_command(uchar alpha){
@@ -405,11 +417,11 @@ BitmapCommand* get_erase_but_color_command(const Color& keep, const Paint& erase
   return function_command("Replace Colors", erase_but, keep, eraser);
 }
 
-Command* get_fill_boundary_command(Object* obj, const Paint& paint){
+CommandPtr get_fill_boundary_command(Object* obj, const Paint& paint){
   return change_setting_command(obj, ts_Fg, paint);
 }
 
-Command* get_fill_inside_command(Object* obj, const Paint& paint){
+CommandPtr get_fill_inside_command(Object* obj, const Paint& paint){
   const Settings& s(obj->GetSettings());
   commands_t commands;
   FillStyle fillStyle = s.Get(ts_FillStyle);
@@ -423,19 +435,20 @@ Command* get_fill_inside_command(Object* obj, const Paint& paint){
       setting_used_for_fill(fillStyle), paint));
 
   return perhaps_bunch(CommandType::OBJECT,
-    bunch_name("Set Object Fill Color"), commands);
+    bunch_name("Set Object Fill Color"), std::move(commands));
 }
 
-Command* get_flatten_command(const objects_t& objects, const Image& image){
+CommandPtr get_flatten_command(const objects_t& objects, const Image& image){
   assert(!objects.empty());
-  std::deque<Command*> commands;
+  std::deque<CommandPtr> commands;
   for (Object* obj : objects){
-    commands.push_back(draw_object_command(just_a_loan(obj)));
-    commands.push_front(delete_object_command(obj, image.GetObjectZ(obj)));
+    commands.emplace_back(draw_object_command(just_a_loan(obj)));
+    commands.emplace_front(delete_object_command(obj, image.GetObjectZ(obj)));
   }
 
-  return command_bunch(CommandType::HYBRID, get_bunch_name("Flatten", objects),
-    commands);
+  return command_bunch(CommandType::HYBRID,
+    get_bunch_name("Flatten", objects),
+    std::move(commands));
 }
 
 BitmapCommand* get_flood_fill_command(const IntPoint& pos, const Paint& fill){
@@ -458,7 +471,7 @@ BitmapCommand* get_invert_command(){
   return function_command("Invert colors", [=](Bitmap& bmp){invert(bmp);});
 }
 
-Command* get_move_objects_command(const objects_t& objects,
+CommandPtr get_move_objects_command(const objects_t& objects,
   const NewTris& in_newTris,
   const OldTris& in_oldTris)
 {
@@ -469,14 +482,14 @@ Command* get_move_objects_command(const objects_t& objects,
 
   commands_t commands;
   for (size_t i = 0; i != objects.size(); i++){
-    commands.push_back(new TriCommand(objects[i],
+    commands.push_back(std::make_unique<TriCommand>(objects[i],
       New(newTris[i]),
       Old(oldTris[i]), "Move"));
   }
 
   return perhaps_bunch(CommandType::OBJECT,
     get_bunch_name("Move", objects),
-    commands);
+    std::move(commands));
 }
 
 class MergeIfSameObjects : public MergeCondition{
@@ -494,7 +507,7 @@ public:
     return m_objects == candidate->m_objects;
   }
 
-  bool Append(Command*) override{
+  bool Append(CommandPtr&) override{
     // MergeIfSameObjects is not used for appending
     return false;
   }
@@ -509,13 +522,15 @@ private:
   const objects_t m_objects;
 };
 
-Command* get_offset_objects_command(const objects_t& objects, const Point& delta){
+CommandPtr get_offset_objects_command(const objects_t& objects,
+  const Point& delta)
+{
   assert(!objects.empty());
 
   commands_t commands;
   for (Object* obj : objects){
     Tri tri = obj->GetTri();
-    commands.push_back(new TriCommand(obj,
+    commands.emplace_back(std::make_unique<TriCommand>(obj,
       New(translated(tri, delta.x, delta.y)),
       Old(tri),
       "Offset",
@@ -523,14 +538,16 @@ Command* get_offset_objects_command(const objects_t& objects, const Point& delta
   }
 
   if (commands.size() == 1){
-    return commands.back();
+    return pop_back(commands);
   }
 
   return command_bunch(CommandType::OBJECT,
-    get_bunch_name("Offset", objects), commands, new MergeIfSameObjects(objects));
+    get_bunch_name("Offset", objects),
+    std::move(commands),
+    new MergeIfSameObjects(objects));
 }
 
-Command* perhaps_bunched_reorder(const std::vector<Command*>& commands,
+CommandPtr perhaps_bunched_reorder(std::vector<CommandPtr> commands,
   const objects_t& objects,
   const NewZ& newZ,
   const OldZ& oldZ)
@@ -540,20 +557,20 @@ Command* perhaps_bunched_reorder(const std::vector<Command*>& commands,
     return nullptr;
   }
   else if (commands.size() == 1){
-    return commands.back();
+    return pop_back(commands);
   }
   const utf8_string objectsName(get_collective_type(objects));
   const utf8_string dirStr = forward_or_back_str(newZ, oldZ);
   const bunch_name commandName(space_sep(objectsName,dirStr));
-  return command_bunch(CommandType::OBJECT, commandName, commands);
+  return command_bunch(CommandType::OBJECT, commandName, std::move(commands));
 }
 
-Command* get_objects_backward_command(const objects_t& objects,
+CommandPtr get_objects_backward_command(const objects_t& objects,
   const Image& image)
 {
   assert(!objects.empty());
   int zLimit = 0;
-  std::vector<Command*> commands;
+  commands_t commands;
   for (Object* object : objects){
     int Z = image.GetObjectZ(object);
 
@@ -569,14 +586,14 @@ Command* get_objects_backward_command(const objects_t& objects,
       commands.push_back(order_object_command(object, New(Z - 1), Old(Z)));
     }
   }
-  return perhaps_bunched_reorder(commands, objects, New(0), Old(1));
+  return perhaps_bunched_reorder(std::move(commands), objects, New(0), Old(1));
 }
 
-Command* get_objects_forward_command(const objects_t& objects,
+CommandPtr get_objects_forward_command(const objects_t& objects,
   const Image& image)
 {
   assert(!objects.empty());
-  std::vector<Command*> commands;
+  commands_t commands;
   int zLimit = resigned(image.GetObjects().size());
   for (Object* object : reversed(objects)){
     int Z = image.GetObjectZ(object);
@@ -591,13 +608,13 @@ Command* get_objects_forward_command(const objects_t& objects,
       commands.push_back(order_object_command(object, New(Z + 1), Old(Z)));
     }
   }
-  return perhaps_bunched_reorder(commands, objects, New(1), Old(0));
+  return perhaps_bunched_reorder(std::move(commands), objects, New(1), Old(0));
 }
 
-Command* get_objects_to_back_command(const objects_t& objects,
+CommandPtr get_objects_to_back_command(const objects_t& objects,
   const Image& image)
 {
-  std::vector<Command*> commands;
+  commands_t commands;
   const int numObjects = resigned(objects.size());
   for (int i = 0; i != numObjects; i++){
     Object* object = objects[to_size_t(i)];
@@ -606,29 +623,29 @@ Command* get_objects_to_back_command(const objects_t& objects,
       commands.push_back(order_object_command(object, New(i), Old(currentPos)));
     }
   }
-  return perhaps_bunched_reorder(commands, objects, New(0), Old(1));
+  return perhaps_bunched_reorder(std::move(commands), objects, New(0), Old(1));
 }
 
-Command* get_objects_to_front_command(const objects_t& objects,
+CommandPtr get_objects_to_front_command(const objects_t& objects,
   const Image& image)
 {
   assert(!objects.empty());
   const int maxPos = get_highest_z(image);
-  std::vector<Command*> commands;
+  commands_t commands;
   for (Object* obj : objects){
     const int currentPos = image.GetObjectZ(obj);
     if (maxPos != currentPos){
       commands.push_back(order_object_command(obj, New(maxPos), Old(currentPos)));
     }
   }
-  return perhaps_bunched_reorder(commands, objects, New(1), Old(0));
+  return perhaps_bunched_reorder(std::move(commands), objects, New(1), Old(0));
 }
 
-Command* get_objects_to_paths_command(const objects_t& objects,
+CommandPtr get_objects_to_paths_command(const objects_t& objects,
   const Image& image,
   const select_added& selectAdded)
 {
-  std::vector<Command*> commands;
+  commands_t commands;
 
   // Delete the replaced objects from front-most to rear-most to
   // maintain valid Z-ordering
@@ -638,7 +655,7 @@ Command* get_objects_to_paths_command(const objects_t& objects,
   }
   return perhaps_bunch(CommandType::OBJECT,
     get_bunch_name(objects, objects.size() == 1 ? "to Path" : "to Paths"),
-    commands);
+    std::move(commands));
 }
 
 BitmapCommand* get_replace_color_command(const OldColor& oldColor,
@@ -647,23 +664,23 @@ BitmapCommand* get_replace_color_command(const OldColor& oldColor,
   return function_command("Replace color", replace_color, oldColor, newColor);
 }
 
-Command* get_replace_object_command(const OldObject& oldWrap,
+CommandPtr get_replace_object_command(const OldObject& oldWrap,
   Object* newObject,
   const Image& image,
   const select_added& selectAdded)
 {
   Object* old(oldWrap.Get());
   auto z = image.GetObjectZ(old);
-  Command* removeCommand = delete_object_command(old, z, "");
-  Command* insertCommand = insert_object_command(newObject, selectAdded, z, "");
+  auto removeCommand = delete_object_command(old, z, "");
+  auto insertCommand = insert_object_command(newObject, selectAdded, z, "");
 
   return command_bunch(CommandType::OBJECT,
     bunch_name(space_sep(old->GetType(), "to", newObject->GetType())),
-    removeCommand,
-    insertCommand);
+    std::move(removeCommand),
+    std::move(insertCommand));
 }
 
-Command* get_resize_command(const Optional<Bitmap>& bmp,
+CommandPtr get_resize_command(const Optional<Bitmap>& bmp,
   const IntRect& rect,
   const Paint& paint)
 {
@@ -676,27 +693,28 @@ Command* get_resize_command(const Optional<Bitmap>& bmp,
   return resize_command(rect, paint);
 }
 
-Command* get_rotate_command(Object* obj, const Angle& angle,
+CommandPtr get_rotate_command(Object* obj, const Angle& angle,
   const Point& origin)
 {
   const Tri& tri = obj->GetTri();
-  return new TriCommand(obj,
+  return std::make_unique<TriCommand>(obj,
     New(rotated(tri, angle, origin)), Old(tri), "Rotate");
 }
 
-Command* get_rotate_command(const objects_t& objects, const Angle& angle,
+CommandPtr get_rotate_command(const objects_t& objects, const Angle& angle,
   const Point& origin)
 {
-  std::vector<Command*> commands;
+  commands_t commands;
   for (Object* obj : objects){
-    commands.push_back(get_rotate_command(obj, angle, origin));
+    commands.emplace_back(get_rotate_command(obj, angle, origin));
   }
 
   return perhaps_bunch(CommandType::OBJECT,
-    get_bunch_name("Rotate", objects), commands);
+    get_bunch_name("Rotate", objects),
+    std::move(commands));
 }
 
-Command* get_rotate_selection_command(const Image& image){
+CommandPtr get_rotate_selection_command(const Image& image){
   auto selection(image.GetRasterSelection());
   using State = SelectionState;
   return set_raster_selection_command(
@@ -721,7 +739,7 @@ Command* get_rotate_selection_command(const Image& image){
     "Rotate Selection Clockwise");
 }
 
-Command* get_rotate_selection_command(const Image& image,
+CommandPtr get_rotate_selection_command(const Image& image,
   const Angle& angle,
   const Paint& bg)
 {
@@ -754,8 +772,8 @@ class AppendIfMoveCommand : public MergeCondition{
 // For grouping undo/redo of consecutive selection movements
 // with keyboard (get_offset_raster_selection_command).
 public:
-  bool Append(Command* cmd) override{
-    return is_move_raster_selection_command(cmd);
+  bool Append(CommandPtr& cmd) override{
+    return is_move_raster_selection_command(cmd.get());
   }
   bool AssumeName() const override{
     return false;
@@ -765,12 +783,12 @@ public:
   }
 };
 
-Command* get_offset_raster_selection_command(const Image& image,
+CommandPtr get_offset_raster_selection_command(const Image& image,
   const IntPoint& delta)
 {
   auto selection(image.GetRasterSelection());
   return sel::visit(selection,
-    [](const sel::Empty&) -> Command*{
+    [](const sel::Empty&) -> CommandPtr{
       assert(false);
       return nullptr;
     },
@@ -797,33 +815,33 @@ Command* get_offset_raster_selection_command(const Image& image,
     });
 }
 
-Command* get_scale_command(const objects_t& objects, const Scale& scale,
+CommandPtr get_scale_command(const objects_t& objects, const Scale& scale,
   const Point& origin)
 {
-  std::vector<Command*> commands;
+  commands_t commands;
   for (Object* obj : objects){
     const Tri& tri = obj->GetTri();
-    commands.push_back(new TriCommand(obj,
+    commands.push_back(std::make_unique<TriCommand>(obj,
         New(scaled(tri, scale, origin)), Old(tri), "Scale"));
   }
   return perhaps_bunch(CommandType::OBJECT,
     get_bunch_name("Scale", objects),
-    commands);
+    std::move(commands));
 }
 
-Command* get_scale_rotate_command(const objects_t& objects, const Scale& scale,
+CommandPtr get_scale_rotate_command(const objects_t& objects, const Scale& scale,
   const Angle& angle, const Point& origin)
 {
-  std::vector<Command*> commands;
+  commands_t commands;
   for (Object* obj : objects){
     const Tri& oldTri = obj->GetTri();
     Tri newTri(rotated(scaled(oldTri, scale, origin), angle, origin));
-    commands.push_back(new TriCommand(obj,
-        New(newTri), Old(oldTri), "Scale and rotate"));
+    commands.push_back(std::make_unique<TriCommand>(obj,
+      New(newTri), Old(oldTri), "Scale and rotate"));
   }
   return perhaps_bunch(CommandType::OBJECT,
     get_bunch_name("Scale and rotate", objects),
-    commands);
+    std::move(commands));
 }
 
 BitmapCommand* get_threshold_command(const threshold_range_t& range,
@@ -832,7 +850,7 @@ BitmapCommand* get_threshold_command(const threshold_range_t& range,
   return function_command("Threshold", threshold, range, in, out);
 }
 
-Command* get_scale_raster_selection_command(const Image& image,
+CommandPtr get_scale_raster_selection_command(const Image& image,
   const IntSize& newSize, ScaleQuality quality)
 {
   auto selection(image.GetRasterSelection());
@@ -864,28 +882,29 @@ OperationFlip::OperationFlip(Axis axis)
   : m_axis(axis)
 {}
 
-Command* OperationFlip::DoImage() const{
+CommandPtr OperationFlip::DoImage() const{
   return flip_image_command(m_axis);
 }
 
-Command* OperationFlip::DoObjects(const objects_t& objects) const{
+CommandPtr OperationFlip::DoObjects(const objects_t& objects) const{
   coord xScale = m_axis == Axis::HORIZONTAL ? -1.0 : 1.0;
   Scale scale(xScale, -xScale);
   Point origin = bounding_rect(objects).Center();
-  std::vector<Command*> commands;
+  commands_t commands;
   for (Object* obj : objects){
     const Tri& tri = obj->GetTri();
-    commands.push_back(new TriCommand(obj, New(scaled(tri, scale, origin)),
+    commands.push_back(std::make_unique<TriCommand>(obj,
+      New(scaled(tri, scale, origin)),
       Old(tri), "Flip"));
   }
   return perhaps_bunch(CommandType::OBJECT, get_bunch_name("Flip", objects),
-    commands);
+    std::move(commands));
 }
 
-Command* OperationFlip::DoRasterSelection(const Image& image) const{
+CommandPtr OperationFlip::DoRasterSelection(const Image& image) const{
   auto selection(image.GetRasterSelection());
   return sel::visit(selection,
-    [](const sel::Empty&) -> Command*{
+    [](const sel::Empty&) -> CommandPtr{
       assert(false);
       return nullptr;
     },
@@ -943,10 +962,10 @@ public:
   CmdFuncs m_funcs;
 };
 
-Command* get_pixel_snap_command(Object* obj){
+CommandPtr get_pixel_snap_command(Object* obj){
   return obj->PixelSnapFunc().Visit(
-    [](const CmdFuncs& funcs){
-      return new PixelSnap(funcs);
+    [](const CmdFuncs& funcs) -> CommandPtr{
+      return std::make_unique<PixelSnap>(funcs);
     },
     [](){
       return nullptr;

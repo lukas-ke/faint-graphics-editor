@@ -76,9 +76,9 @@ void Common_aa_line(T target, const IntLineSegment& line, const ColRGB& color){
 Auto-crops the image. Returns true if the image was modified" */
 template<typename T>
 bool Common_auto_crop(T target){
-  Command* cmd = get_auto_crop_command(bare(target).GetImage());
+  CommandPtr cmd = get_auto_crop_command(bare(target).GetImage());
   if (cmd != nullptr){
-    py_common_run_command(target, cmd);
+    py_common_run_command(target, std::move(cmd));
     return true;
   }
   return false;

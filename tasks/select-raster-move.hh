@@ -26,6 +26,7 @@ class Task;
 
 // Task for either selecting a new region by moving the selection
 // rectangle, or to move the selected content.
+// Throws: std::bad_alloc
 Task* raster_selection_move_task(const IntPoint& offset,
   const IntPoint& topLeft,
   const copy_selected&,

@@ -13,6 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include "commands/command.hh"
 #include "tools/tool.hh"
 #include "util/optional.hh"
 #include "util/raster-selection.hh"
@@ -60,7 +61,7 @@ public:
     return m_activeTool->EatsSettings();
   }
 
-  Command* GetCommand() override{
+  CommandPtr GetCommand() override{
     return m_activeTool->GetCommand();
   }
 

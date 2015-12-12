@@ -17,6 +17,7 @@
 #define FAINT_TASK_HH
 #include <vector>
 #include "app/resource-id.hh"
+#include "commands/command-ptr.hh"
 #include "geo/int-rect.hh"
 #include "tools/refresh-info.hh"
 #include "util/distinct.hh"
@@ -25,7 +26,6 @@
 
 namespace faint{
 
-class Command;
 class FaintDC;
 class HistoryContext;
 class IntRect;
@@ -59,7 +59,7 @@ public:
   virtual void Draw(FaintDC&, Overlays&, const PosInfo&) = 0;
   virtual bool DrawBeforeZoom(Layer) const = 0;
   virtual bool EatsSettings() const = 0;
-  virtual Command* GetCommand() = 0;
+  virtual CommandPtr GetCommand() = 0;
   virtual Cursor GetCursor(const PosInfo&) const = 0;
   virtual Task* GetNewTask() = 0;
   virtual IntRect GetRefreshRect(const RefreshInfo&) const = 0;

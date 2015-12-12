@@ -35,22 +35,40 @@ void TriCommand::Do(CommandContext&){
   m_object->SetTri(m_new);
 }
 
-bool TriCommand::Merge(Command* cmd, bool sameFrame){
+bool TriCommand::Mergable() const{
+  return m_mergable;
+}
+
+bool TriCommand::Merge(CommandPtr& cmd, bool sameFrame){
   if (!m_mergable || !sameFrame){
     return false;
   }
 
-  TriCommand* candidate = dynamic_cast<TriCommand*>(cmd);
-  if (candidate == nullptr || !candidate->m_mergable){
-    return false;
-  }
-  if (m_object != candidate->m_object){
-    return false;
-  }
+  auto get_command_tri = [&]() -> Optional<Tri>{
+    TriCommand* candidate = dynamic_cast<TriCommand*>(cmd.get());
+    if (candidate == nullptr){
+      return {};
+    }
+    else if (!candidate->m_mergable){
+      return {};
+    }
+    else if (m_object != candidate->m_object){
+      return {};
+    }
+    else{
+      return option(candidate->m_new);
+    }
+  };
 
-  m_new = candidate->m_new;
-  delete candidate;
-  return true;
+  return get_command_tri().Visit(
+    [&](const Tri& mergedTri){
+      CommandPtr release(std::move(cmd));
+      m_new = mergedTri;
+      return true;
+    },
+    [&](){
+      return false;
+    });
 }
 
 utf8_string TriCommand::Name() const{

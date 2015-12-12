@@ -18,6 +18,7 @@
 #include "bitmap/auto-crop.hh"
 #include "bitmap/draw.hh"
 #include "bitmap/scale-bilinear.hh"
+#include "commands/command.hh"
 #include "commands/set-bitmap-cmd.hh"
 #include "geo/axis.hh"
 #include "geo/axis.hh"
@@ -171,7 +172,10 @@ void ObjRaster::SetTri(const Tri& t){
   apply_transform(m_bitmap, t, m_scaled);
 }
 
-static Command* crop_to_rect(const IntRect& r, ObjRaster* obj, const Bitmap& bmp){
+static CommandPtr crop_to_rect(const IntRect& r,
+  ObjRaster* obj,
+  const Bitmap& bmp)
+{
   coord old_w = static_cast<coord>(bmp.m_w);
   coord old_h = static_cast<coord>(bmp.m_h);
   coord new_w = static_cast<coord>(r.w);
@@ -188,10 +192,10 @@ static Command* crop_to_rect(const IntRect& r, ObjRaster* obj, const Bitmap& bmp
     t, "Crop Raster Object");
 }
 
-Command* crop_raster_object_command(ObjRaster* obj){
+CommandPtr crop_raster_object_command(ObjRaster* obj){
   const Bitmap& bmp(obj->GetBitmap());
   return get_auto_crop_rectangles(bmp).Visit(
-    []() -> Command* {
+    []() -> CommandPtr {
       return nullptr;
     },
     [&bmp, &obj](const IntRect& r){

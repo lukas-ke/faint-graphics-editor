@@ -44,8 +44,8 @@ private:
   IntPoint m_pos;
 };
 
-Command* get_blit_bitmap_command(const IntPoint& pos, const Bitmap& bmp){
-  return new BlitBitmapCommand(pos, bmp);
+CommandPtr get_blit_bitmap_command(const IntPoint& pos, const Bitmap& bmp){
+  return std::make_unique<BlitBitmapCommand>(pos, bmp);
 }
 
 } // namespace

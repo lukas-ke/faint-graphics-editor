@@ -15,6 +15,7 @@
 
 #ifndef FAINT_SET_RASTER_SELECTION_CMD_HH
 #define FAINT_SET_RASTER_SELECTION_CMD_HH
+#include "commands/command-ptr.hh"
 #include "util/distinct.hh"
 #include "util/raster-selection.hh"
 
@@ -24,7 +25,7 @@ class utf8_string;
 
 // Lightweight command for moving a selection - does not cause another
 // copy of the selected content.
-Command* move_raster_selection_command(const IntPoint& newPos,
+CommandPtr move_raster_selection_command(const IntPoint& newPos,
   const IntPoint& oldPos);
 
 // Fixme: Replace these (stamp_floating) with a function taking a
@@ -34,28 +35,28 @@ Command* move_raster_selection_command(const IntPoint& newPos,
 
 // Stamps the content of a floating selection to the image. Does not
 // modify the selection.
-Command* stamp_floating_selection_command(const sel::Copying&);
+CommandPtr stamp_floating_selection_command(const sel::Copying&);
 
 // Stamps the content of a floating selection to the image, and
 // fills the old source rectangle the selection was moved from.
 // Does not modify the selection.
-Command* stamp_floating_selection_command(const sel::Moving&);
+CommandPtr stamp_floating_selection_command(const sel::Moving&);
 
-Command* set_selection_options_command(const NewSelectionOptions&,
+CommandPtr set_selection_options_command(const NewSelectionOptions&,
   const OldSelectionOptions&);
 
-Command* set_raster_selection_command(const NewSelectionState&,
+CommandPtr set_raster_selection_command(const NewSelectionState&,
   const OldSelectionState&,
   const utf8_string& name,
   bool appendCommand=false);
 
-Command* set_raster_selection_command(const NewSelectionState&,
+CommandPtr set_raster_selection_command(const NewSelectionState&,
   const Alternative<SelectionState>&,
   const OldSelectionState&,
   const utf8_string& name,
   bool appendCommand=false);
 
-Command* set_raster_selection_command(const NewSelectionState&,
+CommandPtr set_raster_selection_command(const NewSelectionState&,
   const OldSelectionState&,
   const utf8_string& name,
   bool appendCommand,

@@ -44,7 +44,7 @@ using bmp_dialog_func = std::function<Optional<BitmapCommand*>(
   DialogFeedback&)>;
 
 using dialog_func =
-  std::function<Optional<Command*>(wxWindow&, DialogFeedback&, Canvas&)>;
+  std::function<Optional<CommandPtr>(wxWindow&, DialogFeedback&, Canvas&)>;
 
 } // namespace
 

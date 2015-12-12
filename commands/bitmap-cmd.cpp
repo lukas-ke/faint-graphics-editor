@@ -126,16 +126,16 @@ private:
   Optional<Bitmap> m_old;
 };
 
-Command* target_full_image(BitmapCommand* bmpCmd){
-  return new BmpTargetImage(bmpCmd);
+CommandPtr target_full_image(BitmapCommand* bmpCmd){
+  return std::make_unique<BmpTargetImage>(bmpCmd);
 }
 
-Command* target_floating_selection(BitmapCommand* bmpCmd){
-  return new BmpTargetSelection(bmpCmd);
+CommandPtr target_floating_selection(BitmapCommand* bmpCmd){
+  return std::make_unique<BmpTargetSelection>(bmpCmd);
 }
 
-Command* target_rectangle(BitmapCommand* bmpCmd, const IntRect& rect){
-  return new BmpTargetRectangle(bmpCmd, rect);
+CommandPtr target_rectangle(BitmapCommand* bmpCmd, const IntRect& rect){
+  return std::make_unique<BmpTargetRectangle>(bmpCmd, rect);
 }
 
 } // namespace

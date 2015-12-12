@@ -15,14 +15,14 @@
 
 #ifndef FAINT_CALIBRATE_CMD_HH
 #define FAINT_CALIBRATE_CMD_HH
+#include "commands/command-ptr.hh"
 #include "util/template-fwd.hh"
 
 namespace faint{
 
 class Calibration;
-class Command;
 
-Command* calibrate_command(const Calibration&, const Optional<Calibration>& old);
+CommandPtr calibrate_command(const Calibration&, const Optional<Calibration>& old);
 
 } // namespace
 

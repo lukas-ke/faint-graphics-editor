@@ -47,10 +47,10 @@ private:
   Optional<Calibration> m_old;
 };
 
-Command* calibrate_command(const Calibration& calibration,
+CommandPtr calibrate_command(const Calibration& calibration,
   const Optional<Calibration>& old)
 {
-  return new CalibrateCommand(calibration, old);
+  return std::make_unique<CalibrateCommand>(calibration, old);
 }
 
 } // namespace

@@ -40,8 +40,11 @@ public:
     fill_rect(ctx.GetRawBitmap(), m_rect, m_bg);
   }
 
-  Command* GetDWIM() override{
-    return new DeleteRectCommand(m_rect, m_altBg.Get(), option(m_bg), true);
+  CommandPtr GetDWIM() override{
+    return std::make_unique<DeleteRectCommand>(m_rect,
+      m_altBg.Get(),
+      option(m_bg),
+      true);
   }
 
   bool HasDWIM() const override{
@@ -64,14 +67,14 @@ private:
   IntRect m_rect;
 };
 
-Command* delete_rect_command(const IntRect& rect, const Paint& bg){
-  return new DeleteRectCommand(rect, bg, no_option(), false);
+CommandPtr delete_rect_command(const IntRect& rect, const Paint& bg){
+  return std::make_unique<DeleteRectCommand>(rect, bg, no_option(), false);
 }
 
-Command* delete_rect_command(const IntRect& rect, const Paint& bg,
+CommandPtr delete_rect_command(const IntRect& rect, const Paint& bg,
   const Alternative<Paint>& altBg)
 {
-  return new DeleteRectCommand(rect, bg, option(altBg.Get()), false);
+  return std::make_unique<DeleteRectCommand>(rect, bg, option(altBg.Get()), false);
 }
 
 } // namespace

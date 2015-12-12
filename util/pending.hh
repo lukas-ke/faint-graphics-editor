@@ -15,34 +15,28 @@
 
 #ifndef FAINT_PENDING_HH
 #define FAINT_PENDING_HH
+#include <memory>
 
 namespace faint{
-
-template<typename T>
-T* transfer(T*& item){
-  T* newPtr = item;
-  item = nullptr;
-  return newPtr;
-}
 
 template <typename T>
 class Pending {
   // Holds an item until it is taken or replaced. On destruction
   // (or replacement with Set) an untaken item will be deleted.
 public:
-  Pending()
-    : m_item(nullptr)
-  {}
-  ~Pending(){
-    delete m_item;
-  }
+  Pending() : m_item(nullptr) {}
+
   void Set(T* item){
-    delete m_item;
-    m_item = item;
+     m_item.reset(item);
   }
 
-  T* Take(){
-    return transfer(m_item);
+  void Set(std::unique_ptr<T>&& item){
+    m_item = std::move(item);
+  }
+
+  std::unique_ptr<T> Take(){
+    auto item(std::move(m_item));
+    return item;
   }
 
   bool Valid() const{
@@ -52,7 +46,7 @@ public:
   Pending& operator=(const Pending&) = delete;
   Pending(const Pending&) = delete;
 private:
-  T* m_item;
+  std::unique_ptr<T> m_item;
 };
 
 } // namespace

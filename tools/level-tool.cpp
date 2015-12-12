@@ -108,7 +108,7 @@ public:
     return true;
   }
 
-  Command* GetCommand() override{
+  CommandPtr GetCommand() override{
     return m_command.Take();
   }
 

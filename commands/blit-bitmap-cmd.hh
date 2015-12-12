@@ -15,14 +15,14 @@
 
 #ifndef FAINT_BLIT_BITMAP_CMD_HH
 #define FAINT_BLIT_BITMAP_CMD_HH
+#include "commands/command-ptr.hh"
 
 namespace faint{
 
-class Command;
 class IntPoint;
 class Bitmap;
 
-Command* get_blit_bitmap_command(const IntPoint&, const Bitmap&);
+CommandPtr get_blit_bitmap_command(const IntPoint&, const Bitmap&);
 
 } // namespace
 

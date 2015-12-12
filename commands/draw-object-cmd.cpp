@@ -54,12 +54,12 @@ private:
   Object* m_object;
 };
 
-Command* draw_object_command(const its_yours_t<Object>& object){
-  return new DrawObjectCommand(object);
+CommandPtr draw_object_command(const its_yours_t<Object>& object){
+  return std::make_unique<DrawObjectCommand>(object);
 }
 
-Command* draw_object_command(const just_a_loan_t<Object>& object){
-  return new DrawObjectCommand(object);
+CommandPtr draw_object_command(const just_a_loan_t<Object>& object){
+  return std::make_unique<DrawObjectCommand>(object);
 }
 
 } // namespace

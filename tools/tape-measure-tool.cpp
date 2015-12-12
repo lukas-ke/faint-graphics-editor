@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include <vector>
+#include "commands/command.hh"
 #include "editors/line-editor.hh"
 #include "geo/angle.hh"
 #include "geo/calibration.hh"
@@ -120,7 +121,7 @@ public:
     return false;
   }
 
-  Command* GetCommand() override{
+  CommandPtr GetCommand() override{
     return nullptr;
   }
 

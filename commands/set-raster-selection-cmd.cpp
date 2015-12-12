@@ -77,18 +77,18 @@ public:
       m_oldState(oldState.Get())
   {}
 
-  Command* GetDWIM() override{
+  CommandPtr GetDWIM() override{
     return m_altNewState.Visit(
-      [&](const SelectionState& altNewState) -> Command*{
+      [&](const SelectionState& altNewState) -> CommandPtr{
         // Fixme: Clone options command
-        return new SetRasterSelectionCommand(
+        return std::make_unique<SetRasterSelectionCommand>(
           New(altNewState),
           alternate(m_newState),
           Old(m_oldState),
           m_name,
           false);
       },
-      []() -> Command*{
+      []() -> CommandPtr{
         assert(false); // Should not be called when not HasDWIM().
         return nullptr;
       });
@@ -156,25 +156,19 @@ public:
       m_oldPos(oldPos)
   {}
 
-  ~MoveRasterSelectionCommand(){
-    for (auto* cmd : m_merged){
-      delete cmd;
-    }
-  }
-
-  bool Merge(Command* cmd, bool sameFrame) override{
+  bool Merge(CommandPtr& cmd, bool sameFrame) override{
     if (!sameFrame){
       return false;
     }
 
     // Merge with other, consecutive, move-raster-selection commands
     // by using their position
-    auto* candidate = dynamic_cast<MoveRasterSelectionCommand*>(cmd);
+    const auto* candidate = dynamic_cast<MoveRasterSelectionCommand*>(cmd.get());
     if (candidate == nullptr){
       return false;
     }
 
-    m_merged.push_back(candidate);
+    m_merged.emplace_back(std::move(cmd));
     m_newPos = candidate->m_newPos;
     return true;
   }
@@ -196,15 +190,15 @@ public:
   }
 
 private:
-  std::vector<Command*> m_merged; // Fixme: Can't I just delete the merged command?
+  std::vector<CommandPtr> m_merged;
   IntPoint m_newPos;
   IntPoint m_oldPos;
 };
 
-Command* move_raster_selection_command(const IntPoint& newPos,
+CommandPtr move_raster_selection_command(const IntPoint& newPos,
   const IntPoint& oldPos)
 {
-  return new MoveRasterSelectionCommand(newPos, oldPos);
+  return std::make_unique<MoveRasterSelectionCommand>(newPos, oldPos);
 }
 
 bool is_move_raster_selection_command(Command* cmd){
@@ -245,55 +239,66 @@ private:
   utf8_string m_name;
 };
 
-Command* stamp_floating_selection_command(const sel::Copying& copying){
-  return new StampFloatingSelectionCommand(copying.GetBitmap(),
+std::unique_ptr<Command> stamp_floating_selection_command(
+  const sel::Copying& copying)
+{
+  return std::make_unique<StampFloatingSelectionCommand>(copying.GetBitmap(),
     copying.Rect(),
     no_option(),
     copying.GetOptions());
 }
 
-Command* stamp_floating_selection_command(const sel::Moving& moving){
-  return new StampFloatingSelectionCommand(moving.GetBitmap(),
+std::unique_ptr<Command> stamp_floating_selection_command(
+  const sel::Moving& moving)
+{
+  return std::make_unique<StampFloatingSelectionCommand>(moving.GetBitmap(),
     moving.Rect(),
     option(moving.OldRect()),
     moving.GetOptions());
 }
 
-Command* set_selection_options_command(const NewSelectionOptions& newOptions,
+CommandPtr set_selection_options_command(const NewSelectionOptions& newOptions,
   const OldSelectionOptions& oldOptions)
 {
-  return new SetSelectionOptionsCommand(newOptions, oldOptions);
+  return std::make_unique<SetSelectionOptionsCommand>(newOptions, oldOptions);
 }
 
-Command* set_raster_selection_command(const NewSelectionState& newState,
+std::unique_ptr<Command> set_raster_selection_command(
+  const NewSelectionState& newState,
   const OldSelectionState& oldState,
   const utf8_string& name,
   bool appendCommand)
 {
-  return new SetRasterSelectionCommand(newState, oldState, name, appendCommand);
+  return std::make_unique<SetRasterSelectionCommand>(
+    newState,
+    oldState,
+    name,
+    appendCommand);
 }
 
-Command* set_raster_selection_command(const NewSelectionState& newState,
+std::unique_ptr<Command> set_raster_selection_command(
+  const NewSelectionState& newState,
   const Alternative<SelectionState>& altNewState,
   const OldSelectionState& oldState,
   const utf8_string& name,
   bool appendCommand)
 {
-  return new SetRasterSelectionCommand(newState,
+  return std::make_unique<SetRasterSelectionCommand>(newState,
     altNewState,
     oldState,
     name,
     appendCommand);
 }
 
-Command* set_raster_selection_command(const NewSelectionState& newState,
+std::unique_ptr<Command> set_raster_selection_command(
+  const NewSelectionState& newState,
   const OldSelectionState& oldState,
   const utf8_string& name,
   bool appendCommand,
   const NewSelectionOptions& newOptions,
   const OldSelectionOptions& oldOptions)
 {
-  auto* cmd = new SetRasterSelectionCommand(newState,
+  auto cmd = std::make_unique<SetRasterSelectionCommand>(newState,
     oldState,
     name,
     appendCommand);

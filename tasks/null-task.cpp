@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include "app/resource-id.hh"
+#include "commands/command.hh"
 #include "tasks/null-task.hh"
 #include "tasks/task.hh"
 #include "util/optional.hh"
@@ -44,7 +45,7 @@ public:
     return false;
   }
 
-  Command* GetCommand() override{
+  CommandPtr GetCommand() override{
     return nullptr;
   }
 

@@ -15,6 +15,7 @@
 
 #ifndef FAINT_BITMAP_CMD_HH
 #define FAINT_BITMAP_CMD_HH
+#include "commands/command-ptr.hh"
 
 namespace faint{
 
@@ -33,13 +34,11 @@ public:
   virtual void Do(Bitmap&) = 0;
 };
 
-class Command;
-
 // Wrappers for assigning targets for a BitmapCommand.  The returned
 // command manages deletion of the BitmapCommand.
-Command* target_full_image(BitmapCommand*);
-Command* target_floating_selection(BitmapCommand*);
-Command* target_rectangle(BitmapCommand*, const IntRect&);
+CommandPtr target_full_image(BitmapCommand*);
+CommandPtr target_floating_selection(BitmapCommand*);
+CommandPtr target_rectangle(BitmapCommand*, const IntRect&);
 
 } // namespace
 

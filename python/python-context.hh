@@ -15,6 +15,7 @@
 
 #ifndef FAINT_PYTHON_CONTEXT_HH
 #define FAINT_PYTHON_CONTEXT_HH
+#include "commands/command-ptr.hh"
 #include "python/bound-object.hh"
 #include "util/template-fwd.hh"
 #include "util/id-types.hh"
@@ -22,7 +23,6 @@
 namespace faint{
 
 class Canvas;
-class Command;
 class Frame;
 class KeyPress;
 class utf8_string;
@@ -73,15 +73,15 @@ public:
   virtual void QueueRefresh(Canvas&) = 0;
 
   // Run a Faint-command from a Python interface function.
-  virtual void RunCommand(Canvas&, Command*) = 0;
+  virtual void RunCommand(Canvas&, CommandPtr) = 0;
 
-  virtual void RunCommand(const BoundObject<Object>&, Command*) = 0;
+  virtual void RunCommand(const BoundObject<Object>&, CommandPtr) = 0;
 
   // Run a Faint-command from a Python interface function, targetting
   // a specific frame.
-  virtual void RunCommand(Canvas&, Command*, const FrameId&) = 0;
+  virtual void RunCommand(Canvas&, CommandPtr, const FrameId&) = 0;
 
-  virtual void RunCommand(const Frame&, Command*) = 0;
+  virtual void RunCommand(const Frame&, CommandPtr) = 0;
 
   virtual void Unbind(const KeyPress&) = 0;
 };

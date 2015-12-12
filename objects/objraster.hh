@@ -16,6 +16,7 @@
 #ifndef FAINT_OBJRASTER_HH
 #define FAINT_OBJRASTER_HH
 #include "bitmap/bitmap.hh"
+#include "commands/command-ptr.hh"
 #include "geo/tri.hh"
 #include "objects/standard-object.hh"
 
@@ -46,8 +47,7 @@ private:
 
 Tri tri_for_bmp(const Point& topLeft, const Bitmap&);
 
-class Command;
-Command* crop_raster_object_command(ObjRaster*);
+CommandPtr crop_raster_object_command(ObjRaster*);
 
 } // namespace
 

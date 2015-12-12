@@ -75,9 +75,9 @@ struct MappedType<const BoundObject<T>&>{
   }
 };
 
-static void run_command(const BoundObject<Object>& obj, Command* cmd){
+static void run_command(const BoundObject<Object>& obj, CommandPtr cmd){
   if (cmd != nullptr){
-    obj.ctx->RunCommand(*obj.canvas, cmd, obj.frameId);
+    obj.ctx->RunCommand(*obj.canvas, std::move(cmd), obj.frameId);
   }
 }
 
@@ -101,7 +101,7 @@ static BoundObject<Object> Smth_become_path(const BoundObject<Object>& self){
   Object* path = clone_as_path(self.obj,
     self.canvas->GetFrame(self.frameId).GetExpressionContext());
   run_command(self, get_replace_object_command(Old(self.obj), path,
-      self.canvas->GetFrame(self.frameId), select_added(false)));
+    self.canvas->GetFrame(self.frameId), select_added(false)));
 
   return bind_same(path, self);
 }
@@ -110,15 +110,15 @@ static BoundObject<Object> Smth_become_path(const BoundObject<Object>& self){
 Auto-crops a Raster or Text object." */
 static bool Smth_crop(const BoundObject<Object>& self){
   if (ObjRaster* rasterObj = dynamic_cast<ObjRaster*>(self.obj)){
-    if (Command* cmd = crop_raster_object_command(rasterObj)){
-      run_command(self, cmd);
+    if (CommandPtr cmd = crop_raster_object_command(rasterObj)){
+      run_command(self, std::move(cmd));
       return true;
     }
     return false;
   }
   else if (ObjText* textObj = dynamic_cast<ObjText*>(self.obj)){
-    if (Command* cmd = crop_text_region_command(textObj)){
-      run_command(self, cmd);
+    if (CommandPtr cmd = crop_text_region_command(textObj)){
+      run_command(self, std::move(cmd));
       return true;
     }
     return false;
@@ -281,7 +281,7 @@ static void Smth_set_angles(const BoundObject<Object>& self,
 
   using SetSpanCmd = ObjFunctionCommand<Object, AngleSpan, set_angle_span>;
   run_command(self,
-    new SetSpanCmd(self.obj, "Change Arc Span",
+    std::make_unique<SetSpanCmd>(self.obj, "Change Arc Span",
       New(span), Old(get_angle_span(self.obj).Get())));
 }
 
@@ -314,7 +314,7 @@ static void Smth_skew(const BoundObject<Object>& self, coord& skew){
   Tri newTri(skewed(oldTri, skew));
 
   run_command(self,
-    new TriCommand(obj, New(newTri), Old(oldTri)));
+    std::make_unique<TriCommand>(obj, New(newTri), Old(oldTri)));
 }
 
 /* method: "update_settings(s)\nUpdate this object's settings with

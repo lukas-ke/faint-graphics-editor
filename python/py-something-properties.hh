@@ -48,7 +48,8 @@ struct Smth_angle_rad{
     Tri newTri = rotated(oldTri, Angle::Rad(angle) - oldTri.GetAngle(),
       center_point(oldTri));
 
-    self.ctx->RunCommand(self, new TriCommand(obj, New(newTri), Old(oldTri)));
+    self.ctx->RunCommand(self,
+      std::make_unique<TriCommand>(obj, New(newTri), Old(oldTri)));
   }
 };
 
@@ -64,7 +65,8 @@ struct Smth_angle_deg{
     Tri newTri = rotated(oldTri, Angle::Deg(angle) - oldTri.GetAngle(),
       center_point(oldTri));
 
-    self.ctx->RunCommand(self, new TriCommand(obj, New(newTri), Old(oldTri)));
+    self.ctx->RunCommand(self,
+      std::make_unique<TriCommand>(obj, New(newTri), Old(oldTri)));
   }
 };
 
@@ -76,7 +78,7 @@ struct Smth_tri{
 
   static void Set(const BoundObject<Object>& self, const Tri& tri){
     self.ctx->RunCommand(self,
-      new TriCommand(self.obj, New(tri), Old(self.obj->GetTri())));
+      std::make_unique<TriCommand>(self.obj, New(tri), Old(self.obj->GetTri())));
   }
 };
 
@@ -91,8 +93,8 @@ struct Smth_pos{
     Point diff = pos - oldTri.P0();
     Tri newTri = translated(oldTri, diff.x, diff.y);
 
-    self.ctx->RunCommand(self, new TriCommand(self.obj,
-      New(newTri), Old(oldTri)));
+    self.ctx->RunCommand(self,
+      std::make_unique<TriCommand>(self.obj, New(newTri), Old(oldTri)));
   }
 };
 

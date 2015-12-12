@@ -94,7 +94,7 @@ public:
     m_canvasIds[&canvas] = canvas.GetId();
   }
 
-  void RunCommand(Canvas& canvas, Command* cmd) override{
+  void RunCommand(Canvas& canvas, CommandPtr cmd) override{
     if (cmd == nullptr){
       return;
     }
@@ -105,10 +105,10 @@ public:
       m_commandBundles.push_back(&canvas);
       canvas.OpenUndoBundle();
     }
-    canvas.RunCommand(cmd);
+    canvas.RunCommand(std::move(cmd));
   }
 
-  void RunCommand(Canvas& canvas, Command* cmd, const FrameId& frameId) override{
+  void RunCommand(Canvas& canvas, CommandPtr cmd, const FrameId& frameId) override{
     // Fixme: Remove in favor of const Frame&-variant
 
     if (cmd == nullptr){
@@ -122,16 +122,16 @@ public:
       m_commandBundles.push_back(&canvas);
       canvas.OpenUndoBundle();
     }
-    canvas.RunCommand(cmd, frameId);
+    canvas.RunCommand(std::move(cmd), frameId);
   }
 
-  void RunCommand(const Frame& frame, Command* cmd) override{
-    RunCommand(frame.canvas, cmd, frame.frameId);
+  void RunCommand(const Frame& frame, CommandPtr cmd) override{
+    RunCommand(frame.canvas, std::move(cmd), frame.frameId);
   }
 
-  void RunCommand(const BoundObject<Object>& obj, Command* cmd) override{
+  void RunCommand(const BoundObject<Object>& obj, CommandPtr cmd) override{
     if (cmd != nullptr){
-      RunCommand(*obj.canvas, cmd, obj.frameId);
+      RunCommand(*obj.canvas, std::move(cmd), obj.frameId);
     }
   }
 

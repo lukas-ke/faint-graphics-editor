@@ -24,7 +24,7 @@ void set_name(Object* obj, const Optional<utf8_string>& name){
   obj->SetName(name);
 }
 
-Command* set_object_name_command(Object* obj,
+CommandPtr set_object_name_command(Object* obj,
   const Optional<utf8_string>& name)
 {
   using SetNameCmd = ObjFunctionCommand<Object,
@@ -55,7 +55,7 @@ Command* set_object_name_command(Object* obj,
            return space_sep("Clear", obj->GetType(), "Name");
          });});
 
-  return new SetNameCmd(obj, commandName, New(name),
+  return std::make_unique<SetNameCmd>(obj, commandName, New(name),
     Old(obj->GetName()));
 }
 

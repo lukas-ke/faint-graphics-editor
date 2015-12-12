@@ -284,9 +284,9 @@ static void canvas_ellipse(CanvasT canvas, const Rect& r,
   Settings s(with(specific_or_app(canvas, default_ellipse_settings(), maybe),
     ts_AntiAlias, false));
 
-  Command* cmd = draw_object_command(
-    its_yours(create_ellipse_object(tri_from_rect(r), s)));
-  canvas.ctx.RunCommand(canvas, cmd);
+  canvas.ctx.RunCommand(canvas,
+    draw_object_command(its_yours(create_ellipse_object(tri_from_rect(r), s))));
+
 }
 
 /* method: "get_filename()->s\n
@@ -548,9 +548,9 @@ static PyObject* canvas_Group(CanvasT bc, PyObject* args){
 
   Canvas& canvas = bc.item;
   cmd_and_group_t p = group_objects_command(faintObjects, select_added(false));
-  Command* cmd = p.first;
+  CommandPtr& cmd = p.first;
   Object* group = p.second;
-  bc.ctx.RunCommand(Frame(bc.ctx, canvas, canvas.GetImage()), cmd);
+  bc.ctx.RunCommand(Frame(bc.ctx, canvas, canvas.GetImage()), std::move(cmd));
   return pythoned(group, bc.ctx, &canvas, canvas.GetImage().GetId());
 }
 
@@ -704,10 +704,9 @@ static void canvas_rect(CanvasT canvas, const Rect& r,
   const auto settings(with(specific_or_app(canvas,
     default_rectangle_settings(), maybe), ts_AntiAlias, false));
 
-  Command* cmd = draw_object_command(
-    its_yours(create_rectangle_object(tri_from_rect(r), settings)));
-
-  canvas.ctx.RunCommand(canvas, cmd);
+  canvas.ctx.RunCommand(canvas,
+    draw_object_command(
+      its_yours(create_rectangle_object(tri_from_rect(r), settings))));
 }
 
 /* method: "redo()\n
@@ -848,15 +847,15 @@ static void canvas_shrink_selection(CanvasT canvas){
 
   // Fixme: Would be better if the lambdas didn't have to
   // capture selection, as it allows mistakes down the line.
-  Command* cmd = sel::visit(selection,
-    [&canvas, &selection](const sel::Empty&) -> Command*{
+  auto cmd = sel::visit(selection,
+    [&canvas, &selection](const sel::Empty&) -> CommandPtr{
       // No selection active: select the region that auto-crop would
       // shrink the image to.
 
       return canvas.item.GetBackground().Visit(
-        [&selection](const Bitmap& bmp) -> Command*{
+        [&selection](const Bitmap& bmp) -> CommandPtr{
           return get_auto_crop_rectangles(bmp).Visit(
-            []() -> Command*{
+            []() -> CommandPtr{
               return nullptr;
             },
             [&selection](const IntRect& r){
@@ -867,22 +866,22 @@ static void canvas_shrink_selection(CanvasT canvas){
                 alternate(largest(r0, r1)), selection);
             });
         },
-        [](const ColorSpan&) -> Command*{
+        [](const ColorSpan&) -> CommandPtr{
           // Can not shrink selection with uniform background
           return nullptr;
         });
     },
 
-    [&canvas, &selection](const sel::Rectangle& s) -> Command*{
+    [&canvas, &selection](const sel::Rectangle& s) -> CommandPtr{
       // Rectangle selection: shrink it by sort-of auto-cropping
       // within the selected region.
 
       return canvas.item.GetBackground().Get<Bitmap>().Visit(
-        [&s, &selection](const Bitmap& bmp) -> Command*{
+        [&s, &selection](const Bitmap& bmp) -> CommandPtr{
           IntRect selectionRect(s.Rect());
           Bitmap bmpSelected(subbitmap(bmp, selectionRect));
           return get_auto_crop_rectangles(bmpSelected).Visit(
-            []() -> Command*{
+            []() -> CommandPtr{
               return nullptr;
             },
             [&](const IntRect& r){
@@ -897,18 +896,18 @@ static void canvas_shrink_selection(CanvasT canvas){
                 selection);
             });
         },
-        []() -> Command*{
+        []() -> CommandPtr{
           return nullptr;
         });
     },
 
-    [&selection](const sel::Moving& s) -> Command*{
+    [&selection](const sel::Moving& s) -> CommandPtr{
       // Floating selection, shrink both the selection and the
       // hole it left.
 
       const Bitmap& floatingBmp(s.GetBitmap());
       return get_auto_crop_rectangles(floatingBmp).Visit(
-        []() -> Command*{
+        []() -> CommandPtr{
           return nullptr;
         },
         [&](const IntRect& cropRect){
@@ -937,12 +936,12 @@ static void canvas_shrink_selection(CanvasT canvas){
             false);
         });
     },
-    [&selection](const sel::Copying& s) -> Command*{
+    [&selection](const sel::Copying& s) -> CommandPtr{
       // Copied selection: Shrink the floating bitmap.
 
       const Bitmap& floatingBmp(s.GetBitmap());
       return get_auto_crop_rectangles(floatingBmp).Visit(
-        []() ->Command* {
+        []() ->CommandPtr {
           return nullptr;
         },
         [&](const IntRect& r){
@@ -967,7 +966,7 @@ static void canvas_shrink_selection(CanvasT canvas){
         });
     });
   if (cmd != nullptr){
-    canvas.ctx.RunCommand(canvas, cmd);
+    canvas.ctx.RunCommand(canvas, std::move(cmd));
   }
 }
 
@@ -1191,8 +1190,8 @@ bool contains_pos(CanvasT canvas, const IntPoint& pos){
   return pos.x < size.w && pos.y < size.h;
 }
 
-void py_common_run_command(CanvasT target, Command* cmd){
-  target.ctx.RunCommand(target.item, cmd);
+void py_common_run_command(CanvasT target, CommandPtr cmd){
+  target.ctx.RunCommand(target.item, std::move(cmd));
 }
 
 /* extra_include: "generated/python/method-def/py-common-method-def.hh" */

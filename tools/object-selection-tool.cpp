@@ -28,17 +28,17 @@ namespace faint{
 // Creates a single object update setting or a CommandBunch if
 // multiple objects are affected
 template<typename T>
-Command* change_setting_objects(const objects_t& objects,
+CommandPtr change_setting_objects(const objects_t& objects,
   const T& s,
   typename T::ValueType value)
 {
   if (objects.empty()){
     return nullptr;
   }
-  std::vector<Command*> commands;
+  std::vector<CommandPtr> commands;
   for (Object* obj : objects){
     if (obj->GetSettings().Has(s)){
-      commands.push_back(change_setting_command(obj, s, value));
+      commands.emplace_back(change_setting_command(obj, s, value));
     }
   }
   if (commands.empty()){
@@ -47,25 +47,26 @@ Command* change_setting_objects(const objects_t& objects,
   return perhaps_bunch(CommandType::OBJECT,
     bunch_name(space_sep("Change", setting_name_pretty(untyped(s)),
       bracketed(get_collective_type(objects)))),
-    commands);
+    std::move(commands));
 }
 
 // Creates a single object update setting or a CommandBunch if
 // multiple objects are affected
-static Command* change_settings_objects(const objects_t& objects,
+static CommandPtr change_settings_objects(const objects_t& objects,
   const Settings& s)
 {
   if (objects.empty()){
     return nullptr;
   }
-  std::vector<Command*> commands;
+  std::vector<CommandPtr> commands;
+  commands.reserve(objects.size());
   for (Object* obj : objects){
-    commands.push_back(change_settings_command(obj,
+    commands.emplace_back(change_settings_command(obj,
       New(s),
       Old(obj->GetSettings())));
   }
   return perhaps_bunch(CommandType::OBJECT,
-    bunch_name("Change object settings"), commands);
+    bunch_name("Change object settings"), std::move(commands));
 }
 
 class ObjectSelectionTool : public MultiTool {
@@ -94,22 +95,24 @@ public:
       return change_setting_objects(objects, s, v);
     };
 
-    Command* cmd = s.Visit(makeCmd);
+    CommandPtr cmd = s.Visit(makeCmd);
     if (cmd != nullptr){
       m_settings.Update(s);
-      m_activeCanvas->RunCommand(cmd);
+      m_activeCanvas->RunCommand(std::move(cmd));
       return true;
     }
     return false;
   }
 
   bool UpdateSettings(const Settings& s) override{
-    bool changed = m_settings.Update(s);
-    Command* cmd =
-      change_settings_objects(m_activeCanvas->GetObjectSelection(),
-        m_settings);
+    const bool changed = m_settings.Update(s);
+
+    auto cmd = change_settings_objects(
+      m_activeCanvas->GetObjectSelection(),
+      m_settings);
+
     if (cmd != nullptr){
-      m_activeCanvas->RunCommand(cmd);
+      m_activeCanvas->RunCommand(std::move(cmd));
     }
     return changed;
   }

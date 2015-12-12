@@ -59,7 +59,7 @@ public:
     return false;
   }
 
-  Command* GetCommand() final override{
+  CommandPtr GetCommand() final override{
     return m_command.Take();
   }
 

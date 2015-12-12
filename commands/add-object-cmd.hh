@@ -16,6 +16,7 @@
 #ifndef FAINT_ADD_OBJECT_CMD_HH
 #define FAINT_ADD_OBJECT_CMD_HH
 #include "commands/command-constants.hh"
+#include "commands/command-ptr.hh"
 #include "text/utf8-string.hh"
 #include "util/optional.hh"
 
@@ -24,11 +25,11 @@ namespace faint{
 class Command;
 class Object;
 
-Command* add_object_command(Object*,
+CommandPtr add_object_command(Object*,
   const select_added&,
   const utf8_string& name="Add");
 
-Command* insert_object_command(Object*,
+CommandPtr insert_object_command(Object*,
   const select_added&,
   int z,
   const utf8_string& name="Add");

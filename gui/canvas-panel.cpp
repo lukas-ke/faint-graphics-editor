@@ -771,16 +771,16 @@ void CanvasPanel::Redo(){
   }
 }
 
-void CanvasPanel::RunCommand(Command* cmd){
+void CanvasPanel::RunCommand(CommandPtr cmd){
   // When a command is run, any commands in the redo list must be
   // cleared (See exception in CanvasPanel::Redo).
-  RunCommand(cmd, clear_redo(true), nullptr);
+  RunCommand(std::move(cmd), clear_redo(true), nullptr);
 }
 
-void CanvasPanel::RunCommand(Command* cmd, const FrameId& frameId){
+void CanvasPanel::RunCommand(CommandPtr cmd, const FrameId& frameId){
   // When a command is run, any commands in the redo list must be
   // cleared (See exception in CanvasPanel::Redo).
-  RunCommand(cmd, clear_redo(true), &m_images.GetImage(frameId));
+  RunCommand(std::move(cmd), clear_redo(true), &m_images.GetImage(frameId));
 }
 
 void CanvasPanel::RunDWIM(){
@@ -1058,12 +1058,12 @@ void CanvasPanel::RefreshToolRect(){
 }
 
 void CanvasPanel::CommitTool(Tool& tool, RefreshMode refreshMode){
-  Command* cmd = tool.GetCommand();
+  auto cmd = tool.GetCommand();
   if (cmd == nullptr){
     return;
   }
 
-  RunCommand(cmd);
+  RunCommand(std::move(cmd));
   if (refreshMode == REFRESH){
     Refresh();
   }
@@ -1104,7 +1104,7 @@ void CanvasPanel::SetFaintCursor(Cursor cursor){
   SetCursor(m_art.Get(cursor));
 }
 
-void CanvasPanel::RunCommand(Command* cmd,
+void CanvasPanel::RunCommand(CommandPtr cmd,
   const clear_redo& clearRedo,
   Image* targetFrame)
 {
@@ -1112,7 +1112,7 @@ void CanvasPanel::RunCommand(Command* cmd,
     targetFrame = &(m_images.Active());
   }
 
-  Optional<IntPoint> offset = m_commands.Apply(cmd,
+  Optional<IntPoint> offset = m_commands.Apply(cmd.release(),
     clearRedo,
     targetFrame,
     m_images,

@@ -31,7 +31,7 @@ public:
   void Draw(FaintDC&, Overlays&, const PosInfo&) override;
   bool DrawBeforeZoom(Layer) const override;
   bool EatsSettings() const override;
-  Command* GetCommand() override;
+  CommandPtr GetCommand() override;
   Cursor GetCursor(const PosInfo&) const override;
   IntRect GetRefreshRect(const RefreshInfo&) const override;
   Optional<const faint::HistoryContext&> HistoryContext() const override;

@@ -19,7 +19,7 @@ struct Smth_property_$name{
 
     $string_to_int
 
-    auto* cmd = change_setting_command(self.obj, $setting, value);
-    self.ctx->RunCommand(*self.canvas, cmd, self.frameId);
+    auto cmd = change_setting_command(self.obj, $setting, value);
+    self.ctx->RunCommand(*self.canvas, std::move(cmd), self.frameId);
   }
 };

@@ -324,11 +324,11 @@ text_lines_t split_evaluated(ExpressionContext& ctx,
     text->GetTri().Width());
 }
 
-Command* crop_text_region_command(ObjText* text){
+CommandPtr crop_text_region_command(ObjText* text){
   const Tri oldTri = text->GetTri();
   Tri tri(rotated(tri_from_rect(text->GetAutoSizedRect()),
       oldTri.GetAngle(), oldTri.P0()));
-  return new TriCommand(text, New(tri), Old(oldTri), "Auto-Size");
+  return std::make_unique<TriCommand>(text, New(tri), Old(oldTri), "Auto-Size");
 }
 
 bool is_text(const Object* obj){

@@ -13,6 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include "commands/command.hh"
 #include "objects/objtext.hh"
 #include "rendering/overlay.hh"
 #include "tasks/standard-task.hh"
@@ -48,7 +49,7 @@ public:
     return layer == Layer::RASTER;
   }
 
-  Command* GetCommand() override{
+  CommandPtr GetCommand() override{
     return nullptr;
   }
 

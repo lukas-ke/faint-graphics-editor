@@ -44,9 +44,10 @@ public:
     MergeMode=MergeMode::SOLITARY);
 
   void Do(CommandContext&) override;
-  bool Merge(Command*, bool) override;
+  bool Merge(CommandPtr&, bool) override;
   utf8_string Name() const override;
   void Undo(CommandContext&) override;
+  bool Mergable() const;
 
 private:
   TriCommand& operator=(const TriCommand&);

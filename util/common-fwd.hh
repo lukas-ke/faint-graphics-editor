@@ -15,8 +15,10 @@
 
 #ifndef FAINT_COMMON_FWD_HH
 #define FAINT_COMMON_FWD_HH
+#include <memory>
 #include <string>
 #include <vector>
+#include "commands/command-ptr.hh"
 #include "geo/geo-fwd.hh"
 #include "geo/primitive.hh"
 
@@ -77,7 +79,7 @@ enum class Cursor;
 enum class Layer;
 enum class MouseButton;
 
-using commands_t = std::vector<Command*>;
+using commands_t = std::vector<CommandPtr>;
 using objects_t = std::vector<Object*>;
 using tris_t = std::vector<Tri>;
 using strings_t = std::vector<std::string>;

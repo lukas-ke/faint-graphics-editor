@@ -15,6 +15,7 @@
 
 #ifndef FAINT_FRAME_CMD_HH
 #define FAINT_FRAME_CMD_HH
+#include "commands/command-ptr.hh"
 #include "util/delay.hh"
 #include "util/distinct.hh"
 #include "util/hot-spot.hh"
@@ -22,29 +23,28 @@
 
 namespace faint{
 
-class Command;
 class Image;
 class Index;
 class IntPoint;
 class IntSize;
 
-Command* add_frame_command(const IntSize&);
-Command* add_frame_command(const Image&, const Index&);
-Command* remove_frame_command(const Index&);
-Command* reorder_frame_command(const NewIndex&, const OldIndex&);
-Command* swap_frames_command(const Index&, const Index&);
+CommandPtr add_frame_command(const IntSize&);
+CommandPtr add_frame_command(const Image&, const Index&);
+CommandPtr remove_frame_command(const Index&);
+CommandPtr reorder_frame_command(const NewIndex&, const OldIndex&);
+CommandPtr swap_frames_command(const Index&, const Index&);
 
 using NewDelay = Order<Delay>::New;
 using OldDelay = Order<Delay>::Old;
 
-Command* set_frame_delay_command(const Index&,
+CommandPtr set_frame_delay_command(const Index&,
   const NewDelay&,
   const OldDelay&);
 
 using NewHotSpot = Order<HotSpot>::New;
 using OldHotSpot = Order<HotSpot>::Old;
 
-Command* set_frame_hotspot_command(const Index& frameIndex,
+CommandPtr set_frame_hotspot_command(const Index& frameIndex,
   const NewHotSpot&,
   const OldHotSpot&);
 

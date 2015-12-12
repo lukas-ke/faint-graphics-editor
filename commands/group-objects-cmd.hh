@@ -23,7 +23,7 @@ namespace faint{
 
 class Command;
 
-using cmd_and_group_t = std::pair<Command*, Object*>;
+using cmd_and_group_t = std::pair<CommandPtr, Object*>;
 
 // Group the specified objects into a new object. The list of objects
 // must not be empty. Returns the command and the group.
@@ -32,7 +32,7 @@ cmd_and_group_t group_objects_command(const objects_t&, const select_added&);
 // Ungroup the specified objects (a list of groups). The list of
 // objects must not be empty and each objects must contain sub-objects
 // (GetObjectCount() > 0)
-Command* ungroup_objects_command(const objects_t&, const select_added&);
+CommandPtr ungroup_objects_command(const objects_t&, const select_added&);
 
 } // namespace
 

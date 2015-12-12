@@ -15,6 +15,7 @@
 
 #ifndef FAINT_OBJTEXT_HH
 #define FAINT_OBJTEXT_HH
+#include "commands/command-ptr.hh"
 #include "geo/line.hh"
 #include "geo/tri.hh"
 #include "objects/standard-object.hh"
@@ -23,8 +24,6 @@
 #include "text/text-line.hh"
 
 namespace faint{
-
-class Command;
 
 class ObjText : public StandardObject{
 public:
@@ -72,7 +71,7 @@ private:
 text_lines_t split_evaluated(ExpressionContext&,
   const ObjText*);
 
-Command* crop_text_region_command(ObjText* object);
+CommandPtr crop_text_region_command(ObjText* object);
 
 bool is_text(const Object*);
 

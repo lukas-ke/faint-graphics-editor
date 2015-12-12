@@ -17,7 +17,9 @@
 #define FAINT_COMMAND_BUNCH_HH
 #include <deque>
 #include <vector>
+#include <memory>
 #include "commands/command-constants.hh"
+#include "commands/command-ptr.hh"
 #include "util/distinct.hh"
 
 namespace faint{
@@ -36,7 +38,7 @@ public:
 
   // True if the command should be appended to the list of commands in
   // the command bunch with this merge condition.
-  virtual bool Append(Command*) = 0;
+  virtual bool Append(CommandPtr&) = 0;
 
   // True if the command bunch should assume the name of the
   // merged command bunch or appended command.
@@ -51,23 +53,41 @@ public:
 // than one, using the specified bunch_name for the command name. If
 // the container only has one command, that command is returned
 // unchanged.
-Command* perhaps_bunch(CommandType, const bunch_name&,
-  const std::vector<Command*>&);
+CommandPtr perhaps_bunch(CommandType,
+  const bunch_name&,
+  std::vector<CommandPtr>);
 
-Command* perhaps_bunch(CommandType, const bunch_name&,
-  const std::deque<Command*>&);
+CommandPtr perhaps_bunch(CommandType,
+  const bunch_name&,
+  std::deque<CommandPtr>);
 
-Command* command_bunch(CommandType, const bunch_name&,
-  const std::vector<Command*>&, MergeCondition* c=nullptr);
+CommandPtr perhaps_bunch(CommandType,
+  const bunch_name&,
+  std::vector<CommandPtr>);
 
-Command* command_bunch(CommandType, const bunch_name&,
-  const std::deque<Command*>&);
-
-Command* command_bunch(CommandType, const bunch_name&, Command*,
+CommandPtr command_bunch(CommandType,
+  const bunch_name&,
+  std::vector<CommandPtr>,
   MergeCondition* c=nullptr);
 
-Command* command_bunch(CommandType, const bunch_name&, Command*, Command*,
+CommandPtr command_bunch(CommandType,
+  const bunch_name&,
+  std::deque<CommandPtr>);
+
+CommandPtr command_bunch(CommandType,
+  const bunch_name&,
+  CommandPtr,
   MergeCondition* c=nullptr);
+
+CommandPtr command_bunch(CommandType,
+  const bunch_name&,
+  CommandPtr, CommandPtr,
+  MergeCondition* c=nullptr);
+
+CommandPtr command_bunch(CommandType,
+  const bunch_name&,
+  CommandPtr,
+  std::unique_ptr<MergeCondition>);
 
 } // namespace
 

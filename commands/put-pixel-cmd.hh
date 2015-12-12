@@ -22,7 +22,7 @@ class Command;
 class IntPoint;
 class Color;
 
-Command* put_pixel_command(const IntPoint&, const Color&);
+CommandPtr put_pixel_command(const IntPoint&, const Color&);
 
 } // namespace
 

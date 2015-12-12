@@ -129,8 +129,8 @@ public:
   PreemptResult Preempt(PreemptOption);
   void PreviousFrame();
   void Redo();
-  void RunCommand(Command*);
-  void RunCommand(Command*, const FrameId&);
+  void RunCommand(CommandPtr);
+  void RunCommand(CommandPtr, const FrameId&);
   void RunDWIM();
   void ScrollMaxDown();
   void ScrollMaxLeft();
@@ -164,7 +164,7 @@ private:
   void InclusiveRefresh(const IntRect&);
   void MousePosRefresh(const IntPoint&, const ToolModifiers&);
   void RefreshToolRect();
-  void RunCommand(Command*, const clear_redo&, Image*);
+  void RunCommand(CommandPtr, const clear_redo&, Image*);
   void ScrollLineUp();
   void ScrollLineDown();
   void ScrollLineLeft();

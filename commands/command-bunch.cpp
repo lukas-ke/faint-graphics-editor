@@ -25,36 +25,30 @@ namespace faint{
 class CommandBunch : public Command{
 public:
   CommandBunch(CommandType type,
-    const commands_t& commands,
+    std::vector<CommandPtr> commands,
     const bunch_name& name,
     MergeCondition* mergeCondition=nullptr)
     : Command(type),
-      m_commands(commands),
+      m_commands(std::move(commands)),
       m_name(name.Get()),
       m_mergeCondition(mergeCondition)
   {
-    assert(!commands.empty());
-  }
-
-  ~CommandBunch(){
-    for (auto* cmd : m_commands){
-      delete cmd;
-    }
+    assert(!m_commands.empty());
   }
 
   void Do(CommandContext& context) override{
-    for (auto* cmd : m_commands){
+    for (auto& cmd : m_commands){
       cmd->Do(context);
     }
   }
 
   void DoRaster(CommandContext& context) override{
-    for (auto* cmd : m_commands){
+    for (auto& cmd : m_commands){
       cmd->DoRaster(context);
     }
   }
 
-  bool Merge(Command* cmd, bool sameFrame) override{
+  bool Merge(CommandPtr& cmd, bool sameFrame) override{
     if (!sameFrame){
       return false;
     }
@@ -64,14 +58,14 @@ public:
     }
 
     if (m_mergeCondition->Append(cmd)){
-      m_commands.push_back(cmd);
+      m_commands.emplace_back(std::move(cmd));
       if (m_mergeCondition->AssumeName()){
         m_name = cmd->Name();
       }
       return true;
     }
 
-    CommandBunch* candidate = dynamic_cast<CommandBunch*>(cmd);
+    auto* candidate = dynamic_cast<CommandBunch*>(cmd.get());
     if (candidate == nullptr){
       return false;
     }
@@ -100,67 +94,112 @@ public:
   }
 
   void Undo(CommandContext& context) override{
-    for (auto* cmd : reversed(m_commands)){
+    for (auto& cmd : reversed(m_commands)){
       cmd->Undo(context);
     }
   }
 private:
-  std::vector<Command*> m_commands;
+  std::vector<CommandPtr> m_commands;
   utf8_string m_name;
   std::unique_ptr<MergeCondition> m_mergeCondition;
 };
 
-Command* perhaps_bunch(CommandType type,
-  const bunch_name& name,
-  const commands_t& commands)
-{
+template<typename T>
+CommandPtr first_element(T& commands){
   assert(!commands.empty());
-  return (commands.size() == 1) ? commands.front() :
-    new CommandBunch(type, commands, name);
+  auto it = begin(commands);
+  CommandPtr p = std::move(*it);
+  commands.erase(it);
+  return p;
 }
 
-Command* perhaps_bunch(CommandType type,
+CommandPtr perhaps_bunch(CommandType type,
   const bunch_name& name,
-  const std::deque<Command*>& commands)
+  std::vector<CommandPtr> commands)
 {
   assert(!commands.empty());
-  return (commands.size() == 1) ? commands.front() :
-    new CommandBunch(type,
-      std::vector<Command*>(begin(commands), end(commands)), name);
+  if (commands.size() == 1){
+    return first_element(commands);
+  }
+  else{
+    return std::make_unique<CommandBunch>(type, std::move(commands), name);
+  }
 }
 
-Command* command_bunch(CommandType type,
+std::vector<CommandPtr> move_to_vec(std::deque<CommandPtr>& cmds){
+  std::vector<CommandPtr> v;
+  v.reserve(cmds.size());
+  for (auto it = begin(cmds); it != end(cmds); it = cmds.erase(it)){
+    v.emplace_back(std::move(*it));
+  }
+  return v;
+}
+
+CommandPtr perhaps_bunch(CommandType type,
   const bunch_name& name,
-  const commands_t& commands,
+  std::deque<CommandPtr> commands)
+{
+  assert(!commands.empty());
+  if (commands.size() == 1){
+    return first_element(commands);
+  }
+  else{
+    return std::make_unique<CommandBunch>(type,
+      move_to_vec(commands), name);
+  }
+}
+
+CommandPtr command_bunch(CommandType type,
+  const bunch_name& name,
+  std::vector<CommandPtr> commands,
   MergeCondition* mergeCondition)
 {
-  return new CommandBunch(type, commands, name, mergeCondition);
+  return std::make_unique<CommandBunch>(type, std::move(commands),
+    name,
+    mergeCondition);
 }
 
-Command* command_bunch(CommandType type,
+CommandPtr command_bunch(CommandType type,
   const bunch_name& name,
-  const std::deque<Command*>& commands)
+  std::deque<CommandPtr> commands)
 {
-  return new CommandBunch(type,
-    std::vector<Command*>(begin(commands), end(commands)),
+  return std::make_unique<CommandBunch>(type,
+    move_to_vec(commands),
     name);
 }
 
-Command* command_bunch(CommandType type,
+CommandPtr command_bunch(CommandType type,
   const bunch_name& name,
-  Command* cmd,
+  CommandPtr cmd,
   MergeCondition* mergeCondition)
 {
-  return new CommandBunch(type, {cmd}, name, mergeCondition);
+  std::vector<CommandPtr> v;
+  v.emplace_back(std::move(cmd));
+  return std::make_unique<CommandBunch>(type, std::move(v), name,
+    mergeCondition);
 }
 
-Command* command_bunch(CommandType type,
+CommandPtr command_bunch(CommandType type,
   const bunch_name& name,
-  Command* cmd1,
-  Command* cmd2,
+  CommandPtr cmd1,
+  CommandPtr cmd2,
   MergeCondition* mergeCondition)
 {
-  return new CommandBunch(type, {cmd1, cmd2}, name, mergeCondition);
+  std::vector<CommandPtr> v;
+  v.emplace_back(std::move(cmd1));
+  v.emplace_back(std::move(cmd2));
+  return std::make_unique<CommandBunch>(type, std::move(v), name, mergeCondition);
+}
+
+CommandPtr command_bunch(CommandType type,
+  const bunch_name& name,
+  CommandPtr cmd,
+  std::unique_ptr<MergeCondition> mergeCondition)
+{
+  return command_bunch(type,
+    name,
+    std::move(cmd),
+    mergeCondition.release());
 }
 
 bool MergeCondition::Unsatisfied(MergeCondition* other){

@@ -15,7 +15,9 @@
 
 #ifndef FAINT_COMMAND_HH
 #define FAINT_COMMAND_HH
+#include <memory>
 #include "commands/command-constants.hh"
+#include "commands/command-ptr.hh"
 #include "util/id-types.hh"
 #include "util/index.hh"
 #include "util/objects.hh"
@@ -92,11 +94,11 @@ public:
   // True if the passed in command could be merged with this command.
   // sameFrame specifies if the command was targetting the same frame
   // as this command.
-  virtual bool Merge(Command*, bool sameFrame);
+  virtual bool Merge(CommandPtr&, bool sameFrame);
 
   // "Do What I Mean" - returns an alternate command if available.
   // Should only be called after HasDWIM() returns true
-  virtual Command* GetDWIM();
+  virtual CommandPtr GetDWIM();
   virtual CommandId GetId() const;
   virtual bool HasDWIM() const;
 
@@ -126,9 +128,9 @@ using PendingCommand = Pending<Command>;
 class Operation{
 public:
   virtual ~Operation() = default;
-  virtual Command* DoImage() const = 0;
-  virtual Command* DoObjects(const objects_t&) const = 0;
-  virtual Command* DoRasterSelection(const Image&) const = 0;
+  virtual CommandPtr DoImage() const = 0;
+  virtual CommandPtr DoObjects(const objects_t&) const = 0;
+  virtual CommandPtr DoRasterSelection(const Image&) const = 0;
 };
 
 } // namespace

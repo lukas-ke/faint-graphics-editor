@@ -62,12 +62,12 @@ private:
   Optional<Index> m_index;
 };
 
-Command* add_frame_command(const IntSize& size){
-  return new AddFrameCommand(size);
+CommandPtr add_frame_command(const IntSize& size){
+  return std::make_unique<AddFrameCommand>(size);
 }
 
-Command* add_frame_command(const Image& image, const Index& index){
-  return new AddFrameCommand(image, index);
+CommandPtr add_frame_command(const Image& image, const Index& index){
+  return std::make_unique<AddFrameCommand>(image, index);
 }
 
 class RemoveFrameCommand : public Command {
@@ -99,8 +99,8 @@ private:
   Index m_index;
 };
 
-Command* remove_frame_command(const Index& index){
-  return new RemoveFrameCommand(index);
+CommandPtr remove_frame_command(const Index& index){
+  return std::make_unique<RemoveFrameCommand>(index);
 }
 
 static void swap_frames(CommandContext& ctx, const Index& f1, const Index& f2){
@@ -138,8 +138,8 @@ private:
   Index m_f2;
 };
 
-Command* swap_frames_command(const Index& f1, const Index& f2){
-  return new SwapFramesCommand(std::min(f1, f2), std::max(f1, f2));
+CommandPtr swap_frames_command(const Index& f1, const Index& f2){
+  return std::make_unique<SwapFramesCommand>(std::min(f1, f2), std::max(f1, f2));
 }
 
 class ReorderFrameCommand : public Command {
@@ -166,10 +166,10 @@ private:
   OldIndex m_oldIndex;
 };
 
-Command* reorder_frame_command(const NewIndex& newIndex,
+CommandPtr reorder_frame_command(const NewIndex& newIndex,
   const OldIndex& oldIndex)
 {
-  return new ReorderFrameCommand(newIndex, oldIndex);
+  return std::make_unique<ReorderFrameCommand>(newIndex, oldIndex);
 }
 
 class SetFrameDelayCommand : public Command {
@@ -200,11 +200,11 @@ private:
   Delay m_oldDelay;
 };
 
-Command* set_frame_delay_command(const Index& frameIndex,
+CommandPtr set_frame_delay_command(const Index& frameIndex,
   const NewDelay& newDelay,
   const OldDelay& oldDelay)
 {
-  return new SetFrameDelayCommand(frameIndex, newDelay, oldDelay);
+  return std::make_unique<SetFrameDelayCommand>(frameIndex, newDelay, oldDelay);
 }
 
 class SetFrameHotSpotCommand : public Command {
@@ -236,11 +236,13 @@ private:
   HotSpot m_oldHotSpot;
 };
 
-Command* set_frame_hotspot_command(const Index& frameIndex,
+CommandPtr set_frame_hotspot_command(const Index& frameIndex,
   const NewHotSpot& newHotSpot,
   const OldHotSpot& oldHotSpot)
 {
-  return new SetFrameHotSpotCommand(frameIndex, newHotSpot, oldHotSpot);
+  return std::make_unique<SetFrameHotSpotCommand>(frameIndex,
+    newHotSpot,
+    oldHotSpot);
 }
 
 } // namespace

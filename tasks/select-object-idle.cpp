@@ -59,18 +59,15 @@ public:
     return false;
   }
 
-  bool Append(Command* cmd) override{
+  bool Append(CommandPtr& cmd) override{
     if (m_appended){
       // Only append a single command
       return false;
     }
-    m_appended = true; // Only attempt appending once
+    // Only attempt appending once
+    m_appended = true;
 
-    T* candidate = dynamic_cast<T*>(cmd);
-    if (candidate == nullptr){
-      return false;
-    }
-    return true;
+    return dynamic_cast<T*>(cmd.get()) != nullptr;
   }
 
   bool AssumeName() const override{
@@ -250,20 +247,21 @@ static TaskResult clicked_nothing(IdleSelectionState& impl, const PosInfo& info)
   return TaskResult::DRAW;
 }
 
-static Command* get_appending_insert_command(Object* obj,
+static CommandPtr get_appending_insert_command(Object* obj,
   object_handle_t handle,
   const Point& pos)
 {
-  Command* cmd = add_point_command(obj, handle + 1, pos);
-  return command_bunch(cmd->Type(), bunch_name(cmd->Name()), cmd,
+  auto cmd = add_point_command(obj, handle + 1, pos);
+  return command_bunch(cmd->Type(), bunch_name(cmd->Name()), std::move(cmd),
     new AppendCommandType<MovePointCommand>());
 }
 
-static Command* get_appending_add_object_command(Object* obj,
+static CommandPtr get_appending_add_object_command(Object* obj,
   const utf8_string& commandName)
 {
-  Command* cmd = add_object_command(obj, select_added(true), commandName);
-  return command_bunch(cmd->Type(), bunch_name(cmd->Name()), cmd,
+  auto cmd = add_object_command(obj, select_added(true), commandName);
+  return command_bunch(cmd->Type(), bunch_name(cmd->Name()),
+    std::move(cmd),
     new AppendCommandType<TriCommand>());
 }
 
@@ -507,7 +505,7 @@ public:
     return false;
   }
 
-  Command* GetCommand() override{
+  CommandPtr GetCommand() override{
     return m_impl.command.Take();
   }
 
@@ -560,7 +558,7 @@ public:
   }
 
   Task* GetNewTask() override{
-    return m_impl.newTask.Take();
+    return m_impl.newTask.Take().release(); // Fixme
   }
 
   IntRect GetRefreshRect(const RefreshInfo& info) const override{

@@ -17,6 +17,7 @@
 #include <cassert>
 #include <memory>
 #include "bitmap/draw.hh"
+#include "commands/command.hh"
 #include "objects/object.hh"
 #include "rendering/faint-dc.hh"
 #include "util/command-util.hh"
@@ -24,10 +25,10 @@
 
 namespace faint{
 
-template<Command*(*func)(const objects_t&, const Image&)>
+template<CommandPtr(*func)(const objects_t&, const Image&)>
 bool got(const Image& image, const objects_t& objects){
   return !objects.empty() &&
-    std::unique_ptr<Command>(func(objects, image)) != nullptr;
+    func(objects, image) != nullptr;
 }
 
 bool can_move_backward(const Image& image, const objects_t& objects){

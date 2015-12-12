@@ -515,7 +515,7 @@ public:
     m_canvas.Refresh();
   }
 
-  void RunCommand(Command* cmd) override{
+  void RunCommand(CommandPtr cmd) override{
     if (cmd != nullptr){
       // Preempt so that for example(!) a move-object tool is
       // preempted before the moved objects are removed.  This is a
@@ -524,11 +524,11 @@ public:
       // e.g. checking if the tool is disturbed by the effects of the
       // command.
       m_canvas.Preempt(PreemptOption::ALLOW_COMMAND);
-      m_canvas.RunCommand(cmd);
+      m_canvas.RunCommand(std::move(cmd));
     }
   }
 
-  void RunCommand(Command* cmd, const FrameId& id) override{
+  void RunCommand(CommandPtr cmd, const FrameId& id) override{
     if (cmd == nullptr){
       return;
     }
@@ -539,7 +539,7 @@ public:
     // e.g. checking if the tool is disturbed by the effects of the
     // command.
     m_canvas.Preempt(PreemptOption::ALLOW_COMMAND);
-    m_canvas.RunCommand(cmd, id);
+    m_canvas.RunCommand(std::move(cmd), id);
   }
 
   void RunDWIM() override{

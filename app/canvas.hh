@@ -17,6 +17,7 @@
 #define FAINT_CANVAS_HH
 #include <memory> // For weak_ptr
 #include "commands/command-constants.hh"
+#include "commands/command-ptr.hh"
 #include "geo/primitive.hh"
 #include "util/id-types.hh"
 #include "util/objects.hh"
@@ -27,7 +28,6 @@ namespace faint{
 
 enum class Layer;
 class Bitmap;
-class Command;
 class FilePath;
 class Grid;
 class Image;
@@ -114,8 +114,8 @@ public:
   virtual void PreviousFrame() = 0;
   virtual void Redo() = 0;
   virtual void Refresh() = 0;
-  virtual void RunCommand(Command*) = 0;
-  virtual void RunCommand(Command*, const FrameId&) = 0;
+  virtual void RunCommand(CommandPtr) = 0;
+  virtual void RunCommand(CommandPtr, const FrameId&) = 0;
   virtual void RunDWIM() = 0;
   virtual void ScrollMaxDown() = 0;
   virtual void ScrollMaxLeft() = 0;

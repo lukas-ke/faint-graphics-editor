@@ -15,17 +15,17 @@
 
 #ifndef FAINT_RESCALE_CMD_HH
 #define FAINT_RESCALE_CMD_HH
+#include "commands/command-ptr.hh"
 
 namespace faint{
 
 enum class ScaleQuality;
-class Command;
 class IntSize;
 
 // Scale the image to the specified size. The raster background will
 // be scaled with the specified quality. All objects will be scaled
 // proportionally to the image resize.
-Command* rescale_command(const IntSize&, ScaleQuality);
+CommandPtr rescale_command(const IntSize&, ScaleQuality);
 
 } // namespace
 

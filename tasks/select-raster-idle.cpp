@@ -45,14 +45,14 @@ public:
     return false;
   }
 
-  bool Append(Command* cmd) override{
+  bool Append(CommandPtr& cmd) override{
     if (m_appended){
       // Only append a single command
       return false;
     }
     m_appended = true;
 
-    return is_appendable_raster_selection_command(cmd);
+    return is_appendable_raster_selection_command(cmd.get());
   }
   bool AssumeName() const override{
     // The rectangle selection command name should be used.
@@ -61,6 +61,10 @@ public:
 private:
   bool m_appended;
 };
+
+std::unique_ptr<MergeCondition> append_selection(){
+  return std::make_unique<AppendSelection>();
+}
 
 static TaskResult deselect(const RasterSelection& selection,
   PendingCommand& command)
@@ -105,22 +109,24 @@ static TaskResult move_selected_content(const PosInfo& info,
 {
   const RasterSelection& selection = info.canvas.GetRasterSelection();
 
-  auto move_floating_content =
-    [&](const auto& s){
-      // Helper for copying a sel::Moving or sel::Copying.
-      using namespace faint;
+  auto move_floating_content = [&](const auto& s){
+    // Helper for copying a sel::Moving or sel::Copying.
+    using namespace faint;
 
-      const bool gonnaCopy(gonna_copy(info));
-      if (gonnaCopy){
-        Command* stamp = stamp_floating_selection_command(s);
-        bunch_name("Clone Selection");
-        command.Set(command_bunch(CommandType::HYBRID,
-            bunch_name("Clone Selection"),
-            stamp, new AppendSelection()));
-      }
+    const bool gonnaCopy(gonna_copy(info));
+    if (gonnaCopy){
+      command.Set(command_bunch(CommandType::HYBRID,
+        bunch_name("Clone Selection"),
+        stamp_floating_selection_command(s),
+        append_selection()));
+
       set_move_task(newTask, gonnaCopy, info, s.TopLeft(), settings, canvas);
-      return gonnaCopy ? TaskResult::COMMIT_AND_CHANGE : TaskResult::CHANGE;
-    };
+      return TaskResult::COMMIT_AND_CHANGE;
+    }
+    else{
+      return TaskResult::CHANGE;
+    }
+  };
 
   return sel::visit(selection,
     [](const sel::Empty&){
@@ -140,10 +146,10 @@ static TaskResult move_selected_content(const PosInfo& info,
 }
 
 // Helper for new_selection_rectangle
-static void deselect_non_floating(PendingCommand& command, Command* deselect){
+static void deselect_non_floating(PendingCommand& command, CommandPtr deselect){
   command.Set(command_bunch(CommandType::SELECTION,
     bunch_name("Deselect Raster"),
-    deselect,
+    std::move(deselect),
     new AppendSelection()));
 }
 
@@ -152,12 +158,12 @@ static void deselect_non_floating(PendingCommand& command, Command* deselect){
 template<typename SELECTION_TYPE>
 void deselect_floating(PendingCommand& command,
   SELECTION_TYPE& s,
-  Command* deselect)
+  CommandPtr deselect)
 {
   command.Set(command_bunch(CommandType::HYBRID,
     bunch_name("Deselect Raster"),
     stamp_floating_selection_command(s),
-    deselect,
+    std::move(deselect),
     new AppendSelection()));
 }
 
@@ -185,21 +191,21 @@ static TaskResult new_selection_rectangle(const PosInfo& info,
   // Create a deselection, and possibly stamping, command. This will
   // be merged later with the command from the selection task (if
   // any).
-  Command* deselect = set_raster_selection_command(New(SelectionState()),
+  auto deselect = set_raster_selection_command(New(SelectionState()),
     Old(selection.GetState()), "Deselect Raster");
 
   sel::visit(selection,
     [&](const sel::Empty&){
-      deselect_non_floating(command, deselect);
+      deselect_non_floating(command, std::move(deselect));
     },
     [&](const sel::Rectangle&){
-      deselect_non_floating(command, deselect);
+      deselect_non_floating(command, std::move(deselect));
     },
     [&](const sel::Moving& s){
-      deselect_floating(command, s, deselect);
+      deselect_floating(command, s, std::move(deselect));
     },
     [&](const sel::Copying& s){
-      deselect_floating(command, s, deselect);
+      deselect_floating(command, s, std::move(deselect));
     });
   return TaskResult::COMMIT_AND_CHANGE;
 }
@@ -223,17 +229,17 @@ static TaskResult move_selection_rect(const PosInfo& info,
     },
     [&command](const sel::Moving& s){
       // Lose the floating selection
-      Command* stamp = stamp_floating_selection_command(s);
       command.Set(command_bunch(CommandType::HYBRID,
         bunch_name("Clone Selection"),
-        stamp, new AppendSelection()));
+        stamp_floating_selection_command(s),
+        append_selection()));
     },
     [&command](const sel::Copying& s){
       // Lose the floating selection
-      Command* stamp = stamp_floating_selection_command(s);
       command.Set(command_bunch(CommandType::HYBRID,
         bunch_name("Clone Selection"),
-        stamp, new AppendSelection()));
+        stamp_floating_selection_command(s),
+        append_selection()));
     });
 
   newTask.Set(raster_selection_move_task(offset, selection.TopLeft(),
@@ -311,7 +317,7 @@ public:
     return false;
   }
 
-  Command* GetCommand() override{
+  CommandPtr GetCommand() override{
     return m_command.Take();
   }
 
@@ -320,7 +326,7 @@ public:
   }
 
   Task* GetNewTask() override{
-    return m_newTask.Take();
+    return m_newTask.Take().release(); // Fixme
   }
 
   IntRect GetRefreshRect(const RefreshInfo& info) const override{

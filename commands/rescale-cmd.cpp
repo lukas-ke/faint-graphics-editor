@@ -42,8 +42,8 @@ public:
     if (m_objectResize == nullptr && context.HasObjects()){
       // Use the top left corner of the image as origin for object scaling.
       const Point origin(0,0);
-      m_objectResize.reset(get_scale_command(context.GetObjects(),
-        Scale(New(floated(m_size)), oldSize), origin));
+      m_objectResize = get_scale_command(context.GetObjects(),
+        Scale(New(floated(m_size)), oldSize), origin);
     }
 
     if (m_objectResize != nullptr){
@@ -79,14 +79,14 @@ public:
   }
 
 private:
-  std::unique_ptr<Command> m_objectResize;
+  CommandPtr m_objectResize;
   IntSize m_size;
   IntSize m_oldSize;
   ScaleQuality m_quality;
 };
 
-Command* rescale_command(const IntSize& size, ScaleQuality quality){
-  return new RescaleCommand(size, quality);
+CommandPtr rescale_command(const IntSize& size, ScaleQuality quality){
+  return std::make_unique<RescaleCommand>(size, quality);
 }
 
 } // namespace
