@@ -17,6 +17,7 @@
 #include "bitmap/bitmap.hh"
 #include "bitmap/pattern.hh"
 #include "util/id-types.hh"
+#include "util/make-vector.hh"
 
 namespace faint{
 
@@ -65,11 +66,10 @@ public:
   }
 
   std::map<int, int> GetStatus() const{
-    std::map<int, int> statusMap;
-    for (const auto& idToCount : m_refCounts){
-      statusMap[idToCount.first.Raw()] = idToCount.second;
-    }
-    return statusMap;
+    return make_map(m_refCounts,
+      [](const auto& idToCount){
+        return std::make_pair(idToCount.first.Raw(), idToCount.second);
+      });
   }
 private:
   void Erase(const PatternId& id){

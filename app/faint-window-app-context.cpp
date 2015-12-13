@@ -574,12 +574,12 @@ Canvas* FaintWindowContext::LoadAsFrames(const FileList& paths,
   const change_tab& changeTab)
 {
   std::vector<ImageProps> props;
-  const std::vector<Format*> formats =
-    loading_file_formats(m_faintWindow.GetFileFormats());
+  const auto formats = loading_file_formats(m_faintWindow.GetFileFormats());
+
   for (const FilePath& filePath : paths){
     FileExtension extension(filePath.Extension());
     bool loaded = false;
-    for (Format* format : formats){
+    for (auto format : formats){
       if (format->Match(extension)){
         props.emplace_back();
         format->Load(filePath, props.back());

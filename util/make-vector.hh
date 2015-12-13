@@ -15,6 +15,7 @@
 
 #ifndef FAINT_MAKE_VECTOR_HH
 #define FAINT_MAKE_VECTOR_HH
+#include <map>
 #include <vector>
 #include <functional>
 
@@ -24,7 +25,7 @@ template<typename Generator, typename Func>
 auto make_vector(const Generator& gen, Func&& f){
   // Return a vector containing the results of calling f with
   // all values produced by begin(gen) to end(gen).
-  
+
   using iter_t = decltype(begin(gen));
   using param_t = typename iter_t::value_type;
   using value_type =
@@ -57,6 +58,23 @@ auto make_vector(std::initializer_list<T>&& gen, Func&& f){
   }
 
   return v;
+}
+
+template<typename Generator, typename Func>
+auto make_map(const Generator& gen, Func&& f){
+  using iter_t = decltype(begin(gen));
+  using param_t = typename iter_t::value_type;
+  using pair_type =
+    typename std::result_of<Func(param_t)>::type;
+  using key_type = decltype(pair_type::first);
+  using value_type = decltype(pair_type::second);
+  std::map<key_type, value_type> m;
+
+  for (const auto& value : gen){
+    auto p = f(value);
+    m[p.first] = p.second;
+  }
+  return m;
 }
 
 } // namespace
