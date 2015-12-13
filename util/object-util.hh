@@ -32,10 +32,12 @@ class Rect;
 
 objects_t as_list(Object*);
 ObjRaster* as_ObjRaster(Object*);
+Rect bounding_rect(Object*);
 Rect bounding_rect(const objects_t&);
 
 // Returns a bounding rectangle for the Tri, padded with the line
 // width from the Settings if the fill style includes border.
+// Fixme: Rename (bounding_rect_ink?)
 Rect bounding_rect(const Tri&, const Settings&);
 
 objects_t clone(const objects_t&);
@@ -90,6 +92,8 @@ Settings get_object_settings(const objects_t&);
 tris_t get_tris(const objects_t&);
 
 bool has_subobjects(const Object*);
+
+bool intersects(Object*, const Rect&);
 
 // True if the the object or one of its sub-objects match the id
 bool is_or_has(const Object*, const ObjectId&);

@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include "bitmap/color.hh"
+#include "geo/tri.hh"
 #include "objects/object.hh"
 #include "util/settings.hh"
 
@@ -32,6 +33,14 @@ void Object::ClearActive(){
 
 bool Object::Inactive() const{
   return !Active();
+}
+
+Object* Object_clone(const Object* o){
+  return o->Clone();
+}
+
+Tri Object_get_tri(const Object* o){
+  return o->GetTri();
 }
 
 } // namespace

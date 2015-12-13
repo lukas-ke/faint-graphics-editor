@@ -136,6 +136,9 @@ void Object::Set(const T& s, typename T::ValueType v){
   GetSettings().Set(s, v);
 }
 
+Object* Object_clone(const Object*);
+Tri Object_get_tri(const Object*);
+
 } // namespace
 
 #endif

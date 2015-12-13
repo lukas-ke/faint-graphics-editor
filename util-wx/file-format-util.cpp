@@ -37,15 +37,6 @@ Formats built_in_file_formats(){
     format_wx_jpg()};
 }
 
-template<typename T>
-T select(const T& src,
-  const std::function<bool(const typename T::value_type&)>& func)
-{
-  T dst;
-  std::copy_if(src.begin(), src.end(), back_inserter(dst), func);
-  return dst;
-}
-
 Formats loading_file_formats(const Formats& allFormats){
   return select(allFormats, can_load_f);
 }

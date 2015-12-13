@@ -48,7 +48,9 @@ coord distance(const Point&, const Point&);
 // time consuming.
 coord distance(const Point& start, const CubicBezier&, int subdivisions);
 
+// a and b are diameters
 coord ellipse_perimeter(coord a, coord b);
+coord ellipse_perimeter(const Radii&);
 
 // Returns the angle between the positive x-axis and the line in the
 // interval (-pi, pi], with positive angles on the lower semi-circle

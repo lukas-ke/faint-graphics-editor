@@ -167,6 +167,10 @@ coord ellipse_perimeter(coord a, coord b){
    );
 }
 
+coord ellipse_perimeter(const Radii& r){
+  return ellipse_perimeter(r.x * 2, r.y * 2);
+
+}
 coord perimeter(const std::vector<PathPt>& path){
   coord len = 0.0;
 

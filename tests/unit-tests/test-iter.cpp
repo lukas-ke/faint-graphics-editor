@@ -1,5 +1,6 @@
 // -*- coding: us-ascii-unix -*-
 #include <vector>
+#include <algorithm>
 #include "test-sys/test.hh"
 #include "text/utf8-string.hh"
 #include "util/iter.hh"
@@ -34,6 +35,14 @@ void test_iter(){
       ASSERT(item == strings[to_size_t(i + 1)]);
       i++;
     }
+  }
+
+  {
+    // Test "but_first" with single element
+    std::vector<int> v{0};
+    ASSERT(v.size() == 1);
+    auto gen(but_first(v));
+    VERIFY(distance(begin(gen), end(gen)) == 0);
   }
 
   {

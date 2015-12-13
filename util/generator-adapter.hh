@@ -31,6 +31,11 @@ bool all_of(Generator&& gen, UnaryPredicate&& p){
   return std::all_of(begin(gen), end(gen), p);
 }
 
+template<class Generator, class T>
+auto find(Generator&& gen, T&& key){
+  return std::find(begin(gen), end(gen), key);
+}
+
 template<class Generator, class UnaryPredicate>
 auto find_if(Generator&& gen, UnaryPredicate&& p){
   auto it = std::find_if(begin(gen), end(gen), p);
@@ -68,6 +73,14 @@ auto accumulate(T&& initial, const Container& c, BinaryOperation&& op){
   return std::accumulate(begin(c), end(c), initial, op);
 }
 
+template<class Container, class T, class BinaryOperation>
+auto accumulate_in_place(T&& obj, const Container& c, BinaryOperation&& op){
+  for (const auto& item : c){
+    op(obj, item);
+  }
+  return obj;
+}
+
 template<class Container>
 Container sorted(Container c){
   sort(begin(c), end(c));
@@ -81,8 +94,16 @@ auto not_equal_to(const T& key){
 
 template<class Container, class Value>
 bool contains(Container&& c, const Value& v){
-  return std::find(begin(c), end(c), v) != end(c);
+  return find(c, v) != end(c);
 }
+
+template<class T, class UnaryPredicate>
+T select(const T& src, UnaryPredicate&& func){
+  T dst;
+  std::copy_if(src.begin(), src.end(), back_inserter(dst), func);
+  return dst;
+}
+
 
 } // namespace
 

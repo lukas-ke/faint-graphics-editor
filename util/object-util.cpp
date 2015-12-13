@@ -34,6 +34,7 @@
 #include "util/generator-adapter.hh"
 #include "util/grid.hh"
 #include "util/iter.hh"
+#include "util/make-vector.hh"
 #include "util/math-constants.hh"
 #include "util/object-util.hh"
 #include "util/setting-util.hh"
@@ -50,6 +51,10 @@ ObjRaster* as_ObjRaster(Object* obj){
   ObjRaster* raster = dynamic_cast<ObjRaster*>(obj);
   assert(raster != nullptr);
   return raster;
+}
+
+Rect bounding_rect(Object* obj){
+  return bounding_rect(obj->GetTri());
 }
 
 Rect bounding_rect(const objects_t& objects){
@@ -75,12 +80,8 @@ Rect bounding_rect(const Tri& tri, const Settings& s){
   return bounding_rect(tri);
 }
 
-objects_t clone(const objects_t& oldObjects){
-  objects_t objects;
-  for (const Object* obj : oldObjects){
-    objects.push_back(obj->Clone());
-  }
-  return objects;
+objects_t clone(const objects_t& objects){
+  return make_vector(objects, Object_clone);
 }
 
 Object* clone_as_path(Object* object, const ExpressionContext& ctx){
@@ -119,7 +120,7 @@ Color color_at(ObjRaster* obj, const Point& imagePos){
 }
 
 bool contains(const objects_t& objects, const Object* obj){
-  return std::find(begin(objects), end(objects), obj) != end(objects);
+  return find(objects, obj) != end(objects);
 }
 
 bool contains_group(const objects_t& objects){
@@ -138,12 +139,7 @@ Optional<utf8_string> empty_to_unset(const Optional<utf8_string>& name){
 
 size_t find_object_index(Object* obj, const objects_t& objects){
   assert(obj != nullptr);
-  for (size_t i = 0; i != objects.size(); i++){
-    if (objects[i] == obj){
-      return i;
-    }
-  }
-  return objects.size();
+  return std::distance(find(objects, obj), objects.end());
 }
 
 std::vector<Point> get_attach_points(const Tri& tri){
@@ -215,6 +211,7 @@ Object* get_by_name(const objects_t& objects, const utf8_string& name){
 utf8_string get_collective_type(const objects_t& objects){
   assert(!objects.empty());
   const auto firstType = objects.front()->GetType();
+
   if (objects.size() == 1){
     return firstType;
   }
@@ -223,48 +220,36 @@ utf8_string get_collective_type(const objects_t& objects){
     return obj->GetType() != firstType;
   };
 
-  return any_of(but_first(objects), has_different_type) ?
-    "Objects" : pluralize(firstType);
+  bool mixedTypes = any_of(but_first(objects), has_different_type);
+  return mixedTypes ? "Objects" : pluralize(firstType);
 }
 
 objects_t get_groups(const objects_t& objects){
-  objects_t groups;
-  for (Object* obj : objects){
-    if (obj->GetObjectCount() != 0){
-      groups.push_back(obj);
-    }
-  }
-  return groups;
+  return select(objects, has_subobjects);
 }
 
 objects_t get_intersected(const objects_t& objects, const Rect& r){
-  objects_t intersected;
-  for (Object* obj : objects){
-    if (intersects(bounding_rect(obj->GetTri()), r)){
-      intersected.push_back(obj);
-    }
-  }
-  return intersected;
+  return select(objects, [r](auto o){return intersects(o, r); });
 }
 
 Settings get_object_settings(const objects_t& objects){
-  Settings s;
-  for (Object* obj : objects){
+  auto merge_settings_f = [](Settings& s, const Object* const obj){
     s.UpdateAll(obj->GetSettings());
-  }
-  return s;
+  };
+
+  return accumulate_in_place(Settings(), objects, merge_settings_f);
 }
 
 tris_t get_tris(const objects_t& objects){
-  tris_t tris;
-  for (Object* obj : objects){
-    tris.push_back(obj->GetTri());
-  }
-  return tris;
+  return make_vector(objects, Object_get_tri);
 }
 
 bool has_subobjects(const Object* obj){
   return obj->GetObjectCount() != 0;
+}
+
+bool intersects(Object* o, const Rect& r){
+  return intersects(bounding_rect(o), r);
 }
 
 bool is_or_has(const Object* object, const ObjectId& id){
@@ -360,16 +345,16 @@ coord object_area(const Object* obj){
 
 coord perimeter(const Object* obj, const ExpressionContext& ctx){
   if (is_ellipse(obj)){
-    Tri tri = obj->GetTri();
-    return ellipse_perimeter(tri.Width(), tri.Height());
+    return ellipse_perimeter(get_radii(obj->GetTri()));
   }
-  if (is_text(obj)){
+  else if (is_text(obj)){
     return 0.0;
   }
-
-  auto path(obj->GetPath(ctx));
-  assert(!path.empty());
-  return perimeter(path);
+  else{
+    auto path(obj->GetPath(ctx));
+    assert(!path.empty());
+    return perimeter(path);
+  }
 }
 
 bool point_edit_disabled(const Object* obj){
