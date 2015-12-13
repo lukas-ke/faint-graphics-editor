@@ -24,6 +24,7 @@
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-wx.hh"
+#include "util/make-vector.hh"
 
 namespace faint{
 
@@ -160,17 +161,12 @@ wxCheckBox* create_checkbox(window_t parent,
   return cb;
 }
 
-wxChoice* create_choice(window_t parent,
-  const std::vector<utf8_string>& strs)
-{
-  std::vector<wxString> strsWx;
-  for (const auto& s : strs){
-    strsWx.push_back(to_wx(s));
-  }
-
+wxChoice* create_choice(window_t parent, const std::vector<utf8_string>& strings){
+  const auto strsWx = to_wx(strings);
   return new wxChoice(parent.w,
     wxID_ANY,
-    wxDefaultPosition, wxDefaultSize,
+    wxDefaultPosition,
+    wxDefaultSize,
     resigned(strsWx.size()),
     strsWx.data());
 }

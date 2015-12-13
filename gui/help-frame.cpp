@@ -221,7 +221,7 @@ public:
     const page_filename& page)
   {
     wxTreeItemId id = AppendItem(parent, title);
-    m_idToPage.insert(std::make_pair(id, page));
+    m_idToPage.insert({id, page});
     return id;
   }
 

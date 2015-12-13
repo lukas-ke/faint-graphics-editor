@@ -240,7 +240,7 @@ public:
   }
 
   static void add(ResultType& v, Bitmap&& bmp, const IconDirEntry& iconDirEntry){
-    v.emplace_back(std::make_pair(std::move(bmp), get_hot_spot(iconDirEntry)));
+    v.emplace_back(std::move(bmp), get_hot_spot(iconDirEntry));
   }
 
   static void test_icon_dir(const IconDir& dir){

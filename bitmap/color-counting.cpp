@@ -33,7 +33,7 @@ static void insert_color_count(color_counts_t& colors, const Color& c){
     it->second++;
   }
   else{
-    colors.insert(std::make_pair(h, 1));
+    colors.insert({h, 1});
   }
 }
 

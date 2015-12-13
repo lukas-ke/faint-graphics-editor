@@ -248,26 +248,27 @@ BoolSetting::ValueType Settings::Not(const BoolSetting& s) const{
 }
 
 BoundSetting::BoundSetting(const BoolSetting s, BoolSetting::ValueType v){
-  m_boolSetting.Set(std::make_pair(s,v));
+  m_boolSetting.Set({s,v});
 }
 
 BoundSetting::BoundSetting(const IntSetting s, IntSetting::ValueType v){
-  m_intSetting.Set(std::make_pair(s,v));
+  m_intSetting.Set({s,v});
 }
 
-BoundSetting::BoundSetting(const StringSetting& s, const StringSetting::ValueType& v){
-  m_strSetting.Set(std::make_pair(s,v));
-
+BoundSetting::BoundSetting(const StringSetting& s,
+  const StringSetting::ValueType& v)
+{
+  m_strSetting.Set({s,v});
 }
 
 BoundSetting::BoundSetting(const FloatSetting& s, FloatSetting::ValueType v){
-  m_floatSetting.Set(std::make_pair(s,v));
+  m_floatSetting.Set({s,v});
 }
 
 BoundSetting::BoundSetting(const PaintSetting& s,
   const PaintSetting::ValueType& v)
 {
-  m_paintSetting.Set(std::make_pair(s,v));
+  m_paintSetting.Set({s,v});
 }
 
 } // namespace

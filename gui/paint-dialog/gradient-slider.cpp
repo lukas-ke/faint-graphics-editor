@@ -156,9 +156,9 @@ public:
 
       const double offset = mid_value(prevStop.GetOffset(), s.GetOffset());
 
-      m_regions.push_back(std::make_pair(addRect,
+      m_regions.emplace_back(addRect,
           HandleHitInfo::HitAddHandle(offset,
-            mix(prevStop.GetColor(), s.GetColor()))));
+            mix(prevStop.GetColor(), s.GetColor())));
     }
 
     if (sortedStops.size() == 1){
@@ -170,8 +170,8 @@ public:
       IntRect addRect(IntPoint(cx - w, 2), IntPoint(cx + w, y1 + 2));
       draw_add_rectangle(bmp, addRect);
 
-      m_regions.push_back(std::make_pair(addRect,
-          HandleHitInfo::HitAddHandle(offset, stop.GetColor())));
+      m_regions.emplace_back(addRect,
+        HandleHitInfo::HitAddHandle(offset, stop.GetColor()));
     }
 
     // Add the regions for moving a handle or changing its color
@@ -188,9 +188,9 @@ public:
 
       int ry0 = sz.h / 2 + 2;
       int ry1= std::min(sz.h, ry0 + 2 * w + 1);
-      m_regions.push_back(std::make_pair(IntRect(IntPoint(cx-w,0),
+      m_regions.emplace_back(IntRect(IntPoint(cx-w,0),
         IntPoint(cx+w, sz.h / 2 - 1)),
-        HandleHitInfo::HitMoveRegion(resigned(i), s)));
+        HandleHitInfo::HitMoveRegion(resigned(i), s));
 
       IntRect colorRect(IntPoint(cx - w, ry0), IntPoint(cx + w, ry1));
       fill_rect(bmp, colorRect, fill);

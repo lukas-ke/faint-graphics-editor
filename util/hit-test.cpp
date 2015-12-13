@@ -45,16 +45,17 @@ static std::pair<Object*, Hit> object_at(const Point& p,
   // First consider the selected objects...
   Object* consider = 0;
   Hit considerType = Hit::NONE;
+
   const objects_t& objectSelection(image.GetObjectSelection());
   for (Object* object : top_to_bottom(objectSelection)){
     if (object->HitTest(p)){
       object->DrawMask(dc, expressionContext);
       Color color = dc.GetPixel(p);
       if (color == mask_edge){
-        return std::make_pair(object, Hit::BOUNDARY);
+        return {object, Hit::BOUNDARY};
       }
       else if (color == mask_fill){
-        return std::make_pair(object, Hit::INSIDE);
+        return {object, Hit::INSIDE};
       }
       else {
         consider = object;
@@ -72,10 +73,10 @@ static std::pair<Object*, Hit> object_at(const Point& p,
       object->DrawMask(dc, expressionContext);
       Color color =  dc.GetPixel(p);
       if (color  == mask_edge){
-        return std::make_pair(object, Hit::BOUNDARY);
+        return {object, Hit::BOUNDARY};
       }
       else if (color == mask_fill){
-        return std::make_pair(object, Hit::INSIDE);
+        return {object, Hit::INSIDE};
       }
       else if ((consider == nullptr || considerType == Hit::NEARBY) &&
         color == mask_no_fill)
@@ -186,6 +187,7 @@ ObjectInfo hit_test(const IntPoint& ptView,
   Object* object = 0;
   bool selected = false;
   HandleInfo handleInfo;
+
   // Selected objects are checked first so that they are prioritized
   const objects_t& objectSelection(image.GetObjectSelection());
   for (Object* objTemp : objectSelection){

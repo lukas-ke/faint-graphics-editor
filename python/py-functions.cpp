@@ -208,7 +208,7 @@ name: "read_png" */
 static png_pair read_png_py(const FilePath& path){
   return read_png_meta(path).Visit(
     [](const Bitmap_and_tEXt& obj) -> png_pair{
-      return std::make_pair(obj.bmp, obj.text);
+      return {obj.bmp, obj.text};
     },
     [](const utf8_string& error) -> png_pair{
       throw OSError(error);
