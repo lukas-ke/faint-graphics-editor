@@ -308,6 +308,10 @@ utf8_string pluralize_count(size_t amount, const utf8_string& type){
     type + "s");
 }
 
+utf8_string pluralize(const utf8_string& item){
+  return item + "s";
+}
+
 utf8_string primary_modifier(const utf8_string& action){
   return "Ctrl=" + action;
 }

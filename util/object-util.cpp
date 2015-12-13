@@ -29,8 +29,9 @@
 #include "objects/objspline.hh"
 #include "objects/objtext.hh"
 #include "rendering/faint-dc.hh"
-#include "text/utf8-string.hh"
+#include "text/formatting.hh"
 #include "util/default-settings.hh"
+#include "util/generator-adapter.hh"
 #include "util/grid.hh"
 #include "util/iter.hh"
 #include "util/math-constants.hh"
@@ -122,12 +123,7 @@ bool contains(const objects_t& objects, const Object* obj){
 }
 
 bool contains_group(const objects_t& objects){
-  for (Object* obj : objects){
-    if (obj->GetObjectCount() > 0){
-      return true;
-    }
-  }
-  return false;
+  return any_of(objects, has_subobjects);
 }
 
 Optional<utf8_string> empty_to_unset(const Optional<utf8_string>& name){
@@ -208,7 +204,7 @@ Object* get_by_name(Object* obj, const utf8_string& name){
 
 Object* get_by_name(const objects_t& objects, const utf8_string& name){
   for (Object* obj : objects){
-    Object* match = get_by_name(obj, name);
+    auto match = get_by_name(obj, name);
     if (match != nullptr){
       return match;
     }
@@ -218,17 +214,17 @@ Object* get_by_name(const objects_t& objects, const utf8_string& name){
 
 utf8_string get_collective_type(const objects_t& objects){
   assert(!objects.empty());
-  utf8_string first = objects.front()->GetType();
+  const auto firstType = objects.front()->GetType();
   if (objects.size() == 1){
-    return first;
+    return firstType;
   }
 
-  for (const Object* obj : but_first(objects)){
-    if (obj->GetType() != first){
-      return "Objects";
-    }
-  }
-  return first + "s"; // Naive plural
+  auto has_different_type = [firstType](Object* obj){
+    return obj->GetType() != firstType;
+  };
+
+  return any_of(but_first(objects), has_different_type) ?
+    "Objects" : pluralize(firstType);
 }
 
 objects_t get_groups(const objects_t& objects){
