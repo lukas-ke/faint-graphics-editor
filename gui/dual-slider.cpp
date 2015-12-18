@@ -26,6 +26,7 @@
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/system-colors.hh"
+#include "util/dumb-ptr.hh" // make_wx
 
 namespace faint{
 
@@ -272,7 +273,7 @@ DualSliderEvent::DualSliderEvent(const Interval& interval, bool special)
 {}
 
 wxEvent* DualSliderEvent::Clone() const{
-  return new DualSliderEvent(*this);
+  return make_wx<DualSliderEvent>(*this);
 }
 
 Interval DualSliderEvent::GetSelectedInterval() const{
@@ -290,7 +291,7 @@ DualSlider* DualSlider::Create(wxWindow* parent,
   const SliderCursors& cursors,
   const IntSize& initialSize)
 {
-  auto* s = new DualSliderImpl(parent, range, startInterval, bg, cursors);
+  auto s = make_wx<DualSliderImpl>(parent, range, startInterval, bg, cursors);
   s->SetInitialSize(to_wx(initialSize));
   return s;
 }

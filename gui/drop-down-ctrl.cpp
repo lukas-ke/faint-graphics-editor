@@ -17,6 +17,7 @@
 #include "util/string-source.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/fwd-wx.hh"
+#include "util/dumb-ptr.hh" // make_wx
 
 namespace faint{
 
@@ -53,7 +54,7 @@ StringSettingControl* create_drop_down(wxWindow* parent,
   const StringSource& source,
   const Tooltip& tooltip)
 {
-  auto* ctrl = new DropDown(parent, setting, source);
+  auto ctrl = make_wx<DropDown>(parent, setting, source);
   set_tooltip(ctrl, tooltip);
   return ctrl;
 }

@@ -24,6 +24,7 @@
 #include "gui/static-bitmap.hh"
 #include "gui/ui-constants.hh"
 #include "util/color-bitmap-util.hh"
+#include "util/dumb-ptr.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/layout-wx.hh"
@@ -87,7 +88,7 @@ Optional<Grid> show_grid_dialog(wxWindow* parent,
   };
 
   auto colorLabel = create_label(dlg, "&color");
-  auto colorButton = new StaticBitmap(raw(dlg), make_color_bitmap());
+  auto colorButton = make_wx<StaticBitmap>(raw(dlg), make_color_bitmap());
   set_size(colorButton, get_size(dashed));
   set_stock_cursor(colorButton, wxCURSOR_HAND);
   set_stock_cursor(colorLabel, wxCURSOR_HAND);

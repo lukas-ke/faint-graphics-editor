@@ -45,7 +45,7 @@ public:
     // The spacing between controls in this panel
     const int spacing = 5;
 
-    wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+    auto sizer = make_wx<wxBoxSizer>(wxHORIZONTAL);
     m_selectedColor = std::make_unique<SelectedColorCtrl>(this,
       IntSize(50,50),
       status,

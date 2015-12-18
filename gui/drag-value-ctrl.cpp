@@ -23,6 +23,7 @@
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/fwd-wx.hh"
+#include "util/dumb-ptr.hh" // make_wx
 #include "util/status-interface.hh"
 
 namespace faint{
@@ -34,7 +35,7 @@ DragValueChangeEvent::DragValueChangeEvent()
 {}
 
 DragValueChangeEvent* DragValueChangeEvent::Clone() const{
-  return new DragValueChangeEvent();
+  return make_wx<DragValueChangeEvent>();
 }
 
 const wxEventTypeTag<DragValueChangeEvent> EVT_FAINT_DRAG_VALUE_CHANGE(

@@ -139,7 +139,7 @@ private:
     StatusInterface& status)
   {
     wxBitmap bmpActive(create_selected_bitmap(bmpInactive));
-    ToggleStatusButton* button = new ToggleStatusButton(m_panel,
+    auto button = make_wx<ToggleStatusButton>(m_panel,
       to_int(id),
       g_toolButtonSize,
       status,
@@ -169,7 +169,7 @@ private:
   }
 
   wxSizer* CreateToolButtons(Art& art, StatusInterface& status){
-    auto sizer = new wxGridSizer(0, 2, 0, 0);
+    auto sizer = make_wx<wxGridSizer>(0, 2, 0, 0);
 
     auto add_tool =
       [&](Icon icon,

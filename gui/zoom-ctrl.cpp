@@ -21,6 +21,7 @@
 #include "gui/status-button.hh"
 #include "gui/zoom-ctrl.hh"
 #include "util-wx/fwd-bind.hh"
+#include "util/dumb-ptr.hh"
 #include "util/zoom-level.hh"
 
 namespace faint{
@@ -44,27 +45,27 @@ public:
       m_currentZoomText(nullptr),
       m_fit(false)
   {
-    wxSizer* hSizer = new wxBoxSizer(wxHORIZONTAL);
-    m_currentZoomText = new wxStaticText(this, wxID_ANY, "####",
+    auto hSizer = make_wx<wxBoxSizer>(wxHORIZONTAL);
+    m_currentZoomText = make_wx<wxStaticText>(this, wxID_ANY, "####",
       wxDefaultPosition, wxSize(40,-1), wxALIGN_CENTRE | wxST_NO_AUTORESIZE);
     hSizer->Add(m_currentZoomText, 0, wxALIGN_CENTER_VERTICAL);
 
-    wxSizer* vSizer = new wxBoxSizer(wxVERTICAL);
+    auto vSizer = make_wx<wxBoxSizer>(wxVERTICAL);
 
-    m_btnZoomIn = new StatusButton(this, wxSize(40,25), status,
+    m_btnZoomIn = make_wx<StatusButton>(this, wxSize(40,25), status,
       "+",
       Tooltip("Zoom In"),
       Description("Click to Zoom In, Ctrl=All Images"));
     vSizer->Add(m_btnZoomIn);
 
-    m_btnZoomOut = new StatusButton(this, m_btnZoomIn->GetSize(), status,
+    m_btnZoomOut = make_wx<StatusButton>(this, m_btnZoomIn->GetSize(), status,
       "-", Tooltip("Zoom Out"),
       Description("Click to Zoom Out, Ctrl=All Images"));
     vSizer->Add(m_btnZoomOut);
 
     hSizer->Add(vSizer, 0, wxEXPAND);
 
-    m_btnZoomFitOr100 = new StatusButton(this, wxSize(60,50), status,
+    m_btnZoomFitOr100 = make_wx<StatusButton>(this, wxSize(60,50), status,
       "1:1", Tooltip(""), Description(""));
     hSizer->Add(m_btnZoomFitOr100,
       1,
@@ -139,7 +140,7 @@ void send_zoom_event(ZoomCtrlImpl* zoomControl, int eventId){
 ZoomCtrl::ZoomCtrl(wxWindow* parent, StatusInterface& status)
   : m_impl(nullptr)
 {
-  m_impl = new ZoomCtrlImpl(parent, status);
+  m_impl = make_wx<ZoomCtrlImpl>(parent, status);
 }
 
 ZoomCtrl::~ZoomCtrl(){

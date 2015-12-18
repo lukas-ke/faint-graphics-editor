@@ -39,6 +39,7 @@
 #include "util-wx/make-event.hh"
 #include "util-wx/placement.hh"
 #include "util/color-bitmap-util.hh"
+#include "util/dumb-ptr.hh" // make_wx
 #include "util/either.hh"
 #include "util/named-operator.hh"
 
@@ -165,7 +166,7 @@ public:
       m_objectAligned(nullptr),
       m_patternDisplay(nullptr)
   {
-    m_patternDisplay = new PatternDisplay(this, cursors);
+    m_patternDisplay = make_wx<PatternDisplay>(this, cursors);
     set_pos(m_patternDisplay, IntPoint::Both(ui::panel_padding));
 
     auto btnUseImage = create_button(this, "Use Image", below(m_patternDisplay),

@@ -22,6 +22,7 @@
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/gui-util.hh"
+#include "util/dumb-ptr.hh"
 #include "util/generator-adapter.hh"
 #include "util/image-props.hh"
 #include "util/index-iter.hh"
@@ -141,7 +142,7 @@ public:
       // creation
       auto freezer = freeze(this);
 
-      AddPage(new CanvasPanel(this,
+      AddPage(make_wx<CanvasPanel>(this,
           ImageList(ImageProps(m_app.GetDefaultImageInfo())),
           initially_dirty(false),
           CreateFileDropTarget(),
@@ -190,7 +191,7 @@ public:
     // creation
     auto freezer = freeze(this);
 
-    CanvasPanel* canvas = new CanvasPanel(this,
+    auto canvas = make_wx<CanvasPanel>(this,
       ImageList(std::move(props)),
       startDirty,
       CreateFileDropTarget(),
@@ -208,7 +209,7 @@ public:
     // creation
     auto freezer = freeze(this);
 
-    CanvasPanel* canvas = new CanvasPanel(this,
+    auto canvas = make_wx<CanvasPanel>(this,
       ImageList(std::move(props)),
       startDirty,
       CreateFileDropTarget(),

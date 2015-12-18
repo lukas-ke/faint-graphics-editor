@@ -25,6 +25,7 @@
 #include "gui/events.hh"
 #include "gui/tool-drop-down-button.hh"
 #include "text/formatting.hh"
+#include "util/dumb-ptr.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
@@ -136,7 +137,7 @@ public:
     const IntSize& buttonSize)
     : wxPopupWindow(parent, wxBORDER_SIMPLE)
   {
-    wxBoxSizer* boxSizer = new wxBoxSizer(wxVERTICAL);
+    auto boxSizer = make_wx<wxBoxSizer>(wxVERTICAL);
     for (const auto& item : items){
       auto b = new wxBitmapToggleButton(this, wxID_ANY,
         item.inactive,
@@ -147,7 +148,7 @@ public:
       boxSizer->Add(b);
     }
 
-    wxBoxSizer* outerSizer = new wxBoxSizer(wxHORIZONTAL);
+    auto outerSizer = make_wx<wxBoxSizer>(wxHORIZONTAL);
     outerSizer->Add(boxSizer,
       0, wxALL, 5);
     SetSizerAndFit(outerSizer);
@@ -191,9 +192,8 @@ private:
 ToolDropDownButton* tool_drop_down_button(wxWindow* parent, const IntSize& size,
     const std::vector<ToolInfo>& items)
 {
-  auto* b = new ToolDropDownButton(parent, items, size);
-
-  ToolPopup* popup = new ToolPopup(b, items, size);
+  auto b = make_wx<ToolDropDownButton>(parent, items, size);
+  auto popup = make_wx<ToolPopup>(b, items, size);
   bind(b, wxEVT_TOGGLEBUTTON,
     [=](){
       popup->Show();

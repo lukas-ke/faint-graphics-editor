@@ -22,6 +22,7 @@
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/gui-util.hh"
+#include "util/dumb-ptr.hh"
 #include "util/setting-id.hh"
 
 namespace faint{
@@ -51,8 +52,8 @@ public:
       m_dialogContext(dialogContext),
       m_settings(settings_from_font(wxFont(wxFontInfo())))
   {
-    wxBoxSizer* vSizer = new wxBoxSizer(wxVERTICAL);
-    wxBoxSizer* hSizer = new wxBoxSizer(wxHORIZONTAL);
+    auto vSizer = make_wx<wxBoxSizer>(wxVERTICAL);
+    auto hSizer = make_wx<wxBoxSizer>(wxHORIZONTAL);
     m_button = create_button(this, "Font", Width(50),
       [this](){
         wxFontData initial;
@@ -93,7 +94,7 @@ private:
 };
 
 ToolSettingCtrl* create_font_ctrl(wxWindow* parent, DialogContext& dialogContext){
-  return new FontCtrl(parent, dialogContext);
+  return make_wx<FontCtrl>(parent, dialogContext);
 }
 
 } // namespace

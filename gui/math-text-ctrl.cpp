@@ -21,6 +21,7 @@
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/gui-util.hh"
 #include "util/parse-math-string.hh"
+#include "util/dumb-ptr.hh" // make_wx
 
 namespace faint{
 // Event sent by MathTextCtrl when the value is changed by user entry
@@ -122,7 +123,7 @@ private:
 };
 
 MathTextCtrl::MathTextCtrl(wxWindow* parent, coord value){
-  m_textCtrl = new MathTextCtrlImpl(parent, value);
+  m_textCtrl = make_wx<MathTextCtrlImpl>(parent, value);
   SetValue(value);
 }
 

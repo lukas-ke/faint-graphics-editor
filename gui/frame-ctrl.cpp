@@ -30,10 +30,11 @@
 #include "gui/frame-ctrl.hh"
 #include "gui/mouse-capture.hh"
 #include "text/formatting.hh"
-#include "util/status-interface.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/fwd-wx.hh"
+#include "util/dumb-ptr.hh"
+#include "util/status-interface.hh"
 
 namespace faint{
 
@@ -406,7 +407,7 @@ public:
       m_ctx(std::move(ctx)),
       m_listCtrl(nullptr)
   {
-    wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+    auto sizer = make_wx<wxBoxSizer>(wxHORIZONTAL);
 
     sizer->Add(noiseless_button(this,
       art.Get(Icon::ADD_FRAME),
@@ -414,7 +415,7 @@ public:
       IntSize(60,50),
       [=](){m_ctx->AddFrame();}));
 
-    m_listCtrl = new FrameListCtrl(this,
+    m_listCtrl = make_wx<FrameListCtrl>(this,
       *m_ctx,
       art,
       status);
@@ -458,7 +459,7 @@ FrameCtrl::FrameCtrl(wxWindow* parent,
   StatusInterface& status,
   const Art& art)
 {
-  m_impl = new FrameCtrlImpl(parent, std::move(ctx), status, art);
+  m_impl = make_wx<FrameCtrlImpl>(parent, std::move(ctx), status, art);
 }
 
 FrameCtrl::~FrameCtrl(){

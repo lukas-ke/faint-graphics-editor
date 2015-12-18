@@ -38,7 +38,7 @@
 #include "util/iter.hh"
 #include "util/named-operator.hh"
 
-namespace faint {
+namespace faint{
 
 template<typename T>
 static Color get_stop_color(const Index& index, const T& g){

@@ -38,6 +38,7 @@
 #include "util-wx/make-event.hh"
 #include "util-wx/placement.hh"
 #include "util/color-bitmap-util.hh"
+#include "util/dumb-ptr.hh"
 
 namespace faint{
 
@@ -179,7 +180,7 @@ public:
     : wxPanel(parent, wxID_ANY),
       m_sliderCursors(sliderCursors)
   {
-    m_hueSatPicker = new HueSatPicker(this, commonCursors);
+    m_hueSatPicker = make_wx<HueSatPicker>(this, commonCursors);
     set_pos(m_hueSatPicker, IntPoint::Both(ui::panel_padding));
     auto lblHue = create_label(this, "&Hue");
     m_hueTxt = BindKillFocus(CreateTextControl({min_t(0),max_t(240)},
@@ -217,7 +218,7 @@ public:
     set_pos(m_lightnessTxt, lightnessTxtPos);
     PlaceLabel(lblLightness, m_lightnessTxt);
 
-    m_colorBitmap = new StaticBitmap(this, Bitmap({120,120}, color_black));
+    m_colorBitmap = make_wx<StaticBitmap>(this, Bitmap({120,120}, color_black));
     set_pos(m_colorBitmap, to_the_right_of(m_alphaSlider));
 
     // RGBA text-boxes
@@ -443,7 +444,7 @@ PaintPanel_HSL::PaintPanel_HSL(wxWindow* parent,
   const CommonCursors& commonCursors,
   const SliderCursors& sliderCursors)
 {
-  m_impl = new PaintPanel_HSL_Impl(parent, sliderCursors, commonCursors);
+  m_impl = make_wx<PaintPanel_HSL_Impl>(parent, sliderCursors, commonCursors);
 }
 
 PaintPanel_HSL::~PaintPanel_HSL(){

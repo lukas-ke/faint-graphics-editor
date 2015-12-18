@@ -34,6 +34,7 @@
 #include "util-wx/placement.hh"
 #include "util/apply-target.hh"
 #include "util/command-util.hh"
+#include "util/dumb-ptr.hh"
 #include "util/object-util.hh"
 
 namespace faint{
@@ -224,13 +225,13 @@ public:
       m_selectTool(selectTool),
       m_targetName(targetName)
   {
-    m_firstPanel = new RotateChoicePanel(this, art,
+    m_firstPanel = make_wx<RotateChoicePanel>(this, art,
       [=](){SetFunctionAndClose(&context_flip_horizontal);},
       [=](){SetFunctionAndClose(&context_flip_vertical);},
       [=](){SwitchPanel();},
       [=](){SelectLevelTool();});
 
-    m_secondPanel = new AngleChoicePanel(this, art, *m_firstPanel,
+    m_secondPanel = make_wx<AngleChoicePanel>(this, art, *m_firstPanel,
       [=](){RotateAndClose();});
     m_secondPanel->Hide();
 

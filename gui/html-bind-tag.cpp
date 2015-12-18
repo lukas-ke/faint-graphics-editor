@@ -19,6 +19,7 @@
 #include "python/py-key-press.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-path-util.hh"
+#include "util/dumb-ptr.hh" // make_wx
 
 namespace faint{
 
@@ -44,7 +45,7 @@ TAG_HANDLER_BEGIN(BIND, "BIND")
     wxString str = m_WParser->GetInnerSource(tag);
     utf8_string key = get_bound_key(to_faint(str));
     if (!key.empty()){
-      m_WParser->GetContainer()->InsertCell(new wxHtmlWordCell("(Key: "+
+      m_WParser->GetContainer()->InsertCell(make_wx<wxHtmlWordCell>("(Key: "+
         to_wx(key)+ ")", wxScreenDC()));
     }
     return true; // Eat inner content
@@ -66,14 +67,14 @@ TAG_HANDLER_BEGIN(BINDLIST, "BINDLIST")
       wxHtmlContainerCell* cell = m_WParser->OpenContainer();
       // Use 20% of the width for the key
       cell->SetWidthFloat(20, wxHTML_UNITS_PERCENT);
-      cell->InsertCell(new wxHtmlWordCell(to_wx(b.key.Name()), wxScreenDC()));
+      cell->InsertCell(make_wx<wxHtmlWordCell>(to_wx(b.key.Name()), wxScreenDC()));
       m_WParser->CloseContainer();
 
       // A container for the function name
       cell = m_WParser->OpenContainer();
       // Use 80% of the width for the function name
       cell->SetWidthFloat(80, wxHTML_UNITS_PERCENT);
-      cell->InsertCell(new wxHtmlWordCell(to_wx(b.function), wxScreenDC()));
+      cell->InsertCell(make_wx<wxHtmlWordCell>(to_wx(b.function), wxScreenDC()));
       m_WParser->CloseContainer();
     }
 
@@ -87,7 +88,7 @@ TAG_HANDLER_BEGIN(CONFIG_PATH_TAG, "FAINTCONFIGPATH")
 
   TAG_HANDLER_PROC(tag){
     wxString iniPath = to_wx(get_user_config_file_path().Str());
-    m_WParser->GetContainer()->InsertCell(new wxHtmlWordCell(iniPath,
+    m_WParser->GetContainer()->InsertCell(make_wx<wxHtmlWordCell>(iniPath,
       wxScreenDC()));
     m_WParser->GetInnerSource(tag); // Just to silence unused parameter warning for "tag".
     return true; // Eat inner content

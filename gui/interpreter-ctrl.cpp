@@ -20,6 +20,7 @@
 #include "bitmap/color.hh"
 #include "gui/interpreter-ctrl.hh"
 #include "text/auto-complete.hh"
+#include "util/dumb-ptr.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-auto-complete.hh"
@@ -39,7 +40,7 @@ PythonKeyEvent::PythonKeyEvent(const KeyPress& keyPress)
 {}
 
 wxEvent* PythonKeyEvent::Clone() const{
-  return new PythonKeyEvent(*this);
+  return make_wx<PythonKeyEvent>(*this);
 }
 
 const KeyPress& PythonKeyEvent::GetKey() const{
@@ -92,7 +93,7 @@ public:
       m_char(c)
   {}
   wxEvent* Clone() const override{
-    return new PendingCharEvent(m_char);
+    return make_wx<PendingCharEvent>(m_char);
   }
 
   wxChar GetChar() const{
@@ -242,7 +243,7 @@ public:
           // ...However: Using WriteText in a char handler crashes in gtk
           // after some wxWidgets change (maybe r73756), so I need to
           // postpone the writing.
-          QueueEvent(new PendingCharEvent(wxChar(keyCode)));
+          QueueEvent(make_wx<PendingCharEvent>(wxChar(keyCode)));
         }
       });
 
@@ -788,7 +789,7 @@ InterpreterCtrl::InterpreterCtrl(wxWindow* parent)
   : m_bgColor(255,249,189),
     m_textColor(0,0,0)
 {
-  m_impl = new InterpreterImpl(parent, m_textColor, m_bgColor);
+  m_impl = make_wx<InterpreterImpl>(parent, m_textColor, m_bgColor);
 }
 
 void InterpreterCtrl::AddNames(const std::vector<utf8_string>& names){

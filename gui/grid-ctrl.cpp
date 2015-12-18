@@ -25,6 +25,7 @@
 #include "util-wx/bind-event.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/fwd-wx.hh"
+#include "util/dumb-ptr.hh"
 #include "util/grid.hh"
 
 namespace faint{
@@ -83,7 +84,7 @@ DragValueCtrl* grid_text(wxWindow* parent,
 {
   // Create the drag-adjustable grid spacing text
 
-  DragValueCtrl* text = new DragValueCtrl(parent,
+  auto text = make_wx<DragValueCtrl>(parent,
     IntRange(min_t(1)),
     Description(
      "Grid: Drag to adjust spacing. "
@@ -129,7 +130,7 @@ GridCtrl::GridCtrl(wxWindow* parent,
     m_enabled(false),
     m_grid(grid)
 {
-  m_sizer = new wxBoxSizer(wxHORIZONTAL);
+  m_sizer = make_wx<wxBoxSizer>(wxHORIZONTAL);
   m_txtCurrentSize = grid_text(this, m_sizer, m_showhide, m_art, statusInfo,
     showDialog);
   m_spinButton = grid_spinbutton(this, m_sizer, m_showhide,

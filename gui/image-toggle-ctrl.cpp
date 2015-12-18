@@ -20,6 +20,7 @@
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/gui-util.hh"
+#include "util/dumb-ptr.hh"
 #include "util/setting-id.hh"
 #include "util/status-interface.hh"
 
@@ -36,7 +37,7 @@ public:
     const IntSize& spacing)
     : IntSettingCtrl(parent, setting)
   {
-    m_bitmapList = new BitmapListCtrl(this,
+    m_bitmapList = make_wx<BitmapListCtrl>(this,
       imageSize,
       status,
       dir,
@@ -89,7 +90,7 @@ IntSettingCtrl* create_image_toggle(wxWindow* parent,
   Axis dir,
   IntSize spacing)
 {
-  ImageToggleCtrl* ctrl = new ImageToggleCtrl(parent,
+  ImageToggleCtrl* ctrl = make_wx<ImageToggleCtrl>(parent,
     setting,
     bitmapSize,
     status,
@@ -179,7 +180,7 @@ BoolSettingControl* create_bool_image_toggle(wxWindow* parent,
   StatusInterface& status,
   const Tooltip& tooltip)
 {
-  BoolImageToggle* ctrl = new BoolImageToggle(parent,
+  BoolImageToggle* ctrl = make_wx<BoolImageToggle>(parent,
     setting,
     bmp,
     status);

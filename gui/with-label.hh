@@ -21,6 +21,7 @@
 #include "gui/ui-constants.hh"
 #include "util-wx/window-types-wx.hh"
 #include "util-wx/fwd-wx.hh"
+#include "util/dumb-ptr.hh"
 
 namespace faint{
 
@@ -48,7 +49,7 @@ public:
     Args&& ... args)
     : wxPanel(parent)
   {
-    wxSizer* sz = new wxBoxSizer(layout_orientation(pos));
+    auto sz = make_wx<wxBoxSizer>(layout_orientation(pos));
     m_label = create_label(this, label);
     m_window = new T(this, std::forward<Args>(args)...);
 
@@ -67,7 +68,7 @@ public:
     std::function<T*(wxWindow*)> f)
     : wxPanel(parent)
   {
-    wxSizer* sz = new wxBoxSizer(layout_orientation(pos));
+    auto sz = make_wx<wxBoxSizer>(layout_orientation(pos));
     m_label = create_label(this, label);
     m_window = f(this);
 
@@ -109,7 +110,7 @@ WithLabel<T>* with_label(LabelPos pos,
   const utf8_string& label,
   Args&& ...args)
 {
-  return new WithLabel<T>(parent, pos, label, std::forward<Args>(args)...);
+  return make_wx<WithLabel<T> >(parent, pos, label, std::forward<Args>(args)...);
 }
 
 template<typename T>

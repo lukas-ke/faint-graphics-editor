@@ -16,6 +16,7 @@
 #include "wx/window.h"
 #include "gui/events.hh"
 #include "util-wx/bind-event.hh"
+#include "util/dumb-ptr.hh"
 
 namespace faint{
 
@@ -102,7 +103,7 @@ public:
   {}
 
   wxEvent* Clone() const override{
-    return new OpenFilesEvent(*this);
+    return make_wx<OpenFilesEvent>(*this);
   }
 
   const FileList& GetFileNames() const{
@@ -115,7 +116,7 @@ private:
 const wxEventTypeTag<OpenFilesEvent> EVT_FAINT_OpenFiles(FAINT_OpenFiles);
 
 void queue_open_files(window_t w, const FileList& files){
-  w.w->GetEventHandler()->QueueEvent(new OpenFilesEvent(files));
+  w.w->GetEventHandler()->QueueEvent(make_wx<OpenFilesEvent>(files));
 }
 
 void on_open_files(window_t w, const std::function<void(const FileList&)>& f){
@@ -136,7 +137,7 @@ public:
     m_layer(layer)
   {}
   wxEvent* Clone() const override{
-    return new LayerChangeEvent(*this);
+    return make_wx<LayerChangeEvent>(*this);
   }
   Layer GetLayer() const{
     return m_layer;
@@ -172,7 +173,7 @@ public:
   {}
 
   wxEvent* Clone() const override{
-    return new ToolChangeEvent(*this);
+    return make_wx<ToolChangeEvent>(*this);
   }
 
   ToolId GetTool() const{
@@ -209,7 +210,7 @@ public:
   {}
 
   wxEvent* Clone() const override{
-    return new PaintEvent(*this);
+    return make_wx<PaintEvent>(*this);
   }
 
   Paint GetPaint() const{
@@ -247,7 +248,7 @@ public:
   {}
 
   wxEvent* Clone() const override{
-    return new ColorEvent(*this);
+    return make_wx<ColorEvent>(*this);
   }
 
   Color GetColor() const{
@@ -288,7 +289,7 @@ const wxEventType FAINT_RequestClose = wxNewEventType();
 CommandEventTag EVT_FAINT_RequestClose(FAINT_RequestClose);
 
 void queue_request_close_faint(window_t w, bool force){
-  auto* evt = new wxCommandEvent(EVT_FAINT_RequestClose);
+  auto evt = make_wx<wxCommandEvent>(EVT_FAINT_RequestClose);
   evt->SetInt(force ? 1 : 0);
   w.w->GetEventHandler()->QueueEvent(evt);
 }

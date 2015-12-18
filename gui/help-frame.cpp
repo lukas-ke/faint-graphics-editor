@@ -94,7 +94,7 @@ bool common_help_key(wxWindow* window, const wxKeyEvent& event){
 }
 
 wxSplitterWindow* create_help_splitter(wxWindow* parent){
-  wxSplitterWindow* splitter = new wxSplitterWindow(parent);
+  auto splitter = make_wx<wxSplitterWindow>(parent);
 
   // Prevent unsplitting
   splitter->SetMinimumPaneSize(20);
@@ -327,7 +327,7 @@ public:
     m_html = make_dumb<HelpWindow>(splitter);
     splitter->SplitVertically(m_tree.get(), m_html.get());
     splitter->SetSashPosition(200);
-    auto toolbar = new wxToolBar(this, wxID_ANY);
+    auto toolbar = make_wx<wxToolBar>(this, wxID_ANY);
     toolbar->AddTool(help_toolbar_back, "Back", art.Get(Icon::HELP_BACK));
     toolbar->AddTool(help_toolbar_forward, "Forward", art.Get(Icon::HELP_FORWARD));
     toolbar->Realize();

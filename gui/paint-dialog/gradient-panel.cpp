@@ -42,6 +42,7 @@
 #include "util-wx/gui-util.hh"
 #include "util-wx/placement.hh"
 #include "util/color-bitmap-util.hh"
+#include "util/dumb-ptr.hh"
 #include "util/index.hh"
 #include "util/iter.hh"
 #include "util/optional.hh"
@@ -83,7 +84,7 @@ public:
     const auto displayTopLeft = IntPoint::Both(ui::panel_padding);
 
     const IntSize bmpSize(28,23); // Fixme why hard coded here?
-    m_gradientTypeCtrl = new BitmapListCtrl(this,
+    m_gradientTypeCtrl = make_wx<BitmapListCtrl>(this,
       bmpSize,
       statusInfo,
       Axis::VERTICAL);
@@ -219,7 +220,7 @@ PaintPanel_Gradient::PaintPanel_Gradient(wxWindow* parent,
   StatusInterface& statusInfo,
   DialogContext& dialogContext)
 {
-  m_impl = new PaintPanel_Gradient_Impl(parent,
+  m_impl = make_wx<PaintPanel_Gradient_Impl>(parent,
     getColor,
     statusInfo,
     dialogContext);
