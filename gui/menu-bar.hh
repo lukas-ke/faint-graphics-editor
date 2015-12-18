@@ -16,6 +16,7 @@
 #ifndef FAINT_MENU_BAR_HH
 #define FAINT_MENU_BAR_HH
 #include <functional>
+#include <memory>
 #include <vector>
 #include "app/app-context.hh"
 #include "gui/entry-mode.hh"
@@ -67,7 +68,7 @@ public:
   Menubar(const Menubar&) = delete;
 private:
   class MenubarImpl;
-  MenubarImpl* m_impl;
+  std::unique_ptr<MenubarImpl> m_impl;
 };
 
 } // namespace

@@ -277,15 +277,15 @@ private:
 class Menubar::MenubarImpl{
 public:
   void Initialize(wxFrame& frame, AppContext& app, const Art& art){
-    m_menuRef = std::make_unique<MenuRefWX>(new wxMenuBar());
-    wxMenu* fileMenu = new wxMenu();
+    m_menuRef = std::make_unique<MenuRefWX>(make_wx<wxMenuBar>());
+    auto fileMenu = make_wx<wxMenu>();
     Add(fileMenu, wxID_NEW, Label("New\tCtrl+N", "Create a new image"),
       [&](){app.NewDocument(app.GetDefaultImageInfo());});
 
     Add(fileMenu, wxID_OPEN, Label("&Open...\tCtrl+O", "Open an existing image"),
       [&](){app.DialogOpenFile();});
 
-    wxMenu* recent = new wxMenu();
+    auto recent = make_wx<wxMenu>();
     m_recentFilesMenu = recent;
 
     int openAllRecentId = Add(recent,
@@ -324,7 +324,7 @@ public:
       });
     m_menuRef->Append(fileMenu, "&File");
 
-    wxMenu* editMenu = new wxMenu();
+    auto editMenu = make_wx<wxMenu>();
     Add(editMenu, wxID_UNDO,
       Label(undo_label(""), "Undo the last action"),
       MenuPred(MenuPred::CAN_UNDO),
@@ -404,7 +404,7 @@ public:
 
     m_menuRef->Append(editMenu, "&Edit");
 
-    wxMenu* viewMenu = new wxMenu();
+    auto viewMenu = make_wx<wxMenu>();
     Add(viewMenu, EVT_FAINT_ZoomIn,
       Label("Zoom In\t+", "Zoom in one step", ToggleShortcut::ALPHABETIC),
       [&](){app.GetActiveCanvas().ZoomIn();});
@@ -449,7 +449,7 @@ public:
 
     m_menuRef->Append(viewMenu, "&View");
 
-    wxMenu* objectMenu = new wxMenu();
+    auto objectMenu = make_wx<wxMenu>();
     Add(objectMenu,
       Label("&Group Objects\tCtrl+G", "Combine selected objects into a group"),
       MenuPred(MenuPred::MULTIPLE_SELECTED),
@@ -528,7 +528,7 @@ public:
 
     m_menuRef->Append(objectMenu, "&Objects");
 
-    wxMenu* imageMenu = new wxMenu();
+    auto imageMenu = make_wx<wxMenu>();
     AddFull(imageMenu,
       Label("&Flip/Rotate...\tCtrl+R", "Flip or rotate the image or selection"),
       bind_show_rotate_dialog(art,
@@ -551,8 +551,7 @@ public:
 
     imageMenu->AppendSeparator();
 
-    wxMenu* colorMenu = new wxMenu();
-
+    auto colorMenu = make_wx<wxMenu>();
     imageMenu->AppendSubMenu(colorMenu, "&Color", "Color");
 
     Add(colorMenu, Label("&Invert", "Invert the colors"),
@@ -591,7 +590,7 @@ public:
       Label("&Color balance...", "Adjust individual colors)"),
       show_color_balance_dialog, app);
 
-    wxMenu* effectsMenu = new wxMenu();
+    auto effectsMenu = make_wx<wxMenu>();
     imageMenu->AppendSubMenu(effectsMenu, "&Effects", "Effects");
 
     Add(effectsMenu, Label("&Sharpness...", "Sharpen or blur the image"),
@@ -607,7 +606,7 @@ public:
 
     m_menuRef->Append(imageMenu, "&Image");
 
-    wxMenu* tabMenu = new wxMenu();
+    auto tabMenu = make_wx<wxMenu>();
     Add(tabMenu, wxID_FORWARD, Label("&Next Tab\tCtrl+Tab"),
       [&](){app.NextTab();});
 
@@ -618,7 +617,7 @@ public:
       [&](){app.Close(app.GetActiveCanvas(), false);});
     m_menuRef->Append(tabMenu, "&Tabs");
 
-    wxMenu* helpMenu = new wxMenu();
+    auto helpMenu = make_wx<wxMenu>();
     Add(helpMenu, wxID_HELP,
       Label("&Help Index\tF1", "Show the help for Faint"),
       [&](){app.ToggleHelpFrame();});
@@ -837,14 +836,10 @@ private:
 };
 
 Menubar::Menubar(wxFrame& frame, AppContext& app, const Art& art)
-  : m_impl(nullptr)
-{
-  m_impl = new MenubarImpl(frame, app, art);
-}
+  : m_impl(std::make_unique<MenubarImpl>(frame, app, art))
+{}
 
-Menubar::~Menubar(){
-  delete m_impl;
-}
+Menubar::~Menubar(){}
 
 void Menubar::BeginTextEntry(bool numericOnly){
   m_impl->BeginTextEntry(numericOnly);

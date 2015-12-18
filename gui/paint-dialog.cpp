@@ -31,6 +31,7 @@
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/gui-util.hh"
 #include "util-wx/key-codes.hh"
+#include "util/dumb-ptr.hh"
 #include "util/optional.hh"
 
 namespace faint{
@@ -79,9 +80,9 @@ public:
     DialogContext& dialogContext)
     : wxDialog(parent, wxID_ANY, title)
   {
-    m_tabs = new wxNotebook(this, wxID_ANY,
+    m_tabs = make_wx<wxNotebook>(this, wxID_ANY,
       wxDefaultPosition, wxDefaultSize, wxNB_NOPAGETHEME);
-    wxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+    auto sizer = make_wx<wxBoxSizer>(wxVERTICAL);
     sizer->Add(m_tabs);
 
     m_panelHSL = std::make_unique<PaintPanel_HSL>(m_tabs,
@@ -239,7 +240,7 @@ static std::unique_ptr<PaintPanel_HSL> init_color_dialog_panel(wxWindow* bgPanel
   const SliderCursors& sliderCursors,
   wxDialog* dlg)
 {
-  wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+  auto sizer = make_wx<wxBoxSizer>(wxVERTICAL);
   auto colorPanel = std::make_unique<PaintPanel_HSL>(bgPanel,
     commonCursors,
     sliderCursors);
@@ -258,7 +259,7 @@ public:
     const Color& initialColor)
     : wxDialog(parent, wxID_ANY, title)
   {
-    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+    auto sizer = make_wx<wxBoxSizer>(wxVERTICAL);
     auto bg = create_panel(this);
     sizer->Add(bg);
     m_panelHSL = init_color_dialog_panel(bg, commonCursors, sliderCursors, this);
