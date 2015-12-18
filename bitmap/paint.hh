@@ -17,6 +17,7 @@
 #define FAINT_PAINT_HH
 #include <cassert>
 #include <type_traits> // result_of
+#include <memory> // unique_ptr
 #include "bitmap/paint-fwd.hh"
 
 namespace faint{
@@ -26,7 +27,7 @@ class IntPoint;
 class Paint{
   // A color, pattern or gradient.
 public:
-  Paint();
+  Paint(); // Default is black color.
   explicit Paint(const Color&);
   explicit Paint(const Gradient&);
   explicit Paint(const Pattern&);
@@ -42,7 +43,7 @@ public:
   Paint& operator=(const Paint&);
 private:
   class PaintImpl;
-  PaintImpl* m_impl;
+  std::unique_ptr<PaintImpl> m_impl;
 };
 
 Paint offsat(const Paint&, const IntPoint& delta);

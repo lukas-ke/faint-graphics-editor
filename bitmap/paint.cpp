@@ -37,33 +37,31 @@ public:
   Optional<Gradient> gradient;
 };
 
-Paint::Paint(){
-  m_impl = new PaintImpl(color_black);
-}
+Paint::Paint() : Paint(color_black){}
 
-Paint::Paint(const Color& color){
-  m_impl = new PaintImpl(color);
-}
+Paint::Paint(const Color& color)
+  : m_impl(std::make_unique<PaintImpl>(color))
+{}
 
-Paint::Paint(const Gradient& g){
-  m_impl = new PaintImpl(g);
-}
+Paint::Paint(const Gradient& g)
+  : m_impl(std::make_unique<PaintImpl>(g))
+{}
 
-Paint::Paint(const Pattern& pattern){
-  m_impl = new PaintImpl(pattern);
-}
 
-Paint::Paint(const Paint& other){
-  m_impl = new PaintImpl(*other.m_impl);
-}
+Paint::Paint(const Pattern& p)
+  : m_impl(std::make_unique<PaintImpl>(p))
+{}
 
-Paint::Paint(Paint&& other){
-  m_impl = other.m_impl;
-  other.m_impl = nullptr;
-}
+Paint::Paint(const Paint& other)
+  : m_impl(std::make_unique<PaintImpl>(*other.m_impl))
+{}
+
+Paint::Paint(Paint&& other)
+  : m_impl(std::move(other.m_impl))
+{}
 
 Paint::~Paint(){
-  delete m_impl;
+  // Required for unique_ptr of forwarded type
 }
 
 bool Paint::IsColor() const{
@@ -95,8 +93,7 @@ Paint& Paint::operator=(const Paint& other){
     return *this;
   }
 
-  delete m_impl;
-  m_impl = new PaintImpl(*other.m_impl);
+  m_impl = std::make_unique<PaintImpl>(*other.m_impl);
   return *this;
 }
 
