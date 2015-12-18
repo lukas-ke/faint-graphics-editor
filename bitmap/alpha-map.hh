@@ -15,6 +15,7 @@
 
 #ifndef FAINT_ALPHA_MAP_HH
 #define FAINT_ALPHA_MAP_HH
+#include <vector>
 #include "geo/int-size.hh"
 #include "util/distinct.hh"
 #include "util/optional.hh"
@@ -45,8 +46,7 @@ class AlphaMap{
   // A "one-channel" Bitmap for alpha values and what not.
 public:
   explicit AlphaMap(const IntSize&);
-  AlphaMap(const AlphaMap&);
-  ~AlphaMap();
+  AlphaMap(const AlphaMap&) = default;
   void Add(int x, int y, uchar value);
   AlphaMapRef FullReference() const;
   uchar Get(int x, int y) const;
@@ -60,11 +60,8 @@ public:
 
   AlphaMap& operator=(const AlphaMap&) = delete;
 private:
-  void Initialize(const IntSize&);
-  void Clear();
-  uchar* m_data;
+  std::vector<uchar> m_data;
   IntSize m_size;
-  int m_stride;
 };
 
 class category_alpha_map;

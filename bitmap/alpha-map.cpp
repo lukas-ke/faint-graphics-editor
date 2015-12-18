@@ -15,7 +15,6 @@
 
 #include <algorithm>
 #include <cassert>
-#include <cstring> // memcpy
 #include "bitmap/alpha-map.hh"
 #include "bitmap/brush.hh"
 #include "geo/int-point.hh"
@@ -69,77 +68,45 @@ Optional<IntRect> AlphaMapRef::BoundingRect() const{
 
 
 AlphaMap::AlphaMap(const IntSize& sz)
-  : m_data(nullptr),
-    m_stride(0)
-{
-  Initialize(sz);
-}
-
-AlphaMap::AlphaMap(const AlphaMap& other)
-  : m_size(other.m_size),
-    m_stride(other.m_stride)
-{
-  assert(m_size.w > 0 && m_size.h > 0);
-  size_t length = to_size_t(area(m_size));
-  m_data = new uchar[length];
-  memcpy(m_data, other.m_data, length);
-}
-
-AlphaMap::~AlphaMap(){
-  delete[] m_data;
-}
+  : m_data(to_size_t(area(sz)), 0),
+    m_size(sz)
+{}
 
 void AlphaMap::Add(int x, int y, uchar value){
-  uchar& item = m_data[to_index(x, y, m_stride)];
+  uchar& item = m_data[to_index(x, y, m_size.w)];
   item = static_cast<uchar>(std::min(int(item) + value, 255));
 }
 
 void AlphaMap::Set(int x, int y, uchar value){
   if (valid_pos(x, y, m_size)){
-    m_data[to_index(x, y, m_stride)] = value;
+    m_data[to_index(x, y, m_size.w)] = value;
   }
 }
 
-void AlphaMap::Clear(){
-  memset(m_data, 0, to_size_t(area(m_size)));
-}
-
 AlphaMapRef AlphaMap::FullReference() const{
-  return AlphaMapRef(m_data, m_size, m_stride);
+  return AlphaMapRef(m_data.data(), m_size, m_size.w);
 }
 
 uchar AlphaMap::Get(int x, int y) const {
-  return m_data[to_index(x,y, m_stride)];
+  return m_data[to_index(x, y, m_size.w)];
 }
 
 uchar* AlphaMap::GetRaw(){
-  return m_data;
+  return m_data.data();
 }
 
 const uchar* AlphaMap::GetRaw() const{
-  return m_data;
+  return m_data.data();
 }
 
 IntSize AlphaMap::GetSize() const{
   return m_size;
 }
 
-void AlphaMap::Initialize(const IntSize& sz){
-  assert(sz.w > 0 && sz.h > 0);
-  m_size = sz;
-  m_data = new uchar[to_size_t(area(m_size))];
-  m_stride = sz.w;
-  Clear();
-}
-
 void AlphaMap::Reset(const IntSize& size){
-  if (GetSize() != size){
-    delete[] m_data;
-    Initialize(size);
-  }
-  else{
-    Clear();
-  }
+  m_size = size;
+  m_data.resize(to_size_t(area(size)));
+  std::fill(begin(m_data), end(m_data), 0);
 }
 
 AlphaMap AlphaMap::SubCopy(const IntRect& r) const{
@@ -160,8 +127,8 @@ AlphaMapRef AlphaMap::SubReference(const IntRect& r) const{
   assert(0 <= r.x && 0 <= r.y &&
     r.x + r.w <= m_size.w &&
     r.y + r.h <= m_size.h);
-  return AlphaMapRef(m_data +
-    to_index(r.x, r.y, m_stride), r.GetSize(), m_stride);
+  return AlphaMapRef(m_data.data() +
+    to_index(r.x, r.y, m_size.w), r.GetSize(), m_size.w);
 }
 
 static void brush_stroke(AlphaMap& data, int x, int y, const Brush& b){
