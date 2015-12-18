@@ -23,6 +23,7 @@
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/layout-wx.hh"
 #include "util/convenience.hh"
+#include "util/dumb-ptr.hh" // make_wx
 
 namespace faint{
 
@@ -72,14 +73,14 @@ public:
       m_changed(false),
       m_spinCtrl(nullptr)
   {
-    auto sizer = new wxBoxSizer(wxVERTICAL);
+    auto sizer = make_wx<wxBoxSizer>(wxVERTICAL);
     if (label.size() > 0){
       layout::add(sizer, create_label(this, label.c_str()));
     }
 
     // Using Int FocusRelayingCtrl regardless of SettingCtrl_T, due to
     // the wxSpinCtrlDouble sometimes ceasing to work on Windows.
-    m_spinCtrl = new FocusRelayingSpinCtrlInt(this);
+    m_spinCtrl = make_wx<FocusRelayingSpinCtrlInt>(this);
     set_value(m_spinCtrl, value);
     m_spinCtrl->SetRange(1, 255);
     m_spinCtrl->SetBackgroundColour(wxColour(255, 255, 255));
@@ -101,7 +102,7 @@ public:
 
     bind(this, wxEVT_TEXT_ENTER,
       [this](){
-	 this->SendChangeEvent();
+     this->SendChangeEvent();
       });
   }
 
@@ -132,7 +133,7 @@ IntSettingCtrl* create_int_spinner(wxWindow* parent,
   int value,
   const utf8_string& label)
 {
-  return new IntSizeControl(parent, setting, value, label);
+  return make_wx<IntSizeControl>(parent, setting, value, label);
 }
 
 class SemiFloatSizeControl : public SizeControl<FloatSettingControl>{
@@ -149,7 +150,7 @@ FloatSettingControl* create_semi_float_spinner(wxWindow* parent,
   coord value,
   const utf8_string& label)
 {
-  return new SemiFloatSizeControl(parent, setting, value, label);
+  return make_wx<SemiFloatSizeControl>(parent, setting, value, label);
 }
 
 } // namespace

@@ -26,6 +26,7 @@
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/system-colors.hh"
+#include "util/dumb-ptr.hh" // make_wx
 
 namespace faint{
 
@@ -41,7 +42,7 @@ private:
 extern const wxEventTypeTag<SliderEvent> EVT_FAINT_SLIDER_CHANGE;
 
 LineSliderMarker* LineSliderMarker::Clone() const{
-  return new LineSliderMarker();
+  return new LineSliderMarker(); // Fixme: Use std::unique_ptr
 }
 
 void LineSliderMarker::Draw(Bitmap& bmp,
@@ -57,7 +58,7 @@ void LineSliderMarker::Draw(Bitmap& bmp,
 }
 
 BorderedSliderMarker* BorderedSliderMarker::Clone() const{
-  return new BorderedSliderMarker();
+  return new BorderedSliderMarker(); // Fixme: Use std::unique_ptr
 }
 
 void BorderedSliderMarker::Draw(Bitmap& bmp,
@@ -202,7 +203,7 @@ SliderEvent::SliderEvent(int value)
 {}
 
 wxEvent* SliderEvent::Clone() const{
-  return new SliderEvent(*this);
+  return make_wx<SliderEvent>(*this);
 }
 
 int SliderEvent::GetValue() const{
@@ -233,7 +234,7 @@ Slider* create_slider(wxWindow* parent,
   const SliderCursors& cursors,
   const IntSize& initialSize)
 {
-  SliderImpl* s = new SliderImpl(parent, values, dir, marker, bg, cursors);
+  auto s = make_wx<SliderImpl>(parent, values, dir, marker, bg, cursors);
   s->SetInitialSize(to_wx(initialSize));
   return s;
 }
@@ -245,7 +246,7 @@ Slider* create_slider(wxWindow* parent,
   const SliderCursors& cursors,
   const IntSize& initialSize)
 {
-  SliderImpl* s = new SliderImpl(parent,
+  auto s = make_wx<SliderImpl>(parent,
     values,
     dir,
     LineSliderMarker(),
@@ -281,7 +282,7 @@ Slider* create_slider(wxWindow* parent,
   const IntSize& initialSize,
   std::function<void(int)>&& onChange)
 {
-  Slider* s = create_slider(parent,
+  auto s = create_slider(parent,
     values,
     dir,
     marker,

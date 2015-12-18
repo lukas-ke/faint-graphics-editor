@@ -21,6 +21,7 @@
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-wx.hh"
+#include "util/dumb-ptr.hh"
 
 namespace faint{
 
@@ -46,7 +47,7 @@ public:
     : wxPanel(parent, wxID_ANY)
   {
     SetInitialSize(size);
-    wxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+    auto sizer = make_wx<wxBoxSizer>(wxVERTICAL);
     const IntSize spinButtonSize(40, 25);
     auto plusButton = create_button(this, "+", spinButtonSize,
       [this](){
@@ -90,7 +91,7 @@ SpinButton::SpinButton(wxWindow* parent,
   const on_spin_up& onSpinUp,
   const on_spin_down& onSpinDown)
 {
-  m_impl = new SpinButtonImpl(parent, to_wx(size), toolTip);
+  m_impl = make_wx<SpinButtonImpl>(parent, to_wx(size), toolTip);
   bind(m_impl, wxEVT_SPIN_UP, onSpinUp.Get());
   bind(m_impl, wxEVT_SPIN_DOWN, onSpinDown.Get());
 }
