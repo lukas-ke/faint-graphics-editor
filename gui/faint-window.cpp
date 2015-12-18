@@ -130,7 +130,7 @@ public:
 
 static wxStatusBar& create_faint_statusbar(wxFrame* frame){
   // The status bar is cleaned up by wxWidgets at frame destruction.
-  wxStatusBar* statusbar = new wxStatusBar(frame, wxID_ANY);
+  auto statusbar = make_wx<wxStatusBar>(frame, wxID_ANY);
   frame->SetStatusBar(statusbar);
   statusbar->SetFieldsCount(2);
   return *statusbar;
@@ -202,7 +202,7 @@ static void initialize_panels(wxFrame& frame,
 {
   panels.menubar = std::make_unique<Menubar>(frame, app, art);
   // Top half, the tool panel and the drawing areas.
-  auto* row1 = new wxBoxSizer(wxHORIZONTAL);
+  auto* row1 = make_wx<wxBoxSizer>(wxHORIZONTAL);
 
   static UnitSource unitStrings;
   panels.tool = std::make_unique<ToolPanel>(&frame,
@@ -278,7 +278,7 @@ static void initialize_panels(wxFrame& frame,
     app.GetStatusInfo(),
     art);
 
-  auto rows = new wxBoxSizer(wxVERTICAL);
+  auto rows = make_wx<wxBoxSizer>(wxVERTICAL);
   rows->Add(row1, 1, wxEXPAND);
   rows->Add(panels.color->AsWindow(), 0, wxEXPAND);
   frame.SetSizer(rows);
@@ -468,12 +468,11 @@ FaintWindow::FaintWindow(Art& art,
   bool silentMode,
   bool usePenTablet)
 {
-  // Deleted by wxWidgets
-  auto* frame = new FaintFrame();
+  auto frame = make_wx<FaintFrame>();
 
-  std::unique_ptr<FaintPanels> panels(new FaintPanels);
-  std::unique_ptr<FaintState> state(new FaintState(default_tool_settings(),
-      silentMode, usePenTablet));
+  auto panels = std::make_unique<FaintPanels>();
+  auto state = std::make_unique<FaintState>(default_tool_settings(),
+    silentMode, usePenTablet);
 
   // Fixme: Who deletes?
   FaintWindowContext* appContext = new FaintWindowContext(*this,

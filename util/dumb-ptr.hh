@@ -16,6 +16,7 @@
 #ifndef FAINT_DUMB_PTR_HH
 #define FAINT_DUMB_PTR_HH
 #include <memory>
+#include <type_traits>
 
 namespace faint{
 
@@ -32,6 +33,13 @@ using dumb_ptr = std::unique_ptr<T, no_delete<T>>;
 template<typename T, typename ...Args>
 dumb_ptr<T> make_dumb(Args&& ...args){
   return dumb_ptr<T>(new T(std::forward<Args>(args)...));
+}
+
+template<typename T, typename ...Args>
+T* make_wx(Args&& ...args){
+  static_assert(std::is_base_of<wxObject, T>::value,
+    "make_wx should only be used for subtypes of wxObject");
+  return new T(std::forward<Args>(args)...);
 }
 
 } // namespace

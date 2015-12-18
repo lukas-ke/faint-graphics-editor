@@ -69,7 +69,6 @@ public:
     hSizer->Add(raw(m_button));
     vSizer->Add(hSizer);
     SetSizerAndFit(vSizer);
-
   }
 
   bool UpdateControl(const Settings& s) override{
