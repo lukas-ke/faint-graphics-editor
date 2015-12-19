@@ -29,6 +29,7 @@ public:
   Point operator-() const;
   void operator*=(coord);
   void operator+=(const Point&);
+  bool operator<(const Point&);
 
   coord x;
   coord y;

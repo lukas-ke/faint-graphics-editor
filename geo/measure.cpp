@@ -45,7 +45,7 @@ Angle angle360_ccw(const LineSegment& l){
 }
 
 IntRect bounding_rect(const IntPoint& p){
-  return {p, IntSize(0,0)};
+  return {p, IntSize(1,1)};
 }
 
 IntRect bounding_rect(const IntPoint& p0, const IntPoint& p1){
@@ -77,7 +77,7 @@ IntRect bounding_rect(const IntLineSegment& line){
 }
 
 Rect bounding_rect(const Point& p){
-  return {p, Size(0,0)};
+  return {p, Size(1,1)};
 }
 
 Rect bounding_rect(const Point& p0, const Point& p1){

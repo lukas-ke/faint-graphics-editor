@@ -43,6 +43,10 @@ void Point::operator+=(const Point& other){
   y += other.y;
 }
 
+bool Point::operator<(const Point& other){
+  return y < other.y || (y == other.y  && x < other.x);
+}
+
 Point operator-(const Point& lhs, const Point& rhs){
   return {lhs.x - rhs.x, lhs.y - rhs.y};
 }

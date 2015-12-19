@@ -1,4 +1,5 @@
 // -*- coding: us-ascii-unix -*-
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include "test-sys/test.hh"
@@ -90,21 +91,34 @@ void test_measure(){
 
   {
     // Variadic bounding_rect (mixed)
-    LineSegment l({0,0}, {10,10});
-    Rect r{Point(20,0), Point(10,15)};
-    EQUAL(bounding_rect(bounding_rect(l), bounding_rect(r)),
-      bounding_rect(r, l));
+    LineSegment l({3,7}, {11,10});
+    Rect r{Point(9,2), Point(10,15)};
+    const auto key = Rect(Point(3,2), Point(11,15));
+    EQUAL(key, bounding_rect(l, r));
   }
 
   {
-    // Variadic bounding_rect, integer points
-    EQUAL(bounding_rect(IntPoint(0,0), IntPoint(10,2), IntPoint(23,1)),
-      IntRect(IntPoint(0,0), IntPoint(23,2)));
+    std::vector<IntPoint> pts = {{1,3}, {10, 2}, {23, 2}};
+    IntRect key{IntPoint(1,2), IntPoint(23,3)};
+    std::sort(begin(pts), end(pts));
+    int i = 0;
+    do{
+      EQUAL(bounding_rect(pts[0], pts[1], pts[2]), key);
+      i++;
+    } while (std::next_permutation(begin(pts), end(pts)));
+    EQUAL(i,6);
   }
 
   {
-    // Variadic bounding_rect, integers
-    EQUAL(bounding_rect(IntPoint(0,0), IntPoint(10,2), IntPoint(23,1)),
-      IntRect(IntPoint(0,0), IntPoint(23,2)));
+    // Variadic bounding_rect, decimal points
+    std::vector<Point> pts = {{1.2, 3.2}, {10, 2}, {23.4, 2}};
+    Rect key{Point(1.2,2), Point(23.4,3.2)};
+    std::sort(begin(pts), end(pts));
+    int i= 0;
+    do{
+      EQUAL(bounding_rect(pts[0], pts[1], pts[2]), key);
+      i++;
+    } while (std::next_permutation(begin(pts), end(pts)));
+    EQUAL(i,6);
   }
 }
