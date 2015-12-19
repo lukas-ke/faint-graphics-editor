@@ -27,6 +27,7 @@
 #include "geo/canvas-geo.hh"
 #include "geo/geo-func.hh"
 #include "geo/point.hh"
+#include "geo/size.hh"
 #include "text/utf8-string.hh"
 #include "util/or-error.hh"
 #include "util-wx/convert-wx.hh"
@@ -140,11 +141,12 @@ IntPoint view_position(const wxWindow& w){
 }
 
 Point image_position(const CanvasGeo& g, const wxWindow& w){
-  Point p(floated(view_position(w)));
+  const IntPoint viewPos = view_position(w);
+  const IntPoint scroll = g.pos;
+  const IntPoint border = point_from_size(g.border);
   const coord zoom = g.zoom.GetScaleFactor();
-  return {
-    (p.x + g.pos.x - g.border.w) / zoom,
-    (p.y + g.pos.y - g.border.w) / zoom};
+
+  return (viewPos + scroll - border) / zoom;
 }
 
 }} // namespace
