@@ -139,7 +139,7 @@ Optional<utf8_string> empty_to_unset(const Optional<utf8_string>& name){
 
 size_t find_object_index(Object* obj, const objects_t& objects){
   assert(obj != nullptr);
-  return std::distance(find(objects, obj), objects.end());
+  return std::distance(objects.begin(), find(objects, obj));
 }
 
 std::vector<Point> get_attach_points(const Tri& tri){

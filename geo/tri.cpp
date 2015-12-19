@@ -34,7 +34,7 @@ Adj::Adj()
     skew(0.0)
 {}
 
-coord delta_from_length(coord length){
+static coord delta_from_length(coord length){
   return length < 0 ? (length + 1) : (length - 1);
 }
 
@@ -189,6 +189,14 @@ Point mid_P2_P3(const Tri& t){
     (t.Width() / 2.0) * sin(t.GetAngle()));
 }
 
+LineSegment P0_P1(const Tri& t){
+  return {t.P0(), t.P1()};
+}
+
+LineSegment P0_P2(const Tri& t){
+  return {t.P0(), t.P2()};
+}
+
 
 static Tri offset_P0_P1(const Tri& t, coord xOff){
   // Fixme: Merge offset_P0_* into offset_aligned
@@ -261,14 +269,6 @@ bool valid(const Tri& t){
 
 bool rather_zero(const Tri& t){
   return rather_zero(t.Width()) || rather_zero(t.Height());
-}
-
-LineSegment P0_P1(const Tri& t){
-  return {t.P0(), t.P1()};
-}
-
-LineSegment P0_P2(const Tri& t){
-  return {t.P0(), t.P2()};
 }
 
 } // namespace
