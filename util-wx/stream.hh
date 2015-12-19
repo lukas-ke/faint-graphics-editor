@@ -17,12 +17,12 @@
 #define FAINT_STREAM_HH
 #include <array>
 #include <iosfwd> // For streampos, streamsize
+#include <memory>
 
 namespace faint{
 
 class FilePath;
 
-class BinaryReaderImpl;
 class BinaryReader{
 public:
   BinaryReader(const FilePath&);
@@ -37,10 +37,10 @@ public:
   BinaryReader(const BinaryReader&) = delete;
   BinaryReader& operator=(const BinaryReader&) = delete;
 private:
-  BinaryReaderImpl* m_impl;
+  class BinaryReaderImpl;
+  std::unique_ptr<BinaryReaderImpl> m_impl;
 };
 
-class BinaryWriterImpl;
 class BinaryWriter{
 public:
   BinaryWriter(const FilePath&);
@@ -53,7 +53,8 @@ public:
   BinaryWriter(const BinaryWriter&) = delete;
   BinaryWriter& operator=(const BinaryWriter&) = delete;
 private:
-  BinaryWriterImpl* m_impl;
+  class BinaryWriterImpl;
+  std::unique_ptr<BinaryWriterImpl> m_impl;
 };
 
 template<std::size_t N>
