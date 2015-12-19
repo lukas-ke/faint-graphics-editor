@@ -20,10 +20,10 @@
 #include "bitmap/color.hh"
 #include "gui/interpreter-ctrl.hh"
 #include "text/auto-complete.hh"
-#include "util/dumb-ptr.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-auto-complete.hh"
+#include "util-wx/fwd-wx.hh"
 #include "util-wx/key-codes.hh"
 #include "util-wx/slice-wx.hh"
 

@@ -17,7 +17,6 @@
 #include "util/string-source.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/fwd-wx.hh"
-#include "util/dumb-ptr.hh" // make_wx
 
 namespace faint{
 

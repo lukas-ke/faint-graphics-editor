@@ -23,7 +23,6 @@
 #include "text/precision.hh"
 #include "util-wx/window-types-wx.hh"
 #include "util/distinct.hh"
-#include "util/type-dependent-false.hh"
 
 class wxCommandEvent;
 class wxCursor;
@@ -299,6 +298,17 @@ template<typename T> void deleted_by_wx(T*& v){
     "deleted_by_wx is only valid for wxWidgets types");
   v = nullptr;
 }
+
+// Helper to distinguish new:s that should be deleted from new:ed
+// wxWidgets objects, which are usually automatically deleted
+// hierarchically.
+template<typename T, typename ...Args>
+T* make_wx(Args&& ...args){
+  static_assert(std::is_base_of<wxObject, T>::value,
+    "make_wx should only be used for subtypes of wxObject");
+  return new T(std::forward<Args>(args)...);
+}
+
 
 } // namespace
 

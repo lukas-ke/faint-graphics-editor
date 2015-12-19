@@ -19,8 +19,8 @@
 #include "text/formatting.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
+#include "util-wx/fwd-wx.hh"
 #include "util-wx/gui-util.hh"
-#include "util/dumb-ptr.hh"
 #include "util/setting-id.hh"
 #include "util/status-interface.hh"
 

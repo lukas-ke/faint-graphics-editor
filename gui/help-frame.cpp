@@ -26,6 +26,7 @@
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
+#include "util-wx/fwd-wx.hh"
 #include "util-wx/gui-util.hh"
 #include "util-wx/make-event.hh"
 #include "util-wx/slice-wx.hh"
@@ -486,7 +487,7 @@ HelpFrame::~HelpFrame(){
 
 void HelpFrame::Close(){
   m_impl->Close(true);
-  m_impl = nullptr;
+  m_impl.reset(nullptr);
 }
 
 void HelpFrame::Hide(){

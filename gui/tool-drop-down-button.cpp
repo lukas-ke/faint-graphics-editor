@@ -25,10 +25,10 @@
 #include "gui/events.hh"
 #include "gui/tool-drop-down-button.hh"
 #include "text/formatting.hh"
-#include "util/dumb-ptr.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
+#include "util-wx/fwd-wx.hh"
 
 namespace faint{
 

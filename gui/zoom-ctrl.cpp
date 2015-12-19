@@ -21,7 +21,7 @@
 #include "gui/status-button.hh"
 #include "gui/zoom-ctrl.hh"
 #include "util-wx/fwd-bind.hh"
-#include "util/dumb-ptr.hh"
+#include "util-wx/fwd-wx.hh"
 #include "util/zoom-level.hh"
 
 namespace faint{
@@ -144,7 +144,7 @@ ZoomCtrl::ZoomCtrl(wxWindow* parent, StatusInterface& status)
 }
 
 ZoomCtrl::~ZoomCtrl(){
-  m_impl = nullptr; // Deletion is handled by wxWidgets.
+  deleted_by_wx(m_impl);
 }
 
 wxWindow* ZoomCtrl::AsWindow(){

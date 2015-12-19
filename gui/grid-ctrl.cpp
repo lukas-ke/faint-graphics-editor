@@ -25,7 +25,6 @@
 #include "util-wx/bind-event.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/fwd-wx.hh"
-#include "util/dumb-ptr.hh"
 #include "util/grid.hh"
 
 namespace faint{

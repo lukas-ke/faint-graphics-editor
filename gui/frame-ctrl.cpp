@@ -33,7 +33,6 @@
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/fwd-wx.hh"
-#include "util/dumb-ptr.hh"
 #include "util/status-interface.hh"
 
 namespace faint{
@@ -463,7 +462,7 @@ FrameCtrl::FrameCtrl(wxWindow* parent,
 }
 
 FrameCtrl::~FrameCtrl(){
-  m_impl = nullptr; // Deletion is handled by wxWidgets
+  deleted_by_wx(m_impl);
 }
 
 wxWindow* FrameCtrl::AsWindow(){

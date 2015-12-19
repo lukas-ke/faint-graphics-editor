@@ -42,7 +42,6 @@
 #include "util-wx/gui-util.hh"
 #include "util-wx/placement.hh"
 #include "util/color-bitmap-util.hh"
-#include "util/dumb-ptr.hh"
 #include "util/index.hh"
 #include "util/iter.hh"
 #include "util/optional.hh"

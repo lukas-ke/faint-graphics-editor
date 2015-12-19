@@ -19,7 +19,7 @@
 #include "python/py-key-press.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-path-util.hh"
-#include "util/dumb-ptr.hh" // make_wx
+#include "util-wx/fwd-wx.hh" // make_wx
 
 namespace faint{
 

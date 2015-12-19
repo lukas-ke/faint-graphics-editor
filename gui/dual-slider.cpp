@@ -25,8 +25,8 @@
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
+#include "util-wx/fwd-wx.hh"
 #include "util-wx/system-colors.hh"
-#include "util/dumb-ptr.hh" // make_wx
 
 namespace faint{
 

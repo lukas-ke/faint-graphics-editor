@@ -35,13 +35,6 @@ dumb_ptr<T> make_dumb(Args&& ...args){
   return dumb_ptr<T>(new T(std::forward<Args>(args)...));
 }
 
-template<typename T, typename ...Args>
-T* make_wx(Args&& ...args){ // TODO: Move to e.g. fwd-wx.hh
-  static_assert(std::is_base_of<wxObject, T>::value,
-    "make_wx should only be used for subtypes of wxObject");
-  return new T(std::forward<Args>(args)...);
-}
-
 } // namespace
 
 #endif

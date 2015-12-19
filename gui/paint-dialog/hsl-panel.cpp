@@ -38,7 +38,6 @@
 #include "util-wx/make-event.hh"
 #include "util-wx/placement.hh"
 #include "util/color-bitmap-util.hh"
-#include "util/dumb-ptr.hh"
 
 namespace faint{
 

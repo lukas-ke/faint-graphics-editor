@@ -23,7 +23,6 @@
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/layout-wx.hh"
 #include "util/convenience.hh"
-#include "util/dumb-ptr.hh" // make_wx
 
 namespace faint{
 

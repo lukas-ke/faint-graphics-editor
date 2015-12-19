@@ -34,7 +34,6 @@
 #include "util-wx/placement.hh"
 #include "util/apply-target.hh"
 #include "util/command-util.hh"
-#include "util/dumb-ptr.hh"
 #include "util/object-util.hh"
 
 namespace faint{

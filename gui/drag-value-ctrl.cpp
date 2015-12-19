@@ -23,7 +23,6 @@
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/fwd-wx.hh"
-#include "util/dumb-ptr.hh" // make_wx
 #include "util/status-interface.hh"
 
 namespace faint{

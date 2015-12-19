@@ -24,7 +24,6 @@
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-wx.hh"
-#include "util/dumb-ptr.hh"
 #include "util/make-vector.hh"
 
 namespace faint{

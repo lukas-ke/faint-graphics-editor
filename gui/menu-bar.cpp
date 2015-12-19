@@ -31,6 +31,7 @@
 #include "gui/menu-predicate.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
+#include "util-wx/fwd-wx.hh"
 #include "util-wx/slice-wx.hh"
 #include "util/command-util.hh"
 #include "util/frame-props.hh"

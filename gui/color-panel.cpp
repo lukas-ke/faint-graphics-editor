@@ -26,6 +26,7 @@
 #include "util/dumb-ptr.hh"
 #include "util/either.hh"
 #include "util-wx/bind-event.hh"
+#include "util-wx/fwd-wx.hh"
 
 namespace faint{
 

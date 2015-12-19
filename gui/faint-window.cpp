@@ -57,6 +57,7 @@
 #include "util-wx/convert-wx.hh"
 #include "util-wx/file-format-util.hh"
 #include "util-wx/fwd-bind.hh"
+#include "util-wx/fwd-wx.hh"
 #include "util-wx/gui-util.hh"
 #ifdef __WXMSW__
 #include "wx/msw/private.h"

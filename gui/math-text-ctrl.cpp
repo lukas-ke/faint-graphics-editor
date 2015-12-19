@@ -19,11 +19,12 @@
 #include "gui/math-text-ctrl.hh"
 #include "util-wx/bind-event.hh"
 #include "util-wx/fwd-bind.hh"
+#include "util-wx/fwd-wx.hh"
 #include "util-wx/gui-util.hh"
 #include "util/parse-math-string.hh"
-#include "util/dumb-ptr.hh" // make_wx
 
 namespace faint{
+
 // Event sent by MathTextCtrl when the value is changed by user entry
 extern const wxEventType MATH_TEXT_CONTROL_UPDATE;
 extern const wxEventTypeTag<wxCommandEvent> EVT_MATH_TEXT_CONTROL_UPDATE;

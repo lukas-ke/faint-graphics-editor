@@ -24,7 +24,6 @@
 #include "gui/static-bitmap.hh"
 #include "gui/ui-constants.hh"
 #include "util/color-bitmap-util.hh"
-#include "util/dumb-ptr.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/layout-wx.hh"

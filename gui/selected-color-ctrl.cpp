@@ -31,7 +31,7 @@
 #include "util-wx/fwd-bind.hh"
 #include "util/color-bitmap-util.hh"
 #include "util/color-choice.hh"
-#include "util/dumb-ptr.hh" // make_wx
+#include "util-wx/fwd-wx.hh"
 #include "util/optional.hh"
 #include "util/setting-id.hh"
 #include "util/status-interface.hh"
@@ -296,7 +296,7 @@ SelectedColorCtrl::SelectedColorCtrl(wxWindow* parent,
 }
 
 SelectedColorCtrl::~SelectedColorCtrl(){
-  m_impl = nullptr; // Deletion is handled by wxWidgets.
+  deleted_by_wx(m_impl);
 }
 
 wxWindow* SelectedColorCtrl::AsWindow(){

@@ -16,7 +16,7 @@
 #include "wx/window.h"
 #include "gui/events.hh"
 #include "util-wx/bind-event.hh"
-#include "util/dumb-ptr.hh"
+#include "util-wx/fwd-wx.hh"
 
 namespace faint{
 

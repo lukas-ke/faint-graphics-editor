@@ -31,7 +31,6 @@
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/gui-util.hh"
 #include "util-wx/key-codes.hh"
-#include "util/dumb-ptr.hh"
 #include "util/optional.hh"
 
 namespace faint{
