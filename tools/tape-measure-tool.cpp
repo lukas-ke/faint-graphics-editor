@@ -131,8 +131,7 @@ public:
 
   IntRect GetRefreshRect(const RefreshInfo&) const override{
     const auto line(m_editor.GetLine());
-    return floiled(bounding_rect(bounding_rect(line),
-        bounding_rect(get_tape_text_tri(line))));
+    return floiled(bounding_rect(line, get_tape_text_tri(line)));
   }
 
   ToolResult MouseDown(const PosInfo& info) override{

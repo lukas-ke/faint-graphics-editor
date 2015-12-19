@@ -16,6 +16,7 @@ PRINTER(IntSize);
 PRINTER(LineSegment);
 PRINTER(Paint);
 PRINTER(Point);
+PRINTER(Rect);
 PRINTER(utf8_char);
 PRINTER(Color);
 PRINTER(ColRGB);

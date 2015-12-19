@@ -4,6 +4,7 @@
 #include "test-sys/test.hh"
 #include "geo/angle.hh"
 #include "geo/line.hh"
+#include "geo/rect.hh"
 #include "geo/measure.hh"
 #include "tests/test-util/print-objects.hh"
 #include "util/math-constants.hh"
@@ -84,5 +85,15 @@ void test_measure(){
 
     EQUAL(with_mid_points_cyclic({{1.0, 1.0}, {2.0, 2.0}}),
       pt_vec({{1.5, 1.5}, {1.0, 1.0}, {1.5, 1.5}, {2.0, 2.0}}));
+  }
+
+  {
+    // Variadic bounding_rect
+    LineSegment l({0,0}, {10,10});
+    Rect r{Point(20,0), Point(10,15)};
+    EQUAL(bounding_rect(bounding_rect(l), bounding_rect(r)),
+      bounding_rect(r, l));
+
+
   }
 }

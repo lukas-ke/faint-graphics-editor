@@ -32,10 +32,18 @@ IntRect bounding_rect(const IntPoint&, const IntPoint&);
 IntRect bounding_rect(const IntPoint&, const IntPoint&, const IntPoint&);
 IntRect bounding_rect(const IntLineSegment&);
 IntRect bounding_rect(const IntRect&, const IntRect&);
+Rect bounding_rect(const Rect&);
 Rect bounding_rect(const Rect&, const Rect&);
 Rect bounding_rect(const LineSegment&);
 Rect bounding_rect(const Point&, const Point&, const Point&);
 Rect bounding_rect(const Point&, const Point&);
+
+template<class A, class ...B>
+auto bounding_rect(const A& head, const B&... tail)
+  -> decltype(bounding_rect(head))
+{
+  return bounding_rect(bounding_rect(head), bounding_rect(tail...));
+}
 
 // Returns the positive distance between the points. Insensitive to
 // ordering.

@@ -9,6 +9,7 @@
 #include "geo/int-size.hh"
 #include "geo/line.hh"
 #include "geo/point.hh"
+#include "geo/rect.hh"
 #include "tests/test-util/print-objects.hh"
 #include "text/text-buffer.hh"
 #include "text/formatting.hh"
@@ -49,6 +50,11 @@ std::ostream& operator<<(std::ostream& o, const Paint& p){
       return o << "Gradient";
     });
 }
+
+std::ostream& operator<<(std::ostream& o, const Rect& r){
+  return o << r.x << "," << r.y << "," << r.w << "," << r.h;
+}
+
 
 std::ostream& operator<<(std::ostream& o, const utf8_char& ch){
   const auto oldFill = o.fill();

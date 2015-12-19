@@ -47,6 +47,7 @@ public:
   coord h;
 };
 
+bool operator==(const Rect&, const Rect&);
 bool empty(const Rect&);
 Rect inflated(const Rect&, coord);
 Rect inflated(const Rect&, coord, coord);

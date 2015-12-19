@@ -90,6 +90,14 @@ bool Rect::Contains(const Point& pt) const{
     pt.x <= Right() && pt.y <= Bottom();
 }
 
+bool operator==(const Rect& lhs, const Rect& rhs){
+  return
+    lhs.x == rhs.x &&
+    lhs.y == rhs.y &&
+    lhs.w == rhs.w &&
+    lhs.h == rhs.h;
+}
+
 bool empty(const Rect& r){
   return r.w == 0 || r.h == 0;
 }
