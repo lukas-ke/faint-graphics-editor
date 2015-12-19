@@ -43,7 +43,6 @@ Rect bounding_rect(const Rect&);
 Rect bounding_rect(const Rect&, const Rect&);
 Rect bounding_rect(const LineSegment&);
 
-
 template<class A, class ...B>
 auto bounding_rect(const A& head, const B&... tail)
   -> decltype(bounding_rect(head))
