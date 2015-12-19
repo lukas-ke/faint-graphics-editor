@@ -16,6 +16,7 @@
 #ifndef FAINT_GRADIENT_SLIDER_HH
 #define FAINT_GRADIENT_SLIDER_HH
 #include <functional>
+#include <memory>
 #include "bitmap/gradient.hh"
 #include "geo/int-size.hh"
 #include "util/pick-paint.hh"
@@ -49,7 +50,7 @@ public:
   static const int HEIGHT = 40;
 
 private:
-  ColorStopSliderImpl* m_impl;
+  std::unique_ptr<ColorStopSliderImpl> m_impl;
 };
 
 class RadialGradientSlider{
@@ -69,7 +70,7 @@ public:
   static const int HORIZONTAL_MARGIN = HANDLE_WIDTH / 2;
   static const int HEIGHT = 40;
 private:
-  ColorStopSliderImpl* m_impl;
+  std::unique_ptr<ColorStopSliderImpl> m_impl;
 };
 
 } // namespace

@@ -392,7 +392,7 @@ LinearGradientSlider::LinearGradientSlider(wxWindow* parent,
   const pick_color_f& getColor,
   DialogContext& ctx)
 {
-  m_impl = new TypedColorStopSlider<LinearGradient>(parent,
+  m_impl = std::make_unique<TypedColorStopSlider<LinearGradient> >(parent,
     size,
     gradient,
     getColor,
@@ -400,7 +400,6 @@ LinearGradientSlider::LinearGradientSlider(wxWindow* parent,
 }
 
 LinearGradientSlider::~LinearGradientSlider(){
-  delete m_impl;
 }
 
 wxWindow* LinearGradientSlider::AsWindow(){
@@ -421,16 +420,14 @@ RadialGradientSlider::RadialGradientSlider(wxWindow* parent,
   const pick_color_f& getColor,
   DialogContext& ctx)
 {
-  m_impl = new TypedColorStopSlider<RadialGradient>(parent,
+  m_impl = std::make_unique<TypedColorStopSlider<RadialGradient> >(parent,
     size,
     gradient,
     getColor,
     ctx);
 }
 
-RadialGradientSlider::~RadialGradientSlider(){
-  delete m_impl;
-}
+RadialGradientSlider::~RadialGradientSlider(){}
 
 wxWindow* RadialGradientSlider::AsWindow(){
   return m_impl->AsWindow();

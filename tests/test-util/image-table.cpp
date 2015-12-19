@@ -65,12 +65,10 @@ private:
 ImageTable::ImageTable(const std::string& title,
   const std::vector<utf8_string>& headings)
 {
-  m_impl = new ImageTableImpl(title, headings);
+  m_impl = std::make_unique<ImageTableImpl>(title, headings);
 }
 
-ImageTable::~ImageTable(){
-  delete m_impl;
-}
+ImageTable::~ImageTable(){}
 
 void ImageTable::AddToggleRow(const std::string& label,
   const FileName& f1,

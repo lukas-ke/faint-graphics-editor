@@ -1,6 +1,7 @@
 // -*- coding: us-ascii-unix -*
 #ifndef FAINT_TEST_IMAGE_TABLE_HH
 #define FAINT_TEST_IMAGE_TABLE_HH
+#include <memory>
 #include <string>
 #include <vector>
 #include "text/utf8-string.hh"
@@ -32,7 +33,7 @@ public:
   std::string ToHtml() const;
 private:
   class ImageTableImpl;
-  ImageTableImpl* m_impl;
+  std::unique_ptr<ImageTableImpl> m_impl;
 
   template<class T1, class... Args>
   void AddCells(T1 v1, Args... args){
