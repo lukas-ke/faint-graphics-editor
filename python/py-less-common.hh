@@ -88,7 +88,7 @@ void Common_line(T target, const LineSegment& line){
   s.Update(common_get_tool_settings(target));
   s.Set(ts_AntiAlias, false);
   Common_draw_object(target, its_yours(
-   create_line_object(Points({PathPt::MoveTo(line.p0),
+   create_line_object_raw(Points({PathPt::MoveTo(line.p0),
      PathPt::LineTo(line.p1)}), s)));
 }
 

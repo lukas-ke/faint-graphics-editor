@@ -18,6 +18,7 @@
 #include <functional>
 #include <vector>
 #include "geo/point.hh"
+#include "objects/object-ptr.hh"
 #include "util/id-types.hh"
 #include "util/objects.hh"
 #include "util/optional.hh"

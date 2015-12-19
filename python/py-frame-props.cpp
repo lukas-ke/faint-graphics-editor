@@ -154,7 +154,7 @@ static Index frameprops_Line(const BoundFrameProps& self,
   if (coords.size() % 2 != 0){
     throw ValueError("Number of coordinates must be an even number.");
   }
-  return self.frame.AddObject(create_line_object(points_from_coords(coords),
+  return self.frame.AddObject(create_line_object_raw(points_from_coords(coords),
     updated(default_line_settings(), s)));
 }
 

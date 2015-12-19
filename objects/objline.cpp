@@ -193,8 +193,12 @@ private:
   Tri m_tri;
 };
 
-Object* create_line_object(const Points& points, const Settings& s){
+Object* create_line_object_raw(const Points& points, const Settings& s){
   return new ObjLine(points, s);
+}
+
+ObjectPtr create_line_object(const Points& points, const Settings& s){
+  return std::make_unique<ObjLine>(points, s);
 }
 
 bool is_line(const Object& obj){

@@ -353,7 +353,7 @@ PyObject* create_Line(const std::vector<coord>& coords,
   }
 
   const auto s = merge_settings(maybeSettings, default_line_settings());
-  return create_Shape(create_line_object(points_from_coords(coords), s));
+  return create_Shape(create_line_object_raw(points_from_coords(coords), s));
 }
 
 PyObject* create_Path(const utf8_string& path,

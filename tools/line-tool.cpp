@@ -247,7 +247,7 @@ private:
       return nullptr;
     }
 
-    return add_or_draw(create_line_object(Points(to_line_path(points)),
+    return add_or_draw(create_line_object_raw(Points(to_line_path(points)),
       clean_line_object_settings(GetSettings())), layer);
   }
 

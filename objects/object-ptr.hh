@@ -1,5 +1,5 @@
 // -*- coding: us-ascii-unix -*-
-// Copyright 2012 Lukas Kemmer
+// Copyright 2015 Lukas Kemmer
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you
 // may not use this file except in compliance with the License. You
@@ -13,17 +13,15 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_OBJRECTANGLE_HH
-#define FAINT_OBJRECTANGLE_HH
-#include "objects/object-ptr.hh"
+#ifndef FAINT_OBJECT_PTR_HH
+#define FAINT_OBJECT_PTR_HH
+#include <memory>
 
 namespace faint{
 
-class Settings;
-class Tri;
+class Object;
 
-Object* create_rectangle_object_raw(const Tri&, const Settings&);
-ObjectPtr create_rectangle_object(const Tri&, const Settings&);
+using ObjectPtr = std::unique_ptr<Object>;
 
 } // namespace
 

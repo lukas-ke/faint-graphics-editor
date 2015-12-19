@@ -100,8 +100,7 @@ void test_object_util(){
 
   {
     // Test PolyLine "prev_point", "next_point"
-    std::unique_ptr<Object> line(create_line_object(pts,
-      default_line_settings()));
+    auto line = create_line_object(pts, default_line_settings());
     VERIFY(!line->CyclicPoints());
 
     // Weird: Prev at start becomes next for lines (non-cyclic).

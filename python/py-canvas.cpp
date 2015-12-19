@@ -570,7 +570,7 @@ static BoundObject<Object> canvas_Line(CanvasT canvas,
   }
 
   return canvas_add_object(canvas,
-    create_line_object(points_from_coords(coords),
+    create_line_object_raw(points_from_coords(coords),
       specific_or_app(canvas, default_line_settings(), s)));
 }
 

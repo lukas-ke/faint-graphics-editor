@@ -15,14 +15,15 @@
 
 #ifndef FAINT_OBJLINE_HH
 #define FAINT_OBJLINE_HH
+#include "objects/object-ptr.hh"
 
 namespace faint{
 
-class Object;
 class Points;
 class Settings;
 
-Object* create_line_object(const Points&, const Settings&);
+Object* create_line_object_raw(const Points&, const Settings&);
+ObjectPtr create_line_object(const Points&, const Settings&);
 bool is_line(const Object&);
 
 } // namespace

@@ -25,19 +25,19 @@ static std::unique_ptr<faint::ExpressionContext> dummy_expression_context(){
 
 void test_clone_as_path(){
   using namespace faint;
-  using obj_ptr = std::unique_ptr<Object>;
   Points pts({PathPt::MoveTo({10,10}),
     PathPt::LineTo({15,12}),
     PathPt::LineTo({20, 23})});
 
   // Create a line
-  auto line = obj_ptr(create_line_object(pts, default_line_settings()));
+  auto line = create_line_object(pts, default_line_settings());
   line->SetName({"Line 1"});
   EQUAL(line->GetMovablePoints().size(), 3);
   EQUAL(line->GetName(), utf8_string{"Line 1"});
 
   // Clone it as a path
   auto ctx = dummy_expression_context();
+  using obj_ptr = std::unique_ptr<Object>;
   auto pathObject1 = obj_ptr(clone_as_path(line.get(), *ctx));
 
   // Verify that the name and points are unchanged in the clone
