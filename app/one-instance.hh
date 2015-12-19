@@ -17,12 +17,12 @@
 #define FAINT_ONE_INSTANCE_HH
 #include <memory>
 #include <string>
+#include "util-wx/file-path.hh"
 #include "util/distinct.hh"
 
 namespace faint{
 
 class AppContext;
-class FileList;
 
 class RemoteFaint{
 public:

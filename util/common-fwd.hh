@@ -41,7 +41,6 @@ class Command;
 class DirPath;
 class ExpressionContext;
 class FaintDC;
-class FileList;
 class FilePath;
 class Format;
 class Frame;
@@ -82,6 +81,7 @@ enum class MouseButton;
 
 using tris_t = std::vector<Tri>;
 using strings_t = std::vector<std::string>;
+using FileList = std::vector<FilePath>;
 
 } // namespace
 

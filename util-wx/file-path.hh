@@ -100,40 +100,7 @@ private:
   PathImpl* m_impl;
 };
 
-class FileListIter{
-public:
-  FileListIter& operator++();
-  bool operator!=(const FileListIter&);
-  const FilePath& operator*() const;
-private:
-  friend class FileList;
-  using iter_type = std::vector<FilePath*>::const_iterator;
-  explicit FileListIter(const iter_type&);
-  iter_type m_it;
-};
-
-class FileList{
-  // Simple vector-like container for FilePath:s, since I don't want
-  // to add a default constructor to FilePath
-public:
-  FileList();
-  FileList(FileList&&);
-  FileList(const FileList&);
-  ~FileList();
-  const FilePath& back() const;
-  FileListIter begin() const;
-  void clear();
-  const FilePath& operator[](size_t) const;
-  bool empty() const;
-  FileListIter end() const;
-  void push_back(const FilePath&);
-  size_t size() const;
-
-  FileList& operator=(const FileList&);
-  FileList& operator=(FileList&&);
-private:
-  std::vector<FilePath*> m_files;
-};
+using FileList = std::vector<FilePath>;
 
 bool exists(const FilePath&);
 bool exists(const DirPath&);

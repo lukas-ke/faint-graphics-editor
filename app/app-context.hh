@@ -20,6 +20,7 @@
 #include "gui/command-dialog.hh" // For dialog_func
 #include "gui/dialog-context.hh"
 #include "rendering/extra-overlay.hh"
+#include "util-wx/file-path.hh"
 #include "util/distinct.hh"
 #include "util/id-types.hh"
 #include "util/settings.hh"
@@ -30,8 +31,6 @@ enum class Layer;
 enum class ToolId;
 class AppContext;
 class Canvas;
-class FileList;
-class FilePath;
 class Format;
 class Grid;
 class ImageInfo;
