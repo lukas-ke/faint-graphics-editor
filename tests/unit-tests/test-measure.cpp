@@ -3,6 +3,7 @@
 #include <limits>
 #include "test-sys/test.hh"
 #include "geo/angle.hh"
+#include "geo/int-rect.hh"
 #include "geo/line.hh"
 #include "geo/rect.hh"
 #include "geo/measure.hh"
@@ -88,12 +89,22 @@ void test_measure(){
   }
 
   {
-    // Variadic bounding_rect
+    // Variadic bounding_rect (mixed)
     LineSegment l({0,0}, {10,10});
     Rect r{Point(20,0), Point(10,15)};
     EQUAL(bounding_rect(bounding_rect(l), bounding_rect(r)),
       bounding_rect(r, l));
+  }
 
+  {
+    // Variadic bounding_rect, integer points
+    EQUAL(bounding_rect(IntPoint(0,0), IntPoint(10,2), IntPoint(23,1)),
+      IntRect(IntPoint(0,0), IntPoint(23,2)));
+  }
 
+  {
+    // Variadic bounding_rect, integers
+    EQUAL(bounding_rect(IntPoint(0,0), IntPoint(10,2), IntPoint(23,1)),
+      IntRect(IntPoint(0,0), IntPoint(23,2)));
   }
 }

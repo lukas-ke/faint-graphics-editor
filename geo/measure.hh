@@ -26,17 +26,23 @@ namespace faint{
 // <../doc/angle360_ccw.png>
 Angle angle360_ccw(const LineSegment&);
 
-// Same as IntRect(const IntPoint&, const IntPoint&), but sometimes
-// looks more consistent
+// Note: returns an empty rectangle situated at IntPoint,
+// This is required by the variadic bounding_rect implementation.
+IntRect bounding_rect(const IntPoint&);
+
 IntRect bounding_rect(const IntPoint&, const IntPoint&);
-IntRect bounding_rect(const IntPoint&, const IntPoint&, const IntPoint&);
 IntRect bounding_rect(const IntLineSegment&);
 IntRect bounding_rect(const IntRect&, const IntRect&);
+
+// Note: Returns an empty rectangle situated at Point.
+// This is required by the variadic bounding_rect implementation.
+Rect bounding_rect(const Point&);
+
+Rect bounding_rect(const Point&, const Point&);
 Rect bounding_rect(const Rect&);
 Rect bounding_rect(const Rect&, const Rect&);
 Rect bounding_rect(const LineSegment&);
-Rect bounding_rect(const Point&, const Point&, const Point&);
-Rect bounding_rect(const Point&, const Point&);
+
 
 template<class A, class ...B>
 auto bounding_rect(const A& head, const B&... tail)

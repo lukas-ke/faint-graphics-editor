@@ -18,11 +18,13 @@
 #include "geo/angle.hh"
 #include "geo/geo-func.hh"
 #include "geo/int-rect.hh"
+#include "geo/int-size.hh"
 #include "geo/line.hh"
 #include "geo/measure.hh"
 #include "geo/pathpt.hh"
 #include "geo/point.hh"
 #include "geo/rect.hh"
+#include "geo/size.hh"
 #include "util/iter.hh"
 
 namespace faint{
@@ -42,12 +44,12 @@ Angle angle360_ccw(const LineSegment& l){
   return tau - angle;
 }
 
-IntRect bounding_rect(const IntPoint& p0, const IntPoint& p1){
-  return {p0, p1};
+IntRect bounding_rect(const IntPoint& p){
+  return {p, IntSize(0,0)};
 }
 
-IntRect bounding_rect(const IntPoint& p0, const IntPoint& p1, const IntPoint& p2){
-  return {min_coords(p0, p1, p2), max_coords(p0, p1, p2)};
+IntRect bounding_rect(const IntPoint& p0, const IntPoint& p1){
+  return {p0, p1};
 }
 
 IntRect bounding_rect(const IntRect& r1, const IntRect& r2) {
@@ -74,12 +76,12 @@ IntRect bounding_rect(const IntLineSegment& line){
   return {line.p0, line.p1};
 }
 
-Rect bounding_rect(const Point& p0, const Point& p1){
-  return {p0, p1};
+Rect bounding_rect(const Point& p){
+  return {p, Size(0,0)};
 }
 
-Rect bounding_rect(const Point& p0, const Point& p1, const Point& p2){
-  return {min_coords(p0, p1, p2), max_coords(p0,p1, p2)};
+Rect bounding_rect(const Point& p0, const Point& p1){
+  return {p0, p1};
 }
 
 coord distance(const Point& p0, const Point& p1){
