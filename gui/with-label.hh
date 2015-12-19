@@ -51,7 +51,7 @@ public:
   {
     auto sz = make_wx<wxBoxSizer>(layout_orientation(pos));
     m_label = create_label(this, label);
-    m_window = new T(this, std::forward<Args>(args)...);
+    m_window = new T(this, std::forward<Args>(args)...); // Fixme: Leaked when T does not derive from wxWindow
 
     if (pos == LabelPos::LEFT){
       sz->Add(raw(m_label), 0, wxRIGHT|wxALIGN_CENTER, ui::label_spacing);

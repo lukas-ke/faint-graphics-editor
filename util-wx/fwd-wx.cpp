@@ -24,6 +24,7 @@
 #include "util-wx/bind-event.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-wx.hh"
+#include "util/dumb-ptr.hh"
 #include "util/make-vector.hh"
 
 namespace faint{
@@ -98,7 +99,7 @@ wxButton* create_button(window_t parent,
   const char* label,
   const button_fn& f)
 {
-  return bind(new wxButton(parent.w, wxID_ANY, label), wxEVT_BUTTON, f);
+  return bind(make_wx<wxButton>(parent.w, wxID_ANY, label), wxEVT_BUTTON, f);
 }
 
 wxButton* create_button(window_t parent,
@@ -106,13 +107,13 @@ wxButton* create_button(window_t parent,
   const Width& width,
   const button_fn& f)
 {
-  return bind(new wxButton(parent.w, wxID_ANY,
+  return bind(make_wx<wxButton>(parent.w, wxID_ANY,
       label, wxDefaultPosition, to_wx(width)),
     wxEVT_BUTTON, f);
 }
 
 wxCheckBox* create_checkbox(window_t parent, const char* label, bool checked){
-  auto* c = new wxCheckBox(parent.w, wxID_ANY, label);
+  auto c = make_wx<wxCheckBox>(parent.w, wxID_ANY, label);
   c->SetValue(checked);
   return c;
 }
@@ -121,7 +122,7 @@ wxCheckBox* create_checkbox(window_t parent,
   const char* label,
   const IntPoint& pos)
 {
-  return new wxCheckBox(parent.w, wxID_ANY, label, to_wx(pos));
+  return make_wx<wxCheckBox>(parent.w, wxID_ANY, label, to_wx(pos));
 }
 
 wxCheckBox* create_checkbox(window_t parent,
@@ -129,7 +130,7 @@ wxCheckBox* create_checkbox(window_t parent,
   bool checked,
   const IntPoint& pos)
 {
-  auto c = new wxCheckBox(parent.w, wxID_ANY, label, to_wx(pos));
+  auto c = make_wx<wxCheckBox>(parent.w, wxID_ANY, label, to_wx(pos));
   c->SetValue(checked);
   return c;
 }
@@ -163,7 +164,7 @@ wxCheckBox* create_checkbox(window_t parent,
 
 wxChoice* create_choice(window_t parent, const std::vector<utf8_string>& strings){
   const auto strsWx = to_wx(strings);
-  return new wxChoice(parent.w,
+  return make_wx<wxChoice>(parent.w,
     wxID_ANY,
     wxDefaultPosition,
     wxDefaultSize,
@@ -183,9 +184,9 @@ static std::unique_ptr<wxDialog, delete_dialog_f> create_dialog(window_t parent,
 {
   return std::unique_ptr<wxDialog, delete_dialog_f>(
     center_over_parent(
-      new wxDialog(parent.w, wxID_ANY, to_wx(title),
-        wxDefaultPosition, wxDefaultSize,
-        dialogStyle)),
+      make_wx<wxDialog>(parent.w, wxID_ANY, to_wx(title),
+      wxDefaultPosition, wxDefaultSize,
+      dialogStyle)),
     destroy);
 }
 
@@ -205,7 +206,7 @@ std::unique_ptr<wxDialog, delete_dialog_f> fixed_size_dialog(
 wxSizer* create_ok_cancel_buttons(window_t parent, wxDialog* dlg){
   auto okButton = create_ok_button(parent);
   auto cancelButton = create_cancel_button(parent);
-  auto sizer = new wxStdDialogButtonSizer();
+  auto sizer = make_wx<wxStdDialogButtonSizer>();
   sizer->Add(okButton);
   sizer->Add(cancelButton);
   sizer->Realize();
@@ -218,7 +219,7 @@ wxSizer* create_ok_cancel_buttons(wxDialog* dlg){
 }
 
 wxWindow* create_panel(window_t parent){
-  return new wxPanel(parent.w, wxID_ANY);
+  return make_wx<wxPanel>(parent.w, wxID_ANY);
 }
 
 wxButton* create_button(window_t parent,
@@ -254,7 +255,7 @@ wxButton* create_button(window_t w,
   const IntSize& size,
   const button_fn& f)
 {
-  wxButton* button = new wxButton(w.w,
+  wxButton* button = make_wx<wxButton>(w.w,
     wxID_ANY,
     "",
     wxDefaultPosition,
@@ -269,7 +270,7 @@ wxButton* create_button(window_t w,
   const IntPoint& pos,
   const button_fn& f)
 {
-  wxButton* button = new wxButton(w.w,
+  wxButton* button = make_wx<wxButton>(w.w,
     wxID_ANY,
     label,
     to_wx(pos));
@@ -281,7 +282,7 @@ wxButton* create_button(window_t w,
   const wxBitmap& bmp,
   const button_fn& f)
 {
-  wxButton* button = new wxButton(w.w,
+  wxButton* button = make_wx<wxButton>(w.w,
     wxID_ANY,
     "",
     wxDefaultPosition,
@@ -317,15 +318,15 @@ wxButton* create_button(window_t w,
 }
 
 wxButton* create_ok_button(window_t parent){
-  return new wxButton(parent.w, wxID_OK);
+  return make_wx<wxButton>(parent.w, wxID_OK);
 }
 
 wxButton* create_cancel_button(window_t parent){
-  return new wxButton(parent.w, wxID_CANCEL);
+  return make_wx<wxButton>(parent.w, wxID_CANCEL);
 }
 
 wxButton* create_cancel_button(window_t parent, const IntSize& initialSize){
-  return new wxButton(parent.w,
+  return make_wx<wxButton>(parent.w,
     wxID_CANCEL,
     wxEmptyString,
     wxDefaultPosition,
@@ -333,14 +334,14 @@ wxButton* create_cancel_button(window_t parent, const IntSize& initialSize){
 }
 
 wxStaticText* create_label(window_t parent, const char* text){
-  return new wxStaticText(parent.w, wxID_ANY, text);
+  return make_wx<wxStaticText>(parent.w, wxID_ANY, text);
 }
 
 wxStaticText* create_label(window_t parent,
   const char* text,
   const IntPoint& pos)
 {
-  return new wxStaticText(parent.w, wxID_ANY, text, to_wx(pos));
+  return make_wx<wxStaticText>(parent.w, wxID_ANY, text, to_wx(pos));
 }
 
 wxStaticText* create_label(window_t parent,
@@ -349,7 +350,7 @@ wxStaticText* create_label(window_t parent,
   Bold bold,
   const Color& color)
 {
-  auto t = new wxStaticText(parent.w, wxID_ANY, to_wx(text));
+  auto t = make_wx<wxStaticText>(parent.w, wxID_ANY, to_wx(text));
   t->SetForegroundColour(to_wx(color));
   t->SetFont(wxFontInfo(size.Get()).Bold(bold.Get()));
   return t;
@@ -360,14 +361,14 @@ wxStaticText* create_label(window_t parent,
   Bold bold,
   const Color& color)
 {
-  auto t = new wxStaticText(parent.w, wxID_ANY, text);
+  auto t = make_wx<wxStaticText>(parent.w, wxID_ANY, text);
   t->SetForegroundColour(to_wx(color));
   t->SetFont(wxFontInfo().Bold(bold.Get()));
   return t;
 }
 
 wxStaticText* create_label(window_t parent, const utf8_string& text){
-  return new wxStaticText(parent.w, wxID_ANY, to_wx(text));
+  return make_wx<wxStaticText>(parent.w, wxID_ANY, to_wx(text));
 }
 
 auto to_wx_align(TextAlign align){
@@ -386,25 +387,26 @@ auto to_wx_align(TextAlign align){
 wxStaticText* create_label(window_t parent, const utf8_string& text,
   TextAlign align)
 {
-  return new wxStaticText(parent.w, wxID_ANY, to_wx(text),
+  return make_wx<wxStaticText>(parent.w, wxID_ANY, to_wx(text),
     wxDefaultPosition,
     wxDefaultSize,
     to_wx_align(align));
 }
 
 wxTextCtrl* create_text_control(window_t parent, const char* text){
-  return new wxTextCtrl(parent.w, wxID_ANY, text);
+  return make_wx<wxTextCtrl>(parent.w, wxID_ANY, text);
 }
 
 wxTextCtrl* create_text_control(window_t parent, const Width& width){
-  return new wxTextCtrl(parent.w, wxID_ANY, "", wxDefaultPosition, to_wx(width));
+  return make_wx<wxTextCtrl>(parent.w, wxID_ANY, "", wxDefaultPosition,
+    to_wx(width));
 }
 
 wxTextCtrl* create_text_control(window_t parent,
   const IntPoint& pos,
   const Width& width)
 {
-  return new wxTextCtrl(parent.w, wxID_ANY, "", to_wx(pos), to_wx(width));
+  return make_wx<wxTextCtrl>(parent.w, wxID_ANY, "", to_wx(pos), to_wx(width));
 }
 
 wxTextCtrl* create_text_control(window_t parent,
@@ -412,12 +414,12 @@ wxTextCtrl* create_text_control(window_t parent,
   const IntPoint& pos,
   const Width& width)
 {
-  return new wxTextCtrl(parent.w, wxID_ANY,
+  return make_wx<wxTextCtrl>(parent.w, wxID_ANY,
     text, to_wx(pos), to_wx(width));
 }
 
 wxTextCtrl* create_multiline_text_control(window_t parent, const IntSize& size){
-  return new wxTextCtrl(parent.w, wxID_ANY, "", wxDefaultPosition,
+  return make_wx<wxTextCtrl>(parent.w, wxID_ANY, "", wxDefaultPosition,
     to_wx(size),
     wxTE_MULTILINE);
 }
@@ -464,7 +466,7 @@ wxButton* noiseless_button(wxWindow* parent,
   const IntSize& size)
 {
   // wxWANTS_CHARS prevents noise on keypress when button has focus
-  wxButton* button = new wxButton(parent, wxID_ANY,
+  wxButton* button = make_wx<wxButton>(parent, wxID_ANY,
     to_wx(label), wxDefaultPosition, to_wx(size),
     wxWANTS_CHARS);
   button->SetInitialSize(to_wx(size));
@@ -515,7 +517,7 @@ void select_all(wxTextCtrl* t){
 }
 
 wxWindow* create_hline(window_t parent){
-  return new wxStaticLine(parent.w, wxID_ANY,
+  return make_wx<wxStaticLine>(parent.w, wxID_ANY,
     wxDefaultPosition,
     wxSize(-1, 1),
     wxLI_HORIZONTAL);
@@ -590,7 +592,7 @@ void set_tooltip(window_t w, const utf8_string& tooltip){
 }
 
 wxBookCtrlBase* create_notebook(window_t parent){
-  return new wxNotebook(parent.w, wxID_ANY);
+  return make_wx<wxNotebook>(parent.w, wxID_ANY);
 }
 
 void add_page(wxBookCtrlBase* book, window_t page, const utf8_string& name){
@@ -603,7 +605,7 @@ void set_selection(wxBookCtrlBase* book, int pageNum){
 
 wxWindow* create_hyperlink(window_t parent, const utf8_string& url){
   auto urlWx = to_wx(url);
-  return new wxHyperlinkCtrl(parent.w, wxID_ANY, urlWx, urlWx);
+  return make_wx<wxHyperlinkCtrl>(parent.w, wxID_ANY, urlWx, urlWx);
 }
 
 wxWidgetsVersion::wxWidgetsVersion()
