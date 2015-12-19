@@ -15,6 +15,7 @@
 
 #ifndef FAINT_PAINT_MAP_HH
 #define FAINT_PAINT_MAP_HH
+#include <memory>
 #include "geo/int-point.hh"
 #include "util/distinct.hh"
 
@@ -24,7 +25,6 @@ class Bitmap;
 class Color;
 class IntSize;
 class Paint;
-class PaintMapImpl;
 
 class category_paint_map;
 using CellSize = Subtype<IntSize, category_paint_map, 0>;
@@ -72,7 +72,8 @@ public:
   void Replace(const CellPos&, const Paint&);
   PaintMap& operator=(const PaintMap&);
 private:
-  PaintMapImpl* m_impl;
+  class PaintMapImpl;
+  std::unique_ptr<PaintMapImpl> m_impl;
 };
 
 // Adds a border around a cell for a bitmap created with

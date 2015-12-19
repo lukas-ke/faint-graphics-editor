@@ -251,25 +251,23 @@ static Bitmap palette_bitmap(const color_map_t& colors,
   return bmp;
 }
 
-class PaintMapImpl{
+class PaintMap::PaintMapImpl{
 public:
   color_map_t colors;
 };
 
 PaintMap::PaintMap(){
-  m_impl = new PaintMapImpl;
+  m_impl = std::make_unique<PaintMapImpl>();
   m_impl->colors.push_back(paint_vec_t());
   m_impl->colors.push_back(paint_vec_t());
 }
 
 PaintMap::PaintMap(const PaintMap& other){
-  m_impl = new PaintMapImpl;
+  m_impl = std::make_unique<PaintMapImpl>();
   m_impl->colors = other.m_impl->colors;
 }
 
-PaintMap::~PaintMap(){
-  delete m_impl;
-}
+PaintMap::~PaintMap(){}
 
 void PaintMap::Append(const Paint& paint){
   color_map_t& colors = m_impl->colors;
@@ -320,8 +318,8 @@ PaintMap& PaintMap::operator=(const PaintMap& other){
   if (this == &other){
     return *this;
   }
-  delete m_impl;
-  m_impl = new PaintMapImpl;
+
+  m_impl = std::make_unique<PaintMapImpl>();
   m_impl->colors = other.m_impl->colors;
   return *this;
 }
