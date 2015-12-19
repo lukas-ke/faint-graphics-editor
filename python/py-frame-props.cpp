@@ -176,7 +176,7 @@ static Index frameprops_Path(const BoundFrameProps& self,
     throw ValueError("Paths must begin with a Move-entry.");
   }
 
-  return self.frame.AddObject(create_path_object(Points(points),
+  return self.frame.AddObject(create_path_object_raw(Points(points),
     updated(default_path_settings(), s)));
 }
 

@@ -12,13 +12,12 @@
 void test_objpath_undo(){
   using namespace faint;
 
-  std::vector<PathPt> pts{
+  std::vector<PathPt> pts = {
     MoveTo({136, 266}),
     CubicBezier({362, 210}, {159, 130}, {289, 125}),
     Close()};
 
-  std::unique_ptr<Object> path(create_path_object(Points(pts),
-    default_path_settings()));
+  auto path = create_path_object(Points(pts), default_path_settings());
 
   auto oldPts = path->GetMovablePoints();
   EQUAL(oldPts.size(), 4);

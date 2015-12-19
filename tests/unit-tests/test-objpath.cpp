@@ -13,8 +13,7 @@ void test_objpath(){
     CubicBezier({362, 210}, {159, 130}, {289, 125}),
     Close()};
 
-  std::unique_ptr<Object> path(create_path_object(Points(pts),
-    default_path_settings()));
+  auto path = create_path_object(Points(pts), default_path_settings());
 
   VERIFY(!path->Active());
   VERIFY(path->Inactive());

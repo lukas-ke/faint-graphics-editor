@@ -593,7 +593,7 @@ static BoundObject<Object> canvas_Path(CanvasT canvas,
   }
 
   return canvas_add_object(canvas,
-    create_path_object(Points(points),
+    create_path_object_raw(Points(points),
       specific_or_app(canvas, default_path_settings(), s)));
 }
 

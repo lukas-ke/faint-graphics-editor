@@ -411,7 +411,7 @@ private:
     if (m_settings.Get(ts_ClosedPath)){
       m_path.Append(PathPt::PathCloser());
     }
-    m_command.Set(add_or_draw(create_path_object(m_path,
+    m_command.Set(add_or_draw(create_path_object_raw(m_path,
       without(m_settings, ts_PointType, ts_ClosedPath)),
       layer));
     m_active = false;

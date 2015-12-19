@@ -15,15 +15,17 @@
 
 #ifndef FAINT_OBJPATH_HH
 #define FAINT_OBJPATH_HH
+#include "objects/object-ptr.hh"
 #include "util/template-fwd.hh"
 
 namespace faint{
 
-class Object;
 class Points;
 class Settings;
 
-Object* create_path_object(const Points&, const Settings&);
+Object* create_path_object_raw(const Points&, const Settings&);
+ObjectPtr create_path_object(const Points&, const Settings&);
+
 
 } // namespace
 

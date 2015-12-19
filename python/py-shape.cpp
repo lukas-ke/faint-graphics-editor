@@ -374,7 +374,7 @@ PyObject* create_Path(const utf8_string& path,
   }
 
   const auto s = merge_settings(maybeSettings, default_path_settings());
-  return create_Shape(create_path_object(Points(points), s));
+  return create_Shape(create_path_object_raw(Points(points), s));
 }
 
 PyObject* create_Polygon(const std::vector<coord>& coords,

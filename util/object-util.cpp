@@ -105,7 +105,7 @@ Object* clone_as_path(Object* object, const ExpressionContext& ctx){
 
   s.Set(ts_EditPoints, true);
   Points pts(object->GetPath(ctx));
-  auto path = create_path_object(pts, s);
+  auto path = create_path_object_raw(pts, s);
   path->SetName(object->GetName());
   return path;
 }

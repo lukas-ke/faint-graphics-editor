@@ -336,8 +336,12 @@ private:
   Tri m_tri;
 };
 
-Object* create_path_object(const Points& points, const Settings& settings){
+Object* create_path_object_raw(const Points& points, const Settings& settings){
   return new ObjPath(points, without(settings, ts_ClosedPath));
+}
+
+ObjectPtr create_path_object(const Points& points, const Settings& settings){
+  return std::make_unique<ObjPath>(points, without(settings, ts_ClosedPath));
 }
 
 } // namespace
