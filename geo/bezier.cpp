@@ -50,8 +50,9 @@ coord distance(const Point& from, const CubicBezier& to, int subdivisions){
 
   Point previous(from);
   coord length = 0.0;
+  const double div = static_cast<double>(subdivisions);
   for (int i = 1; i <= subdivisions; i++){
-    const double t = static_cast<double>(i) / subdivisions;
+    const double t = i / div;
     const Point current = bezier_point(t, from, to);
     length += distance(previous, current);
     previous = current;
