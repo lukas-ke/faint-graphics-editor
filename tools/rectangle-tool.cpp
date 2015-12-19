@@ -111,7 +111,7 @@ public:
     }
 
     const auto tri = tri_from_rect({m_p0, m_p1});
-    m_command.Set(add_or_draw(create_rectangle_object(tri, GetSettings()),
+    m_command.Set(add_or_draw(create_rectangle_object_raw(tri, GetSettings()),
       info.layerType));
     return ToolResult::COMMIT;
   }

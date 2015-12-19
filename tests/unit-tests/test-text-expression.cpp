@@ -172,9 +172,9 @@ void test_text_expression(){
   using namespace faint;
 
   MockExpressionContext c;
-  c.Add(create_rectangle_object(Tri(Point(0,0),Point(10,0),Point(0,10)),
+  c.Add(create_rectangle_object_raw(Tri(Point(0,0),Point(10,0),Point(0,10)),
     default_rectangle_settings()), "rect1");
-  c.Add(create_rectangle_object(Tri(Point(0,0),Point(20,0),Point(0,20)),
+  c.Add(create_rectangle_object_raw(Tri(Point(0,0),Point(20,0),Point(0,20)),
     default_rectangle_settings()), "rect2");
   c.Add(new ObjText(Tri(Point(0,0), Point(100,0),Point(0,20)), "Hello world",
     default_text_settings()), "text1");

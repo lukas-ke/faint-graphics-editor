@@ -219,7 +219,7 @@ static Index frameprops_Rect(const BoundFrameProps& self,
   const Settings& s,
   const Optional<utf8_string>& name)
 {
-  Index index = self.frame.AddObject(create_rectangle_object(tri_from_rect(r),
+  Index index = self.frame.AddObject(create_rectangle_object_raw(tri_from_rect(r),
     updated(default_rectangle_settings(), s)));
   if (name.IsSet()){
     self.frame.GetObject(index)->SetName(name);

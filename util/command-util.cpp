@@ -304,7 +304,7 @@ CommandPtr get_delete_raster_selection_command(const Image& image,
       // Fixme: Tidy up this somehow. E.g. helper function. :)
       return command_bunch(CommandType::HYBRID,
         bunch_name("Delete Selected Region"),
-        draw_object_command(its_yours(create_rectangle_object(tri_from_rect(floated(s.OldRect())),
+        draw_object_command(its_yours(create_rectangle_object_raw(tri_from_rect(floated(s.OldRect())),
               eraser_rectangle_settings(s.GetOptions().bg)))),
         set_raster_selection_command(New(SelectionState()),
           Old(selection.GetState()), ""));

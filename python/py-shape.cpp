@@ -299,7 +299,7 @@ Settings merge_settings(const Optional<Settings>& maybeSettings, Settings s){
 PyObject* create_Rect(const Rect& r, const Optional<Settings>& maybeSettings){
   const auto tri = tri_from_rect(r);
   const auto s = merge_settings(maybeSettings, default_rectangle_settings());
-  return create_Shape(create_rectangle_object(tri, s));
+  return create_Shape(create_rectangle_object_raw(tri, s));
 }
 
 PyObject* create_Ellipse(const Rect& r, const Optional<Settings>& maybeSettings){

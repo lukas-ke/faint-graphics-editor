@@ -131,8 +131,12 @@ private:
   Tri m_tri;
 };
 
-Object* create_rectangle_object(const Tri& tri, const Settings& s){
+Object* create_rectangle_object_raw(const Tri& tri, const Settings& s){
   return new ObjRectangle(tri, s);
+}
+
+ObjectPtr create_rectangle_object(const Tri& tri, const Settings& s){
+  return std::make_unique<ObjRectangle>(tri, s);
 }
 
 } // namespace

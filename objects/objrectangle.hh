@@ -15,14 +15,17 @@
 
 #ifndef FAINT_OBJRECTANGLE_HH
 #define FAINT_OBJRECTANGLE_HH
+#include <memory>
 
 namespace faint{
 
 class Object;
+using ObjectPtr = std::unique_ptr<Object>;
 class Settings;
 class Tri;
 
-Object* create_rectangle_object(const Tri&, const Settings&);
+Object* create_rectangle_object_raw(const Tri&, const Settings&);
+ObjectPtr create_rectangle_object(const Tri&, const Settings&);
 
 } // namespace
 

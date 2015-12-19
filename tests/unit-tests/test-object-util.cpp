@@ -21,13 +21,14 @@
 void test_object_util(){
   using namespace faint;
 
-  std::unique_ptr<Object> rect(create_rectangle_object(Tri(Point(0,0),
-    Point(10,0), Point(0,5)), default_rectangle_settings()));
+  auto rect = create_rectangle_object(Tri(Point(0,0), Point(10,0), Point(0,5)),
+    default_rectangle_settings());
 
   Points pts;
   pts.Append(Point(0,10));
   pts.Append(Point(10,0));
   pts.Append(Point(20,10));
+
   std::unique_ptr<Object> polygon(create_polygon_object(pts,
     default_polygon_settings()));
 
@@ -53,9 +54,8 @@ void test_object_util(){
 
     EQUAL(get_collective_type(LIST(polygon.get())), "Polygon");
 
-    std::unique_ptr<Object> r2(create_rectangle_object(Tri(Point(0,0),
-      Point(10,0), Point(0,10)),
-      default_rectangle_settings()));
+    auto r2 = create_rectangle_object(Tri(Point(0,0),  Point(10,0), Point(0,10)),
+      default_rectangle_settings());
     EQUAL(get_collective_type(LIST(rect.get(), r2.get())), "Rectangles");
   }
 
@@ -119,8 +119,8 @@ void test_object_util(){
 
   {
     // Test "get_by_name"
-    std::unique_ptr<Object> rect1(create_rectangle_object(Tri(Point(0,0),
-       Point(10,0), Point(0,5)), default_rectangle_settings()));
+    auto rect1 = create_rectangle_object(Tri(Point(0,0), Point(10,0), Point(0,5)),
+      default_rectangle_settings());
     const utf8_string nameRect1("rect1");
 
     // Single rectangle
@@ -136,8 +136,8 @@ void test_object_util(){
     VERIFY(get_by_name(objs, "") == nullptr);
     VERIFY(get_by_name(objs, nameRect1) == rect1.get());
 
-    std::unique_ptr<Object> rect2(create_rectangle_object(Tri(Point(0,0),
-       Point(10,0), Point(0,5)), default_rectangle_settings()));
+    auto rect2 = create_rectangle_object(Tri(Point(0,0), Point(10,0), Point(0,5)),
+      default_rectangle_settings());
     const utf8_string nameRect2("rect2");
     rect2->SetName(option(nameRect2));
     objs.emplace_back(rect2.get());
@@ -146,13 +146,13 @@ void test_object_util(){
     VERIFY(get_by_name(objs, nameRect2) == rect2.get());
 
     // Group
-    std::unique_ptr<Object> rect3(create_rectangle_object(Tri(Point(0,0),
-       Point(10,0), Point(0,5)), default_rectangle_settings()));
+    auto rect3 = create_rectangle_object(Tri(Point(0,0), Point(10,0), Point(0,5)),
+      default_rectangle_settings());
     const utf8_string nameRect3("rect3");
     rect3->SetName(option(nameRect3));
 
-    std::unique_ptr<Object> rect4(create_rectangle_object(Tri(Point(0,0),
-       Point(10,0), Point(0,5)), default_rectangle_settings()));
+    auto rect4 = create_rectangle_object(Tri(Point(0,0), Point(10,0), Point(0,5)),
+      default_rectangle_settings());
     const utf8_string nameRect4("rect4");
     rect4->SetName(option(nameRect4));
 
@@ -169,5 +169,22 @@ void test_object_util(){
     VERIFY(get_by_name(objs, nameRect3) == rect3.get());
     VERIFY(get_by_name(objs, nameRect4) == rect4.get());
     VERIFY(get_by_name(objs, "Hello") == nullptr);
+  }
+
+  {
+    // find_object_index
+    auto make_rect = [](){
+      return create_rectangle_object(Tri(Point(0,0), Point(10, 0), Point(0,5)),
+        default_rectangle_settings());
+    };
+
+    auto at0 = make_rect();
+    auto at1 = make_rect();
+    auto notAdded = make_rect();
+
+    objects_t objs = {at0.get(), at1.get()};
+    EQUAL(find_object_index(at0.get(), objs), 0);
+    EQUAL(find_object_index(at1.get(), objs), 1);
+    EQUAL(find_object_index(notAdded.get(), objs), objs.size());
   }
 }

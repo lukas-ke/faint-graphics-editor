@@ -642,7 +642,7 @@ static BoundObject<Object> canvas_Rect(CanvasT canvas, const Rect& r,
   const Optional<Settings>& s)
 {
   return canvas_add_object(canvas,
-    create_rectangle_object(tri_from_rect(r),
+    create_rectangle_object_raw(tri_from_rect(r),
       specific_or_app(canvas, default_rectangle_settings(), s)));
 }
 
@@ -706,7 +706,7 @@ static void canvas_rect(CanvasT canvas, const Rect& r,
 
   canvas.ctx.RunCommand(canvas,
     draw_object_command(
-      its_yours(create_rectangle_object(tri_from_rect(r), settings))));
+      its_yours(create_rectangle_object_raw(tri_from_rect(r), settings))));
 }
 
 /* method: "redo()\n
