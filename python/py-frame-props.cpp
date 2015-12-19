@@ -122,7 +122,7 @@ static Index frameprops_Group(const BoundFrameProps& self,
 
   // The composite owns the objects since they're not added
   // with an AddObjectCommand, but created during loading
-  Object* composite = create_composite_object(objects, Ownership::OWNER);
+  Object* composite = create_composite_object_raw(objects, Ownership::OWNER);
   for (Object* obj : objects){
     self.frame.RemoveObject(obj);
   }
@@ -137,7 +137,7 @@ static Index frameprops_Ellipse(const BoundFrameProps& self,
   const Rect& bounds,
   const Settings& s)
 {
-  return self.frame.AddObject(create_ellipse_object(tri_from_rect(bounds),
+  return self.frame.AddObject(create_ellipse_object_raw(tri_from_rect(bounds),
     updated(default_ellipse_settings(), s)));
 }
 
@@ -196,7 +196,7 @@ static Index frameprops_Polygon(const BoundFrameProps& self,
   }
 
   return self.frame.AddObject(
-    create_polygon_object(points_from_coords(coords),
+    create_polygon_object_raw(points_from_coords(coords),
       updated(default_polygon_settings(), s)));
 }
 

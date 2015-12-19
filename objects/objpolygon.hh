@@ -16,6 +16,7 @@
 #ifndef FAINT_OBJPOLYGON_HH
 #define FAINT_OBJPOLYGON_HH
 #include <vector>
+#include "objects/object-ptr.hh"
 
 namespace faint{
 
@@ -23,7 +24,8 @@ class Object;
 class Points;
 class Settings;
 
-Object* create_polygon_object(const Points&, const Settings&);
+Object* create_polygon_object_raw(const Points&, const Settings&);
+ObjectPtr create_polygon_object(const Points&, const Settings&);
 
 bool is_polygon(const Object*);
 bool is_polygon(const Object&);

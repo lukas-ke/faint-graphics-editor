@@ -150,8 +150,12 @@ private:
   Tri m_tri;
 };
 
-Object* create_ellipse_object(const Tri& tri, const Settings& s){
+Object* create_ellipse_object_raw(const Tri& tri, const Settings& s){
   return new ObjEllipse(tri, s);
+}
+
+ObjectPtr create_ellipse_object(const Tri& tri, const Settings& s){
+  return std::make_unique<ObjEllipse>(tri, s);
 }
 
 bool is_ellipse(const Object* obj){

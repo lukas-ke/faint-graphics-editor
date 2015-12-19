@@ -29,8 +29,7 @@ void test_object_util(){
   pts.Append(Point(10,0));
   pts.Append(Point(20,10));
 
-  std::unique_ptr<Object> polygon(create_polygon_object(pts,
-    default_polygon_settings()));
+  auto polygon = create_polygon_object(pts, default_polygon_settings());
 
   {
     // Test "area"
@@ -41,13 +40,12 @@ void test_object_util(){
   }
 
   {
-    // Test "bounding_rect", "get_collective_name"
-
+    // Test "bounding_rect", "get_collective_type"
     Rect r = bounding_rect(LIST(rect.get(), polygon.get()));
 
     EQUAL(rounded(r.TopLeft()), IntPoint(0,0));
     EQUAL(rounded(r.BottomRight()), IntPoint(20,10));
-    // Test "get_collective_name"
+
     EQUAL(get_collective_type({rect.get(), polygon.get()}), "Objects");
 
     EQUAL(get_collective_type(LIST(rect.get())), "Rectangle");
@@ -155,8 +153,8 @@ void test_object_util(){
     const utf8_string nameRect4("rect4");
     rect4->SetName(option(nameRect4));
 
-    std::unique_ptr<Object> group1(create_composite_object(
-      {rect3.get(), rect4.get()}, Ownership::LOANER));
+    auto group1 = create_composite_object({rect3.get(), rect4.get()},
+      Ownership::LOANER);
     const utf8_string nameGroup1("group1");
     group1->SetName(option(nameGroup1));
 

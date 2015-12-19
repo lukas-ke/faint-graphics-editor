@@ -15,15 +15,17 @@
 
 #ifndef FAINT_OBJELLIPSE_HH
 #define FAINT_OBJELLIPSE_HH
+#include "objects/object-ptr.hh"
 #include "util/template-fwd.hh"
 
 namespace faint{
 
-class Object;
 class Tri;
 class Settings;
 
-Object* create_ellipse_object(const Tri&, const Settings&);
+Object* create_ellipse_object_raw(const Tri&, const Settings&);
+ObjectPtr create_ellipse_object(const Tri&, const Settings&);
+
 bool is_ellipse(const Object*);
 Optional<AngleSpan> get_angle_span(const Object*);
 void set_angle_span(Object*, const AngleSpan&);

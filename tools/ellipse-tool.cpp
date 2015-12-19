@@ -110,7 +110,7 @@ public:
       return ToolResult::NONE;
     }
     const auto tri = tri_from_rect(Rect(Point(x0, y0), Size(w,h)));
-    m_command.Set(add_or_draw(create_ellipse_object(tri, GetSettings()),
+    m_command.Set(add_or_draw(create_ellipse_object_raw(tri, GetSettings()),
       info.layerType));
     info.status.SetMainText("");
     return ToolResult::COMMIT;

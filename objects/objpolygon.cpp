@@ -168,8 +168,12 @@ private:
   Tri m_tri;
 };
 
-Object* create_polygon_object(const Points& points, const Settings& s){
+Object* create_polygon_object_raw(const Points& points, const Settings& s){
   return new ObjPolygon(points,s);
+}
+
+ObjectPtr create_polygon_object(const Points& points, const Settings& s){
+  return std::make_unique<ObjPolygon>(points,s);
 }
 
 bool is_polygon(const Object* obj){

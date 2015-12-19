@@ -285,7 +285,8 @@ static void canvas_ellipse(CanvasT canvas, const Rect& r,
     ts_AntiAlias, false));
 
   canvas.ctx.RunCommand(canvas,
-    draw_object_command(its_yours(create_ellipse_object(tri_from_rect(r), s))));
+    draw_object_command(its_yours(
+      create_ellipse_object_raw(tri_from_rect(r), s))));
 
 }
 
@@ -507,7 +508,7 @@ static BoundObject<Object> canvas_Ellipse(CanvasT canvas,
   const Rect& bounds,
   const Optional<Settings>& s)
 {
-  return canvas_add_object(canvas, create_ellipse_object(tri_from_rect(bounds),
+  return canvas_add_object(canvas, create_ellipse_object_raw(tri_from_rect(bounds),
     specific_or_app(canvas, default_ellipse_settings(), s)));
 }
 
@@ -612,7 +613,7 @@ static BoundObject<Object> canvas_Polygon(CanvasT canvas,
   }
 
   return canvas_add_object(canvas,
-    create_polygon_object(points_from_coords(coords),
+    create_polygon_object_raw(points_from_coords(coords),
       specific_or_app(canvas, default_polygon_settings(), s)));
 }
 

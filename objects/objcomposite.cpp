@@ -216,8 +216,12 @@ private:
   Ownership m_ownership;
 };
 
-Object* create_composite_object(const objects_t& objects, Ownership owner){
+Object* create_composite_object_raw(const objects_t& objects, Ownership owner){
   return new ObjComposite(objects, owner);
+}
+
+ObjectPtr create_composite_object(const objects_t& objects, Ownership owner){
+  return std::make_unique<ObjComposite>(objects, owner);
 }
 
 bool is_composite(Object* obj){

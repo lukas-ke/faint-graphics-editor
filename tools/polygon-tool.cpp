@@ -259,7 +259,7 @@ private:
   }
 
   ToolResult Commit(Layer layer){
-    m_command.Set(add_or_draw(create_polygon_object(m_points, GetSettings()),
+    m_command.Set(add_or_draw(create_polygon_object_raw(m_points, GetSettings()),
       layer));
     Reset();
     return ToolResult::COMMIT;

@@ -15,6 +15,7 @@
 
 #ifndef FAINT_OBJCOMPOSITE_HH
 #define FAINT_OBJCOMPOSITE_HH
+#include "objects/object-ptr.hh"
 #include "util/objects.hh"
 
 namespace faint{
@@ -24,7 +25,9 @@ enum class Ownership{
   LOANER // ...should not
 };
 
-Object* create_composite_object(const objects_t&, Ownership);
+Object* create_composite_object_raw(const objects_t&, Ownership);
+ObjectPtr create_composite_object(const objects_t&, Ownership);
+
 bool is_composite(Object*);
 
 } // namespace

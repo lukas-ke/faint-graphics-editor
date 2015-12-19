@@ -305,7 +305,7 @@ PyObject* create_Rect(const Rect& r, const Optional<Settings>& maybeSettings){
 PyObject* create_Ellipse(const Rect& r, const Optional<Settings>& maybeSettings){
   const auto tri = tri_from_rect(r);
   const auto s = merge_settings(maybeSettings, default_ellipse_settings());
-  return create_Shape(create_ellipse_object(tri, s));
+  return create_Shape(create_ellipse_object_raw(tri, s));
 }
 
 PyObject* create_Group(PyObject* args){
@@ -337,7 +337,7 @@ PyObject* create_Group(PyObject* args){
     faintObjects.push_back(proxy_shape(object));
   }
 
-  Object* group = create_composite_object(faintObjects, Ownership::OWNER);
+  Object* group = create_composite_object_raw(faintObjects, Ownership::OWNER);
   return create_Shape(group);
 }
 
@@ -389,7 +389,7 @@ PyObject* create_Polygon(const std::vector<coord>& coords,
   }
 
   const auto s = merge_settings(maybeSettings, default_polygon_settings());
-  return create_Shape(create_polygon_object(points_from_coords(coords), s));
+  return create_Shape(create_polygon_object_raw(points_from_coords(coords), s));
 }
 
 PyObject* create_Raster(const Either<Point, Rect>& region,
