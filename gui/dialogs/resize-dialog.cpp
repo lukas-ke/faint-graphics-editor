@@ -307,7 +307,7 @@ private:
   }
 
   void Close(WindowFeedback& feedback){
-    m_dialog = nullptr;
+    m_dialog.reset(nullptr);
     feedback.Closed();
   }
 

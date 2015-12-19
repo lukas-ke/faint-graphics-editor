@@ -299,11 +299,11 @@ PaintPanel_Pattern::PaintPanel_Pattern(wxWindow* parent,
   const CommonCursors& cursors,
   const Getter<Bitmap>& getBitmap)
 {
-  m_impl = new PaintPanel_Pattern_Impl(parent, cursors, getBitmap);
+  m_impl = make_wx<PaintPanel_Pattern_Impl>(parent, cursors, getBitmap);
 }
 
 PaintPanel_Pattern::~PaintPanel_Pattern(){
-  m_impl = nullptr; // Deletion handled by wxWidgets
+  deleted_by_wx(m_impl);
 }
 
 wxWindow* PaintPanel_Pattern::AsWindow(){

@@ -1,0 +1,30 @@
+# Coding guide
+Some notes mostly to myself to remind me why I do certain strange
+things.
+
+## When explicitly releasing std::unique_ptr, use p.reset
+When, for some reason, explicitly releasing an `std::unique_ptr`, use
+p.reset(nullptr), so that the line doesn't appear to be a potential memory leak:
+
+**Do:** `p.reset(nullptr);`  
+**Don't:** `p = nullptr;`
+
+Note that most of the time `std::unique_ptr` should just go out of
+scope without explicit reset.
+
+## When instantiating wxWidgets windows, use `make_wx`-helper
+Use `make_wx<T>` instead of `new T` when instantiating
+wxWidgets-widgets, as this makes it more clear that wxWidgets
+(probably-) handles freeing the memory.
+
+## Blank wxWidgets object fields with `deleted_by_wx`
+When a class holds a wxWidgets object, blank it in the
+destructor with:  
+**Do** `deleted_by_wx(p)`
+
+This makes it clearer that the pointer isn't leaked.
+I previously did:  
+**Don't:** `p = nullptr // deleted by wxWidgets`
+
+`deleted_by_wx` is better, as it prevents mistakenly doing this for
+non-wx types which would hide a memory leak.

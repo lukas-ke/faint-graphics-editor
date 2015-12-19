@@ -28,6 +28,7 @@
 #include "util/default-constructible.hh"
 #include "util/delay.hh"
 #include "util/either.hh"
+#include "util/type-dependent-false.hh"
 
 namespace faint{
 
@@ -561,12 +562,6 @@ PyObject* build_result(const std::map<K, V>& m){
   }
   return py_dict;
 }
-
-// Helper for default parse_flat, to make the static_assert dependent on T.
-template<typename T>
-struct TypeDependentFalse{
-  static const bool value = false;
-};
 
 // Default-parse_flat which merely static_asserts
 template<typename T>

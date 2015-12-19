@@ -16,12 +16,14 @@
 #ifndef FAINT_FWD_WX_HH
 #define FAINT_FWD_WX_HH
 #include <functional>
+#include <type_traits>
 #include <vector>
 #include "geo/primitive.hh"
 #include "gui/gui-string-types.hh"
 #include "text/precision.hh"
 #include "util-wx/window-types-wx.hh"
 #include "util/distinct.hh"
+#include "util/type-dependent-false.hh"
 
 class wxCommandEvent;
 class wxCursor;
@@ -282,6 +284,21 @@ void process_event(window_t, wxCommandEvent&);
 void fit_size_to(wxTextCtrl*, const utf8_string&);
 
 void refresh_layout(window_t);
+
+// These functions (deleted_by_wx) merely set the pointer to nullptr,
+// but also convey that the object is probably (eventually-) released
+// by wxWidgets.
+void deleted_by_wx(wxWindow*&);
+void deleted_by_wx(wxPanel*&);
+
+// The template version allows using deleted_by_wx for derived types
+// in translation units where the base classes are known, while also
+// preventing attempts to use it for non wx-types by static_assert
+template<typename T> void deleted_by_wx(T*& v){
+  static_assert(std::is_base_of<wxWindow, T>::value,
+    "deleted_by_wx is only valid for wxWidgets types");
+  v = nullptr;
+}
 
 } // namespace
 

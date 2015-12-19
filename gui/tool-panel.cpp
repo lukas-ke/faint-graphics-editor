@@ -50,7 +50,7 @@ ToolPanel::ToolPanel(wxWindow* parent,
 }
 
 ToolPanel::~ToolPanel(){
-  m_panel = nullptr; // Note: Deleted by wxWidgets
+  deleted_by_wx(m_panel);
 }
 
 wxWindow* ToolPanel::AsWindow(){

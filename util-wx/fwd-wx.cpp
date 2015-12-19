@@ -705,4 +705,12 @@ void refresh_layout(window_t w){
   w.w->Layout();
 }
 
+void deleted_by_wx(wxWindow*& w){
+  w = nullptr;
+}
+
+void deleted_by_wx(wxPanel*& p){
+  p = nullptr;
+}
+
 } // namespace

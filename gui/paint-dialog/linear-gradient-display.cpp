@@ -201,7 +201,6 @@ LinearGradientDisplay::LinearGradientDisplay(wxWindow* parent,
 }
 
 LinearGradientDisplay::~LinearGradientDisplay(){
-  m_impl = nullptr; // Deleted by wxWidgets
 }
 
 wxWindow* LinearGradientDisplay::AsWindow(){

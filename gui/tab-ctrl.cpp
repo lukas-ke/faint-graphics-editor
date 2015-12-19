@@ -243,7 +243,7 @@ TabCtrl::TabCtrl(wxWindow* parent,
   AppContext& app,
   StatusInterface& status)
 {
-  m_impl = new TabCtrlImpl(parent, art, app, status);
+  m_impl = make_wx<TabCtrlImpl>(parent, art, app, status);
   m_defaultTabHeight = m_impl->GetTabCtrlHeight();
 }
 
