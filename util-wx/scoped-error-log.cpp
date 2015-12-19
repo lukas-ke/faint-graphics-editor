@@ -19,7 +19,7 @@
 
 namespace faint{
 
-class ScopedErrorLogImpl{
+class ScopedErrorLog::ScopedErrorLogImpl{
 public:
   ScopedErrorLogImpl()
     : m_stream(""),
@@ -41,12 +41,10 @@ public:
 };
 
 ScopedErrorLog::ScopedErrorLog(){
-  m_impl = new ScopedErrorLogImpl;
+  m_impl = std::make_unique<ScopedErrorLogImpl>();
 }
 
-ScopedErrorLog::~ScopedErrorLog(){
-  delete m_impl;
-}
+ScopedErrorLog::~ScopedErrorLog(){}
 
 utf8_string ScopedErrorLog::GetMessages() const {
   // Convert the messages to a wxString first, to hopefully interpret

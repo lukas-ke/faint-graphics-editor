@@ -15,11 +15,10 @@
 
 #ifndef FAINT_SCOPED_ERROR_LOG_HH
 #define FAINT_SCOPED_ERROR_LOG_HH
+#include <memory>
 #include "text/utf8-string.hh"
 
 namespace faint{
-
-class ScopedErrorLogImpl;
 
 class ScopedErrorLog{
   // Replaces the wxWidgets error logging within a scope. This
@@ -38,7 +37,8 @@ public:
   ScopedErrorLog(const ScopedErrorLog&) = delete;
   ScopedErrorLog& operator=(const ScopedErrorLog&) = delete;
 private:
-  ScopedErrorLogImpl* m_impl;
+  class ScopedErrorLogImpl;
+  std::unique_ptr<ScopedErrorLogImpl> m_impl;
 };
 
 } // namespace
