@@ -20,7 +20,7 @@ wxWidgets-widgets, as this makes it more clear that wxWidgets
 ## Blank wxWidgets object fields with `deleted_by_wx`
 When a class holds a wxWidgets object, blank it in the
 destructor with:  
-**Do** `deleted_by_wx(p)`
+**Do:** `deleted_by_wx(p)`
 
 This makes it clearer that the pointer isn't leaked.
 I previously did:  

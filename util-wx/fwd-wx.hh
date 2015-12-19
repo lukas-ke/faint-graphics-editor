@@ -309,7 +309,6 @@ T* make_wx(Args&& ...args){
   return new T(std::forward<Args>(args)...);
 }
 
-
 } // namespace
 
 #endif
