@@ -62,21 +62,16 @@ public:
       return true;
     }
 
-    const auto* candidate = dynamic_cast<const CommandBunch*>(&cmd);
-    if (candidate == nullptr){
-      return false;
-    }
-    if (candidate->m_mergeCondition == nullptr){
-      return false;
-    }
-    if (candidate->m_commands.size() != m_commands.size()){
-      return false;
-    }
-    if (m_mergeCondition->Unsatisfied(*candidate->m_mergeCondition)){
-      return false;
-    }
-
-    return true;
+    return if_type<const CommandBunch>(cmd,
+      [&](const CommandBunch& cmd){
+        return
+          cmd.m_mergeCondition != nullptr &&
+          cmd.m_commands.size() == m_commands.size() &&
+          m_mergeCondition->Satisfied(*cmd.m_mergeCondition);
+      },
+      [](){
+        return false;
+      });
   }
 
   void Merge(CommandPtr cmd) override{
@@ -112,11 +107,12 @@ private:
   }
 
   void DoMerge(std::unique_ptr<CommandBunch> cmd){
-    for (size_t i = 0; i != m_commands.size(); i++){
-      m_commands[i]->Merge(std::move(cmd->m_commands[i]));
-    }
     if (m_mergeCondition->AssumeName()){
       m_name = cmd->Name();
+    }
+
+    for (size_t i = 0; i != m_commands.size(); i++){
+      m_commands[i]->Merge(std::move(cmd->m_commands[i]));
     }
   }
 

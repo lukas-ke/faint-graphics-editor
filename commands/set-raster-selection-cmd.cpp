@@ -191,13 +191,9 @@ public:
 
 private:
   void DoMerge(std::unique_ptr<ThisType> cmd){
-// Merge with other, consecutive, move-raster-selection commands
+    // Merge with other, consecutive, move-raster-selection commands
     // by using their position
-
-    const auto* candidate =
-      dynamic_cast<const MoveRasterSelectionCommand*>(cmd.get());
-    assert(candidate != nullptr);
-    m_newPos = candidate->m_newPos;
+    m_newPos = cmd->m_newPos;
   }
   IntPoint m_newPos;
   IntPoint m_oldPos;
