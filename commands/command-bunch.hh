@@ -69,7 +69,7 @@ CommandPtr perhaps_bunch(CommandType,
 CommandPtr command_bunch(CommandType,
   const bunch_name&,
   commands_t,
-  MergeCondition* c=nullptr);
+  std::unique_ptr<MergeCondition> c=nullptr);
 
 CommandPtr command_bunch(CommandType,
   const bunch_name&,
@@ -78,17 +78,13 @@ CommandPtr command_bunch(CommandType,
 CommandPtr command_bunch(CommandType,
   const bunch_name&,
   CommandPtr,
-  MergeCondition* c=nullptr);
-
-CommandPtr command_bunch(CommandType,
-  const bunch_name&,
-  CommandPtr, CommandPtr,
-  MergeCondition* c=nullptr);
+  std::unique_ptr<MergeCondition> c=nullptr);
 
 CommandPtr command_bunch(CommandType,
   const bunch_name&,
   CommandPtr,
-  std::unique_ptr<MergeCondition>);
+  CommandPtr,
+  std::unique_ptr<MergeCondition> c=nullptr);
 
 } // namespace
 

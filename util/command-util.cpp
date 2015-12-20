@@ -553,7 +553,7 @@ CommandPtr get_offset_objects_command(const objects_t& objects,
   return command_bunch(CommandType::OBJECT,
     get_bunch_name("Offset", objects),
     std::move(commands),
-    new MergeIfSameObjects(objects));
+    std::make_unique<MergeIfSameObjects>(objects));
 }
 
 CommandPtr perhaps_bunched_reorder(commands_t commands,
@@ -815,7 +815,7 @@ CommandPtr get_offset_raster_selection_command(const Image& image,
         bunch_name("Offset Raster Selection"),
         set_raster_selection_command(New(newState), Old(selection.GetState()),
           ""),
-        new AppendIfMoveCommand());
+        std::make_unique<AppendIfMoveCommand>());
     },
 
     [&delta](const sel::Moving& s){

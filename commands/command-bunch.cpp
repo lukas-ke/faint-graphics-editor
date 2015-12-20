@@ -36,11 +36,11 @@ public:
   CommandBunch(CommandType type,
     commands_t commands,
     const bunch_name& name,
-    MergeCondition* mergeCondition=nullptr)
+    std::unique_ptr<MergeCondition> mergeCondition=nullptr)
     : Command(type),
       m_commands(std::move(commands)),
       m_name(name.Get()),
-      m_mergeCondition(mergeCondition)
+      m_mergeCondition(std::move(mergeCondition))
   {
     assert(!m_commands.empty());
   }
@@ -181,11 +181,11 @@ CommandPtr perhaps_bunch(CommandType type,
 CommandPtr command_bunch(CommandType type,
   const bunch_name& name,
   commands_t commands,
-  MergeCondition* mergeCondition)
+  std::unique_ptr<MergeCondition> mergeCondition)
 {
   return std::make_unique<CommandBunch>(type, std::move(commands),
     name,
-    mergeCondition);
+    std::move(mergeCondition));
 }
 
 CommandPtr command_bunch(CommandType type,
@@ -200,35 +200,28 @@ CommandPtr command_bunch(CommandType type,
 CommandPtr command_bunch(CommandType type,
   const bunch_name& name,
   CommandPtr cmd,
-  MergeCondition* mergeCondition)
+  std::unique_ptr<MergeCondition> mergeCondition)
 {
   commands_t v;
   v.emplace_back(std::move(cmd));
-  return std::make_unique<CommandBunch>(type, std::move(v), name,
-    mergeCondition);
+  return std::make_unique<CommandBunch>(type,
+    std::move(v),
+    name,
+    std::move(mergeCondition));
 }
 
 CommandPtr command_bunch(CommandType type,
   const bunch_name& name,
   CommandPtr cmd1,
   CommandPtr cmd2,
-  MergeCondition* mergeCondition)
+  std::unique_ptr<MergeCondition> mergeCondition)
 {
   commands_t v;
   v.emplace_back(std::move(cmd1));
   v.emplace_back(std::move(cmd2));
-  return std::make_unique<CommandBunch>(type, std::move(v), name, mergeCondition);
-}
-
-CommandPtr command_bunch(CommandType type,
-  const bunch_name& name,
-  CommandPtr cmd,
-  std::unique_ptr<MergeCondition> mergeCondition)
-{
-  return command_bunch(type,
-    name,
-    std::move(cmd),
-    mergeCondition.release());
+  return std::make_unique<CommandBunch>(type,
+    std::move(v),
+    name, std::move(mergeCondition));
 }
 
 bool MergeCondition::Unsatisfied(MergeCondition* other){

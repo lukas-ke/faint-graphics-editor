@@ -88,8 +88,8 @@ CommandPtr tri_command(Object* obj,
   return std::make_unique<TriCommand>(obj, newTri, oldTri, name, mergeMode);
 }
 
-MergeCondition* append_tri_commands(){
-  return new AppendCommandType<TriCommand>();
+std::unique_ptr<MergeCondition> append_tri_commands(){
+  return std::make_unique<AppendCommandType<TriCommand> >();
 }
 
 } // namespace

@@ -38,8 +38,7 @@ CommandPtr tri_command(Object*,
   const utf8_string& name="Adjust",
   MergeMode=MergeMode::SOLITARY);
 
-class MergeCondition;
-MergeCondition* append_tri_commands();
+std::unique_ptr<class MergeCondition> append_tri_commands();
 
 } // namespace
 

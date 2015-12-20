@@ -34,6 +34,7 @@ namespace faint{
 
 class AppendSelection : public MergeCondition{
   // Used to add the selection to this command-bunch
+  // Fixme: Seems duplicated. Use template instead, with condition.
 public:
   AppendSelection()
     : m_appended(false)
@@ -152,7 +153,7 @@ static void deselect_non_floating(PendingCommand& command, CommandPtr deselect){
   command.Set(command_bunch(CommandType::SELECTION,
     bunch_name("Deselect Raster"),
     std::move(deselect),
-    new AppendSelection()));
+    append_selection()));
 }
 
 // Helper for new_selection_rectangle. Stamps the selection before
@@ -166,7 +167,7 @@ void deselect_floating(PendingCommand& command,
     bunch_name("Deselect Raster"),
     stamp_floating_selection_command(s),
     std::move(deselect),
-    new AppendSelection()));
+    append_selection()));
 }
 
 static TaskResult new_selection_rectangle(const PosInfo& info,

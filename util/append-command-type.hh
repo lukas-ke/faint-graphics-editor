@@ -54,6 +54,11 @@ private:
   bool m_appended;
 };
 
+template<typename T>
+std::unique_ptr<MergeCondition> append_if(){
+  return std::make_unique<AppendCommandType<T> >();
+}
+
 } // namespace
 
 #endif
