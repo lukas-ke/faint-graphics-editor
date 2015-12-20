@@ -19,17 +19,9 @@
 #include "commands/command-bunch.hh"
 #include "text/utf8-string.hh"
 #include "util/iter.hh"
+#include "util/type-util.hh"
 
 namespace faint{
-
-template<typename T2, typename T1>
-std::unique_ptr<T2> unique_ptr_cast(std::unique_ptr<T1> src){
-  assert(src != nullptr);
-  auto* p = dynamic_cast<T2*>(src.get());
-  assert(p != nullptr);
-  src.release();
-  return std::unique_ptr<T2>(p);
-}
 
 class CommandBunch : public Command{
 public:

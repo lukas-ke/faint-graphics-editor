@@ -23,6 +23,7 @@
 #include "text/utf8-string.hh"
 #include "util/optional.hh"
 #include "util/setting-util.hh"
+#include "util/type-util.hh"
 
 namespace faint{
 
@@ -147,8 +148,13 @@ private:
   std::unique_ptr<SetSelectionOptionsCommand> m_optionsCommand;
 };
 
+static bool should_append(const SetRasterSelectionCommand& cmd){
+  return cmd.ShouldAppend();
+}
+
 class MoveRasterSelectionCommand : public Command {
 public:
+  using ThisType = MoveRasterSelectionCommand;
   MoveRasterSelectionCommand(const IntPoint& newPos, const IntPoint& oldPos)
     : Command(CommandType::SELECTION),
       m_newPos(newPos),
@@ -159,17 +165,12 @@ public:
     if (!sameFrame){
       return false;
     }
-    return dynamic_cast<const MoveRasterSelectionCommand*>(&cmd) != nullptr;
+
+    return is_type<decltype(*this)>(cmd);
   }
 
   void Merge(CommandPtr cmd) override{
-    // Merge with other, consecutive, move-raster-selection commands
-    // by using their position
-
-    const auto* candidate =
-      dynamic_cast<const MoveRasterSelectionCommand*>(cmd.get());
-    assert(candidate != nullptr);
-    m_newPos = candidate->m_newPos;
+    DoMerge(unique_ptr_cast<MoveRasterSelectionCommand>(std::move(cmd)));
   }
 
   void Do(CommandContext& ctx) override{
@@ -189,6 +190,15 @@ public:
   }
 
 private:
+  void DoMerge(std::unique_ptr<ThisType> cmd){
+// Merge with other, consecutive, move-raster-selection commands
+    // by using their position
+
+    const auto* candidate =
+      dynamic_cast<const MoveRasterSelectionCommand*>(cmd.get());
+    assert(candidate != nullptr);
+    m_newPos = candidate->m_newPos;
+  }
   IntPoint m_newPos;
   IntPoint m_oldPos;
 };
@@ -303,13 +313,11 @@ std::unique_ptr<Command> set_raster_selection_command(
 }
 
 bool is_appendable_raster_selection_command(const Command& cmd){
-  const auto* candidate = dynamic_cast<const SetRasterSelectionCommand*>(&cmd);
-  return candidate != nullptr && candidate->ShouldAppend();
+  return if_type<const SetRasterSelectionCommand>(cmd, should_append, false_f);
 }
 
 bool is_move_raster_selection_command(const Command& cmd){
-  return dynamic_cast<const MoveRasterSelectionCommand*>(&cmd) != nullptr;
+  return is_type<MoveRasterSelectionCommand>(cmd);
 }
-
 
 } // namespace
