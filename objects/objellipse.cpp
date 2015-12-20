@@ -168,11 +168,14 @@ void set_angle_span(Object* obj, const AngleSpan& angleSpan){
   if_type<ObjEllipse>(*obj, set_angle_span_f);
 }
 
-Optional<AngleSpan> get_angle_span(const Object* obj){
-  if (const ObjEllipse* ellipse = dynamic_cast<const ObjEllipse*>(obj)){
-    return option(ellipse->GetAngleSpan());
-  }
-  return no_option();
+Optional<AngleSpan> get_angle_span(const Object* obj){ // Fixme: Pass reference
+  return if_type<const ObjEllipse>(*obj,
+    [](const ObjEllipse& e){
+      return option(e.GetAngleSpan());
+    },
+    []() -> Optional<AngleSpan>{
+      return Optional<AngleSpan>();
+    });
 }
 
 } // namespace
