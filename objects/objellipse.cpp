@@ -29,6 +29,7 @@
 #include "util/optional.hh"
 #include "util/setting-id.hh"
 #include "util/setting-util.hh"
+#include "util/type-util.hh"
 
 namespace faint{
 
@@ -158,8 +159,8 @@ ObjectPtr create_ellipse_object(const Tri& tri, const Settings& s){
   return std::make_unique<ObjEllipse>(tri, s);
 }
 
-bool is_ellipse(const Object* obj){
-  return dynamic_cast<const ObjEllipse*>(obj) != nullptr;
+bool is_ellipse(const Object& obj){
+  return is_type<ObjEllipse>(obj);
 }
 
 void set_angle_span(Object* obj, const AngleSpan& angleSpan){

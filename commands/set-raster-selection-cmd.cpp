@@ -166,11 +166,11 @@ public:
       return false;
     }
 
-    return is_type<decltype(*this)>(cmd);
+    return is_type<ThisType>(cmd);
   }
 
   void Merge(CommandPtr cmd) override{
-    DoMerge(unique_ptr_cast<MoveRasterSelectionCommand>(std::move(cmd)));
+    DoMerge(unique_ptr_cast<ThisType>(std::move(cmd)));
   }
 
   void Do(CommandContext& ctx) override{

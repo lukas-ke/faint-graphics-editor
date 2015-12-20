@@ -324,7 +324,7 @@ coord object_area(const Object* obj){
     return math::pi * r.x * r.y;
   };
 
-  if (is_ellipse(obj)){
+  if (is_ellipse(*obj)){
     return get_angle_span(obj).Visit(
       [=](const AngleSpan& span){
         return span.start == span.stop ?
@@ -344,7 +344,7 @@ coord object_area(const Object* obj){
 }
 
 coord perimeter(const Object* obj, const ExpressionContext& ctx){
-  if (is_ellipse(obj)){
+  if (is_ellipse(*obj)){
     return ellipse_perimeter(get_radii(obj->GetTri()));
   }
   else if (is_text(obj)){

@@ -29,7 +29,7 @@ std::unique_ptr<T2> unique_ptr_cast(std::unique_ptr<T1> src){
 
 template<class Expected, class T>
 bool is_type(const T& o){
-  return dynamic_cast<const T*>(&o) != nullptr;
+  return dynamic_cast<const Expected*>(&o) != nullptr;
 }
 
 template<typename Dst, typename Src, typename Func, typename Func2>

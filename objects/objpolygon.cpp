@@ -25,6 +25,7 @@
 #include "text/utf8-string.hh"
 #include "util/object-util.hh"
 #include "util/setting-util.hh"
+#include "util/type-util.hh"
 
 namespace faint{
 
@@ -177,11 +178,11 @@ ObjectPtr create_polygon_object(const Points& points, const Settings& s){
 }
 
 bool is_polygon(const Object* obj){
-  return dynamic_cast<const ObjPolygon*>(obj) != nullptr;
+  return is_polygon(*obj);
 }
 
 bool is_polygon(const Object& obj){
-  return is_polygon(&obj);
+  return is_type<ObjPolygon>(obj);
 }
 
 std::vector<Point> get_polygon_vertices(const Object* obj){

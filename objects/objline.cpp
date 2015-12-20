@@ -32,6 +32,7 @@
 #include "util/setting-id.hh"
 #include "util/setting-util.hh"
 #include "util/settings.hh"
+#include "util/type-util.hh"
 
 namespace faint{
 
@@ -202,7 +203,7 @@ ObjectPtr create_line_object(const Points& points, const Settings& s){
 }
 
 bool is_line(const Object& obj){
-  return dynamic_cast<const ObjLine*>(&obj) != nullptr;
+  return is_type<ObjLine>(obj);
 }
 
 } // namespace

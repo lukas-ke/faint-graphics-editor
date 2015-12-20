@@ -131,7 +131,7 @@ static bool Smth_crop(const BoundObject<Object>& self){
 /* method: "get_angles()\n
 Returns the interior angles, specified in radians for an elliptic arc" */
 static AngleSpan Smth_get_angles(const BoundObject<Object>& self){
-  if (!is_ellipse(self.obj)){
+  if (!is_ellipse(*self.obj)){
     throw ValueError("Only supported for ellipses.");
   }
 
@@ -275,7 +275,7 @@ Sets the interior angles, specified in radians, for an elliptic arc" */
 static void Smth_set_angles(const BoundObject<Object>& self,
   const AngleSpan& span)
 {
-  if (!is_ellipse(self.obj)){
+  if (!is_ellipse(*self.obj)){
     throw ValueError("Only supported for ellipses.");
   }
 
