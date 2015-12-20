@@ -36,6 +36,7 @@
 #include "util/frame-props.hh"
 #include "util/image-props.hh"
 #include "util/setting-util.hh"
+#include "util/type-util.hh"
 
 namespace faint{
 
@@ -301,14 +302,15 @@ Returns the height of the rows of the Text object specified by the id" */
 static coord frameprops_get_obj_text_height(const BoundFrameProps& self,
   const Index& objectId)
 {
-  throw_if_missing(self, objectId);
+  throw_if_missing(self, objectId); // Fixme: Add throwing get_object(BoundFrameProps, objectId)?
 
-  Object* object = self.frame.GetObject(objectId);
-  ObjText* textObject = dynamic_cast<ObjText*>(object);
-  if (textObject == nullptr){
-    throw TypeError("Not a text object");
-  }
-  return textObject->BaselineOffset();
+  return if_type<ObjText>(*self.frame.GetObject(objectId),
+    [](const ObjText& obj){
+      return obj.BaselineOffset();
+    },
+    []() -> coord{
+      throw TypeError("Not a text object");
+    });
 }
 
 /* method: "get_size()->(w,h)\n
