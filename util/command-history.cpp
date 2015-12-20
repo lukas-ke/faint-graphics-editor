@@ -75,11 +75,14 @@ void CommandHistory::CloseUndoBundle(const utf8_string& name){
       // If the group being closed contains only a single command,
       // remove the the open/close group commands, and just add or merge
       // the command.
-      OldCommand cmd = m_undoList.back();
+      OldCommand cmd(std::move(m_undoList.back()));
       m_undoList.pop_back();
       m_undoList.pop_back();
-      bool merged = !m_undoList.empty() && m_undoList.back().Merge(cmd);
-      if (!merged){
+      bool shouldMerge = !m_undoList.empty() && m_undoList.back().ShouldMerge(cmd);
+      if (shouldMerge){
+        m_undoList.back().Merge(cmd); // Fixme: Move
+      }
+      else {
         m_undoList.push_back(cmd);
       }
     }
@@ -343,8 +346,10 @@ Optional<IntPoint> CommandHistory::Apply(Command* cmd,
   }
   else{
     OldCommand mappedCmd(cmd, activeImage);
-    bool merged = !m_undoList.empty() && m_undoList.back().Merge(mappedCmd);
-    if (merged){
+    bool shouldMerge = !m_undoList.empty() && // Fixme: Duplicated Add helper
+      m_undoList.back().ShouldMerge(mappedCmd);
+    if (shouldMerge){
+      m_undoList.back().Merge(mappedCmd);
       cmd = nullptr;
     }
     else{

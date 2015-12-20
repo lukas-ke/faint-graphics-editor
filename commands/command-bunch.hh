@@ -38,7 +38,8 @@ public:
 
   // True if the command should be appended to the list of commands in
   // the command bunch with this merge condition.
-  virtual bool Append(CommandPtr&) = 0;
+  virtual bool ShouldAppend(const Command&) const = 0;
+  virtual void NotifyAppended() = 0;
 
   // True if the command bunch should assume the name of the
   // merged command bunch or appended command.

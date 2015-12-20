@@ -95,7 +95,8 @@ public:
   // True if the passed in command could be merged with this command.
   // sameFrame specifies if the command was targetting the same frame
   // as this command.
-  virtual bool Merge(CommandPtr&, bool sameFrame);
+  virtual bool ShouldMerge(const Command&, bool sameFrame) const;
+  virtual void Merge(CommandPtr);
 
   // "Do What I Mean" - returns an alternate command if available.
   // Should only be called after HasDWIM() returns true

@@ -49,9 +49,12 @@ public:
   // so that undo/redo can target the same image.
   OldCommand(Command*, Image*);
 
-  // Attempts to merge the passed in OldCommand with this one,
-  // returns true if successful.
-  bool Merge(OldCommand&);
+  // True if the passed in OldCommand should be merged with this one.
+  bool ShouldMerge(const OldCommand&) const;
+
+  // Merges the passed in OldCommand with this one. Should be used
+  // only if ShouldMerge() is true
+  void Merge(OldCommand&); // Fixme: Pass && or unique_ptr eventually.
 
   Command* command;
   Image* targetFrame;

@@ -42,36 +42,24 @@ public:
     m_object->SetTri(m_new);
   }
 
-  bool Merge(CommandPtr& cmd, bool sameFrame) override{
+  bool ShouldMerge(const Command& cmd, bool sameFrame) const override{
     if (!m_mergable || !sameFrame){
       return false;
     }
+    const auto* candidate = dynamic_cast<const TriCommand*>(&cmd);
+    return
+      candidate != nullptr &&
+      candidate->m_mergable &&
+      m_object == candidate->m_object;
+  }
 
-    auto get_command_tri = [&]() -> Optional<Tri>{
-      TriCommand* candidate = dynamic_cast<TriCommand*>(cmd.get());
-      if (candidate == nullptr){
-        return {};
-      }
-      else if (!candidate->m_mergable){
-        return {};
-      }
-      else if (m_object != candidate->m_object){
-        return {};
-      }
-      else{
-        return option(candidate->m_new);
-      }
-    };
-
-    return get_command_tri().Visit(
-      [&](const Tri& mergedTri){
-        CommandPtr release(std::move(cmd));
-        m_new = mergedTri;
-        return true;
-      },
-      [&](){
-        return false;
-      });
+  void Merge(CommandPtr cmd) override{
+    assert(m_mergable);
+    TriCommand* candidate = dynamic_cast<TriCommand*>(cmd.get());
+    assert(candidate != nullptr);
+    assert(candidate->m_mergable);
+    assert(m_object == candidate->m_object);
+    m_new = candidate->m_new;
   }
 
   utf8_string Name() const override{

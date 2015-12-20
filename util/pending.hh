@@ -15,6 +15,7 @@
 
 #ifndef FAINT_PENDING_HH
 #define FAINT_PENDING_HH
+#include <cassert>
 #include <memory>
 
 namespace faint{
@@ -23,6 +24,9 @@ template <typename T>
 class Pending {
   // Holds an item until it is taken or replaced. On destruction
   // (or replacement with Set) an untaken item will be deleted.
+  //
+  // Kind of silly now that I use unique_ptr, but perhaps a bit more
+  // explicit.
 public:
   Pending() : m_item(nullptr) {}
 
@@ -35,6 +39,7 @@ public:
   }
 
   std::unique_ptr<T> Take(){
+    assert(Valid());
     auto item(std::move(m_item));
     return item;
   }

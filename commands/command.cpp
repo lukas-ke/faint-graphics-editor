@@ -66,8 +66,12 @@ bool Command::HasDWIM() const{
   return false;
 }
 
-bool Command::Merge(CommandPtr&, bool){
+bool Command::ShouldMerge(const Command&, bool) const{
   return false;
+}
+
+void Command::Merge(CommandPtr){
+  assert(false); // Default Command::Merge
 }
 
 bool Command::ModifiesState() const{

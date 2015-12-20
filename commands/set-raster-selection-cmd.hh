@@ -64,8 +64,8 @@ CommandPtr set_raster_selection_command(const NewSelectionState&,
   const OldSelectionOptions&
 );
 
-bool is_move_raster_selection_command(Command*);
-bool is_appendable_raster_selection_command(Command*);
+bool is_move_raster_selection_command(const Command&);
+bool is_appendable_raster_selection_command(const Command&);
 
 } // namespace
 

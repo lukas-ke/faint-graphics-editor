@@ -94,7 +94,6 @@ public:
       });
   }
 
-
   void Do(CommandContext& ctx) override{
     if (m_optionsCommand != nullptr){
       m_optionsCommand->Do(ctx);
@@ -156,21 +155,21 @@ public:
       m_oldPos(oldPos)
   {}
 
-  bool Merge(CommandPtr& cmd, bool sameFrame) override{
+  bool ShouldMerge(const Command& cmd, bool sameFrame) const override{
     if (!sameFrame){
       return false;
     }
+    return dynamic_cast<const MoveRasterSelectionCommand*>(&cmd) != nullptr;
+  }
 
+  void Merge(CommandPtr cmd) override{
     // Merge with other, consecutive, move-raster-selection commands
     // by using their position
-    const auto* candidate = dynamic_cast<MoveRasterSelectionCommand*>(cmd.get());
-    if (candidate == nullptr){
-      return false;
-    }
 
-    m_merged.emplace_back(std::move(cmd));
+    const auto* candidate =
+      dynamic_cast<const MoveRasterSelectionCommand*>(cmd.get());
+    assert(candidate != nullptr);
     m_newPos = candidate->m_newPos;
-    return true;
   }
 
   void Do(CommandContext& ctx) override{
@@ -190,7 +189,6 @@ public:
   }
 
 private:
-  commands_t m_merged;
   IntPoint m_newPos;
   IntPoint m_oldPos;
 };
@@ -199,10 +197,6 @@ CommandPtr move_raster_selection_command(const IntPoint& newPos,
   const IntPoint& oldPos)
 {
   return std::make_unique<MoveRasterSelectionCommand>(newPos, oldPos);
-}
-
-bool is_move_raster_selection_command(Command* cmd){
-  return dynamic_cast<MoveRasterSelectionCommand*>(cmd) != nullptr;
 }
 
 class StampFloatingSelectionCommand : public Command {
@@ -308,9 +302,14 @@ std::unique_ptr<Command> set_raster_selection_command(
   return cmd;
 }
 
-bool is_appendable_raster_selection_command(Command* cmd){
-  auto* candidate = dynamic_cast<SetRasterSelectionCommand*>(cmd);
+bool is_appendable_raster_selection_command(const Command& cmd){
+  const auto* candidate = dynamic_cast<const SetRasterSelectionCommand*>(&cmd);
   return candidate != nullptr && candidate->ShouldAppend();
 }
+
+bool is_move_raster_selection_command(const Command& cmd){
+  return dynamic_cast<const MoveRasterSelectionCommand*>(&cmd) != nullptr;
+}
+
 
 } // namespace

@@ -22,6 +22,15 @@
 
 namespace faint{
 
+template<typename T2, typename T1>
+std::unique_ptr<T2> unique_ptr_cast(std::unique_ptr<T1> src){
+  assert(src != nullptr);
+  auto* p = dynamic_cast<T2*>(src.get());
+  assert(p != nullptr);
+  src.release();
+  return std::unique_ptr<T2>(p);
+}
+
 class CommandBunch : public Command{
 public:
   CommandBunch(CommandType type,
@@ -48,7 +57,7 @@ public:
     }
   }
 
-  bool Merge(CommandPtr& cmd, bool sameFrame) override{
+  bool ShouldMerge(const Command& cmd, bool sameFrame) const override{
     if (!sameFrame){
       return false;
     }
@@ -57,15 +66,11 @@ public:
       return false;
     }
 
-    if (m_mergeCondition->Append(cmd)){
-      m_commands.emplace_back(std::move(cmd));
-      if (m_mergeCondition->AssumeName()){
-        m_name = cmd->Name();
-      }
+    if (m_mergeCondition->ShouldAppend(cmd)){
       return true;
     }
 
-    auto* candidate = dynamic_cast<CommandBunch*>(cmd.get());
+    const auto* candidate = dynamic_cast<const CommandBunch*>(&cmd);
     if (candidate == nullptr){
       return false;
     }
@@ -79,14 +84,18 @@ public:
       return false;
     }
 
-    for (size_t i = 0; i != m_commands.size(); i++){
-      bool merged = m_commands[i]->Merge(candidate->m_commands[i], sameFrame);
-      assert(merged);
-    }
-    if (m_mergeCondition->AssumeName()){
-      m_name = candidate->Name();
-    }
     return true;
+  }
+
+  void Merge(CommandPtr cmd) override{
+    assert(m_mergeCondition != nullptr);
+
+    if (m_mergeCondition->ShouldAppend(*cmd)){
+      DoAppend(std::move(cmd));
+    }
+    else{
+      DoMerge(unique_ptr_cast<CommandBunch>(std::move(cmd)));
+    }
   }
 
   utf8_string Name() const override{
@@ -98,7 +107,27 @@ public:
       cmd->Undo(context);
     }
   }
+
 private:
+  void DoAppend(CommandPtr cmd){
+    assert(m_mergeCondition != nullptr);
+    assert(m_mergeCondition->ShouldAppend(*cmd));
+    if (m_mergeCondition->AssumeName()){
+       m_name = cmd->Name();
+    }
+    m_commands.push_back(std::move(cmd));
+    m_mergeCondition->NotifyAppended();
+  }
+
+  void DoMerge(std::unique_ptr<CommandBunch> cmd){
+    for (size_t i = 0; i != m_commands.size(); i++){
+      m_commands[i]->Merge(std::move(cmd->m_commands[i]));
+    }
+    if (m_mergeCondition->AssumeName()){
+      m_name = cmd->Name();
+    }
+  }
+
   commands_t m_commands;
   utf8_string m_name;
   std::unique_ptr<MergeCondition> m_mergeCondition;

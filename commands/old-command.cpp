@@ -49,13 +49,19 @@ OldCommand OldCommand::CloseGroup(const utf8_string& name){
   return cmd;
 }
 
-bool OldCommand::Merge(OldCommand& candidate){
-  CommandPtr c(candidate.command); // Fixme: Horrendous
-  bool m = type == UndoType::NORMAL_COMMAND &&
+bool OldCommand::ShouldMerge(const OldCommand& candidate) const{
+  return
+    type == UndoType::NORMAL_COMMAND &&
     candidate.type == UndoType::NORMAL_COMMAND &&
-    command->Merge(c, targetFrame == candidate.targetFrame);
-  c.release();
-  return m;
+    command->ShouldMerge(*candidate.command, targetFrame == candidate.targetFrame);
+}
+
+void OldCommand::Merge(OldCommand& candidate){
+  assert(ShouldMerge(candidate));
+  CommandPtr c(candidate.command);
+  assert(c != nullptr);
+  assert(command->ShouldMerge(*c, targetFrame == candidate.targetFrame));
+  command->Merge(std::move(c));
 }
 
 } // namespace

@@ -40,24 +40,25 @@ public:
   {}
 
   bool Satisfied(MergeCondition*) override{
-    // AppendSelection is only used for appending,
-    // not merging CommandBunches.
+    // AppendSelection is only used for appending, not merging
+    // CommandBunches.
     return false;
   }
 
-  bool Append(CommandPtr& cmd) override{
-    if (m_appended){
-      // Only append a single command
-      return false;
-    }
-    m_appended = true;
-
-    return is_appendable_raster_selection_command(cmd.get());
+  bool ShouldAppend(const Command& cmd) const override{
+    return !m_appended &&
+      is_appendable_raster_selection_command(cmd);
   }
+
+  void NotifyAppended() override{
+    m_appended = true;
+  }
+
   bool AssumeName() const override{
     // The rectangle selection command name should be used.
     return true;
   }
+
 private:
   bool m_appended;
 };
@@ -124,6 +125,7 @@ static TaskResult move_selected_content(const PosInfo& info,
       return TaskResult::COMMIT_AND_CHANGE;
     }
     else{
+      set_move_task(newTask, gonnaCopy, info, s.TopLeft(), settings, canvas);
       return TaskResult::CHANGE;
     }
   };
@@ -178,14 +180,21 @@ static TaskResult new_selection_rectangle(const PosInfo& info,
   if (!shouldMerge){
     // Use a task without command merging (since no deselection or
     // stamping was required). Also update the selection settings
-    newTask.Set(raster_selection_rectangle_task(info.pos, settings,
-        Old(selection.GetOptions()), shouldMerge, canvas));
+    newTask.Set(
+      raster_selection_rectangle_task(
+        info.pos,
+        settings,
+        Old(selection.GetOptions()),
+        shouldMerge,
+        canvas));
     return TaskResult::CHANGE;
   }
 
-  // Use a task that with command merging which doesn't touch touch
-  // the selection settings.
-  newTask.Set(raster_selection_rectangle_task(info.pos, settings, shouldMerge,
+  // Use a task with command merging which doesn't touch the selection
+  // settings.
+  newTask.Set(raster_selection_rectangle_task(info.pos,
+    settings,
+    shouldMerge,
     canvas));
 
   // Create a deselection, and possibly stamping, command. This will

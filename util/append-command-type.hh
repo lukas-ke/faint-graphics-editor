@@ -34,15 +34,16 @@ public:
     return false;
   }
 
-  bool Append(CommandPtr& cmd) override{
+  bool ShouldAppend(const Command& cmd) const override{
     if (m_appended){
       // Only append a single command
       return false;
     }
-    // Only attempt appending once
-    m_appended = true;
+    return dynamic_cast<const T*>(&cmd) != nullptr;
+  }
 
-    return dynamic_cast<T*>(cmd.get()) != nullptr;
+  void NotifyAppended() override{
+    m_appended = true;
   }
 
   bool AssumeName() const override{

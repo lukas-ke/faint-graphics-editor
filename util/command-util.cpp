@@ -513,10 +513,12 @@ public:
     return m_objects == candidate->m_objects;
   }
 
-  bool Append(CommandPtr&) override{
+  bool ShouldAppend(const Command&) const override{
     // MergeIfSameObjects is not used for appending
     return false;
   }
+
+  void NotifyAppended() override{}
 
   bool AssumeName() const override{
     return false;
@@ -775,15 +777,21 @@ CommandPtr get_rotate_selection_command(const Image& image,
 }
 
 class AppendIfMoveCommand : public MergeCondition{
-// For grouping undo/redo of consecutive selection movements
-// with keyboard (get_offset_raster_selection_command).
+  // For grouping undo/redo of consecutive selection movements
+  // with keyboard (get_offset_raster_selection_command).
 public:
-  bool Append(CommandPtr& cmd) override{
-    return is_move_raster_selection_command(cmd.get());
+  bool ShouldAppend(const Command& cmd) const override{
+    return is_move_raster_selection_command(cmd);
   }
+
+  void NotifyAppended() override{
+    // Todo: Consider if this should only be tried once.
+  }
+
   bool AssumeName() const override{
     return false;
   }
+
   bool Satisfied(MergeCondition*) override{
     return false;
   }
