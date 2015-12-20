@@ -31,7 +31,9 @@
 namespace faint{
 
 static bool no_fillable_object_hit(const PosInfo& info){
-  return !object_color_region_hit(info) || is_raster_object(info.object);
+  return info.object == nullptr ||
+    !object_color_region_hit(info) ||
+    is_raster(*info.object);
 }
 
 static utf8_string hit_description(const PosInfo& info){
@@ -114,6 +116,7 @@ public:
       return ToolResult::NONE;
     }
 
+    // Fixme: Tidy up!
     const auto fillSetting = fg_or_bg(info);
     const Settings& s = GetSettings();
     const Paint fill = s.Get(fillSetting);
@@ -154,7 +157,7 @@ public:
           get_flood_fill_command(floored(info.pos), fill)));
       }
     }
-    else if (is_text_object(info.object)){
+    else if (is_text(*info.object)){
       // Text objects don't quite support a background color, and
       // especially not a fill style, so handle them separately
       m_command.Set(get_fill_boundary_command(info.object, fill));

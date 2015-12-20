@@ -164,9 +164,8 @@ bool is_ellipse(const Object& obj){
 }
 
 void set_angle_span(Object* obj, const AngleSpan& angleSpan){
-  if (ObjEllipse* ellipse = dynamic_cast<ObjEllipse*>(obj)){
-    ellipse->SetAngleSpan(angleSpan);
-  }
+  auto set_angle_span_f = [&](auto& e){ e.SetAngleSpan(angleSpan);};
+  if_type<ObjEllipse>(*obj, set_angle_span_f);
 }
 
 Optional<AngleSpan> get_angle_span(const Object* obj){

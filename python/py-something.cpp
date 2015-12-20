@@ -98,7 +98,7 @@ static PyObject* Smth_richcompare(smthObject* self, PyObject* otherRaw, int op){
 /* method: "become_path()->Path\n
 Replaces this object with a corresponding Path object." */
 static BoundObject<Object> Smth_become_path(const BoundObject<Object>& self){
-  Object* path = clone_as_path(self.obj,
+  Object* path = clone_as_path(*self.obj,
     self.canvas->GetFrame(self.frameId).GetExpressionContext());
   run_command(self, get_replace_object_command(Old(self.obj), path,
     self.canvas->GetFrame(self.frameId), select_added(false)));

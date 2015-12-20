@@ -36,6 +36,7 @@
 #include "util/iter.hh"
 #include "util/optional.hh"
 #include "util/settings.hh"
+#include "util/type-util.hh"
 
 namespace faint{
 
@@ -331,8 +332,8 @@ CommandPtr crop_text_region_command(ObjText* text){
   return tri_command(text, New(tri), Old(oldTri), "Auto-Size");
 }
 
-bool is_text(const Object* obj){
-  return dynamic_cast<const ObjText*>(obj) != nullptr;
+bool is_text(const Object& obj){
+  return is_type<ObjText>(obj);
 }
 
 } // namespace

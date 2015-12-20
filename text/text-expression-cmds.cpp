@@ -318,7 +318,7 @@ static CommandExpressions init_command_expressions(){
     [](expr_list& args){
       return new LengthExpression("perimeter",
         [](const Object* obj, const ExpressionContext& ctx){
-          if (is_text_object(obj)){
+          if (is_text(*obj)){
             // \ref(err1): Checking perimeter of self could lead to infinite
             // recursion, as ObjText::GetPath evaluates its
             // expression. Referring to other text objects should be

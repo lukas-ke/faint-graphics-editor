@@ -21,6 +21,7 @@
 #include "rendering/faint-dc.hh"
 #include "text/utf8-string.hh"
 #include "util/setting-util.hh"
+#include "util/type-util.hh"
 
 namespace faint{
 
@@ -93,7 +94,7 @@ Object* create_spline_object(const Points& points, const Settings& s){
 }
 
 bool is_spline(const Object& obj){
-  return dynamic_cast<const ObjSpline*>(&obj) != nullptr;
+  return is_type<ObjSpline>(obj);
 }
 
 static std::vector<Point> get_spline_points(const Object* obj){

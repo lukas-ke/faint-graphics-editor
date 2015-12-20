@@ -68,12 +68,11 @@ private:
   Optional<parse_result_t> m_expression;
 };
 
-text_lines_t split_evaluated(ExpressionContext&,
-  const ObjText*);
+text_lines_t split_evaluated(ExpressionContext&, const ObjText*);
 
 CommandPtr crop_text_region_command(ObjText* object);
 
-bool is_text(const Object*);
+bool is_text(const Object&);
 
 } // namespace
 

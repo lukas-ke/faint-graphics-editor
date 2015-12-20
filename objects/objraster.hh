@@ -31,6 +31,7 @@ public:
   void DrawMask(FaintDC&, ExpressionContext&) override;
   std::vector<Point> GetAttachPoints() const override;
   Bitmap& GetBitmap();
+  const Bitmap& GetBitmap() const;
   std::vector<PathPt> GetPath(const ExpressionContext&) const override;
   IntRect GetRefreshRect() const override;
   Tri GetTri() const override;
@@ -48,6 +49,8 @@ private:
 Tri tri_for_bmp(const Point& topLeft, const Bitmap&);
 
 CommandPtr crop_raster_object_command(ObjRaster*);
+
+bool is_raster(const Object&);
 
 } // namespace
 

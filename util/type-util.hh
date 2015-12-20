@@ -32,6 +32,15 @@ bool is_type(const T& o){
   return dynamic_cast<const Expected*>(&o) != nullptr;
 }
 
+template<typename Dst, typename Src, typename Func>
+void if_type(Src&& vSrc, Func&& f){
+  auto* vDst = dynamic_cast<Dst*>(&vSrc);
+  if (vDst != nullptr){
+    f(*vDst);
+  }
+}
+
+
 template<typename Dst, typename Src, typename Func, typename Func2>
 auto if_type(Src&& vSrc, Func&& f, Func2&& otherwise){
   auto* vDst = dynamic_cast<Dst*>(&vSrc);

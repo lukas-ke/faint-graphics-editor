@@ -84,9 +84,9 @@ objects_t clone(const objects_t& objects){
   return make_vector(objects, Object_clone);
 }
 
-Object* clone_as_path(Object* object, const ExpressionContext& ctx){
+Object* clone_as_path(const Object& object, const ExpressionContext& ctx){
   Settings s(default_path_settings());
-  s.Update(object->GetSettings());
+  s.Update(object.GetSettings());
 
   if (is_text(object)){
     // Texts have no fill setting - but are drawn like filled paths
@@ -94,9 +94,10 @@ Object* clone_as_path(Object* object, const ExpressionContext& ctx){
     // this makes the path more similar to the source text.
     s.Set(ts_FillStyle, FillStyle::FILL);
   }
-  else if (is_raster_object(object)){
+  else if (is_raster(object)){
     // Create a pattern from the raster object's bitmap
-    ObjRaster* rasterObj = dynamic_cast<ObjRaster*>(object);
+    auto rasterObj = dynamic_cast<const ObjRaster*>(&object); // Fixme
+    assert(rasterObj != nullptr);
     s.Set(ts_FillStyle, FillStyle::FILL);
     Pattern pattern(rasterObj->GetBitmap(),
       IntPoint(0,0), object_aligned_t(true));
@@ -104,9 +105,9 @@ Object* clone_as_path(Object* object, const ExpressionContext& ctx){
   }
 
   s.Set(ts_EditPoints, true);
-  Points pts(object->GetPath(ctx));
+  Points pts(object.GetPath(ctx));
   auto path = create_path_object_raw(pts, s);
-  path->SetName(object->GetName());
+  path->SetName(object.GetName());
   return path;
 }
 
@@ -264,16 +265,8 @@ bool is_or_has(const Object* object, const ObjectId& id){
   return false;
 }
 
-bool is_raster_object(Object* obj){
-  return obj != nullptr && dynamic_cast<ObjRaster*>(obj) != nullptr;
-}
-
 bool is_rotated(Object* obj){
   return !rather_zero(obj->GetTri().GetAngle());
-}
-
-bool is_text_object(const Object* obj){
-  return dynamic_cast<const ObjText*>(obj) != nullptr;
 }
 
 bool lacks(const objects_t& objects, const Object* obj){
@@ -347,7 +340,7 @@ coord perimeter(const Object* obj, const ExpressionContext& ctx){
   if (is_ellipse(*obj)){
     return ellipse_perimeter(get_radii(obj->GetTri()));
   }
-  else if (is_text(obj)){
+  else if (is_text(*obj)){
     return 0.0;
   }
   else{

@@ -33,6 +33,7 @@
 #include "util/at-most.hh"
 #include "util/default-settings.hh"
 #include "util/object-util.hh"
+#include "util/type-util.hh"
 
 namespace faint{
 
@@ -162,6 +163,10 @@ Bitmap& ObjRaster::GetBitmap(){
   return m_bitmap;
 }
 
+const Bitmap& ObjRaster::GetBitmap() const{
+  return m_bitmap;
+}
+
 void ObjRaster::SetBitmap(const Bitmap& bmp){
   m_bitmap = bmp;
   apply_transform(m_bitmap, m_tri, m_scaled);
@@ -212,6 +217,10 @@ CommandPtr crop_raster_object_command(ObjRaster* obj){
 Tri tri_for_bmp(const Point& p0, const Bitmap& bmp){
   Size sz(floated(bmp.GetSize()));
   return Tri(p0, p0 + delta_x(sz.w -1.0), p0 + delta_y(sz.h - 1.0));
+}
+
+bool is_raster(const Object& obj){
+  return is_type<ObjRaster>(obj);
 }
 
 } // namespace

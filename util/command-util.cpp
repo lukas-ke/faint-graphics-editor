@@ -657,7 +657,7 @@ CommandPtr get_objects_to_paths_command(const objects_t& objects,
   auto toPath = [&](Object* obj){
     return get_replace_object_command(
       Old(obj),
-      clone_as_path(obj, image.GetExpressionContext()), image, selectAdded);
+      clone_as_path(*obj, image.GetExpressionContext()), image, selectAdded);
   };
 
   // Delete the replaced objects from front-most to rear-most to

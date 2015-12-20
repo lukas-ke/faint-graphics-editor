@@ -347,7 +347,7 @@ static TaskResult clicked_in_object(IdleSelectionState& impl, const PosInfo& inf
     if (info.modifiers.RightMouse()){
       // Ctrl+right-mouse on a raster object sets transparent
       // background
-      return is_raster_object(obj) ?
+      return is_raster(*obj) ?
         change_raster_background(impl, as_ObjRaster(obj), info.pos) :
         TaskResult::NONE;
     }

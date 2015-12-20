@@ -39,9 +39,7 @@ public:
   }
 
   std::unique_ptr<T> Take(){
-    assert(Valid());
-    auto item(std::move(m_item));
-    return item;
+    return std::unique_ptr<T>(std::move(m_item));
   }
 
   bool Valid() const{

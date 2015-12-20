@@ -38,7 +38,7 @@ void test_clone_as_path(){
   // Clone it as a path
   auto ctx = dummy_expression_context();
   using obj_ptr = std::unique_ptr<Object>;
-  auto pathObject1 = obj_ptr(clone_as_path(line.get(), *ctx));
+  auto pathObject1 = obj_ptr(clone_as_path(*line, *ctx));
 
   // Verify that the name and points are unchanged in the clone
   EQUAL(pathObject1->GetMovablePoints().size(), 3);
@@ -47,7 +47,7 @@ void test_clone_as_path(){
   VERIFY(path1[0].type == PathPt::Type::MoveTo);
 
   // Clone the path to a new path, and verify that it again is unchanged.
-  auto pathObject2 = obj_ptr(clone_as_path(pathObject1.get(), *ctx));
+  auto pathObject2 = obj_ptr(clone_as_path(*pathObject1, *ctx));
   EQUAL(pathObject2->GetMovablePoints().size(), 3);
   EQUAL(pathObject2->GetName(), utf8_string("Line 1"));
   auto path2 = pathObject2->GetPath(*ctx);

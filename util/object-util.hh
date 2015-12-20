@@ -43,7 +43,7 @@ Rect bounding_rect(const Tri&, const Settings&);
 objects_t clone(const objects_t&);
 
 // Creates a new Path object based on the passed in object.
-Object* clone_as_path(Object*, const ExpressionContext&);
+Object* clone_as_path(const Object&, const ExpressionContext&);
 
 // Returns the color at imagePos, which is relative to the image (not
 // the ObjRaster!). Will return the ts_Bg of the ObjRaster if the
@@ -97,9 +97,9 @@ bool intersects(Object*, const Rect&);
 
 // True if the the object or one of its sub-objects match the id
 bool is_or_has(const Object*, const ObjectId&);
-bool is_raster_object(Object*);
+bool is_raster(const Object&); // Defined in objraster.cpp
 bool is_rotated(Object*);
-bool is_text_object(const Object*);
+bool is_text(const Object&); // Defined in objtext.cpp
 
 bool lacks(const objects_t&, const Object*);
 
