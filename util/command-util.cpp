@@ -504,8 +504,8 @@ public:
     : m_objects(objects)
   {}
 
-  bool Satisfied(MergeCondition* cond) override{
-    MergeIfSameObjects* candidate = dynamic_cast<MergeIfSameObjects*>(cond);
+  bool Satisfied(const MergeCondition& cond) override{
+    auto candidate = dynamic_cast<const MergeIfSameObjects*>(&cond);
     if (candidate == nullptr){
       return false;
     }
@@ -792,7 +792,7 @@ public:
     return false;
   }
 
-  bool Satisfied(MergeCondition*) override{
+  bool Satisfied(const MergeCondition&) override{
     return false;
   }
 };

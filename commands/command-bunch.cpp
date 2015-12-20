@@ -80,7 +80,7 @@ public:
     if (candidate->m_commands.size() != m_commands.size()){
       return false;
     }
-    if (m_mergeCondition->Unsatisfied(candidate->m_mergeCondition.get())){
+    if (m_mergeCondition->Unsatisfied(*candidate->m_mergeCondition)){
       return false;
     }
 

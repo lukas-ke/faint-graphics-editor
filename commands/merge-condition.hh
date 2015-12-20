@@ -36,8 +36,8 @@ public:
   virtual bool AssumeName() const = 0;
 
   // True if all commands should be merged.
-  virtual bool Satisfied(MergeCondition*) = 0;
-  bool Unsatisfied(MergeCondition* other);
+  virtual bool Satisfied(const MergeCondition&) = 0;
+  bool Unsatisfied(const MergeCondition& other);
 };
 
 using MergeConditionPtr = std::unique_ptr<MergeCondition>;

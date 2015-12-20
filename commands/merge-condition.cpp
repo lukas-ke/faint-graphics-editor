@@ -17,7 +17,7 @@
 
 namespace faint{
 
-bool MergeCondition::Unsatisfied(MergeCondition* other){
+bool MergeCondition::Unsatisfied(const MergeCondition& other){
   return !Satisfied(other);
 }
 

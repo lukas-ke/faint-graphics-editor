@@ -40,7 +40,7 @@ public:
     : m_appended(false)
   {}
 
-  bool Satisfied(MergeCondition*) override{
+  bool Satisfied(const MergeCondition&) override{
     // AppendSelection is only used for appending, not merging
     // CommandBunches.
     return false;

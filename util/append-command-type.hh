@@ -28,7 +28,7 @@ public:
     : m_appended(false)
   {}
 
-  bool Satisfied(MergeCondition*) override{
+  bool Satisfied(const MergeCondition&) override{
     // AppendCommandType is only used for appending, not merging
     // CommandBunches.
     return false;
