@@ -209,7 +209,8 @@ CommandPtr command_bunch(CommandType type,
   v.emplace_back(std::move(cmd2));
   return std::make_unique<CommandBunch>(type,
     std::move(v),
-    name, std::move(mergeCondition));
+    name,
+    std::move(mergeCondition));
 }
 
 } // namespace

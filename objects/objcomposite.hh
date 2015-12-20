@@ -28,7 +28,7 @@ enum class Ownership{
 Object* create_composite_object_raw(const objects_t&, Ownership);
 ObjectPtr create_composite_object(const objects_t&, Ownership);
 
-bool is_composite(Object*);
+bool is_composite(const Object&);
 
 } // namespace
 

@@ -27,6 +27,7 @@
 #include "text/utf8-string.hh"
 #include "util/object-util.hh"
 #include "util/setting-id.hh"
+#include "util/type-util.hh"
 
 namespace faint{
 
@@ -224,8 +225,8 @@ ObjectPtr create_composite_object(const objects_t& objects, Ownership owner){
   return std::make_unique<ObjComposite>(objects, owner);
 }
 
-bool is_composite(Object* obj){
-  return dynamic_cast<ObjComposite*>(obj) != nullptr;
+bool is_composite(const Object& obj){
+  return is_type<ObjComposite>(obj);
 }
 
 } // namespace

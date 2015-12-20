@@ -144,7 +144,7 @@ Returns the sub-object specified by the passed in integer. Only
 supported by groups." */
 static auto Smth_get_obj(const BoundObject<Object>& self, int index)
 {
-  if (!is_composite(self.obj)){
+  if (!is_composite(*self.obj)){
     throw TypeError("This object does not support sub-objects");
   }
 
@@ -240,7 +240,7 @@ static coord Smth_get_text_height(const BoundObject<Object>& self){
 /* method: "num_objs()->i\n
 Returns the number of sub-objects. Only useful for Group objects." */
 static int Smth_num_objs(const BoundObject<Object>& self){
-  if (!is_composite(self.obj)){
+  if (!is_composite(*self.obj)){
     throw ValueError("That object does not support sub-objects");
   }
   return self.obj->GetObjectCount();

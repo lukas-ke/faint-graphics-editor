@@ -46,20 +46,16 @@ public:
     if (!m_mergable || !sameFrame){
       return false;
     }
-    const auto* candidate = dynamic_cast<const TriCommand*>(&cmd);
-    return
-      candidate != nullptr &&
-      candidate->m_mergable &&
-      m_object == candidate->m_object;
+
+    return if_type<const TriCommand>(cmd,
+      [&](const TriCommand& cmd){
+        return cmd.ShouldMergeFor(m_object);
+      },
+      false_f);
   }
 
   void Merge(CommandPtr cmd) override{
-    assert(m_mergable);
-    TriCommand* candidate = dynamic_cast<TriCommand*>(cmd.get());
-    assert(candidate != nullptr);
-    assert(candidate->m_mergable);
-    assert(m_object == candidate->m_object);
-    m_new = candidate->m_new;
+    DoMerge(unique_ptr_cast<TriCommand>(std::move(cmd)));
   }
 
   utf8_string Name() const override{
@@ -71,6 +67,16 @@ public:
   }
 
 private:
+  void DoMerge(std::unique_ptr<TriCommand> cmd){
+    assert(m_mergable);
+    assert(cmd->m_mergable);
+    assert(m_object == cmd->m_object);
+    m_new = cmd->m_new;
+  }
+  bool ShouldMergeFor(Object* object) const{
+    return m_mergable && object == m_object;
+  }
+
   TriCommand& operator=(const TriCommand&);
   Object* m_object;
   Tri m_new;
