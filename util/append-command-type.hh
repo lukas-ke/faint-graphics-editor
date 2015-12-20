@@ -16,48 +16,10 @@
 #ifndef FAINT_APPEND_COMMAND_TYPE
 #define FAINT_APPEND_COMMAND_TYPE
 #include "commands/command-bunch.hh" // MergeCondition
+#include "util/merge-conditions.hh"
 
 namespace faint{
 
-template<typename T>
-class AppendCommandType : public MergeCondition{
-  // Condition for appending a command of a certain type to a
-  // command-bunch.
-public:
-  AppendCommandType()
-    : m_appended(false)
-  {}
-
-  bool Satisfied(const MergeCondition&) override{
-    // AppendCommandType is only used for appending, not merging
-    // CommandBunches.
-    return false;
-  }
-
-  bool ShouldAppend(const Command& cmd) const override{
-    if (m_appended){
-      // Only append a single command
-      return false;
-    }
-    return dynamic_cast<const T*>(&cmd) != nullptr;
-  }
-
-  void NotifyAppended() override{
-    m_appended = true;
-  }
-
-  bool AssumeName() const override{
-    return false;
-  }
-
-private:
-  bool m_appended;
-};
-
-template<typename T>
-std::unique_ptr<MergeCondition> append_if(){
-  return std::make_unique<AppendCommandType<T> >();
-}
 
 } // namespace
 

@@ -13,10 +13,10 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include "util/append-command-type.hh"
 #include "commands/command.hh"
 #include "commands/tri-cmd.hh"
 #include "objects/object.hh"
+#include "util/append-command-type.hh"
 
 namespace faint{
 
@@ -89,7 +89,7 @@ CommandPtr tri_command(Object* obj,
 }
 
 std::unique_ptr<MergeCondition> append_tri_commands(){
-  return std::make_unique<AppendCommandType<TriCommand> >();
+  return append_once_if_type<TriCommand>();
 }
 
 } // namespace

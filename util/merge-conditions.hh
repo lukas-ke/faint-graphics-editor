@@ -21,10 +21,24 @@
 namespace faint{
 
 enum class AssumeName{Yes, No};
-
 using CommandPredicate = std::function<bool(const Command&)>;
 
+// A merge condition that merges at most one command which fulfills
+// the predicate.
 MergeConditionPtr append_once_if(const CommandPredicate&, AssumeName);
+
+// A merge condition that merges at most one command if it is of the
+// specified type (or sub-type)
+template<typename T>
+MergeConditionPtr append_once_if_type(){
+  return append_once_if(
+    [](const Command& cmd){
+      // Fixme: Add cast-helper
+      // (e.g. like Javas fabulous instanceof)
+      return dynamic_cast<const T*>(&cmd) != nullptr;
+    },
+    AssumeName::No);
+}
 
 } // namespace
 

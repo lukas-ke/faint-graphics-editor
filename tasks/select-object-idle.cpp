@@ -224,7 +224,7 @@ static CommandPtr get_appending_insert_command(Object* obj,
   return command_bunch(cmd->Type(),
     bunch_name(cmd->Name()),
     std::move(cmd),
-    append_if<MovePointCommand>());
+    append_once_if_type<MovePointCommand>());
 }
 
 static CommandPtr get_appending_add_object_command(Object* obj,
