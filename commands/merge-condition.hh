@@ -13,6 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#ifndef FAINT_MERGE_CONDITION_HH
+#define FAINT_MERGE_CONDITION_HH
 #include <memory>
 
 namespace faint{ class Command; }
@@ -43,3 +45,5 @@ public:
 using MergeConditionPtr = std::unique_ptr<MergeCondition>;
 
 } // namespace
+
+#endif

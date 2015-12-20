@@ -29,53 +29,21 @@
 #include "util/setting-util.hh"
 #include "util/tool-util.hh"
 #include "util/visit-selection.hh"
-
+#include "util/merge-conditions.hh"
 namespace faint{
 
-class AppendSelection : public MergeCondition{
+std::unique_ptr<MergeCondition> append_selection(){
   // Used to append a selection command to a command-bunch.
   //
   // In practice, the use is:
-  // When there's a Floating selection and a
-  // user draws a new selection rectangle, the Stamp-selection command
-  // for the previous floating selection and the command selecting the
-  // new rectangle should be combined, so that a single undo unstamps
-  // the floating selection and removes the new rectangle, and if
-  // followed by redo, the selection is again stamped and the new
-  // rectangle selected.
-  //
-  // Fixme: Seems duplicated. Use template instead, with condition.
-public:
-  AppendSelection()
-    : m_appended(false)
-  {}
-
-  bool Satisfied(const MergeCondition&) override{
-    // AppendSelection is only used for appending, not merging
-    // CommandBunches.
-    return false;
-  }
-
-  bool ShouldAppend(const Command& cmd) const override{
-    return !m_appended &&
-      is_appendable_raster_selection_command(cmd);
-  }
-
-  void NotifyAppended() override{
-    m_appended = true;
-  }
-
-  bool AssumeName() const override{
-    // The rectangle selection command name should be used.
-    return true;
-  }
-
-private:
-  bool m_appended;
-};
-
-std::unique_ptr<MergeCondition> append_selection(){
-  return std::make_unique<AppendSelection>();
+  // When there's a Floating selection and a user draws a new
+  // selection rectangle, the Stamp-selection command for the previous
+  // floating selection and the command selecting the new rectangle
+  // should be combined, so that a single undo unstamps the floating
+  // selection and removes the new rectangle, and if followed by redo,
+  // the selection is again stamped and the new rectangle selected.
+  return append_once_if(is_appendable_raster_selection_command,
+    AssumeName::Yes);
 }
 
 static TaskResult deselect(const RasterSelection& selection,
