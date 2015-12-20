@@ -52,8 +52,8 @@ public:
     return {};
   }
 
-  Task* GetNewTask() override{
-    return m_newTask.Take().release(); // Fixme
+  TaskPtr GetNewTask() override{
+    return m_newTask.Take();
   }
 
   TaskResult MouseDown(const PosInfo& info) override{

@@ -529,8 +529,8 @@ public:
     return Cursor::ARROW;
   }
 
-  Task* GetNewTask() override{
-    return m_impl.newTask.Take().release(); // Fixme
+  TaskPtr GetNewTask() override{
+    return m_impl.newTask.Take();
   }
 
   IntRect GetRefreshRect(const RefreshInfo& info) const override{

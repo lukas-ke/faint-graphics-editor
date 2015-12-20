@@ -49,6 +49,9 @@ enum class TaskResult{
   PUSH // Push a new task (revert to this task when popping)
 };
 
+class Task;
+using TaskPtr = std::unique_ptr<Task>;
+
 class Task{
   // Tasks are used to split Tools into states.
 public:
@@ -61,7 +64,7 @@ public:
   virtual bool EatsSettings() const = 0;
   virtual CommandPtr GetCommand() = 0;
   virtual Cursor GetCursor(const PosInfo&) const = 0;
-  virtual Task* GetNewTask() = 0;
+  virtual TaskPtr GetNewTask() = 0;
   virtual IntRect GetRefreshRect(const RefreshInfo&) const = 0;
   virtual Optional<const faint::HistoryContext&> HistoryContext() const = 0;
   virtual TaskResult MouseDown(const PosInfo&) = 0;

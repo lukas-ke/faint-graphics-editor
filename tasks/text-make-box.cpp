@@ -54,8 +54,8 @@ public:
     return Cursor::CROSSHAIR;
   }
 
-  Task* GetNewTask() override{
-    return m_newTask.Take().release(); // Fixme
+  TaskPtr GetNewTask() override{
+    return m_newTask.Take();
   }
 
   IntRect GetRefreshRect(const RefreshInfo&) const override{

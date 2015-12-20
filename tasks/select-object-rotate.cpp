@@ -101,7 +101,7 @@ public:
     return Cursor::ROTATE;
   }
 
-  Task* GetNewTask() override{
+  TaskPtr GetNewTask() override{
     return nullptr;
   }
 

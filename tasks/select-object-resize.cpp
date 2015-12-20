@@ -67,7 +67,7 @@ public:
     return Cursor::ARROW;
   }
 
-  Task* GetNewTask() final override{
+  TaskPtr GetNewTask() final override{
     return nullptr;
   }
 

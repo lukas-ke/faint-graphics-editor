@@ -90,7 +90,7 @@ public:
     return nullptr;
   }
 
-  Task* GetNewTask() override{
+  TaskPtr GetNewTask() override{
     return nullptr;
   }
 

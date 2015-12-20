@@ -70,8 +70,8 @@ public:
   }
 
 
-  Task* GetNewTask() override{
-    return m_newTask.Take().release(); // Fixme
+  TaskPtr GetNewTask() override{
+    return m_newTask.Take(); // Fixme
   }
 
   IntRect GetRefreshRect(const RefreshInfo&) const override{

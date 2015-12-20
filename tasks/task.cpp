@@ -79,7 +79,7 @@ const Task* TaskWrapper::operator->() const{
 }
 
 void TaskWrapper::Push(){
-  Task* newTask = m_task->GetNewTask();
+  Task* newTask = m_task->GetNewTask().release(); // Fixme: Don't release
   assert(newTask != nullptr);
   assert(newTask != m_task);
   m_pushed.push_back(m_task);
@@ -88,7 +88,7 @@ void TaskWrapper::Push(){
 }
 
 bool TaskWrapper::Switch(){
-  Task* newTask = m_task->GetNewTask();
+  Task* newTask = m_task->GetNewTask().release(); // Fixme: Don't release
   assert(newTask != m_task);
   if (m_task != m_defaultTask){
     delete m_task;

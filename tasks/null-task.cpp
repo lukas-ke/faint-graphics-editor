@@ -53,7 +53,7 @@ public:
     return Cursor::DONT_CARE;
   }
 
-  Task* GetNewTask() override{
+  TaskPtr GetNewTask() override{
     return nullptr;
   }
 

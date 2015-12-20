@@ -57,7 +57,7 @@ public:
     return Cursor::CARET;
   }
 
-  Task* GetNewTask() override{
+  TaskPtr GetNewTask() override{
     return nullptr;
   }
 

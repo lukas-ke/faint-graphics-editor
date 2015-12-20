@@ -68,7 +68,7 @@ public:
     return Cursor::CROSSHAIR;
   }
 
-  Task* GetNewTask() override{
+  TaskPtr GetNewTask() override{
     return nullptr;
   }
 

@@ -89,7 +89,7 @@ public:
     return m_copy ? Cursor::CLONE : Cursor::MOVE;
   }
 
-  Task* GetNewTask() override{
+  TaskPtr GetNewTask() override{
     return nullptr;
   }
 

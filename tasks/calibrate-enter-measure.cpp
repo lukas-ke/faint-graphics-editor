@@ -172,7 +172,7 @@ public:
     return Cursor::CARET; // Fixme: Only when over textbox
   }
 
-  Task* GetNewTask() override{
+  TaskPtr GetNewTask() override{
     return nullptr;
   }
 

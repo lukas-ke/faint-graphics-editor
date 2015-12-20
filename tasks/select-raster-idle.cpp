@@ -33,7 +33,17 @@
 namespace faint{
 
 class AppendSelection : public MergeCondition{
-  // Used to add the selection to this command-bunch
+  // Used to append a selection command to a command-bunch.
+  //
+  // In practice, the use is:
+  // When there's a Floating selection and a
+  // user draws a new selection rectangle, the Stamp-selection command
+  // for the previous floating selection and the command selecting the
+  // new rectangle should be combined, so that a single undo unstamps
+  // the floating selection and removes the new rectangle, and if
+  // followed by redo, the selection is again stamped and the new
+  // rectangle selected.
+  //
   // Fixme: Seems duplicated. Use template instead, with condition.
 public:
   AppendSelection()
@@ -335,8 +345,8 @@ public:
     return info.inSelection ? Cursor::MOVE : Cursor::CROSSHAIR;
   }
 
-  Task* GetNewTask() override{
-    return m_newTask.Take().release(); // Fixme
+  TaskPtr GetNewTask() override{
+    return m_newTask.Take();
   }
 
   IntRect GetRefreshRect(const RefreshInfo& info) const override{

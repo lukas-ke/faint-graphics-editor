@@ -86,7 +86,7 @@ public:
     return Cursor::MOVE;
   }
 
-  Task* GetNewTask() override{
+  TaskPtr GetNewTask() override{
     return nullptr;
   }
 
