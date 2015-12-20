@@ -20,6 +20,7 @@
 #include <memory>
 #include "commands/command-constants.hh"
 #include "commands/command-ptr.hh"
+#include "commands/merge-condition.hh"
 #include "util/distinct.hh"
 
 namespace faint{
@@ -28,27 +29,6 @@ class utf8_string;
 
 class category_command_bunch;
 using bunch_name = Distinct<utf8_string, category_command_bunch, 0>;
-
-class MergeCondition{
-  // Specifies conditions for merging all commands in two
-  // CommandBunches, and for appending a single command to
-  // an existing CommandBunch.
-public:
-  virtual ~MergeCondition() = default;
-
-  // True if the command should be appended to the list of commands in
-  // the command bunch with this merge condition.
-  virtual bool ShouldAppend(const Command&) const = 0;
-  virtual void NotifyAppended() = 0;
-
-  // True if the command bunch should assume the name of the
-  // merged command bunch or appended command.
-  virtual bool AssumeName() const = 0;
-
-  // True if all commands should be merged.
-  virtual bool Satisfied(MergeCondition*) = 0;
-  bool Unsatisfied(MergeCondition*);
-};
 
 // Returns a CommandBunch with all the passed in commands, if more
 // than one, using the specified bunch_name for the command name. If
@@ -69,7 +49,7 @@ CommandPtr perhaps_bunch(CommandType,
 CommandPtr command_bunch(CommandType,
   const bunch_name&,
   commands_t,
-  std::unique_ptr<MergeCondition> c=nullptr);
+  MergeConditionPtr c=nullptr);
 
 CommandPtr command_bunch(CommandType,
   const bunch_name&,
@@ -78,13 +58,13 @@ CommandPtr command_bunch(CommandType,
 CommandPtr command_bunch(CommandType,
   const bunch_name&,
   CommandPtr,
-  std::unique_ptr<MergeCondition> c=nullptr);
+  MergeConditionPtr c=nullptr);
 
 CommandPtr command_bunch(CommandType,
   const bunch_name&,
   CommandPtr,
   CommandPtr,
-  std::unique_ptr<MergeCondition> c=nullptr);
+  MergeConditionPtr c=nullptr);
 
 } // namespace
 

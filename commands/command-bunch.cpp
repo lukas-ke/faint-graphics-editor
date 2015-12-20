@@ -36,7 +36,7 @@ public:
   CommandBunch(CommandType type,
     commands_t commands,
     const bunch_name& name,
-    std::unique_ptr<MergeCondition> mergeCondition=nullptr)
+    MergeConditionPtr mergeCondition=nullptr)
     : Command(type),
       m_commands(std::move(commands)),
       m_name(name.Get()),
@@ -130,7 +130,7 @@ private:
 
   commands_t m_commands;
   utf8_string m_name;
-  std::unique_ptr<MergeCondition> m_mergeCondition;
+  MergeConditionPtr m_mergeCondition;
 };
 
 template<typename T>
@@ -181,7 +181,7 @@ CommandPtr perhaps_bunch(CommandType type,
 CommandPtr command_bunch(CommandType type,
   const bunch_name& name,
   commands_t commands,
-  std::unique_ptr<MergeCondition> mergeCondition)
+  MergeConditionPtr mergeCondition)
 {
   return std::make_unique<CommandBunch>(type, std::move(commands),
     name,
@@ -200,7 +200,7 @@ CommandPtr command_bunch(CommandType type,
 CommandPtr command_bunch(CommandType type,
   const bunch_name& name,
   CommandPtr cmd,
-  std::unique_ptr<MergeCondition> mergeCondition)
+  MergeConditionPtr mergeCondition)
 {
   commands_t v;
   v.emplace_back(std::move(cmd));
@@ -214,7 +214,7 @@ CommandPtr command_bunch(CommandType type,
   const bunch_name& name,
   CommandPtr cmd1,
   CommandPtr cmd2,
-  std::unique_ptr<MergeCondition> mergeCondition)
+  MergeConditionPtr mergeCondition)
 {
   commands_t v;
   v.emplace_back(std::move(cmd1));
@@ -222,10 +222,6 @@ CommandPtr command_bunch(CommandType type,
   return std::make_unique<CommandBunch>(type,
     std::move(v),
     name, std::move(mergeCondition));
-}
-
-bool MergeCondition::Unsatisfied(MergeCondition* other){
-  return !Satisfied(other);
 }
 
 } // namespace
