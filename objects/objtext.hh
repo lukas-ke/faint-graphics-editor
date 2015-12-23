@@ -74,6 +74,14 @@ CommandPtr crop_text_region_command(ObjText* object);
 
 bool is_text(const Object&);
 
+ObjText* create_text_object_raw(const Tri&,
+  const utf8_string&,
+  const Settings&);
+
+ObjectPtr create_text_object(const Tri&,
+  const utf8_string&,
+  const Settings&);
+
 } // namespace
 
 #endif

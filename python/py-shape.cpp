@@ -441,7 +441,7 @@ PyObject* create_Text(const Either<Rect, Point>& region,
     });
 
   const auto tri = tri_from_rect(r);
-  return create_Shape(new ObjText(tri, text, s));
+  return create_Shape(create_text_object_raw(tri, text, s));
 }
 
 Object* shape_get_object(PyObject* raw){

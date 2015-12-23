@@ -251,8 +251,10 @@ static Index frameprops_Text(const BoundFrameProps& self,
   const utf8_string& text,
   const Settings& s)
 {
-  return self.frame.AddObject(new ObjText(tri_from_rect(r), text,
-    updated(default_text_settings(), s)));
+  return self.frame.AddObject(
+    create_text_object_raw(tri_from_rect(r),
+      text,
+      updated(default_text_settings(), s)));
 }
 
 /* method: "set_calibration((x0,y0,x1,y1),length,unit)\n

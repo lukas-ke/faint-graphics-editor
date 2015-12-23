@@ -170,7 +170,7 @@ public:
       m_autoComplete(text_auto_complete()),
       m_newTextObject(true),
       m_settings(settings),
-      m_textObject(new ObjText(tri_from_rect(r), str, settings))
+      m_textObject(create_text_object_raw(tri_from_rect(r), str, settings))
   {}
 
   EditText(ObjText* obj, Settings& s, ToolActions& actions)

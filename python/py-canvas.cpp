@@ -685,7 +685,8 @@ static BoundObject<Object> canvas_Text(CanvasT canvas,
       return Rect(pt,
         Size(100,100)); // Fixme: Just a dummy size. Should auto-size instead.
     });
-  return canvas_add_object(canvas, new ObjText(tri_from_rect(r), text, s));
+  return canvas_add_object(canvas,
+    create_text_object_raw(tri_from_rect(r), text, s));
 }
 
 /* method: "ObjTri(tri)->TriObject\n

@@ -336,4 +336,18 @@ bool is_text(const Object& obj){
   return is_type<ObjText>(obj);
 }
 
+ObjText* create_text_object_raw(const Tri& tri,
+  const utf8_string& text,
+  const Settings& settings)
+{
+  return new ObjText(tri, text, settings);
+}
+
+ObjectPtr create_text_object(const Tri& tri,
+  const utf8_string& text,
+  const Settings& settings)
+{
+  return std::make_unique<ObjText>(tri, text, settings);
+}
+
 } // namespace
