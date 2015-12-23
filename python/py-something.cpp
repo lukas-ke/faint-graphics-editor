@@ -117,7 +117,7 @@ static bool Smth_crop(const BoundObject<Object>& self){
     return false;
   }
   else if (ObjText* textObj = dynamic_cast<ObjText*>(self.obj)){
-    if (CommandPtr cmd = crop_text_region_command(textObj)){
+    if (CommandPtr cmd = crop_text_region_command(*textObj)){
       run_command(self, std::move(cmd));
       return true;
     }
@@ -214,7 +214,7 @@ static text_lines_t Smth_get_text_lines(const BoundObject<Object>& self){
 
   const auto& image = self.canvas->GetFrame(self.frameId);
   auto& ctx = image.GetExpressionContext();
-  return split_evaluated(ctx, text);
+  return split_evaluated(ctx, *text);
 }
 
 /* method: "get_text_baseline()->f\nReturns the offset from the top
@@ -247,7 +247,7 @@ static int Smth_num_objs(const BoundObject<Object>& self){
 }
 
 /* method: "pixel_snap()\n
- Aligns the object with the pixel grid to avoid smearing." */
+Aligns the object with the pixel grid to avoid smearing." */
 static void Smth_pixel_snap(const BoundObject<Object>& self){
   run_command(self, get_pixel_snap_command(self.obj));
 }

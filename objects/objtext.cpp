@@ -317,19 +317,17 @@ text_lines_t ObjText::Split(const TextInfo& textInfo,
       maxWidth);
 }
 
-text_lines_t split_evaluated(ExpressionContext& ctx,
-  const ObjText* text)
-{
-  return split_string(TextInfoDC(text->GetSettings()),
-    text->GetEvaluatedString(ctx),
-    text->GetTri().Width());
+text_lines_t split_evaluated(ExpressionContext& ctx, const ObjText& text){
+  return split_string(TextInfoDC(text.GetSettings()),
+    text.GetEvaluatedString(ctx),
+    text.GetTri().Width());
 }
 
-CommandPtr crop_text_region_command(ObjText* text){
-  const Tri oldTri = text->GetTri();
-  Tri tri(rotated(tri_from_rect(text->GetAutoSizedRect()),
+CommandPtr crop_text_region_command(ObjText& text){
+  const Tri oldTri = text.GetTri();
+  Tri tri(rotated(tri_from_rect(text.GetAutoSizedRect()),
       oldTri.GetAngle(), oldTri.P0()));
-  return tri_command(text, New(tri), Old(oldTri), "Auto-Size");
+  return tri_command(&text, New(tri), Old(oldTri), "Auto-Size");
 }
 
 bool is_text(const Object& obj){

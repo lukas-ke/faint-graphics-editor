@@ -52,6 +52,10 @@ CommandPtr crop_raster_object_command(ObjRaster*);
 
 bool is_raster(const Object&);
 
+ObjRaster* create_raster_object_raw(const Tri&, const Bitmap&, const Settings&);
+ObjectPtr create_raster_object(const Tri&, const Bitmap&, const Settings&);
+
+
 } // namespace
 
 #endif

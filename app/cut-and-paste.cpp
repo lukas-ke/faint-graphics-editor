@@ -165,7 +165,7 @@ void paste_to_active_canvas(AppContext& app){
       Settings s(default_raster_settings());
       s.Update(app.GetToolSettings());
       auto tri = tri_for_bmp(canvas.GetImageViewStart(), bitmap);
-      Object* rasterObj = new ObjRaster(tri, bitmap, s);
+      auto rasterObj = create_raster_object_raw(tri, bitmap, s);
       canvas.RunCommand(add_object_command(rasterObj, select_added(false),
         "Paste"));
       canvas.SelectObject(rasterObj, deselect_old(true));

@@ -633,7 +633,7 @@ static BoundObject<Object> canvas_Raster(CanvasT canvas,
     });
 
   return canvas_add_object(canvas,
-    new ObjRaster(tri_from_rect(r), bmp,
+    create_raster_object_raw(tri_from_rect(r), bmp,
       specific_or_app(canvas, default_raster_settings(), s)));
 }
 

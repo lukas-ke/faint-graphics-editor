@@ -209,8 +209,10 @@ static Index frameprops_Raster(const BoundFrameProps& self,
   const Bitmap& bmp,
   const Settings& s)
 {
-  return self.frame.AddObject(new ObjRaster(tri_from_rect(r), bmp,
-    updated(default_raster_settings(), s)));
+  return self.frame.AddObject(
+    create_raster_object_raw(tri_from_rect(r),
+      bmp,
+      updated(default_raster_settings(), s)));
 }
 
 /* method: "Rect((x,y,w,h),settings[,name])->id\n

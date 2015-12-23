@@ -145,7 +145,7 @@ CommandPtr crop_one_object(Object* obj){
   }
   ObjText* text = dynamic_cast<ObjText*>(obj);
   if (text != nullptr){
-    return crop_text_region_command(text);
+    return crop_text_region_command(*text);
   }
   return nullptr;
 }

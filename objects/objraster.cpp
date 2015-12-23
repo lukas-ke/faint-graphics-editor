@@ -223,4 +223,20 @@ bool is_raster(const Object& obj){
   return is_type<ObjRaster>(obj);
 }
 
+
+ObjRaster* create_raster_object_raw(const Tri& tri,
+  const Bitmap& bmp,
+  const Settings& settings)
+{
+  return new ObjRaster(tri, bmp, settings);
+
+}
+
+ObjectPtr create_raster_object(const Tri& tri,
+  const Bitmap& bmp,
+  const Settings& settings)
+{
+  return std::make_unique<ObjRaster>(tri, bmp, settings);
+}
+
 } // namespace

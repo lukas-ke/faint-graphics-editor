@@ -185,7 +185,7 @@ static text_lines_t Shape_get_text_lines(const Object& self){
   }
 
   NullExpressionContext ctx;
-  return split_evaluated(ctx, text);
+  return split_evaluated(ctx, *text);
 }
 
 /* method: "get_type()->s\n
@@ -404,10 +404,9 @@ PyObject* create_Raster(const Either<Point, Rect>& region,
       return r;
     });
 
-
   const auto tri = tri_from_rect(r);
   const auto s = merge_settings(maybeSettings, default_raster_settings());
-  return create_Shape(new ObjRaster(tri, bmp, s));
+  return create_Shape(create_raster_object_raw(tri, bmp, s));
 }
 
 PyObject* create_Spline(const std::vector<coord>& coords,

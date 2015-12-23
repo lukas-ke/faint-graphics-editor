@@ -133,7 +133,7 @@ static void f_autosize_raster(PyFuncContext& ctx, BoundObject<ObjRaster>& bound)
 /* method: "autosize_text(text_object)\n
 Resizes the object's text box to snugly fit the text." */
 static void f_autosize_text(PyFuncContext& ctx, BoundObject<ObjText>& bound){
-  ctx.py.RunCommand(bound.Plain(), crop_text_region_command(bound.obj));
+  ctx.py.RunCommand(bound.Plain(), crop_text_region_command(*bound.obj));
 }
 
 Canvas& or_active(AppContext& app, const Optional<Canvas*>& canvas){
