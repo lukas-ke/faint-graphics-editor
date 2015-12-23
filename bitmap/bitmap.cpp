@@ -168,8 +168,8 @@ void Bitmap::Swap(Bitmap& other){
 }
 
 Bitmap& Bitmap::operator=(Bitmap&& other){
-  Bitmap copy(std::move(other));
-  copy.Swap(*this);
+  Bitmap moved(std::move(other));
+  moved.Swap(*this);
   return *this;
 }
 

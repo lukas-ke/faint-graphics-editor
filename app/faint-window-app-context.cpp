@@ -261,8 +261,8 @@ void FaintDialogContext::OnClosed(BitmapCommandPtr cmd){
   auto& canvas = m_app.GetActiveCanvas();
   if (cmd != nullptr){
     canvas.RunCommand(context_targetted(std::move(cmd), canvas));
-
   }
+
   m_app.EndModalDialog(); // Fixme
   m_windowFeedback->Reset();
   m_app.GetActiveCanvas().Refresh();
@@ -593,6 +593,7 @@ Canvas* FaintWindowContext::LoadAsFrames(const FileList& paths,
       }
     }
     if (!loaded){
+      // Fixme
       // show_load_failed_error(m_faintWindow, filePath, "One path could not be loaded.");
       return nullptr;
     }

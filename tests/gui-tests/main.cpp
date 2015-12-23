@@ -112,10 +112,10 @@ public:
         art.Get(faint::Cursor::RESIZE_WE),
         art.Get(faint::Cursor::RESIZE_NS))
   {
-    m_windowFeedback = std::move(create_window_feedback(
+    m_windowFeedback = create_window_feedback(
       [this](faint::BitmapCommandPtr cmd){
         OnClosed(std::move(cmd));
-      }));
+      });
   }
 
   faint::CommonCursors& GetCommonCursors() override{

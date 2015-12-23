@@ -171,7 +171,8 @@ CommandPtr command_bunch(CommandType type,
   commands_t commands,
   MergeConditionPtr mergeCondition)
 {
-  return std::make_unique<CommandBunch>(type, std::move(commands),
+  return std::make_unique<CommandBunch>(type,
+    std::move(commands),
     name,
     std::move(mergeCondition));
 }
