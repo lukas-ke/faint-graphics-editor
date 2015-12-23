@@ -221,8 +221,10 @@ static CommandPtr get_appending_insert_command(Object* obj,
   const Point& pos)
 {
   auto cmd = add_point_command(obj, handle + 1, pos);
-  return command_bunch(cmd->Type(),
-    bunch_name(cmd->Name()),
+  auto type = cmd->Type();
+  auto name = bunch_name(cmd->Name());
+  return command_bunch(type,
+    bunch_name(name),
     std::move(cmd),
     append_once_if_type<MovePointCommand>());
 }
@@ -231,8 +233,10 @@ static CommandPtr get_appending_add_object_command(Object* obj,
   const utf8_string& commandName)
 {
   auto cmd = add_object_command(obj, select_added(true), commandName);
-  return command_bunch(cmd->Type(),
-    bunch_name(cmd->Name()),
+  const auto type = cmd->Type();
+  const auto name = bunch_name(cmd->Name());
+  return command_bunch(type,
+    name,
     std::move(cmd),
     append_tri_commands());
 }
