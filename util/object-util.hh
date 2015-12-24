@@ -159,7 +159,6 @@ bool toggle_edit_points(Object*);
 // being the start value incremented by one for each point.
 std::vector<ExtensionPoint> extension_index_from(int, const std::vector<Point>&);
 
-
 } // namespace
 
 #endif

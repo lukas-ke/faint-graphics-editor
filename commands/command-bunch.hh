@@ -21,11 +21,12 @@
 #include "commands/command-constants.hh"
 #include "commands/command-ptr.hh"
 #include "commands/merge-condition.hh"
+#include "text/utf8-string.hh"
 #include "util/distinct.hh"
 
 namespace faint{
+
 class Command;
-class utf8_string;
 
 class category_command_bunch;
 using bunch_name = Distinct<utf8_string, category_command_bunch, 0>;
