@@ -19,6 +19,7 @@
 #include <vector>
 #include "wx/chartype.h"
 #include "util/common-fwd.hh"
+#include "util/make-vector.hh"
 
 class wxArrayString;
 class wxBitmap;
@@ -45,13 +46,7 @@ wxSize to_wx(const IntSize&);
 
 template<typename T>
 auto to_wx(const std::vector<T>& v){
-  using T2 = decltype(to_wx(v.front()));
-  std::vector<T2> v2;
-  v2.reserve(v.size());
-  for (auto& o : v){
-    v2.push_back(to_wx(o));
-  }
-  return v2;
+  return make_vector(v, [](const auto& o){ return to_wx(o); });
 }
 
 // Converts a Bitmap to a wxBitmap.

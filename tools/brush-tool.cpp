@@ -30,6 +30,7 @@
 #include "rendering/render-brush.hh"
 #include "text/formatting.hh"
 #include "tools/standard-tool.hh"
+#include "util/make-vector.hh"
 #include "util/pos-info.hh"
 #include "util/setting-util.hh"
 #include "util/tool-util.hh"
@@ -96,12 +97,10 @@ static Settings brush_settings(const Settings& allSettings){
 }
 
 static std::vector<LineSegment> floated(const std::vector<IntLineSegment>& v){
-  std::vector<LineSegment> out;
-  out.reserve(v.size());
-  for (const auto& l : v){
-    out.push_back(floated(l));
-  }
-  return out;
+  return make_vector(v,
+    [](const IntLineSegment& l){
+      return floated(l);
+    });
 }
 
 static Settings maybe_offsat_paint(const Settings& s, const Brush& brush){

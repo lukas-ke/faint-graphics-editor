@@ -76,7 +76,7 @@ std::string to_png_string(const Bitmap& bmp){
 }
 
 std::vector<utf8_string> available_font_facenames(){
-  auto faceNames(wxFontEnumerator().GetFacenames());
+  auto faceNames = wxFontEnumerator().GetFacenames();
   std::vector<utf8_string> v;
   v.reserve(faceNames.size());
   for (const auto& faceName : faceNames){
