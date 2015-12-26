@@ -18,6 +18,7 @@
 #include "geo/pixel-snap.hh"
 #include "geo/points.hh"
 #include "geo/pathpt-iter.hh"
+#include "util/make-vector.hh"
 
 namespace faint{
 
@@ -51,28 +52,29 @@ static LineTo pixel_snap(const LineTo& l, coord lineWidth){ // Fixme: Use lineWi
   return LineTo(pixel_snap_xy(l.p, lineWidth));
 }
 
-Points pixel_snap(const Points& src, coord lineWidth){
-  if (src.Size() <= 1){
-    return src;
+std::vector<PathPt> pixel_snap(const std::vector<PathPt>& pts, coord lineWidth){
+  if (pts.size() <= 1){
+    return pts;
   }
-  std::vector<PathPt> pts(src.GetPoints());
-  std::vector<PathPt> out;
-  out.reserve(pts.size());
 
-  for_each_pt(pts,
-    [&](const ArcTo& a){out.push_back(a);},
-    [&](const Close& c){out.push_back(c);},
-    [&](const CubicBezier& b){out.push_back(b);},
-    [&](const LineTo& l){
-      // Fixme: Too simplistic. Needs to account for the previous point
-      // to avoid getting blended line end-points.
-      out.push_back(pixel_snap(l, lineWidth));
-    },
-    [&](const MoveTo& m){
-      // Fixme: See line-to note
-      out.push_back(pixel_snap(m, lineWidth));
+  const auto snap = [lineWidth](const auto& p){
+    // Fixme: Too simplistic. Needs to account for the previous point
+    // to avoid getting blended line end-points.
+    return pixel_snap(p, lineWidth);
+  };
+
+  return make_vector(pts, [lineWidth, snap](const PathPt& pt){
+    return pt.Visit(
+      convert_f<ArcTo, PathPt>,
+      convert_f<Close, PathPt>,
+      convert_f<CubicBezier, PathPt>,
+      snap,
+      snap);
     });
-  return Points(out);
+}
+
+Points pixel_snap(const Points& src, coord lineWidth){
+  return Points(pixel_snap(src.GetPoints(), lineWidth));
 }
 
 } // namespace

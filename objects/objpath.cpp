@@ -245,13 +245,13 @@ public:
   Optional<CmdFuncs> PixelSnapFunc() override{
     return {CmdFuncs(
       [this](){
-        m_points = pixel_snap(m_points, m_settings.Get(ts_LineWidth));
+        m_points = Points(pixel_snap(m_points.GetPoints(m_tri),
+          m_settings.Get(ts_LineWidth)));
         m_tri = m_points.GetTri();
       },
       [oldPoints=m_points, oldTri=m_tri, this](){
         m_points = oldPoints;
         m_tri = oldTri;
-
       })};
   }
 

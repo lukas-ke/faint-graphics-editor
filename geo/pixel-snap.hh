@@ -17,6 +17,7 @@
 #define FAINT_PIXEL_SNAP_HH
 #include "geo/tri.hh"
 #include "geo/point.hh"
+#include "geo/pathpt.hh"
 
 namespace faint{
 
@@ -29,7 +30,7 @@ Tri pixel_snap_middle(const Tri&);
 
 class Points;
 Points pixel_snap(const Points&, coord lineWidth);
-
+std::vector<PathPt> pixel_snap(const std::vector<PathPt>&, coord lineWidth);
 
 } // namespace
 
