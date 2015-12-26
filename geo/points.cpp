@@ -20,8 +20,13 @@
 #include "geo/scale.hh"
 #include "geo/size.hh"
 #include "util/iter.hh"
+#include "util/make-vector.hh"
 
 namespace faint{
+
+static Point get_end_point(const PathPt& pt){
+  return pt.p;
+}
 
 Tri tri_from_points(const std::vector<PathPt>& points){
   if (points.empty()){
@@ -183,24 +188,11 @@ std::vector<PathPt> Points::GetPoints() const{
 }
 
 std::vector<Point> Points::GetPointsDumb() const{
-  std::vector<Point> v;
-  v.reserve(m_points.size());
-  for (size_t i = 0; i != m_points.size(); i++){
-    const PathPt& pt(m_points[i]);
-    v.push_back(pt.p);
-  }
-  return v;
+  return make_vector(m_points, get_end_point);
 }
 
 std::vector<Point> Points::GetPointsDumb(const Tri& tri) const{
-  std::vector<PathPt> pts(GetPoints(tri));
-  std::vector<Point> v;
-  v.reserve(m_points.size());
-  for (size_t i = 0; i != m_points.size(); i++){
-    PathPt& pt(pts[i]);
-    v.push_back(pt.p);
-  }
-  return v;
+  return make_vector(GetPoints(tri), get_end_point);
 }
 
 Tri Points::GetTri() const {
