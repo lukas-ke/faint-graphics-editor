@@ -40,11 +40,12 @@
 #include "rendering/faint-dc.hh"
 #include "rendering/filter-class.hh"
 #include "text/utf8-string.hh"
+#include "util/default-settings.hh"
 #include "util/math-constants.hh"
 #include "util/optional.hh"
 #include "util/setting-util.hh"
 #include "util/settings.hh"
-#include "util/default-settings.hh"
+#include "util/make-vector.hh"
 
 namespace faint{
 
@@ -300,14 +301,12 @@ static bool has_front_arrow(const Settings& s){
 }
 
 static std::vector<Point> transform_points(const std::vector<Point>& points,
-  coord scale, const Point& origin)
+  coord scale,
+  const Point& origin)
 {
-  std::vector<Point> v2;
-  v2.reserve(points.size());
-  for (const Point& pt : points){
-    v2.push_back(pt * scale + origin);
-  }
-  return v2;
+  return make_vector(points, [=](const Point& p){
+    return p * scale + origin;
+  });
 }
 
 static void rounded_rectangle(CairoContext& cr, const Tri& tri, const Settings& s){
