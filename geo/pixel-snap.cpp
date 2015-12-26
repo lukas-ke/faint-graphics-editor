@@ -19,6 +19,7 @@
 #include "geo/points.hh"
 #include "geo/pathpt-iter.hh"
 #include "util/make-vector.hh"
+#include "util/type-util.hh"
 
 namespace faint{
 

@@ -21,7 +21,7 @@
 namespace faint{
 
 void Angle::operator+=(const Angle& other){
-  m_radians += other.Rad();
+  m_radians += other.m_radians;
 }
 
 bool Angle::operator==(const Angle& other) const{

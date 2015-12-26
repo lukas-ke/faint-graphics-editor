@@ -90,4 +90,10 @@ IntRect centered(const IntSize& item, const IntSize& span);
 
 } // namespace
 
+namespace faint { namespace generic{
+template<typename T> auto floored(const T& v){ return faint::floored(v); }
+
+}} // namespace
+
+
 #endif

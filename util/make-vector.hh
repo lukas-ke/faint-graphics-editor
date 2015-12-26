@@ -77,11 +77,6 @@ auto make_map(const Generator& gen, Func&& f){
   return m;
 }
 
-template<class T1, class T2>
-T2 convert_f(const T1& v){
-  return T2(v);
-}
-
 } // namespace
 
 #endif

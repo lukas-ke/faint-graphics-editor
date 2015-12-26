@@ -15,6 +15,7 @@
 
 #ifndef FAINT_TYPE_UTIL_HH
 #define FAINT_TYPE_UTIL_HH
+#include <memory>
 
 namespace faint{
 
@@ -54,6 +55,11 @@ auto if_type(Src&& vSrc, Func&& f, Func2&& otherwise){
 
 inline bool false_f(){
   return false;
+}
+
+template<class T1, class T2>
+T2 convert_f(const T1& v){
+  return T2(v);
 }
 
 } // namespace

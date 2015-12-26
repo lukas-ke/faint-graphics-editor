@@ -13,8 +13,6 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include <algorithm> // transform
-#include <iterator> // back_inserter
 #include "geo/angle.hh"
 #include "geo/geo-func.hh"
 #include "geo/int-rect.hh"
@@ -25,6 +23,7 @@
 #include "geo/rect.hh"
 #include "geo/scale.hh"
 #include "geo/size.hh"
+#include "util/make-vector.hh"
 
 namespace faint{
 
@@ -65,11 +64,7 @@ Size floated(const IntSize& sz){
 }
 
 std::vector<IntPoint> floored(const std::vector<Point>& points){
-  std::vector<IntPoint> v2;
-  v2.reserve(points.size());
-  std::transform(begin(points), end(points), std::back_inserter(v2),
-    [](const Point& pt){return floored(pt);});
-  return v2;
+  return make_vector(points, generic::floored<Point>);
 }
 
 IntRect padded(const IntRect& r, const Padding& p){
