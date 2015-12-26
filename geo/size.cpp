@@ -23,7 +23,7 @@ bool Size::operator==(const Size& other) const {
 }
 
 bool Size::operator!=(const Size& other) const {
-    return !((*this)==other);
+  return !operator==(other);
 }
 
 Size operator+(const Size& lhs, const Size& rhs){
