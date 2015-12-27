@@ -23,6 +23,8 @@
 #include "geo/limits.hh"
 #include "text/formatting.hh"
 #include "util-wx/stream.hh"
+#include "util/make-vector.hh"
+#include "util/range-iter.hh"
 #include "util/serialize-tuple.hh"
 
 namespace faint{
@@ -54,11 +56,7 @@ static BitmapFileHeader create_bitmap_file_header(const PaletteColors& numColors
 }
 
 static ColorList grayscale_color_table(){
-  ColorList l;
-  for (int i = 0; i != 256; i++){
-    l.push_back(grayscale_rgb(i));
-  }
-  return l;
+  return make_vector(make_closed_range(0, 255), grayscale_rgb);
 }
 
 static Bitmap read_bmp_or_throw(const FilePath& filePath){
