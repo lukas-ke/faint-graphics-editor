@@ -28,6 +28,7 @@
 #include "python/py-png.hh"
 #include "python/py-settings.hh"
 #include "python/py-shape.hh"
+#include "python/py-something.hh"
 #include "python/py-tri.hh"
 #include "wx/image.h"
 
@@ -54,6 +55,8 @@ static void add_compatibility_types(PyObject* module){
   // possible to instantiate them in the extension.
   add_type_object(module, CanvasType, "_Canvas");
   add_type_object(module, FrameType, "_Frame");
+
+  add_type_object(module, SmthType, "_Something");
 }
 
 static PyObject* init_extension_module(){
