@@ -66,7 +66,8 @@ MappedColors::MappedColors(const AlphaMap& map,
     transparencyIndex(transparencyIndex)
 {
   assert(transparencyIndex.NotSet() || 0 <= transparencyIndex.Get());
-  assert(transparencyIndex.NotSet() || transparencyIndex.Get() < palette.size());
+  assert(transparencyIndex.NotSet() ||
+    transparencyIndex.Get() < resigned(palette.size()));
 }
 
 // Fixme: If I replace with 50, gradients.png works

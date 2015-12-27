@@ -22,43 +22,7 @@ namespace faint{
 
 class AlphaMap;
 class Bitmap;
-
-class ColorList{
-public:
-  ColorList(){
-    m_colors.reserve(256);
-  }
-
-  void push_back(const ColRGB& c){m_colors.push_back(c);}
-
-  const ColRGB& operator[](int i) const{
-    return m_colors[i];
-  }
-
-  int size() const{
-    return static_cast<int>(m_colors.size());
-  }
-
-  auto begin(){
-    return m_colors.begin();
-  }
-
-  auto end(){
-    return m_colors.end();
-  }
-
-  auto begin() const{
-    return m_colors.begin();
-  }
-
-  auto end() const{
-    return m_colors.end();
-  }
-
-  using value_type = ColRGB;
-private:
-  std::vector<ColRGB> m_colors;
-};
+using ColorList = std::vector<ColRGB>;
 
 Bitmap bitmap_from_indexed_colors(const AlphaMap&, const ColorList&);
 

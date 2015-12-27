@@ -22,7 +22,6 @@ class AlphaMap;
 class BinaryReader;
 class BinaryWriter;
 class Bitmap;
-class ColorList;
 class MappedColors;
 
 // Returns the required row-stride for the pixel-data rows with the
