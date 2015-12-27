@@ -46,6 +46,7 @@
 #include "util/command-util.hh"
 #include "util/image.hh"
 #include "util/object-util.hh"
+#include "util/points-to-svg-path-string.hh"
 #include "util/setting-util.hh"
 #include "util-wx/encode-bitmap.hh"
 #include "util-wx/font.hh"
@@ -325,6 +326,15 @@ static void Smth_skew(const BoundObject<Object>& self, coord& skew){
   run_command(self,
     tri_command(obj, New(newTri), Old(oldTri)));
 }
+
+/* method: "to_svg_path(object)->s\n
+Returns an svg-path string describing the object." */
+static utf8_string Smth_to_svg_path(const BoundObject<Object>& self){
+  const Image& frame(self.canvas->GetFrame(self.frameId));
+  auto& ctx(frame.GetExpressionContext());
+  return points_to_svg_path_string(self.obj->GetPath(ctx));
+}
+
 
 /* method: "update_settings(s)\nUpdate this object's settings with
 those from the passed in Settings object.\nAny settings not relevant

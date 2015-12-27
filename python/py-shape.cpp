@@ -30,6 +30,7 @@
 #include "objects/objtext.hh"
 #include "util/default-settings.hh"
 #include "util/object-util.hh"
+#include "util/points-to-svg-path-string.hh"
 #include "python/mapped-type.hh"
 #include "python/py-shape.hh"
 #include "python/py-ugly-forward.hh"
@@ -125,6 +126,16 @@ static void Shape_dealloc(shapeObject* self){
   // Fixme: Call some base-dealloc? (cw py-bitmap.cpp)
 }
 
+/* method: "get_bitmap()->bmp\n
+Returns a copy of the bitmap from a Raster object." */
+static const Bitmap& Shape_get_bitmap(const Object& self){
+  const ObjRaster* rasterObj = dynamic_cast<const ObjRaster*>(&self);
+  if (rasterObj == nullptr){
+    throw ValueError("That object does not support fonts");
+  }
+  return rasterObj->GetBitmap();
+}
+
 /* method: "get_obj(i)->Object\n
 Returns the sub-object specified by the passed in integer. Only
 supported by groups." */
@@ -134,6 +145,16 @@ static PyObject* Shape_get_obj(Object& self, int index){
   }
 
   return get_holder(self.GetObject(index));
+}
+
+/* method: "get_text_baseline()->f\nReturns the offset from the top
+of a row to the baseline. Relevant only for text objects" */
+static coord Shape_get_text_baseline(Object& self){
+  ObjText* txt = dynamic_cast<ObjText*>(&self);
+  if (txt == nullptr){
+    throw ValueError("This object does not have text attributes");
+  }
+  return txt->BaselineOffset();
 }
 
 /* method: "num_objs()->i\n
@@ -209,6 +230,13 @@ static Tri Shape_get_tri(const Object& self){
 /* method: "get_tri()" */
 static void Shape_set_tri(Object& self, const Tri& tri){
   return self.SetTri(tri);
+}
+
+/* method: "to_svg_path(object)->s\n
+Returns an svg-path string describing the object." */
+static utf8_string Shape_to_svg_path(const Object& self){
+  NullExpressionContext ctx;
+  return points_to_svg_path_string(self.GetPath(ctx));
 }
 
 /* method: "get_rect() -> (x,y,w,h)\n

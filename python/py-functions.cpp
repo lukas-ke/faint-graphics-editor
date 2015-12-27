@@ -65,50 +65,6 @@ static void py_blit_bitmap(const Bitmap& src,
   blit(offsat(src, topLeft), onto(dst->bmp));
 }
 
-// Helper for to_svg_path
-static utf8_string points_to_svg_path_string(const std::vector<PathPt>& points){
-  std::stringstream ss;
-
-  for_each_pt(points,
-    [&ss](const ArcTo& a){
-      ss << "A" << " " <<
-        a.r.x << " " <<
-        a.r.y << " " <<
-        a.axisRotation.Deg() << " " <<
-        a.largeArcFlag << " " <<
-        a.sweepFlag << " " <<
-        a.p.x << " " <<
-        a.p.y << " ";
-    },
-    [&ss](const Close&){
-      ss << "z ";
-    },
-    [&ss](const CubicBezier& b){
-      ss << "C " <<
-        b.c.x << " " << b.c.y << " " <<
-        b.d.x << " " << b.d.y << " " <<
-        b.p.x << " " << b.p.y << " ";
-    },
-    [&ss](const LineTo& l){
-      ss << "L " <<
-        l.p.x << " " << l.p.y << " ";
-    },
-    [&ss](const MoveTo& m){
-      ss << "M " <<
-        m.p.x << " " << m.p.y << " ";
-    });
-
-  return utf8_string(slice_up_to(ss.str(), -1));
-}
-
-/* function: "to_svg_path(object)->s\n
-Returns an svg-path string describing the object." */
-static utf8_string to_svg_path(BoundObject<Object> bound){
-  const Image& frame(bound.canvas->GetFrame(bound.frameId));
-  auto& ctx(frame.GetExpressionContext());
-  return points_to_svg_path_string(bound.obj->GetPath(ctx));
-}
-
 /* function: "_one_color_bg(frame)->b\n
 True if the frame background consists of a single color."
 name: "_one_color_bg" */

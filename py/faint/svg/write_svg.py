@@ -320,7 +320,7 @@ def create_ellipse_path(obj, state):
 
     # Fixme: Save regular ellipses as ellipses
     element = ET.Element('path')
-    element.set('d', faint.to_svg_path(obj))
+    element.set('d', obj.to_svg_path())
 
     style = svg_fill_style(obj, state) + svg_line_dash_style(obj)
     element.set('style', style)
@@ -427,7 +427,7 @@ def create_linear_gradient(gradient, id_attribute):
 def create_path(obj, state):
     """Creates an SVG <path> element from a Faint Path."""
 
-    path_str = faint.to_svg_path(obj)
+    path_str = obj.to_svg_path()
 
     if len(path_str) == 0:
         # Fixme: Need a way to warn from save?
@@ -624,7 +624,7 @@ def create_spline_path(obj, state):
     """
 
     element = ET.Element('path')
-    element.set('d', faint.to_svg_path(obj))
+    element.set('d', obj.to_svg_path())
     element.set('faint:type', 'spline')
 
     style = (svg_line_style(obj, state) +
