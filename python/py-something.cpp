@@ -25,6 +25,7 @@
 #include "commands/tri-cmd.hh"
 #include "geo/arc.hh" // For AngleSpan
 #include "geo/int-rect.hh"
+#include "geo/pathpt.hh"
 #include "geo/rect.hh"
 #include "objects/objcomposite.hh"
 #include "objects/objellipse.hh"
@@ -165,6 +166,14 @@ vertices for Polygons, Splines and Paths. Returns the points in the
 Tri for other objects." */
 static std::vector<coord> Smth_get_points(const BoundObject<Object>& self){
   return get_flat_coordinate_list(*self.obj);
+}
+
+/* method: "get_path_points()\n
+Returns a list of points describing the object." */
+static std::vector<PathPt> Smth_get_path_points(const BoundObject<Object>& self){
+  const Image& frame(self.canvas->GetFrame(self.frameId));
+  auto& ctx(frame.GetExpressionContext());
+  return self.obj->GetPath(ctx);
 }
 
 /* method: "get_skew()->f\nReturns the skewness of the object." */

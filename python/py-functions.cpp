@@ -37,6 +37,7 @@
 #include "python/py-grid.hh"
 #include "python/py-object-geo.hh"
 #include "python/py-settings.hh"
+#include "python/py-shape.hh"
 #include "python/py-util.hh"
 #include "text/slice.hh"
 #include "tools/tool-id.hh"
@@ -106,15 +107,6 @@ static utf8_string to_svg_path(BoundObject<Object> bound){
   const Image& frame(bound.canvas->GetFrame(bound.frameId));
   auto& ctx(frame.GetExpressionContext());
   return points_to_svg_path_string(bound.obj->GetPath(ctx));
-}
-
-/* function: "get_path_points(obj)\n
-Returns a list of points describing the object."
-name: "get_path_points" */
-static std::vector<PathPt> get_path_points(const BoundObject<Object>& bound){
-  const Image& frame(bound.canvas->GetFrame(bound.frameId));
-  auto& ctx(frame.GetExpressionContext());
-  return bound.obj->GetPath(ctx);
 }
 
 /* function: "_one_color_bg(frame)->b\n

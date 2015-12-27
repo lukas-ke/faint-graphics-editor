@@ -42,6 +42,16 @@
 
 namespace faint{
 
+class NullExpressionContext : public ExpressionContext{
+public:
+  Optional<Calibration> GetCalibration() const override{
+    return {};
+  }
+  virtual const Object* GetObject(const utf8_string&) const override{
+    return nullptr;
+  }
+};
+
 class Object;
 class Canvas;
 
@@ -139,6 +149,13 @@ static std::vector<coord> Shape_get_points(const Object& self){
   return get_flat_coordinate_list(self);
 }
 
+/* method: "get_path_points()\n
+Returns a list of points describing the object." */
+static std::vector<PathPt> Shape_get_path_points(const Object& self){
+  NullExpressionContext ctx;
+  return self.GetPath(ctx);
+}
+
 /* method: "get_settings()->Settings\n
 Returns a copy of this object's settings." */
 static Settings Shape_get_settings(const Object& self){
@@ -163,16 +180,6 @@ static coord Shape_get_text_height(const Object& self){
   }
   return txt->RowHeight();
 }
-
-class NullExpressionContext : public ExpressionContext{
-public:
-  Optional<Calibration> GetCalibration() const override{
-    return {};
-  }
-  virtual const Object* GetObject(const utf8_string&) const override{
-    return nullptr;
-  }
-};
 
 /* method: "get_text_lines()->(s,...)\n
 Returns the evaluated text from a Text-object split into lines. Takes

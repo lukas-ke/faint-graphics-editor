@@ -200,7 +200,7 @@ def object_to_stream(s, object, doc_h, scale_x, scale_y):
     elif object.get_type() == 'Path':
         _set_dash(s, object)
         s.linewidth(object.linewidth)
-        _add_path(s, faint.get_path_points(object), doc_h, scale_x, scale_y)
+        _add_path(s, object.get_path_points(), doc_h, scale_x, scale_y)
         _stroke_and_or_fill(s, object)
 
     elif object.get_type() == 'Group':
