@@ -41,7 +41,7 @@ static void draw_ellipse_span(FaintDC& dc,
   if (angles.Empty()){
     dc.Ellipse(tri, settings);
   }
-  else {
+  else{
     dc.Arc(tri, angles, settings);
   }
 }

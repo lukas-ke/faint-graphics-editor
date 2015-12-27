@@ -193,7 +193,7 @@ bool is_wt_packet(unsigned int cmd){
 
 #pragma warning(disable:4100)
 void msg_activate(WPARAM wParam, LPARAM lParam){
-  if (g_winTabContext) {
+  if (g_winTabContext){
     g_WTEnable(g_winTabContext, GET_WM_ACTIVATE_STATE(wParam, lParam));
     if (GET_WM_ACTIVATE_STATE(wParam, lParam)){
       g_WTOverlap(g_winTabContext, TRUE);
@@ -216,7 +216,7 @@ WTP get_wt_packet(WPARAM wParam, LPARAM lParam){
 }
 
 void activate(bool enable){
-  if (g_winTabContext) {
+  if (g_winTabContext){
     g_WTEnable(g_winTabContext, enable ? TRUE : FALSE);
     g_WTOverlap(g_winTabContext, enable ? TRUE : FALSE);
   }

@@ -244,7 +244,7 @@ void OverlayDC_WX::Pixel(const IntPoint& imagePoint){
     draw_line(m_dc, floored(p - delta_y(dn)), floored(p + delta_y(dp)));
     draw_line(m_dc, floored(p - delta_x(dn)), floored(p + delta_x(dp)));
   }
-  else {
+  else{
     // Draw a "hash"-box around the pixel
     draw_line(m_dc, floored(p - delta_y(dn)),
       floored(p + delta_y(m_scale + dp))); // Left
@@ -325,12 +325,12 @@ void OverlayDC_WX::Textbox(const Point& topLeft, const TextBuffer& text,
 
   auto y0 = p.y + (boxHeight - fontSize.GetHeight()) / 2 - 1;
 
-  if (text.empty()) {
+  if (text.empty()){
     // Draw the sample text when no text is entered.
     m_dc.SetTextForeground(to_wx(color_graytext()));
     m_dc.DrawText(sampleWx, p.x + r, y0);
   }
-  else {
+  else{
     m_dc.SetTextForeground(to_wx(color_captiontext()));
     m_dc.DrawText(textWx, p.x + r, y0);
   }

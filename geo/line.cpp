@@ -133,7 +133,7 @@ Side side(const Point& p, const LineSegment& l){
   else if (value < 0){
     return Side::A;
   }
-  else {
+  else{
     return Side::B;
   }
 }

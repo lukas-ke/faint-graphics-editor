@@ -36,7 +36,7 @@ Tool& ToolWrapper::GetTool(){
     m_lastSeen->SetLayer(m_app.GetLayerType());
     return *m_lastSeen;
   }
-  else {
+  else{
     Tool* mainTool = m_app.GetActiveTool();
     if (m_lastSeen != mainTool){
 
@@ -49,7 +49,7 @@ Tool& ToolWrapper::GetTool(){
       mainTool->SetLayer(m_app.GetLayerType());
       return *mainTool;
     }
-    else {
+    else{
       return *m_switched;
     }
   }
@@ -73,7 +73,7 @@ void ToolWrapper::SetSwitched(Tool* tool){
     m_lastSeen = mainTool;
     m_switched = nullptr;
   }
-  else {
+  else{
     m_lastSeen = mainTool;
     m_switched = tool;
   }

@@ -102,16 +102,16 @@ static PyObject* settings_str(settingsObject* self){
     if (settings.Has(as_int)){
       ss << value_string(as_int, settings.Get(as_int));
     }
-    else if (settings.Has(FloatSetting(raw[i].ToInt()))) {
+    else if (settings.Has(FloatSetting(raw[i].ToInt()))){
       ss << settings.Get(FloatSetting(raw[i].ToInt()));
     }
-    else if (settings.Has(BoolSetting(raw[i].ToInt()))) {
+    else if (settings.Has(BoolSetting(raw[i].ToInt()))){
       ss << settings.Get(BoolSetting(raw[i].ToInt()));
     }
-    else if (settings.Has(StringSetting(raw[i].ToInt()))) {
+    else if (settings.Has(StringSetting(raw[i].ToInt()))){
       ss << settings.Get(StringSetting(raw[i].ToInt()));
     }
-    else if (settings.Has(PaintSetting(raw[i].ToInt()))) {
+    else if (settings.Has(PaintSetting(raw[i].ToInt()))){
       ss << settings.Get(PaintSetting(raw[i].ToInt()));
     }
     if (i != raw.size() - 1){

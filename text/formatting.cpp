@@ -170,7 +170,7 @@ utf8_string str_smart_rgba(const Color& c, const rgb_prefix& prefix){
   if (!prefix.Get()){
     return str_smart_rgba(c);
   }
-  else {
+  else{
     return opaque(c) ?
       "RGB: " + str_rgb(c) :
       "RGBA: " + str_rgba(c);

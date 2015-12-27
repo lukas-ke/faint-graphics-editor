@@ -62,7 +62,7 @@ size_t utf8_string::bytes() const{
   return m_data.size();
 }
 
-void utf8_string::clear() {
+void utf8_string::clear(){
   m_data.clear();
 }
 

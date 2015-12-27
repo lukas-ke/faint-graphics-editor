@@ -151,7 +151,7 @@ public:
           dc.SetPen(wxPen(selectedColor));
           dc.SetBrush(wxBrush(selectedColor));
         }
-        else {
+        else{
           dc.SetPen(wxPen(deselectedColor));
           dc.SetBrush(wxBrush(deselectedColor));
         }

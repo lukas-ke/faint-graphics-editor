@@ -123,14 +123,14 @@ private:
       m_menu->SetLabel(m_clearId, "&Clear");
       m_menu->SetHelpString(m_clearId, "Clear Recent Files");
     }
-    else {
+    else{
       m_menu->Enable(m_openAllId, false);
       if (!m_cleared.empty()){
         m_menu->Enable(m_clearId, true);
         m_menu->SetLabel(m_clearId, "Undo &Clear");
         m_menu->SetHelpString(m_clearId, "Undo clearing Recent Files");
       }
-      else {
+      else{
         m_menu->Enable(m_clearId, false);
         m_menu->SetLabel(m_clearId, "&Clear");
         m_menu->SetHelpString(m_clearId, "Clear Recent Files");
@@ -188,7 +188,7 @@ static void clear_or_undo(RecentFiles& recent){
   if (recent.Size() != 0){
     recent.Clear();
   }
-  else {
+  else{
     recent.UndoClear();
   }
 }
@@ -793,7 +793,7 @@ public:
       m_menuRef->m_menu->SetHelpString(FAINT_ZoomActualSizeToggle,
         "Fit image in view");
     }
-    else {
+    else{
       m_menuRef->m_menu->SetLabel(FAINT_ZoomActualSizeToggle, "Zoom 1:1\t*");
       m_menuRef->m_menu->SetHelpString(FAINT_ZoomActualSizeToggle,
         "Zoom to actual size");

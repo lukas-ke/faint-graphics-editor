@@ -290,7 +290,7 @@ void put_pixel(Bitmap& bmp, const IntPoint& pos, const Color& color){
 }
 
 void put_pixel_raw(Bitmap& bmp, int x, int y, const Color& color){
-  if (x < 0 || y < 0 || x >= bmp.m_w || y >= bmp.m_h) {
+  if (x < 0 || y < 0 || x >= bmp.m_w || y >= bmp.m_h){
     return;
   }
   uchar* data = bmp.GetRaw();

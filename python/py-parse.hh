@@ -118,7 +118,7 @@ bool parse_item(DefaultConstructible<Either<T1, T2> >& obj, PyObject* args, Py_s
       obj.Set((T1)first);
       return true;
     }
-    else {
+    else{
       PyErr_Clear();
     }
   }

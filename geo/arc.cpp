@@ -49,7 +49,7 @@ int required_curve_count(const AngleSpan& angles){
   if (span <= pi / 2){
     return 2;
   }
-  else if (span <= pi) {
+  else if (span <= pi){
     return 4;
   }
   else if (span <= 3 * pi / 2){

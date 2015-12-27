@@ -52,7 +52,7 @@ IntRect bounding_rect(const IntPoint& p0, const IntPoint& p1){
   return {p0, p1};
 }
 
-IntRect bounding_rect(const IntRect& r1, const IntRect& r2) {
+IntRect bounding_rect(const IntRect& r1, const IntRect& r2){
   const auto tl = min_coords(r1.TopLeft(), r2.TopLeft());
   const auto br = max_coords(r1.BottomRight(), r2.BottomRight());
   return {tl, br};

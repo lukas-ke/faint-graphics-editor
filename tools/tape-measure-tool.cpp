@@ -48,7 +48,7 @@ static coord get_distance_scaling(const utf8_string& unit, const Calibration& c)
   if (unit == unit_px){
     return 1.0;
   }
-  else {
+  else{
     const auto& conversions = length_conversions();
     auto it = conversions.find(unit);
     if (it == end(conversions)){

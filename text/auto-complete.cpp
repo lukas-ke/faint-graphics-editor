@@ -51,7 +51,7 @@ public:
       ACNode* node = add(word.front());
       node->extend(slice_from(word, 1));
     }
-    else {
+    else{
       add(chars::full_stop);
     }
   }
@@ -91,7 +91,7 @@ public:
       collect.push_back(prepend);
       return;
     }
-    else {
+    else{
       for (size_t i = 0; i != m_children.size(); i++){
         std::vector<utf8_string> subwords;
         m_children[i]->all_words(subwords, prepend + m_char);

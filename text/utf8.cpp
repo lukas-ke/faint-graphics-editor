@@ -162,7 +162,7 @@ std::string codepoint_to_byte_string(unsigned int cp){
     ch += static_cast<char>((unsigned char)(((cp >> 6) & 0x3f) | continuation));
     ch += static_cast<char>((unsigned char)((cp & 0x3f) | continuation));
   }
-  else {
+  else{
     // 5 and 6 byte sequences removed by RFC 3629
     assert(false);
   }

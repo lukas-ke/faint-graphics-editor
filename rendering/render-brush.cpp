@@ -70,7 +70,7 @@ std::vector<IntLineSegment> brush_edge(const Brush& b){
         }
 
       }
-      else {
+      else{
         if (xBottom){
           xBottom = false;
           lines.push_back(IntLineSegment({xBottomStart, y}, {x, y}));
@@ -104,7 +104,7 @@ std::vector<IntLineSegment> brush_edge(const Brush& b){
             {x + 1, y}));
         }
       }
-      else {
+      else{
         if (yLeft){
           yLeft = false;
           lines.push_back(IntLineSegment({x + 1, yLeftStart},
@@ -128,7 +128,7 @@ std::vector<IntLineSegment> brush_edge(const Brush& b){
         }
 
       }
-      else {
+      else{
         if (yRight){
           yRight = false;
           lines.push_back(IntLineSegment({x,yRightStart}, {x, y}));

@@ -134,7 +134,7 @@ public:
       auto freezer = freeze(this);
       DeletePage(to_size_t(page));
     }
-    else {
+    else{
       DeletePage(to_size_t(page));
     }
     if (GetPageCount() == 0){

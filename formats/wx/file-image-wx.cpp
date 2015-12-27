@@ -32,7 +32,7 @@ utf8_string label_for_wx_image(wxBitmapType type){
   else if (type == wxBITMAP_TYPE_BMP){
     return "Bitmap 24bit (*.bmp)";
   }
-  else {
+  else{
     return "Unknown bitmap type";
   }
 }
@@ -69,7 +69,7 @@ SaveResult write_image_wx(const Bitmap& bmp,
   if (saveOk){
     return SaveResult::SaveSuccessful();
   }
-  else {
+  else{
     // Fixme: wxImage::SaveFile does not seem to reliably return false
     // on failure (Seen when attempting to overwrite locked .jpg on
     // Windows). Also this seems to trash the locked file?

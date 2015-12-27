@@ -200,7 +200,7 @@ Bitmap to_faint(wxBitmap wxBmp){
       p.OffsetY(pixelData, 1);
     }
   }
-  else {
+  else{
   alpha_label:
     AlphaPixelData pixelData(wxBmp);
     assert(pixelData);

@@ -39,7 +39,7 @@ bool somewhat_reversible(CommandType t){
   return t != CommandType::RASTER;
 }
 
-Command::Command(CommandType type) {
+Command::Command(CommandType type){
   m_type = type;
 }
 

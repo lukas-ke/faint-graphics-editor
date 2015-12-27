@@ -346,7 +346,7 @@ public:
           event.Veto();
           Hide();
         }
-        else {
+        else{
           Destroy();
         }
       });
@@ -388,7 +388,7 @@ public:
         if (m_tree->HasFocus()){
           m_html->FaintLineDown();
         }
-        else {
+        else{
           m_tree->Next();
         }
       });
@@ -398,7 +398,7 @@ public:
         if (m_tree->HasFocus()){
           m_html->FaintLineUp();
         }
-        else {
+        else{
           m_tree->Prev();
         }
       });

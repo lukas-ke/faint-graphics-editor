@@ -39,7 +39,7 @@ utf8_string get_bound_key(const utf8_string& function){
 // a Python-function bound to a key, e.g. <bind>zoom_in</bind>,
 // and if so, lists the key.
 TAG_HANDLER_BEGIN(BIND, "BIND")
-  TAG_HANDLER_CONSTR(BIND) { }
+  TAG_HANDLER_CONSTR(BIND){}
 
   TAG_HANDLER_PROC(tag){
     wxString str = m_WParser->GetInnerSource(tag);

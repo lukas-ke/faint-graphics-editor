@@ -61,7 +61,7 @@ public:
         if (!PreviewEnabled()){
           ResetPreview();
         }
-        else {
+        else{
           UpdatePreview();
         }
       });

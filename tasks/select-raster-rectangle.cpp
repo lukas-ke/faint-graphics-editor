@@ -85,7 +85,7 @@ public:
     if (m_maxDistance < 1.0){
       return TaskResult::CHANGE;
     }
-    else {
+    else{
       IntRect rect(intersection(IntRect(floored(m_p0), floored(m_p1)),
         image_rect(info.canvas.GetImage())));
 

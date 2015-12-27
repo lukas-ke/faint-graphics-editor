@@ -51,7 +51,7 @@ static IntLineSegment get_mid_line(const IntSize& size, SliderDir dir){
     int y0 = size.h - PADDING;
     return {IntPoint(x, y0), IntPoint(x, size.h)};
   }
-  else {
+  else{
     int y = size.h / 2;
     return {IntPoint(0, y), IntPoint(size.w, y)};
   }

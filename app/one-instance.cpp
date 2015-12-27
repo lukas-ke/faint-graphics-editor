@@ -106,7 +106,7 @@ public:
       m_app.RaiseWindow();
       return new FaintConnection(m_app);
     }
-    else {
+    else{
       return nullptr;
     }
   }
@@ -182,7 +182,7 @@ public:
       // No files specified, just raise the running window.
       return raise_existing_window(m_serviceName);
     }
-    else {
+    else{
       return send_paths_to_server(files, m_serviceName);
     }
   }

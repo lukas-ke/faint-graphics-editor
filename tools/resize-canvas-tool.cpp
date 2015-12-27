@@ -69,7 +69,7 @@ static IntPoint get_x2y2(const CanvasResizeHandle& handle,
       x2 -= 1;
     }
   }
-  else {
+  else{
     if (release.x > opposite.x){
       x2 += 1;
     }
@@ -80,7 +80,7 @@ static IntPoint get_x2y2(const CanvasResizeHandle& handle,
       y2 -= 1;
     }
   }
-  else {
+  else{
     if (release.y > opposite.y){
       y2 += 1;
     }
@@ -141,7 +141,7 @@ static void set_rescale_status(StatusInterface& status,
   if (constrain_resize(modifiers, dir) && nearest_neighbour(modifiers)){
     status.SetMainText("Scale nearest proportional.");
   }
-  else if (nearest_neighbour(modifiers)) {
+  else if (nearest_neighbour(modifiers)){
     status.SetMainText(can_constrain(dir) ?
       space_sep("Scale nearest.", secondary_modifier("Constrain")) :
       "Scale nearest");
@@ -150,7 +150,7 @@ static void set_rescale_status(StatusInterface& status,
     status.SetMainText(space_sep("Scale bilinear proportional.",
       primary_modifier("Nearest neighbour")));;
   }
-  else {
+  else{
     status.SetMainText(can_constrain(dir) ?
       space_sep(primary_modifier("Nearest neighbour"),
         secondary_modifier("Proportional")) :
@@ -162,14 +162,14 @@ static void set_rescale_status(StatusInterface& status,
   if (constrain_resize(modifiers, dir)){
     status.SetText(str_percentage(r.w , imageSize.w));
   }
-  else {
+  else{
     if (dir == HandleDirection::UP_DOWN){
       status.SetText(str_percentage(r.h, imageSize.h));
     }
     else if (dir == HandleDirection::LEFT_RIGHT){
       status.SetText(str_percentage(r.w, imageSize.w));
     }
-    else {
+    else{
       status.SetText(comma_sep(str_percentage(r.w, imageSize.w),
         str_percentage(r.h, imageSize.h)));
     }
@@ -186,7 +186,7 @@ static void set_resize_status(StatusInterface& status,
   if (constrain_resize(modifiers, dir)){
     status.SetMainText("Proportional resize");
   }
-  else {
+  else{
     status.SetMainText(can_constrain(dir) ?
       secondary_modifier("Proportional")
       : utf8_string());
@@ -199,7 +199,7 @@ static void set_resize_status(StatusInterface& status,
   else if (dir == HandleDirection::UP_DOWN){
     status.SetText(space_sep(lbl("y", pos.y), lbl("h", r.h)));
   }
-  else {
+  else{
     status.SetText(space_sep(lbl("Pos", str(pos)),
       lbl("Size", str(r.GetSize()))));
   }
@@ -288,7 +288,7 @@ public:
     else if (dir == HandleDirection::UP_DOWN){
       return IntRect(IntPoint(r.x, m_release.y - 1), IntSize(r.w, 3));
     }
-    else {
+    else{
       assert(false);
       return IntRect(IntPoint(0, 0), IntSize(1, 1));
     }
@@ -304,7 +304,7 @@ public:
     info.status.SetText("");
     HandleDirection dir(m_handle.GetDirection());
     IntPoint opposite(m_handle.Opposite().GetPos());
-    if (constrain_resize(info.modifiers, dir)) {
+    if (constrain_resize(info.modifiers, dir)){
       pos = constrain_proportional(pos, floated(opposite),
         floated(m_handle.GetPos()));
     }
@@ -329,7 +329,7 @@ public:
     if (m_operation == SCALE){
       set_rescale_status(info.status, m_handle, m_release, info.modifiers);
     }
-    else {
+    else{
       set_resize_status(info.status, m_handle, m_release, info.modifiers);
     }
     return ToolResult::DRAW;
@@ -348,7 +348,7 @@ private:
           GetSettings().Get(ts_Bg)));
       }
     }
-    else {
+    else{
       assert(m_operation == SCALE);
       IntSize newSize = get_rescale_size(m_handle, m_release);
       if (newSize != info.canvas.GetSize()){

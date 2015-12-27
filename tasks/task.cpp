@@ -26,7 +26,7 @@ Task* Task::DefaultTask() const{
   return nullptr;
 }
 
-Optional<faint::SelectionContext&> Task::SelectionContext() {
+Optional<faint::SelectionContext&> Task::SelectionContext(){
   return const_cast<const Task*>(this)->SelectionContext().Visit(
     [](const faint::SelectionContext& c){
       return Optional<faint::SelectionContext&>(
@@ -101,7 +101,7 @@ bool TaskWrapper::Switch(){
       return true;
     }
   }
-  else {
+  else{
     assert(m_pushed.empty());
   }
   m_task = (newTask == nullptr ? m_defaultTask : newTask);

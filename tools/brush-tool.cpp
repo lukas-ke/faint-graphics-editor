@@ -205,9 +205,9 @@ public:
       m_drawCursor = true;
     }
 
-    if (m_active) {
+    if (m_active){
       const bool constrainHeld(info.modifiers.Secondary());
-      if (constrainHeld) {
+      if (constrainHeld){
         if (m_constrainDir == ConstrainDir::NONE){
           if (distance(pos, m_origin) > 5){
             // Lock the constrain direction after a certain distance
@@ -223,7 +223,7 @@ public:
           constrain_pos(pos, m_origin, m_constrainDir);
         }
       }
-      else {
+      else{
         m_origin = pos;
         m_constrainDir = ConstrainDir::NONE;
       }

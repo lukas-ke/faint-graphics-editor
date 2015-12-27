@@ -43,7 +43,7 @@ void test_convert_wx_bmp(){
     if (get_test_platform() == TestPlatform::WINDOWS){
       KNOWN_INEQUAL(get_color_raw(faintBmp, 0, 0), Color(30, 40, 50, 60)); // Fixme: Why alpha 255 on MSW?
     }
-    else {
+    else{
       EQUAL(get_color_raw(faintBmp, 0, 0), Color(30, 40, 50, 60));
     }
   }

@@ -68,7 +68,7 @@ const Optional<utf8_string>& StandardObject::GetName() const{
   return m_name;
 }
 
-Object* StandardObject::GetObject(int) {
+Object* StandardObject::GetObject(int){
   assert(false);
   return nullptr;
 }

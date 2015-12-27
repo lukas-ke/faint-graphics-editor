@@ -82,7 +82,7 @@ void CommandHistory::CloseUndoBundle(const utf8_string& name){
       if (shouldMerge){
         m_undoList.back().Merge(cmd); // Fixme: Move
       }
-      else {
+      else{
         m_undoList.push_back(cmd);
       }
     }
@@ -182,7 +182,7 @@ utf8_string CommandHistory::GetUndoName(const ImageList& images) const{
     // This should never be visible to the user.
     return "";
   }
-  else {
+  else{
     Command* cmd = last.command;
     assert(cmd != nullptr);
     return get_command_name(*cmd, *last.targetFrame, images);

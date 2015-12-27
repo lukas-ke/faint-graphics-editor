@@ -76,7 +76,7 @@ static PyObject* frame_repr(frameObject* self){
   if (canvas_ok(self->canvasId, *self->ctx)){
     ss << "Frame of canvas #" << self->canvasId.Raw();
   }
-  else {
+  else{
     ss << "Frame of retired Canvas #" << self->canvasId.Raw();
   }
   return Py_BuildValue("s", ss.str().c_str());

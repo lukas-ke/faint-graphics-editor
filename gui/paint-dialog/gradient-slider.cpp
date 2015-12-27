@@ -272,7 +272,7 @@ public:
             return;
           }
         }
-        else {
+        else{
           // Clone the handle
           m_gradient.Add(m_gradient.GetStop(Index(m_handle)));
           m_handle = m_gradient.GetNumStops().Get() - 1;
@@ -288,7 +288,7 @@ public:
         if (m_mouse.HasCapture()){
           SetHandleFromPos(to_faint(event.GetPosition()));
         }
-        else {
+        else{
           HandleHitInfo hit = m_region.HitTest(to_faint(event.GetPosition()));
           m_handle = hit.index;
           if (hit.type == HandleHitInfo::MISS){

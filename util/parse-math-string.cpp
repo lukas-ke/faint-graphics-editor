@@ -59,7 +59,7 @@ static std::vector<string> tokenize(const string& s){
       // Push the remainder of the string as a single token
       tokens.push_back(slice_from(s, prevPos));
     }
-    else {
+    else{
       // Push the operand preceding the found operator, if any
       if (pos - prevPos > 0){
         tokens.push_back(slice(s, prevPos, pos));
@@ -88,7 +88,7 @@ static std::vector<string> infix_to_postfix(const std::vector<string>& infix){
     else if (stack.empty() || precedence(stack.top()) < precedence(token)){
       stack.push(token);
     }
-    else {
+    else{
       postfix.push_back(stack.top());
       stack.pop();
       stack.push(token);
@@ -116,7 +116,7 @@ static Optional<coord> compute(std::vector<string> postfix){
     if (is_operand(token)){
       operands.push(my_stof(token));
     }
-    else {
+    else{
       if (operands.size() < 2){
         // Error - crap stack
         return {};
@@ -160,7 +160,7 @@ Optional<coord> parse_math_string(const string& s, coord originalValue){
       }
       previousWasOperator = true;
     }
-    else {
+    else{
       previousWasOperator = false;
     }
   }

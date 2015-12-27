@@ -30,7 +30,7 @@ ToolId Tool::GetId() const{
   return m_id;
 }
 
-Optional<faint::HistoryContext&> Tool::HistoryContext() {
+Optional<faint::HistoryContext&> Tool::HistoryContext(){
   return const_cast<const Tool*>(this)->HistoryContext().Visit(
     [](const faint::HistoryContext& c){
       return
@@ -41,7 +41,7 @@ Optional<faint::HistoryContext&> Tool::HistoryContext() {
     });
 }
 
-Optional<faint::SelectionContext&> Tool::SelectionContext() {
+Optional<faint::SelectionContext&> Tool::SelectionContext(){
   return const_cast<const Tool*>(this)->SelectionContext().Visit(
     [](const faint::SelectionContext& c){
       return Optional<faint::SelectionContext&>(
@@ -53,7 +53,7 @@ Optional<faint::SelectionContext&> Tool::SelectionContext() {
 }
 
 
-Optional<faint::TextContext&> Tool::TextContext() {
+Optional<faint::TextContext&> Tool::TextContext(){
   return const_cast<const Tool*>(this)->TextContext().Visit(
     [](const faint::TextContext& c){
       return Optional<faint::TextContext&>(const_cast<faint::TextContext&>(c));

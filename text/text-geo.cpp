@@ -85,7 +85,7 @@ TextPos char_index_to_row_column(const text_lines_t& lines, size_t caret){
     const utf8_string& line = lines[row].text;
     size_t numChars = line.size();
     chars += numChars;
-    if (chars > caret) {
+    if (chars > caret){
       // Fixme: Why clamp? Also is this really caret and not char index?
       pos.col = numChars - (chars - caret);
       break;
@@ -105,7 +105,7 @@ TextPos caret_index_to_row_column(const text_lines_t& lines, size_t caret){
     const utf8_string& line = lines[row].text;
     size_t numChars = line.size();
     chars += numChars;
-    if (chars > caret) {
+    if (chars > caret){
       // Fixme: Why clamp? Also is this really caret and not char index?
       pos.col = numChars - (chars - caret);
       break;
@@ -125,7 +125,7 @@ TextPos caret_to_row_column(const text_lines_t& lines, size_t caret){
     const utf8_string& line = lines[row].text;
     size_t numChars = line.size();
     chars += numChars;
-    if (chars > caret) {
+    if (chars > caret){
       pos.col = numChars - (chars - caret);
       break;
     }

@@ -44,11 +44,11 @@ public:
     : m_container(c)
   {}
 
-  auto begin() const -> decltype(m_container.c.rbegin()) {
+  auto begin() const -> decltype(m_container.c.rbegin()){
     return m_container.c.rbegin();
   }
 
-  auto end() const -> decltype(m_container.c.rend()) {
+  auto end() const -> decltype(m_container.c.rend()){
     return m_container.c.rend();
   }
   using value_type = typename Container::value_type;
@@ -68,7 +68,7 @@ public:
 
 
 template<typename Container>
-reversed_t<Container> reversed(const Container& container) {
+reversed_t<Container> reversed(const Container& container){
   return reversed_t<Container>(container);
 }
 
@@ -85,12 +85,12 @@ public:
     : m_container(c)
   {}
 
-  auto begin() const -> decltype(m_container.c.begin()) {
+  auto begin() const -> decltype(m_container.c.begin()){
     return m_container.c.empty() ? m_container.c.end() :
       m_container.c.begin() + 1;
   }
 
-  auto end() const -> decltype(m_container.c.end()) {
+  auto end() const -> decltype(m_container.c.end()){
     return m_container.c.end();
   }
 
@@ -117,7 +117,7 @@ public:
 };
 
 template<typename Container>
-but_first_t<Container> but_first(const Container& container) {
+but_first_t<Container> but_first(const Container& container){
   return but_first_t<Container>(container);
 }
 
@@ -130,23 +130,23 @@ public:
     : m_container(c)
   {}
 
-  auto begin() -> decltype(m_container.c.begin()) {
+  auto begin() -> decltype(m_container.c.begin()){
     return m_container.c.begin();
   }
 
-  auto end() -> decltype(m_container.c.end()) {
+  auto end() -> decltype(m_container.c.end()){
     return m_container.c.empty() ?
       m_container.c.end() :
       m_container.c.begin() + resigned(m_container.c.size()) - 1;
   }
 
-  auto rbegin() const -> decltype(m_container.c.rbegin()) {
+  auto rbegin() const -> decltype(m_container.c.rbegin()){
     return m_container.c.empty() ?
       m_container.c.rend() :
       m_container.c.rbegin() + 1;
   }
 
-  auto rend() const -> decltype(m_container.c.rend()) {
+  auto rend() const -> decltype(m_container.c.rend()){
     return m_container.c.crend();
   }
 
@@ -168,7 +168,7 @@ private:
 };
 
 template<typename Container>
-but_last_t<Container> but_last(const Container& container) {
+but_last_t<Container> but_last(const Container& container){
   return but_last_t<Container>(container);
 }
 
@@ -287,7 +287,7 @@ private:
 
 
 template<typename Container>
-enumerate_t<Container> enumerate(const Container& container) {
+enumerate_t<Container> enumerate(const Container& container){
   return enumerate_t<Container>(container);
 }
 

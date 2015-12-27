@@ -123,7 +123,7 @@ public:
         if (ctrlHeld){
           RemoveAt(cellPos);
         }
-        else {
+        else{
           SetBg(m_paintMap.Get(cellPos));
         }
       };
@@ -183,7 +183,7 @@ private:
       m_paintMap.Copy(Old(MousePosToPalettePos(m_dragStart)),
         New(MousePosToPalettePos(pos)));
     }
-    else {
+    else{
       m_paintMap.Move(Old(MousePosToPalettePos(m_dragStart)),
         New(MousePosToPalettePos(pos)));
     }
@@ -253,7 +253,7 @@ private:
       const Paint& paint = m_paintMap.Get(cellPos);
       m_statusInterface.SetMainText(str(paint));
     }
-    else {
+    else{
       m_statusInterface.SetMainText("");
     }
   }

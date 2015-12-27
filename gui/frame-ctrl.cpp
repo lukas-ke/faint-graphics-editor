@@ -102,7 +102,7 @@ static void run_frame_drag_command(FrameContext& ctx,
   if (dragInfo.copy){
     ctx.CopyFrame(Old(srcIndex), New(dstIndex));
   }
-  else {
+  else{
     ctx.MoveFrame(Old(srcIndex), New(dstIndex));
   }
   ctx.SelectFrame(dstIndex);
@@ -201,7 +201,7 @@ public:
               get_frame_label(frame, false));
             SetHighlightCloseFrame(true);
           }
-          else {
+          else{
             SetHighlightCloseFrame(false);
             m_status.SetMainText(get_frame_label(frame, true));
             SetCursor(m_cursorArrow);
@@ -219,7 +219,7 @@ public:
               Refresh();
             }
           }
-          else if (distance(pos, m_dragInfo.dragStart) > 5) {
+          else if (distance(pos, m_dragInfo.dragStart) > 5){
             m_dragInfo.active = true;
             if (ctrlHeld){
               SetCursor(m_cursorDragCopyFrame);
@@ -271,7 +271,7 @@ public:
         dc.SetPen(activePen);
         dc.SetBrush(activeBrush);
       }
-      else {
+      else{
         dc.SetPen(inactivePen);
         dc.SetBrush(inactiveBrush);
       }

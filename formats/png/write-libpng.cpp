@@ -220,7 +220,7 @@ PngWriteResult write_with_libpng(const FilePath& path,
       }
     }
   }
-  else {
+  else{
     // Color type was checked earlier, so just assert.
     assert(false); // Unsupported color type
   }

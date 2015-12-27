@@ -53,7 +53,7 @@ static void split_line(const TextInfo& info,
       line.clear();
     }
 
-    if (info.GetWidth(word) > maxWidth) {
+    if (info.GetWidth(word) > maxWidth){
       word = split_word(info, word, result);
     }
 
@@ -95,13 +95,13 @@ text_lines_t split_string(const TextInfo& info,
           slice(string, lineStart, lineEnd) + chars::space));
         lineStart = lineEnd + 1;
       }
-      else {
+      else{
         result.push_back(TextLine::HardBreak(width,
           slice(string, lineStart, lineEnd) + chars::space));
         lineStart = lineEnd + 1;
       }
     }
-    else {
+    else{
       split_line(info, slice(string, lineStart, lineEnd),
         maxWidth.Get(), result);
       lineStart = lineEnd;

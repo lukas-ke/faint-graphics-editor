@@ -351,7 +351,7 @@ static PyObject* Smth_repr(smthObject* self){
   if (!image.Has(self->objectId)){
     return Py_BuildValue("s", "Removed object");
   }
-  else {
+  else{
     utf8_string str(self->obj->GetType());
     return build_unicode(self->obj->GetType());
   }

@@ -119,7 +119,7 @@ ConstrainDir constrain_pos(IntPoint& p, const IntPoint& origin){
     p.y = origin.y;
     return ConstrainDir::HORIZONTAL;
   }
-  else {
+  else{
     p.x = origin.x;
     return ConstrainDir::VERTICAL;
   }
@@ -130,7 +130,7 @@ ConstrainDir constrain_pos(Point& p, const Point& origin){
     p.y = origin.y;
     return ConstrainDir::HORIZONTAL;
   }
-  else {
+  else{
     p.x = origin.x;
     return ConstrainDir::VERTICAL;
   }

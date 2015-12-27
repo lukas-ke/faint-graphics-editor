@@ -127,7 +127,7 @@ Brush get_brush(const Settings& s){
   else if (shape == BrushShape::EXPERIMENTAL){
     return experimental_brush(size);
   }
-  else {
+  else{
     assert(false);
     return Brush(IntSize::Both(size));
   }
@@ -158,7 +158,7 @@ std::unique_ptr<Filter> get_filter(const Settings& s){
   else if (filterNum == 5){
     return get_shadow_filter();
   }
-  else {
+  else{
     assert(false);
     return nullptr;
   }
@@ -215,7 +215,7 @@ Settings mask_settings_fill(const Settings& objSettings){
   else if (hasFill){
     s.Set(ts_Fg, Paint(mask_fill));
   }
-  else {
+  else{
     // Neither fill nor stroke (possible e.g. when loaded from SVG)
     s.Set(ts_Bg, Paint(mask_no_fill));
     s.Set(ts_Fg, Paint(mask_no_fill));

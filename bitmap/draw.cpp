@@ -173,7 +173,7 @@ static IntPoint get_offset(int x0, int y0, int x1, int y1, int lineWidth){
       p += 2*dy;
       distance += 1;
     }
-    else {
+    else{
       yp += yStep;
       p += 2*dy - 2*dx;
       distance += diag;
@@ -202,7 +202,7 @@ static std::map<int,int> ellipse_points(int x0, int y0, int a, int b){
   int stopy = 0;
   int stopx = a2 * b;
 
-  while (stopy <= stopx) {
+  while (stopy <= stopx){
     //put_pixel(bmp, x0 + x, y0 + y, c);
     points[y0 + y] = x0 - x;
     points[y0 - y] = x0 - x;
@@ -211,7 +211,7 @@ static std::map<int,int> ellipse_points(int x0, int y0, int a, int b){
 
     error -= b2 * (x - 1);
     stopy += b2;
-    if (error <= 0) {
+    if (error <= 0){
       error += a2 * (y - 1);
       y--;
       stopx -= a2;
@@ -223,8 +223,7 @@ static std::map<int,int> ellipse_points(int x0, int y0, int a, int b){
   y = 0;
   stopy = b2*a;
   stopx = 0;
-  while (stopy >= stopx) {
-
+  while (stopy >= stopx){
     //put_pixel(bmp, x0 + x, y0 + y, c);
     points[y0 + y] = x0 - x;
     points[y0 - y] = x0 - x;
@@ -232,7 +231,7 @@ static std::map<int,int> ellipse_points(int x0, int y0, int a, int b){
     y++;
     error -= a2 * (y - 1);
     stopx += a2;
-    if (error < 0) {
+    if (error < 0){
       error += b2 * (x - 1);
       x--;
       stopy -= b2;
@@ -334,7 +333,7 @@ void draw_wide_line_f(Bitmap& bmp, const IntLineSegment& line,
 
     // For each i, draw a parallel line
     int xp = 0;
-    for (EVER) {
+    for (EVER){
       at_x = xStart - yp * yStep;
       at_y = yStart - xp * yStep;
       if (at_x < xMin){
@@ -360,7 +359,7 @@ void draw_wide_line_f(Bitmap& bmp, const IntLineSegment& line,
       if (pp < 0){
         pp += 2*dy;
       }
-      else {
+      else{
         yp += yStep;
         pp += 2*dy - 2*dx;
       }
@@ -373,7 +372,7 @@ void draw_wide_line_f(Bitmap& bmp, const IntLineSegment& line,
       if (p2 < 0){
         p2 += 2 * dy;
       }
-      else {
+      else{
         yMin -= yStep;
         p2 += 2 * dy - 2*dx;
       }
@@ -383,13 +382,13 @@ void draw_wide_line_f(Bitmap& bmp, const IntLineSegment& line,
     if (p < 0){
       p += 2*dy;
     }
-    else {
+    else{
       y += yStep;
       p += 2*dy - 2*dx;
       if (pp_o < 0){
         pp_o += 2*dy;
       }
-      else {
+      else{
         pp_o += 2*dy - 2*dx;
         p -= 2 * dy;
         xOff -= 1;
@@ -450,7 +449,7 @@ void draw_line_f(Bitmap& bmp, const Functor& setPixFunc,
         setPixFunc(bmp, y, x);
       }
     }
-    else {
+    else{
       if (on){
         setPixFunc(bmp, x, y);
       }
@@ -505,7 +504,7 @@ void draw_wide_ellipse_f(Bitmap& bmp, const Functor& setPixFunc,
   int stopx = a2 * b;
 
   // \def(wide-ellipse-dash) Fixme: support dash;
-  while (stopy <= stopx) {
+  while (stopy <= stopx){
     setPixFunc(bmp, x0 + x - xoffset, y0 + y - yoffset);
 
     if (points.find(y0 + y) != points.end()){
@@ -515,7 +514,7 @@ void draw_wide_ellipse_f(Bitmap& bmp, const Functor& setPixFunc,
       scanline_f(bmp, x0 + x - dx - xoffset,
         x0 + x - xoffset, y0 + y - yoffset, setPixFunc);
     }
-    else {
+    else{
       scanline_f(bmp, x0 - x, x0 + x - xoffset,
         y0 + y - yoffset, setPixFunc);
     }
@@ -527,14 +526,14 @@ void draw_wide_ellipse_f(Bitmap& bmp, const Functor& setPixFunc,
       scanline_f(bmp, x0 + x - xoffset - dx, x0 + x - xoffset,
         y0 - y, setPixFunc);
     }
-    else {
+    else{
       scanline_f(bmp, x0 - x, x0 + x - xoffset, y0 - y, setPixFunc);
     }
     x++;
 
     error -= b2 * (x - 1);
     stopy += b2;
-    if (error <= 0) {
+    if (error <= 0){
       error += a2 * (y - 1);
       y--;
       stopx -= a2;
@@ -546,7 +545,7 @@ void draw_wide_ellipse_f(Bitmap& bmp, const Functor& setPixFunc,
   y = 0;
   stopy = b2*a;
   stopx = 0;
-  while (stopy >= stopx) {
+  while (stopy >= stopx){
     if (points.find(y0 + y) != points.end()){
       int x1 = points[y0 + y];
       scanline_f(bmp, x0 - x, x1, y0 + y - yoffset, setPixFunc);
@@ -554,7 +553,7 @@ void draw_wide_ellipse_f(Bitmap& bmp, const Functor& setPixFunc,
       scanline_f(bmp, x0 + x - xoffset - dx, x0 + x - xoffset,
         y0 + y - yoffset, setPixFunc);
     }
-    else {
+    else{
       scanline_f(bmp, x0 - x, x0 + x - xoffset, y0 + y - yoffset, setPixFunc);
     }
 
@@ -565,13 +564,13 @@ void draw_wide_ellipse_f(Bitmap& bmp, const Functor& setPixFunc,
       scanline_f(bmp, x0 + x - xoffset - dx, x0 + x - xoffset,
         y0 - y, setPixFunc);
     }
-    else {
+    else{
       scanline_f(bmp, x0 - x, x0 + x - xoffset, y0 - y, setPixFunc);
     }
     y++;
     error -= a2 * (y - 1);
     stopx += a2;
-    if (error < 0) {
+    if (error < 0){
       error += b2 * (x - 1);
       x--;
       stopy -= b2;
@@ -616,7 +615,7 @@ void draw_thin_ellipse_f(Bitmap& bmp,
   bool on = false;
   const bool dashes = lineStyle != LineStyle::SOLID;
   int steps = 0;
-  while (stopy <= stopx) {
+  while (stopy <= stopx){
     if (steps == 0){
       on = !dashes || !on;
     }
@@ -632,7 +631,7 @@ void draw_thin_ellipse_f(Bitmap& bmp,
 
     error -= b2 * (x - 1);
     stopy += b2;
-    if (error <= 0) {
+    if (error <= 0){
       error += a2 * (y - 1);
       y--;
       stopx -= a2;
@@ -644,7 +643,7 @@ void draw_thin_ellipse_f(Bitmap& bmp,
   y = 0;
   stopy = b2*a;
   stopx = 0;
-  while (stopy >= stopx) {
+  while (stopy >= stopx){
     if (steps == 0){
       on = !dashes || !on;
     }
@@ -658,7 +657,7 @@ void draw_thin_ellipse_f(Bitmap& bmp,
     y++;
     error -= a2 * (y - 1);
     stopx += a2;
-    if (error < 0) {
+    if (error < 0){
       error += b2 * (x - 1);
       x--;
       stopy -= b2;
@@ -746,7 +745,7 @@ void draw_rect_f(Bitmap& bmp,
       vertical_f(bmp, r.Top(), r.Bottom(), r.Right() - i, setPixFunc);
     }
   }
-  else {
+  else{
     draw_polygon_f(bmp, setPixFunc, as_polygon(r), s);
   }
 }
@@ -796,7 +795,7 @@ void fill_polygon_f(Bitmap& bmp, const Functor& setPixFunc,
     for (int x = minX; x <= maxX; x++){
       for (size_t j = 0; j != x_vals.size(); j++){
         if (x < x_vals[j]){
-          if ((x_vals.size() - j) % 2 != 0) {
+          if ((x_vals.size() - j) % 2 != 0){
             setPixFunc(bmp, x + 1, y); // Fixme: Why + 1? (Added to fill the insides of polygon edge in gradient panel)
           }
           break;
@@ -993,7 +992,7 @@ void blend_masked(const Offsat<Bitmap>& src, DstBmp dst,
          (srcData[srcPos + iA] == maskColor.a &&
            srcData[srcPos + iR] == maskColor.r &&
            srcData[srcPos + iG] == maskColor.g &&
-           srcData[srcPos + iB] == maskColor.b)) {
+           srcData[srcPos + iB] == maskColor.b)){
          continue;
        }
 
@@ -1583,7 +1582,7 @@ void fill_ellipse_f(Bitmap& bmp, const Functor& setPixFunc, const IntRect& r){
   int xoffset = r.w % 2 == 0 ? 1 : 0;
   int yoffset = r.h % 2 == 0 ? 1 : 0;
 
-  while (stopy <= stopx) {
+  while (stopy <= stopx){
     scanline_f(bmp, x0 - x, x0 + x - xoffset, y0 + y - yoffset, setPixFunc);
     if (y != 0){
       scanline_f(bmp, x0 - x, x0 + x - xoffset, y0 - y, setPixFunc);
@@ -1592,7 +1591,7 @@ void fill_ellipse_f(Bitmap& bmp, const Functor& setPixFunc, const IntRect& r){
 
     error -= b2 * (x - 1);
     stopy += b2;
-    if (error <= 0) {
+    if (error <= 0){
       error += a2 * (y - 1);
       y--;
       stopx -= a2;
@@ -1604,7 +1603,7 @@ void fill_ellipse_f(Bitmap& bmp, const Functor& setPixFunc, const IntRect& r){
   y = 0;
   stopy = b2*a;
   stopx = 0;
-  while (stopy >= stopx) {
+  while (stopy >= stopx){
     scanline_f(bmp, x0 - x, x0 + x - xoffset, y0 + y - yoffset, setPixFunc);
     if (y != 0){
       scanline_f(bmp, x0 - x, x0 + x - xoffset, y0 - y, setPixFunc);
@@ -1612,7 +1611,7 @@ void fill_ellipse_f(Bitmap& bmp, const Functor& setPixFunc, const IntRect& r){
     y++;
     error -= a2 * (y - 1);
     stopx += a2;
-    if (error < 0) {
+    if (error < 0){
       error += b2 * (x - 1);
       x--;
       stopy -= b2;

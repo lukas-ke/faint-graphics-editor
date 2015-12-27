@@ -305,7 +305,7 @@ typename BmpType::ResultType read_or_throw(const FilePath& filePath){
             errorInfo));
         });
     }
-    else {
+    else{
       const auto on_error_image = [i](){
         return BmpType::error_bmp_data(i);
       };
@@ -353,7 +353,7 @@ static std::vector<BitmapInfoHeader> create_bitmap_headers(const ico_vec& bitmap
         pngData.at(i).size(),
         default_DPI());
     }
-    else {
+    else{
       return create_bitmap_info_header_32bipp(p.first.GetSize(),
         default_DPI(),
         true);

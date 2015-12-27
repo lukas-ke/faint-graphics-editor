@@ -67,7 +67,7 @@ Tool* new_tool(ToolId id,
   const ActiveCanvas& canvas,
   ToolActions& actions)
 {
-  switch (id) {
+  switch (id){
   case ToolId::BRUSH:
     return brush_tool(settings);
 

@@ -132,7 +132,7 @@ public:
       else if (delta > (pi * 3/4.0) && delta < (pi * 3.0 / 4.0) + pi / 4.0){
         delta = pi;
       }
-      else {
+      else{
         delta = pi + pi / 2.0;
       }
     }

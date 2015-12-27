@@ -355,7 +355,7 @@ private:
     if (m_lastChanged == nullptr || m_lastChanged == m_width){
       return std::make_pair(m_width, m_height);
     }
-    else {
+    else{
       return std::make_pair(m_height, m_width);
     }
   }

@@ -133,7 +133,7 @@ void toggle_top_level_window(T& window){
     window.Restore();
     window.Raise();
   }
-  else {
+  else{
     window.Hide();
   }
 }

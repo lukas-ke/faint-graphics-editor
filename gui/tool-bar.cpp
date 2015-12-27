@@ -118,7 +118,7 @@ public:
     else if (m_groupButton->SetSelectedTool(id)){
       m_activeButton = m_groupButton;
     }
-    else {
+    else{
       // Tool without button.
     }
 

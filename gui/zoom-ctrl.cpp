@@ -100,7 +100,7 @@ public:
     if (zoom.GetScaleFactor() >= 1.0f){
       ss << zoom.GetScaleFactor() << ":1";
     }
-    else {
+    else{
       ss << zoom.GetPercentage() << " %";
     }
     if (m_currentZoomText->GetLabel() == ss.str()){
@@ -114,7 +114,7 @@ public:
         Description("Click to fit image in view, Ctrl=All images"));
       m_fit = true;
     }
-    else {
+    else{
       m_btnZoomFitOr100->UpdateText("1:1",
         Tooltip("Use Actual Size"),
         Description("Click to show image at 1:1, Ctrl=All images"));

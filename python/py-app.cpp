@@ -92,7 +92,7 @@ static void faintapp_add_format(PyFuncContext& ctx, PyObject* args){
     throw TypeError("Loader must be a callback or None:\n"
       "add_format(loader, saver, name, extension)");
   }
-  else {
+  else{
     Py_INCREF(loader);
   }
 
@@ -445,7 +445,7 @@ static void faintapp_special_copy(PyFuncContext&){
 
 #include "generated/python/method-def/py-app-method-def.hh"
 
-static void faintapp_special_init(faintAppObject&) {
+static void faintapp_special_init(faintAppObject&){
   // Prevent instantiation from Python, since the AppContext can't be
   // provided from there.
   throw TypeError(space_sep("FaintApp can not be instantiated.",

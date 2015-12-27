@@ -30,28 +30,28 @@ namespace faint{
 template <typename DST, typename SRC>
 static typename std::enable_if<std::is_signed<DST>::value &&
 std::is_signed<SRC>::value, bool>::type
-can_represent(SRC value) {
+can_represent(SRC value){
   return !(value < std::numeric_limits<DST>::min() || value > std::numeric_limits<DST>::max());
 }
 
 template <typename DST, typename SRC>
 static typename std::enable_if<std::is_signed<DST>::value &&
 std::is_unsigned<SRC>::value, bool>::type
-can_represent(SRC value) {
+can_represent(SRC value){
   return !(value > static_cast<typename std::make_unsigned<DST>::type>(std::numeric_limits<DST>::max()));
 }
 
 template <typename DST, typename SRC>
 static typename std::enable_if<std::is_unsigned<DST>::value &&
 std::is_signed<SRC>::value, bool>::type
-can_represent(SRC value) {
+can_represent(SRC value){
   return !(value < 0 || static_cast<typename std::make_unsigned<SRC>::type>(value) > std::numeric_limits<DST>::max());
 }
 
 template <typename DST, typename SRC>
 static typename std::enable_if<std::is_unsigned<DST>::value &&
 std::is_unsigned<SRC>::value, bool>::type
-can_represent(SRC value) {
+can_represent(SRC value){
   return !(value > std::numeric_limits<DST>::max());
 }
 

@@ -106,7 +106,7 @@ static utf8_string name(int k){
   if (k == key::down){
     return "Down";
   }
-  if (k == key::end) {
+  if (k == key::end){
     return "End";
   }
   if (k == key::enter){
@@ -294,7 +294,7 @@ bool KeyPress::operator<(const KeyPress& other) const{
       m_modifiers < other.m_modifiers);
 }
 
-void Mod::operator+=(const Mod& other) {
+void Mod::operator+=(const Mod& other){
   m_modifiers |= other.m_modifiers;
 }
 

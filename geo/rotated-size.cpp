@@ -23,14 +23,14 @@ static double min4(double a, double b, double c, double d){
     if (c < a){
       return (d < c) ? d : c;
     }
-    else {
+    else{
       return (d < a) ? d : a;
     }
   }
   else if (c < b){
     return (d < c) ? d : c;
   }
-  else {
+  else{
     return (d < b) ? d : b;
   }
 }
@@ -40,14 +40,14 @@ static double max4(double a, double b, double c, double d){
     if (c > a){
       return (d > c) ? d : c;
     }
-    else {
+    else{
       return (d > a) ? d : a;
     }
   }
   else if (c > b){
     return (d > c) ? d : c;
   }
-  else {
+  else{
     return (d > b) ? d : b;
   }
 }

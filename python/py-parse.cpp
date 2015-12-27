@@ -108,7 +108,7 @@ static PyObject* build_gradient(const Gradient& gradient){
     py_gradient->gradient = new RadialGradient(gradient.GetRadial());
     return (PyObject*)py_gradient;
   }
-  else {
+  else{
     assert(false);
     return Py_BuildValue("");
   }

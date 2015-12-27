@@ -52,7 +52,7 @@ public:
         if (PreviewEnabled()){
           UpdatePreview();
         }
-        else {
+        else{
           ResetPreview();
         }
       });

@@ -774,7 +774,7 @@ static utf8_string to_string(GifWriteResult result, const FilePath& path){
   else if (result == R::ERROR_OUT_OF_MEMORY){
     return failed_write("Out of memory.");
   }
-  else {
+  else{
     return failed_write("Unknown error.");
   }
 }

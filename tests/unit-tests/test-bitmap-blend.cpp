@@ -5,7 +5,7 @@
 #include "bitmap/draw.hh"
 #include "tests/test-util/print-objects.hh"
 
-void test_bitmap_blend() {
+void test_bitmap_blend(){
   using namespace faint;
 
   auto blended_colors = [](const faint::Color& b, const faint::Color& f){

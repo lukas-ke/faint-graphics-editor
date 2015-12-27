@@ -741,7 +741,7 @@ void FaintWindow::FullScreen(bool enable){
     panels.color->Hide();
     panels.tabControl->HideTabs();
   }
-  else {
+  else{
     auto freezer = freeze(frame);
     panels.color->Show(windowSettings.palette_visible);
     panels.tool->Show(windowSettings.toolbar_visible);
@@ -888,7 +888,7 @@ Canvas& FaintWindow::NewDocument(const ImageInfo& info){
   return canvas->GetInterface();
 }
 
-void FaintWindow::NextTab() {
+void FaintWindow::NextTab(){
   m_impl->panels->tabControl->SelectNext();
 }
 
@@ -916,7 +916,7 @@ void FaintWindow::Open(const FileList& paths){
       if (exists(filePath)){
         Open(filePath, change_tab(then_false(first)));
       }
-      else {
+      else{
         notFound.push_back(filePath); // Fixme
       }
     }
@@ -1145,7 +1145,7 @@ void FaintWindow::ToggleMaximize(){
   if (!IsFullScreen()){
     Maximize(!IsMaximized());
   }
-  else {
+  else{
     FullScreen(false);
   }
 }

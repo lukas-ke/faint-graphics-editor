@@ -123,7 +123,7 @@ CommandPtr context_deselect(Canvas& canvas){
       get_deselect_raster_command(sel::Existing(selection)) :
       nullptr;
   }
-  else {
+  else{
     canvas.DeselectObjects();
     canvas.Refresh(); // Fixme: Tricky, required, because no command is used
     return nullptr;
@@ -251,7 +251,7 @@ CommandPtr context_select_all(Canvas& canvas, const change_tool_f& selectTool){
     return get_select_all_command(active,
       active.GetRasterSelection());
   }
-  else {
+  else{
     canvas.SelectObjects(canvas.GetObjects(), deselect_old(true));
     selectTool(ToolId::SELECTION);
     // Object selection is not handled with commands

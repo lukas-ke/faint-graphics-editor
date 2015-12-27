@@ -361,11 +361,11 @@ public:
       if (selection.Floating()){
         info.status.SetMainText("Click to move the floating selection.");
       }
-      else {
+      else{
         info.status.SetMainText("Click to move the selected content.");
       }
     }
-    else {
+    else{
       info.status.SetMainText("Click to draw a selection rectangle.");
     }
     info.status.SetText(str_floor(info.pos), 0);

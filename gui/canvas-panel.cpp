@@ -126,7 +126,7 @@ CanvasPanel::CanvasPanel(wxWindow* parent,
         // can't be typed (at least not with Swedish keyboard).
         event.Skip();
       }
-      else if (HandleToolResult(m_contexts.GetTool().Char(info))) {
+      else if (HandleToolResult(m_contexts.GetTool().Char(info))){
         // Notify app to allow in-tool undo (e.g. Polygon tool point adding).
         SendCanvasChangeEvent();
 
@@ -148,7 +148,7 @@ CanvasPanel::CanvasPanel(wxWindow* parent,
 
   events::no_op_erase_background(this);
 
-  events::on_idle(this, [this]() {
+  events::on_idle(this, [this](){
     // Update the scrollbars in an idle handler to prevent various
     // crashes and mouse capture problems
     // (e.g. issue 78)
@@ -310,7 +310,7 @@ CanvasPanel::CanvasPanel(wxWindow* parent,
       if (event.GetOrientation() == wxHORIZONTAL){
         AdjustHorizontalScrollbar(geo.pos.x);
       }
-      else {
+      else{
         AdjustVerticalScrollbar(geo.pos.y);
       }
     });
@@ -708,7 +708,7 @@ PreemptResult CanvasPanel::Preempt(PreemptOption option){
     m_contexts.tool.ClearSwitched();
     return PreemptResult::COMMIT;
   }
-  else {
+  else{
     Refresh();
     return PreemptResult::NONE;
   }

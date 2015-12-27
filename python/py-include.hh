@@ -106,7 +106,7 @@ PyObject* py_rich_compare(const T& lhs, const T& rhs, int op){
     }
     Py_RETURN_FALSE;
   }
-  else {
+  else{
     assert(lhs > rhs);
     if (op == Py_GT || op == Py_GE || op == Py_NE){
       Py_RETURN_TRUE;

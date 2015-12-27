@@ -330,7 +330,7 @@ static cairo_matrix_t cairo_radial_matrix_from_tri(const Tri& t,
     cairo_matrix_translate(&m, -x0, -y0);
     return m;
   }
-  else {
+  else{
     Radii r(g.GetRadii());
     Point c(g.GetCenter());
     cairo_matrix_t m;
@@ -564,7 +564,7 @@ std::vector<PathPt> CairoContext::get_text_path(const Tri& t,
 
   for (int i = 0; i < cairoPath->num_data; i += cairoPath->data[i].header.length){
     cairo_path_data_t* data = &cairoPath->data[i];
-    switch (data->header.type) {
+    switch (data->header.type){
     case CAIRO_PATH_MOVE_TO:
       add(PathPt::MoveTo(Point(data[1].point.x, data[1].point.y)));
       break;
@@ -709,7 +709,7 @@ void CairoContext::set_line_join(LineJoin join){
   else if (join == LineJoin::MITER){
     cairo_set_line_join(m_impl->cr.get(), CAIRO_LINE_JOIN_MITER);
   }
-  else {
+  else{
     assert(false);
   }
 }

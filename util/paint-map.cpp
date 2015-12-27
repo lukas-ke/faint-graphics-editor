@@ -187,7 +187,7 @@ static void copy_paint(color_map_t& colors, const IntPoint& oldPos,
       erase_index(colors, oldPos);
     }
   }
-  else {
+  else{
     bool moveLeft = oldPos.x >= newPos.x;
     bool sameRow = newPos.y == oldPos.y;
     bool moveRight = !moveLeft;

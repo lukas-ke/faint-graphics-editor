@@ -296,7 +296,7 @@ bool run_python_user_config(PythonContext& python){
       return true;
     }
   }
-  else {
+  else{
     utf8_string userIniInfo(
       space_sep("Personal config file not found at",
         quoted(configPath.Str())));

@@ -173,7 +173,7 @@ public:
         p.y = snap_y(p.y, objects, info.canvas.GetGrid(), oldRect.Left(),
           oldRect.Right());
       }
-      else {
+      else{
         p = snap(p, objects, info.canvas.GetGrid());
       }
     }

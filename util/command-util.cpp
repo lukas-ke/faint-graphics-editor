@@ -590,7 +590,7 @@ CommandPtr get_objects_backward_command(const objects_t& objects,
       // selected objects is retained.
       zLimit = Z + 1;
     }
-    else {
+    else{
       zLimit = Z - 1;
       commands.push_back(order_object_command(object, New(Z - 1), Old(Z)));
     }
@@ -612,7 +612,7 @@ CommandPtr get_objects_forward_command(const objects_t& objects,
     if (Z + 1 >= zLimit){
       zLimit = Z;
     }
-    else {
+    else{
       zLimit = Z + 1;
       commands.push_back(order_object_command(object, New(Z + 1), Old(Z)));
     }

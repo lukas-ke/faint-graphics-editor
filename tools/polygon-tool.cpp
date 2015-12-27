@@ -180,7 +180,7 @@ public:
       m_points.Append(pos);
       return AddPoint(pos, mouseButton);
     }
-    else {
+    else{
       // Can only adjust to 45-degrees from the second point on,
       // i.e. if we're already active
       pos = ConstrainPoint(pos, info.modifiers);
@@ -190,7 +190,7 @@ public:
       m_points.AdjustBack(pos);
       return AddPoint(pos, mouseButton);
     }
-    else {
+    else{
       // Switched mouse button means commit
       return Commit(info.layerType);
     }
@@ -212,7 +212,7 @@ public:
     if (!m_active){
       info.status.SetMainText("Click to start drawing a polygon.");
     }
-    else {
+    else{
       SetAntiAlias(info);
       StrBtn btn(m_mouseButton);
       info.status.SetMainText(space_sep(btn.This(true), "click to add points,",
@@ -223,7 +223,7 @@ public:
     }
 
     Point pos = ConstrainPoint(info.pos, info.modifiers);
-    if (should_snap(info.modifiers)) {
+    if (should_snap(info.modifiers)){
       pos = polygon_snap(pos, info.canvas, m_points);
     }
 

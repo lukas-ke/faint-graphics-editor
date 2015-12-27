@@ -27,7 +27,7 @@ namespace {
 class GifFile{
   // Wrapper for automatically calling EGifCloseFile on a GifFileType*
 public:
-  explicit GifFile(const faint::FilePath& path) {
+  explicit GifFile(const faint::FilePath& path){
     auto handle = faint_open(path,
       O_WRONLY | O_CREAT | O_TRUNC,
       S_IREAD | S_IWRITE);
@@ -115,9 +115,7 @@ GifWriteResult write_with_giflib(const FilePath& path,
       }
     }
 
-
-
-    if (v.size() > 1) {
+    if (v.size() > 1){
       // Netscape loop extension
       auto err = EGifPutExtensionLeader(gifFile, APPLICATION_EXT_FUNC_CODE);
       if (err == GIF_ERROR){

@@ -84,21 +84,21 @@ public:
     this->blue = new unsigned int[256];
 
     if (numLevels == 1){
-      for (unsigned int i = 0; i != 256; i++) {
+      for (unsigned int i = 0; i != 256; i++){
         red[i] = (i >> 5) & 0x0004;
         green[i] = (i >> 6) & 0x0002;
         blue[i] = (i >> 7);
       }
     }
     else if (numLevels == 2){
-      for (int i = 0; i != 256; i++) {
+      for (int i = 0; i != 256; i++){
         red[i] = ((i >> 2) & 0x0020) | ((i >> 4) & 0x0004);
         green[i] = ((i >> 3) & 0x0010) | ((i >> 5) & 0x0002);
         blue[i] = ((i >> 4) & 0x0008) | ((i >> 6) & 0x0001);
       }
     }
     else if (numLevels == 3){
-      for (int i = 0; i != 256; i++) {
+      for (int i = 0; i != 256; i++){
         red[i] = ((i << 1) & 0x0100) | ((i >> 1) & 0x0020) |
           ((i >> 3) & 0x0004);
         green[i] = (i & 0x0080) | ((i >> 2) & 0x0010) |
@@ -108,7 +108,7 @@ public:
       }
     }
     else if (numLevels == 4){
-      for (int i = 0; i != 256; i++) {
+      for (int i = 0; i != 256; i++){
         red[i] = ((i << 4) & 0x0800) | ((i << 2) & 0x0100) |
           (i & 0x0020) | ((i >> 2) & 0x0004);
         green[i] = ((i << 3) & 0x0400) | ((i << 1) & 0x0080) |
@@ -118,7 +118,7 @@ public:
       }
     }
     else if (numLevels == 5){
-      for (int i = 0; i != 256; i++) {
+      for (int i = 0; i != 256; i++){
         red[i] = ((i << 7) & 0x4000) | ((i << 5) & 0x0800) |
           ((i << 3) & 0x0100) | ((i << 1) & 0x0020) |
           ((i >> 1) & 0x0004);
@@ -131,7 +131,7 @@ public:
       }
     }
     else if (numLevels == 6){
-      for (int i = 0; i < 256; i++) {
+      for (int i = 0; i < 256; i++){
         red[i] = ((i << 10) & 0x20000) | ((i << 8) & 0x4000) |
           ((i << 6) & 0x0800) | ((i << 4) & 0x0100) |
           ((i << 2) & 0x0020) | (i & 0x0004);
@@ -201,14 +201,14 @@ public:
       int numNodes = 1 << (3 * level);
       ColorNode** colorNode_a = new ColorNode*[to_size_t(numNodes)];
       colorNode_aa[level] = colorNode_a;
-      for (int i = 0; i != numNodes; i++) {
+      for (int i = 0; i != numNodes; i++){
         colorNode_a[i] = new ColorNode();
       }
     }
   }
 
   ~Octree(){
-    for (int level = 0; level <= CQ_NLEVELS; level++) {
+    for (int level = 0; level <= CQ_NLEVELS; level++){
       ColorNode** colorNode_a = colorNode_aa[level];
       int numNodes = 1 << (3 * level);
       for (int i = 0; i < numNodes; i++){
@@ -220,15 +220,15 @@ public:
   }
 
   const ColorNode& findNode(int octIndex) const{
-    for (int level = 2; level < CQ_NLEVELS; level++) {
+    for (int level = 2; level < CQ_NLEVELS; level++){
       CubeIndices ind = GetIndices(octIndex, level);
       ColorNode* node = colorNode_aa[level][ind.base];
       ColorNode* subNode = colorNode_aa[level + 1][ind.sub];
 
-      if (!subNode->isLeaf) {  /* use cell at level above */
+      if (!subNode->isLeaf){  /* use cell at level above */
         return *node;
       }
-      else if (level == CQ_NLEVELS - 1) {  /* reached the bottom */
+      else if (level == CQ_NLEVELS - 1){  /* reached the bottom */
         return *subNode;
       }
     }
@@ -341,11 +341,11 @@ static Octree* generate_octree(const Bitmap& bmp,
     int numNodes = 1 << (3 * level);
 
     // Traverse each octIndex (i) at level
-    for (int i = 0; i != numNodes; i++) {
+    for (int i = 0; i != numNodes; i++){
       ColorNode* cqc = cqca[i];
 
       // Check each subnode
-      for (int j = 0; j != 8; j++) {
+      for (int j = 0; j != 8; j++){
         // octindex at level + 1
         int isub = 8 * i + j;
         ColorNode* cqcsub = cqcasub[isub];
@@ -356,11 +356,11 @@ static Octree* generate_octree(const Bitmap& bmp,
           continue;
         }
 
-        if (cqcsub->numSamples >= thresh * static_cast<float>(pixelsPerCell)) {
+        if (cqcsub->numSamples >= thresh * static_cast<float>(pixelsPerCell)){
           // Make it a true leaf
           cqcsub->isLeaf = true;
           assert(colorMap.size() < 256);
-          if (colorMap.size() < 256) {
+          if (colorMap.size() < 256){
             // Assign the color index
             cqcsub->index = colorMap.size();
             ColRGB rgb = get_rgb_from_octcube(isub, level + 1);
@@ -373,26 +373,26 @@ static Octree* generate_octree(const Bitmap& bmp,
           pixelsPerCell = pixels_per_cell(numPixels, numColors, reservedColors);
         }
       }
-      if (cqc->numLeaves > 0 || level == 2) {
+      if (cqc->numLeaves > 0 || level == 2){
         // Make the cube a leaf
         cqc->isLeaf = true;
-        if (cqc->numLeaves < 8) {
+        if (cqc->numLeaves < 8){
           // residual CTE cube: acquire the remaining pixels
-          for (int j = 0; j != 8; j++) {  // check all subnodes
+          for (int j = 0; j != 8; j++){  // check all subnodes
             int isub = 8 * i + j;
             ColorNode* cqcsub = cqcasub[isub];
             if (!cqcsub->isLeaf){
               cqc->numSamples += cqcsub->numSamples;
             }
           }
-          if (colorMap.size() < 256) {
+          if (colorMap.size() < 256){
             // assign the color index
             cqc->index = colorMap.size();
             ColRGB rgb = get_rgb_from_octcube(i, level);
             colorMap.push_back(rgb);
             cqc->center = rgb;
           }
-          else {
+          else{
             // \def(quantize-error)Quantize error;
             // This happens sometimes (e.g. for images with several
             // gradients).
@@ -408,10 +408,10 @@ static Octree* generate_octree(const Bitmap& bmp,
           pixelsPerCell = pixels_per_cell(numPixels, numColors, reservedColors);
         }
       }
-      else {
+      else{
         // absorb all subpixels but don't make it a leaf
         // absorb from all subnodes
-        for (int j = 0; j < 8; j++) {
+        for (int j = 0; j < 8; j++){
           int isub = 8 * i + j;
           ColorNode* cqcsub = cqcasub[isub];
           cqc->numSamples += cqcsub->numSamples;
@@ -454,19 +454,19 @@ static MappedColors apply_dithered_quantization(const Bitmap& bmp,
 
   AlphaMap dst(bmp.GetSize());
   IndexTables tables(tree.CQ_NLEVELS);
-  for (int y = 0; y < bmp.m_h - 1; y++) {
+  for (int y = 0; y < bmp.m_h - 1; y++){
     // Swap data 2 --> 1, and read in new line 2
     memcpy(r1, r2, to_size_t(4 * bmp.m_w));
     memcpy(g1, g2, to_size_t(4 * bmp.m_w));
     memcpy(b1, b2, to_size_t(4 * bmp.m_w));
     get_rgb_line(bmp, y + 1, r8, g8, b8);
-    for (int x = 0; x != bmp.m_w; x++) {
+    for (int x = 0; x != bmp.m_w; x++){
       r2[x] = 64 * static_cast<int>(r8[x]);
       g2[x] = 64 * static_cast<int>(g8[x]);
       b2[x] = 64 * static_cast<int>(b8[x]);
     }
 
-    for (int x = 0; x != bmp.m_w - 1; x++) {
+    for (int x = 0; x != bmp.m_w - 1; x++){
       Color color = color_from_ints(r1[x] / 64,
         g1[x] / 64,
         b1[x] / 64);
@@ -476,16 +476,16 @@ static MappedColors apply_dithered_quantization(const Bitmap& bmp,
       dst.Set(x,y, static_cast<uchar>(node.index));
 
       int dif = r1[x] / 8 - 8 * static_cast<int>(node.center.r);
-      if (dif != 0) {
+      if (dif != 0){
         int val1 = r1[x + 1] + 3 * dif;
         int val2 = r2[x] + 3 * dif;
         int val3 = r2[x + 1] + 2 * dif;
-        if (dif > 0) {
+        if (dif > 0){
           r1[x + 1] = std::min(16383, val1);
           r2[x] = std::min(16383, val2);
           r2[x + 1] = std::min(16383, val3);
         }
-        else if (dif < 0) {
+        else if (dif < 0){
           r1[x + 1] = std::max(0, val1);
           r2[x] = std::max(0, val2);
           r2[x + 1] = std::max(0, val3);
@@ -493,16 +493,16 @@ static MappedColors apply_dithered_quantization(const Bitmap& bmp,
       }
 
       dif = g1[x] / 8 - 8 * static_cast<int>(node.center.g);
-      if (dif != 0) {
+      if (dif != 0){
         int val1 = g1[x + 1] + 3 * dif;
         int val2 = g2[x] + 3 * dif;
         int val3 = g2[x + 1] + 2 * dif;
-        if (dif > 0) {
+        if (dif > 0){
           g1[x + 1] = std::min(16383, val1);
           g2[x] = std::min(16383, val2);
           g2[x + 1] = std::min(16383, val3);
         }
-        else if (dif < 0) {
+        else if (dif < 0){
           g1[x + 1] = std::max(0, val1);
           g2[x] = std::max(0, val2);
           g2[x + 1] = std::max(0, val3);
@@ -510,16 +510,16 @@ static MappedColors apply_dithered_quantization(const Bitmap& bmp,
       }
 
       dif = b1[x] / 8 - 8 * static_cast<int>(node.center.b);
-      if (dif != 0) {
+      if (dif != 0){
         int val1 = b1[x + 1] + 3 * dif;
         int val2 = b2[x] + 3 * dif;
         int val3 = b2[x + 1] + 2 * dif;
-        if (dif > 0) {
+        if (dif > 0){
           b1[x + 1] = std::min(16383, val1);
           b2[x] = std::min(16383, val2);
           b2[x + 1] = std::min(16383, val3);
         }
-        else if (dif < 0) {
+        else if (dif < 0){
           b1[x + 1] = std::max(0, val1);
           b2[x] = std::max(0, val2);
           b2[x + 1] = std::max(0, val3);
@@ -536,7 +536,7 @@ static MappedColors apply_dithered_quantization(const Bitmap& bmp,
   }
 
   // Last row of pixels, no leftward propagation
-  for (int x = 0; x != bmp.m_w; x++) {
+  for (int x = 0; x != bmp.m_w; x++){
 
     int octIndex = tables.GetIndex(color_from_ints(r2[x]/64,
         g2[x]/64,
@@ -565,8 +565,8 @@ static MappedColors apply_quantization(const Bitmap& bmp, const Octree& tree){
   // Canonical index tables (again?)
   IndexTables tables(tree.CQ_NLEVELS);
   AlphaMap dst(sz);
-  for (int y = 0; y < sz.h; y++) {
-    for (int x = 0; x != sz.w; x++) {
+  for (int y = 0; y < sz.h; y++){
+    for (int x = 0; x != sz.w; x++){
       Color color = get_color_raw(bmp, x, y);
       int octIndex = tables.GetIndex(color);
       const ColorNode& cell = tree.findNode(octIndex);
@@ -615,7 +615,7 @@ static MappedColors simply_index_it(const Bitmap& bmp){
       if (hasTransparent && mask.Get(x, y)){
         indexes.Set(x, y, lastColorIndex);
       }
-      else {
+      else{
         const auto rgb = strip_alpha(get_color_raw(bmp,x,y));
         indexes.Set(x,y, colorToIndex[rgb]);
       }

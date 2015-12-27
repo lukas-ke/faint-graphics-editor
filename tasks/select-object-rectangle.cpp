@@ -59,7 +59,7 @@ static void modify_selection(const PosInfo& info, const objects_t& enclosed){
   if (remove_enclosed(info)){
     info.canvas.DeselectObjects(enclosed);
   }
-  else {
+  else{
     info.canvas.SelectObjects(enclosed, deselect_old(!add_enclosed(info)));
   }
 }

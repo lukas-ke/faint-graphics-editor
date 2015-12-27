@@ -199,7 +199,7 @@ static TextExpression* create_constant(const utf8_string& name,
   if (it != constants.end()){
     return new Text(it->second);
   }
-  else {
+  else{
     throw ExpressionParseError(commandPos, space_sep("Unknown constant:", name));
   }
 }

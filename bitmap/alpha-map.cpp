@@ -182,7 +182,7 @@ int x0 = p0.Get().x;
     if (steep){
       brush_stroke(data, y, x, b);
     }
-    else {
+    else{
       brush_stroke(data, x, y, b);
     }
 

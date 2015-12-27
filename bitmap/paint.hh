@@ -76,7 +76,7 @@ auto visit(const Paint& paint, CF colorFunc, PF patternFunc, GF gradientFunc)
   else if (paint.IsPattern()){
     return patternFunc(paint.GetPattern());
   }
-  else {
+  else{
     assert(paint.IsGradient());
     return gradientFunc(paint.GetGradient());
   }

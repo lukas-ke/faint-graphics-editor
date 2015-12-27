@@ -56,7 +56,7 @@ Optional<ENUM_TYPE> to_enum(typename std::underlying_type<ENUM_TYPE>::type v){
   if (within_enum<ENUM_TYPE>(v)){
     return {static_cast<ENUM_TYPE>(v)};
   }
-  else {
+  else{
     return {};
   }
 }

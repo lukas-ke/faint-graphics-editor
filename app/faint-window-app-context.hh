@@ -223,7 +223,7 @@ void change_setting(FaintWindow& window,
   Tool* tool = window.GetActiveTool();
   if (tool->GetSettings().Has(setting)){
     bool toolModified = tool->Set({setting, value});
-    if (toolModified) {
+    if (toolModified){
       window.GetActiveCanvas().Refresh();
     }
     if (tool->EatsSettings()){

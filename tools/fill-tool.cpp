@@ -40,7 +40,7 @@ static utf8_string hit_description(const PosInfo& info){
   if (!info.object->GetSettings().Has(ts_Bg)){
     return "color";
   }
-  else {
+  else{
     return info.hitStatus == Hit::BOUNDARY ? "edge color" : "fill color";
   }
 }
@@ -128,7 +128,7 @@ public:
           // No reason to replace with same color.
           return ToolResult::NONE;
         }
-        else {
+        else{
           m_command.Set(target_full_image(
             get_replace_color_command(Old(clickedColor), fill)));
         }
@@ -140,7 +140,7 @@ public:
           // an image, so do nothing.
           return ToolResult::NONE;
         }
-        else {
+        else{
           m_command.Set(target_full_image(
             get_erase_but_color_command(clickedColor, fill)));
         }
@@ -152,7 +152,7 @@ public:
           get_boundary_fill_command(floored(info.pos), fill,
             boundary.GetColor())));
       }
-      else {
+      else{
         m_command.Set(target_full_image(
           get_flood_fill_command(floored(info.pos), fill)));
       }
@@ -171,7 +171,7 @@ public:
       // should be filled, or the raster background, so it's tricky...
       m_command.Set(get_fill_inside_command(info.object, fill));
     }
-    else {
+    else{
       assert(false);
     }
     return ToolResult::COMMIT;

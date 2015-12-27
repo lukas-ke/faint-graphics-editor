@@ -57,7 +57,7 @@ static std::pair<Object*, Hit> object_at(const Point& p,
       else if (color == mask_fill){
         return {object, Hit::INSIDE};
       }
-      else {
+      else{
         consider = object;
         considerType = Hit::NEARBY;
       }

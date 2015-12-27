@@ -105,7 +105,7 @@ public:
           // Name unchanged
           return TaskResult::CHANGE;
         }
-        else {
+        else{
           m_command.Set(set_object_name_command(namee, newName));
           return TaskResult::COMMIT_AND_CHANGE;
         }

@@ -173,13 +173,13 @@ std::vector<coord> get_flat_coordinate_list(const Object& obj){
   if (is_polygon(obj)){
     return flat_point_list(get_polygon_vertices(obj));
   }
-  else if (is_spline(obj)) {
+  else if (is_spline(obj)){
     return flat_point_list(get_spline_points(obj));
   }
   else if (is_line(obj)){
     return flat_point_list(obj.GetMovablePoints());
   }
-  else {
+  else{
     Tri t = obj.GetTri();
     return flat_point_list({t.P0(), t.P1(), t.P3(), t.P2()});
   }

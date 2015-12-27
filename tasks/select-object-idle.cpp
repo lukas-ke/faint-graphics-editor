@@ -302,7 +302,7 @@ static TaskResult clicked_boundary_handle(IdleSelectionState& impl,
       return TaskResult::CHANGE;
     }
   }
-  else {
+  else{
     if (copy){
       Object* newObject = obj->Clone();
       impl.command.Set(get_appending_add_object_command(newObject,
@@ -496,7 +496,7 @@ public:
             if (handle == Handle::P0 || handle == Handle::P3){
               return Cursor::RESIZE_NW;
             }
-            else if (handle == Handle::P1 || handle == Handle::P2) {
+            else if (handle == Handle::P1 || handle == Handle::P2){
               return Cursor::RESIZE_NE;
             }
             else if (handle == Handle::P0P2 || handle == Handle::P1P3){
@@ -511,7 +511,7 @@ public:
             }
           },
           [&](const MovableHandle& handle){
-            if (handle.type == HandleType::MOVABLE_POINT) {
+            if (handle.type == HandleType::MOVABLE_POINT){
               return Cursor::MOVE_POINT;
             }
             else if (handle.type == HandleType::EXTENSION_POINT){
@@ -547,7 +547,7 @@ public:
   }
 
   TaskResult DoubleClick(const PosInfo& info) override{
-    if (!info.objSelected) {
+    if (!info.objSelected){
       return TaskResult::NONE;
     }
 

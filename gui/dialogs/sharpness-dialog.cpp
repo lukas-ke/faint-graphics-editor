@@ -123,7 +123,7 @@ private:
       if (sharpness < 0){
         m_feedback.SetBitmap(gaussian_blur_fast(m_bitmap, -sharpness));
       }
-      else {
+      else{
         m_feedback.SetBitmap(unsharp_mask_fast(m_bitmap, sharpness));
       }
     }

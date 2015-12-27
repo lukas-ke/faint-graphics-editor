@@ -85,7 +85,7 @@ public:
       m_p0 = m_origP0 = snap(info.pos, info.canvas.GetObjects(),
         info.canvas.GetGrid());
     }
-    else {
+    else{
       m_p0 = m_origP0 = info.pos;
     }
     m_p1 = m_p0;
@@ -135,7 +135,7 @@ public:
       m_p0 = m_origP0;
     }
 
-    if (centerPoint && constrainToCircle) {
+    if (centerPoint && constrainToCircle){
       m_p1 = constrain_to_square(m_origP0, info.pos, subPixel);
       Angle angle = line_angle_cw({m_origP0, m_p1});
       coord radius = distance(m_origP0, m_p1);
@@ -158,7 +158,7 @@ public:
       m_p1 = constrain_to_square(m_p0, info.pos, subPixel);
       info.status.SetText(str_from_to(m_p0, m_p1), 0);
     }
-    else {
+    else{
       info.status.SetMainText(space_sep(primary_modifier("From Center"),
         secondary_modifier("Circle")));
       info.status.SetText(str_from_to(m_p0, m_p1), 0);

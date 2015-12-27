@@ -68,7 +68,7 @@ void run_bench(void (*func)(), const std::string& fileName){
       ss << int((entry.seconds / minTime) * 100 + 0.5);
       row.percentage = ss.str();
     }
-    else {
+    else{
       row.percentage = "N/A";
     }
     percentageColWidth = std::max(percentageColWidth, static_cast<int>(row.percentage.size()));

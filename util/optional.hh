@@ -116,7 +116,7 @@ public:
     if (other.m_obj == nullptr){
       m_obj = nullptr;
     }
-    else {
+    else{
       m_obj = opthelper<T>::create(*other.m_obj);
     }
   }

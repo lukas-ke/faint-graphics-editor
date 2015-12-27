@@ -234,7 +234,7 @@ public:
           PushLine();
           return;
         }
-        else {
+        else{
           // SetDefaultStyle affects WriteText, but it does not affect
           // normal text entry (i.e. what would happen on event.Skip() for
           // the char-event, so I need to do WriteText instead to get the
@@ -308,10 +308,10 @@ public:
         }
 
         if (keyCode == WXK_TAB){
-          if (in_quote(GetRange(m_inputStart, GetLastPosition()))) {
+          if (in_quote(GetRange(m_inputStart, GetLastPosition()))){
             PathCompletion(event.ShiftDown());
           }
-          else {
+          else{
             CommandCompletion(event.ShiftDown());
           }
           return;
@@ -342,9 +342,9 @@ public:
               DeleteSelection();
             }
           }
-          else {
+          else{
             // No selection, remove at insertion point
-            if (Editable(GetInsertionPoint())) {
+            if (Editable(GetInsertionPoint())){
               Remove(GetInsertionPoint(), GetInsertionPoint() + 1);
             }
           }
@@ -379,7 +379,7 @@ public:
             BackwardWord();
             return;
           }
-          else {
+          else{
             event.Skip();
           }
         }
@@ -592,7 +592,7 @@ private:
     if (pos != wxString::npos){
       SetInsertionPoint(currPos - resigned((text.size() - pos)));
     }
-    else {
+    else{
       SetInsertionPoint(m_inputStart);
     }
   }
@@ -632,7 +632,7 @@ private:
     if (pos != wxString::npos){
       text = slice_from(text, pos + 1);
     }
-    else {
+    else{
       pos = 0;
     }
 
@@ -697,7 +697,7 @@ private:
     if (spacePos != wxString::npos){
       SetInsertionPoint(currPos + resigned(spacePos) + 1);
     }
-    else {
+    else{
       SetInsertionPoint(GetLastPosition());
     }
   }
@@ -719,7 +719,7 @@ private:
     if (pos != wxString::npos){
       text = slice_from(text, pos + 1);
     }
-    else {
+    else{
       pos = 0;
     }
 

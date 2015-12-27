@@ -44,7 +44,7 @@ public:
     if (m_index.IsSet()){
       context.AddFrame(m_image.get(), m_index.Get());
     }
-    else {
+    else{
       context.AddFrame(m_image.get());
     }
   }

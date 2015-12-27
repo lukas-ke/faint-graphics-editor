@@ -130,7 +130,7 @@ public:
     return m_appendCommand;
   }
 
-  void SetOptionsCommand(SetSelectionOptionsCommand* cmd) {
+  void SetOptionsCommand(SetSelectionOptionsCommand* cmd){
     // Fixme: Remove?
     // ..Presumably this refers to using a command bunch instead
     // ..of appending the selections to the selection.

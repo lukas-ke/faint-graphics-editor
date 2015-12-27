@@ -71,7 +71,7 @@ inline std::pair<int, int> plus_minus_f(int value, int delta){
 } // namespace
 
 template <typename F>
-inline constexpr namedop::named_operator_wrapper<F> make_named_operator(F f) {
+inline constexpr namedop::named_operator_wrapper<F> make_named_operator(F f){
   return {f};
 }
 

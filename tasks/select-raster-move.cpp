@@ -62,7 +62,7 @@ public:
           });
       }
     }
-    else {
+    else{
       IntRect r = m_selection->GetRect();
       m_selection->Deselect();
       m_selection->SetRect(r);

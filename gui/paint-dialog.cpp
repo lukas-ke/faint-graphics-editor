@@ -143,7 +143,7 @@ public:
     else if (selected == m_panelGradient->AsWindow()){
       return Paint(m_panelGradient->GetGradient());
     }
-    else {
+    else{
       assert(false);
       return Paint(Color(0,0,0));
     }

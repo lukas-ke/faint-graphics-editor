@@ -78,7 +78,7 @@ void TextBuffer::del(){
   if (m_sel.active){
     del_selection();
   }
-  else {
+  else{
     if (m_data.size() > m_caret){
       m_data.erase(m_caret,1);
     }
@@ -89,10 +89,10 @@ void TextBuffer::del_back(){
   if (m_sel.active){
     del_selection();
   }
-  else if (m_caret == 0) {
+  else if (m_caret == 0){
     return;
   }
-  else {
+  else{
     m_caret--;
     del();
   }
@@ -265,7 +265,7 @@ CaretRange word_boundaries(size_t pos, const TextBuffer& buffer){
       }
     }
   }
-  else {
+  else{
     // Find the delimiters and return the range of characters between
     // them.
     for (size_t i = pos; i != 0; i--){

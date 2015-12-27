@@ -133,22 +133,22 @@ public:
       return ToolResult::NONE;
     }
 
-    if (pen_constrain_held(info.modifiers)) {
+    if (pen_constrain_held(info.modifiers)){
       if (m_constrainDir == ConstrainDir::NONE){
         if (distance(floored(pos), m_origin) > 5){
           // Lock the constrain direction after a certain distance
           // to avoid weird switches
           m_constrainDir = constrain_pos(pos, floated(m_origin));
         }
-        else {
+        else{
           constrain_pos(pos, floated(m_origin));
         }
       }
-      else {
+      else{
         constrain_pos(pos, floated(m_origin), m_constrainDir);
       }
     }
-    else {
+    else{
       m_origin = floored(pos);
       m_constrainDir = ConstrainDir::NONE;
     }

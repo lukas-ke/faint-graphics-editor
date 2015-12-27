@@ -167,7 +167,7 @@ public:
           m_statusInfo.SetMainText("");
           m_statusInfo.SetText("", 0);
         }
-        else {
+        else{
           m_statusInfo.SetMainText(
             "Left click for color dialog, right click for options.");
           m_statusInfo.SetText(str(GetClickedPaint(hit)), 0);
@@ -217,7 +217,7 @@ private:
     else if (m_bgRect.Contains(pos)){
       return Which::HIT_BG;
     }
-    else {
+    else{
       return Which::HIT_NEITHER;
     }
   }

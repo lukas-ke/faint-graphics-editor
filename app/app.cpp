@@ -313,7 +313,7 @@ public:
           "Python file specified with --run not found:"),
           scriptPath.Str()));
       }
-      else {
+      else{
         show_error(m_faintWindow->GetRawFrame(),
           *m_appContext,
           Title("Script not found"),
@@ -321,7 +321,7 @@ public:
             scriptPath.Str()));
       }
     }
-    else {
+    else{
       run_python_file(scriptPath).IfSet(
         [&](const FaintPyExc& err){
           const utf8_string errStr(format_run_script_error(scriptPath, err));

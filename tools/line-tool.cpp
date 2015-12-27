@@ -54,11 +54,11 @@ static void line_status_bar(StatusInterface& status,
   const ToolModifiers& modifiers,
   bool subPixel)
 {
-  if (modifiers.Neither()) {
+  if (modifiers.Neither()){
     status.SetMainText(space_sep(primary_modifier("Snap"),
       secondary_modifier("Constrain")));
   }
-  else {
+  else{
     status.SetMainText("");
   }
 

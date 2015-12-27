@@ -61,7 +61,7 @@ public:
     if (objText == nullptr){
       m_newTask.Set(text_make_box_task(info.pos, m_settings, m_actions));
     }
-    else {
+    else{
       m_newTask.Set(edit_text_task(objText, m_settings, m_actions));
     }
     return TaskResult::CHANGE;
@@ -75,7 +75,7 @@ public:
     if (hovered_selected_text(info)){
       info.status.SetMainText("Click to edit the text object");
     }
-    else {
+    else{
       info.status.SetMainText("Click to start drawing a text-box");
     }
     info.status.SetText(str_floor(info.pos));

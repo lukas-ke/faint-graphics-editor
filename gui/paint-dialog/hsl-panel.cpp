@@ -118,7 +118,7 @@ public:
             // sufficient feedback
             cursors.SetBlank(this);
           }
-          else {
+          else{
             // Show the cursor also during adjustment to indicate the
             // position if it is outside the hs-region, since the
             // position cross will be clamped.
@@ -417,7 +417,7 @@ private:
       set_pos(label, IntPoint(ctrlPos.x,
           ctrlPos.y + ctrlSize.h / 2 - lblSize.h / 2));
     }
-    else {
+    else{
       set_pos(label,
         {ctrlPos.x - lblSize.w - 5,
          ctrlPos.y + ctrlSize.h / 2 - lblSize.h / 2});

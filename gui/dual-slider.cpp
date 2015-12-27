@@ -155,7 +155,7 @@ public:
       UpdateFromPos(m_range.Constrain(pos_to_value(x, GetSize().
             GetWidth(), m_range)), m_which);
     }
-    else {
+    else{
       UpdateFromAnchor(x);
     }
     m_mouse.Capture();
@@ -247,7 +247,7 @@ public:
     else if (dx1 < dx0 && (dx1 < dxA || dxA > 5)){
       return Handle::END;
     }
-    else {
+    else{
       return Handle::MIDDLE;
     }
   }

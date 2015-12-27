@@ -126,7 +126,7 @@ public:
           btn.This(false), "click to stop."));
       return ToolResult::DRAW;
     }
-    else {
+    else{
       info.status.SetMainText("Click to start drawing a spline");
     }
     return ToolResult::NONE;

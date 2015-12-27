@@ -269,7 +269,7 @@ static void fill_and_or_stroke(CairoContext& cr, const Settings& s){
     if (border(s)){
       cr.fill_preserve();
     }
-    else {
+    else{
       cr.fill();
       return; // No stroke, return early
     }
@@ -286,11 +286,11 @@ static void from_settings(CairoContext& cr, const Settings& s){
   cr.set_line_width(lineWidth);
   cr.set_fill_rule(s.GetDefault(ts_FillRule, FillRule::DEFAULT));
   cr.set_source(get_fg(s)); // Fixme: This might duplicate pattern creation, compare fill_and_or_stroke
-  if (dashed(s)) {
+  if (dashed(s)){
     coord dashes[] = {2 * lineWidth, 2 * lineWidth};
     cr.set_dash(dashes, 2, 0);
   }
-  else {
+  else{
     cr.set_dash(0, 0, 0);
   }
 }
@@ -415,11 +415,11 @@ void FaintDC::Blit(const Bitmap& bmp, const Point& topLeft,
       BitmapSetAlphaMasked(bmp, bgCol, imagePt);
     }
   }
-  else {
+  else{
     if (alphaBlend){
       BitmapBlendAlpha(bmp, imagePt);
     }
-    else {
+    else{
       BitmapSetAlpha(bmp, imagePt);
     }
   }
@@ -437,7 +437,7 @@ void FaintDC::BitmapBlendAlpha(const Bitmap& drawnBitmap,
     const Bitmap scaled(scale_nearest(drawnBitmap, truncated(m_sc)));
     blend(offsat(scaled, topLeft), onto(m_bitmap));
   }
-  else {
+  else{
     blend(offsat(drawnBitmap, topLeft), onto(m_bitmap));
   }
 }
@@ -454,7 +454,7 @@ void FaintDC::BitmapBlendAlphaMasked(const Bitmap& drawnBitmap,
     const Bitmap scaled(scale_nearest(drawnBitmap, truncated(m_sc)));
     blend_masked(offsat(scaled, topLeft), onto(m_bitmap), maskColor);
   }
-  else {
+  else{
     blend_masked(offsat(drawnBitmap, topLeft), onto(m_bitmap), maskColor);
   }
 }
@@ -471,7 +471,7 @@ void FaintDC::BitmapSetAlpha(const Bitmap& drawnBitmap,
     const Bitmap scaled(scale_nearest(drawnBitmap, truncated(m_sc)));
     blit(offsat(scaled, topLeft), onto(m_bitmap));
   }
-  else {
+  else{
     blit(offsat(drawnBitmap, topLeft), onto(m_bitmap));
   }
 }
@@ -488,7 +488,7 @@ void FaintDC::BitmapSetAlphaMasked(const Bitmap& drawnBitmap,
     Bitmap scaled(scale_nearest(drawnBitmap, truncated(m_sc)));
     blit_masked(offsat(scaled, topLeft), onto(m_bitmap), maskColor);
   }
-  else {
+  else{
     blit_masked(offsat(drawnBitmap, topLeft), onto(m_bitmap), maskColor);
   }
 }
@@ -797,7 +797,7 @@ void FaintDC::PolyLine(const Tri& tri, const std::vector<Point>& points,
     m_cr->stroke();
     draw_arrow_head(*m_cr, a, s.Get(ts_LineWidth));
   }
-  else {
+  else{
     m_cr->line_to(to);
     m_cr->stroke();
   }
