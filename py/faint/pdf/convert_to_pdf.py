@@ -55,9 +55,9 @@ def _rad_angle(x0, y0, x1, y1):
     return atan2(y1b, x1b)
 
 
-def _set_dash(stream, object):
-    if object.linestyle == 'long_dash':
-        w = object.linewidth * 2
+def _set_dash(stream, obj):
+    if obj.linestyle == 'long_dash':
+        w = obj.linewidth * 2
         stream.dash(w, w)
     else:
         stream.dash_off()
@@ -86,17 +86,17 @@ def _add_path(stream, path_pts, doc_h, scale_x, scale_y):
         else:
             assert(False) # Fixme
 
-def _stroke_and_or_fill(stream, object):
-    fillStyle = object.fillstyle
+def _stroke_and_or_fill(stream, obj):
+    fillStyle = obj.fillstyle
     if fillStyle == 'border':
-        stream.fgcol(*_to_pdf_color(object.fg))
+        stream.fgcol(*_to_pdf_color(obj.fg))
         stream.stroke()
     elif fillStyle == 'fill':
-        stream.bgcol(*_to_pdf_color(object.fg))
+        stream.bgcol(*_to_pdf_color(obj.fg))
         stream.fill()
     elif fillStyle == 'border+fill':
-        stream.fgcol(*_to_pdf_color(object.fg))
-        stream.bgcol(*_to_pdf_color(object.bg))
+        stream.fgcol(*_to_pdf_color(obj.fg))
+        stream.bgcol(*_to_pdf_color(obj.bg))
         stream.stroke_and_fill()
 
 
@@ -130,35 +130,35 @@ def _transform_points(faint_points, doc_h, scale_x, scale_y):
     return pdf_points
 
 
-def object_to_stream(s, object, doc_h, scale_x, scale_y):
+def object_to_stream(s, obj, doc_h, scale_x, scale_y):
     """Adds objects to the stream (s).
     Returns extra meta-data (for pdf comments) as a list."""
 
     meta = []
-    if object.get_type() == 'Line':
-        _set_dash(s, object)
-        s.fgcol(*_to_pdf_color(object.fg))
-        s.linewidth(object.linewidth)
-        points = _transform_points(object.get_points(), doc_h, scale_x, scale_y)
+    if obj.get_type() == 'Line':
+        _set_dash(s, obj)
+        s.fgcol(*_to_pdf_color(obj.fg))
+        s.linewidth(obj.linewidth)
+        points = _transform_points(obj.get_points(), doc_h, scale_x, scale_y)
         if len(points) == 4:
             x1, y1, x0, y0 = points
-            if object.arrow == 'front':
-                s.bgcol(*_to_pdf_color(object.fg))
-                arrowPos = _arrowhead(s, object.linewidth, x0, y0, x1, y1)
+            if obj.arrow == 'front':
+                s.bgcol(*_to_pdf_color(obj.fg))
+                arrowPos = _arrowhead(s, obj.linewidth, x0, y0, x1, y1)
                 meta.append(arrowPos)
             else:
                 s.line(x1, y1, x0, y0)
         else:
             s.polyline(points)
 
-    elif object.get_type() == 'Rectangle':
-        t = object.tri
+    elif obj.get_type() == 'Rectangle':
+        t = obj.tri
         p0 = t.p0()
         p1 = t.p1()
         p2 = t.p2()
         p3 = t.p3()
-        _set_dash(s, object)
-        s.linewidth(object.linewidth)
+        _set_dash(s, obj)
+        s.linewidth(obj.linewidth)
         points = _transform_points(
             (p0[0], p0[1],
              p1[0], p1[1],
@@ -167,52 +167,52 @@ def object_to_stream(s, object, doc_h, scale_x, scale_y):
             doc_h, scale_x, scale_y)
 
         s.polygon(points)
-        _stroke_and_or_fill(s, object)
+        _stroke_and_or_fill(s, obj)
 
-    elif object.get_type() == 'Text Region':
-        s.bgcol(*_to_pdf_color(object.fg))
-        x, y = object.tri.p0()
-        textHeight = object.get_text_height()
-        lineSpacing = object.get_text_height()
+    elif obj.get_type() == 'Text Region':
+        s.bgcol(*_to_pdf_color(obj.fg))
+        x, y = obj.tri.p0()
+        textHeight = obj.get_text_height()
+        lineSpacing = obj.get_text_height()
         y += textHeight
         x *= scale_x
         y *= scale_y
         y = doc_h - y
-        for num, item in enumerate(object.get_text_lines()):
+        for num, item in enumerate(obj.get_text_lines()):
             textStr = escape_string(item[1])
-            s.text(x, y - num * (textHeight + lineSpacing), object.fontsize,
+            s.text(x, y - num * (textHeight + lineSpacing), obj.fontsize,
                    textStr)
 
-    elif object.get_type() == 'Spline':
-        s.fgcol(*_to_pdf_color(object.fg))
-        s.linewidth(object.linewidth)
-        _set_dash(s, object)
-        points = _transform_points(object.get_points(), doc_h, scale_x, scale_y)
+    elif obj.get_type() == 'Spline':
+        s.fgcol(*_to_pdf_color(obj.fg))
+        s.linewidth(obj.linewidth)
+        _set_dash(s, obj)
+        points = _transform_points(obj.get_points(), doc_h, scale_x, scale_y)
         s.spline(points)
 
-    elif object.get_type() == 'Polygon':
-        _set_dash(s, object)
-        s.linewidth(object.linewidth)
-        points = _transform_points(object.get_points(), doc_h, scale_x, scale_y)
+    elif obj.get_type() == 'Polygon':
+        _set_dash(s, obj)
+        s.linewidth(obj.linewidth)
+        points = _transform_points(obj.get_points(), doc_h, scale_x, scale_y)
         s.polygon(points)
-        _stroke_and_or_fill(s, object)
+        _stroke_and_or_fill(s, obj)
 
-    elif object.get_type() == 'Path':
-        _set_dash(s, object)
-        s.linewidth(object.linewidth)
-        _add_path(s, object.get_path_points(), doc_h, scale_x, scale_y)
-        _stroke_and_or_fill(s, object)
+    elif obj.get_type() == 'Path':
+        _set_dash(s, obj)
+        s.linewidth(obj.linewidth)
+        _add_path(s, obj.get_path_points(), doc_h, scale_x, scale_y)
+        _stroke_and_or_fill(s, obj)
 
-    elif object.get_type() == 'Group':
-        for i in range(object.num_objs()):
-            object_to_stream(s, object.get_obj(i), doc_h, scale_x, scale_y)
+    elif obj.get_type() == 'Group':
+        for i in range(obj.num_objs()):
+            obj_to_stream(s, obj.get_obj(i), doc_h, scale_x, scale_y)
 
-    elif object.get_type() == 'Ellipse':
-        _set_dash(s, object)
-        s.linewidth(object.linewidth)
+    elif obj.get_type() == 'Ellipse':
+        _set_dash(s, obj)
+        s.linewidth(obj.linewidth)
         row = len(s.stream.split("\n"))
 
-        t = object.tri
+        t = obj.tri
         x, y = t.p0()
         w = t.width()
         h = t.height()
@@ -225,6 +225,6 @@ def object_to_stream(s, object, doc_h, scale_x, scale_y):
         y = doc_h - y
         y -= h
         s.ellipse(x, y, w, h)
-        _stroke_and_or_fill(s, object)
+        _stroke_and_or_fill(s, obj)
 
     return meta
