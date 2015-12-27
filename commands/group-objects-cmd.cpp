@@ -87,7 +87,7 @@ public:
 
   void Do(CommandContext& context) override{
     // Initialize object depths for Undo on the first run
-    if (m_objectDepths.empty()) {
+    if (m_objectDepths.empty()){
       for (const auto* obj : m_objects){
         m_objectDepths.push_back(context.GetObjectZ(obj));
       }
