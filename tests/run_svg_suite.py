@@ -25,6 +25,8 @@ sys.path.insert(1, EXT_OUT)
 sys.path.insert(1, PY)
 
 import faint.svg.parse_svg as svg
+import faint.svg.write_svg as write_svg
+import faint.pdf.write_pdf as write_pdf
 import faint
 from faint import Bitmap
 
@@ -79,15 +81,38 @@ def get_blank_line():
 
 old_info_str_len = 0
 error_num = 0
+
+def test_parse_SVG(source_file):
+    l = faint.PimageList()
+    svg.parse_doc(source_file, l)
+    img = l.frames[0]
+    return img
+
+def test_file_PNG(source_file, target_file):
+    img = test_parse_SVG(source_file)
+    img.flatten()
+    faint.write_png(img.background, target_file, faint.png.RGB)
+
+def test_file_PDF(source_file, target_file):
+    img = test_parse_SVG(source_file)
+    write_pdf.write(target_file, img)
+
+def test_file_SVG(source_file, target_file):
+    img = test_parse_SVG(source_file)
+    write_svg.write(target_file, img)
+
 def test_file(num, f, target_dir, target_type, silent, svg_file_paths):
     global old_info_str_len
     global error_num
-    l = faint.PimageList()
-    svg.parse_doc(f, l)
-    img = l.frames[0]
-    img.flatten()
+
     target_file = os.path.join(target_dir, target_name(f, target_type))
-    faint.write_png(img.background, target_file, faint.png.RGB)
+    if target_type == 'png':
+        test_file_PNG(f, target_file)
+    elif target_type == 'pdf':
+        test_file_PDF(f, target_file)
+    elif target_type == 'svg':
+        test_file_SVG(f, target_file)
+
     if not os.path.exists(target_file):
         if old_info_str_len != 0 and not silent:
             sys.stdout.write("\b" * old_info_str_len)
@@ -106,7 +131,6 @@ def test_file(num, f, target_dir, target_type, silent, svg_file_paths):
         sys.stdout.write("\b" * old_info_str_len + info_str)
         old_info_str_len = len(info_str)
         sys.stdout.flush()
-
 
 def run_test(svg_test_suite_root,
              target_type,
