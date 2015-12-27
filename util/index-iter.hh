@@ -23,8 +23,8 @@ namespace faint{
 class IndexIter{
 public:
   using value_type = Index;
-  using iterator_category = std::input_iterator_tag;
-  using difference_type = size_t;
+  using iterator_category = std::random_access_iterator_tag;
+  using difference_type = int;
   using pointer = Index*;
   using reference = Index&;
 
@@ -38,6 +38,10 @@ public:
 
   Index operator*() const{
     return m_index;
+  }
+
+  int operator-(const IndexIter& rhs) const{
+    return m_index.Get() - rhs.m_index.Get();
   }
 
   bool operator!=(const IndexIter& other) const{

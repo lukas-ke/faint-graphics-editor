@@ -26,7 +26,7 @@ public:
   using difference_type = int;
   using pointer = int*;
   using reference = int&;
-  using iterator_category = std::input_iterator_tag;
+  using iterator_category = std::random_access_iterator_tag;
 
   explicit range_iter_t(int current)
     : m_current(current)
@@ -45,12 +45,16 @@ public:
     return *this;
   }
 
-  bool operator==(const range_iter_t& rhs){
+  bool operator==(const range_iter_t& rhs) const{
     return m_current == rhs.m_current;
   }
 
-  bool operator!=(const range_iter_t& rhs){
+  bool operator!=(const range_iter_t& rhs) const{
     return m_current != rhs.m_current;
+  }
+
+  int operator-(const range_iter_t& rhs) const{
+    return m_current - rhs.m_current;
   }
 
 private:

@@ -38,7 +38,6 @@ bool operator>(const Index&, size_t);
 bool operator<=(const Index&, const Index&);
 bool operator!=(const Index&, const Index&);
 bool operator!=(const Index&, size_t);
-Index operator-(const Index&, const Index&);
 Index operator-(const Index&, size_t);
 bool operator<=(const Index&, size_t);
 bool operator>=(const Index&, size_t);

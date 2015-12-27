@@ -31,6 +31,7 @@
 #include "util-wx/stream.hh"
 #include "util/index-iter.hh"
 #include "util/iter.hh"
+#include "util/make-vector.hh"
 
 namespace faint{
 
@@ -83,17 +84,13 @@ static void test_icon_dir_common(const IconDir& dir){
 
 static auto read_icon_dir_entries(BinaryReader& in, IconType type, Index numIcons){
   assert(numIcons >= 0);
-  std::vector<IconDirEntry> v;
-  v.reserve(to_size_t(numIcons));
-
-  for (auto i : up_to(numIcons)){
+  return make_vector(up_to(numIcons), [&](const auto& i){
     auto entry = read_struct_or_throw_ico<IconDirEntry>(in, type, option(i));
     if (!in.good()){
       throw ReadBmpError(error_premature_eof_ico(type, "ICONDIRENTRY", option(i)));
     }
-    v.push_back(entry);
-  }
-  return v;
+    return entry;
+  });
 }
 
 static Bitmap masked(const Bitmap& bmp, const AlphaMap& mask){
@@ -347,33 +344,30 @@ OrError<cur_vec> read_cur(const FilePath& filePath){
 static std::vector<BitmapInfoHeader> create_bitmap_headers(const ico_vec& bitmaps,
   const std::map<size_t, std::string>& pngData)
 {
-  std::vector<BitmapInfoHeader> v;
-  v.reserve(bitmaps.size());
-  for (size_t i = 0; i != bitmaps.size(); i++){
-    const auto& p = bitmaps[i];
+  return make_vector(enumerate(bitmaps), [&](const auto& bmp){
+    const auto& p = bmp.item;
+    const auto i = bmp.num;
+
     if (p.second == IcoCompression::PNG){
-      v.push_back(create_bitmap_info_header_png(p.first.GetSize(),
-          pngData.at(i).size(),
-          default_DPI()));
+      return create_bitmap_info_header_png(p.first.GetSize(),
+        pngData.at(i).size(),
+        default_DPI());
     }
     else {
-      v.push_back(create_bitmap_info_header_32bipp(p.first.GetSize(),
+      return create_bitmap_info_header_32bipp(p.first.GetSize(),
         default_DPI(),
-        true));
+        true);
     }
-  }
-  return v;
+  });
 }
 
 static std::vector<BitmapInfoHeader> create_bitmap_headers(const cur_vec& cursors){
-  std::vector<BitmapInfoHeader> v;
-  v.reserve(cursors.size());
-  for (const auto& c : cursors){
-    v.push_back(create_bitmap_info_header_32bipp(c.first.GetSize(),
-      default_DPI(),
-      true));
-  }
-  return v;
+  return make_vector(cursors,
+    [](const auto& c){
+      return create_bitmap_info_header_32bipp(c.first.GetSize(),
+        default_DPI(),
+        true);
+    });
 }
 
 static IconDir create_icon_dir_icon(const ico_vec& bitmaps){
@@ -441,27 +435,25 @@ static std::vector<IconDirEntry> create_icon_dir_entries(const ico_vec& bitmaps,
 }
 
 static std::vector<IconDirEntry> create_cursor_dir_entries(const cur_vec& cursors){
-  std::vector<IconDirEntry> v;
-
   auto offset = struct_lengths<IconDir>() +
     cursors.size() * struct_lengths<IconDirEntry>();
 
-  for (size_t i = 0; i != cursors.size(); i++){
-    const Bitmap& bmp = cursors[i].first;
+  return make_vector(cursors, [offset](const auto& obj) mutable {
+    const Bitmap& bmp = obj.first;
+    const auto& hotspot = obj.second;
+
     IconDirEntry entry;
     set_size(entry, bmp.GetSize());
     entry.reserved = 0;
     entry.colorCount = 0; // 0 when bitsPerPixel >= 8
-    set_hot_spot(entry, cursors[i].second);
-
+    set_hot_spot(entry, hotspot);
     entry.bytes = convert(area(bmp.GetSize()) * 4 +
       and_map_bytes(bmp.GetSize()) +
       struct_lengths<BitmapInfoHeader>());
     entry.offset = convert(offset);
-    v.push_back(entry);
     offset += entry.bytes;
-  }
-  return v;
+    return entry;
+  });
 }
 
 BitmapFileHeader create_bitmap_file_header_png(size_t encodedSize){

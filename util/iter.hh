@@ -239,9 +239,15 @@ private:
   ITER_T m_iter;
   int m_num;
 public:
-  enumerate_iter_t(ITER_T iter):
-    m_iter(iter),
-    m_num(0)
+  using value_type = CountedItem<VALUE_T>;
+  using difference_type = int;
+  using pointer = CountedItem<VALUE_T>*;
+  using reference = CountedItem<VALUE_T>&;
+  using iterator_category = std::input_iterator_tag;
+
+  enumerate_iter_t(ITER_T iter)
+    : m_iter(iter),
+      m_num(0)
   {}
 
   auto operator*() -> CountedItem<VALUE_T>{
