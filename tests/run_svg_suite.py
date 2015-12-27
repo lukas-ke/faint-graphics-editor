@@ -85,11 +85,11 @@ error_num = 0
 def test_parse_SVG(source_file):
     l = faint.PimageList()
     svg.parse_doc(source_file, l)
-    img = l.frames[0]
-    return img
+    return l
 
 def test_file_PNG(source_file, target_file):
-    img = test_parse_SVG(source_file)
+    imageList = test_parse_SVG(source_file)
+    img = l.get_frame(0)
     img.flatten()
     faint.write_png(img.background, target_file, faint.png.RGB)
 
