@@ -162,6 +162,7 @@ Optional<Bitmap> read_32bipp_BI_RGB(BinaryReader& in, const IntSize& size){
 Optional<ColorList> read_color_table(BinaryReader& in, int numColors){
   // blue, green, red, 0x00
   ColorList l;
+  l.reserve(numColors);
   for (int i = 0; i != numColors; i++){
     char bytes[4];
     in.read(bytes, 4);

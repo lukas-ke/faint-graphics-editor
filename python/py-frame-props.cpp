@@ -34,7 +34,9 @@
 #include "python/py-util.hh"
 #include "util/default-settings.hh"
 #include "util/frame-props.hh"
+#include "util/generator-adapter.hh"
 #include "util/image-props.hh"
+#include "util/make-vector.hh"
 #include "util/setting-util.hh"
 #include "util/type-util.hh"
 
@@ -108,21 +110,21 @@ static Index frameprops_Group(const BoundFrameProps& self,
     throw ValueError("A Group must contain at least one object.");
   }
 
-  objects_t objects;
-  for (const Index& objectId : ids){
-    throw_if_missing(self, objectId);
-    if (!self.frame.IsTopLevel(objectId)){
-      throw ValueError("Object is already in a group.");
-    }
-    objects.push_back(self.frame.GetObject(objectId));
-  }
-  objects_t::iterator uniqueEnd = std::unique(begin(objects), end(objects));
-  if (uniqueEnd != end(objects)){
+  if (!is_unique(sorted(ids))){
     throw ValueError("Duplicate object identifiers specified.");
   }
 
-  // The composite owns the objects since they're not added
-  // with an AddObjectCommand, but created during loading
+  objects_t objects = make_vector(ids,
+    [&](const auto& objectId){
+      throw_if_missing(self, objectId);
+      if (!self.frame.IsTopLevel(objectId)){
+        throw ValueError("Object is already in a group.");
+      }
+      return self.frame.GetObject(objectId);
+    });
+
+  // The composite owns the objects since they're not added with an
+  // AddObjectCommand, but created during loading
   Object* composite = create_composite_object_raw(objects, Ownership::OWNER);
   for (Object* obj : objects){
     self.frame.RemoveObject(obj);

@@ -36,6 +36,7 @@ public:
   virtual void Add(const FilePath&) = 0;
   virtual void Clear() = 0;
   virtual FilePath Get(size_t) const = 0;
+  FilePath Get(const Index& i) const;
   virtual void Save() = 0;
   virtual size_t Size() const = 0;
   virtual void UndoClear() = 0;

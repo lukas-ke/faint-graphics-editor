@@ -40,6 +40,10 @@
 
 namespace faint{
 
+FilePath RecentFiles::Get(const Index& i) const{
+  return Get(to_size_t(i));
+}
+
 class RecentFilesImpl : public RecentFiles {
   // Handles the storing, retrieving and menu-states for
   // recent files in the Menubar.
@@ -142,11 +146,10 @@ private:
 };
 
 static FileList get_all(const RecentFiles& recent){
-  FileList files;
-  for (size_t i = 0; i != recent.Size(); i++){
-    files.push_back(recent.Get(i));
-  }
-  return files;
+  return make_vector(up_to(recent.Size()),
+    [&](const auto& i){
+      return recent.Get(i);
+    });
 }
 
 // Wrapper to allow the MenuPredicate to be unaware of wxMenu.

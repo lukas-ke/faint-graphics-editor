@@ -92,6 +92,16 @@ auto not_equal_to(const T& key){
   return [=](const T& value){return value != key;};
 }
 
+template<class Container>
+auto unique(Container&& c){
+  return std::unique(begin(c), end(c));
+}
+
+template<class Container>
+bool is_unique(Container&& c){
+  return unique(c) == end(c);
+}
+
 template<class Container, class Value>
 bool contains(Container&& c, const Value& v){
   return find(c, v) != end(c);
