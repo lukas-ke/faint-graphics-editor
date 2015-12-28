@@ -64,7 +64,9 @@ Size floated(const IntSize& sz){
 }
 
 std::vector<IntPoint> floored(const std::vector<Point>& points){
-  return make_vector(points, generic::floored<Point>);
+  // Why does not generic::floored<Point> work in Clang?
+  auto flooredPoint = [](const Point& p){return floored(p);};
+  return make_vector(points, flooredPoint);
 }
 
 IntRect padded(const IntRect& r, const Padding& p){

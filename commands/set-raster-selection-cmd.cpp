@@ -305,7 +305,7 @@ std::unique_ptr<Command> set_raster_selection_command(
 
   cmd->SetOptionsCommand(new SetSelectionOptionsCommand(newOptions,
     oldOptions));
-  return cmd;
+  return upcast(std::move(cmd));
 }
 
 bool is_appendable_raster_selection_command(const Command& cmd){

@@ -305,7 +305,7 @@ static Optional<CommandPtr> show_rotate_dialog(wxWindow& parent,
     selectTool);
 
   if (c.ShowModal(dlg) == DialogChoice::OK){
-    return Optional<CommandPtr>(dlg.GetCommand(canvas));
+    return {dlg.GetCommand(canvas)};
   }
   else{
     return {};

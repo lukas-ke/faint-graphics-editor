@@ -111,6 +111,15 @@ public:
       m_obj = opthelper<T>::create(obj);
     }
   }
+  
+  Optional(Optional& other){
+    if (other.m_obj == nullptr){
+      m_obj = nullptr;
+    }
+    else{
+      m_obj = opthelper<T>::create(*other.m_obj);
+    }
+  }
 
   Optional(const Optional& other){
     if (other.m_obj == nullptr){
@@ -118,6 +127,17 @@ public:
     }
     else{
       m_obj = opthelper<T>::create(*other.m_obj);
+    }
+  }
+
+  template<typename T2=T,
+	   typename=typename std::enable_if<!std::is_reference<T2>::value, T2>::type>
+  Optional(Optional&& other){
+    if (other.m_obj == nullptr){
+      m_obj = nullptr;
+    }
+    else{
+      m_obj = opthelper<T>::create(std::move(*other.m_obj));
     }
   }
 

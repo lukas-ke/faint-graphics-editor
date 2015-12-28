@@ -41,7 +41,7 @@ void test_object_util(){
 
   {
     // Test "bounding_rect", "get_collective_type"
-    Rect r = bounding_rect(LIST(rect.get(), polygon.get()));
+    Rect r = bounding_rect(objects_t{rect.get(), polygon.get()});
 
     EQUAL(rounded(r.TopLeft()), IntPoint(0,0));
     EQUAL(rounded(r.BottomRight()), IntPoint(20,10));

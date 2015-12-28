@@ -133,7 +133,7 @@ public:
   }
 
 private:
-  void OnClosed(faint::BitmapCommandPtr cmd){
+  void OnClosed(faint::BitmapCommandPtr){
     m_commandWindow.reset(nullptr);
   }
   void BeginModalDialog() override {};

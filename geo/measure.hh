@@ -26,6 +26,10 @@ namespace faint{
 // <../doc/angle360_ccw.png>
 Angle angle360_ccw(const LineSegment&);
 
+// Defined in geo-list-points.cpp (Fixme?)
+IntRect bounding_rect(const std::vector<IntPoint>&);
+Rect bounding_rect(const std::vector<Point>&);
+
 // Note: returns an 1x1 rectangle with TopLeft IntPoint,
 // This is required by the variadic bounding_rect implementation.
 IntRect bounding_rect(const IntPoint&);
@@ -44,9 +48,7 @@ Rect bounding_rect(const Rect&, const Rect&);
 Rect bounding_rect(const LineSegment&);
 
 template<class A, class ...B>
-auto bounding_rect(const A& head, const B&... tail)
-  -> decltype(bounding_rect(head))
-{
+auto bounding_rect(const A& head, const B&... tail){
   return bounding_rect(bounding_rect(head), bounding_rect(tail...));
 }
 

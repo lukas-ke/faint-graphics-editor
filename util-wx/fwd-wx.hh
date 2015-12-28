@@ -26,6 +26,7 @@
 
 class wxCommandEvent;
 class wxCursor;
+class wxObject;
 
 namespace faint{
 

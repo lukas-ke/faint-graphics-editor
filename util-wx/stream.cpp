@@ -21,75 +21,83 @@ namespace faint{
 
 class BinaryReader::BinaryReaderImpl{
 public:
-  explicit BinaryReaderImpl(std::ifstream&& s)
-    : stream(std::move(s))
+  explicit BinaryReaderImpl(std::ifstream* s)
+    : stream(s)
   {}
 
-  std::ifstream stream;
+  ~BinaryReaderImpl(){
+    delete stream;
+  }
+
+  std::ifstream* stream; // Fixme: Using pointer because gcc 4.9 does not support moving streams
 };
 
 BinaryReader::BinaryReader(const FilePath& path){
   m_impl = std::make_unique<BinaryReaderImpl>(
-    std::ifstream(iostream_friendly(path), std::ios::binary));
+    new std::ifstream(iostream_friendly(path), std::ios::binary));
 }
 
 BinaryReader::~BinaryReader(){}
 
 bool BinaryReader::eof() const{
-  return m_impl->stream.eof();
+  return m_impl->stream->eof();
 }
 
 bool BinaryReader::good() const{
-  return m_impl->stream.good();
+  return m_impl->stream->good();
 }
 
 void BinaryReader::read(char* buffer, std::streamsize sz){
-  m_impl->stream.read(buffer, sz);
+  m_impl->stream->read(buffer, sz);
 }
 
 void BinaryReader::seekg(std::streampos pos) const{
-  m_impl->stream.seekg(pos);
+  m_impl->stream->seekg(pos);
 }
 
 std::streampos BinaryReader::tellg() const{
-  return m_impl->stream.tellg();
+  return m_impl->stream->tellg();
 }
 
 BinaryReader& BinaryReader::ignore(std::streamsize n){
-  m_impl->stream.ignore(n);
+  m_impl->stream->ignore(n);
   return *this;
 }
 
 class BinaryWriter::BinaryWriterImpl{
 public:
-  explicit BinaryWriterImpl(std::ofstream&& s)
-    : stream(std::move(s))
+  explicit BinaryWriterImpl(std::ofstream* s)
+    : stream(s)
   {}
 
-  std::ofstream stream;
+  ~BinaryWriterImpl(){
+    delete stream;
+  }
+
+  std::ofstream* stream; // Fixme: Using pointer because gcc 4.9 did not support moving stream
 };
 
 BinaryWriter::BinaryWriter(const FilePath& path){
   m_impl = std::make_unique<BinaryWriterImpl>(
-    std::ofstream(iostream_friendly(path), std::ios::binary));
+    new std::ofstream(iostream_friendly(path), std::ios::binary));
 }
 
 BinaryWriter::~BinaryWriter(){}
 
 bool BinaryWriter::eof() const{
-  return m_impl->stream.eof();
+  return m_impl->stream->eof();
 }
 
 bool BinaryWriter::good() const{
-  return m_impl->stream.good();
+  return m_impl->stream->good();
 }
 
 void BinaryWriter::write(const char* buffer, std::streamsize sz){
-  m_impl->stream.write(buffer, sz);
+  m_impl->stream->write(buffer, sz);
 }
 
 void BinaryWriter::put(char c){
-  m_impl->stream.put(c);
+  m_impl->stream->put(c);
 }
 
 } // namespace

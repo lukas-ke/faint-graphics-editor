@@ -24,6 +24,13 @@ class Command;
 using CommandPtr = std::unique_ptr<Command>;
 using commands_t = std::vector<CommandPtr>;
 
+template<typename T>
+CommandPtr upcast(std::unique_ptr<T> p){
+  return CommandPtr(std::move(p));
+}
+
+CommandPtr upcast(CommandPtr) = delete;
+
 } // namespace
 
 #endif
