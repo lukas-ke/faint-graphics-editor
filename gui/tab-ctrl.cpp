@@ -229,8 +229,10 @@ public:
     RefreshTabName(GetIndexForId(id).Get());
   }
 
-  wxFileDropTarget* CreateFileDropTarget(){
-    return new CanvasFileDropTarget(m_app);
+  std::unique_ptr<wxFileDropTarget> CreateFileDropTarget(){
+    // Each Canvas needs a separate file drop target, as they take
+    // ownership.
+    return std::make_unique<CanvasFileDropTarget>(m_app);
   }
 private:
   AppContext& m_app;

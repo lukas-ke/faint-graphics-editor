@@ -75,7 +75,7 @@ public:
   CanvasPanel(wxWindow* parent,
     ImageList&&,
     const initially_dirty&,
-    wxFileDropTarget*,
+    std::unique_ptr<wxFileDropTarget>,
     const Art&,
     AppContext&,
     StatusInterface&);

@@ -97,7 +97,7 @@ static KeyPress char_event_to_keypress(const wxKeyEvent& event,
 CanvasPanel::CanvasPanel(wxWindow* parent,
   ImageList&& images,
   const initially_dirty& startDirty,
-  wxFileDropTarget* fileDropTarget,
+  std::unique_ptr<wxFileDropTarget> fileDropTarget,
   const Art& art,
   AppContext& app,
   StatusInterface& statusInfo)
@@ -379,7 +379,8 @@ CanvasPanel::CanvasPanel(wxWindow* parent,
   m_contexts.canvas = create_canvas_context(*this, m_contexts.app, m_images);
   m_contexts.command = create_command_context(*this, m_images);
 
-  SetDropTarget(fileDropTarget);
+  // The wxWindow takes ownership
+  SetDropTarget(fileDropTarget.release());
 
   if (startDirty.Get()){
     // Set a unique command id so that the image remains dirty until
