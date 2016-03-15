@@ -16,7 +16,7 @@ class TestPng(unittest.TestCase):
         b1.set_pixel((0,0),(255,0,255))
 
         fn = os.path.join(out_dir, "b1.png")
-        faint.write_png(b1, fn, png.RGB)
+        faint.write_png(fn, b1, png.RGB)
 
         b2, tEXt = faint.read_png(fn)
         self.assertEqual(b2.get_size(), (5,7))
@@ -31,7 +31,7 @@ class TestPng(unittest.TestCase):
         written_tEXt = {"hello":"world","good day":"to you"}
 
         fn = os.path.join(out_dir, "b1.png")
-        faint.write_png(b1, fn, png.RGB, written_tEXt)
+        faint.write_png(fn, b1, png.RGB, written_tEXt)
 
         b2, read_tEXt = faint.read_png(fn)
         self.assertEqual(b2.get_size(), (5,7))
@@ -42,4 +42,4 @@ class TestPng(unittest.TestCase):
         out_dir = py_tests.make_test_dir(self)
 
         with self.assertRaises(TypeError):
-            faint.write_png("not a bitmap", out_dir, 0)
+            faint.write_png(out_dir, "not a bitmap", 0)

@@ -117,8 +117,8 @@ Optional parameters:\n
  - text_dict: A dictionary of key-strings to value-strings\n
    for png tEXt meta-data."
 name: "write_png" */
-static void write_png_py(const Bitmap& bmp,
-  const FilePath& p,
+static void write_png_py(const FilePath& p,
+  const Bitmap& bmp,
   const Optional<int>& rawColorType,
   const Optional<png_tEXt_map>& maybeTextChunks)
 {
