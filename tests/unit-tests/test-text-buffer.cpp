@@ -194,7 +194,7 @@ void test_text_buffer(){
 
     // "The selection is similar to having two carets"
     b.caret(1);
-    b.caret(4,true);
+    b.caret(4, true);
     EQUAL(b.get_selection(), "ell");
     EQUAL(b.get_sel_range().from, 1);
     EQUAL(b.get_sel_range().to, 4);

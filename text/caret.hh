@@ -21,8 +21,10 @@ namespace faint{
 
 using Caret = std::size_t;
 
-// Selection range
 class CaretRange{
+  // A selection range defined by two caret positions:
+  // a|bcd|e
+  //  ^~~~^
 public:
   CaretRange(Caret from, Caret to);
   static CaretRange Both(Caret);
