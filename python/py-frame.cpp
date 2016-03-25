@@ -94,9 +94,9 @@ static void frame_copy(const Frame&){
 }
 
 // Fixme: Consider return bitmap even if ColorSpan?
-/* method: "get_bitmap()->bmp?\n
+/* method: "get_background()->bmp?\n
 Returns a copy of the pixel data as a Bitmap." */
-static const Optional<Bitmap>& frame_get_bitmap(const Frame& frame){
+static const Optional<Bitmap>& frame_get_background(const Frame& frame){
   return frame.image.GetBackground().Get<Bitmap>();
 }
 
