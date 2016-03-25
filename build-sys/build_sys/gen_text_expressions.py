@@ -26,6 +26,7 @@ COMMANDS = [
     # Command, character, docs
     ('alpha', 'utf8_char(0x03b1)', 'Greek small letter alpha'),
     ('angle', 'utf8_char(0x2220)', 'Angle-symbol'),
+    ('beta', 'utf8_char(0x03b2)', 'Greek small letter beta'),
     ('deg', 'chars::degree_sign', 'Degree sign'),
     ('delta', 'chars::greek_capital_letter_delta', 'Greek capital delta'),
     ('dog', 'utf8_char(0x1f415)', 'Dog symbol'),
