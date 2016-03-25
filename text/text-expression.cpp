@@ -135,11 +135,6 @@ public:
     return str.substr(oldPos, num);
   }
 
-  void StoreTo(size_t p2){
-    storePos = pos;
-    pos = p2;
-  }
-
   void EatWhitespace(){
     while (pos < str.size() && str[pos] == chars::space){
       pos++;
@@ -290,9 +285,11 @@ static void read_any(ParseState& st){
         "\\ at end of text, expected command name.");
     }
     else if (st.str[newPos + 1] == chars::backslash){
-      // Escaped backslash
-      st.StoreTo(newPos);
-      continue;
+      // Escaped backslash. Add text up to and including the first
+      // backslash
+      auto text = st.ConsumeTo(newPos + 1);
+      st.Append(new Text(text));
+      st.ConsumeCount(1); // Eat away the second backslash
     }
     else{
       // Command

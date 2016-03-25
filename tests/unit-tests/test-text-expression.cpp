@@ -257,4 +257,8 @@ void test_text_expression(){
 
   PARSE_ERROR("01234\\u(a,b,c)", 5,
     "u expects 1 argument");
+
+  VALID_EXPRESSION("\\\\", "\\"); // escaped backslash
+  VALID_EXPRESSION("\\\\a", "\\a"); // escaped backslash followed by character
+  VALID_EXPRESSION("a\\\\", "a\\"); // escaped backslash preceded by character
 }
