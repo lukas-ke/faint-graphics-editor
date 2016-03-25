@@ -16,6 +16,9 @@ Operations on a canvas always target the active frame. To modify a
 specific frame, retrieve a \ref(py-frame.txt, frame object) instead
 with get_frame(index).
 
+For saving, see the save and save_backup methods
+of \ref(py-app.txt, app).
+
 ||\image(icon-info.png)|| The undo/redo overhead for each action makes the Canvas interface unsuitable for per-pixel modification. See instead \ref(py-bitmap.txt). ||
 
 == Example use ==

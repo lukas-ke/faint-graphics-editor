@@ -236,8 +236,14 @@ static void do_save(PyFuncContext& ctx, Canvas& canvas, const FilePath& filePath
   canvas.NotifySaved(filePath);
 }
 
-/* method: "save(filename)\n
-Save the image to the specified file." */
+/* method: "save(image[, filename])\n
+Save the image to its file, or the file specified by filename.\n
+\n
+The format is deduced from the filename extension and uses the
+available file formats (see app.list_formats).\n
+\n
+Note: app.save updates the current file name of the image. To
+avoid this use app.save_backup instead." */
 static void faintapp_save(PyFuncContext& ctx,
   Canvas* canvas,
   Optional<FilePath>& maybeFilename)
@@ -305,7 +311,8 @@ static Optional<int> faintapp_tool(PyFuncContext& ctx, const Optional<int>& mayb
   return no_option();
 }
 
-/* method: "tool_selection(PyFuncContext& ctx)\nSelects the raster selection tool." */
+/* method: "tool_selection(PyFuncContext& ctx)\n
+Selects the raster selection tool." */
 static void faintapp_tool_selection(PyFuncContext& ctx){
   ctx.app.SelectTool(ToolId::SELECTION);
 }
