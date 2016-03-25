@@ -27,7 +27,7 @@ Long overdue release!
   expressions.
 
 - Added support for typing expressions in text objects, which are
-  automatically converted like: "The rectangle is \width(rect1,mm) mm
+  automatically converted. For example: "The rectangle is \width(rect1,mm) mm
   wide." becomes e.g. "The rectangle is 22 mm wide".
 
 - Added rounded rectangles.
@@ -38,9 +38,9 @@ Long overdue release!
 - Added `--arg` command line option which stores the specified value
   as a string in `ifaint.cmd_arg, for use with command line scripts.
 
-- Added Ctrl+T for transposing characters during text entry.
+- Made Ctrl+T transpose characters during text entry.
 
-- Added support for specifying character contants in text objects, which are
+- Added support for specifying character constants in text objects, which are
   shown as symbols when the text objects are not being edited, for example
   \pi for a pi-symbol,
   \deg for degree
@@ -60,13 +60,13 @@ Long overdue release!
 
 - Flood fill supports gradient as fill color.
 
-- Brush tool supports gradients.
+- Brush tool now supports gradient as paint.
 
-- When saving icons, those at 256x256 pixels size are now png-encoded for
-  smaller file size.
+- When saving icons (.ico), those at 256x256 pixels size are now
+  png-encoded for smaller file size.
 
-- Added DWIM-support for `shrink_selection`, which shrinks to the
-  other half like auto-crop.
+- Added DWIM-support for `shrink_selection`, which alternates to
+  shrinks to the other half like auto-crop.
 
 - Added DWIM-support for raster rotation, to use the most common edge
   color for the hole left by the rotation.
@@ -118,8 +118,8 @@ Long overdue release!
 
 - [Python] Added: `obj.get_text_raw`
 
-- [Python] Added: `write_png` function. Allows specifying color type
-  and tEXt entries.
+- [Python] Added: `write_png` function. Unlike app.save with
+  png-extension, this allows specifying color type and tEXt entries.
 
 - [Python] New object method: `obj.set_name(s)`, sets the name used
   for referring to objects from expressions in text objects.
@@ -127,23 +127,25 @@ Long overdue release!
 - [Python] New function, `perimeter` for getting the perimeter length
   of objects.
 
-- [Python] Added new function `encode_bitmap_png`
+- [Python] Added new function `encode_bitmap_png`, which returns the
+  bitmap coded as png in a Python `bytes` object.
 
 - [Python] Added new method `Image.flattened`, which returns
   the image with all objects rasterized and any selection stamped.
 
-- [Python] New method `Bitmap.fill`
+- [Python] New method `Bitmap.fill`. This replaces `Bitmap.flood_fill`.
 
-- [Python] New method `Bitmap.set_threshold`
+- [Python] New method `Bitmap.set_threshold` for separating the image
+  into two fills depending on pixel lightness.
 
-- [Python] Added `list_fonts` function
+- [Python] Added `list_fonts` function, listing all available fonts.
 
 - [Python] Added comparison operations for Objects, based on their
   identifiers.
 
 - [Python] Added property `Canvas.command_name` to allow
   specifying the undo/redo name for an upcoming command, to provide
-  meaningful alternatives to "Undo Python Commands (3)"
+  meaningful alternatives to "Undo Python Commands (3)".
 
 - [Python] Added functions for shrinking the image by erasing rows or
   columns:
@@ -166,7 +168,7 @@ Long overdue release!
   `f.get_objects()`  
   `f.get_selected()`
 
-- [Python] Added `pinch_whirl` to `Canvas`.
+- [Python] Added `pinch_whirl` method to `Canvas`, for distorting the image.
 
 - [Python] Added `copy` to `Bitmap`, for duplicating a Bitmap.
 
@@ -303,9 +305,9 @@ Long overdue release!
 
 - Improved text placement to avoid clipping umlauts.
 
-- Become path now retains object name.
+- `Become path` now retains object name.
 
-- Fixed floating raster selection appearing on top of objects when
+- Fixed floating raster selection being stamped over objects when
   flattening an image.
 
 - Fixed crash when pressing backspace with no selection active.
@@ -376,20 +378,21 @@ Long overdue release!
 
 - More intuitive drop location of frames for drag and drop in the frame control.
 
-- Invert and Desaturate now targets the raster selection if there is one.
+- Invert and Desaturate now target the raster selection if there is one.
 
 - Fixed data offset in saved 8-bit-bitmaps.
 
 - Fixed errors in 1bpp cursor loading.
 
-- Fixed text converted to part appearing duplicated until refresh.
+- Fixed text converted to path appearing duplicated until refresh.
 
 - [SVG] Set the background color when saving an SVG with uniform background
   color.
 
-- [SVG] Removed extension `faint:halign` in favor of standard SVG text-anchor.
+- [SVG] Removed the custom extension `faint:halign` in favor of
+  standard SVG text-anchor.
 
-- [SVG] Fixed centering on load.
+- [SVG] Fixed text centering on load.
 
 - [SVG] Fixed saving of no-fill/no-stroke objects.
 
