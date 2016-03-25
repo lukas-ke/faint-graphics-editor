@@ -191,6 +191,9 @@ Long overdue release!
 - [Python] Removed `Image.get_bitmap` method. Use
   `Image.get_background` instead.
 
+- [Python] Removed `Frame.get_bitmap` method. Use
+  `Frame.get_background` instead.
+
 - [Python] Removed the `copy_text` function. Use instead
   `clipboard.set(str)`
 

@@ -24,6 +24,7 @@ documentation."""
 
 COMMANDS = [
     # Command, character, docs
+    ('alpha', 'utf8_char(0x03b1)', 'Greek small letter alpha'),
     ('angle', 'utf8_char(0x2220)', 'Angle-symbol'),
     ('deg', 'chars::degree_sign', 'Degree sign'),
     ('delta', 'chars::greek_capital_letter_delta', 'Greek capital delta'),
