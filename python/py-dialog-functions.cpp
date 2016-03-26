@@ -59,10 +59,11 @@ static void dialog_brightness_contrast(PyFuncContext& ctx){
   ctx.app.Modal(show_brightness_contrast_dialog);
 }
 
-/* method: "__copy__()"
+/* method: "__copy__()\n
+Not implemented."
 name: "__copy__" */
 static void dialog_copy(PyFuncContext&){
-  throw NotImplementedError("Dialogs object can not be copied.");
+  throw NotImplementedError("The Dialogs object can not be copied.");
 }
 
 /* method: "color_balance()\n

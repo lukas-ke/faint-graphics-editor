@@ -100,6 +100,13 @@ struct MappedType<const BoundFrameProps&>{
   }
 };
 
+/* method: "__copy__\n
+Not implemented."
+name: "__copy__" */
+static void frameprops_copy(const BoundFrameProps&){
+  throw NotImplementedError("FrameProps can not be copied.");
+}
+
 /* method: "Group(id1, id2,...)->id\n
 Groups the objects with the specified ids. Returns a new identifier for
 the group." */

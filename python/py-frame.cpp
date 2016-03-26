@@ -87,7 +87,8 @@ static void frame_init(frameObject&){
     "Use image.get_frame or frames[index]");
 }
 
-/* method: "__copy__() Not implemented."
+/* method: "__copy__()\n
+Not implemented."
 name: "__copy__" */
 static void frame_copy(const Frame&){
   throw NotImplementedError("Frame can not be copied.");
