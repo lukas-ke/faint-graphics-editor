@@ -183,6 +183,13 @@ static coord Smth_get_skew(const BoundObject<Object>& self){
   return t.Skew();
 }
 
+/* method: "__copy__()\n
+Not implemented."
+name: "__copy__" */
+static void Smth_copy(const BoundObject<Object>&){
+  throw NotImplementedError("Objects can not be copied.");
+}
+
 /* method: "get_settings()->Settings\n
 Returns a copy of this object's settings." */
 static Settings Smth_get_settings(const BoundObject<Object>& self){
@@ -194,7 +201,7 @@ Returns a copy of the bitmap from a Raster object." */
 static const Bitmap& Smth_get_bitmap(const BoundObject<Object>& self){
   ObjRaster* rasterObj = dynamic_cast<ObjRaster*>(self.obj);
   if (rasterObj == nullptr){
-    throw ValueError("That object does not support fonts");
+    throw ValueError("That object does not support bitmaps");
   }
   return rasterObj->GetBitmap();
 }

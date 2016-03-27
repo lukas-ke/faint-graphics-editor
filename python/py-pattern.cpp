@@ -69,6 +69,13 @@ static void Pattern_dealloc(patternObject* self){
   self->ob_base.ob_type->tp_free((PyObject*)self);
 }
 
+/* method: "__copy__(pattern)->Pattern\n
+Used by Python copy.copy"
+name: "__copy__" */
+static Pattern Pattern_copy(Pattern& self){
+  return self;
+}
+
 /* method: "get_anchor()->x,y\n
 Returns the anchor point of the pattern." */
 static IntPoint Pattern_get_anchor(Pattern& self){

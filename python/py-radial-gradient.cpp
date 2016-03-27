@@ -169,6 +169,13 @@ static void RadialGradient_dealloc(radialGradientObject* self){
   self->ob_base.ob_type->tp_free((PyObject*)self);
 }
 
+/* method: "__copy__(rg)->RadialGradient\n
+Used by Python copy.copy"
+name: "__copy__" */
+static RadialGradient RadialGradient_copy(RadialGradient& self){
+  return self;
+}
+
 /* method: "add_stop(offset,(r,g,b[,a]))\n
 Adds the specified color stop to the gradient" */
 static void RadialGradient_add_stop(RadialGradient& self, const ColorStop& stop){

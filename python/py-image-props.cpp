@@ -62,6 +62,13 @@ struct MappedType<imagePropsObject&>{
   }
 };
 
+/* method: "__copy__\n
+Not implemented."
+name: "__copy__" */
+static void imageprops_copy(ImageProps&){
+  throw NotImplementedError("ImageProps can not be copied.");
+}
+
 /* method: "get_frame(i)->frame\nReturns the i:th frame" */
 static PyObject* imageprops_get_frame(imagePropsObject& self, const Index& index){
   throw_if_outside(index, self.props->GetNumFrames());

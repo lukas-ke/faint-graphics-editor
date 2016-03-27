@@ -45,6 +45,13 @@ struct MappedType<Tri&>{
 
 };
 
+/* method: "__copy__(tri)->Tri\n
+Used by Python copy.copy"
+name: "__copy__" */
+static Tri tri_copy(Tri& self){
+  return self;
+}
+
 /* method: "p0()->(x,y)\n
 Returns a triangle vertex." */
 static Point tri_p0(Tri& self){

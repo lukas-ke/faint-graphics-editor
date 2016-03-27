@@ -1175,7 +1175,8 @@ static void canvas_init(canvasObject&){
     "Use app.new or app.open instead.");
 }
 
-/* method: "__copy__()\nNot implemented."
+/* method: "__copy__()\n
+Not implemented."
 name: "__copy__" */
 static void canvas_copy(CanvasT){
   throw NotImplementedError("Canvas can not be copied.");

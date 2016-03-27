@@ -137,6 +137,13 @@ static void LinearGradient_dealloc(linearGradientObject* self){
   self->ob_base.ob_type->tp_free((PyObject*)self);
 }
 
+/* method: "__copy__(lg)->LinearGradient\n
+Used by Python copy.copy"
+name: "__copy__" */
+static LinearGradient LinearGradient_copy(LinearGradient& self){
+  return self;
+}
+
 /* method: "add_stop(offset, (r,g,b[,a]))\n
 Adds the specified color stop to the gradient" */
 static void LinearGradient_add_stop(LinearGradient& self, const ColorStop& stop){

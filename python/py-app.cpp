@@ -444,7 +444,8 @@ struct faintapp_griddashed{
   }
 };
 
-/* method: "__copy__()\nNot implemented."
+/* method: "__copy__()\n
+Not implemented."
 name: "__copy__" */
 static void faintapp_special_copy(PyFuncContext&){
   throw NotImplementedError("FaintApp object can not be copied.");

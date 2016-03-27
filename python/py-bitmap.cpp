@@ -80,8 +80,8 @@ static void Bitmap_dealloc(bitmapObject* self){
   self->ob_base.ob_type->tp_free((PyObject*)self);
 }
 
-
-/* method: "__copy__()->bmp\nUsed by Python copy.copy"
+/* method: "__copy__()->bmp\n
+Used by Python copy.copy"
 name: "__copy__" */
 static Bitmap Bitmap_copy(Bitmap&);
 

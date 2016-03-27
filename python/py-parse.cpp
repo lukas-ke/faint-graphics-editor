@@ -1038,6 +1038,10 @@ PyObject* build_result(const IntSize& size){
   return Py_BuildValue("ii", size.w, size.h);
 }
 
+PyObject* build_result(const LinearGradient& lg){
+  return build_result(Paint(lg));
+}
+
 PyObject* build_result(const LineSegment& l){
   return Py_BuildValue("dddd", l.p0.x, l.p0.y, l.p1.x, l.p1.y);
 }
@@ -1046,6 +1050,10 @@ PyObject* build_result(const TextLine& line){
   int hardBreak = line.hardBreak ? 1 : 0;
   return Py_BuildValue("(iOd)", hardBreak, build_result(line.text),
     line.width);
+}
+
+PyObject* build_result(const Pattern& pattern){
+  return build_result(Paint(pattern));
 }
 
 PyObject* build_result(const Paint& paint){
@@ -1096,6 +1104,11 @@ PyObject* build_result(const Point& pos){
 
 PyObject* build_result(PyObject* obj){
   return obj;
+}
+
+
+PyObject* build_result(const RadialGradient& rg){
+  return build_result(Paint(rg));
 }
 
 PyObject* build_result(const Radii& r){
