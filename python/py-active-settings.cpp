@@ -128,8 +128,6 @@ PyTypeObject ActiveSettingsType = {
   nullptr  // tp_finalize
 };
 
-// FIXME: Add __copy__ function o prevent crash
-
 void add_ActiveSettings(AppContext& app, PyObject* module){
   add_type_object(module, ActiveSettingsType, "ActiveSettings");
   PyModule_AddObject(module, "active_settings",
