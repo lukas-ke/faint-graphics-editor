@@ -65,3 +65,36 @@ gets a spurious border.
 Currently (2014-09-24 onwards) I'm avoiding this by using a smaller
 clip-region than the actual rotated destination region, but this loses
 pixels. There's probably a better way to do it.
+
+\def(new-style-events)New event-style, events::on_...;
+I've started wrapping wxWidgets event-binding in functions that take
+lambdas and using those functions from wxWindow-sub-class constructors
+to simplify event-binding while still avoiding the old wxWidgets
+macros.
+
+This also lets me get away with including much less of wxWidgets in
+some files.
+
+Functions for binding regular wxWidgets events are declared in
+util-wx/fwd-bind.hh.
+
+Faint-specific events are added to the events-namespace in the header
+declaring the new control.
+
+Todo:
+Maybe add events::on_left_down_modifiers(Point, ctrl and so on);
+Add wxEVT_COMMAND_TEXT_UPDATED. (Non-skipping probably).
+
+Skipping (i.e. propagating events) when:
+* Focus-event: Always skip (maybe), i.e. on_focus_lost, on_focus_gained
+* Button and such, never (I guess).
+
+ "In general, it is recommended to skip all non-command events to
+ allow the default handling to take place. The command events are,
+ however, normally not skipped as usually a single command such as a
+ button click or menu item selection must only be processed by one
+ handler."
+
+Create Faint PaintDC:
+ Pass it to on_paint-handlers. (fwd-bind.hh)
+ + Helper for drawing faint::Bitmap on window_t
