@@ -238,6 +238,14 @@ void Common_set_threshold(Image&, const std::pair<double, double>&,
 
 #define COMMONFWD(bundle)FORWARDER(bundle::Func<Image&>, bundle::ArgType(), bundle::Name(), bundle::Doc())
 
+/* method: "__copy__()\n
+Not implemented"
+name: "__copy__" */
+static void Image_copy(Image&){
+  // Fixme: Consider implementing
+  throw NotImplementedError("Image can not be copied");
+}
+
 /* extra_include: "generated/python/method-def/py-common-method-def.hh" */
 #include "generated/python/method-def/py-image-method-def.hh"
 
