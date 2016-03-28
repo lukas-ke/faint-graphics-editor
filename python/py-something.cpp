@@ -18,6 +18,7 @@
 #include "app/app-context.hh"
 #include "app/canvas.hh"
 #include "bitmap/bitmap.hh"
+#include "commands/command-bunch.hh"
 #include "commands/change-setting-cmd.hh"
 #include "commands/obj-function-cmd.hh"
 #include "commands/set-object-name-cmd.hh"
@@ -216,6 +217,28 @@ static utf8_string Smth_get_text_evaluated(const BoundObject<Object>& self){
   const auto& image = self.canvas->GetFrame(self.frameId);
   auto& ctx = image.GetExpressionContext();
   return text->GetEvaluatedString(ctx);
+}
+
+/* method: "store_evaluated_text()\n
+Evaluates the text expression in the text object and replaces it with
+the result, so that expressions are replaced by their values and
+character constants are replaced with the character they
+represent." */
+static void Smth_store_evaluated_text(const BoundObject<Object>& self){
+  ObjText* text = dynamic_cast<ObjText*>(self.obj);
+  if (!text){
+    throw TypeError(space_sep(self.obj->GetType(),
+      "does not support text."));
+  }
+
+  const auto& image = self.canvas->GetFrame(self.frameId);
+  auto evaluated = text->GetEvaluatedString(image.GetExpressionContext());
+  auto cmd =
+    command_bunch(CommandType::OBJECT,
+      bunch_name("Store Evaluated Text"),
+      change_setting_command(text, ts_ParseExpressions, false),
+      text_entry_command(text, New(evaluated), Old(text->GetRawString())));
+  run_command(self, std::move(cmd));
 }
 
 /* method: "get_text_lines()->(s,...)\n

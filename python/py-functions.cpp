@@ -13,7 +13,6 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include <sstream>
 #include "python/py-include.hh"
 #include "app/canvas.hh"
 #include "app/frame.hh"
