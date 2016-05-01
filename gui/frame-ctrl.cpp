@@ -162,13 +162,15 @@ public:
         Index selected = m_ctx.GetSelectedFrame();
         if (frame == selected && CloseBoxHitTest(pos, frame.Get())){
           m_ctx.RemoveFrame(frame);
+          return;
         }
-
-        assert(frame < m_ctx.GetNumFrames());
-        m_ctx.SelectFrame(frame);
-        m_dragInfo = FrameDragInfo(pos, frame);
-        m_mouse.Capture();
-        Refresh();
+        else{
+          assert(frame < m_ctx.GetNumFrames());
+          m_ctx.SelectFrame(frame);
+          m_dragInfo = FrameDragInfo(pos, frame);
+          m_mouse.Capture();
+          Refresh();
+        }
     };
 
     events::on_mouse_left_down(this, handle_click);
