@@ -34,7 +34,7 @@ Point adjust_to(const Point& o,
   for (int i = 0; i!= n_angles; i++){
     Angle i_angle = i * step + offset;
     if (abs(angle - i_angle) <= step / 2.0){
-      Angle newAngle = tau - i_angle;
+      Angle newAngle = two_pi - i_angle;
       coord x_mplr = cos(newAngle);
       coord y_mplr = sin(newAngle);
       coord x = x_mplr * length + o.x;

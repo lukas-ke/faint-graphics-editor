@@ -51,7 +51,7 @@ void test_measure(){
   // Note: bezier-distance tested in bezier-distance.cpp
 
   // ellipse_perimeter
-  NEAR(ellipse_perimeter(1.0, 1.0), math::tau, eps);
+  NEAR(ellipse_perimeter(1.0, 1.0), math::two_pi, eps);
   NEAR(ellipse_perimeter(0.5, 0.5), math::pi, eps);
   NEAR(ellipse_perimeter(10.0, 20.0), 96.884, 0.001_eps);
 

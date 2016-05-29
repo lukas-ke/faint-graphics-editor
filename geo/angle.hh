@@ -67,8 +67,8 @@ constexpr Angle Angle::Rad(coord a){
 }
 
 constexpr Angle pi(Angle::Rad(math::pi));
-constexpr Angle half_pi(Angle::Rad(math::pi / 2));
-constexpr Angle tau(Angle::Rad(math::tau));
+constexpr Angle half_pi(Angle::Rad(math::half_pi));
+constexpr Angle two_pi(Angle::Rad(math::two_pi));
 
 bool multiple_of_90(const Angle&);
 

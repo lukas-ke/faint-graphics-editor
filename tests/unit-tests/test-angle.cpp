@@ -38,8 +38,8 @@ void test_angle(){
   NEAR(abs(-pi), pi, eps);
 
   NEAR(normalized(3 * pi), pi, eps);
-  NEAR(tau, 2 * pi, eps);
-  NEAR(pi * 2, pi + pi, eps);
+  NEAR(two_pi, 2 * pi, eps);
+  NEAR(two_pi, pi + pi, eps);
   VERIFY(Angle::Zero() < pi);
   VERIFY(Angle::Zero() <= pi);
   VERIFY(pi > 0_deg);

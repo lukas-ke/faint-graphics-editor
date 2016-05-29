@@ -95,9 +95,9 @@ bool multiple_of_90(const Angle& a){
 }
 
 Angle normalized(const Angle& a){
-  auto radians = std::fmod(a.Rad(), math::tau);
+  auto radians = std::fmod(a.Rad(), math::two_pi);
   return (radians < 0) ?
-    Angle::Rad(radians + math::tau) :
+    Angle::Rad(radians + math::two_pi) :
     Angle::Rad(radians);
 }
 

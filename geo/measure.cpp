@@ -36,12 +36,12 @@ Angle angle360_ccw(const LineSegment& l){
 
   Angle angle = line_angle_cw(l);
   if (angle < Angle::Zero()){
-    angle = angle + tau;
+    angle = angle + two_pi;
   }
   if (angle == Angle::Zero()){
     return angle;
   }
-  return tau - angle;
+  return two_pi - angle;
 }
 
 IntRect bounding_rect(const IntPoint& p){

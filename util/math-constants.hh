@@ -21,7 +21,7 @@ namespace faint{namespace math{
 constexpr double e = 2.71828182845904523536028747135266249775;
 constexpr double pi = 3.141592653589793238462643383279502884;
 constexpr double half_pi = 3.141592653589793238462643383279502884 / 2;
-constexpr double tau = 6.283185307179586476925286766559005768;
+constexpr double two_pi = 6.283185307179586476925286766559005768;
 
 constexpr double radians_from_degrees(double degrees){
   return (pi / 180.0) * degrees;
