@@ -428,7 +428,8 @@ def build_python_extension(platform, cmdline):
     def precompile_steps(bo):
         bo.create_build_info = False
         bo.target_type = bo.Target.shared_python_library
-
+        if not os.path.exists("../ext/out"):
+            os.mkdir("../ext/out")
     target = faint_info.target.python_extension
 
     def extension_source_files(platform, bo):
