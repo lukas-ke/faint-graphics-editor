@@ -99,6 +99,7 @@ InterpreterFrame::InterpreterFrame()
 InterpreterFrame::~InterpreterFrame(){
   if (m_impl != nullptr){
     m_impl->Close();
+    m_impl = nullptr;
   }
 }
 
@@ -108,6 +109,7 @@ void InterpreterFrame::AddNames(const std::vector<utf8_string>& names){
 
 void InterpreterFrame::Close(){
   m_impl->Close(true);
+  m_impl = nullptr;
 }
 
 bool InterpreterFrame::HasFocus() const{
