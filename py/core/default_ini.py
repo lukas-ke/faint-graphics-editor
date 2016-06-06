@@ -1,3 +1,5 @@
+from faint import *
+
 # Tool binds
 bindk(key.paragraph, toggle_selection_type)
 bindc('1', tool_pen)
