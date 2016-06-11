@@ -14,7 +14,7 @@ You may need to get these packages:
 **Note** Either gcc-4.9 or clang-3.6 (or later) are required.
 
 ## 1. wxWidgets
-wxWidgets is th GUI toolkit used for Faint.
+wxWidgets is the GUI toolkit used for Faint.
 
 ### Clone the wxWidgets trunk
 
