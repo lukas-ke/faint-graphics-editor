@@ -3,7 +3,7 @@
 I use the Visual Studio 2015 community edition for building Faint in
 Windows.
 
-Note that since I only Visual Studio for compiling, not for editing,
+Note that since I only use Visual Studio for compiling, not for editing,
 there is no Visual Studio project or solution included with the Faint
 sources. Instead I use a Python script which invokes the Visual Studio
 compiler.
