@@ -91,7 +91,7 @@ def test_file_PNG(source_file, target_file):
     imageList = test_parse_SVG(source_file)
     img = imageList.get_frame(0)
     img.flatten()
-    faint.write_png(img.background, target_file, faint.png.RGB)
+    faint.write_png(target_file, img.background, faint.png.RGB)
 
 def test_file_PDF(source_file, target_file):
     img = test_parse_SVG(source_file)
@@ -179,6 +179,10 @@ def test_svg_suite(cfg, args, silent=False):
 
     cfg = config.read_config()
     svg_test_suite_root = cfg.get('test','svg_test_suite_root')
+    if len(svg_test_suite_root) == 0:
+        print('Error: No path to svg suite entered in config.ini')
+        exit(1)
+
     svg_files = config.list_svg_files(svg_test_suite_root)
 
     for num, target_type in enumerate(sorted(args)):
