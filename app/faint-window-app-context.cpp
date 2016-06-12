@@ -562,15 +562,19 @@ bool FaintWindowContext::IsFullScreen() const{
   return m_faintWindow.IsFullScreen();
 }
 
-Canvas* FaintWindowContext::Load(const FilePath& filePath, const change_tab& changeTab){
-  return m_faintWindow.Open(filePath, changeTab);
+Optional<Canvas&> FaintWindowContext::Load(const FilePath& filePath, const change_tab& changeTab){
+  Canvas* c = m_faintWindow.Open(filePath, changeTab);
+  if (c == nullptr){
+    return {};
+  }
+  return Optional<Canvas&>(*c);
 }
 
 void FaintWindowContext::Load(const FileList& filePaths){
   return m_faintWindow.Open(filePaths);
 }
 
-Canvas* FaintWindowContext::LoadAsFrames(const FileList& paths,
+Optional<Canvas&> FaintWindowContext::LoadAsFrames(const FileList& paths,
   const change_tab& changeTab)
 {
   std::vector<ImageProps> props;
@@ -586,7 +590,7 @@ Canvas* FaintWindowContext::LoadAsFrames(const FileList& paths,
         if (!props.back().IsOk()){
           // Fixme: Commented for some reason
           // show_load_failed_error(m_faintWindow, filePath, props.back().GetError());
-          return nullptr;
+          return {};
         }
         loaded = true;
         break;
@@ -595,13 +599,12 @@ Canvas* FaintWindowContext::LoadAsFrames(const FileList& paths,
     if (!loaded){
       // Fixme
       // show_load_failed_error(m_faintWindow, filePath, "One path could not be loaded.");
-      return nullptr;
+      return {};
     }
   }
   auto canvas = m_tabControl->NewDocument(std::move(props),
     changeTab, initially_dirty(true));
-  Canvas* canvasInterface = &(canvas->GetInterface());
-  return canvasInterface;
+  return Optional<Canvas&>(canvas->GetInterface());
 }
 
 void FaintWindowContext::Maximize(){

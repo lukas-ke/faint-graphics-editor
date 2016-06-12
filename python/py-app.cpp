@@ -196,11 +196,14 @@ Open the specified image file in a new tab." */
 static Optional<Bound<Canvas>> faintapp_open(PyFuncContext& ctx,
   const utf8_string& pathStr)
 {
-  Canvas* c = ctx.app.Load(get_openable_path(pathStr), change_tab(true));
-  if (c == nullptr){
-    return no_option();
-  }
-  return option(bind(*c, ctx));
+  auto c = ctx.app.Load(get_openable_path(pathStr), change_tab(true));
+  return c.Visit(
+    [&ctx](Canvas& c){
+      return option(bind(c, ctx));
+    },
+    [](){
+      return no_option();
+    });
 }
 
 /* method: "quit(force=False)\n

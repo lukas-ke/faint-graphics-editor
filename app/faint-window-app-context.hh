@@ -138,9 +138,9 @@ public:
   Settings GetToolSettings() const override;
   const TransparencyStyle& GetTransparencyStyle() const override;
   bool IsFullScreen() const override;
-  Canvas* Load(const FilePath&, const change_tab&) override;
+  Optional<Canvas&> Load(const FilePath&, const change_tab&) override;
   void Load(const FileList&) override;
-  Canvas* LoadAsFrames(const FileList& paths,
+  Optional<Canvas&> LoadAsFrames(const FileList& paths,
     const change_tab& changeTab) override;
   void Maximize() override;
   void MaximizePythonConsole() override;

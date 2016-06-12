@@ -88,9 +88,9 @@ public:
   virtual Settings GetToolSettings() const = 0;
   virtual const TransparencyStyle& GetTransparencyStyle() const = 0;
   virtual bool IsFullScreen() const = 0;
-  virtual Canvas* Load(const FilePath&, const change_tab&) = 0;
+  virtual Optional<Canvas&> Load(const FilePath&, const change_tab&) = 0;
   virtual void Load(const FileList&) = 0;
-  virtual Canvas* LoadAsFrames(const FileList&, const change_tab&) = 0;
+  virtual Optional<Canvas&> LoadAsFrames(const FileList&, const change_tab&) = 0;
   virtual void Maximize() = 0;
   virtual void MaximizePythonConsole() = 0;
   virtual bool ModalDialogShown() const = 0;
