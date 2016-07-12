@@ -46,6 +46,7 @@ ref-gui.txt
 >>gui-help-window.txt
 >>gui-open-file-dialog.txt
 >>gui-python-console.txt
+>>gui-sharpness-dialog.txt
 >>gui-threshold-dialog.txt
 >ref-command-line.txt
 >gui-color-panel.txt

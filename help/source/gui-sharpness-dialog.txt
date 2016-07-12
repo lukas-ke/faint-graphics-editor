@@ -1,0 +1,11 @@
+page:"Sharpness Dialog"
+summary:"Dialog for sharpening or blurring an image"
+
+= The sharpness dialog =
+The sharpness dialog adjusts the image sharpness.
+
+The slider in the dialog has the current "sharpness" at its center. By
+moving the handle to the right, the image
+is \ref(feat-sharpen.txt,sharpened) using an unsharp mask. Moving the
+handle to the left \ref(feat-blur.txt,blurs) the image using gaussian
+blur.
