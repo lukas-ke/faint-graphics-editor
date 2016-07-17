@@ -13,48 +13,13 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include <algorithm> // min, max
 #include <cmath>
 #include "geo/rotated-size.hh"
 
 namespace faint{
 
-static double min4(double a, double b, double c, double d){
-  if (a < b){
-    if (c < a){
-      return (d < c) ? d : c;
-    }
-    else{
-      return (d < a) ? d : a;
-    }
-  }
-  else if (c < b){
-    return (d < c) ? d : c;
-  }
-  else{
-    return (d < b) ? d : b;
-  }
-}
-
-static double max4(double a, double b, double c, double d){
-  if (a > b){
-    if (c > a){
-      return (d > c) ? d : c;
-    }
-    else{
-      return (d > a) ? d : a;
-    }
-  }
-  else if (c > b){
-    return (d > c) ? d : c;
-  }
-  else{
-    return (d > b) ? d : b;
-  }
-}
-
-IntSize get_rotated_size(const Angle& angle,
-  const IntSize& size)
-{
+IntSize get_rotated_size(const Angle& angle, const IntSize& size){
   // Use the upper-left corner as pivot
   const coord CtX = 0;
   const coord CtY = 0;
@@ -73,10 +38,10 @@ IntSize get_rotated_size(const Angle& angle,
   const coord y3 = CtY + (size.h - CtY) * cA + (size.w - CtX) * sA;
   const coord y4 = CtY + (-CtY) * cA + (size.w - CtX) * sA;
 
-  const IntPoint offset(floored(min4(x1, x2, x3, x4)),
-    floored(min4(y1, y2, y3, y4)));
-  const IntSize newSize(ceiled(max4(x1, x2, x3, x4)) - offset.x,
-    ceiled(max4(y1,y2,y3,y4)) - offset.y);
+  const IntPoint offset(floored(std::min({x1, x2, x3, x4})),
+    floored(std::min({y1, y2, y3, y4})));
+  const IntSize newSize(ceiled(std::max({x1, x2, x3, x4})) - offset.x,
+    ceiled(std::max({y1,y2,y3,y4})) - offset.y);
 
   return newSize;
 }
