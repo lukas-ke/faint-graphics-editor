@@ -22,7 +22,7 @@ namespace faint{
 
 template<typename T>
 bool point_less(const T& lhs, const T& rhs){
-  return lhs.x < rhs.x || (lhs.x == rhs.x && lhs.y < rhs.y);
+  return std::tie(lhs.x, lhs.y) < std::tie(rhs.x, rhs.y);
 }
 
 static bool operator<(const Point& lhs, const Point& rhs){
