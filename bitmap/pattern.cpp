@@ -202,19 +202,9 @@ bool Pattern::operator!=(const Pattern& other) const{
 }
 
 bool Pattern::operator<(const Pattern& other) const{
-  if (*m_ref < *other.m_ref){
-    return true;
-  }
-  else if (*m_ref != *other.m_ref){
-    return false;
-  }
-  else if (m_anchor < other.m_anchor){
-    return true;
-  }
-  else if (m_anchor != other.m_anchor){
-    return false;
-  }
-  return m_objectAligned < other.m_objectAligned;
+  return
+    std::tie(*m_ref, m_anchor, m_objectAligned) <
+    std::tie(*other.m_ref, other.m_anchor, other.m_objectAligned);
 }
 
 bool Pattern::operator>(const Pattern& other) const{
