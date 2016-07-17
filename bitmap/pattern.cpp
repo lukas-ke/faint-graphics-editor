@@ -35,6 +35,11 @@ public:
   bool operator!=(const PatternRef&) const;
   bool operator<(const PatternRef&) const;
   PatternRef operator=(const PatternRef&) = delete;
+
+  int RefId() const{
+    return m_id.Raw();
+  }
+
 private:
   PatternId m_id;
 };
@@ -192,6 +197,10 @@ bool Pattern::operator==(const Pattern& other) const{
     m_objectAligned == other.m_objectAligned);
 }
 
+bool Pattern::operator!=(const Pattern& other) const{
+  return !(*this == other);
+}
+
 bool Pattern::operator<(const Pattern& other) const{
   if (*m_ref < *other.m_ref){
     return true;
@@ -210,6 +219,10 @@ bool Pattern::operator<(const Pattern& other) const{
 
 bool Pattern::operator>(const Pattern& other) const{
   return !operator==(other) && !operator<(other);
+}
+
+int Pattern::RefId() const{
+  return m_ref->RefId();
 }
 
 Pattern offsat(const Pattern& p, const IntPoint& delta){

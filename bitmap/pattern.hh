@@ -44,8 +44,13 @@ public:
   void SetObjectAligned(bool);
   Pattern& operator=(const Pattern&);
   bool operator==(const Pattern&) const;
+  bool operator!=(const Pattern&) const;
   bool operator<(const Pattern&) const;
   bool operator>(const Pattern&) const;
+
+  // Returns the id of the backing bitmap. Used for testing and
+  // debugging.
+  int RefId() const;
 private:
   IntPoint m_anchor;
   bool m_objectAligned;
