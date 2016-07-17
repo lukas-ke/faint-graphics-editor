@@ -89,6 +89,7 @@ public:
       });
     return attachPoints;
   }
+
   std::vector<ExtensionPoint> GetExtensionPoints() const override{
     if (m_points.Empty()){
       return {};

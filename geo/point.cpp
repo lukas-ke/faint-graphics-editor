@@ -13,11 +13,8 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#include <algorithm>
+#include <algorithm> // min, max
 #include "geo/point.hh"
-
-using std::min;
-using std::max;
 
 namespace faint{
 
@@ -88,7 +85,7 @@ Point max_coords(const Point& p0, const Point& p1){
 }
 
 Point max_coords(const Point& p0, const Point& p1, const Point& p2){
-  return {max(max(p0.x, p1.x), p2.x), max(max(p0.y, p1.y), p2.y)};
+  return {std::max({p0.x, p1.x, p2.x}), std::max({p0.y, p1.y, p2.y})};
 }
 
 Point max_coords(const Point& p0,
@@ -96,16 +93,17 @@ Point max_coords(const Point& p0,
   const Point& p2,
   const Point& p3)
 {
-  return {max(max(max(p0.x, p1.x), p2.x), p3.x),
-    max(max(max(p0.y, p1.y), p2.y), p3.y)};
+  return{
+    std::max({p0.x, p1.x, p2.x, p3.x}),
+    std::max({p0.y, p1.y, p2.y, p3.y})};
 }
 
 Point min_coords(const Point& p0, const Point& p1){
-  return {min(p0.x, p1.x), min(p0.y, p1.y)};
+  return {std::min(p0.x, p1.x), std::min(p0.y, p1.y)};
 }
 
 Point min_coords(const Point& p0, const Point& p1, const Point& p2){
-  return {min(min(p0.x, p1.x), p2.x), min(min(p0.y, p1.y), p2.y)};
+  return {std::min({p0.x, p1.x, p2.x}), std::min({p0.y, p1.y, p2.y})};
 }
 
 Point min_coords(const Point& p0,
@@ -113,8 +111,9 @@ Point min_coords(const Point& p0,
   const Point& p2,
   const Point& p3)
 {
-  return {min(min(min(p0.x, p1.x), p2.x), p3.x),
-    min(min(min(p0.y, p1.y), p2.y), p3.y)};
+  return {
+    std::min({p0.x, p1.x, p2.x, p3.x}),
+    std::min({p0.y, p1.y, p2.y, p3.y})};
 }
 
 Point transposed(const Point& pt){
