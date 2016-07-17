@@ -26,11 +26,17 @@ bool point_less(const T& lhs, const T& rhs){
 }
 
 static bool operator<(const Point& lhs, const Point& rhs){
+  // Required for operator< on tuple containing Point
   return point_less(lhs, rhs);
 }
 
 static bool operator<(const Radii& lhs, const Radii& rhs){
+  // Required for operator< on tuple containing Point
   return point_less(lhs, rhs);
+}
+
+inline std::tuple<Color, double> tupled(const ColorStop& s){
+  return std::make_tuple(s.GetColor(), s.GetOffset());
 }
 
 ColorStop::ColorStop()
@@ -52,18 +58,15 @@ double ColorStop::GetOffset() const{
 }
 
 bool ColorStop::operator<(const ColorStop& other) const{
-  return m_offset < other.m_offset ||
-    (m_offset == other.m_offset && m_color < other.m_color);
+  return std::tie(m_offset, m_color) < std::tie(other.m_offset, other.m_color);
 }
 
 bool ColorStop::operator==(const ColorStop& other) const{
-  return m_color == other.m_color &&
-    m_offset == other.m_offset;
+  return tupled(*this) == tupled(other);
 }
 
 bool ColorStop::operator!=(const ColorStop& other) const{
-  return m_color != other.m_color ||
-    m_offset != other.m_offset;
+  return !(*this == other);
 }
 
 LinearGradient::LinearGradient()
@@ -124,7 +127,7 @@ void LinearGradient::SetStops(const color_stops_t& stops){
   m_stops = stops;
 }
 
-inline std::tuple<Angle, bool, const color_stops_t&> tupeled(
+inline std::tuple<Angle, bool, const color_stops_t&> tupled(
   const LinearGradient& g)
 {
   return std::make_tuple(g.GetAngle(),
@@ -133,11 +136,11 @@ inline std::tuple<Angle, bool, const color_stops_t&> tupeled(
 }
 
 bool LinearGradient::operator<(const LinearGradient& other) const{
-  return tupeled(*this) < tupeled(other);
+  return tupled(*this) < tupled(other);
 }
 
 bool LinearGradient::operator==(const LinearGradient& other) const{
-  return tupeled(*this) == tupeled(other);
+  return tupled(*this) == tupled(other);
 }
 
 bool LinearGradient::operator!=(const LinearGradient& other) const{
@@ -145,7 +148,7 @@ bool LinearGradient::operator!=(const LinearGradient& other) const{
 }
 
 bool LinearGradient::operator>(const LinearGradient& other) const{
-  return tupeled(*this) > tupeled(other);
+  return tupled(*this) > tupled(other);
 }
 
 LinearGradient unrotated(const LinearGradient& g){
@@ -160,7 +163,7 @@ LinearGradient with_angle(const LinearGradient& g, const Angle& angle){
   return g2;
 }
 
-inline std::tuple<Point, bool, Radii, const color_stops_t&> tupeled(
+inline std::tuple<Point, bool, Radii, const color_stops_t&> tupled(
   const RadialGradient& g)
 {
   return std::make_tuple(g.GetCenter(),
@@ -240,7 +243,7 @@ void RadialGradient::SetStops(const color_stops_t& stops){
 }
 
 bool RadialGradient::operator==(const RadialGradient& other) const{
-  return tupeled(*this) == tupeled(other);
+  return tupled(*this) == tupled(other);
 }
 
 bool RadialGradient::operator!=(const RadialGradient& other) const{
@@ -248,11 +251,11 @@ bool RadialGradient::operator!=(const RadialGradient& other) const{
 }
 
 bool RadialGradient::operator<(const RadialGradient& other) const{
-  return tupeled(*this) < tupeled(other);
+  return tupled(*this) < tupled(other);
 }
 
 bool RadialGradient::operator>(const RadialGradient& other) const{
-  return tupeled(*this) > tupeled(other);
+  return tupled(*this) > tupled(other);
 }
 
 class Gradient::GradientImpl{
