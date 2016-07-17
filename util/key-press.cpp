@@ -15,6 +15,7 @@
 
 #include <set>
 #include <sstream>
+#include <tuple>
 #include "wx/defs.h"
 
 #include "text/char-constants.hh"
@@ -48,6 +49,10 @@ static std::set<KeyPress> init_excluded_alpha_numeric_entry(){
 const std::set<KeyPress>& excluded_alpha_numeric_entry(){
   static const auto codes = init_excluded_alpha_numeric_entry();
   return codes;
+}
+
+inline std::tuple<Key, Mod> tupled(const KeyPress& k){
+  return std::make_tuple(k.GetKeyCode(), k.Modifiers());
 }
 
 bool affects_alphanumeric_entry(const KeyPress& key){
@@ -284,14 +289,11 @@ bool KeyPress::Shift() const{
 }
 
 bool KeyPress::operator==(const KeyPress& other) const{
-  return m_keyCode == other.m_keyCode &&
-    m_modifiers == other.m_modifiers;
+  return tupled(*this) == tupled(other);
 }
 
 bool KeyPress::operator<(const KeyPress& other) const{
-  return m_keyCode < other.m_keyCode ||
-    (m_keyCode == other.m_keyCode &&
-      m_modifiers < other.m_modifiers);
+  return tupled(*this) < tupled(other);
 }
 
 void Mod::operator+=(const Mod& other){
