@@ -17,16 +17,22 @@
 
 import xml.etree.ElementTree as ET
 
-def create_arrowhead():
+def create_arrowhead(marker_id, color):
     """Creates a forward-pointing arrow-head marker."""
     element = ET.Element('marker')
-    element.set('id', 'Arrowhead')
+    element.set('id', marker_id)
     element.set('markerUnits', 'strokeWidth')
     element.set('markerWidth', '7.5')
     element.set('markerHeight', '6.6')
     element.set('orient', 'auto')
     element.set('refX', '0')
     element.set('refY', '3.3') # Offset by half width
+
+    if color.__class__ == tuple: # Fixme: Bad!
+        # Fixme: Handle pattern
+        # Fixme: Handle opacity
+        # Fixme: Reuse svg_color utility
+        element.set('fill', 'rgb{c}'.format(c=color[0:3]))
 
     path = ET.Element('path')
     path.set('d', "M 0 0 L 7.5 3.3 L 0 6.6 z")

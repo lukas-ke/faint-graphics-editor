@@ -26,6 +26,7 @@ class SvgBuildState:
         self.linear_gradients = []
         self.radial_gradients = []
         self.patterns = []
+        self.arrows = {} # color to arrowhead-marker-elements
 
         # Maps Faint fill types to their list and id-prefix
         self.class_map = {
@@ -33,20 +34,30 @@ class SvgBuildState:
             faint.Pattern: ('pattern', self.patterns),
             faint.RadialGradient: ('rgradient', self.radial_gradients)}
 
-        # Keep track of whether an arrowhead has been added
-        # Fixme: Rework
-        self.arrow = True
+    def add_arrowhead(self, color):
+        """Adds a marker for an arrowhead of the given color. Returns the
+        marker id, for referencing.
 
-    def set_arrow(self, arrowSetting):
-        if arrowSetting != 'none':
-            self.arrow = True
+        """
+
+        def arrowhead_id(num):
+            return 'Arrowhead_{num}'.format(num=num)
+
+        if color in self.arrows:
+            # Reuse old id
+            num, element = self.arrows[color]
+            return arrowhead_id(num)
+
+        # Add new element
+        num = len(self.arrows)
+        marker_id = arrowhead_id(num)
+        self.arrows[color] = (num, create_arrowhead(marker_id, color))
+        return marker_id
 
     def get_marker_elements(self):
         """Returns a list of marker elements"""
-        # Fixme: Currently only arrowhead
-        if self.arrow:
-            return [create_arrowhead(),]
-        return []
+        # Fixme: Currently only arrowheads
+        return [item[1] for item in self.arrows.values()]
 
     def get_items(self):
         """Returns all def-entries with their id as a list of tuples"""

@@ -285,8 +285,10 @@ def parse_marker_attr(node, settings):
     arrowhead_str = node.get('marker-end')
     arrowtail_str = node.get('marker-start')
     # Fixme: actually refer to marked structure
-    arrowhead = (arrowhead_str == 'url(#Arrowhead)')
-    arrowtail = (arrowtail_str == 'url(#Arrowtail)')
+    arrowhead = (arrowhead_str is not None and
+                 arrowhead_str.startswith('url(#Arrowhead')) # Fixme: Hack
+    arrowtail = (arrowtail_str is not None and
+                 arrowtail_str.startswith('url(#Arrowtail')) # Fixme: Hack
 
     if arrowhead and arrowtail:
         settings.arrow = 'both'

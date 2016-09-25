@@ -54,7 +54,6 @@ def to_rgb_color(color):
     """Turns a Faint rgb-color tuple into an svg string."""
     return "rgb%s" % str(color[0:3])
 
-
 def to_svg_color(color, state):
     """Turns a Faint color tuple, pattern or gradient into an svg color
     description or defs-reference.
@@ -496,7 +495,8 @@ def create_polyline(obj, state):
     points = obj.get_points()
 
     arrow = obj.arrow
-    state.set_arrow(arrow)
+    if arrow != 'none':
+        arrow_url = state.add_arrowhead(obj.fg)
 
     if arrow == 'front':
         angle = rad_angle(points[-2], points[-1], points[-4], points[-3])
@@ -511,10 +511,8 @@ def create_polyline(obj, state):
     style = svg_line_style(obj, state) + svg_line_dash_style(obj) + "fill:none"
     element.set('style', style)
 
-    if arrow == 'front' or arrow == 'both':
-        element.set('marker-end', 'url(#Arrowhead)')
-    elif arrow == 'back' or arrow == 'both':
-        element.set('marker-start', 'url(#Arrowtail)')
+    if arrow != 'none': # Fixme: Duplicates create_line
+        element.set('marker-end', 'url(#{marker_id})'.format(marker_id=arrow_url))
     return element
 
 
@@ -595,7 +593,8 @@ def create_simple_line(obj, state):
     element.set('y1', str(points[1]))
 
     arrow = obj.arrow
-    state.set_arrow(arrow)
+    if arrow != 'none': # Fixme: Duplicates create_polyline
+        arrow_url = state.add_arrowhead(obj.fg)
 
     # Fixme: Duplicates poly-line
     if arrow == 'front':
@@ -609,10 +608,9 @@ def create_simple_line(obj, state):
 
     element.set('style', svg_line_style(obj, state) + svg_line_dash_style(obj))
 
-    if arrow == 'front' or arrow == 'both':
-        element.set('marker-end', 'url(#Arrowhead)')
-    if arrow == 'back' or arrow == 'both':
-        element.set('marker-start', 'url(#Arrowtail)')
+    if arrow != 'none':
+        # Fixme: Only arrow-head
+        element.set('marker-end', 'url(#{marker_id})'.format(marker_id=arrow_url))
 
     return element
 
