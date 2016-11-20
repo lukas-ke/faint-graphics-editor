@@ -17,6 +17,7 @@
 #include "python/py-add-type-object.hh"
 #include "python/py-bitmap.hh"
 #include "python/py-canvas.hh"
+#include "python/py-color.hh"
 #include "python/py-clipboard.hh"
 #include "python/py-functions.hh"
 #include "python/py-gradient.hh"
@@ -68,6 +69,7 @@ static PyObject* init_extension_module(){
 
   // Types
   add_type_Bitmap(ifaint);
+  add_type_Color(ifaint);
   add_type_Image(ifaint);
   add_type_Pattern(ifaint);
   add_type_Settings(ifaint);

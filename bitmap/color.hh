@@ -52,7 +52,8 @@ public:
   bool operator!=(const Color&) const;
 
   // Simple field-by-field less for containers.
-  bool operator<(const Color& c) const;
+  bool operator<(const Color&) const;
+  bool operator>(const Color&) const;
   uchar r;
   uchar g;
   uchar b;

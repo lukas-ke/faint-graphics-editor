@@ -43,6 +43,7 @@ namespace faint{
 template<>
 struct MappedType<Bitmap&>{
   using PYTHON_TYPE = bitmapObject;
+
   static Bitmap& GetCppObject(bitmapObject* self){
     return self->bmp;
   }

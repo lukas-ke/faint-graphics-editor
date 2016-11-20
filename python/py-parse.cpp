@@ -31,6 +31,7 @@
 #include "python/py-include.hh"
 #include "python/py-function-error.hh"
 #include "python/py-canvas.hh"
+#include "python/py-color.hh"
 #include "python/py-gradient.hh"
 #include "python/py-grid.hh"
 #include "python/py-util.hh"
@@ -121,12 +122,12 @@ static PyObject* build_pattern(const Pattern& pattern){
   return (PyObject*)py_pattern;
 }
 
-static PyObject* build_color_tuple(const Color& color){
-  return Py_BuildValue("iiii", color.r, color.g, color.b, color.a);
+static PyObject* build_color(const Color& color){
+  return pythoned(color);
 }
 
 static PyObject* build_paint(const Paint& paint){
-  return visit(paint, build_color_tuple, build_pattern, build_gradient);
+  return visit(paint, build_color, build_pattern, build_gradient);
 }
 
 bool parse_item(PyObject*& item, PyObject* args, Py_ssize_t&, Py_ssize_t, bool){
@@ -561,6 +562,18 @@ bool parse_flat(Radii& radii, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
 
 bool parse_flat(Color& color, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   const auto items = len - n;
+
+  throw_insufficient_args_if(items < 1, "color");
+  {
+    scoped_ref ref(PySequence_GetItem(args, n));
+    auto* c = as_Color(ref.get());
+    if (c != nullptr){
+      color = *c;
+      n += 1;
+      return true;
+    }
+  }
+
   throw_insufficient_args_if(items < 3, "color");
 
   int readItems = 0;
@@ -667,6 +680,12 @@ static Optional<Gradient> as_Gradient(PyObject* obj){
 }
 
 static bool parse_non_sequence(Paint& paint, PyObject* arg){
+  Color* color = as_Color(arg);
+  if (color != nullptr){
+    paint = Paint(*color);
+    return true;
+  }
+
   Optional<Gradient> gradient = as_Gradient(arg);
   if (gradient.IsSet()){
     paint = Paint(gradient.Get());
@@ -993,7 +1012,7 @@ PyObject* build_result(const CanvasGrid& grid){
 }
 
 PyObject* build_result(const Color& color){
-  return build_color_tuple(color);
+  return pythoned(color);
 }
 
 PyObject* build_result(const ColorStop& stop){

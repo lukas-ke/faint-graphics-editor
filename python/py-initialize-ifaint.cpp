@@ -18,6 +18,7 @@
 #include "python/py-initialize-ifaint.hh"
 #include "python/py-bitmap.hh"
 #include "python/py-canvas.hh"
+#include "python/py-color.hh"
 #include "python/py-faint-singletons.hh"
 #include "python/py-frame.hh"
 #include "python/py-functions.hh"
@@ -45,6 +46,7 @@ namespace faint{
 
 static void add_faint_types(PyObject* module){
   add_type_Bitmap(module);
+  add_type_Color(module);
   add_type_Grid(module);
   add_type_Pattern(module);
   add_type_Settings(module);

@@ -42,6 +42,10 @@ bool Color::operator<(const Color& c2) const{
   return to_hash(*this) < to_hash(c2);
 }
 
+bool Color::operator>(const Color& c2) const{
+  return to_hash(*this) > to_hash(c2);
+}
+
 HSL::HSL(double h, double s, double l) :
   h(h),
   s(s),
