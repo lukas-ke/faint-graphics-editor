@@ -20,7 +20,7 @@ def run_tests(test_args=None):
     # Run the tests
     tp = unittest.main(py_tests, argv=test_args, exit=False)
     result = tp.result
-    return len(result.errors) == 0
+    return len(result.failures) == 0
 
 if __name__ == '__main__':
     exit(run_tests(sys.argv))
