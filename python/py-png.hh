@@ -16,6 +16,7 @@
 #ifndef FAINT_PY_PNG_HH
 #define FAINT_PY_PNG_HH
 #include "python/py-include.hh"
+
 namespace faint{
 
 void add_png_module(PyObject* parentModule);
