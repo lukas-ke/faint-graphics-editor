@@ -15,6 +15,7 @@
 
 #ifndef FAINT_PY_SOMETHING_HH
 #define FAINT_PY_SOMETHING_HH
+#include "bound-object.hh"
 #include "util/id-types.hh"
 
 namespace faint{
@@ -22,17 +23,12 @@ namespace faint{
 class Object;
 class Canvas;
 
-extern PyTypeObject SmthType;
+void add_type_Something(PyObject* module);
 
-struct smthObject{
-  PyObject_HEAD
-  Object* obj;
-  PyFuncContext* ctx;
-  Canvas* canvas;
-  CanvasId canvasId;
-  FrameId frameId;
-  ObjectId objectId;
-};
+bool is_Something(PyObject*);
+
+Object* Something_as_Object(PyObject*);
+BoundObject<Object> Something_as_BoundObject(PyObject*);
 
 PyObject* pythoned(Object*, PyFuncContext& ctx, Canvas*, const FrameId&);
 

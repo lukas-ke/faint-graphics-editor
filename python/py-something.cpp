@@ -51,10 +51,23 @@
 #include "util/setting-util.hh"
 #include "util-wx/encode-bitmap.hh"
 #include "util-wx/font.hh"
+#include "python/py-add-type-object.hh"
 #include "python/py-something-properties.hh"
 #include "generated/python/settings/py-smth-setting-properties.hh"
 
 namespace faint{
+
+extern PyTypeObject SmthType;
+
+struct smthObject{
+  PyObject_HEAD
+  Object* obj;
+  PyFuncContext* ctx;
+  Canvas* canvas;
+  CanvasId canvasId;
+  FrameId frameId;
+  ObjectId objectId;
+};
 
 template<class T>
 struct MappedType<const BoundObject<T>&>{
@@ -459,6 +472,14 @@ PyTypeObject SmthType = {
   nullptr  // tp_finalize
 };
 
+void add_type_Something(PyObject* module){
+  add_type_object(module, SmthType, "Something");
+}
+
+bool is_Something(PyObject* o){
+  return PyObject_IsInstance(o, (PyObject*)&SmthType) == 1;
+}
+
 PyObject* pythoned(Object* faintObj,
   PyFuncContext& ctx,
   Canvas* canvas,
@@ -472,6 +493,16 @@ PyObject* pythoned(Object* faintObj,
   smth->canvasId = canvas->GetId();
   smth->frameId = frameId;
   return (PyObject*)smth;
+}
+
+Object* Something_as_Object(PyObject* o){
+  auto* something = (smthObject*)(o);
+  return something->obj;
+}
+
+BoundObject<Object> Something_as_BoundObject(PyObject* o){
+  auto* s = (smthObject*)(o);
+  return BoundObject<Object>(s->ctx, s->canvas, s->obj, s->frameId);
 }
 
 } // namespace

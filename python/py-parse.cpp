@@ -241,21 +241,19 @@ bool parse_flat(BoundObject<Object>& obj, PyObject* args, Py_ssize_t& n, Py_ssiz
   throw_insufficient_args_if(len - n < 1, "Object");
 
   if (!PySequence_Check(args)){
-    if (!PyObject_IsInstance(args, (PyObject*)&SmthType)){
+    if (!is_Something(args)){
       throw TypeError(type_name(obj), n);
     }
-    smthObject* smth = (smthObject*)(args);
-    obj = BoundObject<Object>(smth->ctx, smth->canvas, smth->obj, smth->frameId);
+    obj = Something_as_BoundObject(args);
     return true;
   }
 
   scoped_ref ref(PySequence_GetItem(args, n));
-  if (!PyObject_IsInstance(ref.get(), (PyObject*)&SmthType)){
+  if (!is_Something(ref.get())){
     throw TypeError(arg_traits<Object>::name, n);
   }
 
-  smthObject* smth = (smthObject*)(ref.get());
-  obj = BoundObject<Object>(smth->ctx, smth->canvas, smth->obj, smth->frameId);
+  obj = Something_as_BoundObject(ref.get());
   return true;
 }
 

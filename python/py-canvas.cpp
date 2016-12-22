@@ -550,11 +550,11 @@ static PyObject* canvas_Group(CanvasT bc, PyObject* args){
   objects_t faintObjects;
   for (int i = 0; i != n; i++){
     PyObject* object = PySequence_GetItem(sequence, i);
-    if (!PyObject_IsInstance(object, (PyObject*)&SmthType)){
+    if (!is_Something(object)){
       PyErr_SetString(PyExc_TypeError, "Unsupported item in list");
       return nullptr;
     }
-    faintObjects.push_back(((smthObject*)object)->obj);
+    faintObjects.push_back(Something_as_Object(object));
   }
 
   Canvas& canvas = bc.item;

@@ -56,7 +56,7 @@ static void add_compatibility_types(PyObject* module){
   // possible to instantiate them in the extension.
   add_type_Canvas(module);
   add_type_Frame(module);
-  add_type_object(module, SmthType, "_Something");
+  add_type_Something(module);
 }
 
 static PyObject* init_extension_module(){

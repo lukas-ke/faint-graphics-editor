@@ -53,12 +53,11 @@ static void add_faint_types(PyObject* module){
   add_type_Pattern(module);
   add_type_Settings(module);
   add_type_Shape(module);
+  add_type_Something(module);
   add_type_Tri(module);
 
   add_gradient_types(module);
   add_image_props_types(module);
-
-  add_type_object(module, SmthType, "Something");
 
   PyObject* binds = PyDict_New();
   PyModule_AddObject(module, "_binds", binds);
