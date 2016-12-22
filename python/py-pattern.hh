@@ -20,14 +20,10 @@ namespace faint{
 
 class Pattern;
 
-extern PyTypeObject PatternType;
-
-struct patternObject{
-  PyObject_HEAD
-  Pattern* pattern;
-};
-
 void add_type_Pattern(PyObject* module);
+Pattern* as_Pattern(PyObject*);
+bool is_Pattern(PyObject*);
+PyObject* pythoned(const Pattern&);
 
 } // namespace
 

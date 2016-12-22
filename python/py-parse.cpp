@@ -104,10 +104,7 @@ static PyObject* build_gradient(const Gradient& gradient){
 }
 
 static PyObject* build_pattern(const Pattern& pattern){
-  patternObject* py_pattern =
-    (patternObject*)PatternType.tp_alloc(&PatternType, 0);
-  py_pattern->pattern = new Pattern(pattern);
-  return (PyObject*)py_pattern;
+  return pythoned(pattern);
 }
 
 static PyObject* build_color(const Color& color){
@@ -639,15 +636,6 @@ bool parse_flat(Rect& r, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   r.w = w;
   r.h = h;
   return true;
-}
-
-static Pattern* as_Pattern(PyObject* obj){
-  if (!PyObject_IsInstance(obj, (PyObject*)&PatternType)){
-    PyErr_SetString(PyExc_TypeError, "The argument must be a Pattern object");
-    return nullptr;
-  }
-  patternObject* pyPattern = (patternObject*)(obj);
-  return pyPattern->pattern;
 }
 
 static Optional<Gradient> as_Gradient(PyObject* obj){

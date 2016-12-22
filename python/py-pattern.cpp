@@ -24,6 +24,13 @@
 
 namespace faint{
 
+extern PyTypeObject PatternType;
+
+struct patternObject{
+  PyObject_HEAD
+  Pattern* pattern;
+};
+
 template<>
 struct MappedType<Pattern&>{
   using PYTHON_TYPE = patternObject;
@@ -169,5 +176,27 @@ PyTypeObject PatternType = {
 void add_type_Pattern(PyObject* module){
   add_type_object(module, PatternType, "Pattern");
 }
+
+PyObject* pythoned(const Pattern& pattern){
+  patternObject* py_pattern =
+    (patternObject*)PatternType.tp_alloc(&PatternType, 0);
+  py_pattern->pattern = new Pattern(pattern);
+  return (PyObject*)py_pattern;
+}
+
+bool is_Pattern(PyObject* o){
+  return PyObject_IsInstance(o, (PyObject*)&PatternType) == 1;
+}
+
+Pattern* as_Pattern(PyObject* o){
+  if (!is_Pattern(o)){
+    // Fixme: Not here
+    PyErr_SetString(PyExc_TypeError, "The argument must be a Pattern object");
+    return nullptr;
+  }
+  patternObject* pyPattern = (patternObject*)(o);
+  return pyPattern->pattern;
+}
+
 
 } // namespace
