@@ -22,6 +22,13 @@
 
 namespace faint{
 
+extern PyTypeObject TriType;
+
+struct triObject{
+  PyObject_HEAD
+  Tri tri;
+};
+
 template<>
 struct MappedType<Tri&>{
   using PYTHON_TYPE = triObject;
@@ -230,7 +237,15 @@ PyObject* pythoned(const Tri& tri){
 
 void add_type_Tri(PyObject* module){
   add_type_object(module, TriType, "Tri");
+}
 
+Tri& as_Tri(PyObject* o){
+  auto* pyTri = (triObject*)o;
+  return pyTri->tri;
+}
+
+bool is_Tri(PyObject* o){
+  return PyObject_IsInstance(o, (PyObject*)&TriType) == 1;
 }
 
 } // namespace

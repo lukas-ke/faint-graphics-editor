@@ -511,19 +511,21 @@ bool parse_flat(IntRect& r, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
 
 bool parse_flat(Tri& tri, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 1, "Tri");
-  if (PyObject_IsInstance(args, (PyObject*)&TriType)){
-    tri = ((triObject*)args)->tri;
+  if (is_Tri(args)){
+    tri = as_Tri(args);
     return true;
   }
 
   scoped_ref ref(PySequence_GetItem(args, n));
-  if (!PyObject_IsInstance(ref.get(), (PyObject*)&TriType)){
+  if (!is_Tri(ref.get())){
     throw TypeError(type_name(tri), n);
   }
-  if (!valid(((triObject*)(ref.get()))->tri)){
+
+  Tri t = as_Tri(ref.get());
+  if (!valid(t)){
     throw ValueError("Invalid Tri.");
   }
-  tri = ((triObject*)(ref.get()))->tri;
+  tri = t;
   n += 1;
   return true;
 }

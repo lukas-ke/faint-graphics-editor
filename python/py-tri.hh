@@ -19,15 +19,9 @@
 
 namespace faint{
 
-extern PyTypeObject TriType;
-
-struct triObject{
-  PyObject_HEAD
-  Tri tri;
-};
-
 void add_type_Tri(PyObject* module);
-
+Tri& as_Tri(PyObject*);
+bool is_Tri(PyObject*);
 PyObject* pythoned(const Tri&);
 
 } // namespace
