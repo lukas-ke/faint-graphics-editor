@@ -301,16 +301,15 @@ bool parse_flat(Canvas*& canvas, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 1, "Canvas");
 
   scoped_ref ref(PySequence_GetItem(args, n));
-  if (!PyObject_IsInstance(ref.get(), (PyObject*)&CanvasType)){
+  if (!is_Canvas(ref.get())){
     throw TypeError(arg_traits<Canvas>::name, n);
   }
 
-  canvasObject* pyCanvas = (canvasObject*)(ref.get());
-  if (!canvas_ok(pyCanvas->id, *pyCanvas->ctx)){
+  if (!canvas_ok(ref.get())){
     throw ValueError("Operation on closed canvas.");
   }
   n += 1;
-  canvas = pyCanvas->canvas;
+  canvas = get_Canvas(ref.get());
   return true;
 }
 

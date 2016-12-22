@@ -25,18 +25,13 @@ class PyFuncContext;
 class Canvas;
 class IntPoint;
 
-extern PyTypeObject CanvasType;
-
-struct canvasObject{
-  PyObject_HEAD
-  PyFuncContext* ctx;
-  Canvas* canvas;
-  CanvasId id;
-};
-
+void add_type_Canvas(PyObject* module);
+bool canvas_ok(PyObject*);
 bool canvas_ok(const CanvasId&, PyFuncContext&);
-PyObject* pythoned(Canvas&, PyFuncContext&);
 bool contains_pos(const Canvas&, const IntPoint&);
+Canvas* get_Canvas(PyObject*);
+bool is_Canvas(PyObject*);
+PyObject* pythoned(Canvas&, PyFuncContext&);
 
 } // namespace
 

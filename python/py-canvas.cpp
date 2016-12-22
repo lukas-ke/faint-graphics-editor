@@ -61,6 +61,7 @@
 #include "util/visit-selection.hh"
 #include "python/bound-object.hh"
 #include "python/python-context.hh"
+#include "python/py-add-type-object.hh"
 #include "python/py-canvas.hh"
 #include "python/py-common.hh"
 #include "python/py-func-context.hh"
@@ -72,6 +73,15 @@
 #include "python/py-util.hh"
 
 namespace faint{
+
+extern PyTypeObject CanvasType;
+
+struct canvasObject{
+  PyObject_HEAD
+  PyFuncContext* ctx;
+  Canvas* canvas;
+  CanvasId id;
+};
 
 using CanvasT = const Bound<Canvas>&;
 
@@ -1264,6 +1274,24 @@ PyObject* pythoned(Canvas& canvas, PyFuncContext& ctx){
   py_canvas->canvas = &canvas;
   py_canvas->id = py_canvas->canvas->GetId();
   return (PyObject*) py_canvas;
+}
+
+void add_type_Canvas(PyObject* module){
+  add_type_object(module, CanvasType, "Canvas");
+}
+
+bool is_Canvas(PyObject* object){
+  return PyObject_IsInstance(object, (PyObject*)&CanvasType) == 1;
+}
+
+bool canvas_ok(PyObject* o){
+  auto* c = (canvasObject*)(o);
+  return canvas_ok(c->id, *c->ctx);
+}
+
+Canvas* get_Canvas(PyObject* o){
+  auto* c = (canvasObject*)(o);
+  return c->canvas;
 }
 
 } // namespace
