@@ -24,6 +24,7 @@
 #include "util/image.hh"
 #include "util/object-util.hh"
 #include "util/setting-util.hh"
+#include "python/py-add-type-object.hh"
 #include "python/py-include.hh"
 #include "python/py-canvas.hh"
 #include "python/py-common.hh"
@@ -36,13 +37,25 @@
 
 namespace faint{
 
-bool expired(frameObject* self){
+struct frameObject {
+  PyObject_HEAD
+  Canvas* canvas;
+  PyFuncContext* ctx;
+  CanvasId canvasId;
+  FrameId frameId;
+};
+
+static bool expired(frameObject* self){
   if (canvas_ok(self->canvasId, *self->ctx) && self->canvas->Has(self->frameId)){
     return false;
   }
   PyErr_SetString(PyExc_ValueError,
     "That frame is removed."); // Fixme: really do this?
   return true;
+}
+
+bool expired_Frame(PyObject* frame){
+  return expired((frameObject*)frame);
 }
 
 template<>
@@ -258,5 +271,30 @@ PyTypeObject FrameType = {
   0, // tp_version_tag
   nullptr  // tp_finalize
 };
+
+void add_type_Frame(PyObject* module){
+  add_type_object(module, FrameType, "Frame");
+}
+
+PyObject* build_Frame(PyFuncContext& ctx,
+  Canvas& canvas,
+  const FrameId& frameId)
+{
+  frameObject* py_frame = (frameObject*)(FrameType.tp_alloc(&FrameType, 0));
+  py_frame->ctx = &ctx;
+  py_frame->canvas = &canvas;
+  py_frame->canvasId = canvas.GetId();
+  py_frame->frameId = frameId;
+  return (PyObject*)py_frame;
+}
+
+bool is_Frame(PyObject* o){
+  return PyObject_IsInstance(o, (PyObject*)&FrameType) == 1;
+}
+
+const Image* get_Frame(PyObject* o){
+  auto* pyFrame = (frameObject*)(o);
+  return &pyFrame->canvas->GetFrame(pyFrame->frameId);
+}
 
 } // namespace

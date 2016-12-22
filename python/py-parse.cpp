@@ -84,18 +84,6 @@ TypeName type_name(T*&){
   return arg_traits<T>::name;
 }
 
-static PyObject* build_frame(PyFuncContext& ctx,
-  Canvas& canvas,
-  const FrameId& frameId)
-{
-  frameObject* py_frame = (frameObject*)(FrameType.tp_alloc(&FrameType, 0));
-  py_frame->ctx = &ctx;
-  py_frame->canvas = &canvas;
-  py_frame->canvasId = canvas.GetId();
-  py_frame->frameId = frameId;
-  return (PyObject*)py_frame;
-}
-
 static PyObject* build_gradient(const Gradient& gradient){
   if (gradient.IsLinear()){
     linearGradientObject* py_gradient =
@@ -395,15 +383,14 @@ bool parse_flat(const Image*& image,
   throw_insufficient_args_if(len - n < 1, "Canvas");
 
   scoped_ref ref(PySequence_GetItem(args, n));
-  if (!PyObject_IsInstance(ref.get(), (PyObject*)&FrameType)){
+  if (!is_Frame(ref.get())){
     throw TypeError(type_name(image), n);
   }
 
-  frameObject* pyFrame = (frameObject*)(ref.get());
-  if (expired(pyFrame)){
+  if (expired_Frame(ref.get())){
     throw ValueError("Operation on closed Frame.");
   }
-  image = &(pyFrame->canvas->GetFrame(pyFrame->frameId));
+  image = get_Frame(ref.get());
   return true;
 }
 
@@ -1033,7 +1020,7 @@ PyObject* build_result(const FilePath& filePath){
 }
 
 PyObject* build_result(const Frame& frame){
-  return build_frame(frame.ctx, frame.canvas, frame.frameId);
+  return build_Frame(frame.ctx, frame.canvas, frame.frameId);
 }
 
 PyObject* build_result(const Index& index){

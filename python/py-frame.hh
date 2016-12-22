@@ -20,20 +20,15 @@
 namespace faint{
 
 class Canvas;
+class Image;
 class PyFuncContext;
 
-// Python-interface to one frame in a Canvas
-extern PyTypeObject FrameType;
+void add_type_Frame(PyObject* module);
 
-struct frameObject {
-  PyObject_HEAD
-  Canvas* canvas;
-  PyFuncContext* ctx;
-  CanvasId canvasId;
-  FrameId frameId;
-};
-
-bool expired(frameObject*);
+PyObject* build_Frame(PyFuncContext&, Canvas&, const FrameId&);
+bool expired_Frame(PyObject*);
+const Image* get_Frame(PyObject*);
+bool is_Frame(PyObject*);
 
 } // namespace
 

@@ -54,9 +54,8 @@ static void add_compatibility_types(PyObject* module){
   //
   // Since they raise exceptions in their tp_init, it won't be
   // possible to instantiate them in the extension.
-  add_type_object(module, CanvasType, "_Canvas");
-  add_type_object(module, FrameType, "_Frame");
-
+  add_type_Canvas(module);
+  add_type_Frame(module);
   add_type_object(module, SmthType, "_Something");
 }
 
