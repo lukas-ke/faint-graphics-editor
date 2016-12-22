@@ -859,11 +859,11 @@ bool parse_flat(Settings& s, PyObject* args, Py_ssize_t& n, Py_ssize_t len){
   throw_insufficient_args_if(len - n < 1, "Settings");
 
   scoped_ref ref(PySequence_GetItem(args, n));
-  if (!PyObject_IsInstance(ref.get(), (PyObject*)&SettingsType)){
+  if (!is_Settings(ref.get())){
     throw TypeError(type_name(s), n);
   }
 
-  s = *(((settingsObject*)(ref.get()))->settings);
+  s = *as_Settings(ref.get());
   n += 1;
   return true;
 }

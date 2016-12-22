@@ -27,6 +27,15 @@
 
 namespace faint{
 
+class Settings;
+
+extern PyTypeObject SettingsType;
+
+struct settingsObject{
+  PyObject_HEAD
+  Settings* settings;
+};
+
 template<>
 struct MappedType<Settings&>{
   using PYTHON_TYPE = settingsObject;
@@ -197,4 +206,14 @@ PyObject* pythoned(const Settings& s){
 void add_type_Settings(PyObject* module){
   add_type_object(module, SettingsType, "Settings");
 }
+
+Settings* as_Settings(PyObject* o){
+  auto* pySettings = (settingsObject*)(o);
+  return pySettings->settings;
+}
+
+bool is_Settings(PyObject* o){
+  return PyObject_IsInstance(o, (PyObject*)&SettingsType) == 1;
+}
+
 } // namespace

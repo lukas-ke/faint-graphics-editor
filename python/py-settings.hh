@@ -21,16 +21,10 @@ namespace faint{
 
 class Settings;
 
-extern PyTypeObject SettingsType;
-
-struct settingsObject{
-  PyObject_HEAD
-  Settings* settings;
-};
-
 void add_type_Settings(PyObject* module);
-
+bool is_Settings(PyObject*);
 PyObject* pythoned(const Settings&);
+Settings* as_Settings(PyObject*);
 
 } // namespace
 
