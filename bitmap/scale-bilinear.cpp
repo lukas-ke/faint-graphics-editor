@@ -18,7 +18,6 @@
 #include "bitmap/scale-bilinear.hh"
 #include "geo/axis.hh" // For flip
 #include "geo/geo-func.hh"
-#include "geo/range.hh" // constrained
 
 namespace faint{
 

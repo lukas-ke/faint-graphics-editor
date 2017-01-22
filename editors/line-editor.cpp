@@ -15,7 +15,7 @@
 
 #include "app/canvas.hh" // For GetObjects(), GetGrid()
 #include "editors/line-editor.hh"
-#include "geo/adjust.hh" // line_constrain
+#include "geo/adjust.hh"
 #include "geo/geo-func.hh"
 #include "geo/int-rect.hh"
 #include "geo/measure.hh"
