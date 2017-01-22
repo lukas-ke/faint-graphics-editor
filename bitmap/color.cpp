@@ -17,8 +17,16 @@
 #include <cassert>
 #include <cmath> // fabs
 #include "bitmap/color.hh"
+#include "geo/typed-range.hh"
 
 namespace faint{
+
+static const auto colorRange = TypedRange<uchar>(0, 255);
+
+template<typename T>
+static uchar constrain_color(T v){
+  return colorRange.Constrain(v);
+}
 
 bool ColRGB::operator==(const ColRGB& other) const{
   return r == other.r &&
@@ -61,13 +69,13 @@ HSL::HSL(const HS& hueSat, double l)
 {}
 
 HS HSL::GetHS() const{
-  return HS(h,s);
+  return {h,s};
 }
 
 static ColRGB rgb_from_hash(unsigned int h){
-  unsigned char r = static_cast<unsigned char>((h >> 16) & 0xff);
-  unsigned char g = static_cast<unsigned char>((h >> 8) & 0xff);
-  unsigned char b = static_cast<unsigned char>((h) & 0xff);
+  auto r = static_cast<uchar>((h >> 16) & 0xff);
+  auto g = static_cast<uchar>((h >> 8) & 0xff);
+  auto b = static_cast<uchar>((h) & 0xff);
   return {r,g,b};
 }
 
@@ -96,27 +104,15 @@ ColRGB invert(const ColRGB& c){
   uchar r = static_cast<uchar>(255 - c.r);
   uchar g = static_cast<uchar>(255 - c.g);
   uchar b = static_cast<uchar>(255 - c.b);
-  return ColRGB(r,g,b);
+  return {r,g,b};
 }
 
-int constrained(int lower, int value, int upper){
-  return std::min(std::max(lower, value), upper);
-}
-
-uint constrained_u(uint lower, uint value, uint upper){
-  return std::min(std::max(lower, value), upper);
-}
-
-double constrained(double lower, double value, double upper){
-  return std::min(std::max(lower, value), upper);
-}
-
-Color color_from_ints(int ir, int ig, int ib, int ia){
-  uchar r = static_cast<uchar>(constrained(0,ir,255));
-  uchar g = static_cast<uchar>(constrained(0,ig,255));
-  uchar b = static_cast<uchar>(constrained(0,ib,255));
-  uchar a = static_cast<uchar>(constrained(0,ia,255));
-  return Color(r,g,b,a);
+Color color_from_ints(int r, int g, int b, int a){
+  return {
+    constrain_color(r),
+    constrain_color(g),
+    constrain_color(b),
+    constrain_color(a)};
 }
 
 ColRGB grayscale_rgb(int lightness){
@@ -127,32 +123,30 @@ Color grayscale_rgba(int lightness, int alpha){
   return color_from_ints(lightness, lightness, lightness, alpha);
 }
 
-ColRGB rgb_from_ints(int ir, int ig, int ib){
-  uchar r = static_cast<uchar>(constrained(0,ir,255));
-  uchar g = static_cast<uchar>(constrained(0,ig,255));
-  uchar b = static_cast<uchar>(constrained(0,ib,255));
-  return ColRGB(r,g,b);
+ColRGB rgb_from_ints(int r, int g, int b){
+  return {constrain_color(r), constrain_color(g), constrain_color(b)};
 }
 
-Color color_from_uints(uint ir, uint ig, uint ib, uint ia){
-  uchar r = static_cast<uchar>(constrained_u(0,ir,255));
-  uchar g = static_cast<uchar>(constrained_u(0,ig,255));
-  uchar b = static_cast<uchar>(constrained_u(0,ib,255));
-  uchar a = static_cast<uchar>(constrained_u(0,ia,255));
-  return Color(r,g,b,a);
+Color color_from_uints(uint r, uint g, uint b, uint a){
+  return {
+    constrain_color(r),
+    constrain_color(g),
+    constrain_color(b),
+    constrain_color(a)};
 }
 
 Color color_from_double(double r, double g, double b, double a){
-  return Color(static_cast<uchar>(constrained(0.0, r, 255.0)),
-    static_cast<uchar>(constrained(0.0, g, 255.0)),
-    static_cast<uchar>(constrained(0.0, b, 255.0)),
-    static_cast<uchar>(constrained(0.0, a, 255.0)));
+  return {constrain_color(r),
+    constrain_color(g),
+    constrain_color(b),
+    constrain_color(a)};
 }
 
 ColRGB rgb_from_double(double r, double g, double b){
-  return ColRGB(static_cast<uchar>(constrained(0.0, r, 255.0)),
-    static_cast<uchar>(constrained(0.0, g, 255.0)),
-    static_cast<uchar>(constrained(0.0, b, 255.0)));
+  return {
+    constrain_color(r),
+    constrain_color(g),
+    constrain_color(b)};
 }
 
 bool opaque(const Color& c){
@@ -168,10 +162,7 @@ bool translucent(const Color& c){
 }
 
 bool valid_color(int r, int g, int b, int a){
-  return 0 <= r && r <= 255 &&
-    0 <= g && g <= 255 &&
-    0 <= b && b <= 255 &&
-    0 <= a && a <= 255;
+  return has_all(colorRange, r, g, b, a);
 }
 
 bool valid_color(int r, int g, int b){
@@ -277,7 +268,7 @@ ColRGB to_rgb(const HSL& c){
 
 Color to_rgba(const HSL& hsl, int a){
   return Color(to_rgb(hsl),
-    static_cast<uchar>(constrained(0,a,255)));
+    constrain_color(a));
 }
 
 Color subtract(const Color& lhs, const Color& rhs){
@@ -310,10 +301,10 @@ unsigned int to_hash(const Color& c){
 }
 
 Color color_from_hash(unsigned int h){
-  unsigned char r = static_cast<unsigned char>((h >> 24) & 0xff);
-  unsigned char g = static_cast<unsigned char>((h >> 16) & 0xff);
-  unsigned char b = static_cast<unsigned char>((h >> 8) & 0xff);
-  unsigned char a = static_cast<unsigned char>((h & 0xff));
+  auto r = static_cast<uchar>((h >> 24) & 0xff);
+  auto g = static_cast<uchar>((h >> 16) & 0xff);
+  auto b = static_cast<uchar>((h >> 8) & 0xff);
+  auto a = static_cast<uchar>((h & 0xff));
   return Color(r,g,b,a);
 }
 

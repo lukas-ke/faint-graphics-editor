@@ -78,4 +78,6 @@ void test_color(){
     Color(100, 170, 193, 42));
 
   EQUAL(color_from_hex(0x001122), Color(0x00, 0x11, 0x22));
+
+  EQUAL(color_from_double(10.5, 100.2, 1000.5), Color(10, 100, 255));
 }
