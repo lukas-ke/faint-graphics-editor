@@ -23,6 +23,11 @@ namespace faint{
 
 static const auto colorRange = TypedRange<uchar>(0, 255);
 
+static uchar invert_color(uchar v){
+  // gcc 4.8.1 with -Wconversion insisted on this cast.
+  return static_cast<uchar>(255 - v);
+}
+
 template<typename T>
 static uchar constrain_color(T v){
   return colorRange.Constrain(v);
@@ -90,9 +95,12 @@ bool ColRGB::operator<(const ColRGB& c2) const{
 }
 
 ColRGB blend_alpha(const Color& color, const ColRGB& bg){
-  return rgb_from_ints((color.r * color.a + bg.r * (255 - color.a)) / 255,
-    (color.g * color.a + bg.g * (255 - color.a)) / 255,
-    (color.b * color.a + bg.b * (255 - color.a)) / 255);
+  const auto a = color.a;
+  const auto ia = invert_color(a);
+  return rgb_from_ints(
+    (color.r * a + bg.r * ia) / 255,
+    (color.g * a + bg.g * ia) / 255,
+    (color.b * a + bg.b * ia) / 255);
 }
 
 ColRGB strip_alpha(const Color& color){
@@ -100,11 +108,7 @@ ColRGB strip_alpha(const Color& color){
 }
 
 ColRGB invert(const ColRGB& c){
-  // gcc 4.8.1 with -Wconversion insisted on these casts.
-  uchar r = static_cast<uchar>(255 - c.r);
-  uchar g = static_cast<uchar>(255 - c.g);
-  uchar b = static_cast<uchar>(255 - c.b);
-  return {r,g,b};
+  return {invert_color(c.r), invert_color(c.g), invert_color(c.b)};
 }
 
 Color color_from_ints(int r, int g, int b, int a){
