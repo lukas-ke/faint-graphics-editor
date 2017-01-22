@@ -331,4 +331,11 @@ ColRGB next_color(const ColRGB& c){
     rgb_from_hash(h + 1);
 }
 
+Color color_from_hex(unsigned int v){
+  auto r = (v >> 16) & 0xff;
+  auto g = (v >> 8) & 0xff;
+  auto b = v & 0xff;
+  return color_from_ints(r, g, b);
+}
+
 } // namespace

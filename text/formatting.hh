@@ -78,7 +78,6 @@ utf8_string str_line_status_subpixel(const LineSegment&);
 utf8_string str_percentage(int numerator, int denominator);
 utf8_string str_range(const ClosedIntRange&);
 
-
 utf8_string str_rgb(const Color&);
 utf8_string str_rgba(const Color&);
 

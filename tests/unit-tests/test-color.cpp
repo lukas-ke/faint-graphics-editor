@@ -76,4 +76,6 @@ void test_color(){
 
   EQUAL(color_from_hash(to_hash(Color(100, 170, 193, 42))),
     Color(100, 170, 193, 42));
+
+  EQUAL(color_from_hex(0x001122), Color(0x00, 0x11, 0x22));
 }

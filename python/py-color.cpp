@@ -55,6 +55,14 @@ static void Color_init(colorObject& self, PyObject* args){
   if (len == 0){
     self.color = color_black;
   }
+  else if (len == 1){
+    // Hex
+    int v;
+    if (!PyArg_ParseTuple(args, "i", &v)){
+      throw TypeError(space_sep("Expected hex value"));
+    }
+    self.color = color_from_hex(v);
+  }
   else if (len == 3){
     int r, g, b;
     if (!PyArg_ParseTuple(args, "iii", &r, &g, &b)){
@@ -95,6 +103,24 @@ Used by Python copy.copy"
 name: "__copy__" */
 static Color Color_copy(Color& c){
   return c;
+}
+
+/* method: "str_hex()\n
+ Color value as hex string" */
+static utf8_string Color_str_hex(Color& c){
+  return str_hex(c);
+}
+
+/* method: "str_rgb()\n
+ Color value as rgb string" */
+static utf8_string Color_str_rgb(Color& c){
+  return str_rgb(c);
+}
+
+/* method: "str_rgba()\n
+ Color value as rgba string" */
+static utf8_string Color_str_rgba(Color& c){
+  return str_rgba(c);
 }
 
 PyObject* Color_richcompare(colorObject* self, PyObject* otherRaw, int op){
