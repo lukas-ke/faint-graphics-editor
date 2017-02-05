@@ -1143,6 +1143,19 @@ struct canvas_command_name{
   }
 };
 
+/* property: "Canvas size" */
+struct canvas_size{
+  static IntSize Get(CanvasT self){
+    return self.item.GetSize();
+  }
+
+  static void Set(CanvasT self, const IntSize& size){
+    const auto bg = self.item.GetTool().GetSettings().Get(ts_Bg);
+    self.ctx.RunCommand(self.item,
+      resize_command(rect_from_size(size), bg));
+  }
+};
+
 // Python standard methods follow...
 static PyObject* canvas_new(PyTypeObject* type, PyObject*, PyObject*){
   canvasObject *self;

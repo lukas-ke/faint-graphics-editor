@@ -44,9 +44,10 @@ inline size_t data_length(int stride, int height){
     if (stride == -1){
       // cairo_format_stride_for_width returns -1 if "the format is invalid
       // or the width too large".
-      throw BitmapException("Invalid stride (-1)");
+      throw BitmapStrideError("Invalid stride (-1)");
     }
-    throw BitmapException(stride == 0 ? "Invalid stride (0)" : "Negative stride");
+    throw BitmapStrideError(stride == 0 ? "Invalid stride (0)"
+      : "Negative stride");
   }
 
   return multiply(to_size_t(stride), to_size_t(height));

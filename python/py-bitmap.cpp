@@ -40,6 +40,22 @@
 
 namespace faint{
 
+template<typename FUNC>
+auto bmp_exception_to_py(FUNC&& func){
+  try{
+    return func();
+  }
+  catch (const BitmapOutOfMemory&){
+    throw MemoryError("Failed allocating memory for Bitmap");
+  }
+  catch (const BitmapStrideError&){
+    throw MemoryError("Failed initializing bitmap stride (width too large?)");
+  }
+  catch (const BitmapException& e){
+    throw MemoryError(space_sep("Bitmap error:", e.what()));
+  }
+}
+
 template<>
 struct MappedType<Bitmap&>{
   using PYTHON_TYPE = bitmapObject;
@@ -65,12 +81,12 @@ static void Bitmap_init(bitmapObject& self,
   const IntSize& size,
   const Optional<Paint>& bg)
 {
-  try{
+  bmp_exception_to_py([&](){
+    if (size.w <= 0 || size.h <= 0){
+      throw ValueError("Negative size");
+    }
     self.bmp = Bitmap(size, bg.Or(Paint(color_white)));
-  }
-  catch (const BitmapOutOfMemory&){
-    throw MemoryError("Failed allocating memory for Bitmap");
-  }
+  });
 }
 
 static utf8_string Bitmap_repr(Bitmap&){
@@ -367,6 +383,23 @@ void Common_set_threshold(Bitmap& bmp, const std::pair<double, double>& range,
 
 /* extra_include: "generated/python/method-def/py-common-method-def.hh" */
 
+/* property: "Bitmap size" */
+struct bitmap_size{
+  static IntSize Get(Bitmap& self){
+    return self.GetSize();
+  }
+
+  static void Set(Bitmap& self, const IntSize& size){
+    bmp_exception_to_py(
+      [&](){
+        Bitmap temp(size, color_white);
+        blit(at_top_left(self), onto(temp));
+        self = temp;
+      });
+  }
+};
+
+
 #include "generated/python/method-def/py-bitmap-method-def.hh"
 
 PyTypeObject BitmapType = {
@@ -400,7 +433,7 @@ PyTypeObject BitmapType = {
   nullptr, // tp_iternext
   bitmap_methods, // tp_methods
   nullptr, // tp_members
-  nullptr, // tp_getset
+  bitmap_getseters, // tp_getset
   nullptr, // tp_base
   nullptr, // tp_dict
   nullptr, // tp_descr_get

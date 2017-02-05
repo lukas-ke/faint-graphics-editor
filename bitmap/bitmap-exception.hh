@@ -25,6 +25,12 @@ public:
   BitmapException() = delete;
 };
 
+class BitmapStrideError : public BitmapException{
+public:
+  using BitmapException::BitmapException;
+  BitmapStrideError() = delete;
+};
+
 class BitmapOutOfMemory : public BitmapException{
   using BitmapException::BitmapException;
   BitmapOutOfMemory() = delete;
