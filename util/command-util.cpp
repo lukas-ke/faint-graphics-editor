@@ -806,10 +806,18 @@ CommandPtr get_offset_raster_selection_command(const Image& image,
       assert(false);
       return nullptr;
     },
-    [&](const sel::Rectangle& s){
+    [&](const sel::Rectangle& s) -> CommandPtr{
+      // Clip selection to image (the non-floating rectangle could extend
+      // outside the image)
+      const auto clippedRect = intersection(image_rect(image), s.Rect());
+      if (empty(clippedRect)){
+        return nullptr;
+      }
+
       // Begin floating, and offset
-      SelectionState newState(subbitmap(image, s.Rect()),
-        s.TopLeft() + delta, s.Rect());
+      SelectionState newState(subbitmap(image, clippedRect),
+        clippedRect.TopLeft() + delta,
+        s.Rect());
 
       return command_bunch(CommandType::HYBRID,
         bunch_name("Offset Raster Selection"),
