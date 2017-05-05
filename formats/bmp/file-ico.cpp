@@ -158,6 +158,25 @@ auto get_read_pixeldata_func(const Index num, int bitsPerPixel)
       return masked(bmp, andMask.Get());
     };
   }
+  else if (bitsPerPixel == 24){
+    return [](BinaryReader& in, const IntSize& bitmapSize) -> Optional<Bitmap>{
+      auto xorMask = read_24bipp_BI_RGB(in, bitmapSize);
+      if (xorMask.NotSet()){
+        return {}; // TODO: Error?
+      }
+
+      auto andMask = read_1bipp_BI_RGB(in, bitmapSize);
+      if (andMask.NotSet()){
+        return {}; // TODO: Error?
+      }
+
+      if (andMask.Get().GetSize() != xorMask.Get().GetSize()){
+        return {}; // TODO: Error? Also maybe unnecessary check
+      }
+
+      return masked(xorMask.Get(), andMask.Get());
+    };
+  }
   else if (bitsPerPixel == 32){
 
     return [](BinaryReader& in, const IntSize& bitmapSize) -> Optional<Bitmap>{
