@@ -20,6 +20,12 @@
 
 namespace faint{
 
+BmpSizeAndOrder get_size_and_order(const BitmapInfoHeader& h){
+  return h.height < 0 ?
+    BmpSizeAndOrder{IntSize(h.width, -h.height), true} :
+    BmpSizeAndOrder{IntSize(h.width, h.height), false};
+}
+
 const char* enum_str(Compression c){
   switch (c){
   case Compression::BI_RGB: return "BI_RGB";

@@ -22,6 +22,7 @@ class AlphaMap;
 class BinaryReader;
 class BinaryWriter;
 class Bitmap;
+class BmpSizeAndOrder;
 class MappedColors;
 
 // Returns the required row-stride for the pixel-data rows with the
@@ -45,11 +46,11 @@ int bmp_row_padding(int w){
   return bmp_row_stride(bitsPerPixel, w) - (w * bitsPerPixel) / 8;
 }
 
-Optional<AlphaMap> read_1bipp_BI_RGB(BinaryReader&, const IntSize&);
-Optional<AlphaMap> read_4bipp_BI_RGB(BinaryReader&, const IntSize&);
-Optional<AlphaMap> read_8bipp_BI_RGB(BinaryReader&, const IntSize&);
-Optional<Bitmap> read_24bipp_BI_RGB(BinaryReader&, const IntSize&);
-Optional<Bitmap> read_32bipp_BI_RGB(BinaryReader&, const IntSize&);
+Optional<AlphaMap> read_1bipp_BI_RGB(BinaryReader&, const BmpSizeAndOrder&);
+Optional<AlphaMap> read_4bipp_BI_RGB(BinaryReader&, const BmpSizeAndOrder&);
+Optional<AlphaMap> read_8bipp_BI_RGB(BinaryReader&, const BmpSizeAndOrder&);
+Optional<Bitmap> read_24bipp_BI_RGB(BinaryReader&, const BmpSizeAndOrder&);
+Optional<Bitmap> read_32bipp_BI_RGB(BinaryReader&, const BmpSizeAndOrder&);
 Optional<ColorList> read_color_table(BinaryReader&, int numColors);
 
 void write_8bipp_BI_RGB(BinaryWriter&, const MappedColors&); // Fixme: Ignores transparent index

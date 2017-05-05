@@ -62,7 +62,7 @@ class BitmapInfoHeader{
 public:
   uint32_t headerLen;
   int32_t width;
-  int32_t height;
+  int32_t height; // Note: Negative height means top-down
   uint16_t colorPlanes;
   uint16_t bitsPerPixel;
   Compression compression;
@@ -72,6 +72,29 @@ public:
   uint32_t paletteColors;
   uint32_t importantColors;
 };
+
+class BmpSizeAndOrder{
+public:
+  // Note: The height of this size shall be positive regardless of
+  // top-down/bottom-up pixel row order.
+  IntSize size;
+
+  // Pixel row order in bitmap images,
+  //
+  // True if top-down - the TOP-left pixel is the first value of
+  // the row with the lowest address.
+  //
+  // False if bottom-up - the BOTTOM-left pixel is the first value
+  // of the row with the lowest address.
+  bool topDown;
+};
+
+// Extract the size of the bitmap and the row order from a BitmapInfoHeader.
+//
+// Note: The size will have positive height regardless of row order
+// (unlike in the BitmapInfoHeader where negative height indicates a
+// top-down bitmap).
+BmpSizeAndOrder get_size_and_order(const BitmapInfoHeader&);
 
 enum class IconType : uint16_t {
   ICO = 1,

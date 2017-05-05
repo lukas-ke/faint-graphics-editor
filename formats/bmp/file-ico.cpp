@@ -108,7 +108,7 @@ static Bitmap masked(const Bitmap& bmp, const AlphaMap& mask){
 
 
 auto get_read_pixeldata_func(const Index num, int bitsPerPixel)
-  -> std::function<Optional<Bitmap>(BinaryReader&, const IntSize&)>
+  -> std::function<Optional<Bitmap>(BinaryReader&, const BmpSizeAndOrder&)>
 {
   // Returns a function for reading pixeldata of the specified
   // bits-per-pixel, or throws ReadBmpError if the bitsPerPixel is
@@ -116,7 +116,7 @@ auto get_read_pixeldata_func(const Index num, int bitsPerPixel)
 
   if (bitsPerPixel == 1){
 
-    return [](BinaryReader& in, const IntSize& size) -> Optional<Bitmap>{
+    return [](BinaryReader& in, const BmpSizeAndOrder& size) -> Optional<Bitmap>{
       auto colorTable = read_color_table(in, 2);
       if (colorTable.NotSet()){
         return {};
@@ -138,7 +138,7 @@ auto get_read_pixeldata_func(const Index num, int bitsPerPixel)
   }
   else if (bitsPerPixel == 4){
 
-    return [](BinaryReader& in, const IntSize& size) -> Optional<Bitmap>{
+    return [](BinaryReader& in, const BmpSizeAndOrder& size) -> Optional<Bitmap>{
       auto colorTable = read_color_table(in, 16);
       if (colorTable.NotSet()){
         return {};
@@ -159,13 +159,13 @@ auto get_read_pixeldata_func(const Index num, int bitsPerPixel)
     };
   }
   else if (bitsPerPixel == 24){
-    return [](BinaryReader& in, const IntSize& bitmapSize) -> Optional<Bitmap>{
-      auto xorMask = read_24bipp_BI_RGB(in, bitmapSize);
+    return [](BinaryReader& in, const BmpSizeAndOrder& bmpSize) -> Optional<Bitmap>{
+      auto xorMask = read_24bipp_BI_RGB(in, bmpSize);
       if (xorMask.NotSet()){
         return {}; // TODO: Error?
       }
 
-      auto andMask = read_1bipp_BI_RGB(in, bitmapSize);
+      auto andMask = read_1bipp_BI_RGB(in, bmpSize);
       if (andMask.NotSet()){
         return {}; // TODO: Error?
       }
@@ -179,11 +179,11 @@ auto get_read_pixeldata_func(const Index num, int bitsPerPixel)
   }
   else if (bitsPerPixel == 32){
 
-    return [](BinaryReader& in, const IntSize& bitmapSize) -> Optional<Bitmap>{
+    return [](BinaryReader& in, const BmpSizeAndOrder& bitmapSize) -> Optional<Bitmap>{
       const int bypp = 4;
       // The size from the bmp-header. May have larger height than the size
       // in the IconDirEntry.
-      int bufLen = area(bitmapSize) * bypp;
+      int bufLen = area(bitmapSize.size) * bypp;
       std::vector<char> pixelData(bufLen);
       in.read(pixelData.data(), bufLen);
       if (!in.good()){
@@ -192,7 +192,7 @@ auto get_read_pixeldata_func(const Index num, int bitsPerPixel)
 
       // The size from the IconDirEntry is the exact amount of pixels
       // this image should have.
-      const IntSize& sz(bitmapSize);
+      const IntSize& sz(bitmapSize.size);
       Bitmap bmp(sz);
       for (int y = 0; y != sz.h; y++){
         for (int x = 0; x != sz.w; x++){
@@ -200,7 +200,9 @@ auto get_read_pixeldata_func(const Index num, int bitsPerPixel)
           uint g = to_uint(pixelData[y * sz.w * bypp + x * bypp + 1]);
           uint r = to_uint(pixelData[y * sz.w * bypp + x * bypp + 2]);
           uint a = to_uint(pixelData[y * sz.w * bypp + x * bypp + 3]);
-          put_pixel_raw(bmp, x, bmp.m_h - y - 1, color_from_uints(r,g,b,a));
+
+          const auto yDst = bitmapSize.topDown ? y : bmp.m_h - y - 1;
+          put_pixel_raw(bmp, x, yDst, color_from_uints(r,g,b,a));
         }
       }
       return std::move(bmp);
@@ -333,9 +335,10 @@ typename BmpType::ResultType read_or_throw(const FilePath& filePath){
         BmpType::type(), Index(i));
       test_bitmap_header(BmpType::type(), Index(i), bmpHeader);
       const IntSize imageSize(get_size(iconDirEntry));
+      const BmpSizeAndOrder bmpSize = {imageSize, false}; // Fixme: Assumption, icons never top down
 
       auto read_pixeldata = get_read_pixeldata_func(i, bmpHeader.bitsPerPixel);
-      auto bmp = or_throw(read_pixeldata(in, imageSize), on_error_image);
+      auto bmp = or_throw(read_pixeldata(in, bmpSize), on_error_image);
       BmpType::add(bitmaps, std::move(bmp), iconDirEntry);
     }
   }

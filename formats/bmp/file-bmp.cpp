@@ -85,7 +85,7 @@ static Bitmap read_bmp_or_throw(const FilePath& filePath){
     throw ReadBmpError(error_color_planes(bitmapInfoHeader.colorPlanes));
   }
 
-  const IntSize bmpSize(bitmapInfoHeader.width, bitmapInfoHeader.height);
+  auto bmpSize = get_size_and_order(bitmapInfoHeader);
 
   if (bitmapInfoHeader.paletteColors != 0){
     if (bitmapInfoHeader.bitsPerPixel != 8){ // Fixme: Maybe support?
@@ -102,13 +102,13 @@ static Bitmap read_bmp_or_throw(const FilePath& filePath){
   }
   else{
     // No palette
-    if (bitmapInfoHeader.bitsPerPixel == 8){
-      // Fixme: could read as gray-scale
-      throw ReadBmpError("Palette missing in 8-bpp bitmap.");
-    }
-
     in.seekg(bitmapFileHeader.dataOffset);
-    if (bitmapInfoHeader.bitsPerPixel == 24){
+    if (bitmapInfoHeader.bitsPerPixel == 8){
+      auto alphaMap = or_throw(read_8bipp_BI_RGB(in, bmpSize),
+        "Failed reading 8-bits-per-pixel data");
+      return bitmap_from_indexed_colors(alphaMap, grayscale_color_table());
+    }
+    else if (bitmapInfoHeader.bitsPerPixel == 24){
       return or_throw(read_24bipp_BI_RGB(in, bmpSize),
         "Failed reading 24-bits-per-pixel data.");
     }

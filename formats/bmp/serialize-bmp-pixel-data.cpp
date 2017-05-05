@@ -15,6 +15,7 @@
 
 #include "bitmap/alpha-map.hh"
 #include "bitmap/bitmap.hh"
+#include "formats/bmp/bmp-types.hh" // For BmpSizeAndOrder
 #include "bitmap/color-list.hh"
 #include "bitmap/quantize.hh"
 #include "formats/bmp/serialize-bmp-pixel-data.hh"
@@ -47,7 +48,10 @@ static void write_color_table(BinaryWriter& out, const ColorList& l){
   }
 }
 
-Optional<AlphaMap> read_1bipp_BI_RGB(BinaryReader& in, const IntSize& size){
+Optional<AlphaMap> read_1bipp_BI_RGB(BinaryReader& in,
+  const BmpSizeAndOrder& bmpSize)
+{
+  const auto& size = bmpSize.size;
   const int rowLength = bmp_row_stride<1>(size.w);
   const int bufferLength = rowLength * size.h;
 
@@ -63,14 +67,17 @@ Optional<AlphaMap> read_1bipp_BI_RGB(BinaryReader& in, const IntSize& size){
       unsigned int value =
         static_cast<unsigned int>(pixelData[rowLength * y + x / 8]);
       unsigned char paletteIndex = (value & (1 << (7 - x % 8))) == 0 ? 0 : 1;
-      alphaMap.Set(x, size.h - y - 1,
-        paletteIndex);
+      const auto yDst = bmpSize.topDown ? y : size.h - y - 1;
+      alphaMap.Set(x, yDst, paletteIndex);
     }
   }
   return option(alphaMap);
 }
 
-Optional<AlphaMap> read_4bipp_BI_RGB(BinaryReader& in, const IntSize& size){
+Optional<AlphaMap> read_4bipp_BI_RGB(BinaryReader& in,
+  const BmpSizeAndOrder& bmpSize)
+{
+  const auto& size = bmpSize.size;
   const int rowLength = bmp_row_stride<4>(size.w);
   const int bufferLength = rowLength * size.h;
 
@@ -89,16 +96,21 @@ Optional<AlphaMap> read_4bipp_BI_RGB(BinaryReader& in, const IntSize& size){
         value <<= 4;
       }
       value &= 0xf;
-      alphaMap.Set(x, size.h - y - 1,
-        static_cast<uchar>(value));
+
+      const auto yDst = bmpSize.topDown ? y : size.h - y - 1;
+      alphaMap.Set(x, yDst, static_cast<uchar>(value));
     }
   }
   return option(alphaMap);
 }
 
-Optional<AlphaMap> read_8bipp_BI_RGB(BinaryReader& in, const IntSize& size){
-  AlphaMap alphaMap(size);
+Optional<AlphaMap> read_8bipp_BI_RGB(BinaryReader& in,
+  const BmpSizeAndOrder& bmpSize)
+{
+  const auto& size = bmpSize.size;
   const int padBytes = bmp_row_padding<8>(size.w);
+  AlphaMap alphaMap(size);
+
   for (int y = 0; y != size.h; y++){
     for (int x = 0; x != size.w; x++){
       // Fixme: Read full rows
@@ -108,14 +120,19 @@ Optional<AlphaMap> read_8bipp_BI_RGB(BinaryReader& in, const IntSize& size){
         return option(alphaMap); // Fixme
         // return {};
       }
-      alphaMap.Set(x, size.h - y - 1, static_cast<unsigned char>(v));
+
+      const auto yDst = bmpSize.topDown ? y : size.h - y - 1;
+      alphaMap.Set(x, yDst, static_cast<unsigned char>(v));
     }
     in.ignore(padBytes);
   }
   return option(alphaMap);
 }
 
-Optional<Bitmap> read_24bipp_BI_RGB(BinaryReader& in, const IntSize& size){
+Optional<Bitmap> read_24bipp_BI_RGB(BinaryReader& in,
+  const BmpSizeAndOrder& bmpSize)
+{
+  const auto& size = bmpSize.size;
   Bitmap bmp(size);
   const int padBytes = bmp_row_padding<24>(size.w);
   for (int y = 0; y != bmp.m_h; y++){
@@ -126,18 +143,22 @@ Optional<Bitmap> read_24bipp_BI_RGB(BinaryReader& in, const IntSize& size){
       if (!in.good()){
         return {};
       }
-      put_pixel_raw(bmp, x, size.h - y - 1,
+      const auto yDst = bmpSize.topDown ? y : size.h - y - 1;
+      put_pixel_raw(bmp, x, yDst,
         Color(static_cast<unsigned char>(bytes[2]),
-        static_cast<unsigned char>(bytes[1]),
-        static_cast<unsigned char>(bytes[0]),
-        255));
+          static_cast<unsigned char>(bytes[1]),
+          static_cast<unsigned char>(bytes[0]),
+          255));
     }
     in.ignore(padBytes);
   }
   return option(bmp);
 }
 
-Optional<Bitmap> read_32bipp_BI_RGB(BinaryReader& in, const IntSize& size){
+Optional<Bitmap> read_32bipp_BI_RGB(BinaryReader& in,
+  const BmpSizeAndOrder& bmpSize)
+{
+  const auto& size(bmpSize.size);
   Bitmap bmp(size);
   const int padBytes = bmp_row_padding<32>(size.w);
 
@@ -148,7 +169,8 @@ Optional<Bitmap> read_32bipp_BI_RGB(BinaryReader& in, const IntSize& size){
       if (!in.good()){
         return {};
       }
-      put_pixel_raw(bmp, x, size.h - y - 1,
+      const auto yDst = bmpSize.topDown ? y : size.h - y - 1;
+      put_pixel_raw(bmp, x, yDst,
         Color(static_cast<unsigned char>(bytes[3]),
           static_cast<unsigned char>(bytes[2]),
           static_cast<unsigned char>(bytes[1]),
