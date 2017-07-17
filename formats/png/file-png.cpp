@@ -20,6 +20,7 @@
 #include "formats/png/write-libpng.hh"
 #include "geo/limits.hh"
 #include "text/formatting.hh"
+#include <cstdint>
 
 namespace faint{
 
@@ -233,15 +234,28 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
           const auto* row = rows + y * width * PNG_ByPP;
           for (png_uint_32 x = 0; x < width; x++){
             auto i =  y * bmpStride + x * bmpByPP;
-            p[i + faint::iR] = row[x * PNG_ByPP + 1];
-            p[i + faint::iG] = row[x * PNG_ByPP + 3];
-            p[i + faint::iB] = row[x * PNG_ByPP + 5];
-            p[i + faint::iA] = row[x * PNG_ByPP + 7];
+            const std::uint16 r = std::uint16_t(row[x * PNG_ByPP + 0] << 8) |
+              std::uint16_t(row[x * PNG_ByPP + 1]);
+
+            const std::uint16_t g = std::uint16_t(row[x * PNG_ByPP + 2]) << 8  |
+              std::uint16_t(row[x * PNG_ByPP + 3]);
+
+            const std::uint16_t b = std::uint16_t(row[x * PNG_ByPP + 4]) << 8 |
+              std::uint16_t(row[x * PNG_ByPP + 5]);
+
+            const std::uint16_t a = std::uint16_t(row[x * PNG_ByPP + 6]) << 8 |
+              std::uint16_t(row[x * PNG_ByPP + 7]);
+
+            p[i + faint::iR] = r >> 8;
+            p[i + faint::iG] = g >> 8;
+            p[i + faint::iB] = b >> 8;
+            p[i + faint::iA] = a >> 8;
           }
         }
       }
     }
     else if (palettized(colorType)){
+
 
       for (png_uint_32 y = 0; y < height; y++){
         const auto* row = rows + y * width * PNG_ByPP;
