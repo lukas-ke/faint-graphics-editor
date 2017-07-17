@@ -40,6 +40,7 @@ PngReadResult read_with_libpng(const FilePath&,
   png_byte* bitDepth,
   int* bitsPerPixel,
   std::vector<png_color>& palette,
+  std::vector<png_byte>& paletteAlpha,
   std::map<utf8_string, utf8_string>& textChunks);
 
 } // namespace

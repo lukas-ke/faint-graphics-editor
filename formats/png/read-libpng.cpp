@@ -30,6 +30,7 @@ PngReadResult read_with_libpng(const FilePath& path,
   png_byte* bitDepth,
   int* bitsPerPixel,
   std::vector<png_color>& palette,
+  std::vector<png_byte>& paletteAlpha,
   std::map<utf8_string, utf8_string>& textChunks)
 {
   FILE* f = faint_fopen_read_binary(path);
@@ -132,15 +133,29 @@ PngReadResult read_with_libpng(const FilePath& path,
   png_read_image(png_ptr, rowPointers);
   // Fixme: Read post-image-data
   if (*colorType == PNG_COLOR_TYPE_PALETTE){
-    png_color* tempPalette;
-    int numPalette = 0;
-    auto result = png_get_PLTE(png_ptr, info_ptr, &tempPalette, &numPalette);
+    {
+      // Read palette
+      png_color* tempPalette;
+      int numPalette = 0;
+      auto result = png_get_PLTE(png_ptr, info_ptr, &tempPalette, &numPalette);
 
-    if (result != PNG_INFO_PLTE || numPalette == 0){
-      return PngReadResult::ERROR_READ_PALETTE;
+      if (result != PNG_INFO_PLTE || numPalette == 0){
+        return PngReadResult::ERROR_READ_PALETTE;
+      }
+
+      palette.assign(tempPalette, tempPalette + numPalette);
     }
 
-    palette.assign(tempPalette, tempPalette + numPalette);
+
+    if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)){
+      // Read tRNS
+      int num_trans;
+      unsigned char* trans = nullptr;
+      png_color_16* trans_values = nullptr;
+      png_get_tRNS(png_ptr, info_ptr, &trans, &num_trans, &trans_values);
+
+      paletteAlpha.assign(trans, trans + num_trans);
+    }
   }
 
   png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);

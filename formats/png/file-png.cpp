@@ -118,7 +118,7 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
   int pngBitsPerPixel;
   png_tEXt_map textChunks;
   std::vector<png_color> palette;
-
+  std::vector<png_byte> paletteAlpha;
   PngReadResult result = read_with_libpng(path,
     &rows,
     &width,
@@ -127,6 +127,7 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
     &bitDepth,
     &pngBitsPerPixel,
     palette,
+    paletteAlpha,
     textChunks);
   // --
 
@@ -253,11 +254,12 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
           p[i + faint::iR] = color.red;
           p[i + faint::iG] = color.green;
           p[i + faint::iB] = color.blue;
-          p[i + faint::iA] = 255;
+          p[i + faint::iA] = paletteIndex < paletteAlpha.size() ?
+            paletteAlpha[paletteIndex] :
+            255;
         }
       }
     }
-
     free(rows);
     return {Bitmap_and_tEXt(std::move(bmp), std::move(textChunks))};
   }
