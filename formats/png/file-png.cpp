@@ -168,9 +168,9 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
     }
   }
   else if (colorType == PNG_COLOR_TYPE_RGB_ALPHA){
-    if (pngBitsPerPixel != 32 &&
-      pngBitsPerPixel != 24 &&
-      pngBitsPerPixel != 64)
+    if (pngBitsPerPixel != 64 &&
+      pngBitsPerPixel != 32 &&
+      pngBitsPerPixel != 24)
     {
       return {"Unsupported bits-per-pixel: " + str_int(pngBitsPerPixel)};
     }
