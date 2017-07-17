@@ -29,8 +29,7 @@ PngReadResult read_with_libpng(const FilePath& path,
   png_byte* colorType,
   png_byte* bitDepth,
   int* bitsPerPixel,
-  png_color** palette,
-  int* numPalette,
+  std::vector<png_color>& palette,
   std::map<utf8_string, utf8_string>& textChunks)
 {
   FILE* f = faint_fopen_read_binary(path);
@@ -134,17 +133,14 @@ PngReadResult read_with_libpng(const FilePath& path,
   // Fixme: Read post-image-data
   if (*colorType == PNG_COLOR_TYPE_PALETTE){
     png_color* tempPalette;
-    auto result = png_get_PLTE(png_ptr, info_ptr, &tempPalette, numPalette);
-    if (result != PNG_INFO_PLTE){
+    int numPalette = 0;
+    auto result = png_get_PLTE(png_ptr, info_ptr, &tempPalette, &numPalette);
+
+    if (result != PNG_INFO_PLTE || numPalette == 0){
       return PngReadResult::ERROR_READ_PALETTE;
     }
-    *palette = (png_color*) malloc(sizeof(png_color) * PNG_MAX_PALETTE_LENGTH);
-    if (*palette == nullptr){
-      free(*rows);
-      free(*rowPointers);
-      return PngReadResult::ERROR_MALLOC;
-    }
-    memcpy(*palette, tempPalette, *numPalette);
+
+    palette.assign(tempPalette, tempPalette + numPalette);
   }
 
   png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);

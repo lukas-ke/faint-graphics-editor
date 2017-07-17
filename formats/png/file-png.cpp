@@ -117,8 +117,7 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
   png_byte bitDepth;
   int pngBitsPerPixel;
   png_tEXt_map textChunks;
-  png_color* palette = nullptr;
-  int numPalette = 0;
+  std::vector<png_color> palette;
 
   PngReadResult result = read_with_libpng(path,
     &rows,
@@ -127,8 +126,7 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
     &colorType,
     &bitDepth,
     &pngBitsPerPixel,
-    &palette,
-    &numPalette,
+    palette,
     textChunks);
   // --
 
@@ -162,7 +160,6 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
   }
   else if (colorType == PNG_COLOR_TYPE_PALETTE){
     if (pngBitsPerPixel != 8){
-      free(palette);
       return {"Unsupported bits-per-pixel for PNG_COLOR_TYPE_PALETTE; " +
           str_int(pngBitsPerPixel)};
     }
@@ -209,9 +206,9 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
       }
     }
     else if (rgb_or_rgba(colorType)){
+      // Read RGB or RGBA
 
       if (PNG_ByPP == 3 || PNG_ByPP == 4){
-        // Read RGB or RGBA
         for (png_uint_32 y = 0; y < height; y++){
           const auto* row = rows + y * width * PNG_ByPP;
           for (png_uint_32 x = 0; x < width; x++){
@@ -244,11 +241,12 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
       }
     }
     else if (palettized(colorType)){
+
       for (png_uint_32 y = 0; y < height; y++){
         const auto* row = rows + y * width * PNG_ByPP;
 
         for (png_uint_32 x = 0; x < width; x++){
-          auto i =  y * bmpStride + x * bmpByPP;
+          auto i = y * bmpStride + x * bmpByPP;
           auto paletteIndex = row[x * PNG_ByPP]; // PNG_ByPP Should be 1 probably.
           auto color = palette[paletteIndex];
 
@@ -258,7 +256,6 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
           p[i + faint::iA] = 255;
         }
       }
-      free(palette);
     }
 
     free(rows);
