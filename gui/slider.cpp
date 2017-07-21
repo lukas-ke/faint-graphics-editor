@@ -41,48 +41,6 @@ private:
 
 extern const wxEventTypeTag<SliderEvent> EVT_FAINT_SLIDER_CHANGE;
 
-std::unique_ptr<SliderMarker> LineSliderMarker::Clone() const{
-  return std::make_unique<LineSliderMarker>();
-}
-
-void LineSliderMarker::Draw(Bitmap& bmp,
-  SliderDir dir,
-  const IntSize& size,
-  int pos) const
-{
-  auto line = (dir == SliderDir::HORIZONTAL ?
-    IntLineSegment({pos, 1}, {pos, size.h - 2}):
-    IntLineSegment({0, pos}, {size.w - 2, pos}));
-
-  draw_line(bmp, line, solid_1px(color_white));
-}
-
-std::unique_ptr<SliderMarker> BorderedSliderMarker::Clone() const{
-  return std::make_unique<BorderedSliderMarker>();
-}
-
-void BorderedSliderMarker::Draw(Bitmap& bmp,
-  SliderDir dir,
-  const IntSize& size,
-  int pos) const
-{
-  if (dir == SliderDir::HORIZONTAL){
-    draw_vline(bmp, pos, {1, size.h - 2},
-      solid_1px(color_white));
-    draw_rect(bmp, {IntPoint(pos - 1, 1), IntPoint(pos + 1, size.h - 2)},
-      solid_1px(color_dark_shadow_3d()));
-  }
-  else if (dir == SliderDir::VERTICAL){
-    draw_hline(bmp, pos, {1, size.w - 2},
-      solid_1px(color_white));
-    draw_rect(bmp, {IntPoint(1, pos - 1), IntPoint(size.w - 2, pos + 1)},
-      solid_1px(color_dark_shadow_3d()));
-  }
-  else{
-    assert(false);
-  }
-}
-
 Slider::Slider(wxWindow* parent)
   : wxPanel(parent, wxID_ANY)
 {}
@@ -92,13 +50,13 @@ public:
   SliderImpl(wxWindow* parent,
     const BoundedInt& values,
     SliderDir dir,
-    const SliderMarker& marker,
+    std::unique_ptr<SliderMarker> marker,
     const SliderBackground& bg,
     const SliderCursors& cursors)
     : Slider(parent),
       m_background(bg.Clone()),
       m_dir(dir),
-      m_marker(marker.Clone()),
+      m_marker(std::move(marker)),
       m_mouse(this),
       m_range(values.GetRange()),
       m_value(values.GetValue())
@@ -215,26 +173,31 @@ const wxEventTypeTag<SliderEvent> EVT_FAINT_SLIDER_CHANGE(FAINT_SLIDER_CHANGE);
 Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
-  const SliderMarker& marker,
+  std::unique_ptr<SliderMarker> marker,
   const SliderBackground& background,
   const SliderCursors& sliderCursors,
   const IntSize& initialSize,
   const std::function<void()>& onChange)
 {
   return bind(create_slider(parent,
-      values, dir, marker, background, sliderCursors, initialSize),
+      values, dir, std::move(marker), background, sliderCursors, initialSize),
     EVT_FAINT_SLIDER_CHANGE, std::move(onChange));
 }
 
 Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
-  const SliderMarker& marker,
+  std::unique_ptr<SliderMarker> marker,
   const SliderBackground& bg,
   const SliderCursors& cursors,
   const IntSize& initialSize)
 {
-  auto s = make_wx<SliderImpl>(parent, values, dir, marker, bg, cursors);
+  auto s = make_wx<SliderImpl>(parent,
+    values,
+    dir,
+    std::move(marker),
+    bg,
+    cursors);
   s->SetInitialSize(to_wx(initialSize));
   return s;
 }
@@ -249,7 +212,7 @@ Slider* create_slider(wxWindow* parent,
   auto s = make_wx<SliderImpl>(parent,
     values,
     dir,
-    LineSliderMarker(),
+    create_LineSliderMarker(),
     bg,
     cursors);
   s->SetInitialSize(to_wx(initialSize));
@@ -276,7 +239,7 @@ Slider* create_slider(wxWindow* parent,
 Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
-  const SliderMarker& marker,
+  std::unique_ptr<SliderMarker> marker,
   const SliderBackground& background,
   const SliderCursors& cursors,
   const IntSize& initialSize,
@@ -285,7 +248,7 @@ Slider* create_slider(wxWindow* parent,
   auto s = create_slider(parent,
     values,
     dir,
-    marker,
+    std::move(marker),
     background,
     cursors,
     initialSize);
@@ -293,6 +256,62 @@ Slider* create_slider(wxWindow* parent,
   events::on_slider_change(s, onChange);
   return s;
 }
+
+class LineSliderMarker : public SliderMarker{
+public:
+  std::unique_ptr<SliderMarker> Clone() const override{
+    return std::make_unique<LineSliderMarker>();
+  }
+
+  void Draw(Bitmap& bmp,
+    SliderDir dir,
+    const IntSize& size,
+    int pos) const override
+  {
+    auto line = (dir == SliderDir::HORIZONTAL ?
+      IntLineSegment({pos, 1}, {pos, size.h - 2}):
+      IntLineSegment({0, pos}, {size.w - 2, pos}));
+    draw_line(bmp, line, solid_1px(color_white));
+  }
+};
+
+std::unique_ptr<SliderMarker> create_LineSliderMarker(){
+  return std::make_unique<LineSliderMarker>();
+}
+
+class BorderedSliderMarker : public SliderMarker{
+public:
+  std::unique_ptr<SliderMarker> Clone() const override{
+    return std::make_unique<BorderedSliderMarker>();
+  }
+
+  void BorderedSliderMarker::Draw(Bitmap& bmp,
+  SliderDir dir,
+  const IntSize& size,
+  int pos) const override
+  {
+    if (dir == SliderDir::HORIZONTAL){
+      draw_vline(bmp, pos, {1, size.h - 2},
+        solid_1px(color_white));
+      draw_rect(bmp, {IntPoint(pos - 1, 1), IntPoint(pos + 1, size.h - 2)},
+        solid_1px(color_dark_shadow_3d()));
+    }
+    else if (dir == SliderDir::VERTICAL){
+      draw_hline(bmp, pos, {1, size.w - 2},
+        solid_1px(color_white));
+      draw_rect(bmp, {IntPoint(1, pos - 1), IntPoint(size.w - 2, pos + 1)},
+        solid_1px(color_dark_shadow_3d()));
+    }
+    else{
+      assert(false);
+    }
+  }
+};
+
+std::unique_ptr<SliderMarker> create_BorderedSliderMarker(){
+  return std::make_unique<BorderedSliderMarker>();
+}
+
 
 } // namespace
 

@@ -39,25 +39,17 @@ public:
   virtual void Draw(Bitmap&, SliderDir, const IntSize&, int pos) const = 0;
 };
 
-class LineSliderMarker : public SliderMarker{
-  // A line indicating a slider position.
-public:
-  std::unique_ptr<SliderMarker> Clone() const override;
-  void Draw(Bitmap&, SliderDir, const IntSize&, int) const override;
-};
+// A line indicating a slider position.
+std::unique_ptr<SliderMarker> create_LineSliderMarker();
 
-class BorderedSliderMarker : public SliderMarker{
-  // A bordered line indicating a slider position.
-public:
-  std::unique_ptr<SliderMarker> Clone() const override;
-  void Draw(Bitmap&, SliderDir, const IntSize&, int) const override;
-};
+// A bordered line indicating a slider position.
+std::unique_ptr<SliderMarker> create_BorderedSliderMarker();
 
 // Creates a horizontal or vertical slider control
 Slider* create_slider(wxWindow* parent,
   const BoundedInt&,
   SliderDir,
-  const SliderMarker&,
+  std::unique_ptr<SliderMarker>,
   const SliderBackground&,
   const SliderCursors&,
   const IntSize& initialSize);
@@ -72,7 +64,7 @@ Slider* create_slider(wxWindow* parent,
 Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
-  const SliderMarker&,
+  std::unique_ptr<SliderMarker>,
   const SliderBackground&,
   const SliderCursors&,
   const IntSize& initialSize,
@@ -89,7 +81,7 @@ Slider* create_slider(wxWindow* parent,
 Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir,
-  const SliderMarker&,
+  std::unique_ptr<SliderMarker>,
   const SliderBackground&,
   const SliderCursors&,
   const IntSize&,

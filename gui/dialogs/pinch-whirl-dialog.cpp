@@ -63,7 +63,7 @@ public:
     m_pinchSlider = create_slider(this,
       BoundedInt::Mid(min_t(-100), max_t(100)),
       SliderDir::HORIZONTAL,
-      BorderedSliderMarker(),
+      create_BorderedSliderMarker(),
       SliderMidPointBackground(),
       m_sliderCursors,
       ui::horizontal_slider_size);
@@ -72,7 +72,7 @@ public:
     m_whirlSlider = create_slider(this,
       BoundedInt::Mid(min_t(-360), max_t(360)),
       SliderDir::HORIZONTAL,
-      BorderedSliderMarker(),
+      create_BorderedSliderMarker(),
       SliderMidPointBackground(),
       m_sliderCursors,
       ui::horizontal_slider_size);

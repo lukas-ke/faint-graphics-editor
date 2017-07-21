@@ -44,7 +44,7 @@ void gui_test_slider(wxWindow* p, faint::StatusInterface&,
   using namespace faint;
   auto s1 = create_slider(p, BoundedInt(min_t(0), 45, max_t(120)),
     SliderDir::HORIZONTAL,
-    LineSliderMarker(),
+    create_LineSliderMarker(),
     SliderRectangleBackground(),
     c.GetSliderCursors(),
     IntSize(200, 20));
@@ -52,7 +52,7 @@ void gui_test_slider(wxWindow* p, faint::StatusInterface&,
 
   auto s2 = create_slider(p, BoundedInt(min_t(0), 45, max_t(120)),
     SliderDir::HORIZONTAL,
-    BorderedSliderMarker(),
+    create_BorderedSliderMarker(),
     SliderRectangleBackground(),
     c.GetSliderCursors(),
     IntSize(200, 20));
@@ -60,7 +60,7 @@ void gui_test_slider(wxWindow* p, faint::StatusInterface&,
 
   auto s3 = create_slider(p, BoundedInt(min_t(0), 45, max_t(120)),
     SliderDir::HORIZONTAL,
-    BorderedSliderMarker(),
+    create_BorderedSliderMarker(),
     AlphaBackground(ColRGB(255,0,0)),
     c.GetSliderCursors(),
     IntSize(200, 20));
@@ -68,7 +68,7 @@ void gui_test_slider(wxWindow* p, faint::StatusInterface&,
 
   auto s4 = create_slider(p, BoundedInt(min_t(0), 45, max_t(255)),
     SliderDir::HORIZONTAL,
-    BorderedSliderMarker(),
+    create_BorderedSliderMarker(),
     SliderHistogramBackground(histogram_test_values(), ColRGB(0,0,0)),
     c.GetSliderCursors(),
     IntSize(200, 20));
@@ -83,7 +83,7 @@ void gui_test_slider(wxWindow* p, faint::StatusInterface&,
 
   auto s6 = create_slider(p, BoundedInt(min_t(0), 45, max_t(120)),
     SliderDir::VERTICAL,
-    BorderedSliderMarker(),
+    create_BorderedSliderMarker(),
     SliderRectangleBackground(),
     c.GetSliderCursors(),
     IntSize(20, 230));
@@ -91,7 +91,7 @@ void gui_test_slider(wxWindow* p, faint::StatusInterface&,
 
   auto s7 = create_slider(p, BoundedInt(min_t(0), 45, max_t(120)),
     SliderDir::VERTICAL,
-    BorderedSliderMarker(),
+    create_BorderedSliderMarker(),
     AlphaBackground(ColRGB(0,0,255)),
     c.GetSliderCursors(),
     IntSize(20, 230));

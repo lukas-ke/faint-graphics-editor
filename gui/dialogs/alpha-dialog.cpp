@@ -99,7 +99,7 @@ public:
     m_alphaSlider = create_slider(raw(m_dialog),
       BoundedInt(min_t(0), get_initial_alpha(m_bitmap), max_t(255)),
       SliderDir::HORIZONTAL,
-      BorderedSliderMarker(),
+      create_BorderedSliderMarker(),
       AlphaBackground(ColRGB(77,109,243)),
       m_sliderCursors,
       ui::horizontal_slider_size,

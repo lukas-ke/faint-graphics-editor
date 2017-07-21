@@ -194,7 +194,7 @@ public:
     m_lightnessSlider = create_slider(this,
       BoundedInt::Mid(min_t(0), max_t(240)),
       SliderDir::VERTICAL,
-      BorderedSliderMarker(),
+      create_BorderedSliderMarker(),
       LightnessBackground(m_hueSatPicker->GetValue()),
       m_sliderCursors,
       IntSize(20, 240));
@@ -203,7 +203,7 @@ public:
     m_alphaSlider = create_slider(this,
       BoundedInt::Mid(min_t(0), max_t(255)),
       SliderDir::VERTICAL,
-      BorderedSliderMarker(),
+      create_BorderedSliderMarker(),
       AlphaBackground(ColRGB(128,128,128)),
       m_sliderCursors,
       IntSize(20,255));

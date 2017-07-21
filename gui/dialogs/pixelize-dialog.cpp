@@ -62,7 +62,7 @@ public:
       BoundedInt::Mid(min_t(1), max_t(100)),
 
       SliderDir::HORIZONTAL,
-      BorderedSliderMarker(),
+      create_BorderedSliderMarker(),
       SliderRectangleBackground(),
       m_sliderCursors,
       IntSize(200, 20));
