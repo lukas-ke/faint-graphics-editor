@@ -37,8 +37,7 @@ Rect bounding_rect(const objects_t&);
 
 // Returns a bounding rectangle for the Tri, padded with the line
 // width from the Settings if the fill style includes border.
-// Fixme: Rename (bounding_rect_ink?)
-Rect bounding_rect(const Tri&, const Settings&);
+Rect bounding_rect_ink(const Tri&, const Settings&);
 
 objects_t clone(const objects_t&);
 

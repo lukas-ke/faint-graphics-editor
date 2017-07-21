@@ -70,7 +70,7 @@ Rect bounding_rect(const objects_t& objects){
   return {minPt, maxPt};
 }
 
-Rect bounding_rect(const Tri& tri, const Settings& s){
+Rect bounding_rect_ink(const Tri& tri, const Settings& s){
   if (border(s)){
     // Pad by half the line width (the line is centered on object
     // edges)

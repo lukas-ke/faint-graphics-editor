@@ -98,7 +98,7 @@ public:
   }
 
   IntRect GetRefreshRect() const override{
-    return floored(bounding_rect(m_tri, m_settings));
+    return floored(bounding_rect_ink(m_tri, m_settings));
   }
 
   utf8_string GetType() const override{
