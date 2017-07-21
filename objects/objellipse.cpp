@@ -80,6 +80,15 @@ public:
     return m_angleSpan;
   }
 
+  coord GetArea() const override{
+    if (m_angleSpan.Empty()){
+      return ellipse_area(abs(get_radii(m_tri)));
+    }
+    else{
+      return arc_area(abs(get_radii(m_tri)), m_angleSpan); // Fixme: Negative if negative span
+    }
+  }
+
   std::vector<Point> GetAttachPoints() const override{
     if (m_angleSpan.Empty()){
       return get_attach_points(m_tri);

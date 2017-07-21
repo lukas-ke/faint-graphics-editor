@@ -311,29 +311,7 @@ void offset_by(const objects_t& objects, const IntPoint& d){
 }
 
 coord object_area(const Object* obj){
-  // Fixme: Move area calculation into the object classes.
-  auto ellipse_area = [](const Object* obj){
-    auto r = abs(get_radii(obj->GetTri()));
-    return math::pi * r.x * r.y;
-  };
-
-  if (is_ellipse(*obj)){
-    return get_angle_span(*obj).Visit(
-      [=](const AngleSpan& span){
-        return span.start == span.stop ?
-          ellipse_area(obj) :
-          arc_area(abs(get_radii(obj->GetTri())), span);
-      },
-      [=](){
-        return ellipse_area(obj);
-      });
-  }
-  if (is_line(*obj)){
-    // No area for you.
-    return 0.0;
-  }
-  // Fixme: Only correct for rectangle. :)
-  return area(obj->GetTri());
+  return obj->GetArea();
 }
 
 coord perimeter(const Object* obj, const ExpressionContext& ctx){

@@ -29,6 +29,7 @@ public:
   void Draw(FaintDC&, ExpressionContext&) override;
   void Draw(FaintDC&);
   void DrawMask(FaintDC&, ExpressionContext&) override;
+  coord GetArea() const override;
   std::vector<Point> GetAttachPoints() const override;
   Bitmap& GetBitmap();
   const Bitmap& GetBitmap() const;

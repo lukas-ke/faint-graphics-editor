@@ -57,6 +57,10 @@ public:
       mask_settings_fill(m_settings));
   }
 
+  coord GetArea() const override{
+    return area(m_tri); // Fixme: Incorrect, need proper polygon area
+  }
+
   std::vector<Point> GetAttachPoints() const override{
     return with_mid_points_cyclic(Vertices());
   }

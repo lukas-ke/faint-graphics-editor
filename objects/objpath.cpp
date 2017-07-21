@@ -55,6 +55,10 @@ public:
     dc.Path(m_points.GetPoints(m_tri), mask_settings_fill(m_settings));
   }
 
+  coord GetArea() const override{
+    return area(m_tri); // Fixme: Incorrect, need proper path area
+  }
+
   std::vector<Point> GetAttachPoints() const override{
     std::vector<Point> attachPoints;
     auto pts = m_points.GetPoints(m_tri);

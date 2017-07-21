@@ -57,6 +57,10 @@ public:
       mask_settings_line(m_settings));
   }
 
+  coord GetArea() const override{
+    return 0.0; // Fixme: Consider if ink-area more meaningful
+  }
+
   IntRect GetRefreshRect() const override{
     if (m_settings.Get(ts_LineArrowhead) == LineArrowhead::FRONT){
       return floored(bounding_rect(GetLineRect(), GetArrowHeadRect()));

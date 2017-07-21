@@ -26,7 +26,6 @@ class Settings;
 Object* create_path_object_raw(const Points&, const Settings&);
 ObjectPtr create_path_object(const Points&, const Settings&);
 
-
 } // namespace
 
 #endif

@@ -63,6 +63,8 @@ coord distance(const Point&, const Point&);
 // time consuming.
 coord distance(const Point& start, const CubicBezier&, int subdivisions);
 
+coord ellipse_area(const Radii&);
+
 // a and b are diameters
 coord ellipse_perimeter(coord a, coord b);
 coord ellipse_perimeter(const Radii&);

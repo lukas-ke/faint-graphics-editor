@@ -80,6 +80,10 @@ public:
   void DrawMask(FaintDC&, ExpressionContext&) override{
   }
 
+  coord GetArea() const override{
+    return area(m_tri);
+  }
+
   std::vector<Point> GetAttachPoints() const override{
     return get_attach_points(m_tri);
   }

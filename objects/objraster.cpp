@@ -125,6 +125,10 @@ void ObjRaster::DrawMask(FaintDC& dc, ExpressionContext&){
   dc.Rectangle(m_tri, s);
 }
 
+coord ObjRaster::GetArea() const{
+  return area(m_tri);
+}
+
 std::vector<Point> ObjRaster::GetAttachPoints() const{
   return get_attach_points(m_tri);
 }

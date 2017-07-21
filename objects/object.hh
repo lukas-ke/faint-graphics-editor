@@ -85,6 +85,8 @@ public:
   virtual void DrawMask(FaintDC&, ExpressionContext&) = 0;
   virtual bool Extendable() const = 0;
 
+  virtual coord GetArea() const = 0;
+
   // Gets the points in this objects that other objects and tools can
   // snap to
   virtual std::vector<Point> GetAttachPoints() const = 0;

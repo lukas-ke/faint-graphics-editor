@@ -168,6 +168,10 @@ void ObjText::DrawMask(FaintDC& dc, ExpressionContext& ctx){
     Paint(mask_fill));
 }
 
+coord ObjText::GetArea() const{
+  return 0.0; // Fixme: Consider if ink area or full rectangle more useful than 0
+}
+
 Rect ObjText::GetAutoSizedRect() const {
   TextInfoDC info(m_settings);
   // Fixme: Doesn't take expressions in account.

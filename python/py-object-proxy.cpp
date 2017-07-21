@@ -59,12 +59,17 @@ public:
   void Draw(FaintDC& dc, ExpressionContext& ctx) override{
     m_obj->Draw(dc, ctx);
   };
+
   void DrawMask(FaintDC& dc, ExpressionContext& ctx) override{
     m_obj->DrawMask(dc, ctx);
   };
 
   bool Extendable() const override{
     return m_obj->Extendable();
+  }
+
+  coord GetArea() const override{
+    return m_obj->GetArea();
   }
 
   std::vector<Point> GetAttachPoints() const override{

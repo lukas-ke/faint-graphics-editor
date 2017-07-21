@@ -45,6 +45,10 @@ public:
     dc.Spline(m_points.GetPointsDumb(m_tri), mask_settings_line(m_settings)) ;
   }
 
+  coord GetArea() const override{
+    return 0.0; // Fixme: Consider if ink area more useful
+  }
+
   std::vector<Point> GetAttachPoints() const override{
     std::vector<Point> splinePts(m_points.GetPointsDumb(m_tri));
     return{ splinePts.front(), splinePts.back() };

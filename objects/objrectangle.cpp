@@ -50,6 +50,10 @@ public:
     dc.Rectangle(m_tri, mask_settings_fill(m_settings));
   }
 
+  coord GetArea() const override{
+    return area(m_tri);
+  }
+
   std::vector<Point> GetAttachPoints() const override{
     return get_attach_points(m_tri);
   }

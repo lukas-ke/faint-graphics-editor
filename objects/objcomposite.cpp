@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <cassert>
 #include <iterator> // back_inserter
+#include <numeric> // accumulate
 #include "geo/int-rect.hh"
 #include "geo/measure.hh" // bounding_rect
 #include "geo/pathpt.hh"
@@ -115,6 +116,14 @@ public:
 
   Object* Clone() const override{
     return new ObjComposite(*this);
+  }
+
+  coord GetArea() const override{
+    return std::accumulate(begin(m_objects), end(m_objects),
+      0.0,
+      [](auto v, auto obj){
+        return v + obj->GetArea();
+      });
   }
 
   int GetObjectCount() const override{

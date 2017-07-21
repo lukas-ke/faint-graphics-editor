@@ -32,6 +32,7 @@ public:
   void Draw(FaintDC&, ExpressionContext&) override;
   void DrawMask(FaintDC&, ExpressionContext&) override;
 
+  coord GetArea() const override;
   std::vector<PathPt> GetPath(const ExpressionContext&) const override;
   IntRect GetRefreshRect() const override;
   Tri GetTri() const override;
