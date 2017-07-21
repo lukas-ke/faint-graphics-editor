@@ -26,7 +26,6 @@
 #include "text/text-expression-context.hh"
 #include "util/at-most.hh"
 #include "rendering/faint-dc.hh"
-#include "util/command-util.hh" // Fixme: Remove
 #include "util/optional.hh"
 #include "objects/object.hh"
 #include "python/py-common.hh"
