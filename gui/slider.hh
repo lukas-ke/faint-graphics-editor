@@ -35,21 +35,22 @@ class SliderMarker{
   // Interface for slider position indicators.
 public:
   virtual ~SliderMarker() = default;
-  virtual std::unique_ptr<SliderMarker> Clone() const = 0;
   virtual void Draw(Bitmap&, SliderDir, const IntSize&, int pos) const = 0;
 };
 
+using SliderMarkerPtr = std::unique_ptr<SliderMarker>;
+
 // A line indicating a slider position.
-std::unique_ptr<SliderMarker> create_LineSliderMarker();
+SliderMarkerPtr create_LineSliderMarker();
 
 // A bordered line indicating a slider position.
-std::unique_ptr<SliderMarker> create_BorderedSliderMarker();
+SliderMarkerPtr create_BorderedSliderMarker();
 
 // Creates a horizontal or vertical slider control
 Slider* create_slider(wxWindow* parent,
   const BoundedInt&,
   SliderDir,
-  std::unique_ptr<SliderMarker>,
+  SliderMarkerPtr,
   const SliderBackground&,
   const SliderCursors&,
   const IntSize& initialSize);
@@ -64,7 +65,7 @@ Slider* create_slider(wxWindow* parent,
 Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
-  std::unique_ptr<SliderMarker>,
+  SliderMarkerPtr,
   const SliderBackground&,
   const SliderCursors&,
   const IntSize& initialSize,
@@ -81,7 +82,7 @@ Slider* create_slider(wxWindow* parent,
 Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir,
-  std::unique_ptr<SliderMarker>,
+  SliderMarkerPtr,
   const SliderBackground&,
   const SliderCursors&,
   const IntSize&,

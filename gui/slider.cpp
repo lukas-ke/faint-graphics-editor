@@ -50,7 +50,7 @@ public:
   SliderImpl(wxWindow* parent,
     const BoundedInt& values,
     SliderDir dir,
-    std::unique_ptr<SliderMarker> marker,
+    SliderMarkerPtr marker,
     const SliderBackground& bg,
     const SliderCursors& cursors)
     : Slider(parent),
@@ -147,7 +147,7 @@ private:
   std::unique_ptr<SliderBackground> m_background;
   wxBitmap m_bitmap;
   SliderDir m_dir;
-  std::unique_ptr<SliderMarker> m_marker;
+  SliderMarkerPtr m_marker;
   MouseCapture m_mouse;
   ClosedIntRange m_range;
   double m_value;
@@ -173,7 +173,7 @@ const wxEventTypeTag<SliderEvent> EVT_FAINT_SLIDER_CHANGE(FAINT_SLIDER_CHANGE);
 Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
-  std::unique_ptr<SliderMarker> marker,
+  SliderMarkerPtr marker,
   const SliderBackground& background,
   const SliderCursors& sliderCursors,
   const IntSize& initialSize,
@@ -187,7 +187,7 @@ Slider* create_slider(wxWindow* parent,
 Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
-  std::unique_ptr<SliderMarker> marker,
+  SliderMarkerPtr marker,
   const SliderBackground& bg,
   const SliderCursors& cursors,
   const IntSize& initialSize)
@@ -239,7 +239,7 @@ Slider* create_slider(wxWindow* parent,
 Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
-  std::unique_ptr<SliderMarker> marker,
+  SliderMarkerPtr marker,
   const SliderBackground& background,
   const SliderCursors& cursors,
   const IntSize& initialSize,
@@ -259,10 +259,6 @@ Slider* create_slider(wxWindow* parent,
 
 class LineSliderMarker : public SliderMarker{
 public:
-  std::unique_ptr<SliderMarker> Clone() const override{
-    return std::make_unique<LineSliderMarker>();
-  }
-
   void Draw(Bitmap& bmp,
     SliderDir dir,
     const IntSize& size,
@@ -275,17 +271,13 @@ public:
   }
 };
 
-std::unique_ptr<SliderMarker> create_LineSliderMarker(){
+SliderMarkerPtr create_LineSliderMarker(){
   return std::make_unique<LineSliderMarker>();
 }
 
 class BorderedSliderMarker : public SliderMarker{
 public:
-  std::unique_ptr<SliderMarker> Clone() const override{
-    return std::make_unique<BorderedSliderMarker>();
-  }
-
-  void BorderedSliderMarker::Draw(Bitmap& bmp,
+  void Draw(Bitmap& bmp,
   SliderDir dir,
   const IntSize& size,
   int pos) const override
@@ -308,7 +300,7 @@ public:
   }
 };
 
-std::unique_ptr<SliderMarker> create_BorderedSliderMarker(){
+SliderMarkerPtr create_BorderedSliderMarker(){
   return std::make_unique<BorderedSliderMarker>();
 }
 
