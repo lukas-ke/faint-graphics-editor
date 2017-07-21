@@ -56,10 +56,19 @@ BoundFrameProps::BoundFrameProps(ImageProps& image, FrameProps& frame)
     frame(frame)
 {}
 
-void throw_if_missing(const BoundFrameProps& self, const Index& objectId){
+static void throw_if_missing(const BoundFrameProps& self, const Index& objectId){
   if (!self.frame.HasObject(objectId)){
     throw IndexError("Invalid object identifier");
   }
+}
+
+static Object& get_object_or_throw(const BoundFrameProps& fp,
+  const Index& objectId)
+{
+  throw_if_missing(fp, objectId);
+  auto* obj = fp.frame.GetObject(objectId);
+  assert(obj != nullptr);
+  return *obj;
 }
 
 extern PyTypeObject FramePropsType;
@@ -282,10 +291,7 @@ static void frameprops_set_obj_tri(const BoundFrameProps& self,
   const Index& objectId,
   const Tri& tri)
 {
-  throw_if_missing(self, objectId);
-
-  Object* object = self.frame.GetObject(objectId);
-  object->SetTri(tri);
+  get_object_or_throw(self, objectId).SetTri(tri);
 }
 
 /* method: "set_obj_name(id, name)\n
@@ -294,9 +300,7 @@ static void frameprops_set_obj_name(const BoundFrameProps& self,
   const Index& objectId,
   const utf8_string& name)
 {
-  throw_if_missing(self, objectId);
-  Object* object = self.frame.GetObject(objectId);
-  object->SetName(option(name));
+  get_object_or_throw(self, objectId).SetName(option(name));
 }
 
 /* method: "get_obj_tri(id)->tri\n
@@ -304,10 +308,7 @@ Returns the Tri for the object specified by the id." */
 static Tri frameprops_get_obj_tri(const BoundFrameProps& self,
   const Index& objectId)
 {
-  throw_if_missing(self, objectId);
-
-  Object* object = self.frame.GetObject(objectId);
-  return object->GetTri();
+  return get_object_or_throw(self, objectId).GetTri();
 }
 
 /* method: "get_obj_text_height(id)->height\n
@@ -315,9 +316,7 @@ Returns the height of the rows of the Text object specified by the id" */
 static coord frameprops_get_obj_text_height(const BoundFrameProps& self,
   const Index& objectId)
 {
-  throw_if_missing(self, objectId); // Fixme: Add throwing get_object(BoundFrameProps, objectId)?
-
-  return if_type<ObjText>(*self.frame.GetObject(objectId),
+  return if_type<ObjText>(get_object_or_throw(self, objectId),
     [](const ObjText& obj){
       return obj.BaselineOffset();
     },
