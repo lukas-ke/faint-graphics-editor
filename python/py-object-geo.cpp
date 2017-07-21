@@ -45,7 +45,7 @@ extern coord area_py(const BoundObject<Object>& obj){
   const auto& frame = obj.canvas->GetFrame(obj.frameId);
   const coord conversion(get_pixel_to_mm_conversion(frame).Or(1.0));  // Fixme: Allow specifying px or mm
   const coord pixels = obj.obj->GetArea();
-  return pixels * conversion;
+  return pixels * conversion * conversion;
 }
 
 } // namespace
