@@ -41,10 +41,8 @@ public:
   virtual ~Drawable() = default;
   virtual void Draw(FaintDC&, Overlays&, const PosInfo&) = 0;
   virtual bool DrawBeforeZoom(Layer) const = 0;
-  virtual bool ShouldDrawRaster(Layer) const = 0; // Fixme: Consider removing
-  virtual bool ShouldDrawVector(Layer layer) const{
-    return !ShouldDrawRaster(layer);
-  }
+  virtual bool ShouldDrawRaster(Layer) const = 0;
+  bool ShouldDrawVector(Layer layer) const;
 };
 
 // Draws the canvas onto the passed in DC

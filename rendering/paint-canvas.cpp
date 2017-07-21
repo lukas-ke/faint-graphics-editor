@@ -52,6 +52,10 @@
 
 namespace faint{
 
+bool Drawable::ShouldDrawVector(Layer layer) const{
+  return !ShouldDrawRaster(layer);
+}
+
 bool should_draw_raster(const ToolWrapper& toolWrap, Layer layer){
   ToolId tool = toolWrap.GetToolId();
   return get_tool_layer(tool, layer) == Layer::RASTER;
