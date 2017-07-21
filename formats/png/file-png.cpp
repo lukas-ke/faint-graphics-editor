@@ -234,7 +234,7 @@ OrError<Bitmap_and_tEXt> read_png_meta(const FilePath& path){
           const auto* row = rows + y * width * PNG_ByPP;
           for (png_uint_32 x = 0; x < width; x++){
             auto i =  y * bmpStride + x * bmpByPP;
-            const std::uint16 r = std::uint16_t(row[x * PNG_ByPP + 0] << 8) |
+            const std::uint16_t r = std::uint16_t(row[x * PNG_ByPP + 0] << 8) |
               std::uint16_t(row[x * PNG_ByPP + 1]);
 
             const std::uint16_t g = std::uint16_t(row[x * PNG_ByPP + 2]) << 8  |
