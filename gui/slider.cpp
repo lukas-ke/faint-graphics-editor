@@ -41,8 +41,8 @@ private:
 
 extern const wxEventTypeTag<SliderEvent> EVT_FAINT_SLIDER_CHANGE;
 
-LineSliderMarker* LineSliderMarker::Clone() const{
-  return new LineSliderMarker(); // Fixme: Use std::unique_ptr
+std::unique_ptr<SliderMarker> LineSliderMarker::Clone() const{
+  return std::make_unique<LineSliderMarker>();
 }
 
 void LineSliderMarker::Draw(Bitmap& bmp,
@@ -57,8 +57,8 @@ void LineSliderMarker::Draw(Bitmap& bmp,
   draw_line(bmp, line, solid_1px(color_white));
 }
 
-BorderedSliderMarker* BorderedSliderMarker::Clone() const{
-  return new BorderedSliderMarker(); // Fixme: Use std::unique_ptr
+std::unique_ptr<SliderMarker> BorderedSliderMarker::Clone() const{
+  return std::make_unique<BorderedSliderMarker>();
 }
 
 void BorderedSliderMarker::Draw(Bitmap& bmp,

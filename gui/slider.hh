@@ -35,21 +35,21 @@ class SliderMarker{
   // Interface for slider position indicators.
 public:
   virtual ~SliderMarker() = default;
-  virtual SliderMarker* Clone() const = 0;
+  virtual std::unique_ptr<SliderMarker> Clone() const = 0;
   virtual void Draw(Bitmap&, SliderDir, const IntSize&, int pos) const = 0;
 };
 
 class LineSliderMarker : public SliderMarker{
   // A line indicating a slider position.
 public:
-  LineSliderMarker* Clone() const override;
+  std::unique_ptr<SliderMarker> Clone() const override;
   void Draw(Bitmap&, SliderDir, const IntSize&, int) const override;
 };
 
 class BorderedSliderMarker : public SliderMarker{
   // A bordered line indicating a slider position.
 public:
-  BorderedSliderMarker* Clone() const override;
+  std::unique_ptr<SliderMarker> Clone() const override;
   void Draw(Bitmap&, SliderDir, const IntSize&, int) const override;
 };
 
