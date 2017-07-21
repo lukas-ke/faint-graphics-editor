@@ -318,7 +318,7 @@ coord object_area(const Object* obj){
   };
 
   if (is_ellipse(*obj)){
-    return get_angle_span(obj).Visit(
+    return get_angle_span(*obj).Visit(
       [=](const AngleSpan& span){
         return span.start == span.stop ?
           ellipse_area(obj) :

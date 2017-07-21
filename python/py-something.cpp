@@ -151,7 +151,9 @@ static AngleSpan Smth_get_angles(const BoundObject<Object>& self){
     throw ValueError("Only supported for ellipses.");
   }
 
-  return get_angle_span(self.obj).Get();
+  auto span = get_angle_span(*self.obj);
+  assert(span.IsSet()); // Ellipse should always have a span
+  return span.Get();
 }
 
 
@@ -335,7 +337,7 @@ static void Smth_set_angles(const BoundObject<Object>& self,
   using SetSpanCmd = ObjFunctionCommand<Object, AngleSpan, set_angle_span>;
   run_command(self,
     std::make_unique<SetSpanCmd>(self.obj, "Change Arc Span",
-      New(span), Old(get_angle_span(self.obj).Get())));
+      New(span), Old(get_angle_span(*self.obj).Get())));
 }
 
 /* method: "set_text(s)\nSet the text of Text-objects" */
