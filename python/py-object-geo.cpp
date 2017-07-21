@@ -27,14 +27,24 @@
 
 namespace faint{
 
-/* function: "perimeter()\n
+/* function: "perimeter(object)\n
 Returns the perimeter length of the object.\n
 Warning: Treats curves as lines currently."
 name: "perimeter" */
 extern coord perimeter_py(const BoundObject<Object>& obj){
   const auto& frame = obj.canvas->GetFrame(obj.frameId);
-  const coord conversion(get_pixel_to_mm_conversion(frame).Or(1.0));
+  const coord conversion(get_pixel_to_mm_conversion(frame).Or(1.0)); // Fixme: Allow specifying px or mm
   const coord pixels = perimeter(obj.obj, frame.GetExpressionContext());
+  return pixels * conversion;
+}
+
+/* function: "area(object)\n
+Returns the area of the object in pixels or mm if calibrated.\n"
+name: "area" */
+extern coord area_py(const BoundObject<Object>& obj){
+  const auto& frame = obj.canvas->GetFrame(obj.frameId);
+  const coord conversion(get_pixel_to_mm_conversion(frame).Or(1.0));  // Fixme: Allow specifying px or mm
+  const coord pixels = obj.obj->GetArea();
   return pixels * conversion;
 }
 

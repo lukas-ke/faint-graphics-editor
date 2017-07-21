@@ -21,6 +21,7 @@
 namespace faint{
 
 coord perimeter_py(const BoundObject<Object>& obj);
+coord area_py(const BoundObject<Object>& obj);
 
 } // namespace
 
