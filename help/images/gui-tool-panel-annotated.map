@@ -8,7 +8,7 @@
 0,233,101,256 tool-level.txt
 0,258,101,281 tool-hot-spot.txt
 102,13,219,36 tool-pen.txt
-102,38,219,61 tool-picker.txt
+102,38,219,61 tool-color-picker.txt
 102,63,219,86 tool-path.txt
 102,88,219,111 tool-ellipse.txt
 102,113,219,136 tool-text.txt

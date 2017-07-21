@@ -15,7 +15,7 @@ indicates a tool which can target objects
 ||\graphic(tool-selection.png)|| \ref(tool-selection.txt,Selection)|| Selects a region or objects to move or modify||\image(supports-raster.png)\image(supports-object.png)||
 ||\graphic(tool-pen.png)||\ref(tool-pen,Pen)||Freehand-drawing||\image(supports-raster.png)||
 ||\graphic(tool-brush.png)||\ref(tool-brush,Brush)||Like the pen, but more luxurious||\image(supports-raster.png)||
-||\graphic(tool-picker.png)||\ref(tool-picker,Color Picker)||Selects colors from the image||\image(supports-raster.png)\image(supports-object.png)||
+||\graphic(tool-picker.png)||\ref(tool-color-picker,Color Picker)||Selects colors from the image||\image(supports-raster.png)\image(supports-object.png)||
 ||\graphic(tool-line.png)||\ref(tool-line,Line)||Draws lines||\image(supports-raster.png)\image(supports-object.png)||
 ||\graphic(tool-path.png)||\ref(tool-path,Path)||Draws arbitrary shapes||\image(supports-raster.png)\image(supports-object.png)||
 ||\graphic(tool-spline.png)||\ref(tool-spline,Spline)||Draws curved lines||\image(supports-raster.png)\image(supports-object.png)||

@@ -22,7 +22,7 @@ ref-tools.txt
 >tool-selection.txt
 >tool-pen.txt
 >tool-brush.txt
->tool-picker.txt
+>tool-color-picker.txt
 >tool-line.txt
 >tool-path.txt
 >tool-spline.txt

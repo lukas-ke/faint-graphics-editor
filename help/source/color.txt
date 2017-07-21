@@ -16,7 +16,7 @@ Single-click either the primary or the secondary color in the selected
 color control to adjust the color freely in the
 \ref(gui-color-selection-dialog.txt). Double click a color in the palette
 to adjust it with the color selection dialog. Colors can also be
-selected from an image, using the \ref(tool-picker).
+selected from an image, using the \ref(tool-color-picker.txt,color picker).
 
 == Alpha {color-rgba} ==
 Faint uses RGBA-colors. That is, colors are defined by their relative
@@ -52,7 +52,7 @@ with this icon: \image(color-pattern-icon.png) \br
 
 Patterns are repeated where drawn, and can also be used for various
 image effects. Use the \ref(gui-color-selection-dialog.txt) or the
-\ref(tool-picker) to select an image to use as a pattern.
+\ref(tool-color-picker.txt,color picker) to select an image to use as a pattern.
 ||\image(color-draw-with-pattern.png)||
 ||'Drawing with a pattern'||
 
@@ -61,4 +61,4 @@ as the pattern, the image state is stored as a color and can be
 selectively reverted using any of the drawing tools.
 
 || \image(color-selective-resaturation.png)||
-|| Desaturated image with color redrawn with the \ref(tool-brush,brush tool). ||
+|| Desaturated image with color redrawn with the \ref(tool-brush,brush). ||

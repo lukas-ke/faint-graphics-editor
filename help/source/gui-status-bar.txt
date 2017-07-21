@@ -22,7 +22,7 @@ controls.
 == Right side ==
 The right side of the status bar contains context feedback. This
 example image shows feedback for
-the \ref(tool-picker.txt,color picker) tool, indicating the pointed at
+the \ref(tool-color-picker.txt,color picker) tool, indicating the pointed at
 color expressed in rgb and hex, followed by the pixel
 position.\br
 \image(gui-status-info2.png)

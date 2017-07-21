@@ -16,7 +16,7 @@ and sized "brush".
 ||\image(key-shift.png)|| If shift is held while drawing, the brush will draw horizontal or vertical lines.||
 
 == Using the brush for Cloning ==
-By \ref(tool-picker.txt,picking) image locations as patterns and
+By \ref(tool-color-picker.txt,picking) image locations as patterns and
 drawing with a transparent brush, details can be added or removed from
 an image, such as dogs getting in the way of your gravel photography:
 

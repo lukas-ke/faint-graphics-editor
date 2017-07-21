@@ -25,4 +25,4 @@ region is replaced with the secondary color.
 ||\image(raster-selection-cutout.png) \image(feat-delete-raster-yellow-bg.png) || \image(feat-delete-raster-pre.png) || \image(feat-delete-raster-post.png) ||
 || Using raster selection and\br yellow secondary color || A region is selected with the\br raster selection tool || Delete replaces the selected\br region with the secondary color ||
 
-See \ref(feat-dwim-delete.txt) for a way to erase with the surrounding color, or use the \ref(tool-picker,Color picker) to select the secondary color.
+See \ref(feat-dwim-delete.txt) for a way to erase with the surrounding color, or use the \ref(tool-color-picker,Color picker) to select the secondary color.
