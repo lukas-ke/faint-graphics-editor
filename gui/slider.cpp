@@ -51,10 +51,10 @@ public:
     const BoundedInt& values,
     SliderDir dir,
     SliderMarkerPtr marker,
-    const SliderBackground& bg,
+    SliderBackgroundPtr bg,
     const SliderCursors& cursors)
     : Slider(parent),
-      m_background(bg.Clone()),
+      m_background(std::move(bg)),
       m_dir(dir),
       m_marker(std::move(marker)),
       m_mouse(this),
@@ -103,8 +103,8 @@ public:
     return static_cast<int>(m_value);
   }
 
-  void SetBackground(const SliderBackground& background) override{
-    m_background.reset(background.Clone());
+  void SetBackground(SliderBackgroundPtr background) override{
+    m_background = std::move(background);
     Refresh();
   }
 
@@ -174,13 +174,17 @@ Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
   SliderMarkerPtr marker,
-  const SliderBackground& background,
+  SliderBackgroundPtr background,
   const SliderCursors& sliderCursors,
   const IntSize& initialSize,
   const std::function<void()>& onChange)
 {
   return bind(create_slider(parent,
-      values, dir, std::move(marker), background, sliderCursors, initialSize),
+      values, dir,
+      std::move(marker),
+      std::move(background),
+      sliderCursors,
+      initialSize),
     EVT_FAINT_SLIDER_CHANGE, std::move(onChange));
 }
 
@@ -188,7 +192,7 @@ Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
   SliderMarkerPtr marker,
-  const SliderBackground& bg,
+  SliderBackgroundPtr bg,
   const SliderCursors& cursors,
   const IntSize& initialSize)
 {
@@ -196,7 +200,7 @@ Slider* create_slider(wxWindow* parent,
     values,
     dir,
     std::move(marker),
-    bg,
+    std::move(bg),
     cursors);
   s->SetInitialSize(to_wx(initialSize));
   return s;
@@ -205,7 +209,7 @@ Slider* create_slider(wxWindow* parent,
 Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
-  const SliderBackground& bg,
+  SliderBackgroundPtr bg,
   const SliderCursors& cursors,
   const IntSize& initialSize)
 {
@@ -213,7 +217,7 @@ Slider* create_slider(wxWindow* parent,
     values,
     dir,
     create_LineSliderMarker(),
-    bg,
+    std::move(bg),
     cursors);
   s->SetInitialSize(to_wx(initialSize));
   return s;
@@ -222,7 +226,7 @@ Slider* create_slider(wxWindow* parent,
 Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
-  const SliderBackground& background,
+  SliderBackgroundPtr background,
   const SliderCursors& cursors,
   const IntSize& initialSize,
   std::function<void()>&& onChange)
@@ -230,7 +234,7 @@ Slider* create_slider(wxWindow* parent,
   return bind(create_slider(parent,
       values,
       dir,
-      background,
+      std::move(background),
       cursors,
       initialSize),
     EVT_FAINT_SLIDER_CHANGE, std::move(onChange));
@@ -240,7 +244,7 @@ Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
   SliderMarkerPtr marker,
-  const SliderBackground& background,
+  SliderBackgroundPtr background,
   const SliderCursors& cursors,
   const IntSize& initialSize,
   std::function<void(int)>&& onChange)
@@ -249,7 +253,7 @@ Slider* create_slider(wxWindow* parent,
     values,
     dir,
     std::move(marker),
-    background,
+    std::move(background),
     cursors,
     initialSize);
 
@@ -303,7 +307,6 @@ public:
 SliderMarkerPtr create_BorderedSliderMarker(){
   return std::make_unique<BorderedSliderMarker>();
 }
-
 
 } // namespace
 

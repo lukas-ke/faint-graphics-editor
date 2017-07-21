@@ -15,6 +15,7 @@
 
 #ifndef FAINT_SLIDER_COMMON_HH
 #define FAINT_SLIDER_COMMON_HH
+#include <memory> // unique_ptr
 
 class wxWindow;
 
@@ -29,28 +30,17 @@ enum class SliderDir{HORIZONTAL, VERTICAL};
 class SliderBackground{
   // Base class for slider background renderers.
 public:
-  SliderBackground() = default;
-
   virtual void Draw(Bitmap&, const IntSize&, SliderDir) = 0;
-  virtual SliderBackground* Clone() const = 0;
-protected:
-  SliderBackground(const SliderBackground&) = default;
 };
 
-class SliderRectangleBackground final : public SliderBackground{
-  // Background filled with a solid color.
-public:
-  SliderBackground* Clone() const override;
-  void Draw(Bitmap&, const IntSize&, SliderDir) override;
-};
+using SliderBackgroundPtr = std::unique_ptr<SliderBackground>;
 
-class SliderMidPointBackground final : public SliderBackground{
-  // Background which indicates the middle of the slider range with a
-  // line.
-public:
-  SliderBackground* Clone() const override;
-  void Draw(Bitmap&, const IntSize&, SliderDir) override;
-};
+// Background filled with a solid color.
+SliderBackgroundPtr create_SliderRectangleBackground();
+
+// Background which indicates the middle of the slider range with a
+// line.
+SliderBackgroundPtr create_SliderMidPointBackground();
 
 class SliderCursors{
 public:

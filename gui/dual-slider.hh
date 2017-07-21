@@ -30,12 +30,12 @@ public:
   DualSlider(wxWindow* parent);
   virtual Interval GetSelectedInterval() const = 0;
   virtual void SetSelectedInterval(const Interval&) = 0;
-  virtual void SetBackground(const SliderBackground&) = 0;
+  virtual void SetBackground(SliderBackgroundPtr) = 0;
 private:
   template<int MINB, int MAXB, typename FUNC>
   friend DualSlider* create_dual_slider(wxWindow*,
     const StaticBoundedInterval<MINB, MAXB>&,
-    const SliderBackground&,
+    SliderBackgroundPtr,
     const SliderCursors&,
     const IntSize&,
     const FUNC&);
@@ -43,14 +43,14 @@ private:
   template<int MINB, int MAXB>
   friend DualSlider* create_dual_slider(wxWindow*,
     const StaticBoundedInterval<MINB, MAXB>&,
-    const SliderBackground&,
+    SliderBackgroundPtr,
     const SliderCursors&,
     const IntSize&);
 
   static DualSlider* Create(wxWindow* parent,
     const ClosedIntRange&,
     const Interval&,
-    const SliderBackground&,
+    SliderBackgroundPtr,
     const SliderCursors&,
     const IntSize&);
 };
@@ -67,7 +67,7 @@ void on_dual_slider_change(window_t, const interval_func&);
 template<int MINB, int MAXB>
 DualSlider* create_dual_slider(wxWindow* parent,
   const StaticBoundedInterval<MINB, MAXB>& values,
-  const SliderBackground& bg,
+  SliderBackgroundPtr bg,
   const SliderCursors& cursors,
   const IntSize& initialSize)
 {
@@ -75,7 +75,7 @@ DualSlider* create_dual_slider(wxWindow* parent,
   return DualSlider::Create(parent,
     make_closed_range(RangeType::min_allowed, RangeType::max_allowed),
     values.GetInterval(),
-    bg,
+    std::move(bg),
     cursors,
     initialSize);
 }
@@ -84,7 +84,7 @@ DualSlider* create_dual_slider(wxWindow* parent,
 template<int MINB, int MAXB, typename FUNC>
 DualSlider* create_dual_slider(wxWindow* parent,
   const StaticBoundedInterval<MINB, MAXB>& values,
-  const SliderBackground& bg,
+  SliderBackgroundPtr bg,
   const SliderCursors& cursors,
   const IntSize& initialSize,
   const FUNC& onChange)
@@ -93,7 +93,7 @@ DualSlider* create_dual_slider(wxWindow* parent,
   auto s = DualSlider::Create(parent,
     make_closed_range(RangeType::min_allowed, RangeType::max_allowed),
     values.GetInterval(),
-    bg,
+    std::move(bg),
     cursors,
     initialSize);
   events::on_slider_change(s, onChange);

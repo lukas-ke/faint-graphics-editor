@@ -62,7 +62,7 @@ public:
     {
       return create_dual_slider(this,
         fractional_bounded_interval<color_range_t>(0.2, 0.8),
-        SliderHistogramBackground(histogram, bg),
+        create_SliderHistogramBackground(histogram, bg),
         m_sliderCursors,
         ui::horizontal_slider_size);
     };

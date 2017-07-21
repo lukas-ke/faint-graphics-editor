@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include <algorithm>
+#include "bitmap/bitmap.hh"
 #include "bitmap/draw.hh"
 #include "bitmap/histogram.hh"
 #include "geo/int-rect.hh"
@@ -23,49 +24,56 @@
 
 namespace faint{
 
-SliderHistogramBackground::SliderHistogramBackground(
-  const std::vector<int>& values,
+class SliderHistogramBackground : public SliderBackground{
+public:
+  SliderHistogramBackground(const std::vector<int>& values, const ColRGB& fg)
+    : m_bitmap(),
+      m_values(values),
+      m_fg(fg)
+  {}
+
+  void Draw(Bitmap& bmp, const IntSize& size, SliderDir) override{
+    if (!bitmap_ok(m_bitmap) || m_bitmap.GetSize() != size){
+      InitializeBitmap(size);
+    }
+    blit(at_top_left(m_bitmap), onto(bmp));
+  }
+
+private:
+  void InitializeBitmap(const IntSize& size){
+    const int numValues = resigned(m_values.size());
+    const bin_t bins(std::min(numValues, size.w));
+    Histogram histogram(ClosedIntRange(min_t(0), max_t(numValues)), bins);
+    for (int i = 0; i != numValues; i++){
+      histogram.Insert(i, count_t(m_values[to_size_t(i)]));
+    }
+    int max = histogram.Max();
+
+    // Pixels per bin
+    double binWidth = std::max(size.w / double(histogram.NumBins()), 1.0);
+
+    double scale_h = size.h / double(max);
+    m_bitmap = Bitmap(size, color_button_face());
+
+    for (int bin = 0; bin < histogram.NumBins(); bin++){
+      int x = static_cast<int>(bin * binWidth);
+      int y = static_cast<int>(size.h - histogram.Count(bin_t(bin)) * scale_h);
+      fill_rect_color(m_bitmap, IntRect(IntPoint(x,y),
+          IntSize(int(binWidth) + 1, size.h)), Color(m_fg,255));
+    }
+
+    draw_sunken_ui_border(m_bitmap, {IntPoint(0,0), size});
+  }
+
+  Bitmap m_bitmap;
+  std::vector<int> m_values;
+  ColRGB m_fg;
+};
+
+SliderBackgroundPtr create_SliderHistogramBackground(const std::vector<int>& v,
   const ColRGB& fg)
-  : m_bitmap(),
-    m_values(values),
-    m_fg(fg)
-{}
-
-void SliderHistogramBackground::Draw(Bitmap& bmp, const IntSize& size, SliderDir){
-  if (!bitmap_ok(m_bitmap) || m_bitmap.GetSize() != size){
-    InitializeBitmap(size);
-  }
-  blit(at_top_left(m_bitmap), onto(bmp));
-}
-
-SliderBackground* SliderHistogramBackground::Clone() const {
-  return new SliderHistogramBackground(*this);
-}
-
-void SliderHistogramBackground::InitializeBitmap(const IntSize& size){
-  const int numValues = resigned(m_values.size());
-  const bin_t bins(std::min(numValues, size.w));
-  Histogram histogram(ClosedIntRange(min_t(0), max_t(numValues)), bins);
-  for (int i = 0; i != numValues; i++){
-    histogram.Insert(i, count_t(m_values[to_size_t(i)]));
-  }
-  int max = histogram.Max();
-
-  // Pixels per bin
-  double binWidth = std::max(size.w / double(histogram.NumBins()), 1.0);
-
-  double scale_h = size.h / double(max);
-  m_bitmap = Bitmap(size, color_button_face());
-
-  for (int bin = 0; bin < histogram.NumBins(); bin++){
-    int x = static_cast<int>(bin * binWidth);
-    int y = static_cast<int>(size.h - histogram.Count(bin_t(bin)) * scale_h);
-    fill_rect_color(m_bitmap, IntRect(IntPoint(x,y),
-        IntSize(int(binWidth) + 1, size.h)), Color(m_fg,255));
-  }
-
-  draw_sunken_ui_border(m_bitmap, {IntPoint(0,0), size});
-
+{
+  return std::make_unique<SliderHistogramBackground>(v, fg);
 }
 
 } // namespace

@@ -45,7 +45,7 @@ void gui_test_slider(wxWindow* p, faint::StatusInterface&,
   auto s1 = create_slider(p, BoundedInt(min_t(0), 45, max_t(120)),
     SliderDir::HORIZONTAL,
     create_LineSliderMarker(),
-    SliderRectangleBackground(),
+    create_SliderRectangleBackground(),
     c.GetSliderCursors(),
     IntSize(200, 20));
   set_pos(s1, {10,10});
@@ -53,7 +53,7 @@ void gui_test_slider(wxWindow* p, faint::StatusInterface&,
   auto s2 = create_slider(p, BoundedInt(min_t(0), 45, max_t(120)),
     SliderDir::HORIZONTAL,
     create_BorderedSliderMarker(),
-    SliderRectangleBackground(),
+    create_SliderRectangleBackground(),
     c.GetSliderCursors(),
     IntSize(200, 20));
   set_pos(s2, {10,40});
@@ -61,7 +61,7 @@ void gui_test_slider(wxWindow* p, faint::StatusInterface&,
   auto s3 = create_slider(p, BoundedInt(min_t(0), 45, max_t(120)),
     SliderDir::HORIZONTAL,
     create_BorderedSliderMarker(),
-    AlphaBackground(ColRGB(255,0,0)),
+    create_SliderAlphaBackground(ColRGB(255,0,0)),
     c.GetSliderCursors(),
     IntSize(200, 20));
   set_pos(s3, {10,70});
@@ -69,14 +69,14 @@ void gui_test_slider(wxWindow* p, faint::StatusInterface&,
   auto s4 = create_slider(p, BoundedInt(min_t(0), 45, max_t(255)),
     SliderDir::HORIZONTAL,
     create_BorderedSliderMarker(),
-    SliderHistogramBackground(histogram_test_values(), ColRGB(0,0,0)),
+    create_SliderHistogramBackground(histogram_test_values(), ColRGB(0,0,0)),
     c.GetSliderCursors(),
     IntSize(200, 20));
   set_pos(s4, {10,100});
 
   auto s5 = create_dual_slider(p,
     StaticBoundedInterval<0, 100>(Interval(min_t(0), max_t(80))),
-    AlphaBackground(ColRGB(0,128,0)),
+    create_SliderAlphaBackground(ColRGB(0,128,0)),
     c.GetSliderCursors(),
     IntSize(200, 20));
   set_pos(s5, {10,130});
@@ -84,7 +84,7 @@ void gui_test_slider(wxWindow* p, faint::StatusInterface&,
   auto s6 = create_slider(p, BoundedInt(min_t(0), 45, max_t(120)),
     SliderDir::VERTICAL,
     create_BorderedSliderMarker(),
-    SliderRectangleBackground(),
+    create_SliderRectangleBackground(),
     c.GetSliderCursors(),
     IntSize(20, 230));
   set_pos(s6, {10,160});
@@ -92,7 +92,7 @@ void gui_test_slider(wxWindow* p, faint::StatusInterface&,
   auto s7 = create_slider(p, BoundedInt(min_t(0), 45, max_t(120)),
     SliderDir::VERTICAL,
     create_BorderedSliderMarker(),
-    AlphaBackground(ColRGB(0,0,255)),
+    create_SliderAlphaBackground(ColRGB(0,0,255)),
     c.GetSliderCursors(),
     IntSize(20, 230));
   set_pos(s7, {40,160});

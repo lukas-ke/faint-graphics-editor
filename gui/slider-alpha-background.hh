@@ -15,24 +15,12 @@
 
 #ifndef FAINT_SLIDER_ALPHA_BACKGROUND_HH
 #define FAINT_SLIDER_ALPHA_BACKGROUND_HH
-#include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
-#include "bitmap/paint.hh"
 #include "gui/slider-common.hh"
 
 namespace faint{
 
-class AlphaBackground : public SliderBackground{
-public:
-  AlphaBackground(const ColRGB&);
-  void Draw(Bitmap&, const IntSize&, SliderDir) override;
-  SliderBackground* Clone() const override;
-
-private:
-  Bitmap m_bitmap;
-  Paint m_bgPattern;
-  ColRGB m_rgb;
-};
+SliderBackgroundPtr create_SliderAlphaBackground(const ColRGB&);
 
 } // namespace
 

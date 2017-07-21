@@ -63,7 +63,7 @@ public:
 
       SliderDir::HORIZONTAL,
       create_BorderedSliderMarker(),
-      SliderRectangleBackground(),
+      create_SliderRectangleBackground(),
       m_sliderCursors,
       IntSize(200, 20));
 

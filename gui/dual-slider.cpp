@@ -57,13 +57,13 @@ public:
   DualSliderImpl(wxWindow* parent,
     const ClosedIntRange& range,
     const Interval& startInterval,
-    const SliderBackground& bg,
+    SliderBackgroundPtr bg,
     const SliderCursors& cursors)
     : DualSlider(parent),
       m_anchor(0),
       m_anchorV1(0.0),
       m_anchorV2(0.0),
-      m_background(bg.Clone()),
+      m_background(std::move(bg)),
       m_cursors(cursors),
       m_mouse(this),
       m_range(range),
@@ -201,8 +201,8 @@ public:
     Refresh();
   }
 
-  void SetBackground(const SliderBackground& bg) override{
-    m_background.reset(bg.Clone());
+  void SetBackground(SliderBackgroundPtr bg) override{
+    m_background = std::move(bg);
     Refresh();
   }
 
@@ -287,11 +287,15 @@ bool DualSliderEvent::Special() const{
 DualSlider* DualSlider::Create(wxWindow* parent,
   const ClosedIntRange& range,
   const Interval& startInterval,
-  const SliderBackground& bg,
+  SliderBackgroundPtr bg,
   const SliderCursors& cursors,
   const IntSize& initialSize)
 {
-  auto s = make_wx<DualSliderImpl>(parent, range, startInterval, bg, cursors);
+  auto s = make_wx<DualSliderImpl>(parent,
+    range,
+    startInterval,
+    std::move(bg),
+    cursors);
   s->SetInitialSize(to_wx(initialSize));
   return s;
 }

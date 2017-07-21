@@ -29,8 +29,9 @@
 
 namespace faint{
 
-SliderHistogramBackground threshold_histogram_background(const Bitmap& bmp){
-  return SliderHistogramBackground(threshold_histogram(bmp), ColRGB(0,0,0));
+static SliderBackgroundPtr threshold_histogram_background(const Bitmap& bmp){
+  return create_SliderHistogramBackground(threshold_histogram(bmp),
+    ColRGB(0,0,0));
 }
 
 class ThresholdDialog : public CommandWindow{

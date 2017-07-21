@@ -35,14 +35,15 @@ void draw_styled_slider_bg_rect(Bitmap& bmp, const IntSize& size){
   draw_sunken_ui_border(bmp, r);
 }
 
-void SliderRectangleBackground::Draw(Bitmap& bmp, const IntSize& size,
-  SliderDir)
-{
-  draw_styled_slider_bg_rect(bmp, size);
-}
+class SliderRectangleBackground final : public SliderBackground{
+ public:
+  void Draw(Bitmap& bmp, const IntSize& size, SliderDir) override{
+    draw_styled_slider_bg_rect(bmp, size);
+  }
+};
 
-SliderBackground* SliderRectangleBackground::Clone() const{
-  return new SliderRectangleBackground(*this);
+SliderBackgroundPtr create_SliderRectangleBackground(){
+  return std::make_unique<SliderRectangleBackground>();
 }
 
 static IntLineSegment get_mid_line(const IntSize& size, SliderDir dir){
@@ -57,16 +58,18 @@ static IntLineSegment get_mid_line(const IntSize& size, SliderDir dir){
   }
 }
 
-void SliderMidPointBackground::Draw(Bitmap& bmp, const IntSize& size,
-  SliderDir dir)
-{
-  draw_styled_slider_bg_rect(bmp, size);
-  draw_line(bmp, get_mid_line(size, dir),
-    {color_inactive_caption(), 3, LineStyle::SOLID, LineCap::BUTT});
-}
+class SliderMidPointBackground final : public SliderBackground{
 
-SliderBackground* SliderMidPointBackground::Clone() const{
-  return new SliderMidPointBackground(*this);
+public:
+  void Draw(Bitmap& bmp, const IntSize& size, SliderDir dir) override{
+    draw_styled_slider_bg_rect(bmp, size);
+    draw_line(bmp, get_mid_line(size, dir),
+      {color_inactive_caption(), 3, LineStyle::SOLID, LineCap::BUTT});
+  }
+};
+
+SliderBackgroundPtr create_SliderMidPointBackground(){
+  return std::make_unique<SliderMidPointBackground>();
 }
 
 double pos_to_value(const int pos,

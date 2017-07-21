@@ -64,7 +64,7 @@ public:
       BoundedInt::Mid(min_t(-100), max_t(100)),
       SliderDir::HORIZONTAL,
       create_BorderedSliderMarker(),
-      SliderMidPointBackground(),
+      create_SliderMidPointBackground(),
       m_sliderCursors,
       ui::horizontal_slider_size);
 
@@ -73,7 +73,7 @@ public:
       BoundedInt::Mid(min_t(-360), max_t(360)),
       SliderDir::HORIZONTAL,
       create_BorderedSliderMarker(),
-      SliderMidPointBackground(),
+      create_SliderMidPointBackground(),
       m_sliderCursors,
       ui::horizontal_slider_size);
 

@@ -16,23 +16,13 @@
 #ifndef FAINT_SLIDER_HISTOGRAM_BACKGROUND_HH
 #define FAINT_SLIDER_HISTOGRAM_BACKGROUND_HH
 #include <vector>
-#include "bitmap/bitmap.hh"
 #include "bitmap/color.hh"
 #include "gui/slider-common.hh"
 
 namespace faint{
 
-class SliderHistogramBackground : public SliderBackground{
-public:
-  SliderHistogramBackground(const std::vector<int>& values, const ColRGB& fg);
-  void Draw(Bitmap&, const IntSize&, SliderDir) override;
-  SliderBackground* Clone() const override;
-private:
-  void InitializeBitmap(const IntSize&);
-  Bitmap m_bitmap;
-  std::vector<int> m_values;
-  ColRGB m_fg;
-};
+SliderBackgroundPtr create_SliderHistogramBackground(const std::vector<int>&,
+  const ColRGB& fg);
 
 } // namespace
 

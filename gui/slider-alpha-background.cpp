@@ -13,7 +13,9 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include "bitmap/bitmap.hh"
 #include "bitmap/draw.hh"
+#include "bitmap/paint.hh"
 #include "bitmap/pattern.hh"
 #include "geo/int-point.hh"
 #include "geo/int-rect.hh"
@@ -22,7 +24,7 @@
 
 namespace faint{
 
-Bitmap alpha_background_bitmap(const ColRGB& rgb,
+static Bitmap alpha_background_bitmap(const ColRGB& rgb,
   const IntSize& size,
   SliderDir dir)
 {
@@ -34,33 +36,43 @@ Bitmap alpha_background_bitmap(const ColRGB& rgb,
   }
 }
 
-AlphaBackground::AlphaBackground(const ColRGB& rgb)
-  : m_rgb(rgb)
-{
-  const int cellW = 10;
-  Bitmap bg(IntSize(cellW*2,cellW*2), color_white);
-  const Color alpha_gray(grayscale_rgba(192));
-  // Checkered background
-  fill_rect_color(bg, IntRect(IntPoint(cellW,0), IntSize(cellW,cellW)),
-    alpha_gray);
+class AlphaBackground : public SliderBackground{
+public:
+  explicit AlphaBackground(const ColRGB& rgb)
+    : m_rgb(rgb)
+  {
+    const int cellW = 10;
+    Bitmap bg(IntSize(cellW*2,cellW*2), color_white);
+    const Color alpha_gray(grayscale_rgba(192));
+    // Checkered background
+    fill_rect_color(bg, IntRect(IntPoint(cellW,0), IntSize(cellW,cellW)),
+      alpha_gray);
 
-  fill_rect_color(bg, IntRect(IntPoint(0,cellW), IntSize(cellW,cellW)),
-    alpha_gray);
-  m_bgPattern = Paint(Pattern(bg));
-}
-
-void AlphaBackground::Draw(Bitmap& bmp, const IntSize& size, SliderDir dir){
-  if (!bitmap_ok(m_bitmap) || m_bitmap.GetSize() != size){
-    m_bitmap = alpha_background_bitmap(m_rgb, size, dir);
+    fill_rect_color(bg, IntRect(IntPoint(0,cellW), IntSize(cellW,cellW)),
+      alpha_gray);
+    m_bgPattern = Paint(Pattern(bg));
   }
 
-  clear(bmp, Color(255,255,255));
-  fill_rect(bmp, IntRect(IntPoint(0,0), bmp.GetSize()), m_bgPattern);
-  blend(at_top_left(m_bitmap), onto(bmp));
-}
+  void AlphaBackground::Draw(Bitmap& bmp,
+    const IntSize& size,
+    SliderDir dir) override
+  {
+    if (!bitmap_ok(m_bitmap) || m_bitmap.GetSize() != size){
+      m_bitmap = alpha_background_bitmap(m_rgb, size, dir);
+    }
 
-SliderBackground* AlphaBackground::Clone() const{
-  return new AlphaBackground(*this);
+    clear(bmp, Color(255,255,255));
+    fill_rect(bmp, IntRect(IntPoint(0,0), bmp.GetSize()), m_bgPattern);
+    blend(at_top_left(m_bitmap), onto(bmp));
+  }
+private:
+  Bitmap m_bitmap;
+  Paint m_bgPattern;
+  ColRGB m_rgb;
+};
+
+SliderBackgroundPtr create_SliderAlphaBackground(const ColRGB& rgb){
+  return std::make_unique<AlphaBackground>(rgb);
 }
 
 } // namespace

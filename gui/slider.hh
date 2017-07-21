@@ -27,7 +27,7 @@ class Slider : public wxPanel{
 public:
   Slider(wxWindow* parent);
   virtual int GetValue() const = 0;
-  virtual void SetBackground(const SliderBackground&) = 0;
+  virtual void SetBackground(SliderBackgroundPtr) = 0;
   virtual void SetValue(int) = 0;
 };
 
@@ -51,14 +51,14 @@ Slider* create_slider(wxWindow* parent,
   const BoundedInt&,
   SliderDir,
   SliderMarkerPtr,
-  const SliderBackground&,
+  SliderBackgroundPtr,
   const SliderCursors&,
   const IntSize& initialSize);
 
 Slider* create_slider(wxWindow* parent,
   const BoundedInt&,
   SliderDir,
-  const SliderBackground&,
+  SliderBackgroundPtr,
   const SliderCursors&,
   const IntSize& initialSize);
 
@@ -66,7 +66,7 @@ Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
   SliderMarkerPtr,
-  const SliderBackground&,
+  SliderBackgroundPtr,
   const SliderCursors&,
   const IntSize& initialSize,
   const std::function<void()>& onChange);
@@ -74,7 +74,7 @@ Slider* create_slider(wxWindow* parent,
 Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir dir,
-  const SliderBackground&,
+  SliderBackgroundPtr,
   const SliderCursors&,
   const IntSize& initialSize,
   const std::function<void()>& onChange);
@@ -83,7 +83,7 @@ Slider* create_slider(wxWindow* parent,
   const BoundedInt& values,
   SliderDir,
   SliderMarkerPtr,
-  const SliderBackground&,
+  SliderBackgroundPtr,
   const SliderCursors&,
   const IntSize&,
   const std::function<void(int)>& onChange);

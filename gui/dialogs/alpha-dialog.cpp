@@ -100,7 +100,7 @@ public:
       BoundedInt(min_t(0), get_initial_alpha(m_bitmap), max_t(255)),
       SliderDir::HORIZONTAL,
       create_BorderedSliderMarker(),
-      AlphaBackground(ColRGB(77,109,243)),
+      create_SliderAlphaBackground(ColRGB(77,109,243)),
       m_sliderCursors,
       ui::horizontal_slider_size,
       update_preview);

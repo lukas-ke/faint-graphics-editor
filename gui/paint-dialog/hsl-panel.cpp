@@ -65,10 +65,6 @@ public:
     blit(at_top_left(m_bitmap), onto(bmp));
   }
 
-  SliderBackground* Clone() const override{
-    return new LightnessBackground(*this);
-  }
-
 private:
   Bitmap m_bitmap;
   HS m_hueSat;
@@ -195,7 +191,7 @@ public:
       BoundedInt::Mid(min_t(0), max_t(240)),
       SliderDir::VERTICAL,
       create_BorderedSliderMarker(),
-      LightnessBackground(m_hueSatPicker->GetValue()),
+      std::make_unique<LightnessBackground>(m_hueSatPicker->GetValue()),
       m_sliderCursors,
       IntSize(20, 240));
     set_pos(m_lightnessSlider, to_the_right_of(m_hueSatPicker));
@@ -204,7 +200,7 @@ public:
       BoundedInt::Mid(min_t(0), max_t(255)),
       SliderDir::VERTICAL,
       create_BorderedSliderMarker(),
-      AlphaBackground(ColRGB(128,128,128)),
+      create_SliderAlphaBackground(ColRGB(128,128,128)),
       m_sliderCursors,
       IntSize(20,255));
     set_pos(m_alphaSlider, to_the_right_of(m_lightnessSlider));
@@ -257,7 +253,7 @@ public:
     events::on_slider_change(m_lightnessSlider,
       [this](int lightness){
         HSL hsl(m_hueSatPicker->GetValue(), lightness / 240.0);
-        m_alphaSlider->SetBackground(AlphaBackground(to_rgb(hsl)));
+        m_alphaSlider->SetBackground(create_SliderAlphaBackground(to_rgb(hsl)));
         UpdateColorBitmap();
         set_number_text(m_lightnessTxt, lightness, Signal::NO);
         UpdateRGBA();
@@ -272,9 +268,10 @@ public:
     bind(this, EVT_PICKED_HUE_SAT,
       [this](){
         HS hueSat(m_hueSatPicker->GetValue());
-        m_lightnessSlider->SetBackground(LightnessBackground(hueSat));
+        m_lightnessSlider->SetBackground(
+          std::make_unique<LightnessBackground>(hueSat));
         ColRGB rgb(to_rgb(HSL(hueSat, m_lightnessSlider->GetValue() / 240.0))); // Fixme: Nasty conversion
-        m_alphaSlider->SetBackground(AlphaBackground(rgb));
+        m_alphaSlider->SetBackground(create_SliderAlphaBackground(rgb));
         UpdateColorBitmap();
         int hue = static_cast<int>((hueSat.h / 360) * 240); // Fixme
         set_number_text(m_hueTxt, hue, Signal::NO);
@@ -296,19 +293,22 @@ public:
           HS hs = m_hueSatPicker->GetValue();
           hs.h = std::min((value / 240.0) * 360.0, 359.0); // Fixme
           m_hueSatPicker->Set(hs);
-          m_lightnessSlider->SetBackground(LightnessBackground(hs));
+          m_lightnessSlider->SetBackground(
+            std::make_unique<LightnessBackground>(hs));
           UpdateColorBitmap();
         }
         else if (ctrl == m_saturationTxt){
           HS hs = m_hueSatPicker->GetValue();
           hs.s = value / 240.0;
           m_hueSatPicker->Set(hs);
-          m_lightnessSlider->SetBackground(LightnessBackground(hs));
+          m_lightnessSlider->SetBackground(
+            std::make_unique<LightnessBackground>(hs));
           UpdateColorBitmap();
         }
         else if (ctrl == m_lightnessTxt){
           m_lightnessSlider->SetValue(value);
-          m_alphaSlider->SetBackground(AlphaBackground(strip_alpha(GetColor())));
+          m_alphaSlider->SetBackground(
+            create_SliderAlphaBackground(strip_alpha(GetColor())));
           UpdateColorBitmap();
         }
         else if (ctrl == m_alphaTxt){
@@ -321,9 +321,10 @@ public:
               parse_int_value(m_blueTxt, 0)));
           HSL hsl(to_hsl(rgb));
           m_hueSatPicker->Set(hsl.GetHS());
-          m_lightnessSlider->SetBackground(LightnessBackground(hsl.GetHS()));
+          m_lightnessSlider->SetBackground(
+            std::make_unique<LightnessBackground>(hsl.GetHS()));
           m_lightnessSlider->SetValue(floored(hsl.l * 240.0)); // Fixme: Conversion
-          m_alphaSlider->SetBackground(AlphaBackground(rgb));
+          m_alphaSlider->SetBackground(create_SliderAlphaBackground(rgb));
           UpdateColorBitmap();
           UpdateHSL();
         }
@@ -340,9 +341,11 @@ public:
   void SetColor(const Color& color){
     HSL hsl(to_hsl(strip_alpha(color)));
     m_hueSatPicker->Set(hsl.GetHS());
-    m_lightnessSlider->SetBackground(LightnessBackground(hsl.GetHS()));
+    m_lightnessSlider->SetBackground(
+      std::make_unique<LightnessBackground>(hsl.GetHS()));
     m_lightnessSlider->SetValue(floored(hsl.l * 240.0)); // Fixme: Nasty conversion
-    m_alphaSlider->SetBackground(AlphaBackground(strip_alpha(color)));
+    m_alphaSlider->SetBackground(
+      create_SliderAlphaBackground(strip_alpha(color)));
     m_alphaSlider->SetValue(color.a);
     UpdateColorBitmap();
     UpdateRGBA();
