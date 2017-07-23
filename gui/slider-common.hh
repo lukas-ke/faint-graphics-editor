@@ -36,11 +36,11 @@ public:
 using SliderBackgroundPtr = std::unique_ptr<SliderBackground>;
 
 // Background filled with a solid color.
-SliderBackgroundPtr create_SliderRectangleBackground();
+SliderBackgroundPtr slider_bg_Rectangle();
 
 // Background which indicates the middle of the slider range with a
 // line.
-SliderBackgroundPtr create_SliderMidPointBackground();
+SliderBackgroundPtr slider_bg_MidPoint();
 
 class SliderCursors{
 public:

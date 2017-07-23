@@ -62,12 +62,12 @@ public:
     {
       return create_dual_slider(this,
         fractional_bounded_interval<color_range_t>(0.2, 0.8),
-        create_SliderHistogramBackground(histogram, bg),
+        slider_bg_Histogram(histogram, bg),
         m_sliderCursors,
         ui::horizontal_slider_size);
     };
 
-    m_redSlider = create_color_slider(ui::nice_red,red_histogram(m_bitmap));
+    m_redSlider = create_color_slider(ui::nice_red, red_histogram(m_bitmap));
     m_greenSlider = create_color_slider(ui::nice_green, green_histogram(m_bitmap));
     m_blueSlider = create_color_slider(ui::nice_blue, blue_histogram(m_bitmap));
 

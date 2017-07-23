@@ -216,7 +216,7 @@ Slider* create_slider(wxWindow* parent,
   auto s = make_wx<SliderImpl>(parent,
     values,
     dir,
-    create_LineSliderMarker(),
+    slider_marker_Line(),
     std::move(bg),
     cursors);
   s->SetInitialSize(to_wx(initialSize));
@@ -275,7 +275,7 @@ public:
   }
 };
 
-SliderMarkerPtr create_LineSliderMarker(){
+SliderMarkerPtr slider_marker_Line(){
   return std::make_unique<LineSliderMarker>();
 }
 
@@ -304,7 +304,7 @@ public:
   }
 };
 
-SliderMarkerPtr create_BorderedSliderMarker(){
+SliderMarkerPtr slider_marker_BorderedLine(){
   return std::make_unique<BorderedSliderMarker>();
 }
 

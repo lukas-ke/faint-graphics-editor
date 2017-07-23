@@ -71,7 +71,7 @@ private:
   ColRGB m_rgb;
 };
 
-SliderBackgroundPtr create_SliderAlphaBackground(const ColRGB& rgb){
+SliderBackgroundPtr slider_bg_Alpha(const ColRGB& rgb){
   return std::make_unique<AlphaBackground>(rgb);
 }
 

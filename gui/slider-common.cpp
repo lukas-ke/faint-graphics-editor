@@ -42,7 +42,7 @@ class SliderRectangleBackground final : public SliderBackground{
   }
 };
 
-SliderBackgroundPtr create_SliderRectangleBackground(){
+SliderBackgroundPtr slider_bg_Rectangle(){
   return std::make_unique<SliderRectangleBackground>();
 }
 
@@ -68,7 +68,7 @@ public:
   }
 };
 
-SliderBackgroundPtr create_SliderMidPointBackground(){
+SliderBackgroundPtr slider_bg_MidPoint(){
   return std::make_unique<SliderMidPointBackground>();
 }
 

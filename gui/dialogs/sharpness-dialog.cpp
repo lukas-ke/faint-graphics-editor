@@ -64,8 +64,8 @@ public:
     m_sharpnessSlider = create_slider(this,
       BoundedInt::Mid(min_t(-100), max_t(100)),
       SliderDir::HORIZONTAL,
-      create_BorderedSliderMarker(),
-      create_SliderMidPointBackground(),
+      slider_marker_BorderedLine(),
+      slider_bg_MidPoint(),
       m_sliderCursors,
       IntSize(200, 20));
 

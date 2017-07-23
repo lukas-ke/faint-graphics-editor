@@ -41,10 +41,10 @@ public:
 using SliderMarkerPtr = std::unique_ptr<SliderMarker>;
 
 // A line indicating a slider position.
-SliderMarkerPtr create_LineSliderMarker();
+SliderMarkerPtr slider_marker_Line();
 
 // A bordered line indicating a slider position.
-SliderMarkerPtr create_BorderedSliderMarker();
+SliderMarkerPtr slider_marker_BorderedLine();
 
 // Creates a horizontal or vertical slider control
 Slider* create_slider(wxWindow* parent,

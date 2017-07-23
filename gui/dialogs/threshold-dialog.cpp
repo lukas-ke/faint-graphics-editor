@@ -29,8 +29,8 @@
 
 namespace faint{
 
-static SliderBackgroundPtr threshold_histogram_background(const Bitmap& bmp){
-  return create_SliderHistogramBackground(threshold_histogram(bmp),
+static SliderBackgroundPtr slider_bg_threshold_histogram(const Bitmap& bmp){
+  return slider_bg_Histogram(threshold_histogram(bmp),
     ColRGB(0,0,0));
 }
 
@@ -70,7 +70,7 @@ public:
 
     m_slider = create_dual_slider(raw(m_dialog),
       fractional_bounded_interval<threshold_range_t>(0.2, 0.8),
-      threshold_histogram_background(m_bitmap),
+      slider_bg_threshold_histogram(m_bitmap),
       m_sliderCursors,
       ui::tall_horizontal_slider_size,
       [&](const Interval&, bool){
@@ -144,7 +144,7 @@ private:
 
   void Reinitialize(WindowFeedback& feedback) override{
     m_bitmap = feedback.GetBitmap();
-    m_slider->SetBackground(threshold_histogram_background(m_bitmap));
+    m_slider->SetBackground(slider_bg_threshold_histogram(m_bitmap));
     UpdatePreview();
   }
 

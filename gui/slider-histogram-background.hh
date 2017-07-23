@@ -21,7 +21,7 @@
 
 namespace faint{
 
-SliderBackgroundPtr create_SliderHistogramBackground(const std::vector<int>&,
+SliderBackgroundPtr slider_bg_Histogram(const std::vector<int>&,
   const ColRGB& fg);
 
 } // namespace

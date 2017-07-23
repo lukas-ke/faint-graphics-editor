@@ -70,8 +70,8 @@ public:
     m_brightnessSlider = create_slider(this,
       BoundedInt::Mid(min_t(0), max_t(100)),
       SliderDir::HORIZONTAL,
-      create_BorderedSliderMarker(),
-      create_SliderMidPointBackground(),
+      slider_marker_BorderedLine(),
+      slider_bg_MidPoint(),
       m_sliderCursors,
       ui::horizontal_slider_size);
 
@@ -79,8 +79,8 @@ public:
     m_contrastSlider = create_slider(this,
       BoundedInt::Mid(min_t(0), max_t(100)),
       SliderDir::HORIZONTAL,
-      create_BorderedSliderMarker(),
-      create_SliderMidPointBackground(),
+      slider_marker_BorderedLine(),
+      slider_bg_MidPoint(),
       m_sliderCursors,
       ui::horizontal_slider_size);
 

@@ -20,7 +20,7 @@
 
 namespace faint{
 
-SliderBackgroundPtr create_SliderAlphaBackground(const ColRGB&);
+SliderBackgroundPtr slider_bg_Alpha(const ColRGB&);
 
 } // namespace
 

@@ -70,7 +70,7 @@ private:
   ColRGB m_fg;
 };
 
-SliderBackgroundPtr create_SliderHistogramBackground(const std::vector<int>& v,
+SliderBackgroundPtr slider_bg_Histogram(const std::vector<int>& v,
   const ColRGB& fg)
 {
   return std::make_unique<SliderHistogramBackground>(v, fg);
