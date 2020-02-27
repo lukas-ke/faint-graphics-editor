@@ -1,112 +1,131 @@
-# Building Faint on Windows using Visual Studio 2015
+# Building Faint on Windows using Build Tools for VS2019
 
-I use the Visual Studio 2015 community edition for building Faint in
+I use the "Build Tools for Visual Studio 2019" for building Faint in
 Windows.
 
-Note that since I only use Visual Studio for compiling, not for editing,
-there is no Visual Studio project or solution included with the Faint
-sources. Instead I use a Python script which invokes the Visual Studio
-compiler.
+Note that, since I only use the build tools, there is no Visual Studio
+project or solution included with the Faint sources. Instead I use a
+Python script which invokes the Visual Studio compiler directly.
 
 Many of the instructions below are done in the command prompt. The
-build steps require that the Visual Studio command prompt is used -
-and not the x64 variant!
+build steps require that the **Developer Command Prompt for VS 2019**
+is used.
 
 The instructions are written assuming that "c:\dev" is used as a root
-for checkouts etc., adapt this to your preferences
+for checkouts etc., adapt this to your preferences.
 
 ## Prerequisites
-* [Visual C++ Community Edition](https://www.visualstudio.com/en-us/downloads/visual-studio-2015-downloads-vs.aspx)
-* [git](https://git-scm.com/)
+
+### Build tools for Visual Studio 2019
+
+https://visualstudio.microsoft.com/downloads/
+
+Download the build tools installer and run it. The installer is named
+something like `vs_buildtools_<numbers>.exe`.
+
+At a minimum these components must be selected in the "Build
+tools"-installer:
+
+* C++-build tools core features
+* C++-2019-redistributable update
+* Windows 10 SDK
+* MSVC v142
+
+Note: Visual Studio 2019 Community (or any other edition of 2019)
+probably works as well, as long as the above features are included,
+but I have not tried it.
+
+### Vcpkg
+https://github.com/microsoft/vcpkg
+
+Microsoft package manager, used for getting and building some Faint dependencies.
+
+Clone it and run bootstrap:
+
+    cd c:\dev
+    git clone https://github.com/Microsoft/vcpkg
+    bootstrap-vcpkg.bat
 
 ## 1. wxWidgets
 wxWidgets is the GUI toolkit used for Faint.
 
 ### Clone the wxWidgets trunk
+
     cd c:\dev
     git clone https://github.com/wxWidgets/wxWidgets.git wxWidgets
 
 This clones the wxWidgets source to c:\dev\wxWidgets.
 
 ### Build wxWidgets
+
     cd c:\dev\wxWidgets\build\msw
     nmake BUILD=release SHARED=0 -f makefile.vc
+	
+Note: You can probably use Vcpkg instead, but I have not tried this.
+See https://www.wxwidgets.org/blog/2019/01/wxwidgets-and-vcpkg/
 
-## 2. Python
+## 2. Python 3
 Python is used both for generating some code when building Faint and
-as the embedded scripting language of Faint. Faint requires Python 3.4.0.
+as the embedded scripting language of Faint. Faint requires Python3,
+and was most recently tested with 3.8.2.
 
-### Install Python 3.4.0
+### Install Python 3
 http://www.python.org/download/
 
-**Note:** It seems the exact version matters, only `3.4.0` is known to work.
+Get the x86 (32-bit)-version, since that's how Faint is built
+currently.
 
 ## 3. Pango and Cairo
 Faint uses Cairo for rendering vector graphics, and Pango for
 rendering text.
 
-### Get the Pango and Cairo development files
-~~http://www.gtk.org/download/win32.php~~
+Use Vcpkg to download and build Pango, Cairo and related dependencies.
+Simply getting cairo seems to bring with it a lot of the dependencies
+(e.g. Pango):
 
-**Update:** This info is out of date, www.gtk.org no longer provides
-these dll:s. For now consider using the dll:s from archived gtk.org:
-http://web.archive.org/web/20150905072710/http://www.gtk.org/download/win32.php
+    cd c:\dev\vcpkg
+    vcpkg install cairo:x86-windows
 
-The required items are listed below. Unzip these somewhere convenient.
-
-**Required Dev** These are required for building Faint, and contain
-libraries and headers. These will be indicated by the build.cfg (see
-step 4).
-
-* GLib Dev
-* Pango Dev
-* Cairo Dev
-
-**Required Run time** DLL:s from these zips are needed to run Faint.
-
-* Freetype runtime
-* gettext runtime
-* Cairo runtime
-* expat runtime
-* Fontconfig runtime
-* GLib runtime
-* Pango runtime
-* libpng runtime
-* zlib runtime
+If any of the dependencies cairo, pango, glib or libpng16 are missing
+get them explicitly for x86-windows with vcpkg.
 
 ## 4. Faint
-Without further ado...
+And finally...
 
 ### Clone Faint
+
     cd c:\dev
     git clone https://github.com/lukas-ke/faint-graphics-editor.git faint-graphics-editor
 
 This clones the Faint source to c:\dev\faint-graphics-editor.
 
 ### Create build.cfg
+
 The build.cfg contains paths to Faint dependencies. Generate the
 build-config as follows:
 
     cd c:\dev\faint-graphics-editor\build
     build.py
 
-This creates the build.cfg file. Edit it so that it correctly points out
-wxWidgets, Pango and Cairo.
+This creates the build.cfg file. Edit it so that it correctly points
+out wxWidgets, Pango and Cairo. If you used Vcpkg, it should look like
+the example below (except for any initial path differences and Python
+install path).
 
 Example build.cfg:
 
     [folders]
     wx_root=c:\dev\wxWidgets
-    cairo_include=c:\dev\cairo-dev_1.10.2-2_win32\include\cairo
-    cairo_lib=c:\dev\cairo-dev_1.10.2-2_win32\lib
-    python_include=c:\Python34\include
-    python_lib=c:\Python34\libs
-    pango_include=c:\dev\pango-dev_1.29.4-1_win32\include\pango-1.0
-    pango_lib=c:\dev\pango-dev_1.29.4-1_win32\lib
+    cairo_include=C:\dev\vcpkg\installed\x86-windows\include\cairo
+    cairo_lib=C:\dev\vcpkg\installed\x86-windows\lib
+    python_include=C:\Users\UserName\AppData\Local\Programs\Python\Python38-32\include
+    python_lib=C:\Users\UserName\AppData\Local\Programs\Python\Python38-32\libs
+    pango_include=C:\dev\vcpkg\installed\x86-windows\include
+    pango_lib=C:\dev\vcpkg\installed\x86-windows\lib
+    glib_include=C:\dev\vcpkg\installed\x86-windows\include
+    glib_lib=C:\dev\vcpkg\installed\x86-windows\lib
+    glib_config_include=C:\dev\vcpkg\installed\x86-windows\include
     pnglib_include=c:\dev\wxWidgets\src\png
-    glib_include=c:\dev\glib-dev_2.28.8-1_win32\include\glib-2.0
-    glib_lib=c:\dev\faintdep\glib-dev_2.28.8-1_win32\lib
-    glib_config_include=c:\dev\glib-dev_2.28.8-1_win32\lib\glib-2.0\include
     [nsis]
     makensis=
     [other]
@@ -118,32 +137,47 @@ only used for generating an installer and tags for the emacs editor
 respectively.
 
 ### Build Faint
-Run build.py again (from the Visual Studio 2015 command prompt!):
+Run build.py again (from the Developer command prompt):
 
+    cd c:\dev\faint-graphics-editor\build
     build.py
 
 Faint should now build, producing the executable "Faint.exe" in the
-root-folder (e.g c:\\dev\\faint\\faint.exe).
+root-folder (e.g c:\\dev\\faint-graphics-editor\\faint.exe).
 
 ### Copy runtime libraries
-Copy the following dll:s from the Runtime packages downloaded in (3)
-to the Faint root folder (e.g. c:\dev\faint-graphics-editor):
+Copy the following dll to the Faint root folder
+(e.g. `c:\dev\faint-graphics-editor`):
 
-* freetype6.dll
-* intl.dll
-* libcairo-2.dll
-* libexpat-1.dll
-* libfontconfig-1.dll
-* libgio-2.0-0.dll
-* libglib-2.0-0.dll
-* libgmodule-2.0-0.dll
-* libgobject-2.0-0.dll
-* libgthread-2.0-0.dll
-* libpango-1.0-0.dll
-* libpangocairo-1.0-0.dll
-* libpangoft2-1.0-0.dll
-* libpangowin32-1.0-0.dll
+* python38.dll 
+
+from `C:\Users\UserName\AppData\Local\Programs\Python\Python38-32`(or
+wherever you've installed Python).
+
+Also copy these dll:s:
+
+* bz2.dll
+* cairo.dll
+* expat.dll
+* fontconfig.dll
+* freetype.dll
+* glib-2.dll
+* gobject-2.dll
+* harfbuzz.dll
+* libcharset.dll
+* libffi.dll
+* libiconv.dll
+* libintl.dll
+* libpng16.dll
+* pango-1.dll
+* pangocairo-1.dll
+* pangoft2-1.dll
+* pangowin32-1.dll
+* pcre.dll
 * zlib1.dll
+
+from `vcpkg\installed\x86-windows\bin` (they were created by build
+step 3).
 
 ### Start
 Run the Faint executable (Faint.exe). Faint should start.

@@ -1,5 +1,7 @@
 # Building Faint on Linux
 
+**These instructions are probably outdated**
+
 For simplicity, these instructions assume that Faint and dependencies
 are cloned into ~/dev.
 
