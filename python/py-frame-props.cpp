@@ -395,7 +395,7 @@ PyTypeObject FramePropsType = {
   sizeof(framePropsObject), // tp_basicsize
   0, // tp_itemsize
   (destructor)frameprops_dealloc, // tp_dealloc
-  nullptr, // tp_print
+  0, // tp_vectorcall
   nullptr, // tp_getattr
   nullptr, // tp_setattr
   nullptr, // tp_compare

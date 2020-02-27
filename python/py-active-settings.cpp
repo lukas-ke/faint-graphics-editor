@@ -83,10 +83,10 @@ PyTypeObject ActiveSettingsType = {
   sizeof(activeSettingsObject), // tp_basicsize
   0, // tp_itemsize
   nullptr, // tp_dealloc
-  nullptr, // tp_print
+  0, // tp_vectorcall_offset
   nullptr, // tp_getattr
   nullptr, // tp_setattr
-  nullptr, // reserved (formerly tp_compare)
+  nullptr, // tp_as_async
   (reprfunc)as_repr, // tp_repr
   nullptr, // tp_as_number
   nullptr, // tp_as_sequence

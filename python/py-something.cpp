@@ -429,7 +429,7 @@ PyTypeObject SmthType = {
   sizeof(smthObject), // tp_basicsize
   0, // tp_itemsize
   nullptr, // tp_dealloc
-  nullptr, // tp_print
+  0, // tp_vectorcall_offset
   nullptr, // tp_getattr
   nullptr, // tp_setattr
   nullptr, // tp_compare
