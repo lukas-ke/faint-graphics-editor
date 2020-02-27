@@ -4,6 +4,7 @@
 *.exp
 *.lib
 *.tmp
+*.dll
 *__pycache__*
 /Doxyfile
 /doxygen
