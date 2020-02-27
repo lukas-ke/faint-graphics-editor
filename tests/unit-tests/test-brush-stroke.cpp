@@ -7,7 +7,7 @@
 
 void test_brush_stroke(){
   using namespace faint;
-  const auto valueMap = alphamap_value_map({{'.', 0u}, {'X', 255u}});
+  const auto valueMap = alphamap_value_map({{'.', uchar(0u)}, {'X', uchar(255u)}});
 
   {
     // Single pixel brush
@@ -15,7 +15,7 @@ void test_brush_stroke(){
 
     Brush b1(create_brush({1,1},
       "X",
-      {{'X', 255u}}));
+      {{'X', uchar(255u)}}));
     stroke(map, UpperLeft({1,1}), UpperLeft({8,1}), b1);
     check(map,
       ".........."

@@ -14,7 +14,7 @@ void test_brush_overlay(){
       "XXXX"
       "XXXX"
       " XX ",
-      {{' ', 0}, {'X', 1}}));
+      {{' ', uchar(0)}, {'X', uchar(1)}}));
 
   // Verify that the overlay matches the brush we defined
   check(overlay,
@@ -22,7 +22,7 @@ void test_brush_overlay(){
     "XXXX"
     "XXXX"
     " XX ",
-    {{' ', 0}, {'X', 1}});
+    {{' ', uchar(0)}, {'X', uchar(1)}});
   EQUAL(overlay.GetSize(), IntSize(4,4));
 
   // Set the same brush again to ensure the overlay is reset
@@ -33,14 +33,14 @@ void test_brush_overlay(){
       "XXXX"
       "XXXX"
       " XX ",
-      {{' ', 0}, {'X', 1}}));
+      {{' ', uchar(0)}, {'X', uchar(1)}}));
 
   check(overlay,
     " XX "
     "XXXX"
     "XXXX"
     " XX ",
-    {{' ', 0}, {'X', 1}});
+    {{' ', uchar(0)}, {'X', uchar(1)}});
   EQUAL(overlay.GetSize(), IntSize(4,4));
 
   // Set a brush with different dimensions
@@ -52,7 +52,7 @@ void test_brush_overlay(){
       "OX"
       " O"
       "OX",
-      {{' ', 0}, {'X', 1}, {'O', 255}}));
+      {{' ', uchar(0)}, {'X', uchar(1)}, {'O', uchar(255)}}));
   check(overlay,
       "XO"
       "O "
@@ -60,6 +60,6 @@ void test_brush_overlay(){
       "OX"
       " O"
       "OX",
-    {{' ', 0}, {'X', 1}, {'O', 255}});
+      {{' ', uchar(0)}, {'X', uchar(1)}, {'O', uchar(255)}});
   EQUAL(overlay.GetSize(), IntSize(2,6));
 }

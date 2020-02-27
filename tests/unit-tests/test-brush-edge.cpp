@@ -31,7 +31,7 @@ void test_brush_edge(){
         " XX ",
         // Using 1 as alpha-value to ensure that low alpha values > 0
         // are considered "inside".
-        {{' ', 0}, {'X', 1}}));
+	{{' ', uchar(0)}, {'X', uchar(1)}}));
     ASSERT_EQUAL(edge.size(), 12);
 
     // Top edge

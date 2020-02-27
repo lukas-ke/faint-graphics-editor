@@ -11,13 +11,13 @@ void test_serialize_tuple(){
   using namespace faint;
 
   static_assert(sizeof_entries<uint16_t, uint32_t, uint16_t, uint16_t, uint32_t>::value == 14, "Incorrect byte-size");
-  std::tuple<uint16_t, uint32_t, uint16_t, uint16_t, uint32_t, uint8_t> t(
-    0x424d,
-    0x12345678,
-    0x424d,
-    0x424d,
-    0xfefefefe,
-    0xab);
+  auto t = std::make_tuple(
+    uint16_t(0x424d),
+    uint32_t(0x12345678),
+    uint16_t(0x424d),
+    uint16_t(0x424d),
+    uint32_t(0xfefefefe),
+    uint8_t(0xab));
   auto a = serialize_tuple(t);
   ABORT_IF(a.size() != 15);
 

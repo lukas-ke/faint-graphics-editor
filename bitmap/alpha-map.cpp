@@ -106,7 +106,7 @@ IntSize AlphaMap::GetSize() const{
 void AlphaMap::Reset(const IntSize& size){
   m_size = size;
   m_data.resize(to_size_t(area(size)));
-  std::fill(begin(m_data), end(m_data), 0);
+  std::fill(begin(m_data), end(m_data), uchar(0));
 }
 
 AlphaMap AlphaMap::SubCopy(const IntRect& r) const{

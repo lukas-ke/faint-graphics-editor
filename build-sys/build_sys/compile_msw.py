@@ -226,7 +226,9 @@ def other_libs():
                      "glib-2.0.lib",
                      "gmodule-2.0.lib",
                      "gobject-2.0.lib",
-                     "gthread-2.0.lib"])
+                     "gthread-2.0.lib",
+                     "libpng16.lib",
+    ])
 
 
 def get_wxlibs(debug):
