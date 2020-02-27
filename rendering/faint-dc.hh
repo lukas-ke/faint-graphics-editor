@@ -16,6 +16,7 @@
 #ifndef FAINT_DC_HH
 #define FAINT_DC_HH
 #include <memory> // for unique_ptr
+#include <string>
 #include <vector>
 #include "geo/geo-fwd.hh"
 #include "geo/offsat.hh"

@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include <algorithm> // min, max
+#include <cmath> // std::fabs, std::isnan
 #include "geo/point.hh"
 
 namespace faint{

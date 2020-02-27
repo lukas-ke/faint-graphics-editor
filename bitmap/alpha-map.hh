@@ -16,6 +16,7 @@
 #ifndef FAINT_ALPHA_MAP_HH
 #define FAINT_ALPHA_MAP_HH
 #include <vector>
+#include "geo/primitive.hh" // uchar
 #include "geo/int-size.hh"
 #include "util/distinct.hh"
 #include "util/optional.hh"
