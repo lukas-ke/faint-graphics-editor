@@ -18,9 +18,6 @@
 #include "util/dumb-ptr.hh"
 
 #ifdef _WIN32
-// pymath.h:s round conflicts with math.h round (last checked with
-// Python 3.4, VC2013).
-#define HAVE_ROUND
 
 #pragma warning(push)
 // Warnings emitted by Python header since 3.4
