@@ -15,18 +15,25 @@
 # implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
+"""Script for showing Faint C++-file dependencies.
+
+Prints lists of inclusions or generates a GraphViz .dot-graph
+
+"""
+
 import os
 import sys
 import faint_info
 import subprocess
 
 build_dir = os.path.split(os.path.realpath(__file__))[0]
-os.chdir(build_dir) # Fixme: Don't change dir, use absolute paths.
+os.chdir(build_dir)  # Fixme: Don't change dir, use absolute paths.
 root_dir = os.path.split(build_dir)[0]
 
 sys.path.append(os.path.join(root_dir, "build-sys"))
-import build_sys.dependencies as dependencies
-import build_sys.gv as gv
+import build_sys.dependencies as dependencies  # noqa: E402
+import build_sys.gv as gv  # noqa: E402
+
 
 def unflat_header_dependencies(root, count_only, headers_only):
     """Prints a list of every header mapped to every file that directly
@@ -34,20 +41,23 @@ def unflat_header_dependencies(root, count_only, headers_only):
 
     """
 
-    deps = dependencies.find_header_dependencies_all(root,
+    deps = dependencies.find_header_dependencies_all(
+        root,
         faint_info.get_src_folders())
+
     print("Header->direct dependents!")
     print()
     if not count_only:
-        for dep in sorted(deps.keys(), key=lambda x:-len(deps[x])):
+        for dep in sorted(deps.keys(), key=lambda x: -len(deps[x])):
             num_deps = len(deps[dep])
-            print("%s (%d):" % (dep.replace(root, ""), num_deps))
+            stripped = dep.replace(root, "")
+            print(f"{stripped} ({num_deps}):")
             for dependent in sorted(deps[dep]):
                 if not headers_only or dependent.endswith(".hh"):
                     print(" ", dependent.replace(root, ""))
             print()
     else:
-        for dep in sorted(deps.keys(), key=lambda x:-len(deps[x])):
+        for dep in sorted(deps.keys(), key=lambda x: -len(deps[x])):
             print(dep, len(deps[dep]))
 
 
@@ -55,20 +65,24 @@ def flat_header_dependencies(root, count_only):
     """Prints a list of headers mapped to every file that sees that
     header."""
 
-    deps = dependencies.get_flat_header_dependencies(root,
+    deps = dependencies.get_flat_header_dependencies(
+        root,
         faint_info.get_src_folders())
     print("Header->dependents (recursive)")
     print()
-    for dep in sorted(deps.keys(), key=lambda x:-len(deps[x])):
+
+    for dep in sorted(deps.keys(), key=lambda x: -len(deps[x])):
         num_deps = len(deps[dep])
-        print("%s (%d):" % (dep.replace(root, ""), num_deps))
+        stripped = dep.replace(root, "")
+        print(f"{stripped} ({num_deps}):")
         if not count_only:
             for dependent in sorted(deps[dep]):
                 print(" ", dependent.replace(root, ""))
 
 
 def who_includes_graph(root, name):
-    include_dict = dependencies.find_header_dependencies_all(root,
+    include_dict = dependencies.find_header_dependencies_all(
+        root,
         faint_info.get_src_folders())
     dot_name = os.path.basename(name).replace(".hh", ".dot")
     png_name = dot_name.replace(".dot", ".png")
@@ -76,8 +90,9 @@ def who_includes_graph(root, name):
         f.write(gv.who_includes(include_dict, name))
 
     out = open(png_name, 'wb')
-    cmd = "dot -Tpng %s" % dot_name
+    cmd = f"dot -Tpng {dot_name}"
     subprocess.call(cmd, stdout=out)
+
 
 if __name__ == '__main__':
     root = faint_info.FAINT_ROOT
