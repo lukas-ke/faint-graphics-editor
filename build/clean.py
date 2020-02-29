@@ -15,17 +15,19 @@
 # implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
+"""Script for cleaning Faint output."""
+
 import os
 import sys
 import faint_info
 import shutil
 
 build_dir = os.path.split(os.path.realpath(__file__))[0]
-os.chdir(build_dir) # Fixme: Don't change dir, use absolute paths.
+os.chdir(build_dir)  # Fixme: Don't change dir, use absolute paths.
 root_dir = os.path.split(build_dir)[0]
 
 sys.path.append(os.path.join(root_dir, "build-sys"))
-import build_sys.gen_method_def as gen_method_def
+import build_sys.gen_method_def as gen_method_def  # noqa: E402
 
 
 def existing(paths):
@@ -63,11 +65,11 @@ def clean_path(base, levels, extensions):
 
 def clean_generated(faintDir):
     clean_path(os.path.join(faintDir, 'generated', 'python'),
-               ( 'settings',),
+               ('settings',),
                ('.hh', '.cpp', '.txt'))
 
     clean_path(os.path.join(faintDir, 'generated', 'python'),
-               ( 'method-def',),
+               ('method-def',),
                ('.hh', '.cpp', '.txt'))
 
     clean_path(os.path.join(faintDir, 'generated'),
@@ -97,12 +99,13 @@ def clean_generated(faintDir):
     if os.path.exists(generated_makefile):
         os.remove(generated_makefile)
 
-    gen_method_def.clean(faint_info.HEADERS_TO_GENERATE,
-       faint_info.GENERATED_HELP_PATH)
+    gen_method_def.clean(
+        faint_info.HEADERS_TO_GENERATE,
+        faint_info.GENERATED_HELP_PATH)
 
 
 def clean_test_output(faintDir):
-    test_out_dir = os.path.join(faintDir, 'tests', 'out' )
+    test_out_dir = os.path.join(faintDir, 'tests', 'out')
     if os.path.exists(test_out_dir):
         shutil.rmtree(test_out_dir)
 
@@ -133,7 +136,8 @@ def clean_obj(faintDir):
             '.o',
             '.obj',
             '.res',
-            '.pdb',]
+            '.pdb',
+        ]
         return any([f.endswith(ext) for ext in cleaned_exts])
 
     def maybe_remove(f):
@@ -169,17 +173,17 @@ def clean_exe(faintDir):
         os.remove(f)
 
 
-known_args=(("all",
-             "everything",
-             (clean_help,
-              clean_generated,
-              clean_obj,
-              clean_exe,
-              clean_test_output)),
-            ("exe", "Faint executables", (clean_exe,)),
-            ("html", "the help", (clean_help,)),
-            ("gen", "generated code", (clean_generated,)),
-            ("obj", "built object files", (clean_obj,)))
+known_args = (("all",
+               "everything",
+               (clean_help,
+                clean_generated,
+                clean_obj,
+                clean_exe,
+                clean_test_output)),
+              ("exe", "Faint executables", (clean_exe,)),
+              ("html", "the help", (clean_help,)),
+              ("gen", "generated code", (clean_generated,)),
+              ("obj", "built object files", (clean_obj,)))
 
 
 def main():
@@ -207,6 +211,7 @@ def main():
             if arg == ka[0]:
                 for func in ka[2]:
                     func(rootDir)
+
 
 if __name__ == '__main__':
     main()
