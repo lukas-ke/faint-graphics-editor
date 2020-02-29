@@ -36,6 +36,7 @@ from build_sys.util.scoped import working_dir, no_output  # noqa: E402
 from test_sys import gen_runner  # noqa: E402
 import gencpp  # noqa: E402
 
+
 def recreate_config(platform):
     with open("build.cfg", 'w') as f:
         f = open("build.cfg", 'w')
@@ -198,7 +199,7 @@ def test_extra_objs(bo):
             not excluded(item)]
 
 
-def test_source_files(platform, bo, folder):
+def get_test_source_files(bo, folder):
     test_source_folder = join_path(bo.project_root, folder)
     test_root = join_path(bo.project_root, "tests")
     test_files = []
@@ -208,6 +209,10 @@ def test_source_files(platform, bo, folder):
         test_files.extend([join_path(folder, f)
                            for f in list_cpp(folder)])
     return test_files
+
+
+def no_source_folders_f(*args, **kwArgs):
+    return []
 
 
 def build(caption,
@@ -279,18 +284,11 @@ def run_py_tests(platform, cmdline):
         return 1
 
 
-def build_faint(platform, cmdline):
-    def faint_source_files(platform, project_root):
-        src_folders = faint_info.get_src_folders(platform)
-        src_folders = [join_path(project_root, folder)
-                       for folder in src_folders]
-        src_folders.append(project_root)
+def forced_include_func(bo):
+    return join_path(bo.project_root, "util", "msw_warn.hh")
 
-        files = []
-        for folder in src_folders:
-            files.extend([join_path(folder, f)
-                         for f in list_cpp(folder)])
-        return files
+
+def build_faint(platform, cmdline):
 
     def precompile_steps(bo):
         # Generate setting-handling code based on set_and_get.py
@@ -317,6 +315,21 @@ def build_faint(platform, cmdline):
         # HTML help
         bs.gen_help.run()
 
+    def get_faint_src_files(platform, bo):
+        src_folders = faint_info.get_src_folders(platform)
+        src_folders = [join_path(bo.project_root, folder)
+                       for folder in src_folders]
+        src_folders.append(bo.project_root)
+
+        files = []
+        for folder in src_folders:
+            files.extend([join_path(folder, f)
+                         for f in list_cpp(folder)])
+        return files
+
+    def get_faint_extra_objs(bo):
+        return []
+
     return build(
         "Faint",
         platform,
@@ -324,11 +337,11 @@ def build_faint(platform, cmdline):
         "objs",
         "faint",
         precompile_steps,
-        lambda platform, bo: faint_source_files(platform, bo.project_root),
-        lambda platform, test: faint_info.get_src_folders(platform, test),
-        lambda bo: [],
+        get_faint_src_files,
+        faint_info.get_src_folders,
+        get_faint_extra_objs,
         "windows",
-        lambda bo: join_path(bo.project_root, "util", "msw_warn.hh"))
+        forced_include_func)
 
 
 def build_benchmarks(platform, cmdline):
@@ -341,6 +354,9 @@ def build_benchmarks(platform, cmdline):
             out_file=join_path(bench_root, 'gen', 'bench-runner.cpp'))
         bo.create_build_info = False
 
+    def get_benchmark_source_files(platform_, bo):
+        return get_test_source_files(bo, target.source_folder)
+
     return build(
         "Benchmarks",
         platform,
@@ -348,11 +364,11 @@ def build_benchmarks(platform, cmdline):
         target.objs_folder_prefix,
         target.executable,
         precompile_steps,
-        lambda platform, bo: test_source_files(platform, bo, target.source_folder),  # noqa: E501
-        lambda platform, test: [],
+        get_benchmark_source_files,
+        no_source_folders_f,
         test_extra_objs,
         "console",
-        lambda bo: join_path(bo.project_root, "util", "msw_warn.hh"))
+        forced_include_func)
 
 
 def build_unit_tests(platform, cmdline):
@@ -365,6 +381,9 @@ def build_unit_tests(platform, cmdline):
             out_file=join_path(tests_root, 'gen', 'test-runner.cpp'))
         bo.create_build_info = False
 
+    def get_unit_test_source_files(platform, bo):
+        return get_test_source_files(bo, target.source_folder)
+
     return build(
         "Unit tests",
         platform,
@@ -372,11 +391,11 @@ def build_unit_tests(platform, cmdline):
         target.objs_folder_prefix,
         target.executable,
         precompile_steps,
-        lambda platform, bo: test_source_files(platform, bo, target.source_folder),  # noqa: E501
-        lambda platform, test: [],
+        get_unit_test_source_files,
+        no_source_folders_f,
         test_extra_objs,
         "console",
-        lambda bo: join_path(bo.project_root, "util", "msw_warn.hh"))
+        forced_include_func)
 
 
 def build_image_tests(platform, cmdline):
@@ -389,6 +408,9 @@ def build_image_tests(platform, cmdline):
             out_file=join_path(tests_root, 'gen', 'image-runner.cpp'))
         bo.create_build_info = False
 
+    def get_image_test_source_files(platform, bo):
+        return get_test_source_files(bo, target.source_folder)
+
     return build(
         "Image tests",
         platform,
@@ -396,11 +418,11 @@ def build_image_tests(platform, cmdline):
         target.objs_folder_prefix,
         target.executable,
         precompile_steps,
-        lambda platform, bo: test_source_files(platform, bo, target.source_folder),  # noqa: E501
-        lambda platform, test: [],
+        get_image_test_source_files,
+        no_source_folders_f,
         test_extra_objs,
         "console",
-        lambda bo: join_path(bo.project_root, "util", "msw_warn.hh"))
+        forced_include_func)
 
 
 def build_gui_tests(platform, cmdline):
@@ -409,8 +431,8 @@ def build_gui_tests(platform, cmdline):
     def precompile_steps(bo):
         bo.create_build_info = False
 
-    def test_source_files(platform, bo, folder):
-        test_source_folder = join_path(bo.project_root, folder)
+    def get_gui_test_source_files(platform, bo):
+        test_source_folder = join_path(bo.project_root, target.source_folder)
         test_root = join_path(bo.project_root, "tests")
         test_files = []
         for folder in (test_source_folder,
@@ -426,11 +448,11 @@ def build_gui_tests(platform, cmdline):
         target.objs_folder_prefix,
         target.executable,
         precompile_steps,
-        lambda platform, bo: test_source_files(platform, bo, target.source_folder),  # noqa: E501
-        lambda platform, test: [],
+        get_gui_test_source_files,
+        no_source_folders_f,
         test_extra_objs,
         "windows",
-        lambda bo: join_path(bo.project_root, "util", "msw_warn.hh"))
+        forced_include_func)
 
 
 def build_python_extension(platform, cmdline):
@@ -453,10 +475,10 @@ def build_python_extension(platform, cmdline):
         target.out_lib,
         precompile_steps,
         extension_source_files,
-        lambda platform, test: [],
+        no_source_folders_f,
         test_extra_objs,
         "console",
-        lambda bo: join_path(bo.project_root, "util", "msw_warn.hh"))
+        forced_include_func)
 
     return result
 
@@ -486,5 +508,7 @@ if __name__ == '__main__':
 
     if opts.version != bs.unknown_version_str and platform == 'msw':
         bo = read_build_options(platform)
+
         bs.build_installer(opts.version, bo.makensis_exe)
+
     exit(0)
