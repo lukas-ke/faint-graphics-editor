@@ -15,52 +15,53 @@
 # implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-from optparse import OptionParser
 import configparser
 import os
-join_path = os.path.join
-import shutil
 import subprocess
 import sys
 
-build_dir = os.path.split(os.path.realpath(__file__))[0]
-os.chdir(build_dir) # Fixme: Don't change dir, use absolute paths.
-root_dir = os.path.split(build_dir)[0]
-
-# Make build-system and test-system imports available
-sys.path.append(join_path(root_dir, "build-sys/"))
-sys.path.append(join_path(root_dir, "test-sys/"))
-import build_sys as bs
-from build_sys.util import list_cpp, strip_ext
-from build_sys.util.scoped import working_dir, no_output
-from test_sys import gen_runner
-import gencpp
 import faint_info
 
+join_path = os.path.join
+
+build_dir = os.path.split(os.path.realpath(__file__))[0]
+os.chdir(build_dir)  # Fixme: Don't change dir, use absolute paths.
+
+root_dir = os.path.split(build_dir)[0]
+sys.path.append(join_path(root_dir, "build-sys/"))
+sys.path.append(join_path(root_dir, "test-sys/"))
+import build_sys as bs  # noqa: E402
+from build_sys.util import list_cpp, strip_ext  # noqa: E402
+from build_sys.util.scoped import working_dir, no_output  # noqa: E402
+from test_sys import gen_runner  # noqa: E402
+import gencpp  # noqa: E402
 
 def recreate_config(platform):
-    f = open( "build.cfg" ,'w')
-    f.write("[folders]\n")
-    f.write("wx_root=\n")
-    f.write("cairo_include=\n")
-    f.write("cairo_lib=\n")
-    f.write("python_include=\n")
-    f.write("python_lib=\n")
-    f.write("pango_include=\n")
-    f.write("pango_lib=\n")
-    f.write("glib_include=\n")
-    f.write("glib_lib=\n")
-    f.write("glib_config_include=\n")
-    f.write("pnglib_include=\n")
-    if platform == 'msw':
-        f.write("[nsis]\n")
-        f.write("makensis=\n")
-    f.write("[other]\n")
-    if platform != 'msw':
-        f.write('compiler=gcc\n')
-    f.write("parallell_compiles=0\n")
-    f.write("etags_folder=\n")
-    print('Config file "build.cfg" created.\nYou must update the file with correct paths.')
+    with open("build.cfg", 'w') as f:
+        f = open("build.cfg", 'w')
+        f.write("[folders]\n")
+        f.write("wx_root=\n")
+        f.write("cairo_include=\n")
+        f.write("cairo_lib=\n")
+        f.write("python_include=\n")
+        f.write("python_lib=\n")
+        f.write("pango_include=\n")
+        f.write("pango_lib=\n")
+        f.write("glib_include=\n")
+        f.write("glib_lib=\n")
+        f.write("glib_config_include=\n")
+        f.write("pnglib_include=\n")
+        if platform == 'msw':
+            f.write("[nsis]\n")
+            f.write("makensis=\n")
+        f.write("[other]\n")
+        if platform != 'msw':
+            f.write('compiler=gcc\n')
+        f.write("parallell_compiles=0\n")
+        f.write("etags_folder=\n")
+
+    print('Config file "build.cfg" created.\n'
+          'You must update the file with correct paths.')
 
 
 def read_config(platform):
@@ -73,16 +74,14 @@ def read_config(platform):
         full_path = os.path.expanduser(os.path.join(folder, expected_content))
 
         if not os.path.exists(full_path):
-            print("Error in build.cfg:\n %s: %s not found in \n %s"
-                  %(name, expected_content, folder))
+            print(f'Error in build.cfg:\n {name}: {expected_content} not found in \n {folder}')  # noqa: E501
             print(full_path)
             exit(1)
-
 
     bo = bs.BuildOptions()
     bo.platform = platform
     config = configparser.RawConfigParser()
-    config.read( 'build.cfg')
+    config.read('build.cfg')
     try:
         wx_root = config.get('folders', 'wx_root')
         wx_vc_lib = join_path(wx_root, "lib", "vc_lib")
@@ -126,20 +125,20 @@ def read_config(platform):
             print("Expected compiler=clang or compiler=gcc under [other].")
             exit(1)
         elif compiler not in ('gcc', 'clang', 'iwyu'):
-            print('Error: Unsupported compiler specified in build.cfg: "%s"'
-                  % compiler)
+            print(f'Error: Unsupported compiler specified in build.cfg: "{compiler}"')  # noqa: E501
             print('Expected "clang", "gcc" or "iwyu"')
             exit(1)
         bo.compiler = compiler
     elif bo.platform == 'msw':
         bo.compiler = 'msvc'
 
-    if (wx_root == "" or
-        python_lib == "" or
-        python_include == "" or
-        cairo_include == "" or
-        pango_include == "" or
-        pnglib_include == ""):
+    required_path_empty = (wx_root == "" or
+                           python_lib == "" or
+                           python_include == "" or
+                           cairo_include == "" or
+                           pango_include == "" or
+                           pnglib_include == "")
+    if required_path_empty:
         print("Error: Incorrect paths in build.cfg")
         exit(1)
 
@@ -157,7 +156,6 @@ def read_config(platform):
 
     if bo.platform == "msw":
         bo.lib_paths.append(join_path(wx_root, 'lib', 'vc_lib'))
-
 
     bo.project_root = faint_info.FAINT_ROOT
     bo.system_include_folders = [
@@ -187,9 +185,11 @@ def read_build_options(platform):
 
 def test_extra_objs(bo):
     def excluded(obj):
-        return obj.startswith('app.') or obj.startswith('py-initialize-ifaint.')
+        return (obj.startswith('app.')
+                or obj.startswith('py-initialize-ifaint.'))
 
-    obj_root = join_path(os.getcwd(), faint_info.target.faint.objs_folder_prefix)
+    obj_root = join_path(os.getcwd(),
+                         faint_info.target.faint.objs_folder_prefix)
     obj_root = obj_root + ("-debug" if bo.debug_compile else "-release")
 
     return [join_path(obj_root, strip_ext(item)) for item in
@@ -224,8 +224,12 @@ def build(caption,
     print(caption)
     print("--------------------")
     bo = read_build_options(platform)
-    bo.obj_root_release = join_path(os.getcwd(), "%s-release" % obj_folder_prefix)
-    bo.obj_root_debug = join_path(os.getcwd(), "%s-debug" % obj_folder_prefix)
+    bo.obj_root_release = join_path(
+        os.getcwd(),
+        f"{obj_folder_prefix}-release")
+    bo.obj_root_debug = join_path(
+        os.getcwd(),
+        f"{obj_folder_prefix}-debug")
     bo.extra_objs = extra_objs(bo)
     bo.out_name_release = out_name
     bo.out_name_debug = out_name + "d"
@@ -271,16 +275,15 @@ def run_py_tests(platform, cmdline):
         print('* Python Unit tests OK')
         return 0
     else:
-        print("* Error: Python Unit tests failed!");
+        print("* Error: Python Unit tests failed!")
         return 1
 
 
 def build_faint(platform, cmdline):
-    target = faint_info.target.faint
     def faint_source_files(platform, project_root):
         src_folders = faint_info.get_src_folders(platform)
         src_folders = [join_path(project_root, folder)
-                for folder in src_folders ]
+                       for folder in src_folders]
         src_folders.append(project_root)
 
         files = []
@@ -296,17 +299,21 @@ def build_faint(platform, cmdline):
         if not os.path.exists("../help/source/generated"):
             os.mkdir("../help/source/generated")
 
-        bs.gen_method_def.generate_headers(faint_info.HEADERS_TO_GENERATE,
-                                           faint_info.GENERATED_METHOD_DEF_PATH,
-                                           faint_info.GENERATED_HELP_PATH)
+        bs.gen_method_def.generate_headers(
+            faint_info.HEADERS_TO_GENERATE,
+            faint_info.GENERATED_METHOD_DEF_PATH,
+            faint_info.GENERATED_HELP_PATH)
 
         bs.gen_resource.run(bo.project_root)
 
         bs.gen_text_expressions.generate(
-            hh_path=join_path(bo.project_root,
-                              "generated", "text-expression-constants.hh"),
-            help_path=join_path(faint_info.GENERATED_HELP_PATH,
-                                "text-expressions.txt"))
+            hh_path=join_path(
+                bo.project_root,
+                "generated", "text-expression-constants.hh"),
+            help_path=join_path(
+                faint_info.GENERATED_HELP_PATH,
+                "text-expressions.txt"))
+
         # HTML help
         bs.gen_help.run()
 
@@ -326,10 +333,11 @@ def build_faint(platform, cmdline):
 
 def build_benchmarks(platform, cmdline):
     target = faint_info.target.benchmark
+
     def precompile_steps(bo):
         bench_root = join_path(bo.project_root, target.source_folder)
-        test_root = join_path(bo.project_root, "tests")
-        gen_runner.gen_bench_runner(root_dir=bench_root,
+        gen_runner.gen_bench_runner(
+            root_dir=bench_root,
             out_file=join_path(bench_root, 'gen', 'bench-runner.cpp'))
         bo.create_build_info = False
 
@@ -340,7 +348,7 @@ def build_benchmarks(platform, cmdline):
         target.objs_folder_prefix,
         target.executable,
         precompile_steps,
-        lambda platform, bo: test_source_files(platform, bo, target.source_folder),
+        lambda platform, bo: test_source_files(platform, bo, target.source_folder),  # noqa: E501
         lambda platform, test: [],
         test_extra_objs,
         "console",
@@ -352,8 +360,8 @@ def build_unit_tests(platform, cmdline):
 
     def precompile_steps(bo):
         tests_root = join_path(bo.project_root, target.source_folder)
-        test_root = join_path(bo.project_root, "tests")
-        gen_runner.gen_test_runner(root_dir=tests_root,
+        gen_runner.gen_test_runner(
+            root_dir=tests_root,
             out_file=join_path(tests_root, 'gen', 'test-runner.cpp'))
         bo.create_build_info = False
 
@@ -364,7 +372,7 @@ def build_unit_tests(platform, cmdline):
         target.objs_folder_prefix,
         target.executable,
         precompile_steps,
-        lambda platform, bo: test_source_files(platform, bo, target.source_folder),
+        lambda platform, bo: test_source_files(platform, bo, target.source_folder),  # noqa: E501
         lambda platform, test: [],
         test_extra_objs,
         "console",
@@ -376,7 +384,8 @@ def build_image_tests(platform, cmdline):
 
     def precompile_steps(bo):
         tests_root = join_path(bo.project_root, target.source_folder)
-        gen_runner.gen_image_runner(root_dir=tests_root,
+        gen_runner.gen_image_runner(
+            root_dir=tests_root,
             out_file=join_path(tests_root, 'gen', 'image-runner.cpp'))
         bo.create_build_info = False
 
@@ -387,7 +396,7 @@ def build_image_tests(platform, cmdline):
         target.objs_folder_prefix,
         target.executable,
         precompile_steps,
-        lambda platform, bo: test_source_files(platform, bo, target.source_folder),
+        lambda platform, bo: test_source_files(platform, bo, target.source_folder),  # noqa: E501
         lambda platform, test: [],
         test_extra_objs,
         "console",
@@ -396,6 +405,7 @@ def build_image_tests(platform, cmdline):
 
 def build_gui_tests(platform, cmdline):
     target = faint_info.target.gui_test
+
     def precompile_steps(bo):
         bo.create_build_info = False
 
@@ -409,7 +419,6 @@ def build_gui_tests(platform, cmdline):
                                for f in list_cpp(folder)])
         return test_files
 
-
     return build(
         "GUI-tests",
         platform,
@@ -417,7 +426,7 @@ def build_gui_tests(platform, cmdline):
         target.objs_folder_prefix,
         target.executable,
         precompile_steps,
-        lambda platform, bo: test_source_files(platform, bo, target.source_folder),
+        lambda platform, bo: test_source_files(platform, bo, target.source_folder),  # noqa: E501
         lambda platform, test: [],
         test_extra_objs,
         "windows",
@@ -436,17 +445,18 @@ def build_python_extension(platform, cmdline):
         src_folder = join_path(bo.project_root, target.source_folder)
         return [join_path(src_folder, f) for f in list_cpp(src_folder)]
 
-    result = build("Python extension",
-                 platform,
-                 cmdline,
-                 target.objs_folder_prefix,
-                 target.out_lib,
-                 precompile_steps,
-                 extension_source_files,
-                 lambda platform, test: [],
-                 test_extra_objs,
-                 "console",
-                 lambda bo: join_path(bo.project_root, "util", "msw_warn.hh"))
+    result = build(
+        "Python extension",
+        platform,
+        cmdline,
+        target.objs_folder_prefix,
+        target.out_lib,
+        precompile_steps,
+        extension_source_files,
+        lambda platform, test: [],
+        test_extra_objs,
+        "console",
+        lambda bo: join_path(bo.project_root, "util", "msw_warn.hh"))
 
     return result
 
@@ -458,7 +468,7 @@ if __name__ == '__main__':
 
     exit_on_error(build_faint, (platform, cmdline), blank_line=False)
 
-    if platform == 'msw': # Not implemented for Linux yet.
+    if platform == 'msw':  # Py-extension build not implemented for Linux yet.
         exit_on_error(build_python_extension, (platform, cmdline))
 
     if opts.debug:
