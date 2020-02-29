@@ -17,13 +17,13 @@
 
 import os
 
-FAINT_ROOT = (os.path.abspath("../") + "/").replace("\\","/")
+FAINT_ROOT = (os.path.abspath("../") + "/").replace("\\", "/")
 FAINT_TESTS_ROOT = os.path.join(FAINT_ROOT, "tests")
 
 HEADERS_TO_GENERATE = [
 
-    # List of cpp-files to parse with gen_method_def.py for generating methoddef
-    # include files.
+    # List of cpp-files to parse with gen_method_def.py for generating
+    # methoddef include files.
     #
     # The first item is the prefix for the methoddef name
     #   PyMethodDef <prefix>_methods[],
@@ -98,8 +98,8 @@ def get_src_folders(platform='msw', test=False):
         "text/",
         "util/",
         "util-wx/",
-
     ]
+
     if platform == 'msw':
         folders.extend((
             "tablet/msw",
@@ -117,24 +117,20 @@ class target:
         objs_folder_prefix = "objs"
         executable = "faint"
 
-
     class image_test:
         objs_folder_prefix = "objs-image-test"
         source_folder = "tests/image-tests"
         executable = "tests/run-image-tests"
-
 
     class unit_test:
         objs_folder_prefix = "objs-unit-test"
         source_folder = "tests/unit-tests"
         executable = "tests/run-unit-tests"
 
-
     class benchmark:
         objs_folder_prefix = "objs-bench"
         source_folder = "tests/benchmarks"
         executable = "tests/run-benchmarks"
-
 
     class gui_test:
         objs_folder_prefix = "objs-gui-test"
@@ -145,6 +141,7 @@ class target:
         objs_folder_prefix = "objs-python-ext"
         source_folder = "ext"
         out_lib = "ext/out/ifaint"
+
 
 TARGETS = [
     target.faint,
