@@ -21,6 +21,7 @@ import time
 import sys
 from build_sys.util.util import changed, print_timing
 from build_sys.util.scoped import working_dir
+from pathlib import Path
 
 obj_ext = '.obj'
 
@@ -252,26 +253,11 @@ def clean_vc_nonsense(bo):
             os.remove(fn)
 
 
-def embed_manifest(opts, out, err):
-    # Embed the manifest to get the correct common controls version etc.
-    # See: http://msdn.microsoft.com/en-us/library/ms235591(v=vs.80).aspx
+def _get_manifest_path(opts):
+    # Use the wxWidgets manifest file
+    mf_path = Path(opts.wx_root) / "include/wx/msw/wx_dpi_aware_pmv2.manifest"
+    return mf_path.resolve()
 
-    out_name = opts.get_out_name()
-    manifest = out_name + ".exe.manifest"
-    exe = out_name + ".exe"
-
-    manifestCmd = 'mt.exe -manifest %s -outputresource:%s;1' % (manifest, exe)
-
-    for attempt in range(3):
-        embedManifest = subprocess.Popen(manifestCmd, stdout=out, stderr=err)
-        if embedManifest.wait() != 0:
-            print("Embedding Manifest failed.")
-            time.sleep(1)
-        else:
-            clean_vc_nonsense(opts)
-            break
-    else:
-        print("Totally failed embedding Manifest.")
 
 def _link(files, resource_file, opts, out, err, debug):
     flags = "/NOLOGO"
@@ -283,6 +269,13 @@ def _link(files, resource_file, opts, out, err, debug):
         flags += " %s /DEBUG /PDB:%s.pdb" % (target, out_name)
     else:
         flags += " %s" % (target)
+
+    # Add manifest flags for DPI-awareness
+    manifest_path = _get_manifest_path(opts)
+    assert manifest_path.exists, \
+        f"wxWidgets manifest not found at {manifest_path}"
+    flags += " /MANIFEST:EMBED"
+    flags += f" /MANIFESTINPUT:{manifest_path.as_posix()}"
 
     if opts.target_type == opts.Target.shared_python_library:
         flags += " /DLL"
@@ -305,13 +298,7 @@ def _link(files, resource_file, opts, out, err, debug):
         print("Linking failed.")
         exit(1)
 
-    if opts.msw_subsystem == "windows":
-        # The manifest compiler can sometimes not write to the exe after
-        # the linking, maybe waiting a tiny bit helps.
-        time.sleep(1)
-        embed_manifest(opts, out, err)
-    else:
-        clean_vc_nonsense(opts)
+    clean_vc_nonsense(opts)  # FIXME: Check if this is meaningful
 
 
 def link(files, opts, out, err, debug):
