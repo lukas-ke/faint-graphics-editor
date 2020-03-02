@@ -17,6 +17,7 @@
 
 import sys
 from code import InteractiveConsole
+from collections.abc import Sequence
 import copy
 import ifaint
 import os
@@ -532,9 +533,8 @@ import faint.formatpdf as formatpdf
 ifaint.add_format(formatpdf.load, formatpdf.save, "Portable Document Format (*.pdf)", "pdf")
 del formatpdf
 
-import collections
 
-class ContextList(collections.Sequence):
+class ContextList(Sequence):
     """Behaves like a list of objects, but is initialized on demand by
      calling a function"""
 
