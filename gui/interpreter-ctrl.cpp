@@ -302,6 +302,13 @@ public:
           return;
         }
 
+        if (keyCode == WXK_F4) {
+          if (event.AltDown()) {
+            GetParent()->Close();
+          }
+          return;
+        }
+
         if (keyCode == WXK_ESCAPE){
           GetParent()->Close();
           return;
