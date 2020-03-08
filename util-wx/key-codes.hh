@@ -72,7 +72,12 @@ extern const Key F9;
 extern const Key F10;
 extern const Key F11;
 extern const Key F12;
+
+// True if the wxWidgets key-code is a modifier (shift, control, alt)
 bool modifier(int key);
+
+// True if the wxWidgets key-code is a function key (F1-F24)
+bool function_key(int key);
 
 }} // namespace
 

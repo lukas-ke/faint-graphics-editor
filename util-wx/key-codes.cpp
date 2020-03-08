@@ -75,4 +75,9 @@ bool modifier(int key){
   return key == shift || key == ctrl || key == alt;
 }
 
+bool function_key(int key){
+  static_assert(WXK_F24 == WXK_F1 + 23, "WXK_F-key values not sequential");
+  return WXK_F1 <= key && key <= WXK_F24;
+}
+
 }} // namespace

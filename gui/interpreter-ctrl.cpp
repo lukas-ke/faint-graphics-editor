@@ -302,10 +302,14 @@ public:
           return;
         }
 
-        if (keyCode == WXK_F4) {
-          if (event.AltDown()) {
+        if (key::function_key(keyCode)){
+          if (keyCode == WXK_F4 && event.AltDown()){
+            // Close interpreter-window on Alt+F4
             GetParent()->Close();
           }
+
+          // Don't pass function keys along, they'd just print as
+          // garbage.
           return;
         }
 
