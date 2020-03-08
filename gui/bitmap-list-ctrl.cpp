@@ -187,7 +187,7 @@ void BitmapListCtrl::SetSelection(const Index& selection){
 
 } // namespace
 
-namespace faint{ namespace events{
+namespace faint::events{
 
 void on_selection(BitmapListCtrl* ctrl,
   const std::function<void(const Index&)>& f)
@@ -198,4 +198,4 @@ void on_selection(BitmapListCtrl* ctrl,
     });
 }
 
-}} // namespace
+} // namespace

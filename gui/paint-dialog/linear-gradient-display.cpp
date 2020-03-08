@@ -233,10 +233,10 @@ void LinearGradientDisplay::Show(){
 
 } // namespace
 
-namespace faint{ namespace events{
+namespace faint::events{
 
 void on_angle_picked(LinearGradientDisplay& d, const std::function<void()>& f){
   bind(d.AsWindow(), EVT_GRADIENT_ANGLE_PICKED, f);
 }
 
-}} // namespace
+} // namespace

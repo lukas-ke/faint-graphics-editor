@@ -17,7 +17,7 @@
 #define FAINT_UTF8_HH
 #include <string>
 
-namespace faint{namespace utf8{
+namespace faint::utf8{
 
 size_t prefix_num_bytes(char);
 size_t codepoint_num_bytes(unsigned int);
@@ -34,6 +34,6 @@ unsigned int byte_string_to_codepoint(const std::string&);
 
 std::string codepoint_to_byte_string(unsigned int);
 
-}} // namespace
+} // namespace
 
 #endif

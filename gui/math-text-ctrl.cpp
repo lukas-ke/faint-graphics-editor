@@ -35,7 +35,7 @@ const wxEventTypeTag<wxCommandEvent> EVT_MATH_TEXT_CONTROL_UPDATE(
 
 }
 
-namespace faint{ namespace events{
+namespace faint::events{
 void on_value_change(MathTextCtrl* c, const coord_func& f){
   bind_fwd(c->AsWindow(), EVT_MATH_TEXT_CONTROL_UPDATE,
     [f, c](const wxCommandEvent&){
@@ -43,7 +43,7 @@ void on_value_change(MathTextCtrl* c, const coord_func& f){
     });
 }
 
-}}
+}
 
 namespace faint{
 

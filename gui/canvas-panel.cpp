@@ -1177,7 +1177,7 @@ bool CanvasPanel::HandleToolResult(ToolResult ref){
 
 } // namespace
 
-namespace faint{ namespace events{
+namespace faint::events{
 
 static void on_canvas_event(wxWindow* w,
   const CanvasChangeTag& tag,
@@ -1209,4 +1209,4 @@ void on_zoom_modified(window_t w, canvas_id_fn f){
   on_canvas_event(w.w, EVT_FAINT_ZOOM_CHANGE, f, false);
 }
 
-}} // namespace
+} // namespace

@@ -16,7 +16,7 @@
 #include <algorithm> // min, max
 #include "slice-generic.hh"
 
-namespace faint{ namespace generic {
+namespace faint::generic {
 
 size_t resolve_index(const size_t len, int i){
   if (i < 0){
@@ -28,4 +28,4 @@ size_t resolve_index(const size_t len, int i){
   }
 }
 
-}} // namespace
+} // namespace

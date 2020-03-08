@@ -16,7 +16,7 @@
 #ifndef FAINT_MATH_CONSTANTS_HH
 #define FAINT_MATH_CONSTANTS_HH
 
-namespace faint{namespace math{
+namespace faint::math{
 
 constexpr double e = 2.71828182845904523536028747135266249775;
 constexpr double pi = 3.141592653589793238462643383279502884;
@@ -31,6 +31,6 @@ constexpr double degrees_from_radians(double radians){
   return (180.0 / pi) * radians;
 }
 
-}} // namespace
+} // namespace
 
 #endif

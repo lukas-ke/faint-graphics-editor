@@ -17,7 +17,7 @@
 #define FAINT_KEY_CODES_HH
 #include "util/key-press.hh"
 
-namespace faint{namespace key{
+namespace faint::key{
 
 extern const Key one;
 extern const Key alt;
@@ -79,6 +79,6 @@ bool modifier(int key);
 // True if the wxWidgets key-code is a function key (F1-F24)
 bool function_key(int key);
 
-}} // namespace
+} // namespace
 
 #endif

@@ -16,7 +16,7 @@
 #include <cassert>
 #include "text/utf8.hh"
 
-namespace faint{namespace utf8{
+namespace faint::utf8{
 
 inline unsigned int to_uint(const char ch){
   return static_cast<unsigned int>(static_cast<unsigned char>(ch));
@@ -184,4 +184,4 @@ size_t num_characters(const std::string& utf8){
   return numChars;
 }
 
-}} // namespace
+} // namespace

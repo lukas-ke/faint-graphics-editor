@@ -310,7 +310,7 @@ SliderMarkerPtr slider_marker_BorderedLine(){
 
 } // namespace
 
-namespace faint{ namespace events{
+namespace faint::events{
 
 void on_slider_change(Slider* s, const int_func& f){
   bind_fwd(s, EVT_FAINT_SLIDER_CHANGE,
@@ -326,4 +326,4 @@ void on_slider_change(window_t w, const int_func& f){
     });
 }
 
-}} // namespace
+} // namespace

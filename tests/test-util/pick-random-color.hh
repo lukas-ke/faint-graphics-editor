@@ -15,8 +15,8 @@
 
 #include "util/pick-paint.hh"
 
-namespace faint{ namespace test{
+namespace faint::test{
 
 pick_color_f random_color_picker(int seed);
 
-}} // namespace
+} // namespace

@@ -20,7 +20,7 @@
 #include "geo/point.hh"
 #include "util/mouse.hh"
 
-namespace faint{namespace mouse {
+namespace faint::mouse {
 
 Point view_to_image(const IntPoint& p, const CanvasGeo& g){
   return (p + g.pos - point_from_size(g.border)) / g.Scale();
@@ -35,4 +35,4 @@ IntRect image_to_view(const IntRect& r, const CanvasGeo& g){
     image_to_view(r.BottomRight(), g)};
 }
 
-}} // namespace
+} // namespace

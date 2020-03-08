@@ -18,7 +18,7 @@
 #include "tests/test-util/pick-random-color.hh"
 #include "bitmap/color.hh"
 
-namespace faint{ namespace test{
+namespace faint::test{
 
 pick_color_f random_color_picker(int seed){
   return
@@ -31,4 +31,4 @@ pick_color_f random_color_picker(int seed){
     };
 }
 
-}} // namespace
+} // namespace

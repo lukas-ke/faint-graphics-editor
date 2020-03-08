@@ -22,14 +22,14 @@ class wxWindow;
 
 namespace faint{ class MathTextCtrl; }
 
-namespace faint{ namespace events{
+namespace faint::events{
 
 // Event handler for when the MathTextCtrl:s value is changed by user
 // entry.
 using coord_func = std::function<void(coord)>;
 void on_value_change(MathTextCtrl*, const coord_func&);
 
-}} // namespace
+} // namespace
 
 namespace faint{
 

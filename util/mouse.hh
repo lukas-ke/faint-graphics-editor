@@ -19,7 +19,7 @@
 
 class wxWindow;
 
-namespace faint{namespace mouse{
+namespace faint::mouse{
 
 IntPoint screen_position();
 IntPoint view_position(const wxWindow&);
@@ -28,6 +28,6 @@ Point view_to_image(const IntPoint&, const CanvasGeo&);
 IntPoint image_to_view(const IntPoint&, const CanvasGeo&);
 IntRect image_to_view(const IntRect&, const CanvasGeo&);
 
-}} // namespace
+} // namespace
 
 #endif

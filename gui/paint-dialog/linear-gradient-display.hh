@@ -49,11 +49,11 @@ private:
 
 } // namespace
 
-namespace faint{ namespace events{
+namespace faint::events{
 
 void on_angle_picked(LinearGradientDisplay&,
   const std::function<void()>&);
 
-}} // namespace
+} // namespace
 
 #endif

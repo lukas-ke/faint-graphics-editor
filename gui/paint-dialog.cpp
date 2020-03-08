@@ -150,7 +150,6 @@ public:
   }
 
   void SetPaint(const Paint& paint, const Color& secondary){
-    using namespace std::placeholders;
     visit(paint,
       [&](const Color& c){SetColor(c, secondary);},
       [&](const Pattern& p){SetPattern(p);},

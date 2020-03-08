@@ -19,7 +19,7 @@
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
 
-namespace faint{ namespace events{
+namespace faint::events{
 
 void on_button(wxButton* b, const void_func& f){
   bind(b, wxEVT_BUTTON, f);
@@ -104,4 +104,4 @@ void no_op_erase_background(window_t w){
   bind(w.w, wxEVT_ERASE_BACKGROUND, [](){});
 }
 
-}} // namespace
+} // namespace

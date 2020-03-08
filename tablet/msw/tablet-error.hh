@@ -16,7 +16,7 @@
 #ifndef FAINT_TABLET_ERROR_HH
 #define FAINT_TABLET_ERROR_HH
 
-namespace faint{namespace tablet{
+namespace faint::tablet{
 
 enum class InitResult{
   OK,
@@ -33,6 +33,6 @@ enum class InitResult{
   OTHER_ERROR
 };
 
-}} // namespace
+} // namespace
 
 #endif

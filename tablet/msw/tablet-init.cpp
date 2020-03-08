@@ -34,7 +34,7 @@ WTPACKET g_WTPacket = nullptr;
 WTENABLE g_WTEnable = nullptr;
 WTOVERLAP g_WTOverlap = nullptr;
 
-namespace faint{namespace tablet{
+namespace faint::tablet{
 
 class InitError{
 public:
@@ -222,4 +222,4 @@ void activate(bool enable){
   }
 }
 
-}} // namespace
+} // namespace

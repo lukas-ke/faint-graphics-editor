@@ -444,7 +444,7 @@ void RadialGradientSlider::UpdateGradient(){
 
 } // namespace
 
-namespace faint{ namespace events{
+namespace faint::events{
 
 void on_gradient_slider_change(LinearGradientSlider& s,
   const std::function<void()>& f)
@@ -458,4 +458,4 @@ void on_gradient_slider_change(RadialGradientSlider& s,
   bind(s.AsWindow(), EVT_GRADIENT_SLIDER_CHANGE, f);
 }
 
-}} // namespace
+} // namespace

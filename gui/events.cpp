@@ -61,7 +61,7 @@ void send_control_resized_event(wxEvtHandler* handler){
 
 } // namespace
 
-namespace faint{ namespace events{
+namespace faint::events{
 
 // Entry-control focus events
 // --------------------------
@@ -300,4 +300,4 @@ void on_request_close_faint(window_t w, const std::function<void(bool force)>& f
   });
 }
 
-}} // namespace
+} // namespace

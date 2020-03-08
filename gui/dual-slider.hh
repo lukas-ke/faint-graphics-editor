@@ -55,14 +55,17 @@ private:
     const IntSize&);
 };
 
-namespace events {
+} // namespace (faint)
+
+namespace faint::events{
 
 using interval_func = std::function<void(const Interval&, bool /*special*/)>;
 void on_slider_change(DualSlider*, const interval_func&);
 void on_dual_slider_change(window_t, const interval_func&);
 
-} // namespace
+} // namespace (faint::events)
 
+namespace faint{
 // Creates a dual slider control
 template<int MINB, int MAXB>
 DualSlider* create_dual_slider(wxWindow* parent,
@@ -100,7 +103,6 @@ DualSlider* create_dual_slider(wxWindow* parent,
   return s;
 }
 
-} // namespace
-
+} // namespace (faint)
 
 #endif

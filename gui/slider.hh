@@ -90,11 +90,11 @@ Slider* create_slider(wxWindow* parent,
 
 } // namespace
 
-namespace faint{ namespace events{
+namespace faint::events{
 
 void on_slider_change(Slider*, const int_func&);
 void on_slider_change(window_t, const int_func&);
 
-}} // namespace
+} // namespace
 
 #endif

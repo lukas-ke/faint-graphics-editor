@@ -21,7 +21,7 @@
 #error tablet-init.hh included on non-VC compiler
 #endif
 
-namespace faint{namespace tablet{
+namespace faint::tablet{
 
 InitResult initialize(HINSTANCE, HWND);
 void uninitialize();
@@ -37,6 +37,6 @@ struct WTP{
 
 WTP get_wt_packet(WPARAM wParam, LPARAM lParam);
 
-}} // namespace
+} // namespace
 
 #endif

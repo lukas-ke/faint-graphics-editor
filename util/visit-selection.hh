@@ -17,7 +17,7 @@
 #define FAINT_VISIT_SELECTION_HH
 #include "util/raster-selection.hh"
 
-namespace faint{namespace sel{
+namespace faint::sel{
 
 template<typename EMPTY_FUNC,
   typename RECT_FUNC,
@@ -86,6 +86,6 @@ auto visit(const Existing& e,
   }
 }
 
-}} // namespace
+} // namespace
 
 #endif

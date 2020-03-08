@@ -27,7 +27,7 @@ using ItemSpacing = PrimitiveSubtype<int, category_ui_constants, 1>;
 
 } // namespace
 
-namespace faint{ namespace ui{
+namespace faint::ui{
 
 constexpr OuterSpacing panel_padding{{10}};
 constexpr ItemSpacing item_spacing{{10}};
@@ -42,6 +42,6 @@ constexpr ColRGB nice_red(181, 0, 0);
 constexpr ColRGB nice_green(34, 177, 76);
 constexpr ColRGB nice_blue(47, 54, 153);
 
-}} // namespace
+} // namespace
 
 #endif

@@ -85,8 +85,8 @@ using FileList = std::vector<FilePath>;
 
 } // namespace
 
-namespace faint{ namespace sel{
+namespace faint::sel{
   class Existing;
-}} // namespace
+} // namespace
 
 #endif

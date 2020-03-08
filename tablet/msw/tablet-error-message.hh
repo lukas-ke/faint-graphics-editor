@@ -19,7 +19,7 @@
 class wxWindow;
 namespace faint{ class AppContext; }
 
-namespace faint{namespace tablet{
+namespace faint::tablet{
 
 enum class InitResult;
 
@@ -27,6 +27,6 @@ void show_tablet_error_message(wxWindow* parent,
   AppContext&,
   InitResult error);
 
-}}
+}
 
 #endif

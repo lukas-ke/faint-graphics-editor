@@ -22,7 +22,7 @@ class wxButton;
 class wxTextCtrl;
 namespace faint{ class IntPoint; }
 
-namespace faint{ namespace events{
+namespace faint::events{
 
 using void_func = std::function<void()>;
 using int_point_func = std::function<void(const IntPoint&)>;
@@ -49,6 +49,6 @@ void on_resize(window_t, const void_func&);
 void on_set_focus(window_t, const void_func&);
 void no_op_erase_background(window_t);
 
-}} // namespace
+} // namespace
 
 #endif

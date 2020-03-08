@@ -128,9 +128,9 @@ DirPath get_data_dir(){
   return DirPath(pathStr);
 }
 
-} // namespace
+} // namespace (faint)
 
-namespace faint{namespace mouse{
+namespace faint::mouse{
 
 IntPoint screen_position(){
   return to_faint(wxGetMousePosition());
@@ -149,4 +149,4 @@ Point image_position(const CanvasGeo& g, const wxWindow& w){
   return (viewPos + scroll - border) / zoom;
 }
 
-}} // namespace
+} // namespace (faint::mouse)

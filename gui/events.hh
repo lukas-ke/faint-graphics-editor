@@ -68,7 +68,7 @@ enum class CopyColorMode { HEX, RGB };
 
 } // namespace
 
-namespace faint{ namespace events{
+namespace faint::events{
 
 // Event for notifying that a text entry control has received or lost
 // focus (used to disable some Python binds)
@@ -96,6 +96,6 @@ void on_copy_color_string(window_t,
 void queue_request_close_faint(window_t, bool force);
 void on_request_close_faint(window_t, const std::function<void(bool force)>&);
 
-}} // namespace
+} // namespace
 
 #endif

@@ -16,7 +16,7 @@
 #include "wx/defs.h"
 #include "util-wx/key-codes.hh"
 
-namespace faint{namespace key{
+namespace faint::key{
 
 const Key alt(WXK_ALT);
 const Key asterisk(39);
@@ -80,4 +80,4 @@ bool function_key(int key){
   return WXK_F1 <= key && key <= WXK_F24;
 }
 
-}} // namespace
+} // namespace

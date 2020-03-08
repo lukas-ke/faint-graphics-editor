@@ -250,7 +250,9 @@ void update_mask(bool enableMask, const Paint& bg, bool enableAlpha,
   selection.SetAlphaBlending(enableAlpha);
 }
 
-namespace sel{
+} // namespace (faint)
+
+namespace faint::sel{
 
 Existing::Existing(const RasterSelection& selection)
   : m_selection(selection)
@@ -306,4 +308,4 @@ Copying::Copying(const IntRect& r, const Bitmap& bmp,
   : Floating(r, bmp, options)
 {}
 
-}} // namespace
+} // namespace (faint::sel)

@@ -215,7 +215,7 @@ private:
 
 } // namespace
 
-namespace faint{ namespace events{
+namespace faint::events{
 
 using canvas_id_fn = const std::function<void(CanvasId)>&;
 
@@ -232,6 +232,6 @@ void on_grid_modified(window_t, canvas_id_fn);
 // Called when the zoom has changed for a canvas
 void on_zoom_modified(window_t, canvas_id_fn);
 
-}} // namespace
+} // namespace
 
 #endif

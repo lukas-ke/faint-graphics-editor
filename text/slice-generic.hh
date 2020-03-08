@@ -17,7 +17,7 @@
 #define FAINT_SLICE_HH
 #include <cassert>
 
-namespace faint{ namespace generic{
+namespace faint::generic{
 
 size_t resolve_index(const size_t, int);
 
@@ -79,6 +79,6 @@ StringType char_at(const StringType& s, int pos){
     s.substr(i, 1) : "";
 }
 
-}} // namespace
+} // namespace
 
 #endif

@@ -17,7 +17,7 @@
 #define FAINT_CHAR_CONSTANTS_HH
 #include "text/utf8-char.hh"
 
-namespace faint{ namespace chars{
+namespace faint::chars{
 
 constexpr utf8_char utf8_null(0x00);
 constexpr utf8_char arabic_letter_beh(0x628);
@@ -49,7 +49,7 @@ constexpr utf8_char superscript_two(0xb2);
 constexpr utf8_char tab(0x9);
 constexpr utf8_char triple_prime(0x2034);
 
-}} // namespace
+} // namespace
 
 namespace faint{
 

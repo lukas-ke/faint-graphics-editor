@@ -59,10 +59,10 @@ private:
 
 } // namespace
 
-namespace faint{ namespace events{
+namespace faint::events{
 
 void on_switch_canvas(window_t, const std::function<void(CanvasId)>&);
 
-}} // namespace
+} // namespace
 
 #endif

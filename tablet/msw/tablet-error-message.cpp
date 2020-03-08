@@ -17,7 +17,7 @@
 #include "tablet/msw/tablet-error-message.hh"
 #include "util-wx/gui-util.hh"
 
-namespace faint{namespace tablet{
+namespace faint::tablet{
 
 void show_tablet_error_message(wxWindow* parent,
   AppContext& app,
@@ -50,4 +50,4 @@ void show_tablet_error_message(wxWindow* parent,
   }
 }
 
-}} // namespace
+} // namespace

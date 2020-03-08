@@ -54,11 +54,8 @@ private:
 
 } // namespace
 
-namespace faint{ namespace events{
-
-void on_selection(BitmapListCtrl*,
-  const std::function<void(const Index&)>&);
-
-}} // namespace
+namespace faint::events{
+  void on_selection(BitmapListCtrl*, const std::function<void(const Index&)>&);
+} // namespace
 
 #endif

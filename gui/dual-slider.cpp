@@ -302,7 +302,7 @@ DualSlider* DualSlider::Create(wxWindow* parent,
 
 } // namespace
 
-namespace faint{ namespace events{
+namespace faint::events{
 
 void on_slider_change(DualSlider* s, const interval_func& f){
   bind_fwd(s, EVT_FAINT_DUAL_SLIDER_CHANGE,
@@ -318,4 +318,4 @@ void on_dual_slider_change(window_t w, const interval_func& f){
     });
 }
 
-}}
+} // namespace (faint::events)

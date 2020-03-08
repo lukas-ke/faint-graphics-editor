@@ -28,7 +28,7 @@ class wxString;
 class wxTextCtrl;
 class wxWindow;
 
-namespace faint{ namespace layout{
+namespace faint::layout{
 
 class category_layout_wx;
 using Proportion = Distinct<int, category_layout_wx, 0>;
@@ -87,6 +87,6 @@ T* focused(T* obj){
   return obj;
 }
 
-}} // namespace
+} // namespace
 
 #endif

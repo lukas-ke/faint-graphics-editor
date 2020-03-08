@@ -75,7 +75,7 @@ private:
 
 } // namespace
 
-namespace faint{ namespace events{
+namespace faint::events{
 
 void on_gradient_slider_change(LinearGradientSlider&,
   const std::function<void()>&);
@@ -83,6 +83,6 @@ void on_gradient_slider_change(LinearGradientSlider&,
 void on_gradient_slider_change(RadialGradientSlider&,
   const std::function<void()>&);
 
-}} // namespace
+} // namespace
 
 #endif

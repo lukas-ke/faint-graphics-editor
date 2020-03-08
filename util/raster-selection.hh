@@ -72,7 +72,9 @@ using OldSelectionState = Order<SelectionState>::Old;
 
 class RasterSelection;
 
-namespace sel{
+} // namespace (faint)
+
+namespace faint::sel{
   class Empty{
   };
 
@@ -120,7 +122,9 @@ namespace sel{
   public:
     explicit Copying(const IntRect&, const Bitmap&, const SelectionOptions&);
   };
-} // namespace
+} // namespace (faint::sel)
+
+namespace faint{
 
 class RasterSelection{
   // A selected region in the image or a floating selection.
@@ -212,6 +216,6 @@ void update_mask(bool enableMask,
 
 SelectionOptions raster_selection_options(const Settings&);
 
-} // namespace
+} // namespace (faint)
 
 #endif
