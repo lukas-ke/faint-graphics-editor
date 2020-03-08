@@ -296,7 +296,7 @@ struct free_n_arg_t{
 
   template<RET Func(Args...)>
   static PyObject* PythonFunc(PyObject*, PyObject* args){
-    auto t = std::make_tuple();
+    auto t = std::tuple(); // Initial
     return call_cpp_function<decltype(t), RET, std::function<RET(Args...)>, Args...>
       (args, std::function<RET(Args...)>(Func), t);
   }
@@ -308,7 +308,7 @@ struct free_n_arg_no_except_t{
 
   template<RET Func(Args...)>
   static PyObject* PythonFunc(PyObject*, PyObject* args){
-    auto t = std::make_tuple();
+    auto t = std::tuple(); // Initial
     return call_cpp_function_no_catch<decltype(t), RET, std::function<RET(Args...)>, Args...>
       (args, std::function<RET(Args...)>(Func), t);
   }

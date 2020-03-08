@@ -22,6 +22,7 @@ namespace faint{
 class Settings;
 
 using FlaggedPaint = std::pair<Paint, bool>;
+
 class ColorChoice{
   // A foreground and background Paint, with a bool each
   // signifying if the color was from some primary Settings (true) or

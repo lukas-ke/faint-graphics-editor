@@ -922,7 +922,7 @@ PyObject* build_result(const Angle& angle){
 }
 
 PyObject* build_result(const AngleSpan& angleSpan){
-  return build_result(std::make_pair(angleSpan.start, angleSpan.stop));
+  return build_result(std::pair(angleSpan.start, angleSpan.stop));
 }
 
 PyObject* build_result(const Delay& delay){

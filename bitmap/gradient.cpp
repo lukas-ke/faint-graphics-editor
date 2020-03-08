@@ -36,7 +36,7 @@ static bool operator<(const Radii& lhs, const Radii& rhs){
 }
 
 inline std::tuple<Color, double> tupled(const ColorStop& s){
-  return std::make_tuple(s.GetColor(), s.GetOffset());
+  return {s.GetColor(), s.GetOffset()};
 }
 
 ColorStop::ColorStop()
@@ -130,9 +130,7 @@ void LinearGradient::SetStops(const color_stops_t& stops){
 inline std::tuple<Angle, bool, const color_stops_t&> tupled(
   const LinearGradient& g)
 {
-  return std::make_tuple(g.GetAngle(),
-    g.GetObjectAligned(),
-    std::cref(g.GetStops()));
+  return {g.GetAngle(), g.GetObjectAligned(), std::cref(g.GetStops())};
 }
 
 bool LinearGradient::operator<(const LinearGradient& other) const{
@@ -166,10 +164,11 @@ LinearGradient with_angle(const LinearGradient& g, const Angle& angle){
 inline std::tuple<Point, bool, Radii, const color_stops_t&> tupled(
   const RadialGradient& g)
 {
-  return std::make_tuple(g.GetCenter(),
+  return {
+    g.GetCenter(),
     g.GetObjectAligned(),
     g.GetRadii(),
-    std::cref(g.GetStops()));
+    std::cref(g.GetStops())};
 }
 
 RadialGradient::RadialGradient()

@@ -345,18 +345,18 @@ private:
   auto GetProportionMasterSlave(FocusMode f){
     if (f == FocusMode::CONSIDER_FOCUS){
       if (m_width->GetWindow().HasFocus()){
-        return std::make_pair(m_width, m_height);
+        return std::pair(m_width, m_height);
       }
       else if (m_height->GetWindow().HasFocus()){
-        return std::make_pair(m_height, m_width);
+        return std::pair(m_height, m_width);
       }
     }
 
     if (m_lastChanged == nullptr || m_lastChanged == m_width){
-      return std::make_pair(m_width, m_height);
+      return std::pair(m_width, m_height);
     }
     else{
-      return std::make_pair(m_height, m_width);
+      return std::pair(m_height, m_width);
     }
   }
 

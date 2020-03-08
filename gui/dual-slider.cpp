@@ -175,7 +175,7 @@ public:
     auto highlightColor = Color(100, 100, 255, 100);
     auto edgeSettings = solid_1px(color_white);
 
-    const auto ySpan = std::make_pair(1, sz.h - 2);
+    const auto ySpan = std::pair(1, sz.h - 2);
 
     if (selection.Delta() != 0){
       // Fixme: Blended rectangle instead of Bitmap?

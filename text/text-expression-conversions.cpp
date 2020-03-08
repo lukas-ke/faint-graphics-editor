@@ -38,7 +38,7 @@ Conversions Conversions::operator/(coord scale) const{
 }
 
 static auto rescale(const utf8_string& unit, const Conversions& conv){
-  return std::make_pair(unit, conv / conv[unit].Get());
+  return std::pair(unit, conv / conv[unit].Get());
 }
 
 const conversions_map_t& length_conversions(){

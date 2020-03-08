@@ -72,7 +72,7 @@ public:
 
   std::map<int, int> GetStatus() const{
     auto key_value_f = [](const auto& idToCount){
-      return std::make_pair(idToCount.first.Raw(), idToCount.second);
+      return std::pair(idToCount.first.Raw(), idToCount.second);
     };
     return make_map(m_refCounts, key_value_f);
   }

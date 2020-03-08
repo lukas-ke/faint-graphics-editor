@@ -145,7 +145,7 @@ Returns a list of the available file formats as tuples with
 static auto faintapp_list_formats(PyFuncContext& ctx){
   return make_vector(ctx.app.GetFormats(),
     [](const Format* f){
-      return std::make_pair(f->GetLabel(), f->GetDefaultExtension().Str());
+      return std::pair(f->GetLabel(), f->GetDefaultExtension().Str());
     });
 }
 

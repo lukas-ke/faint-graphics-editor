@@ -68,7 +68,7 @@ Point polar(const Radii&, const Angle&);
 
 template<typename T1, typename T2>
 auto floored(const std::pair<T1, T2>& p){
-  return std::make_pair(floored(p.first), floored(p.second));
+  return std::pair(floored(p.first), floored(p.second));
 }
 
 std::vector<IntPoint> floored(const std::vector<Point>&);
@@ -98,6 +98,5 @@ auto floored(const T& v){
 }
 
 } // namespace
-
 
 #endif

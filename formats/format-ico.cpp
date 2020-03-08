@@ -32,7 +32,7 @@ static IcoCompression select_compression(const Image& image){
 }
 
 static auto to_icon(const Image& frame){
-  return std::make_pair(flatten(frame), select_compression(frame));
+  return std::pair(flatten(frame), select_compression(frame));
 }
 
 class FormatICO : public Format {

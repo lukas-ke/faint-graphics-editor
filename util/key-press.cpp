@@ -52,7 +52,7 @@ const std::set<KeyPress>& excluded_alpha_numeric_entry(){
 }
 
 inline std::tuple<Key, Mod> tupled(const KeyPress& k){
-  return std::make_tuple(k.GetKeyCode(), k.Modifiers());
+  return std::tuple(k.GetKeyCode(), k.Modifiers());
 }
 
 bool affects_alphanumeric_entry(const KeyPress& key){
