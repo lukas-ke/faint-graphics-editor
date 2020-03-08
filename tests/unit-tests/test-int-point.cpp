@@ -11,8 +11,7 @@ void test_int_point(){
     "IntPoint not literal");
 
   #ifdef _MSC_VER // C++14: Not supported by clang 3.5.0 with libstdc++
-  static_assert(std::is_trivially_copyable<IntPoint>::value,
-    "IntPoint not trivially copyable");
+  static_assert(std::is_trivially_copyable<IntPoint>::value);
   #endif
 
   IntPoint p0;

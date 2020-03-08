@@ -113,7 +113,7 @@ void PyFileFormat::Load(const FilePath& filePath, ImageProps& props){
   }
 
   auto py_props = pythoned(props);
-  static_assert(managed(py_props), "");
+  static_assert(managed(py_props));
 
   scoped_ref filePathUnicode(build_unicode(filePath.Str()));
   scoped_ref argList(Py_BuildValue("OO", filePathUnicode.get(),
