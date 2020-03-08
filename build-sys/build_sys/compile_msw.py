@@ -42,7 +42,7 @@ cl_common_switches = [
     "errorReport:queue",
     "Zc:forScope", # ISO-Conformance
     "Zc:wchar_t", # ISO-Conformance
-
+    "std:c++17",
     # /Za disables Microsoft extensions. Not used here because it causes many
     # warnings in wxWidgets headers and Microsoft's last developer says its
     # broken:
