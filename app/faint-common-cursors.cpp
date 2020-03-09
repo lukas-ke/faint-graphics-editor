@@ -28,7 +28,7 @@ void FaintCommonCursors::SetBlank(wxWindow* w) const{
   set_cursor(w, m_blank);
 }
 
-void FaintCommonCursors::SetCrosshair(wxWindow* w)const{
+void FaintCommonCursors::SetCrosshair(wxWindow* w) const{
   set_cursor(w, m_crosshair);
 }
 
