@@ -91,9 +91,9 @@ static void draw_text(FaintDC& dc,
   auto tris(text_line_regions(textInfo, tri, lines, align));
   Optional<Tri> clipTri(tri, settings.Get(ts_BoundedText));
 
-  for (const auto item : zip(tris, lines)){
+  for (const auto [lineTri, line] : zip(tris, lines)){
     // Fixme: Selected text should be drawn with wxSYS_COLOUR_HIGHLIGHTTEXT
-    dc.Text(item.first, item.second.text, settings, clipTri);
+    dc.Text(lineTri, line.text, settings, clipTri);
   }
 }
 

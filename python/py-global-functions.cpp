@@ -116,10 +116,9 @@ static void f_int_ran_command(PyFuncContext& ctx){
 Faint internal: Checks the status of pattern reference counts."
 name: "_get_pattern_status" */
 static utf8_string f_get_pattern_status(PyFuncContext&){
-  std::map<int,int> status = pattern_status();
   utf8_string s;
-  for (const auto& idToCount : status){
-    s += str_int(idToCount.first) + "=" + str_int(idToCount.second) + ",";
+  for (const auto& [id, count] : pattern_status()){
+    s += str_int(id) + "=" + str_int(count) + ",";
   }
   return s;
 }

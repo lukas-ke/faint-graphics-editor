@@ -136,12 +136,10 @@ bool update_map_values(T& targetMap, const Settings& source){
   // Updatate the values of all settings that exist in both targetMap
   // and source with the values from source.
   bool updated = false;
-  for (auto& targetItem : targetMap){
-    const auto& settingId = targetItem.first;
-    if (source.Has(settingId)){
-      const auto& v = source.Get(settingId);
-      if (targetItem.second != v){
-        targetItem.second = v;
+  for (auto& [id, targetValue] : targetMap) {
+    if (source.Has(id)){
+      if (auto& srcValue = source.Get(id); targetValue != srcValue){
+        targetValue = srcValue;
         updated = true;
       }
     }

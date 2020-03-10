@@ -81,10 +81,10 @@ void test_iter(){
   {
     // Test "zip"
     int i = 0;
-    for (auto item : zip(strings, chars)){
+    for (const auto& [str, ch] : zip(strings, chars)){
       ASSERT(i < 6);
-      EQUAL(item.first, strings[to_size_t(i)]);
-      EQUAL(item.second, chars[to_size_t(i)]);
+      EQUAL(str, strings[to_size_t(i)]);
+      EQUAL(ch, chars[to_size_t(i)]);
       i++;
     }
   }

@@ -44,9 +44,7 @@ void img_text(){
   settings.emplace_back("Italic", s4);
 
   int imageNum = 0;
-  for (const auto& p : settings){
-    const auto& label = p.first;
-    const auto& s = p.second;
+  for (const auto& [label, s] : settings){
     Bitmap bmp({200,50}, grayscale_rgba(200));
     FaintDC dc(bmp);
     Tri bounds({10,10},{190,10},{10,40});

@@ -208,9 +208,9 @@ public:
   HandleHitInfo HitTest(const IntPoint& pos){
     // Traverse the regions in reverse so that the move-handles have
     // higher priority than the add-buttons
-    for (auto region : reversed(m_regions)){
-      if (region.first.Contains(pos)){
-        return region.second;
+    for (const auto& [rect, hitInfo] : reversed(m_regions)){
+      if (rect.Contains(pos)){
+        return hitInfo;
       }
     }
     return HandleHitInfo::Miss();

@@ -42,25 +42,25 @@ public:
     const ColorFunc& colorFunc) const
   {
     if (m_boolSetting.IsSet()){
-      const auto& p = m_boolSetting.Get();
-      return boolFunc(p.first, p.second);
+      const auto& [setting, value] = m_boolSetting.Get();
+      return boolFunc(setting, value);
     }
     else if (m_intSetting.IsSet()){
-      const auto& p = m_intSetting.Get();
-      return intFunc(p.first, p.second);
+      const auto& [setting, value] = m_intSetting.Get();
+      return intFunc(setting, value);
     }
     else if (m_strSetting.IsSet()){
-      const auto& p = m_strSetting.Get();
-      return strFunc(p.first, p.second);
+      const auto& [setting, value] = m_strSetting.Get();
+      return strFunc(setting, value);
     }
     else if (m_floatSetting.IsSet()){
-      const auto& p = m_floatSetting.Get();
-      return floatFunc(p.first, p.second);
+      const auto& [setting, value] = m_floatSetting.Get();
+      return floatFunc(setting, value);
     }
     else{
       assert(m_paintSetting.IsSet());
-      const auto& p = m_paintSetting.Get();
-      return colorFunc(p.first, p.second);
+      const auto& [setting, value] = m_paintSetting.Get();
+      return colorFunc(setting, value);
     }
   }
 

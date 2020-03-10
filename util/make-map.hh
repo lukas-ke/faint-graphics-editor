@@ -33,9 +33,9 @@ auto make_map(const Generator& gen, Func&& f){
   using value_type = decltype(pair_type::second);
   std::map<key_type, value_type> m;
 
-  for (const auto& value : gen){
-    auto p = f(value);
-    m[p.first] = p.second;
+  for (const auto& v : gen){
+    const auto& [key, value] = f(v);
+    m[key] = value;
   }
   return m;
 }

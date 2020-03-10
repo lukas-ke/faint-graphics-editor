@@ -232,8 +232,7 @@ ObjectInfo hit_test(const IntPoint& ptView,
 
   if (handleInfo.NotSet()){
     Point ptImg = mouse::view_to_image(ptView, geo);
-    std::pair<Object*, Hit> hitObject = object_at(ptImg, image, geo,
-      hitTestBuffer);
+    auto hitObject = object_at(ptImg, image, geo, hitTestBuffer);
     object = hitObject.first;
     hitStatus = hitObject.second;
     selected = (object == nullptr ? false :

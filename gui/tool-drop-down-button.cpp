@@ -164,12 +164,12 @@ public:
           return;
         }
 
-        for (auto b : m_buttons){
-          if (b.first->GetRect().Contains(to_wx(p))){
+        for (const auto& [button, toolInfo] : m_buttons){
+          if (button->GetRect().Contains(to_wx(p))){
             // Hit a button
             ReleaseMouse();
             Hide();
-            events::tool_change(parent, b.second.toolId);
+            events::tool_change(parent, toolInfo.toolId);
           }
         }
       });

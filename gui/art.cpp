@@ -94,8 +94,8 @@ void Art::Load(const wxString& filename, Cursor cursorId){
   result.Visit(
     [&](const cur_vec& cursors){
       throw_unless_single_frame(cursors, filename);
-      const auto& c = cursors.back();
-      m_cursors[cursorId] = cur_from_bmp(to_wx_bmp(c.first), c.second);
+      const auto& [bmp, hotspot] = cursors.back();
+      m_cursors[cursorId] = cur_from_bmp(to_wx_bmp(bmp), hotspot);
     },
     [](const utf8_string& err){
       throw Exception(err);

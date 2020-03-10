@@ -44,8 +44,7 @@ static PngWriteResult init_text_chunks(const png_tEXt_map& textChunks,
 
   size_t i = 0;
 
-  for (const auto& kv : textChunks){
-    const auto& key = kv.first;
+  for (const auto& [key, value] : textChunks){
     if (!is_ascii(key)){
       return PngWriteResult::ERROR_WRITE_TEXT_KEY_ENCODING;
     }
@@ -57,7 +56,6 @@ static PngWriteResult init_text_chunks(const png_tEXt_map& textChunks,
       return PngWriteResult::ERROR_WRITE_TEXT_KEY_EMPTY;
     }
 
-    const auto& value = kv.second;
     if (!is_ascii(value)){
       return PngWriteResult::ERROR_WRITE_TEXT_VALUE_ENCODING;
     }

@@ -486,8 +486,8 @@ void draw_wide_ellipse_f(Bitmap& bmp, const Functor& setPixFunc,
 
   std::map<int,int> points = ellipse_points(x0, y0,
     a - s.lineWidth, b - s.lineWidth);
-  for (const auto& ptPair : points){
-    setPixFunc(bmp, ptPair.second, ptPair.first);
+  for (auto [y, x] : points){
+    setPixFunc(bmp, x, y);
   }
 
   int a2 = 2 * a * a;

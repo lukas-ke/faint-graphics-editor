@@ -80,8 +80,8 @@ utf8_string u8_chars(){
 }
 
 FileName suffix_u8_chars(const FileName& f){
-  auto p = split_extension(f);
-  return FileName(p.first + u8_chars() + p.second);
+  const auto [name, extension] = split_extension(f);
+  return FileName(name + u8_chars() + extension);
 }
 
 } // namespace

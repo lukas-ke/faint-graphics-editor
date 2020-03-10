@@ -40,8 +40,8 @@ public:
   void Load(const FilePath& filename, ImageProps& imageProps){
     read_cur(filename).Visit(
       [&](cur_vec& cursors){
-        for (auto& c : cursors){
-          imageProps.AddFrame(std::move(c.first), FrameInfo(c.second));
+        for (auto& [bmp, hotspot] : cursors){
+          imageProps.AddFrame(std::move(bmp), FrameInfo(hotspot));
         }
       },
       [&](const utf8_string& error){

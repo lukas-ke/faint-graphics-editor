@@ -368,11 +368,9 @@ private:
     // Update the width or height field proportionally relative to its
     // old value, using the last edited or focused edit field to
     // determine the factor.
-
-
-    auto p = GetProportionMasterSlave(f);
-    set_from_ratio(p.second->GetWindow(),
-      get_change_ratio(p.first->GetWindow()));
+    auto [focused, unfocused] = GetProportionMasterSlave(f);
+    set_from_ratio(unfocused->GetWindow(),
+      get_change_ratio(focused->GetWindow()));
   }
 
   void SetDefaultOptions(ResizeDialogOptions::ResizeType type){

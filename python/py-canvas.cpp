@@ -558,9 +558,7 @@ static PyObject* canvas_Group(CanvasT bc, PyObject* args){
   }
 
   Canvas& canvas = bc.item;
-  cmd_and_group_t p = group_objects_command(faintObjects, select_added(false));
-  CommandPtr& cmd = p.first;
-  Object* group = p.second;
+  auto [cmd, group] = group_objects_command(faintObjects, select_added(false));
   bc.ctx.RunCommand(Frame(bc.ctx, canvas, canvas.GetImage()), std::move(cmd));
   return pythoned(group, bc.ctx, &canvas, canvas.GetImage().GetId());
 }
