@@ -71,11 +71,14 @@ public:
 
 
 private:
-  Optional<std::pair<BoolSetting, BoolSetting::ValueType> > m_boolSetting;
-  Optional<std::pair<IntSetting, IntSetting::ValueType> > m_intSetting;
-  Optional<std::pair<StringSetting, StringSetting::ValueType> > m_strSetting;
-  Optional<std::pair<FloatSetting, FloatSetting::ValueType> > m_floatSetting;
-  Optional<std::pair<PaintSetting, PaintSetting::ValueType> > m_paintSetting;
+  template<typename T>
+  using OptionalSetting = Optional<std::pair<T, typename T::ValueType>>;
+
+  OptionalSetting<BoolSetting> m_boolSetting;
+  OptionalSetting<IntSetting> m_intSetting;
+  OptionalSetting<StringSetting> m_strSetting;
+  OptionalSetting<FloatSetting> m_floatSetting;
+  OptionalSetting<PaintSetting> m_paintSetting;
 };
 
 } // namespace
