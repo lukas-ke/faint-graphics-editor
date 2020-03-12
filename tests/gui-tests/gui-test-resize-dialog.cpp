@@ -19,7 +19,7 @@
 #include "geo/int-point.hh"
 #include "geo/int-rect.hh"
 #include "gui/art.hh"
-#include "gui/resize-dialog.hh"
+#include "gui/dialogs/resize-dialog.hh"
 #include "text/formatting.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/layout-wx.hh"

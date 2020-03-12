@@ -21,7 +21,7 @@
 #include "commands/rescale-cmd.hh"
 #include "commands/resize-cmd.hh"
 #include "geo/geo-func.hh"
-#include "gui/resize-dialog.hh"
+#include "gui/dialogs/resize-dialog.hh"
 #include "text/formatting.hh"
 #include "util/apply-target.hh"
 #include "util/command-util.hh"
