@@ -245,28 +245,24 @@ BoolSetting::ValueType Settings::Not(const BoolSetting& s) const{
   return !(it->second);
 }
 
-BoundSetting::BoundSetting(const BoolSetting s, BoolSetting::ValueType v){
-  m_boolSetting.Set({s,v});
-}
+BoundSetting::BoundSetting(const BoolSetting s, BoolSetting::ValueType v)
+  : m_setting(std::pair(s, v))
+{}
 
-BoundSetting::BoundSetting(const IntSetting s, IntSetting::ValueType v){
-  m_intSetting.Set({s,v});
-}
+BoundSetting::BoundSetting(const IntSetting s, IntSetting::ValueType v)
+  : m_setting(std::pair(s, v))
+{}
 
-BoundSetting::BoundSetting(const StringSetting& s,
-  const StringSetting::ValueType& v)
-{
-  m_strSetting.Set({s,v});
-}
+BoundSetting::BoundSetting(const StringSetting& s, const StringSetting::ValueType& v)
+  : m_setting(std::pair(s, v))
+{}
 
-BoundSetting::BoundSetting(const FloatSetting& s, FloatSetting::ValueType v){
-  m_floatSetting.Set({s,v});
-}
+BoundSetting::BoundSetting(const FloatSetting& s, FloatSetting::ValueType v)
+  : m_setting(std::pair(s, v))
+{}
 
-BoundSetting::BoundSetting(const PaintSetting& s,
-  const PaintSetting::ValueType& v)
-{
-  m_paintSetting.Set({s,v});
-}
+BoundSetting::BoundSetting(const PaintSetting& s, const PaintSetting::ValueType& v)
+  : m_setting(std::pair(s, v))
+{}
 
 } // namespace

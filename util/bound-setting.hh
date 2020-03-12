@@ -15,21 +15,25 @@
 
 #ifndef FAINT_BOUND_SETTING_HH
 #define FAINT_BOUND_SETTING_HH
-#include "util/optional.hh"
+#include <variant>
 #include "util/settings.hh"
 
 namespace faint{
 
 class BoundSetting{
+private:
+  template<typename T>
+  using PairType = std::pair<T, typename T::ValueType>;
+
 public:
   BoundSetting(const BoolSetting, BoolSetting::ValueType);
   BoundSetting(const IntSetting, IntSetting::ValueType);
   BoundSetting(const StringSetting&, const StringSetting::ValueType&);
   BoundSetting(const FloatSetting&, FloatSetting::ValueType);
   BoundSetting(const PaintSetting&, const PaintSetting::ValueType&);
+
   template<typename T>
-  BoundSetting(const EnumSetting<T>& s,
-    const typename EnumSetting<T>::ValueType& v)
+  BoundSetting(const EnumSetting<T>& s, const typename EnumSetting<T>::ValueType& v)
     : BoundSetting(static_cast<IntSetting>(s), to_int(v))
   {}
 
@@ -41,27 +45,30 @@ public:
     const FloatFunc& floatFunc,
     const ColorFunc& colorFunc) const
   {
-    if (m_boolSetting.IsSet()){
-      const auto& [setting, value] = m_boolSetting.Get();
-      return boolFunc(setting, value);
-    }
-    else if (m_intSetting.IsSet()){
-      const auto& [setting, value] = m_intSetting.Get();
-      return intFunc(setting, value);
-    }
-    else if (m_strSetting.IsSet()){
-      const auto& [setting, value] = m_strSetting.Get();
-      return strFunc(setting, value);
-    }
-    else if (m_floatSetting.IsSet()){
-      const auto& [setting, value] = m_floatSetting.Get();
-      return floatFunc(setting, value);
-    }
-    else{
-      assert(m_paintSetting.IsSet());
-      const auto& [setting, value] = m_paintSetting.Get();
-      return colorFunc(setting, value);
-    }
+    return std::visit(
+      [&](auto&& arg){
+
+        const auto& [setting, value] = arg;
+        using T = std::decay_t<decltype(arg)>;
+        if constexpr (std::is_same_v<T, PairType<BoolSetting>>) {
+          return boolFunc(setting, value);
+        }
+        else if constexpr (std::is_same_v<T, PairType<IntSetting>>) {
+          return intFunc(setting, value);
+        }
+        else if constexpr (std::is_same_v<T, PairType<StringSetting>>) {
+          return strFunc(setting, value);
+        }
+        else if constexpr (std::is_same_v<T, PairType<FloatSetting>>) {
+          return floatFunc(setting, value);
+        }
+        else if constexpr (std::is_same_v<T, PairType<PaintSetting>>) {
+          return colorFunc(setting, value);
+        }
+        else {
+          static_assert(always_false<T>::value, "Non-exhaustive variant visitor");
+        }
+      }, m_setting);
   }
 
   template<typename T>
@@ -71,14 +78,12 @@ public:
 
 
 private:
-  template<typename T>
-  using OptionalSetting = Optional<std::pair<T, typename T::ValueType>>;
-
-  OptionalSetting<BoolSetting> m_boolSetting;
-  OptionalSetting<IntSetting> m_intSetting;
-  OptionalSetting<StringSetting> m_strSetting;
-  OptionalSetting<FloatSetting> m_floatSetting;
-  OptionalSetting<PaintSetting> m_paintSetting;
+  std::variant<
+    PairType<BoolSetting>,
+    PairType<IntSetting>,
+    PairType<StringSetting>,
+    PairType<FloatSetting>,
+    PairType<PaintSetting>> m_setting;
 };
 
 } // namespace
