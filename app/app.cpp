@@ -258,8 +258,8 @@ public:
 
     m_pyFuncContext = std::make_unique<PyFuncContext>(*m_appContext,
       m_art, *m_pythonContext);
-    bool ok = init_python(m_cmd.arg, *m_pyFuncContext);
-    if (!ok){
+
+    if (bool ok = init_python(m_cmd.arg, *m_pyFuncContext); !ok){
       return show_init_error(Title("Faint Internal Error"),
         "Faint crashed!\n\n...while running envsetup.py");
     }
@@ -270,8 +270,7 @@ public:
 
     m_faintWindow->Initialize();
 
-    bool configOk = run_python_user_config(*m_pythonContext);
-    if (!configOk){
+    if (bool ok = run_python_user_config(*m_pythonContext); !ok){
       // Show the console where some error info should have been printed.
       m_appContext->ShowPythonConsole();
       if (m_cmd.scriptPath.IsSet()){
@@ -281,6 +280,7 @@ public:
         m_cmd.scriptPath.Clear();
       }
     }
+
     m_interpreterFrame->AddNames(list_ifaint_names());
     if (!m_cmd.files.empty()){
       m_faintWindow->Open(m_cmd.files);
