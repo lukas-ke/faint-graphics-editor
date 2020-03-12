@@ -34,10 +34,13 @@ template<> struct handle_return<Handle::P0P2>{using type = LineSegment;};
 template<> struct handle_return<Handle::P1P3>{using type = LineSegment;};
 template<> struct handle_return<Handle::P2P3>{using type = LineSegment;};
 
+template<Handle H>
+using handle_return_t = typename handle_return<H>::type;
+
 // Gets the Point from the Tri for the specified handle for corner handles,
 // or a line between the corners for side handles.
 template<Handle H>
-typename handle_return<H>::type get(const Tri&){}
+handle_return_t<H> get(const Tri&){}
 
 template<>
 inline Point get<Handle::P0>(const Tri& tri){
@@ -82,7 +85,7 @@ inline LineSegment get<Handle::P2P3>(const Tri& tri){
 // Gets the Point from the Rect for the specified handle for corner
 // handles, or a line between the corners for side handles.
 template<Handle H>
-typename handle_return<H>::type get(const Rect&){}
+handle_return_t<H> get(const Rect&){}
 
 template<>
 inline Point get<Handle::P0>(const Rect& rect){

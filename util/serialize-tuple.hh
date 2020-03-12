@@ -21,31 +21,31 @@
 namespace faint {
 
 template<typename T>
-inline typename std::underlying_type<T>::type& raw_enum_value(T& e){
-  return reinterpret_cast<typename std::underlying_type<T>::type&>(e);
+inline std::underlying_type_t<T>& raw_enum_value(T& e){
+  return reinterpret_cast<typename std::underlying_type_t<T>&>(e);
 }
 
 template<typename T>
-inline const typename std::underlying_type<T>::type& raw_enum_value(const T& e){
-  return reinterpret_cast<const typename std::underlying_type<T>::type&>(e);
+inline const std::underlying_type_t<T>& raw_enum_value(const T& e){
+  return reinterpret_cast<const std::underlying_type_t<T>&>(e);
 }
 
 template<size_t N, class Head, class... Tail>
 struct sizeof_rest{
   static const size_t value =
-    sizeof(typename std::tuple_element<N, std::tuple<Head, Tail...> >::type) +
+    sizeof(typename std::tuple_element_t<N, std::tuple<Head, Tail...>>) +
     sizeof_rest<N - 1, Head, Tail...>::value;
 };
 
 template<class Head, class... Tail>
 struct sizeof_rest<0, Head, Tail...>{
-  static const size_t value = sizeof(typename std::tuple_element<0,
-    std::tuple<Head, Tail...>>::type);
+  static const size_t value =
+    sizeof(std::tuple_element_t<0, std::tuple<Head, Tail...>>);
 };
 
 template<class Head, class... Tail >
 inline constexpr size_t sizeof_entries =
-  sizeof_rest<std::tuple_size<std::tuple<Head, Tail...> >::value - 1, Head, Tail...>::value;
+  sizeof_rest<std::tuple_size_v<std::tuple<Head, Tail...> > - 1, Head, Tail...>::value;
 
 inline void write(unsigned char* data, const uint32_t v){
   data[3] = static_cast<unsigned char>(((v >> 24) & 0xffu));

@@ -23,9 +23,11 @@ template<typename T>
 struct plain_type{
   // Loses the const and reference qualifiers so that parameters can be
   // default constructed before being parsed from PyObject* arguments.
-  using type = typename std::remove_const<
-    typename std::remove_reference<T>::type>::type;
+  using type = std::remove_const_t<std::remove_reference_t<T>>;
 };
+
+template<typename T>
+using plain_type_t = typename plain_type<T>::type;
 
 } // namespace
 

@@ -122,7 +122,7 @@ public:
   }
 
   template<typename T2=T,
-       typename=typename std::enable_if<!std::is_reference<T2>::value, T2>::type>
+           typename=std::enable_if_t<!std::is_reference_v<T2>, T2>>
   Optional(Optional&& other){
     if (other.m_obj == nullptr){
       m_obj = nullptr;
@@ -203,7 +203,7 @@ public:
   // alternative argument or, if returning as value type, copying a
   // held value object not meant to be copied or not supporting copy.
   template<typename T2=T>
-  typename std::enable_if<!std::is_reference<T2>::value, T2>::type Or(const PT& alternative) const{
+  typename std::enable_if_t<!std::is_reference_v<T2>, T2> Or(const PT& alternative) const{
     if (m_obj == nullptr){
       return alternative;
     }
@@ -243,7 +243,7 @@ public:
     return m_obj != nullptr;
   }
 private:
-  typename std::remove_reference<T>::type* m_obj;
+  typename std::remove_reference_t<T>* m_obj;
 };
 
 template<typename T>

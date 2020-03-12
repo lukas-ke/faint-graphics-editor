@@ -80,7 +80,7 @@ namespace tuple_unpack{
 
   template <typename RET, typename F, typename Tuple>
   PyObject* call(F f, Tuple&& t){
-    using ttype = typename std::decay<Tuple>::type;
+    using ttype = std::decay_t<Tuple>;
     return call_impl<RET, F, Tuple, std::tuple_size<ttype>::value == 0, std::tuple_size<ttype>::value>::call(f, std::forward<Tuple>(t));
   }
 }
@@ -339,7 +339,7 @@ template<typename PY_CLASS_T>
 struct init_zero_arg_t{
   // tp_init without arguments
   template<void Func(PY_CLASS_T)>
-  static int PythonFunc(typename std::remove_reference<PY_CLASS_T>::type* rawSelf, PyObject* /*args*/, PyObject*){
+  static int PythonFunc(typename std::remove_reference_t<PY_CLASS_T>* rawSelf, PyObject* /*args*/, PyObject*){
     auto t(std::tie(*rawSelf));
     PyObject* result = call_cpp_function<decltype(t), void,
       std::function<void(PY_CLASS_T)>>(
@@ -353,7 +353,7 @@ struct init_n_arg_t{
   // tp_init with arguments
 
   template<void Func(PY_CLASS_T, Args...)>
-  static int PythonFunc(typename std::remove_reference<PY_CLASS_T>::type* rawSelf, PyObject* args, PyObject*){
+  static int PythonFunc(typename std::remove_reference_t<PY_CLASS_T>* rawSelf, PyObject* args, PyObject*){
     auto t(std::tie(*rawSelf));
     PyObject* result = call_cpp_function<decltype(t), void, std::function<void(PY_CLASS_T, Args...)>, Args...>
       (args, std::function<void(PY_CLASS_T,Args...)>(Func), t);

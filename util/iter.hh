@@ -192,7 +192,7 @@ public:
     return m_value != rhs.m_value;
   }
 private:
-  using T2 = typename std::underlying_type<T>::type;
+  using T2 = std::underlying_type_t<T>;
   T2 m_value;
 };
 

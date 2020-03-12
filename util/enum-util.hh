@@ -22,18 +22,18 @@ namespace faint{
 
 template<typename ENUM_TYPE>
 auto enum_min_value(){
-  using UT = typename std::underlying_type<ENUM_TYPE>::type;
+  using UT = std::underlying_type_t<ENUM_TYPE>;
   return static_cast<UT>(ENUM_TYPE::MIN_VALUE);
 }
 
 template<typename ENUM_TYPE>
 auto enum_max_value(){
-  using UT = typename std::underlying_type<ENUM_TYPE>::type;
+  using UT = std::underlying_type_t<ENUM_TYPE>;
   return static_cast<UT>(ENUM_TYPE::MAX_VALUE);
 }
 
 template<typename ENUM_TYPE>
-bool within_enum(typename std::underlying_type<ENUM_TYPE>::type v){
+bool within_enum(std::underlying_type_t<ENUM_TYPE> v){
   return enum_min_value<ENUM_TYPE>() <= v && v <= enum_max_value<ENUM_TYPE>();
 }
 
@@ -42,17 +42,16 @@ bool within_enum(typename std::underlying_type<ENUM_TYPE>::type v){
 // The enum must have contiguous values, and MIN_VALUE and MAX_VALUE
 // entries defining the valid range of values.
 template<typename ENUM_TYPE>
-ENUM_TYPE to_enum(typename std::underlying_type<ENUM_TYPE>::type v,
+ENUM_TYPE to_enum(std::underlying_type_t<ENUM_TYPE> v,
   Default<ENUM_TYPE> defaultValue)
 {
   return within_enum<ENUM_TYPE>(v) ?
     static_cast<ENUM_TYPE>(v) : defaultValue.Get();
 }
 
-
 // Returns the value converted to the enum, or an empty Optional.
 template<typename ENUM_TYPE>
-Optional<ENUM_TYPE> to_enum(typename std::underlying_type<ENUM_TYPE>::type v){
+Optional<ENUM_TYPE> to_enum(std::underlying_type_t<ENUM_TYPE> v){
   if (within_enum<ENUM_TYPE>(v)){
     return {static_cast<ENUM_TYPE>(v)};
   }
