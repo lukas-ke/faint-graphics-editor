@@ -21,38 +21,27 @@
 
 namespace faint{
 
-// Various "can_represent"-functions which return true if the
-// specified type can hold the passed in value (presumably of a different type).
+// Returns true if the specified type can hold the passed in value (of
+// a different type).
 //
 // Usage: can_represent<int>(someValue)
-//
-// Overloaded via enable_if to avoid invalid signed/unsigned comparisons.
 template <typename DST, typename SRC>
-static typename std::enable_if<std::is_signed<DST>::value &&
-std::is_signed<SRC>::value, bool>::type
-can_represent(SRC value){
-  return !(value < std::numeric_limits<DST>::min() || value > std::numeric_limits<DST>::max());
-}
-
-template <typename DST, typename SRC>
-static typename std::enable_if<std::is_signed<DST>::value &&
-std::is_unsigned<SRC>::value, bool>::type
-can_represent(SRC value){
-  return !(value > static_cast<typename std::make_unsigned<DST>::type>(std::numeric_limits<DST>::max()));
-}
-
-template <typename DST, typename SRC>
-static typename std::enable_if<std::is_unsigned<DST>::value &&
-std::is_signed<SRC>::value, bool>::type
-can_represent(SRC value){
-  return !(value < 0 || static_cast<typename std::make_unsigned<SRC>::type>(value) > std::numeric_limits<DST>::max());
-}
-
-template <typename DST, typename SRC>
-static typename std::enable_if<std::is_unsigned<DST>::value &&
-std::is_unsigned<SRC>::value, bool>::type
-can_represent(SRC value){
-  return !(value > std::numeric_limits<DST>::max());
+bool can_represent(SRC value){
+  // Separate implementations to avoid invalid signed/unsigned
+  // comparisons
+  if constexpr (std::is_signed_v<DST> && std::is_signed_v<SRC>){
+    return !(value < std::numeric_limits<DST>::min() ||
+             value > std::numeric_limits<DST>::max());
+  }
+  else if constexpr (std::is_signed_v<DST> && std::is_unsigned_v<SRC>){
+    return !(value > static_cast<typename std::make_unsigned_t<DST>>(std::numeric_limits<DST>::max()));
+  }
+  else if constexpr (std::is_unsigned_v<DST> && std::is_signed_v<SRC>){
+    return !(value < 0 || static_cast<typename std::make_unsigned_t<SRC>>(value) > std::numeric_limits<DST>::max());
+  }
+  else if constexpr (std::is_unsigned_v<DST> && std::is_unsigned_v<SRC>) {
+    return !(value > std::numeric_limits<DST>::max());
+  }
 }
 
 template<typename DST, typename SRC>
