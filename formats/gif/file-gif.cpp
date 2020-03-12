@@ -618,8 +618,7 @@ static Bitmap get_bg(ImageProps& props,
     return Bitmap(lsd.size, color_transparent_white);
   }
 
-  Disposal d = disposeInfo.disposal;
-  switch (d){
+  switch (disposeInfo.disposal){
   case Disposal::RESTORE_TO_BACKGROUND_COLOR:
     {
       return props.GetFrame(props.GetNumFrames() - 1).GetBackground().Visit(
