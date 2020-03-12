@@ -26,7 +26,7 @@ void test_convert_wx_bmp(){
 
     // Convert from faint::Bitmap to wxBitmap
     auto wxBmp(to_wx_bmp(src));
-    static_assert(std::is_same<wxBitmap, decltype(wxBmp)>::value,
+    static_assert(std::is_same_v<wxBitmap, decltype(wxBmp)>,
       "Expected to_wx_bmp to yield a wxBitmap.");
     EQUAL(to_faint(wxBmp.GetSize()), IntSize(8, 14));
     EQUAL(wxBmp.GetDepth(), 32);
@@ -37,7 +37,7 @@ void test_convert_wx_bmp(){
 
     // Convert back to faint::Bitmap
     auto faintBmp(to_faint(wxBmp));
-    static_assert(std::is_same<faint::Bitmap, decltype(faintBmp)>::value,
+    static_assert(std::is_same_v<faint::Bitmap, decltype(faintBmp)>,
       "Expected to_faint to yield a faint::Bitmap.");
     EQUAL(faintBmp.GetSize(), IntSize(8, 14));
     if (get_test_platform() == TestPlatform::WINDOWS){
@@ -51,7 +51,7 @@ void test_convert_wx_bmp(){
   { // Bitmap <-> wxImage
     const Bitmap src(IntSize(8,14), Color(30, 40, 50, 60));
     auto image(to_wx_image(src));
-    static_assert(std::is_same<wxImage, decltype(image)>::value,
+    static_assert(std::is_same_v<wxImage, decltype(image)>,
       "Expected to_wx_image to yield a wxImage.");
     EQUAL(to_faint(image.GetSize()), IntSize(8, 14));
     VERIFY(image.HasAlpha());

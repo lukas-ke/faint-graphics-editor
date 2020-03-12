@@ -180,7 +180,7 @@ enum class Disposal : int{
   MAX_VALUE = 3
 };
 
-static Disposal to_disposal(std::underlying_type<Disposal>::type value){
+static Disposal to_disposal(std::underlying_type_t<Disposal> value){
   return to_enum(value, default_to(Disposal::NOT_SPECIFIED));
 }
 

@@ -22,8 +22,8 @@
 namespace faint{
 
 template<typename T>
-typename std::underlying_type<T>::type enum_value(T e){
-  return static_cast<typename std::underlying_type<T>::type>(e);
+typename std::underlying_type_t<T> enum_value(T e){
+  return static_cast<typename std::underlying_type_t<T>>(e);
 }
 
 static const utf8_string str_user(IconType type){

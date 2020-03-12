@@ -51,7 +51,7 @@ struct deserializer{
     const ARRAY_TYPE& a,
     size_t byteOffset)
   {
-    size_t entrySize = sizeof_entries<Head, Tail...>::value;
+    size_t entrySize = sizeof_entries<Head, Tail...>;
     auto& item = std::get<N - 1>(t);
     const unsigned char* END = a.data() + entrySize;
     read(END - byteOffset - sizeof(item), item);
@@ -71,7 +71,7 @@ struct deserializer<0, Head, Tail...>{
 
 template<class Head, class... Tail>
 void deserialize_tuple(std::tuple<Head, Tail...>& t,
-  const std::array<unsigned char, sizeof_entries<Head, Tail...>::value>& a)
+  const std::array<unsigned char, sizeof_entries<Head, Tail...>>& a)
 {
   static const size_t N = std::tuple_size<std::tuple<Head, Tail...> >::value;
   deserializer<N, Head, Tail...>::add_rest(t, a, 0);

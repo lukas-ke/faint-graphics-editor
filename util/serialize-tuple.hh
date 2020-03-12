@@ -43,12 +43,9 @@ struct sizeof_rest<0, Head, Tail...>{
     std::tuple<Head, Tail...>>::type);
 };
 
-template<class Head, class... Tail>
-struct sizeof_entries{
-  static const size_t value =
-    sizeof_rest<std::tuple_size< std::tuple<Head, Tail...> >::value - 1,
-      Head, Tail...>::value;
-};
+template<class Head, class... Tail >
+inline constexpr size_t sizeof_entries =
+  sizeof_rest<std::tuple_size<std::tuple<Head, Tail...> >::value - 1, Head, Tail...>::value;
 
 inline void write(unsigned char* data, const uint32_t v){
   data[3] = static_cast<unsigned char>(((v >> 24) & 0xffu));
@@ -76,7 +73,7 @@ struct serializer{
   static void add_rest(const std::tuple<Head, Tail...>& t,
     ARRAY_TYPE& a,
     size_t byteOffset){
-    size_t entrySize = sizeof_entries<Head, Tail...>::value;
+    size_t entrySize = sizeof_entries<Head, Tail...>;
     auto item = std::get<N - 1>(t);
     unsigned char* END = a.data() + entrySize;
     write(END - byteOffset - sizeof(item), item);
@@ -92,8 +89,8 @@ struct serializer<0, Head, Tail...>{
 
 template<class Head, class... Tail>
 auto serialize_tuple(const std::tuple<Head, Tail...>& t){
-  std::array<unsigned char, sizeof_entries<Head, Tail...>::value> a;
-  static const size_t N = std::tuple_size<std::tuple<Head, Tail...> >::value;
+  std::array<unsigned char, sizeof_entries<Head, Tail...>> a;
+  static const size_t N = std::tuple_size_v<std::tuple<Head, Tail...> >;
   serializer<N, Head, Tail...>::add_rest(t, a, 0);
   return a;
 }

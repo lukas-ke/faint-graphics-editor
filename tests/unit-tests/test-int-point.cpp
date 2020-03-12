@@ -7,11 +7,8 @@
 void test_int_point(){
   using namespace faint;
 
-  static_assert(std::is_literal_type<IntPoint>::value,
-    "IntPoint not literal");
-
   #ifdef _MSC_VER // C++14: Not supported by clang 3.5.0 with libstdc++
-  static_assert(std::is_trivially_copyable<IntPoint>::value);
+  static_assert(std::is_trivially_copyable_v<IntPoint>);
   #endif
 
   IntPoint p0;

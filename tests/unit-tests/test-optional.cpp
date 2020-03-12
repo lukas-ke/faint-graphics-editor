@@ -49,19 +49,18 @@ class False{};
 
 template<typename T>
 constexpr bool is_false(){
-  return std::is_same<T, False>::value;
+  return std::is_same_v<T, False>;
 }
 
 template<typename T>
 constexpr bool is_true(){
-  return std::is_same<T, True>::value;
+  return std::is_same_v<T, True>;
 }
 
 template<typename T>
-auto has_or(const T& t)
- -> typename std::enable_if<
-   std::is_same<decltype(t.Or(typename T::PT())), typename T::PT>::value,
-   True>::type;
+auto has_or(const T& t) -> typename std::enable_if_t<
+  std::is_same_v<decltype(t.Or(typename T::PT())), typename T::PT>,
+  True>;
 
 False has_or(...);
 

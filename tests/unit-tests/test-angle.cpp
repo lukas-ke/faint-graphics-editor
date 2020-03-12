@@ -14,9 +14,6 @@ namespace test{
 void test_angle(){
   using namespace faint;
 
-  static_assert(std::is_literal_type<Angle>::value,
-    "Angle not considered literal");
-
   const auto eps = 0.0001_eps;
   EQUAL(Angle::Zero(), Angle::Rad(0));
   EQUAL(Angle::Zero(), Angle::Deg(0));
