@@ -10,7 +10,7 @@
 void test_serialize_tuple(){
   using namespace faint;
 
-  static_assert(sizeof_entries<uint16_t, uint32_t, uint16_t, uint16_t, uint32_t>::value == 14, "Incorrect byte-size");
+  static_assert(sizeof_entries<uint16_t, uint32_t, uint16_t, uint16_t, uint32_t> == 14, "Incorrect byte-size");
   auto t = std::tuple(
     uint16_t(0x424d),
     uint32_t(0x12345678),

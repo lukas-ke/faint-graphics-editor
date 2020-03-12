@@ -63,6 +63,9 @@ template<> struct type2type<Delay>{
   using type = DefaultConstructible<Delay>;
 };
 
+template<class T>
+using type2type_t = typename type2type<T>::type;
+
 class ObjRaster;
 class ObjText;
 
@@ -113,7 +116,7 @@ bool parse_flat(BoundObject<T>& obj, PyObject* args, Py_ssize_t& n,
 template<typename T1,typename T2>
 bool parse_item(DefaultConstructible<Either<T1, T2> >& obj, PyObject* args, Py_ssize_t& n, Py_ssize_t len, bool allowFlat){
   try{
-    typename type2type<T1>::type first;
+    type2type_t<T1> first;
     if (parse_item(first, args, n, len, allowFlat)){ // Fixme: allow flat?
       obj.Set((T1)first);
       return true;
@@ -128,7 +131,7 @@ bool parse_item(DefaultConstructible<Either<T1, T2> >& obj, PyObject* args, Py_s
     PyErr_Clear();
   } // Try T2 too
 
-  typename type2type<T2>::type second;
+  type2type_t<T2> second;
   if (parse_item(second, args, n, len, allowFlat)){ // Fixme: allow flat?
     obj.Set((T2)second);
     return true;
@@ -479,7 +482,7 @@ bool parse_item(Optional<T>& item,
     return true;
   }
 
-  typename type2type<T>::type temp;
+  type2type_t<T> temp;
   if (parse_item(temp, args, n, len, allowFlat)){
     item.Set(temp);
     return true;

@@ -32,7 +32,7 @@ struct plain_type2type{
   // Loses the const-ness and reference so that parameters can be
   // default constructed before being parsed from PyObject* arguments.
   // Also remaps some types with type2type.
-  using type = typename type2type<typename plain_type<T>::type>::type;
+  using type = type2type_t<typename plain_type<T>::type>;
 };
 
 static PyObject* set_error(const PythonError& err){
