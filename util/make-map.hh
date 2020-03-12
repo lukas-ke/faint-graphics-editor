@@ -27,8 +27,7 @@ auto make_map(const Generator& gen, Func&& f){
 
   using iter_t = decltype(begin(gen));
   using param_t = typename iter_t::value_type;
-  using pair_type =
-    typename std::result_of<Func(param_t)>::type;
+  using pair_type = std::invoke_result_t<Func, param_t>;
   using key_type = decltype(pair_type::first);
   using value_type = decltype(pair_type::second);
   std::map<key_type, value_type> m;

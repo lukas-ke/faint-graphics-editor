@@ -16,7 +16,7 @@
 #ifndef FAINT_PAINT_HH
 #define FAINT_PAINT_HH
 #include <cassert>
-#include <type_traits> // result_of
+#include <type_traits> // invoke_result
 #include <memory> // unique_ptr
 #include "bitmap/paint-fwd.hh"
 
@@ -68,7 +68,7 @@ bool is_translucent_color(const Paint&);
 
 template<typename CF, typename PF, typename GF>
 auto visit(const Paint& paint, CF colorFunc, PF patternFunc, GF gradientFunc)
-  -> typename std::result_of<CF(Color)>::type
+  -> std::invoke_result_t<CF, Color>
 {
   if (paint.IsColor()){
     return colorFunc(paint.GetColor());
