@@ -205,7 +205,7 @@ auto get_read_pixeldata_func(const Index num, int bitsPerPixel)
           put_pixel_raw(bmp, x, yDst, color_from_uints(r,g,b,a));
         }
       }
-      return std::move(bmp);
+      return bmp;
     };
   }
   else{

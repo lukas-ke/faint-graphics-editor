@@ -13,6 +13,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+#include <cstring> // std::strlen
 #include "formats/faint-fopen.hh"
 #include "formats/png/read-libpng.hh"
 
@@ -81,7 +82,7 @@ PngReadResult read_with_libpng(const FilePath& path,
   if (png_get_text(png_ptr, info_ptr, &textPtr, &numText) > 0){
     for (int i = 0; i != numText; i++){
       const auto& text(textPtr[i]);
-      auto len = strlen(text.key);
+      auto len = std::strlen(text.key);
       if (len == 0 || len > PNG_KEYWORD_MAX_LENGTH){
         continue; // Fixme: Signal error
       }

@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include <algorithm> // min, max
+#include <cmath>
 #include "geo/point.hh"
 #include "geo/rect.hh"
 #include "geo/size.hh"
@@ -31,8 +32,8 @@ Rect::Rect(const std::pair<Point, Point>& pts)
 Rect::Rect(const Point& p1, const Point& p2){
   x = std::min(p1.x, p2.x);
   y = std::min(p1.y, p2.y);
-  w = fabs(p1.x - p2.x) + 1.0;
-  h = fabs(p1.y - p2.y) + 1.0;
+  w = std::fabs(p1.x - p2.x) + 1.0;
+  h = std::fabs(p1.y - p2.y) + 1.0;
 }
 
 Rect::Rect(const Point& p, const Size& sz){

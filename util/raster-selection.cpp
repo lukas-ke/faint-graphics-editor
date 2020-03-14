@@ -60,15 +60,6 @@ bool SelectionState::Floating() const{
   return floating;
 }
 
-SelectionState& SelectionState::operator=(const SelectionState& state){
-  copy = state.copy;
-  floating = state.floating;
-  floatingBmp = state.floatingBmp;
-  oldRect = state.oldRect;
-  rect = state.rect;
-  return *this;
-}
-
 RasterSelection::RasterSelection()
   : m_options(false, Paint(Color(255,255,255)), false)
 {}

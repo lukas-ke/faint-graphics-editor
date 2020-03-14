@@ -25,7 +25,7 @@ CC_OPTIONS_COMMON = [
     "ansi",
     "Wno-strict-aliasing", # No aliasing warnings
     "Wno-sign-conversion", # No sign conversion warnings
-    "std=c++14", # C++14-conformance
+    "std=c++17", # C++17-conformance
     "c", # Do not invoke linker
 ]
 

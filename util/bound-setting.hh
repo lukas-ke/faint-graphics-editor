@@ -17,6 +17,7 @@
 #define FAINT_BOUND_SETTING_HH
 #include <variant>
 #include "util/settings.hh"
+#include "util/type-dependent-false.hh"
 
 namespace faint{
 
@@ -66,7 +67,7 @@ public:
           return colorFunc(setting, value);
         }
         else {
-          static_assert(always_false<T>::value, "Non-exhaustive variant visitor");
+          static_assert(TypeDependentFalse_v<T>, "Non-exhaustive variant visitor");
         }
       }, m_setting);
   }

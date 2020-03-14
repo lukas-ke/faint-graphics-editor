@@ -55,6 +55,7 @@ public:
   void SetPoint(const Tri&, const PathPt&, int index);
   void SetTri(const Tri&);
   int Size() const;
+  Points& operator=(const Points&);
 private:
   Tri m_tri;
   std::vector<PathPt> m_points;

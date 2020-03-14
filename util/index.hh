@@ -23,10 +23,12 @@ namespace faint{
 class Index{
 public:
   constexpr Index() : m_value(0) {}
+  Index(const Index&) = default;
   explicit constexpr Index (int v) : m_value(v) {}
   explicit Index(size_t);
   int Get() const;
-  Index& operator=(const Index& rhs);
+
+  Index& operator=(const Index& rhs) = default;
 private:
   int m_value;
 };

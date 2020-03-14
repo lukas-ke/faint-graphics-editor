@@ -15,6 +15,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cmath>
 #include "bitmap/bitmap-templates.hh"
 #include "bitmap/color.hh"
 #include "bitmap/filter.hh"
@@ -448,7 +449,7 @@ void filter_pinch_whirl(Bitmap& bmp, coord pinch, const Angle& whirl){
       coord d = sq(delta.x) + sq(delta.y);
 
       if (d < r2){
-        coord dist = sqrt(d / 1.0) / (bmp.m_w / 2.0);
+        const coord dist = std::sqrt(d / 1.0) / (bmp.m_w / 2.0);
         delta *= pow(sin(pi/2*dist), pinch);
         IntPoint p2 = whirled(delta, c, dist, whirl);
         if (p2.x > 0 && p2.y > 0 && p2.x < bmp.m_w && p2.y < bmp.m_h){

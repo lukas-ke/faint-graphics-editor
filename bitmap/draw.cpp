@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include <algorithm>
+#include <cmath>
 #include <functional>
 #include <unordered_set>
 #include "bitmap/alpha-map.hh"
@@ -165,7 +166,7 @@ static IntPoint get_offset(int x0, int y0, int x1, int y1, int lineWidth){
   int yp = 0;
 
   coord distance = 0;
-  coord diag = sqrt(2.0);
+  const coord diag = std::sqrt(2.0);
   for (int xp = 0; xp != lineWidth; xp++){
     at_x = - yp;
     at_y = - xp;

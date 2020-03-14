@@ -15,6 +15,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cmath>
 #include "bitmap/paint.hh"
 #include "bitmap/pattern.hh"
 #include "geo/arc.hh"
@@ -274,7 +275,7 @@ bool lacks(const objects_t& objects, const Object* obj){
 }
 
 bool multiple_of_90_deg(const Angle& a){
-  return fmod(a.Rad(), math::half_pi) < 0.0001;
+  return std::fmod(a.Rad(), math::half_pi) < 0.0001;
 }
 
 Point next_point(Object* obj, int index){

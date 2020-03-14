@@ -34,11 +34,6 @@ bool operator==(const Index& lhs, const size_t& rhs){
   return to_size_t(lhs) == rhs;
 }
 
-Index& Index::operator=(const Index& rhs){
-  m_value = rhs.Get();
-  return *this;
-}
-
 bool operator<(const Index& lhs, const Index& rhs){
   return lhs.Get() < rhs.Get();
 }

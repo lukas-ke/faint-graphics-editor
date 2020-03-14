@@ -33,6 +33,7 @@
 #include "python/py-function-error.hh"
 #include "python/bound.hh" // for bare(T)
 #include "text/formatting.hh"
+#include "util/command-util.hh"
 #include "util-wx/clipboard.hh"
 #include "util/default-settings.hh"
 

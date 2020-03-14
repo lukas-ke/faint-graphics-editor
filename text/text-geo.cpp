@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include <cassert>
+#include <cmath>
 #include "geo/geo-func.hh" // rotate_point
 #include "geo/size.hh"
 #include "geo/tri.hh"

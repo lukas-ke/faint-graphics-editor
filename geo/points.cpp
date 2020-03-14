@@ -252,6 +252,15 @@ int Points::Size() const{
   return resigned(m_points.size());
 }
 
+Points& Points::operator=(const Points& other){
+  m_tri = other.m_tri;
+  m_points = other.m_points;
+  m_cache.clear();
+  m_cache.shrink_to_fit();
+  m_cacheTri = Tri();
+  return *this;
+}
+
 Points points_from_coords(const std::vector<coord>& coords){
   const size_t n = coords.size();
   assert(n % 2 == 0);

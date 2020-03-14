@@ -15,6 +15,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cmath> // fabs
 #include <iterator> // back_inserter
 #include <numeric> // accumulate
 #include "geo/int-rect.hh"
@@ -37,7 +38,7 @@ static void update_objects(const Tri& tri,
   const std::vector<Tri>& objTris)
 {
   Adj a = get_adj(origTri, tri);
-  coord ht = fabs(origTri.P2().y - origTri.P1().y);
+  coord ht = std::fabs(origTri.P2().y - origTri.P1().y);
   for (size_t objNum = 0; objNum != objects.size(); objNum++){
     Tri temp = objTris[objNum];
 

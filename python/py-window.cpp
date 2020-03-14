@@ -128,7 +128,9 @@ PyTypeObject FaintWindowType = {
     nullptr, // tp_weaklist
     nullptr, // tp_del
     0, // tp_version_tag
-    nullptr, // tp_finalize
+    nullptr,  // tp_finalize
+    nullptr, // tp_vectorcall
+    nullptr // tp_print (deprecated)
 };
 
 void add_Window(AppContext& app, PyObject* module){

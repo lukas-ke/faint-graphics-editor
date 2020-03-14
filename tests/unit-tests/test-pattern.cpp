@@ -97,9 +97,11 @@ void test_pattern(){
   EQUAL(ref_count(p2_id), 0); // No one refers to this anymore
 
   const auto p4_id = reset(p4);
+  (void) p4_id; // Silence unused variable warning
   EQUAL(ref_count(p1_id), 1); // Only p3 still refers
 
   const auto p3_id = reset(p3);
+  (void) p3_id; // Silence unused variable warning
   EQUAL(ref_count(p1_id), 0);
 
   // No pattern backing bitmaps remain

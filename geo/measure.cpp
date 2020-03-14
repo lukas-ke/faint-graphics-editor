@@ -156,7 +156,7 @@ std::vector<Point> with_mid_points_cyclic(const std::vector<Point>& src){
 
 coord ellipse_area(const Radii& r){
   return math::pi * r.x * r.y;
-};
+}
 
 coord ellipse_perimeter(coord a, coord b){
   coord pi = faint::pi.Rad();

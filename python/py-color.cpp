@@ -25,7 +25,7 @@ namespace faint{
 extern PyTypeObject ColorType;
 
 struct colorObject{
-  PyObject_HEAD;
+  PyObject_HEAD
   Color color;
 };
 
@@ -339,7 +339,9 @@ PyTypeObject ColorType = {
   nullptr, // tp_weaklist
   nullptr, // tp_del
   0, // tp_version_tag
-  nullptr // tp_finalize
+  nullptr,  // tp_finalize
+  nullptr, // tp_vectorcall
+  nullptr // tp_print (deprecated)
 };
 
 Color* as_Color(PyObject* obj){

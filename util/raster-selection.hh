@@ -47,6 +47,8 @@ public:
     : copy(false),
       floating(false)
   {}
+  SelectionState(const SelectionState&) = default;
+
   // A floating pasted bitmap
   SelectionState(const Bitmap&, const IntPoint&);
 
@@ -58,7 +60,7 @@ public:
 
   bool Floating() const;
 private:
-  SelectionState& operator=(const SelectionState&);
+  SelectionState& operator=(const SelectionState&) = default;
   friend class RasterSelection;
   bool copy;
   bool floating;
@@ -139,6 +141,9 @@ class RasterSelection{
 public:
   friend class SelectionState;
   RasterSelection();
+
+  RasterSelection(const RasterSelection&) = default;
+
   // Changes the current selection to a floating selection.
   // Must not be Empty().
   void BeginFloat(const Bitmap& src, const copy_selected&);

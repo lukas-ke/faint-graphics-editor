@@ -23,10 +23,7 @@ template<typename T1, typename T2>
 class Either{
   // Container for exactly one object of either one type or another.
 public:
-  Either(const Either& other)
-    : m_v1(other.m_v1),
-      m_v2(other.m_v2)
- {}
+  Either(const Either& other) = default;
 
   Either(const T1& v1)
     : m_v1(v1)
@@ -120,6 +117,8 @@ public:
   bool operator!=(const Either& other){
     return !operator==(other);
   }
+
+  Either& operator=(const Either& other) = default;
 
 private:
   void DoGet(Optional<T1>*& opt){

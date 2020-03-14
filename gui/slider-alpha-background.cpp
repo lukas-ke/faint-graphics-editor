@@ -53,7 +53,7 @@ public:
     m_bgPattern = Paint(Pattern(bg));
   }
 
-  void AlphaBackground::Draw(Bitmap& bmp,
+  void Draw(Bitmap& bmp,
     const IntSize& size,
     SliderDir dir) override
   {
