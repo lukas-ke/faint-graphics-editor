@@ -594,8 +594,7 @@ bool parse_flat(Optional<T>& opt, PyObject* args, Py_ssize_t& n, Py_ssize_t len)
 // Default-build_result which merely static_asserts
 template<typename T>
 PyObject* build_result(const T&){
-  static_assert(TypeDependentFalse<T>::value,
-    "build_result not overloaded for type.");
+  static_assert(TypeDependentFalse<T>, "build_result not overloaded for type.");
   return nullptr;
 }
 

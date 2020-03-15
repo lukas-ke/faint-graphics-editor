@@ -67,7 +67,7 @@ public:
           return colorFunc(setting, value);
         }
         else {
-          static_assert(TypeDependentFalse_v<T>, "Non-exhaustive variant visitor");
+          static_assert(TypeDependentFalse<T>, "Non-exhaustive variant visitor");
         }
       }, m_setting);
   }
