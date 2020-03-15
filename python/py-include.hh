@@ -81,9 +81,8 @@ scoped_ref new_ref(PyObject*);
 template<typename T>
 constexpr bool managed(const T&){
   return
-    std::is_same<typename T::deleter_type, Decreffer>::value ||
-    std::is_same<typename T::deleter_type,
-                 CastDecreffer<typename T::element_type>>::value;
+    std::is_same_v<typename T::deleter_type, Decreffer> ||
+    std::is_same_v<typename T::deleter_type, CastDecreffer<typename T::element_type>>;
 }
 
 const int init_ok = 0;

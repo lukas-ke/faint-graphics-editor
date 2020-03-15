@@ -34,10 +34,10 @@ bool can_represent(SRC value){
              value > std::numeric_limits<DST>::max());
   }
   else if constexpr (std::is_signed_v<DST> && std::is_unsigned_v<SRC>){
-    return !(value > static_cast<typename std::make_unsigned_t<DST>>(std::numeric_limits<DST>::max()));
+    return !(value > static_cast<std::make_unsigned_t<DST>>(std::numeric_limits<DST>::max()));
   }
   else if constexpr (std::is_unsigned_v<DST> && std::is_signed_v<SRC>){
-    return !(value < 0 || static_cast<typename std::make_unsigned_t<SRC>>(value) > std::numeric_limits<DST>::max());
+    return !(value < 0 || static_cast<std::make_unsigned_t<SRC>>(value) > std::numeric_limits<DST>::max());
   }
   else if constexpr (std::is_unsigned_v<DST> && std::is_unsigned_v<SRC>) {
     return !(value > std::numeric_limits<DST>::max());

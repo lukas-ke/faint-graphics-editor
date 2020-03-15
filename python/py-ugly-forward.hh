@@ -32,8 +32,11 @@ struct plain_type2type{
   // Loses the const-ness and reference so that parameters can be
   // default constructed before being parsed from PyObject* arguments.
   // Also remaps some types with type2type.
-  using type = type2type_t<typename plain_type<T>::type>;
+  using type = type2type_t<plain_type_t<T>>;
 };
+
+template<typename T>
+using plain_type2type_t = typename plain_type2type<T>::type;
 
 static PyObject* set_error(const PythonError& err){
   err.SetError();
@@ -46,8 +49,8 @@ static PyObject* set_error(const PythonError& err){
 //
 // Requires a template specialization of MappedType that maps the
 // Python object structure to the C++ class.
-#define GET_TYPED_SELF(CLASS_T, obj) static_assert(!std::is_same<typename MappedType<CLASS_T>::PYTHON_TYPE, InvalidMappedType>::value, "MappedType not specialized for CLASS_T"); \
-  typename MappedType<CLASS_T>::PYTHON_TYPE* self = (typename MappedType<CLASS_T>::PYTHON_TYPE*)obj
+#define GET_TYPED_SELF(CLASS_T, obj) static_assert(!std::is_same_v<typename MappedType<CLASS_T>::PYTHON_TYPE, InvalidMappedType>, "MappedType not specialized for CLASS_T"); \
+  typename MappedType<CLASS_T>::PYTHON_TYPE* self = (typename MappedType<CLASS_T>::PYTHON_TYPE*) obj
 
 // -----------------------------------------------------------------------
 // Tuple-unpacking and function call (tuple_unpack)
@@ -81,7 +84,7 @@ namespace tuple_unpack{
   template <typename RET, typename F, typename Tuple>
   PyObject* call(F f, Tuple&& t){
     using ttype = std::decay_t<Tuple>;
-    return call_impl<RET, F, Tuple, std::tuple_size<ttype>::value == 0, std::tuple_size<ttype>::value>::call(f, std::forward<Tuple>(t));
+    return call_impl<RET, F, Tuple, std::tuple_size_v<ttype> == 0, std::tuple_size_v<ttype>>::call(f, std::forward<Tuple>(t));
   }
 }
 
@@ -105,7 +108,7 @@ struct ArgParse{
     Py_ssize_t len,
     const FUNC& f)
   {
-    typename plain_type2type<HEAD>::type current;
+    plain_type2type_t<HEAD> current;
     if (!parse_item(current, pyArgs, n, len, true)){
       return nullptr;
     }
@@ -126,7 +129,7 @@ struct ArgParse<RET, FUNC, HEAD>{
     Py_ssize_t len,
     const FUNC& f)
   {
-    typename plain_type2type<HEAD>::type current;
+    plain_type2type_t<HEAD> current;
     if (!parse_item(current, pyArgs, n, len, true)){
       return nullptr;
     }
@@ -339,7 +342,7 @@ template<typename PY_CLASS_T>
 struct init_zero_arg_t{
   // tp_init without arguments
   template<void Func(PY_CLASS_T)>
-  static int PythonFunc(typename std::remove_reference_t<PY_CLASS_T>* rawSelf, PyObject* /*args*/, PyObject*){
+  static int PythonFunc(std::remove_reference_t<PY_CLASS_T>* rawSelf, PyObject* /*args*/, PyObject*){
     auto t(std::tie(*rawSelf));
     PyObject* result = call_cpp_function<decltype(t), void,
       std::function<void(PY_CLASS_T)>>(
@@ -353,7 +356,7 @@ struct init_n_arg_t{
   // tp_init with arguments
 
   template<void Func(PY_CLASS_T, Args...)>
-  static int PythonFunc(typename std::remove_reference_t<PY_CLASS_T>* rawSelf, PyObject* args, PyObject*){
+  static int PythonFunc(std::remove_reference_t<PY_CLASS_T>* rawSelf, PyObject* args, PyObject*){
     auto t(std::tie(*rawSelf));
     PyObject* result = call_cpp_function<decltype(t), void, std::function<void(PY_CLASS_T, Args...)>, Args...>
       (args, std::function<void(PY_CLASS_T,Args...)>(Func), t);
@@ -391,7 +394,7 @@ struct setter_t{
     }
 
     try{
-      typename plain_type2type<T1>::type a1;
+      plain_type2type_t<T1> a1;
       Py_ssize_t n = 0;
       const Py_ssize_t len = static_cast<int>(PySequence_Check(arg) ?
         PySequence_Length(arg) : 1);

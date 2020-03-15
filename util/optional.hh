@@ -86,7 +86,7 @@ class Optional{
   // assert. This is less error prone than using pointers and not as
   // bulky as a boolean and a member.
 public:
-  using PT = typename plain_type<T>::type;
+  using PT = plain_type_t<T>;
 
   Optional()
     : m_obj(nullptr)
@@ -203,7 +203,7 @@ public:
   // alternative argument or, if returning as value type, copying a
   // held value object not meant to be copied or not supporting copy.
   template<typename T2=T>
-  typename std::enable_if_t<!std::is_reference_v<T2>, T2> Or(const PT& alternative) const{
+  std::enable_if_t<!std::is_reference_v<T2>, T2> Or(const PT& alternative) const{
     if (m_obj == nullptr){
       return alternative;
     }
@@ -243,7 +243,7 @@ public:
     return m_obj != nullptr;
   }
 private:
-  typename std::remove_reference_t<T>* m_obj;
+  std::remove_reference_t<T>* m_obj;
 };
 
 template<typename T>

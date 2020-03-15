@@ -22,7 +22,7 @@ namespace faint {
 
 template<typename T>
 inline std::underlying_type_t<T>& raw_enum_value(T& e){
-  return reinterpret_cast<typename std::underlying_type_t<T>&>(e);
+  return reinterpret_cast<std::underlying_type_t<T>&>(e);
 }
 
 template<typename T>
@@ -33,7 +33,7 @@ inline const std::underlying_type_t<T>& raw_enum_value(const T& e){
 template<size_t N, class Head, class... Tail>
 struct sizeof_rest{
   static const size_t value =
-    sizeof(typename std::tuple_element_t<N, std::tuple<Head, Tail...>>) +
+    sizeof(std::tuple_element_t<N, std::tuple<Head, Tail...>>) +
     sizeof_rest<N - 1, Head, Tail...>::value;
 };
 
