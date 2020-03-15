@@ -5,13 +5,15 @@
 ;; * faint-fixme: finds fixmes in Faint sources
 
 (require 'compile)
-(load-library "faint-paths.el")
+(require 'faint-paths)
+(provide 'faint-build)
 
 (defun faint-build ()
   (interactive)
   (when (= 0 (length faint-root))
     (user-error "faint-root not customized"))
-  (compile (concat (faint-build-dir) "build.py --stdout")))
+  (let ((default-directory (faint-build-dir)))
+    (compile "build.py --stdout")))
 
 (defun faint-clean ()
   "Clean all build output"
