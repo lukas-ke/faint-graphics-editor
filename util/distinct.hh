@@ -129,7 +129,7 @@ template<class T, class C1, class C2, int ID1, int ID2>
 void assert_same(const Subtype<T, C1, ID1>&,
   const Subtype<T, C2, ID2>&)
 {
-  static_assert(std::is_same<C1, C2>::value && ID1 == ID2,
+  static_assert(std::is_same_v<C1, C2> && ID1 == ID2,
     "Comparing apples to oranges.");
 }
 
@@ -165,14 +165,14 @@ bool operator!=(const Subtype<T, C1, ID1>& v1,
 
 template<class T, class C1, class C2, int ID1, int ID2>
 bool operator<(const Subtype<T, C1, ID1>& v1, const Subtype<T, C2, ID2>& v2){
-  static_assert(std::is_same<C1, C2>::value && ID1 == ID2,
+  static_assert(std::is_same_v<C1, C2> && ID1 == ID2,
     "Comparing apples to oranges.");
   return raw(v1) < raw(v2);
 }
 
 template<class T, class C1, class C2, int ID1, int ID2>
 bool operator<=(const Subtype<T, C1, ID1>& v1, const Subtype<T, C2, ID2>& v2){
-  static_assert(std::is_same<C1, C2>::value && ID1 == ID2,
+  static_assert(std::is_same_v<C1, C2> && ID1 == ID2,
     "Comparing apples to oranges.");
   return static_cast<const T&>(v1) <= static_cast<const T&>(v2);
 }

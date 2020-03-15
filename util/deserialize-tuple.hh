@@ -73,7 +73,7 @@ template<class Head, class... Tail>
 void deserialize_tuple(std::tuple<Head, Tail...>& t,
   const std::array<unsigned char, sizeof_entries<Head, Tail...>>& a)
 {
-  static const size_t N = std::tuple_size<std::tuple<Head, Tail...> >::value;
+  static const size_t N = std::tuple_size_v<std::tuple<Head, Tail...> >;
   deserializer<N, Head, Tail...>::add_rest(t, a, 0);
 }
 

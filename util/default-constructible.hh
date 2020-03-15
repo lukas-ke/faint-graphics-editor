@@ -25,7 +25,7 @@ namespace faint{
 template<typename T>
 class DefaultConstructible{
 public:
-  static_assert(!std::is_default_constructible<T>::value,
+  static_assert(!std::is_default_constructible_v<T>,
     "T already default constructible.");
 
   DefaultConstructible(){}

@@ -16,7 +16,7 @@ void test_convert_wx(){
   { // Color <-> wxColour
     const Color srcColor(30, 40, 50, 60);
     auto colWx = to_wx(srcColor);
-    static_assert(std::is_same<wxColour, decltype(colWx)>::value,
+    static_assert(std::is_same_v<wxColour, decltype(colWx)>,
       "Expected to_wx to yield a wxColour.");
     EQUAL(colWx.Red(), srcColor.r);
     EQUAL(colWx.Green(), srcColor.g);
@@ -28,7 +28,7 @@ void test_convert_wx(){
   { // ColorRGB <-> wxColour
     const ColRGB srcColor(30, 40, 50);
     auto colWx = to_wx(srcColor);
-    static_assert(std::is_same<wxColour, decltype(colWx)>::value,
+    static_assert(std::is_same_v<wxColour, decltype(colWx)>,
       "Expected to_wx to yield a wxColour.");
     EQUAL(colWx.Red(), srcColor.r);
     EQUAL(colWx.Green(), srcColor.g);

@@ -295,7 +295,7 @@ void deleted_by_wx(wxPanel*&);
 // in translation units where the base classes are known, while also
 // preventing attempts to use it for non wx-types by static_assert
 template<typename T> void deleted_by_wx(T*& v){
-  static_assert(std::is_base_of<wxWindow, T>::value,
+  static_assert(std::is_base_of_v<wxWindow, T>,
     "deleted_by_wx is only valid for wxWidgets types");
   v = nullptr;
 }
@@ -305,7 +305,7 @@ template<typename T> void deleted_by_wx(T*& v){
 // hierarchically.
 template<typename T, typename ...Args>
 T* make_wx(Args&& ...args){
-  static_assert(std::is_base_of<wxObject, T>::value,
+  static_assert(std::is_base_of_v<wxObject, T>,
     "make_wx should only be used for subtypes of wxObject");
   return new T(std::forward<Args>(args)...);
 }
