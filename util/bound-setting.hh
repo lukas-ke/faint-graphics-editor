@@ -17,7 +17,7 @@
 #define FAINT_BOUND_SETTING_HH
 #include <variant>
 #include "util/settings.hh"
-#include "util/type-dependent-false.hh"
+#include "util/type-util.hh"
 
 namespace faint{
 
@@ -76,7 +76,6 @@ public:
   auto Visit(T f) const{
     return Visit(f, f, f, f, f);
   }
-
 
 private:
   std::variant<

@@ -62,6 +62,14 @@ T2 convert_f(const T1& v){
   return T2(v);
 }
 
+// Helper to make static_assert:s dependent on T.
+template<class T>
+struct TypeDependentFalse : std::false_type {};
+
+// Variable variant of TypeDependentFalse
+template<class T>
+inline constexpr bool TypeDependentFalse_v = TypeDependentFalse<T>::value;
+
 } // namespace
 
 #endif

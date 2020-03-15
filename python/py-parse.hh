@@ -28,7 +28,7 @@
 #include "util/default-constructible.hh"
 #include "util/delay.hh"
 #include "util/either.hh"
-#include "util/type-dependent-false.hh"
+#include "util/type-util.hh"
 
 namespace faint{
 
