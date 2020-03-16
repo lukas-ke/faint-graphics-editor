@@ -126,17 +126,17 @@ public:
       }
     }
 
-    if (GetPageCount() == 1){
+    {
       // Remove annyoing flashing appearance on windows when closing
-      // last tab. This freeze must only be done when the last tab is
-      // closed, because it causes a refresh error if the tabcontrol
-      // is split (see issue 86).
+      // tabs.
+      //
+      // Note: This was previously only done for the last tab
+      // due to refresh glitches when the view is split,
+      // but that no longer seems to happen.
       auto freezer = freeze(this);
       DeletePage(to_size_t(page));
     }
-    else{
-      DeletePage(to_size_t(page));
-    }
+
     if (GetPageCount() == 0){
       // Avoid flicker in the upper-left of the tab-bar from page
       // creation

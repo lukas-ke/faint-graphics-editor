@@ -44,12 +44,12 @@ private:
 };
 
 template<typename T>
-Freezer<T> freeze(T* window){
+[[nodiscard]] Freezer<T> freeze(T* window){
   return Freezer<T>(window);
 }
 
 template<typename T>
-Freezer<typename T::element_type> freeze(T& window){
+[[nodiscard]] Freezer<typename T::element_type> freeze(T& window){
   return Freezer<typename T::element_type>(window.get());
 }
 
