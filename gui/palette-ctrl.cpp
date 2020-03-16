@@ -26,6 +26,7 @@
 #include "text/formatting.hh"
 #include "util-wx/convert-wx.hh"
 #include "util-wx/fwd-bind.hh"
+#include "util-wx/fwd-wx.hh"
 #include "util/color-bitmap-util.hh"
 #include "util/optional.hh"
 #include "util/paint-map.hh"
@@ -164,11 +165,11 @@ private:
   }
 
   CellSize GetButtonSize() const{
-    return CellSize(IntSize(24, 24));
+    return CellSize(from_DIP(IntSize(24, 24), this));
   }
 
   CellSpacing GetButtonSpacing() const{
-    return CellSpacing(IntSize(2,2));
+    return CellSpacing(from_DIP(IntSize(2,2), this));
   }
 
   CellPos MousePosToPalettePos(const IntPoint& pos) const{

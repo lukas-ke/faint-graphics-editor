@@ -310,6 +310,10 @@ T* make_wx(Args&& ...args){
   return new T(std::forward<Args>(args)...);
 }
 
+int from_DIP(int, const wxWindow*);
+
+IntSize from_DIP(const IntSize&, const wxWindow*);
+
 } // namespace
 
 #endif

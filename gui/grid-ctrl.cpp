@@ -64,7 +64,7 @@ static std::unique_ptr<SpinButton> grid_spinbutton(wxWindow* parent,
   // Create the buttons for single-stepping the spacing
 
   auto spinButton = std::make_unique<SpinButton>(parent,
-    IntSize(40,50),
+    from_DIP(IntSize(40,50), parent),
     "Adjust Grid Spacing",
     onSpinUp,
     onSpinDown);
@@ -109,10 +109,11 @@ wxButton* grid_toggle_button(wxWindow* parent,
   const Art& art)
 {
   // Create the button that enables/disables the grid
-  wxButton* button = noiseless_button(parent,
+  wxButton* button = noiseless_button(
+    parent,
     "",
     Tooltip(""),
-    IntSize(60,50));
+    from_DIP(IntSize(60,50), parent));
   update_grid_toggle_button(Grid(), button, art);
   sizer->Add(button, 0, wxEXPAND);
   return button;

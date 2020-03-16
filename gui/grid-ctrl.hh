@@ -59,7 +59,6 @@ private:
   wxSizer* m_sizer;
   std::unique_ptr<SpinButton> m_spinButton;
   DragValueCtrl* m_txtCurrentSize;
-
 };
 
 } // namespace

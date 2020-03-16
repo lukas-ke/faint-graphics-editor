@@ -36,7 +36,8 @@ ToolPanel::ToolPanel(wxWindow* parent,
     dialogContext,
     unitStrings);
 
-  const int borderSize = 5;
+  const int borderSize = from_DIP(5, m_panel);
+
   using namespace layout;
   set_sizer(m_panel,
     create_column(OuterSpacing(0), ItemSpacing(0), {

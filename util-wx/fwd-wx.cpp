@@ -712,4 +712,12 @@ void deleted_by_wx(wxPanel*& p){
   p = nullptr;
 }
 
+int from_DIP(int x, const wxWindow* w){
+  return w->FromDIP(x);
+}
+
+IntSize from_DIP(const IntSize& sz, const wxWindow* w){
+  return to_faint(w->FromDIP(to_wx(sz)));
+}
+
 } // namespace

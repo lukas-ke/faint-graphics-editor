@@ -37,7 +37,7 @@
 
 namespace faint{
 
-const int iconSpacing = 5;
+const int iconSpacing_dp = 5;
 
 #ifdef __WXMSW__
 #define FRAMECTRL_BORDER_STYLE wxBORDER_THEME
@@ -127,7 +127,6 @@ public:
       m_cursorArrow(art.Get(Cursor::ARROW)),
       m_cursorDragCopyFrame(art.Get(Cursor::DRAG_COPY_FRAME)),
       m_cursorDragFrame(art.Get(Cursor::DRAG_FRAME)),
-      m_frameBoxSize(35, 38),
       m_highlightCloseFrame(false),
       m_mouse(this,
         OnLoss([this](){
@@ -143,6 +142,9 @@ public:
       m_numFrames(0),
       m_status(status)
   {
+    m_frameBoxSize = FromDIP(wxSize(35, 38));
+    m_iconSpacing = FromDIP(iconSpacing_dp);
+
     #ifdef __WXMSW__
     SetBackgroundStyle(wxBG_STYLE_PAINT);
     #endif
@@ -253,7 +255,7 @@ public:
     const int iconHeight = m_frameBoxSize.GetHeight();
 
     // The bmp should be at least as large as the panel
-    int bmpWidth = std::max((iconWidth + iconSpacing) * m_numFrames.Get(),
+    int bmpWidth = std::max((iconWidth + m_iconSpacing) * m_numFrames.Get(),
       GetSize().GetWidth());
 
     m_bitmap = wxBitmap(wxSize(bmpWidth, iconHeight));
@@ -277,7 +279,7 @@ public:
         dc.SetPen(inactivePen);
         dc.SetBrush(inactiveBrush);
       }
-      wxPoint pos(i * (iconWidth + iconSpacing) + iconSpacing, 0);
+      wxPoint pos(i * (iconWidth + m_iconSpacing) + m_iconSpacing, 0);
       dc.DrawRectangle(pos, m_frameBoxSize);
       if (i == selected){
         if (m_highlightCloseFrame){
@@ -299,8 +301,8 @@ public:
       dragPen.SetCap(wxCAP_BUTT);
       dc.SetPen(dragPen);
       int dropPost = m_dragInfo.dropPost.Get();
-      dc.DrawLine(dropPost * (iconWidth + iconSpacing) + iconSpacing - 3, 0,
-        dropPost * (iconWidth + iconSpacing) + iconSpacing - 3, iconHeight);
+      dc.DrawLine(dropPost * (iconWidth + m_iconSpacing) + m_iconSpacing - 3, 0,
+        dropPost * (iconWidth + m_iconSpacing) + m_iconSpacing - 3, iconHeight);
     }
   }
 
@@ -310,7 +312,7 @@ public:
 
   void SetNumFrames(const Index& numFrames){
     SetInitialSize(wxSize((
-      m_frameBoxSize.GetWidth() + iconSpacing) * numFrames.Get() + iconSpacing,
+      m_frameBoxSize.GetWidth() + m_iconSpacing) * numFrames.Get() + m_iconSpacing,
         m_frameBoxSize.GetHeight()));
     m_numFrames = numFrames;
     Refresh();
@@ -334,9 +336,9 @@ private:
     wxSize sz = GetSize();
     if (m_bitmap.GetWidth() > sz.GetWidth()){
       int x = m_ctx.GetSelectedFrame().Get() *
-        (m_frameBoxSize.GetWidth() + iconSpacing);
+        (m_frameBoxSize.GetWidth() + m_iconSpacing);
       if (x > sz.GetWidth() / 2){
-        return std::max(-x - (m_frameBoxSize.GetWidth() + iconSpacing) +
+        return std::max(-x - (m_frameBoxSize.GetWidth() + m_iconSpacing) +
           sz.GetWidth() / 2,
           -m_bitmap.GetWidth() + sz.GetWidth());
       }
@@ -348,7 +350,7 @@ private:
     // Gets the frame under pos
     Index numFrames(m_ctx.GetNumFrames());
     Index frame(std::max((pos.x - GetDrawOffset()) /
-      (m_frameBoxSize.GetWidth() + iconSpacing), 0));
+      (m_frameBoxSize.GetWidth() + m_iconSpacing), 0));
     if (frame < numFrames){
       return frame;
     }
@@ -366,8 +368,8 @@ private:
   }
 
   bool CloseBoxHitTest(const IntPoint& pos, int index){
-    const int x = index * (m_frameBoxSize.GetWidth() + iconSpacing) +
-      iconSpacing +
+    const int x = index * (m_frameBoxSize.GetWidth() + m_iconSpacing) +
+      m_iconSpacing +
       m_frameBoxSize.GetWidth() -
       m_closeFrameBitmap.GetWidth() - 1 +
       GetDrawOffset();
@@ -395,6 +397,7 @@ private:
   MouseCapture m_mouse;
   Index m_numFrames;
   StatusInterface& m_status;
+  int m_iconSpacing;
 };
 
 class FrameCtrl::FrameCtrlImpl : public wxPanel {
@@ -413,7 +416,7 @@ public:
     sizer->Add(noiseless_button(this,
       art.Get(Icon::ADD_FRAME),
       Tooltip("Add Frame"),
-      IntSize(60,50),
+      from_DIP(IntSize(60,50), this),
       [=](){m_ctx->AddFrame();}));
 
     m_listCtrl = make_wx<FrameListCtrl>(this,

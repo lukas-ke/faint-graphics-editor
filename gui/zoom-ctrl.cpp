@@ -47,12 +47,12 @@ public:
   {
     auto hSizer = make_wx<wxBoxSizer>(wxHORIZONTAL);
     m_currentZoomText = make_wx<wxStaticText>(this, wxID_ANY, "####",
-      wxDefaultPosition, wxSize(40,-1), wxALIGN_CENTRE | wxST_NO_AUTORESIZE);
+      wxDefaultPosition, FromDIP(wxSize(40,-1)), wxALIGN_CENTRE | wxST_NO_AUTORESIZE);
     hSizer->Add(m_currentZoomText, 0, wxALIGN_CENTER_VERTICAL);
 
     auto vSizer = make_wx<wxBoxSizer>(wxVERTICAL);
 
-    m_btnZoomIn = make_wx<StatusButton>(this, wxSize(40,25), status,
+    m_btnZoomIn = make_wx<StatusButton>(this, FromDIP(wxSize(40,25)), status,
       "+",
       Tooltip("Zoom In"),
       Description("Click to Zoom In, Ctrl=All Images"));
@@ -65,7 +65,7 @@ public:
 
     hSizer->Add(vSizer, 0, wxEXPAND);
 
-    m_btnZoomFitOr100 = make_wx<StatusButton>(this, wxSize(60,50), status,
+    m_btnZoomFitOr100 = make_wx<StatusButton>(this, FromDIP(wxSize(60,50)), status,
       "1:1", Tooltip(""), Description(""));
     hSizer->Add(m_btnZoomFitOr100,
       1,

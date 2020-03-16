@@ -141,7 +141,7 @@ private:
     wxBitmap bmpActive(create_selected_bitmap(bmpInactive));
     auto button = make_wx<ToggleStatusButton>(m_panel,
       to_int(id),
-      g_toolButtonSize,
+      m_panel->FromDIP(g_toolButtonSize),
       status,
       bmpInactive,
       bmpActive,
@@ -159,7 +159,11 @@ private:
   ToolDropDownButton* AddToolGroup(wxGridSizer* sizer,
     const std::vector<ToolInfo>& tools)
   {
-    auto* button = tool_drop_down_button(m_panel, to_faint(g_toolButtonSize), tools);
+    auto* button = tool_drop_down_button(
+      m_panel,
+      to_faint(m_panel->FromDIP(g_toolButtonSize)),
+      tools);
+
     sizer->Add(button);
     events::on_tool_change(button,
       [&](ToolId toolId){

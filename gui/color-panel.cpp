@@ -44,11 +44,11 @@ public:
     : wxPanel(parent)
   {
     // The spacing between controls in this panel
-    const int spacing = 5;
+    const int spacing = FromDIP(5);
 
     auto sizer = make_wx<wxBoxSizer>(wxHORIZONTAL);
     m_selectedColor = std::make_unique<SelectedColorCtrl>(this,
-      IntSize(50,50),
+      from_DIP(IntSize(50,50), this),
       status,
       pickPaint,
       getBg);
