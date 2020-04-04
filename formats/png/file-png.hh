@@ -48,10 +48,10 @@ struct Bitmap_and_tEXt{
   png_tEXt_map text;
 };
 
-// Reads a PNG-file from a Bitmap.
+// Reads a png-file into a Bitmap.
 OrError<Bitmap> read_png(const FilePath&);
 
-// Reads a PNG-file to a bitmap along with a map of the png-tEXT key,
+// Reads a png-file into a bitmap along with a map of the png-tEXT key,
 // value pairs.
 OrError<Bitmap_and_tEXt> read_png_meta(const FilePath&);
 
