@@ -241,19 +241,22 @@ private:
       ProcessEvent(newEvent);
       return;
     }
-    else{
-      Paint paint(MenuTargetColor());
-      if (action == menu_add){
-        events::add_to_palette(this, paint);
-      }
-      else if (action == menu_copyHex){
-        assert(paint.IsColor()); // Hex copy available only for plain colors
-        events::copy_color_string(this, paint.GetColor(), CopyColorMode::HEX);
-      }
-      else if (action == menu_copyRgb){
-        assert(paint.IsColor()); // RGB copy available only for plain color
-        events::copy_color_string(this, paint.GetColor(), CopyColorMode::RGB);
-      }
+    else if (action == menu_add){
+      events::add_to_palette(this, MenuTargetColor());
+    }
+    else if (action == menu_copyHex){
+      const Paint& paint(MenuTargetColor());
+      assert(paint.IsColor()); // Hex copy menu option available only for plain colors
+      events::copy_color_string(this, paint.GetColor(), CopyColorMode::HEX);
+    }
+    else if (action == menu_copyRgb){
+      const Paint& paint(MenuTargetColor());
+      assert(paint.IsColor()); // RGB copy available only for plain color
+      events::copy_color_string(this, paint.GetColor(), CopyColorMode::RGB);
+    }
+    else {
+      // Unknown event, ignore. Note: Execution can get here (atleast
+      // on MSW), see git log for details.
     }
   }
 
