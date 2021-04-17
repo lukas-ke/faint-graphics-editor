@@ -1,4 +1,4 @@
-# Faint
+* Faint
 
 A cross-platform combined raster and vector graphics editor with
 Python scripting support.
@@ -17,6 +17,6 @@ files. This enables programmatic image editing and configuration.
 Functions can be connected to keys, so that they can be called
 conveniently while drawing.
 
-## Build instructions
-* [Windows (Visual Studio)](build/build-instructions-visual-studio.md)
-* [Linux (g++ or clang)](build/build-instructions-linux.md)
+** Build instructions
+   - [[file:build/build-instructions-visual-studio.org][Windows (Visual Studio)]]
+   - [[file:build/build-instructions-linux.md][Linux (g++ or clang)]]
