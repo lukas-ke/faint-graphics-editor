@@ -53,6 +53,8 @@ public:
     return IntSize(m_w, m_h);
   }
 
+  size_t GetRawSize() const;
+
   inline int GetStride() const{
     return m_row_stride;
   }

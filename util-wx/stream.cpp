@@ -14,6 +14,7 @@
 // permissions and limitations under the License.
 
 #include <fstream>
+#include "geo/limits.hh"
 #include "util-wx/file-path.hh"
 #include "util-wx/stream.hh"
 
@@ -98,6 +99,32 @@ void BinaryWriter::write(const char* buffer, std::streamsize sz){
 
 void BinaryWriter::put(char c){
   m_impl->stream->put(c);
+}
+
+using B = unsigned int; // FIXME: What is this? B?!
+
+std::vector<unsigned char> read_into_vector(const FilePath& path){
+  std::ifstream in(iostream_friendly(path), std::ios::binary);
+  in.unsetf(std::ios::skipws);
+
+  in.seekg(0, std::ios::end);
+  const auto fileSize = in.tellg();
+  in.seekg(0, std::ios::beg);
+
+  // TODO: Stream-pos neither signed nor unsigned?
+  // if (!can_represent<B>(fileSize)){
+  //   // TODO: Signal error
+  //   return {};
+  // }
+
+  std::vector<unsigned char> vec;
+  vec.reserve(static_cast<unsigned int>(fileSize));
+
+  vec.insert(std::begin(vec),
+    std::istream_iterator<unsigned char>(in),
+    std::istream_iterator<unsigned char>());
+
+  return vec;
 }
 
 } // namespace

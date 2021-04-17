@@ -81,6 +81,7 @@ def get_src_folders(platform='msw', test=False):
         "formats/gif",
         "formats/gif/giflib-5.0.5/",
         "formats/png",
+        "formats/webp",
         "formats/wx",
         "generated/",
         "generated/python/settings",

@@ -18,6 +18,7 @@
 #include <array>
 #include <iosfwd> // For streampos, streamsize
 #include <memory>
+#include <vector>
 
 namespace faint{
 
@@ -68,6 +69,9 @@ std::array<unsigned char, N> read_array(BinaryReader& f){
   f.read(reinterpret_cast<char*>(a.data()), N);
   return a;
 }
+
+// TODO: Must be able to throw error
+std::vector<unsigned char> read_into_vector(const FilePath&);
 
 } // namespace
 

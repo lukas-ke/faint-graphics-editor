@@ -154,6 +154,10 @@ Bitmap::~Bitmap(){
   delete[] m_data;
 }
 
+size_t Bitmap::GetRawSize() const {
+  return data_length(m_row_stride, m_h);
+}
+
 Bitmap& Bitmap::operator=(const Bitmap& other){
   Bitmap copy(other);
   copy.Swap(*this);

@@ -126,11 +126,6 @@ utf8_string error_cursor_is_icon(){
   return "Error: This supposed cursor file contains icons.";
 }
 
-utf8_string error_open_file_read(const FilePath& path){
-  return endline_sep("The file could not be opened for reading.",
-    lbl("Filename", path.Str()));
-}
-
 utf8_string error_open_file_write(const FilePath& path){
   return endline_sep("The file could not be opened for writing.",
     lbl("Filename", path.Str()));

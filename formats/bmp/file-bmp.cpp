@@ -20,6 +20,7 @@
 #include "formats/bmp/file-bmp.hh"
 #include "formats/bmp/serialize-bmp-pixel-data.hh"
 #include "formats/bmp/serialize-bmp-types.hh"
+#include "formats/format-errors-common.hh"
 #include "geo/limits.hh"
 #include "text/formatting.hh"
 #include "util-wx/stream.hh"

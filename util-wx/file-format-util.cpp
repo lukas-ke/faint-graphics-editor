@@ -31,6 +31,7 @@ Formats built_in_file_formats(){
     format_cur(),
     format_load_bmp(),
     format_png(),
+    format_webp(),
     format_save_bmp(BitmapQuality::COLOR_24BIT),
     format_save_bmp(BitmapQuality::COLOR_8BIT),
     format_save_bmp(BitmapQuality::GRAY_8BIT),

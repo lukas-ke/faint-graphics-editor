@@ -42,6 +42,9 @@ bool can_represent(SRC value){
   else if constexpr (std::is_unsigned_v<DST> && std::is_unsigned_v<SRC>) {
     return !(value > std::numeric_limits<DST>::max());
   }
+  else {
+    static_assert(false);
+  }
 }
 
 template<typename DST, typename SRC>

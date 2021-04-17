@@ -1,5 +1,5 @@
 // -*- coding: us-ascii-unix -*-
-// Copyright 2014 Lukas Kemmer
+// Copyright 2020 Lukas Kemmer
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you
 // may not use this file except in compliance with the License. You
@@ -13,22 +13,14 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-#ifndef FAINT_FILE_FORMATS_HH
-#define FAINT_FILE_FORMATS_HH
-#include "formats/bmp/file-bmp.hh" // For BitmapQuality
-#include "formats/format.hh"
+// Error strings for file-format read functions.
+
+#include "text/utf8-string.hh"
+
+namespace faint{ class FilePath; }
 
 namespace faint{
 
-Format* format_save_bmp(BitmapQuality);
-Format* format_load_bmp();
-Format* format_cur();
-Format* format_gif();
-Format* format_ico();
-Format* format_png();
-Format* format_webp();
-Format* format_wx_jpg();
+utf8_string error_open_file_read(const FilePath&);
 
 } // namespace
-
-#endif

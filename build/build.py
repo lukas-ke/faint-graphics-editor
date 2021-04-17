@@ -52,6 +52,8 @@ def recreate_config(platform):
         f.write("glib_lib=\n")
         f.write("glib_config_include=\n")
         f.write("pnglib_include=\n")
+        f.write("libwebp_include=\n")
+        f.write("libwebp_lib=\n")
         if platform == 'msw':
             f.write("[nsis]\n")
             f.write("makensis=\n")
@@ -102,6 +104,11 @@ def read_config(platform):
         bo.parallell_compiles = int(config.get('other', 'parallell_compiles'))
 
         pnglib_include = config.get('folders', 'pnglib_include')
+
+        libwebp_include = config.get('folders', 'libwebp_include')
+        libwebp_lib = config.get('folders', 'libwebp_lib')
+
+
     except configparser.NoOptionError as e:
         print("Error in build.cfg:", e)
         exit(1)
@@ -114,6 +121,7 @@ def read_config(platform):
     check_folder("pnglib_include", pnglib_include, "png.h")
     check_folder("glib_include", glib_include, "glib.h")
     check_folder("glib_config_include", glib_config_include, "glibconfig.h")
+    check_folder("libwebp_include", libwebp_include, "decode.h")
 
     bo.extra_resource_root = wx_root
     if bo.platform == 'msw':
@@ -138,7 +146,8 @@ def read_config(platform):
                            python_include == "" or
                            cairo_include == "" or
                            pango_include == "" or
-                           pnglib_include == "")
+                           pnglib_include == "" or
+                           libwebp_include == "")
     if required_path_empty:
         print("Error: Incorrect paths in build.cfg")
         exit(1)
@@ -151,7 +160,8 @@ def read_config(platform):
         cairo_lib,
         pango_lib,
         python_lib,
-        glib_lib]
+        glib_lib,
+        libwebp_lib]
 
     bo.lib_paths = [l for l in bo.lib_paths if len(l) != 0]
 
@@ -167,7 +177,8 @@ def read_config(platform):
         pango_include,
         glib_include,
         glib_config_include,
-        pnglib_include
+        pnglib_include,
+        libwebp_include
     ]
 
     bo.include_folders = [bo.project_root]

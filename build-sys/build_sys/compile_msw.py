@@ -229,6 +229,7 @@ def other_libs():
                      "gobject-2.0.lib",
                      "gthread-2.0.lib",
                      "libpng16.lib",
+                     "webp.lib"
     ])
 
 
