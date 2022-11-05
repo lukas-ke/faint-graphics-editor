@@ -125,6 +125,7 @@ unsigned int to_hash(const Color&);
 Color color_from_hash(unsigned int);
 
 Color color_from_hex(unsigned int);
+ColRGB rgb_from_hex(unsigned int);
 
 // The next greater color, using the same scheme as operator<
 ColRGB next_color(const ColRGB&);

@@ -12,9 +12,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
-
 #include <iomanip>
 #include <sstream>
+#include <string>
 #include "bitmap/color.hh"
 #include "bitmap/paint.hh"
 #include "geo/angle.hh"
@@ -52,6 +52,16 @@ utf8_string decapitalized(const utf8_string& s){
     return s;
   }
   return tolower(s[0]) + slice_from(s, 1);
+}
+
+std::string replace_all(const std::string& s, const std::string& old, const std::string& replacement) {
+  std::string s2 = s;
+  size_t start_pos = 0;
+  while((start_pos = s2.find(old, start_pos)) != std::string::npos) {
+    s2.replace(start_pos, old.length(), replacement);
+    start_pos += replacement.length();
+  }
+  return s2;
 }
 
 utf8_string quoted(const utf8_string& s){
@@ -154,6 +164,12 @@ utf8_string str_range(const ClosedIntRange& range){
   return utf8_string(ss.str());
 }
 
+utf8_string str(const ColRGB& c){
+  std::stringstream ss;
+  ss << (int)c.r << "," << (int)c.g << "," << int(c.b);
+  return utf8_string(ss.str());
+}
+
 utf8_string str_rgb(const Color& c){
   std::stringstream ss;
   ss << (int)c.r << "," << (int)c.g << "," << (int)c.b;
@@ -164,6 +180,32 @@ utf8_string str_rgba(const Color& c){
   std::stringstream ss;
   ss << (int)c.r << "," << (int)c.g << "," << (int)c.b << "," << (int)c.a;
   return utf8_string(ss.str());
+}
+
+Optional<ColRGB> parse_hex_color(const utf8_string& u8str){
+  if (!is_ascii(u8str)){
+    return no_option();
+  }
+
+  const auto s = replace_all(u8str.str(), "#", "0x");
+  if (s.size() == 0){
+    return no_option();
+  }
+
+  const size_t n = 0;
+  const char* start = s.c_str();
+  char* end = const_cast<char*>(start);
+  // Seems I don't have the C++11 strtoul for std::string with msvc
+  const unsigned int x = std::strtoul(start, &end, 16);
+  if (end < start + s.size()){
+    // Garbage at end of string
+    return no_option();
+  }
+  if (x < 0x000000 || 0xffffff < x){
+    // Hex value out of range
+    return no_option();
+  }
+  return option(rgb_from_hex(x));
 }
 
 utf8_string str_smart_rgba(const Color& c, const rgb_prefix& prefix){

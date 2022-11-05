@@ -333,4 +333,11 @@ Color color_from_hex(unsigned int v){
   return color_from_ints(r, g, b);
 }
 
+ColRGB rgb_from_hex(unsigned int v){
+  auto r = (v >> 16) & 0xff;
+  auto g = (v >> 8) & 0xff;
+  auto b = v & 0xff;
+  return rgb_from_ints(r, g, b);
+}
+
 } // namespace

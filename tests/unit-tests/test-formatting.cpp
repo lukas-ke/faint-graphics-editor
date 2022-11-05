@@ -126,4 +126,6 @@ void test_formatting(){
   EQUAL(comma_sep({"hello", "world"}), "hello, world");
   EQUAL(endline_sep({"hello", "world"}), "hello\nworld");
   EQUAL(endline_sep({"hello", "world", "meh"}), "hello\nworld\nmeh");
+
+  EQUAL(replace_all("what a terrible day to have a curse", "day", "night"), "what a terrible night to have a curse");
 }

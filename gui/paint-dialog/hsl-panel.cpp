@@ -35,6 +35,7 @@
 #include "util-wx/fwd-bind.hh"
 #include "util-wx/fwd-wx.hh"
 #include "util-wx/gui-util.hh"
+#include "util-wx/key-codes.hh"
 #include "util-wx/make-event.hh"
 #include "util-wx/placement.hh"
 #include "util/color-bitmap-util.hh"
@@ -181,8 +182,9 @@ public:
     PlaceLabel(lblHue, m_hueTxt, true);
 
     auto lblSat = create_label(this, "&Sat");
+    const auto satPos = below(m_hueTxt);
     m_saturationTxt = BindKillFocus(CreateTextControl({min_t(0),max_t(240)},
-      below(m_hueTxt)));
+      satPos));
     PlaceLabel(lblSat, m_saturationTxt, false);
 
     m_lightnessSlider = create_slider(this,
@@ -240,12 +242,33 @@ public:
       alphaPos));
     PlaceLabel(lblAlpha, m_alphaTxt);
 
+    auto lblHex = create_label(this, "He&x");
+    IntPoint hexPos(alphaPos.x - get_width(m_alphaTxt), satPos.y);
+    m_hexTxt = create_text_control(this, hexPos, Width(100));
+    PlaceLabel(lblHex, m_hexTxt);
+
+    events::on_kill_focus(m_hexTxt,
+      [this](){
+        const auto c = parse_hex_color(get_text(m_hexTxt));
+        c.Visit(
+          [this](const ColRGB& c){
+            SetColor(Color(c, 255));
+            UpdateRGBA();
+            UpdateHSL();
+            UpdateColorBitmap();
+          },
+          [this](){
+            UpdateHex();
+          });
+      });
+
     SetInitialSize(wxSize(right_side(m_colorBitmap) + ui::panel_padding,
       bottom(m_saturationTxt) + ui::panel_padding));
-    SetColor(Color(0,0,128,255));
+    SetColor(Color(0,0,128,255)); // TODO: Why?
 
     UpdateRGBA();
     UpdateHSL();
+    UpdateHex();
     UpdateColorBitmap();
 
     events::on_slider_change(m_lightnessSlider,
@@ -255,6 +278,7 @@ public:
         UpdateColorBitmap();
         set_number_text(m_lightnessTxt, lightness, Signal::NO);
         UpdateRGBA();
+        UpdateHex();
       });
 
     events::on_slider_change(m_alphaSlider,
@@ -276,6 +300,7 @@ public:
         int saturation = static_cast<int>(hueSat.s * 40);
         set_number_text(m_saturationTxt, saturation, Signal::NO);
         UpdateRGBA();
+        UpdateHex();
       });
 
     // Fixme: Bind each text-control separately instead
@@ -292,6 +317,8 @@ public:
           m_hueSatPicker->Set(hs);
           m_lightnessSlider->SetBackground(slider_bg_Lightness(hs));
           UpdateColorBitmap();
+          UpdateRGBA();
+          UpdateHex();
         }
         else if (ctrl == m_saturationTxt){
           HS hs = m_hueSatPicker->GetValue();
@@ -299,11 +326,15 @@ public:
           m_hueSatPicker->Set(hs);
           m_lightnessSlider->SetBackground(slider_bg_Lightness(hs));
           UpdateColorBitmap();
+          UpdateRGBA();
+          UpdateHex();
         }
         else if (ctrl == m_lightnessTxt){
           m_lightnessSlider->SetValue(value);
           m_alphaSlider->SetBackground(slider_bg_Alpha(strip_alpha(GetColor())));
           UpdateColorBitmap();
+          UpdateRGBA();
+          UpdateHex();
         }
         else if (ctrl == m_alphaTxt){
           m_alphaSlider->SetValue(value);
@@ -321,6 +352,23 @@ public:
           m_alphaSlider->SetBackground(slider_bg_Alpha(rgb));
           UpdateColorBitmap();
           UpdateHSL();
+          UpdateHex();
+        }
+        else if (ctrl == m_hexTxt) {
+          const auto c = parse_hex_color(get_text(m_hexTxt));
+          c.Visit(
+            [this](const ColRGB& rgb){
+              HSL hsl(to_hsl(rgb));
+              const auto hs = hsl.GetHS();
+              m_hueSatPicker->Set(hs);
+              m_lightnessSlider->SetBackground(slider_bg_Lightness(hs));
+              m_lightnessSlider->SetValue(floored(hsl.l * 240.0)); // Fixme: Conversion
+              m_alphaSlider->SetBackground(slider_bg_Alpha(rgb));
+              UpdateColorBitmap();
+              UpdateHSL();
+              UpdateRGBA();
+            },
+            [this](){});
         }
       });
   }
@@ -330,6 +378,14 @@ public:
       m_lightnessSlider->GetValue() / 240.0),
       m_alphaSlider->GetValue()));
     return c;
+  }
+
+  bool EatAccelerator(Key c){
+    if (c == key::E && m_hexTxt->HasFocus()){
+      m_hexTxt->WriteText("e");
+      return true;
+    }
+    return false;
   }
 
   void SetColor(const Color& color){
@@ -342,6 +398,7 @@ public:
     UpdateColorBitmap();
     UpdateRGBA();
     UpdateHSL();
+    UpdateHex();
   }
 private:
   wxTextCtrl* BindKillFocus(wxTextCtrl* textCtrl){
@@ -359,6 +416,7 @@ private:
         if (!range.Has(value)){
           set_number_text(textCtrl, range.Constrain(value), Signal::YES);
         }
+        UpdateHex();
       });
     return textCtrl;
   }
@@ -388,6 +446,10 @@ private:
     m_hueTxt->ChangeValue(to_wx(str_int(truncated((hsl.h / 360.0) * 240.0)))); // Fixme
     m_saturationTxt->ChangeValue(to_wx(str_int(truncated(hsl.s * 240.0)))); // Fixme
     m_lightnessTxt->ChangeValue(to_wx(str_int(truncated(hsl.l * 240.0)))); // Fixme
+  }
+
+  void UpdateHex(){
+    m_hexTxt->ChangeValue(to_wx(str_hex(GetColor())));
   }
 
   void UpdateColorBitmap(){
@@ -424,6 +486,7 @@ private:
   wxTextCtrl* m_blueTxt;
   StaticBitmap* m_colorBitmap;
   wxTextCtrl* m_greenTxt;
+  wxTextCtrl* m_hexTxt;
   HueSatPicker* m_hueSatPicker;
   wxTextCtrl* m_hueTxt;
   Slider* m_lightnessSlider;
@@ -443,6 +506,10 @@ PaintPanel_HSL::PaintPanel_HSL(wxWindow* parent,
 
 PaintPanel_HSL::~PaintPanel_HSL(){
   m_impl = nullptr; // Deletion handled by wxWidgets
+}
+
+bool PaintPanel_HSL::EatAccelerator(Key key){
+  return m_impl->EatAccelerator(key);
 }
 
 Color PaintPanel_HSL::GetColor() const{

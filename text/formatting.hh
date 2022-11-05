@@ -22,8 +22,14 @@
 #include "util/common-fwd.hh"
 #include "util/template-fwd.hh"
 #include "util/distinct.hh"
+#include "util/optional.hh"
 
 namespace faint{
+
+std::string replace_all(
+  const std::string&,
+  const std::string& old,
+  const std::string& replacement);
 
 utf8_string bracketed(const utf8_string&);
 utf8_string capitalized(const utf8_string&);
@@ -78,8 +84,11 @@ utf8_string str_line_status_subpixel(const LineSegment&);
 utf8_string str_percentage(int numerator, int denominator);
 utf8_string str_range(const ClosedIntRange&);
 
+utf8_string str(const ColRGB&);
 utf8_string str_rgb(const Color&);
 utf8_string str_rgba(const Color&);
+
+Optional<ColRGB> parse_hex_color(const utf8_string&);
 
 // Excludes the alpha-component if fully opaque
 utf8_string str_smart_rgba(const Color&);

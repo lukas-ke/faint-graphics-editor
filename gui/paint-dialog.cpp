@@ -128,7 +128,12 @@ public:
       {Ctrl+key::V, [=]{PastePattern();}},
       {key::Q, [=]{SelectTab(m_panelHSL->AsWindow());}},
       {key::W, [=]{SelectTab(m_panelGradient->AsWindow());}},
-      {key::E, [=]{SelectTab(m_panelPattern->AsWindow());}}
+      {key::E, [=]{
+        // Change tab on e, unless hex-field has focus
+        if (m_tabs->GetCurrentPage() != m_panelHSL->AsWindow() ||
+            !m_panelHSL->EatAccelerator(key::E)) {
+          SelectTab(m_panelPattern->AsWindow());
+        }}}
     });
   }
 

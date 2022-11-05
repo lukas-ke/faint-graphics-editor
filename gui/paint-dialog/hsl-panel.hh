@@ -18,6 +18,7 @@
 #include "gui/common-cursors.hh"
 #include "gui/slider-common.hh" // SliderCursors
 #include "util/accessor.hh"
+#include "util/key-press.hh"
 
 class wxWindow;
 
@@ -34,7 +35,7 @@ public:
   wxWindow* AsWindow();
   Color GetColor() const;
   void SetColor(const Color&);
-
+  bool EatAccelerator(Key); // For passing "e" to hex-text control
   PaintPanel_HSL(const PaintPanel_HSL&) = delete;
   PaintPanel_HSL& operator=(const PaintPanel_HSL&) = delete;
 private:
