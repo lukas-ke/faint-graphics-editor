@@ -192,7 +192,6 @@ Optional<ColRGB> parse_hex_color(const utf8_string& u8str){
     return no_option();
   }
 
-  const size_t n = 0;
   const char* start = s.c_str();
   char* end = const_cast<char*>(start);
   // Seems I don't have the C++11 strtoul for std::string with msvc
@@ -201,7 +200,7 @@ Optional<ColRGB> parse_hex_color(const utf8_string& u8str){
     // Garbage at end of string
     return no_option();
   }
-  if (x < 0x000000 || 0xffffff < x){
+  if (0xffffff < x){
     // Hex value out of range
     return no_option();
   }
